@@ -21,6 +21,7 @@ type MessageFormData = z.infer<typeof messageFormSchema>;
 export default function MessageLog() {
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [replyingTo, setReplyingTo] = useState<Message | null>(null);
   
   const { data: messages = [], isLoading } = useQuery<Message[]>({
     queryKey: ["/api/messages"]
@@ -33,6 +34,16 @@ export default function MessageLog() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Group messages into threads - only show root messages, not replies
+  const rootMessages = messages.filter(m => !m.parentId);
+  const getThreadReplies = (threadId: number) => 
+    messages.filter(m => m.threadId === threadId && m.parentId);
+  
+  const getLatestReply = (threadId: number) => {
+    const replies = getThreadReplies(threadId);
+    return replies.length > 0 ? replies[replies.length - 1] : null;
+  };
 
   const form = useForm<MessageFormData>({
     resolver: zodResolver(messageFormSchema),
@@ -52,9 +63,10 @@ export default function MessageLog() {
         sender: form.getValues("sender"),
         content: ""
       });
+      setReplyingTo(null);
       toast({
         title: "Message sent",
-        description: "Your message has been added to the team chat."
+        description: replyingTo ? "Reply added to thread" : "Your message has been added to the team chat."
       });
     },
     onError: () => {
@@ -67,7 +79,15 @@ export default function MessageLog() {
   });
 
   const onSubmit = (data: MessageFormData) => {
-    sendMessageMutation.mutate(data);
+    const messageData = replyingTo 
+      ? { ...data, parentId: replyingTo.id, threadId: replyingTo.threadId || replyingTo.id }
+      : data;
+    sendMessageMutation.mutate(messageData);
+  };
+
+  const handleReply = (message: Message) => {
+    setReplyingTo(message);
+    // Focus on input field would be nice but we'll keep it simple
   };
 
   const formatMessageTime = (timestamp: string | Date) => {
@@ -143,13 +163,17 @@ export default function MessageLog() {
           </div>
         )}
         
-        {messages.map((message, index) => {
-          const prevMessage = index > 0 ? messages[index - 1] : null;
+        {rootMessages.map((message, index) => {
+          const prevMessage = index > 0 ? rootMessages[index - 1] : null;
           const isSameSender = prevMessage?.sender === message.sender;
           const timeDiff = prevMessage ? 
             new Date(message.timestamp).getTime() - new Date(prevMessage.timestamp).getTime() : 
             Number.MAX_SAFE_INTEGER;
           const shouldShowAvatar = !isSameSender || timeDiff > 300000; // 5 minutes
+          
+          const threadReplies = getThreadReplies(message.threadId || message.id);
+          const latestReply = getLatestReply(message.threadId || message.id);
+          const hasReplies = threadReplies.length > 0;
 
           return (
             <div key={message.id} className={`group hover:bg-slate-50 px-2 py-1 rounded ${shouldShowAvatar ? 'mt-4' : 'mt-0.5'}`}>
@@ -179,9 +203,83 @@ export default function MessageLog() {
                       </span>
                     </div>
                   )}
-                  <div className="text-slate-800 text-sm leading-relaxed break-words">
+                  <div className="text-slate-800 text-sm leading-relaxed break-words mb-1">
                     {message.content}
                   </div>
+                  
+                  {/* Message actions */}
+                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs text-slate-500 hover:text-slate-700"
+                      onClick={() => handleReply(message)}
+                    >
+                      <MessageSquare className="w-3 h-3 mr-1" />
+                      Reply
+                    </Button>
+                  </div>
+
+                  {/* Thread replies preview */}
+                  {hasReplies && (
+                    <div className="mt-2 border-l-2 border-slate-200 pl-3 ml-1">
+                      <div className="flex items-center gap-2 text-xs text-slate-600 mb-1">
+                        <MessageSquare className="w-3 h-3" />
+                        <span className="font-medium">
+                          {threadReplies.length} {threadReplies.length === 1 ? 'reply' : 'replies'}
+                        </span>
+                        {latestReply && (
+                          <span>Last reply {formatMessageTime(latestReply.timestamp)}</span>
+                        )}
+                      </div>
+                      
+                      {/* Show latest reply preview */}
+                      {latestReply && (
+                        <div className="flex items-start gap-2 text-sm">
+                          <Avatar className={`w-6 h-6 ${getAvatarColor(latestReply.sender)}`}>
+                            <AvatarFallback className="text-white text-xs">
+                              {getInitials(latestReply.sender)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <span className="font-medium text-slate-900 text-xs mr-1">
+                              {latestReply.sender}
+                            </span>
+                            <span className="text-slate-700 text-xs">
+                              {latestReply.content.length > 100 
+                                ? latestReply.content.substring(0, 100) + "..." 
+                                : latestReply.content}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Show all replies if there are more than one */}
+                      {threadReplies.length > 1 && (
+                        <div className="mt-2 space-y-1">
+                          {threadReplies.slice(0, -1).map((reply) => (
+                            <div key={reply.id} className="flex items-start gap-2 text-sm">
+                              <Avatar className={`w-6 h-6 ${getAvatarColor(reply.sender)}`}>
+                                <AvatarFallback className="text-white text-xs">
+                                  {getInitials(reply.sender)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 min-w-0">
+                                <span className="font-medium text-slate-900 text-xs mr-1">
+                                  {reply.sender}
+                                </span>
+                                <span className="text-slate-700 text-xs">
+                                  {reply.content.length > 100 
+                                    ? reply.content.substring(0, 100) + "..." 
+                                    : reply.content}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -192,6 +290,33 @@ export default function MessageLog() {
 
       {/* Message Input - Slack style */}
       <div className="border-t border-slate-200 p-4">
+        {/* Reply indicator */}
+        {replyingTo && (
+          <div className="mb-3 p-2 bg-slate-50 border-l-4 border-blue-500 rounded-r">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="w-4 h-4 text-blue-500" />
+                <span className="text-sm text-slate-600">
+                  Replying to <span className="font-medium">{replyingTo.sender}</span>
+                </span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 w-6 p-0 text-slate-400 hover:text-slate-600"
+                onClick={() => setReplyingTo(null)}
+              >
+                ×
+              </Button>
+            </div>
+            <div className="text-sm text-slate-700 mt-1 truncate">
+              {replyingTo.content.length > 100 
+                ? replyingTo.content.substring(0, 100) + "..." 
+                : replyingTo.content}
+            </div>
+          </div>
+        )}
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
@@ -218,7 +343,7 @@ export default function MessageLog() {
                     <FormControl>
                       <div className="relative">
                         <Input
-                          placeholder="Message #team-chat"
+                          placeholder={replyingTo ? `Reply to ${replyingTo.sender}...` : "Message #team-chat"}
                           {...field}
                           className="pr-10 resize-none border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           onKeyDown={(e) => {

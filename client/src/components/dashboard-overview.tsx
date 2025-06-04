@@ -63,6 +63,9 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
   return (
     <div className="space-y-6">
+      {/* Sandwich Collection Form */}
+      <SandwichCollectionForm />
+
       {/* Upcoming Projects */}
       <div className="bg-white rounded-lg border border-slate-200">
         <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
@@ -182,8 +185,6 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
         </div>
       </div>
 
-      {/* Sandwich Collection Form */}
-      <SandwichCollectionForm />
     </div>
   );
 }
