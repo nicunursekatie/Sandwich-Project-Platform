@@ -11,12 +11,7 @@ export default function MeetingMinutes() {
   const [showAddMeeting, setShowAddMeeting] = useState(false);
 
   const { data: minutes = [], isLoading } = useQuery<MeetingMinutes[]>({
-    queryKey: ["/api/meeting-minutes", { limit: 3 }],
-    queryFn: async () => {
-      const response = await fetch("/api/meeting-minutes?limit=3", { credentials: "include" });
-      if (!response.ok) throw new Error("Failed to fetch meeting minutes");
-      return response.json();
-    }
+    queryKey: ["/api/meeting-minutes"]
   });
 
   const getBorderColor = (color: string) => {
@@ -83,14 +78,7 @@ export default function MeetingMinutes() {
             ))}
           </div>
           
-          <Button
-            variant="outline"
-            className="mt-4 w-full justify-center border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
-            onClick={() => setShowAllMinutes(true)}
-          >
-            <Maximize2 className="mr-2 w-4 h-4" />
-            View All Minutes
-          </Button>
+
         </div>
       </div>
 

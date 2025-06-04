@@ -125,10 +125,7 @@ export default function ProjectList() {
           ))}
         </div>
         
-        <button className="mt-4 text-sm text-blue-600 hover:text-blue-700 flex items-center">
-          <span>View all projects</span>
-          <ArrowRight className="ml-1 w-3 h-3" />
-        </button>
+
       </div>
     </div>
   );

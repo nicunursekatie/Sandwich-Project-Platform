@@ -9,12 +9,7 @@ export default function MessageLog() {
   const [showChatHistory, setShowChatHistory] = useState(false);
 
   const { data: messages = [], isLoading } = useQuery<Message[]>({
-    queryKey: ["/api/messages", { limit: 3 }],
-    queryFn: async () => {
-      const response = await fetch("/api/messages?limit=3", { credentials: "include" });
-      if (!response.ok) throw new Error("Failed to fetch messages");
-      return response.json();
-    }
+    queryKey: ["/api/messages"]
   });
 
   const formatTimeAgo = (timestamp: string | Date) => {
@@ -28,10 +23,7 @@ export default function MessageLog() {
     return `${Math.floor(diffInHours / 24)}d ago`;
   };
 
-  const truncateMessage = (content: string, maxLength: number = 50) => {
-    if (content.length <= maxLength) return content;
-    return content.substring(0, maxLength) + "...";
-  };
+
 
   if (isLoading) {
     return (
@@ -62,26 +54,25 @@ export default function MessageLog() {
           <span className="text-sm text-slate-500">3 new</span>
         </div>
         <div className="p-6">
-          <div className="space-y-3">
+          <div className="space-y-4">
             {messages.map((message) => (
-              <div key={message.id} className="text-sm">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium text-slate-900">{message.sender}</span>
-                  <span className="text-slate-500 text-xs">{formatTimeAgo(message.timestamp)}</span>
+              <div key={message.id} className="border border-slate-200 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-semibold text-slate-900">{message.sender}</span>
+                  <span className="text-sm text-slate-500">{formatTimeAgo(message.timestamp)}</span>
                 </div>
-                <p className="text-slate-600">{truncateMessage(message.content)}</p>
+                <p className="text-slate-700 leading-relaxed">{message.content}</p>
               </div>
             ))}
+            
+            {messages.length === 0 && (
+              <div className="text-center py-8 text-slate-500">
+                No messages found.
+              </div>
+            )}
           </div>
           
-          <Button
-            variant="outline"
-            className="mt-4 w-full justify-center border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
-            onClick={() => setShowChatHistory(true)}
-          >
-            <Maximize2 className="mr-2 w-4 h-4" />
-            View Full Chat History
-          </Button>
+
         </div>
       </div>
 
