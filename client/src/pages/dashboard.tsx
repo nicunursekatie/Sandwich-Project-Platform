@@ -5,6 +5,7 @@ import MessageLog from "@/components/message-log";
 import MeetingMinutes from "@/components/meeting-minutes";
 import GoogleDriveLinks from "@/components/google-drive-links";
 import DashboardOverview from "@/components/dashboard-overview";
+import SandwichCollectionLog from "@/components/sandwich-collection-log";
 import { useState } from "react";
 
 export default function Dashboard() {
@@ -17,6 +18,7 @@ export default function Dashboard() {
     { id: "meetings", label: "Meetings", icon: ClipboardList },
     { id: "files", label: "Files", icon: FolderOpen },
     { id: "reports", label: "Reports", icon: BarChart3 },
+    { id: "collections", label: "Collection Log", icon: Sandwich },
   ];
 
   const renderContent = () => {
@@ -33,6 +35,8 @@ export default function Dashboard() {
         return <GoogleDriveLinks />;
       case "reports":
         return <WeeklySandwichForm />;
+      case "collections":
+        return <SandwichCollectionLog />;
       default:
         return <DashboardOverview />;
     }
