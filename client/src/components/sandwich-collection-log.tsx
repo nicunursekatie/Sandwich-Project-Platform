@@ -27,8 +27,16 @@ export default function SandwichCollectionLog() {
   };
 
   const calculateTotal = (collection: SandwichCollection) => {
-    const groupData = JSON.parse(collection.groupCollections || "[]");
-    const groupTotal = groupData.reduce((sum: number, group: any) => sum + group.sandwichCount, 0);
+    let groupTotal = 0;
+    try {
+      const groupData = JSON.parse(collection.groupCollections || "[]");
+      if (Array.isArray(groupData)) {
+        groupTotal = groupData.reduce((sum: number, group: any) => sum + (group.sandwichCount || 0), 0);
+      }
+    } catch (error) {
+      // If parsing fails, treat as 0
+      groupTotal = 0;
+    }
     return collection.individualSandwiches + groupTotal;
   };
 
