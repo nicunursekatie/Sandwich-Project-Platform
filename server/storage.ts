@@ -371,4 +371,22 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+import { GoogleSheetsStorage } from './google-sheets';
+
+// Create storage instance with error handling
+let storageInstance: IStorage;
+
+try {
+  if (process.env.GOOGLE_SPREADSHEET_ID && process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL) {
+    console.log('Attempting to use Google Sheets storage...');
+    storageInstance = new GoogleSheetsStorage();
+  } else {
+    console.log('Google Sheets credentials not found, using memory storage');
+    storageInstance = new MemStorage();
+  }
+} catch (error) {
+  console.error('Failed to initialize Google Sheets storage, falling back to memory:', error);
+  storageInstance = new MemStorage();
+}
+
+export const storage = storageInstance;
