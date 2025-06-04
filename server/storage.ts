@@ -25,6 +25,9 @@ export interface IStorage {
   getAllMessages(): Promise<Message[]>;
   getRecentMessages(limit: number): Promise<Message[]>;
   createMessage(message: InsertMessage): Promise<Message>;
+  getThreadMessages(threadId: number): Promise<Message[]>;
+  createReply(message: InsertMessage, parentId: number): Promise<Message>;
+  updateReplyCount(messageId: number): Promise<void>;
   
   // Weekly Reports
   getAllWeeklyReports(): Promise<WeeklyReport[]>;
@@ -254,10 +257,52 @@ export class MemStorage implements IStorage {
     const message: Message = { 
       ...insertMessage, 
       id, 
-      timestamp: new Date()
+      timestamp: new Date(),
+      parentId: insertMessage.parentId || null,
+      threadId: insertMessage.threadId || id,
+      replyCount: 0
     };
     this.messages.set(id, message);
     return message;
+  }
+
+  async getThreadMessages(threadId: number): Promise<Message[]> {
+    return Array.from(this.messages.values())
+      .filter(message => message.threadId === threadId)
+      .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+  }
+
+  async createReply(insertMessage: InsertMessage, parentId: number): Promise<Message> {
+    const parentMessage = this.messages.get(parentId);
+    if (!parentMessage) {
+      throw new Error("Parent message not found");
+    }
+
+    const id = this.currentIds.message++;
+    const message: Message = { 
+      ...insertMessage, 
+      id,
+      timestamp: new Date(),
+      parentId: parentId,
+      threadId: parentMessage.threadId,
+      replyCount: 0
+    };
+    
+    this.messages.set(id, message);
+    await this.updateReplyCount(parentMessage.threadId === parentMessage.id ? parentMessage.id : parentMessage.threadId);
+    
+    return message;
+  }
+
+  async updateReplyCount(messageId: number): Promise<void> {
+    const message = this.messages.get(messageId);
+    if (message) {
+      const replyCount = Array.from(this.messages.values())
+        .filter(m => m.threadId === message.threadId && m.id !== message.id).length;
+      
+      const updatedMessage = { ...message, replyCount };
+      this.messages.set(messageId, updatedMessage);
+    }
   }
 
   // Weekly Report methods

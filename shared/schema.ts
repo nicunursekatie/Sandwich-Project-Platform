@@ -23,6 +23,9 @@ export const messages = pgTable("messages", {
   sender: text("sender").notNull(),
   content: text("content").notNull(),
   timestamp: timestamp("timestamp").notNull().defaultNow(),
+  parentId: integer("parent_id"), // for threading - references another message
+  threadId: integer("thread_id"), // groups messages in same thread
+  replyCount: integer("reply_count").notNull().default(0), // number of replies
 });
 
 export const weeklyReports = pgTable("weekly_reports", {
@@ -63,7 +66,7 @@ export const driveLinks = pgTable("drive_links", {
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertProjectSchema = createInsertSchema(projects).omit({ id: true });
-export const insertMessageSchema = createInsertSchema(messages).omit({ id: true, timestamp: true });
+export const insertMessageSchema = createInsertSchema(messages).omit({ id: true, timestamp: true, replyCount: true });
 export const insertWeeklyReportSchema = createInsertSchema(weeklyReports).omit({ id: true, submittedAt: true });
 export const insertSandwichCollectionSchema = createInsertSchema(sandwichCollections).omit({ id: true, submittedAt: true });
 export const insertMeetingMinutesSchema = createInsertSchema(meetingMinutes).omit({ id: true });
