@@ -74,6 +74,79 @@ export default function SandwichCollectionLog() {
     }
   };
 
+  // Mutations for update and delete
+  const updateMutation = useMutation({
+    mutationFn: async (data: { id: number; updates: any }) => {
+      const response = await apiRequest("PUT", `/api/sandwich-collections/${data.id}`, data.updates);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      setEditingCollection(null);
+      toast({
+        title: "Collection updated",
+        description: "Sandwich collection has been updated successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update collection. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest("DELETE", `/api/sandwich-collections/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      toast({
+        title: "Collection deleted",
+        description: "Sandwich collection has been deleted successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete collection. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const handleEdit = (collection: SandwichCollection) => {
+    setEditingCollection(collection);
+    setEditFormData({
+      collectionDate: collection.collectionDate,
+      hostName: collection.hostName,
+      individualSandwiches: collection.individualSandwiches.toString(),
+      groupCollections: collection.groupCollections
+    });
+  };
+
+  const handleUpdate = () => {
+    if (!editingCollection) return;
+    
+    updateMutation.mutate({
+      id: editingCollection.id,
+      updates: {
+        collectionDate: editFormData.collectionDate,
+        hostName: editFormData.hostName,
+        individualSandwiches: parseInt(editFormData.individualSandwiches) || 0,
+        groupCollections: editFormData.groupCollections
+      }
+    });
+  };
+
+  const handleDelete = (id: number) => {
+    if (confirm("Are you sure you want to delete this collection? This action cannot be undone.")) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
@@ -122,9 +195,27 @@ export default function SandwichCollectionLog() {
                       <span>{collection.hostName}</span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-lg font-semibold text-slate-900">{totalSandwiches}</div>
-                    <div className="text-xs text-slate-500">total sandwiches</div>
+                  <div className="flex items-center space-x-2">
+                    <div className="text-right mr-3">
+                      <div className="text-lg font-semibold text-slate-900">{totalSandwiches}</div>
+                      <div className="text-xs text-slate-500">total sandwiches</div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(collection)}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDelete(collection.id)}
+                      className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
 
@@ -184,6 +275,73 @@ export default function SandwichCollectionLog() {
           )}
         </div>
       </div>
+
+      {/* Edit Modal */}
+      <Dialog open={!!editingCollection} onOpenChange={(open) => !open && setEditingCollection(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Collection</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-date">Collection Date</Label>
+              <Input
+                id="edit-date"
+                type="date"
+                value={editFormData.collectionDate}
+                onChange={(e) => setEditFormData({ ...editFormData, collectionDate: e.target.value })}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="edit-host">Host Name</Label>
+              <Select value={editFormData.hostName} onValueChange={(value) => setEditFormData({ ...editFormData, hostName: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select host" />
+                </SelectTrigger>
+                <SelectContent>
+                  {hostOptions.map((host) => (
+                    <SelectItem key={host} value={host}>{host}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <Label htmlFor="edit-individual">Individual Sandwiches</Label>
+              <Input
+                id="edit-individual"
+                type="number"
+                min="0"
+                value={editFormData.individualSandwiches}
+                onChange={(e) => setEditFormData({ ...editFormData, individualSandwiches: e.target.value })}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="edit-groups">Group Collections (JSON format)</Label>
+              <Input
+                id="edit-groups"
+                value={editFormData.groupCollections}
+                onChange={(e) => setEditFormData({ ...editFormData, groupCollections: e.target.value })}
+                placeholder='[{"groupName": "Youth Group", "sandwichCount": 100}]'
+              />
+            </div>
+            
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button variant="outline" onClick={() => setEditingCollection(null)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleUpdate}
+                disabled={updateMutation.isPending}
+              >
+                {updateMutation.isPending ? "Updating..." : "Update Collection"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
