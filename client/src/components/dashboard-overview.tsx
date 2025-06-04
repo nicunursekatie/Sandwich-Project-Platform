@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, TrendingUp } from "lucide-react";
-import type { Project, Message, MeetingMinutes, DriveLink, WeeklyReport } from "@shared/schema";
+import { Button } from "@/components/ui/button";
+import SandwichCollectionForm from "@/components/sandwich-collection-form";
+import type { Project, Message, MeetingMinutes, DriveLink, WeeklyReport, SandwichCollection } from "@shared/schema";
 
 export default function DashboardOverview() {
   const { data: projects = [] } = useQuery<Project[]>({
@@ -23,6 +25,10 @@ export default function DashboardOverview() {
     queryKey: ["/api/weekly-reports"]
   });
 
+  const { data: collections = [] } = useQuery<SandwichCollection[]>({
+    queryKey: ["/api/sandwich-collections"]
+  });
+
   const getProjectStatusCounts = () => {
     const counts = {
       available: 0,
@@ -42,6 +48,12 @@ export default function DashboardOverview() {
 
   const statusCounts = getProjectStatusCounts();
   const totalSandwiches = reports.reduce((sum, report) => sum + report.sandwichCount, 0);
+  const totalCollectedSandwiches = collections.reduce((sum, collection) => {
+    const groupData = JSON.parse(collection.groupCollections || "[]");
+    const groupTotal = groupData.reduce((groupSum: number, group: any) => groupSum + group.sandwichCount, 0);
+    return sum + collection.individualSandwiches + groupTotal;
+  }, 0);
+  const upcomingProjects = projects.filter(p => p.status === "available" || p.status === "planning");
   const recentMessages = messages.slice(0, 3);
   const recentMinutes = minutes.slice(0, 2);
 
@@ -91,57 +103,60 @@ export default function DashboardOverview() {
         <div className="bg-white rounded-lg border border-slate-200 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-600">Total Sandwiches</p>
-              <p className="text-2xl font-semibold text-slate-900">{totalSandwiches}</p>
+              <p className="text-sm text-slate-600">Total Collected</p>
+              <p className="text-2xl font-semibold text-slate-900">{totalCollectedSandwiches}</p>
             </div>
             <BarChart3 className="w-8 h-8 text-green-500" />
           </div>
           <div className="mt-2 text-xs text-slate-500">
-            {reports.length} reports submitted
+            {collections.length} collection entries
           </div>
         </div>
       </div>
 
       {/* Main Dashboard Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Project Status Overview */}
+        {/* Upcoming Projects */}
         <div className="lg:col-span-2 bg-white rounded-lg border border-slate-200">
           <div className="px-6 py-4 border-b border-slate-200">
             <h2 className="text-lg font-semibold text-slate-900 flex items-center">
               <ListTodo className="text-blue-500 mr-2 w-5 h-5" />
-              Project Status Overview
+              Upcoming Projects
             </h2>
           </div>
           <div className="p-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <div className="space-y-3">
+              {upcomingProjects.map((project) => (
+                <div key={project.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <span className={`w-3 h-3 rounded-full ${
+                      project.status === "available" ? "bg-green-500" : "bg-blue-500"
+                    }`}></span>
+                    <div>
+                      <h3 className="font-medium text-slate-900">{project.title}</h3>
+                      <p className="text-sm text-slate-600">{project.description}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      project.status === "available" 
+                        ? "bg-green-100 text-green-800" 
+                        : "bg-blue-100 text-blue-800"
+                    }`}>
+                      {project.status === "available" ? "Available" : "Planning"}
+                    </span>
+                    {project.assigneeName && (
+                      <span className="text-sm text-slate-500">Assigned to {project.assigneeName}</span>
+                    )}
+                  </div>
                 </div>
-                <p className="text-sm font-medium text-slate-900">{statusCounts.available}</p>
-                <p className="text-xs text-slate-500">Available</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-2">
-                  <div className="w-3 h-3 bg-amber-500 rounded-full"></div>
+              ))}
+              
+              {upcomingProjects.length === 0 && (
+                <div className="text-center py-8 text-slate-500">
+                  No upcoming projects at this time.
                 </div>
-                <p className="text-sm font-medium text-slate-900">{statusCounts.in_progress}</p>
-                <p className="text-xs text-slate-500">In Progress</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-2">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                </div>
-                <p className="text-sm font-medium text-slate-900">{statusCounts.planning}</p>
-                <p className="text-xs text-slate-500">Planning</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-2">
-                  <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-                </div>
-                <p className="text-sm font-medium text-slate-900">{statusCounts.completed}</p>
-                <p className="text-xs text-slate-500">Completed</p>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -173,6 +188,11 @@ export default function DashboardOverview() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Sandwich Collection Form */}
+      <div className="mb-6">
+        <SandwichCollectionForm />
       </div>
 
       {/* Recent Activity */}

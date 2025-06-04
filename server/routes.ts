@@ -77,6 +77,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Sandwich Collections
+  app.get("/api/sandwich-collections", async (req, res) => {
+    try {
+      const collections = await storage.getAllSandwichCollections();
+      res.json(collections);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch sandwich collections" });
+    }
+  });
+
+  app.post("/api/sandwich-collections", async (req, res) => {
+    try {
+      const collectionData = insertSandwichCollectionSchema.parse(req.body);
+      const collection = await storage.createSandwichCollection(collectionData);
+      res.status(201).json(collection);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid collection data" });
+    }
+  });
+
   // Meeting Minutes
   app.get("/api/meeting-minutes", async (req, res) => {
     try {
