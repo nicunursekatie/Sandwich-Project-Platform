@@ -1,15 +1,17 @@
-import { Sandwich, LogOut, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3 } from "lucide-react";
+import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3 } from "lucide-react";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
 import MessageLog from "@/components/message-log";
 import MeetingMinutes from "@/components/meeting-minutes";
 import GoogleDriveLinks from "@/components/google-drive-links";
+import DashboardOverview from "@/components/dashboard-overview";
 import { useState } from "react";
 
 export default function Dashboard() {
-  const [activeSection, setActiveSection] = useState("projects");
+  const [activeSection, setActiveSection] = useState("dashboard");
 
   const sidebarItems = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "projects", label: "Projects", icon: ListTodo },
     { id: "messages", label: "Messages", icon: MessageCircle },
     { id: "meetings", label: "Meetings", icon: ClipboardList },
@@ -19,6 +21,8 @@ export default function Dashboard() {
 
   const renderContent = () => {
     switch (activeSection) {
+      case "dashboard":
+        return <DashboardOverview />;
       case "projects":
         return <ProjectList />;
       case "messages":
@@ -30,7 +34,7 @@ export default function Dashboard() {
       case "reports":
         return <WeeklySandwichForm />;
       default:
-        return <ProjectList />;
+        return <DashboardOverview />;
     }
   };
 
