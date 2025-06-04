@@ -53,8 +53,16 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
   const statusCounts = getProjectStatusCounts();
   const totalSandwiches = reports.reduce((sum, report) => sum + report.sandwichCount, 0);
   const totalCollectedSandwiches = collections.reduce((sum, collection) => {
-    const groupData = JSON.parse(collection.groupCollections || "[]");
-    const groupTotal = groupData.reduce((groupSum: number, group: any) => groupSum + group.sandwichCount, 0);
+    let groupTotal = 0;
+    try {
+      const groupData = JSON.parse(collection.groupCollections || "[]");
+      if (Array.isArray(groupData)) {
+        groupTotal = groupData.reduce((groupSum: number, group: any) => groupSum + (group.sandwichCount || 0), 0);
+      }
+    } catch (error) {
+      // If parsing fails, treat as 0
+      groupTotal = 0;
+    }
     return sum + collection.individualSandwiches + groupTotal;
   }, 0);
   const upcomingProjects = projects.filter(p => p.status === "available" || p.status === "planning");

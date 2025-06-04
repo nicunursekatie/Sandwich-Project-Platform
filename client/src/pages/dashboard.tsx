@@ -38,7 +38,7 @@ export default function Dashboard() {
       case "collections":
         return <SandwichCollectionLog />;
       default:
-        return <DashboardOverview />;
+        return <DashboardOverview onSectionChange={setActiveSection} />;
     }
   };
 

@@ -67,7 +67,7 @@ export class GoogleSheetsStorage implements IStorage {
       'Projects': ['id', 'title', 'description', 'status', 'assigneeId', 'assigneeName', 'color'],
       'Messages': ['id', 'sender', 'content', 'timestamp', 'parentId', 'threadId', 'replyCount'],
       'WeeklyReports': ['id', 'weekEnding', 'sandwichCount', 'notes', 'submittedBy', 'submittedAt'],
-      'SandwichCollections': ['id', 'collectionDate', 'hostName', 'individualSandwiches', 'groupCollections', 'submittedAt'],
+      'SandwichCollections': ['Date Collected', 'Host Group', 'Solo Sandwiches', 'Group Contributors', 'Logged At'],
       'MeetingMinutes': ['id', 'title', 'date', 'summary', 'color'],
       'DriveLinks': ['id', 'title', 'description', 'url', 'icon', 'iconColor']
     };
@@ -473,20 +473,20 @@ export class GoogleSheetsStorage implements IStorage {
     try {
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.spreadsheetId,
-        range: 'SandwichCollections!A:F',
+        range: 'SandwichCollections!A:E',
       });
 
       const rows = response.data.values || [];
       if (rows.length <= 1) return [];
 
-      return rows.slice(1).map((row: any[]) => ({
-        id: parseInt(row[0]) || 0,
-        collectionDate: row[1] || '',
-        hostName: row[2] || '',
-        individualSandwiches: parseInt(row[3]) || 0,
-        groupCollections: row[4] || '',
-        submittedAt: new Date(row[5] || Date.now())
-      })).filter(collection => collection.id > 0);
+      return rows.slice(1).map((row: any[], index: number) => ({
+        id: index + 1, // Generate sequential ID since we're not storing it
+        collectionDate: row[0] || '',        // Date Collected
+        hostName: row[1] || '',              // Host Group
+        individualSandwiches: parseInt(row[2]) || 0, // Solo Sandwiches
+        groupCollections: row[3] || '',      // Group Contributors
+        submittedAt: new Date(row[4] || Date.now()) // Logged At
+      }));
     } catch (error) {
       console.error('Error getting sandwich collections:', error);
       return [];
@@ -504,19 +504,21 @@ export class GoogleSheetsStorage implements IStorage {
     };
 
     try {
+      // Format the new row according to the specified structure
+      const newRow = [
+        collection.collectionDate,      // Date Collected
+        collection.hostName,            // Host Group
+        collection.individualSandwiches, // Solo Sandwiches
+        collection.groupCollections,    // Group Contributors
+        collection.submittedAt.toISOString() // Logged At
+      ];
+
       await this.sheets.spreadsheets.values.append({
         spreadsheetId: this.spreadsheetId,
-        range: 'SandwichCollections!A:F',
+        range: 'SandwichCollections!A:E',
         valueInputOption: 'RAW',
         requestBody: {
-          values: [[
-            collection.id,
-            collection.collectionDate,
-            collection.hostName,
-            collection.individualSandwiches,
-            collection.groupCollections,
-            collection.submittedAt.toISOString()
-          ]]
+          values: [newRow]
         }
       });
 

@@ -16,7 +16,10 @@ interface GroupCollection {
 
 export default function SandwichCollectionForm() {
   const { toast } = useToast();
-  const [collectionDate, setCollectionDate] = useState("");
+  
+  // Default to today's date
+  const today = new Date().toISOString().split('T')[0];
+  const [collectionDate, setCollectionDate] = useState(today);
   const [hostName, setHostName] = useState("");
   const [individualSandwiches, setIndividualSandwiches] = useState("");
   const [groupCollections, setGroupCollections] = useState<GroupCollection[]>([
@@ -43,7 +46,7 @@ export default function SandwichCollectionForm() {
       return response.json();
     },
     onSuccess: () => {
-      setCollectionDate("");
+      setCollectionDate(today);
       setHostName("");
       setIndividualSandwiches("");
       setGroupCollections([{ id: "1", groupName: "", sandwichCount: 0 }]);
