@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import type { Project, Message, MeetingMinutes, DriveLink, WeeklyReport, SandwichCollection } from "@shared/schema";
 
-export default function DashboardOverview() {
+interface DashboardOverviewProps {
+  onSectionChange: (section: string) => void;
+}
+
+export default function DashboardOverview({ onSectionChange }: DashboardOverviewProps) {
   const { data: projects = [] } = useQuery<Project[]>({
     queryKey: ["/api/projects"]
   });
@@ -61,13 +65,24 @@ export default function DashboardOverview() {
     <div className="space-y-6">
       {/* Upcoming Projects */}
       <div className="bg-white rounded-lg border border-slate-200">
-        <div className="px-6 py-4 border-b border-slate-200">
+        <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
           <h2 className="text-lg font-semibold text-slate-900">Upcoming Projects</h2>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => onSectionChange("projects")}
+          >
+            View All
+          </Button>
         </div>
         <div className="p-6">
           <div className="space-y-3">
             {upcomingProjects.map((project) => (
-              <div key={project.id} className="p-3 border border-slate-200 rounded">
+              <div 
+                key={project.id} 
+                className="p-3 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
+                onClick={() => onSectionChange("projects")}
+              >
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-medium text-slate-900">{project.title}</h3>
@@ -82,6 +97,86 @@ export default function DashboardOverview() {
             
             {upcomingProjects.length === 0 && (
               <p className="text-slate-500 text-center py-4">No upcoming projects</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Messages */}
+      <div className="bg-white rounded-lg border border-slate-200">
+        <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-slate-900">Recent Messages</h2>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => onSectionChange("messages")}
+          >
+            View All
+          </Button>
+        </div>
+        <div className="p-6">
+          <div className="space-y-3">
+            {recentMessages.map((message) => (
+              <div 
+                key={message.id} 
+                className="p-3 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
+                onClick={() => onSectionChange("messages")}
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <span className="font-medium text-slate-900 text-sm">{message.sender}</span>
+                  <span className="text-xs text-slate-500">
+                    {new Date(message.timestamp).toLocaleDateString()}
+                  </span>
+                </div>
+                <p className="text-sm text-slate-600">
+                  {message.content.length > 80 
+                    ? message.content.substring(0, 80) + "..." 
+                    : message.content}
+                </p>
+              </div>
+            ))}
+            
+            {recentMessages.length === 0 && (
+              <p className="text-slate-500 text-center py-4">No recent messages</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Meeting Minutes */}
+      <div className="bg-white rounded-lg border border-slate-200">
+        <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-slate-900">Recent Meetings</h2>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => onSectionChange("meetings")}
+          >
+            View All
+          </Button>
+        </div>
+        <div className="p-6">
+          <div className="space-y-3">
+            {recentMinutes.map((minute) => (
+              <div 
+                key={minute.id} 
+                className="p-3 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
+                onClick={() => onSectionChange("meetings")}
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <span className="font-medium text-slate-900 text-sm">{minute.title}</span>
+                  <span className="text-xs text-slate-500">{minute.date}</span>
+                </div>
+                <p className="text-sm text-slate-600">
+                  {minute.summary.length > 80 
+                    ? minute.summary.substring(0, 80) + "..." 
+                    : minute.summary}
+                </p>
+              </div>
+            ))}
+            
+            {recentMinutes.length === 0 && (
+              <p className="text-slate-500 text-center py-4">No recent meetings</p>
             )}
           </div>
         </div>

@@ -24,7 +24,7 @@ export default function Dashboard() {
   const renderContent = () => {
     switch (activeSection) {
       case "dashboard":
-        return <DashboardOverview />;
+        return <DashboardOverview onSectionChange={setActiveSection} />;
       case "projects":
         return <ProjectList />;
       case "messages":
