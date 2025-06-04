@@ -1,9 +1,10 @@
 import { 
-  users, projects, messages, weeklyReports, meetingMinutes, driveLinks,
+  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections,
   type User, type InsertUser, 
   type Project, type InsertProject,
   type Message, type InsertMessage,
   type WeeklyReport, type InsertWeeklyReport,
+  type SandwichCollection, type InsertSandwichCollection,
   type MeetingMinutes, type InsertMeetingMinutes,
   type DriveLink, type InsertDriveLink
 } from "@shared/schema";
@@ -29,6 +30,10 @@ export interface IStorage {
   getAllWeeklyReports(): Promise<WeeklyReport[]>;
   createWeeklyReport(report: InsertWeeklyReport): Promise<WeeklyReport>;
   
+  // Sandwich Collections
+  getAllSandwichCollections(): Promise<SandwichCollection[]>;
+  createSandwichCollection(collection: InsertSandwichCollection): Promise<SandwichCollection>;
+  
   // Meeting Minutes
   getAllMeetingMinutes(): Promise<MeetingMinutes[]>;
   getRecentMeetingMinutes(limit: number): Promise<MeetingMinutes[]>;
@@ -44,6 +49,7 @@ export class MemStorage implements IStorage {
   private projects: Map<number, Project>;
   private messages: Map<number, Message>;
   private weeklyReports: Map<number, WeeklyReport>;
+  private sandwichCollections: Map<number, SandwichCollection>;
   private meetingMinutes: Map<number, MeetingMinutes>;
   private driveLinks: Map<number, DriveLink>;
   private currentIds: {
@@ -51,6 +57,7 @@ export class MemStorage implements IStorage {
     project: number;
     message: number;
     weeklyReport: number;
+    sandwichCollection: number;
     meetingMinutes: number;
     driveLink: number;
   };
@@ -60,6 +67,7 @@ export class MemStorage implements IStorage {
     this.projects = new Map();
     this.messages = new Map();
     this.weeklyReports = new Map();
+    this.sandwichCollections = new Map();
     this.meetingMinutes = new Map();
     this.driveLinks = new Map();
     this.currentIds = {
@@ -67,6 +75,7 @@ export class MemStorage implements IStorage {
       project: 1,
       message: 1,
       weeklyReport: 1,
+      sandwichCollection: 1,
       meetingMinutes: 1,
       driveLink: 1,
     };
@@ -267,6 +276,24 @@ export class MemStorage implements IStorage {
     };
     this.weeklyReports.set(id, report);
     return report;
+  }
+
+  // Sandwich Collection methods
+  async getAllSandwichCollections(): Promise<SandwichCollection[]> {
+    return Array.from(this.sandwichCollections.values()).sort((a, b) => 
+      new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+    );
+  }
+
+  async createSandwichCollection(insertCollection: InsertSandwichCollection): Promise<SandwichCollection> {
+    const id = this.currentIds.sandwichCollection++;
+    const collection: SandwichCollection = { 
+      ...insertCollection, 
+      id, 
+      submittedAt: new Date()
+    };
+    this.sandwichCollections.set(id, collection);
+    return collection;
   }
 
   // Meeting Minutes methods
