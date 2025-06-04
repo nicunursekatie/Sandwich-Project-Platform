@@ -117,10 +117,12 @@ export default function SandwichCollectionLog() {
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium text-slate-700">Group Collections</span>
                       <span className="text-sm font-semibold text-slate-900">
-                        {groupData.reduce((sum: number, group: any) => sum + group.sandwichCount, 0)}
+                        {Array.isArray(groupData) 
+                          ? groupData.reduce((sum: number, group: any) => sum + (group.sandwichCount || 0), 0)
+                          : 0}
                       </span>
                     </div>
-                    {groupData.length > 0 && (
+                    {Array.isArray(groupData) && groupData.length > 0 && (
                       <div className="space-y-1">
                         {groupData.map((group: any, index: number) => (
                           <div key={index} className="flex items-center justify-between text-xs">
@@ -133,7 +135,7 @@ export default function SandwichCollectionLog() {
                         ))}
                       </div>
                     )}
-                    {groupData.length === 0 && (
+                    {(!Array.isArray(groupData) || groupData.length === 0) && (
                       <div className="text-xs text-slate-500">No group collections</div>
                     )}
                   </div>
