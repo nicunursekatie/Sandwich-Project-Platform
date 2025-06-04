@@ -529,6 +529,18 @@ export class GoogleSheetsStorage implements IStorage {
     }
   }
 
+  async updateSandwichCollection(id: number, updates: Partial<SandwichCollection>): Promise<SandwichCollection | undefined> {
+    // For Google Sheets, we'll need to find and update the row
+    // This is a simplified implementation - in production you'd want more sophisticated row management
+    throw new Error('Update not implemented for Google Sheets - use fallback storage');
+  }
+
+  async deleteSandwichCollection(id: number): Promise<boolean> {
+    // For Google Sheets, we'll need to find and delete the row
+    // This is a simplified implementation - in production you'd want more sophisticated row management
+    throw new Error('Delete not implemented for Google Sheets - use fallback storage');
+  }
+
   // Meeting Minutes methods
   async getAllMeetingMinutes(): Promise<MeetingMinutes[]> {
     await this.ensureWorksheets();

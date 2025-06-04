@@ -1,11 +1,37 @@
-import { useQuery } from "@tanstack/react-query";
-import { Sandwich, Calendar, User, Users } from "lucide-react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { Sandwich, Calendar, User, Users, Edit, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useState } from "react";
 import type { SandwichCollection } from "@shared/schema";
 
 export default function SandwichCollectionLog() {
+  const { toast } = useToast();
+  const [editingCollection, setEditingCollection] = useState<SandwichCollection | null>(null);
+  const [editFormData, setEditFormData] = useState({
+    collectionDate: "",
+    hostName: "",
+    individualSandwiches: "",
+    groupCollections: ""
+  });
+
   const { data: collections = [], isLoading } = useQuery<SandwichCollection[]>({
     queryKey: ["/api/sandwich-collections"]
   });
+
+  // Common host names for the dropdown
+  const hostOptions = [
+    "Sarah Chen",
+    "Mike Rodriguez", 
+    "Jessica Park",
+    "John Doe",
+    "Other"
+  ];
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {

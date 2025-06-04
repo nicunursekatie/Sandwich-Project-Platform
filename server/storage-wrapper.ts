@@ -173,6 +173,20 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async updateSandwichCollection(id: number, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateSandwichCollection(id, updates),
+      () => this.fallbackStorage.updateSandwichCollection(id, updates)
+    );
+  }
+
+  async deleteSandwichCollection(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteSandwichCollection(id),
+      () => this.fallbackStorage.deleteSandwichCollection(id)
+    );
+  }
+
   // Meeting Minutes methods
   async getAllMeetingMinutes() {
     return this.executeWithFallback(

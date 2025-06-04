@@ -36,6 +36,8 @@ export interface IStorage {
   // Sandwich Collections
   getAllSandwichCollections(): Promise<SandwichCollection[]>;
   createSandwichCollection(collection: InsertSandwichCollection): Promise<SandwichCollection>;
+  updateSandwichCollection(id: number, updates: Partial<SandwichCollection>): Promise<SandwichCollection | undefined>;
+  deleteSandwichCollection(id: number): Promise<boolean>;
   
   // Meeting Minutes
   getAllMeetingMinutes(): Promise<MeetingMinutes[]>;
@@ -339,6 +341,19 @@ export class MemStorage implements IStorage {
     };
     this.sandwichCollections.set(id, collection);
     return collection;
+  }
+
+  async updateSandwichCollection(id: number, updates: Partial<SandwichCollection>): Promise<SandwichCollection | undefined> {
+    const existing = this.sandwichCollections.get(id);
+    if (!existing) return undefined;
+    
+    const updated: SandwichCollection = { ...existing, ...updates };
+    this.sandwichCollections.set(id, updated);
+    return updated;
+  }
+
+  async deleteSandwichCollection(id: number): Promise<boolean> {
+    return this.sandwichCollections.delete(id);
   }
 
   // Meeting Minutes methods

@@ -97,6 +97,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.put("/api/sandwich-collections/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const collection = await storage.updateSandwichCollection(id, updates);
+      if (!collection) {
+        return res.status(404).json({ message: "Collection not found" });
+      }
+      res.json(collection);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid update data" });
+    }
+  });
+
+  app.delete("/api/sandwich-collections/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const deleted = await storage.deleteSandwichCollection(id);
+      if (!deleted) {
+        return res.status(404).json({ message: "Collection not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete collection" });
+    }
+  });
+
   // Meeting Minutes
   app.get("/api/meeting-minutes", async (req, res) => {
     try {
