@@ -24,10 +24,7 @@ export default function MeetingMinutes() {
     }
   };
 
-  const truncateSummary = (summary: string, maxLength: number = 60) => {
-    if (summary.length <= maxLength) return summary;
-    return summary.substring(0, maxLength) + "...";
-  };
+
 
   if (isLoading) {
     return (
@@ -73,7 +70,7 @@ export default function MeetingMinutes() {
                   <h3 className="font-medium text-slate-900">{minute.title}</h3>
                   <span className="text-sm text-slate-500">{minute.date}</span>
                 </div>
-                <p className="text-sm text-slate-600">{truncateSummary(minute.summary)}</p>
+                <p className="text-sm text-slate-600 leading-relaxed">{minute.summary}</p>
               </div>
             ))}
           </div>

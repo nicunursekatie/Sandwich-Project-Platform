@@ -49,9 +49,9 @@ export default function MessageLog() {
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center">
             <MessageCircle className="text-blue-500 mr-2 w-5 h-5" />
-            Recent Messages
+            Team Messages
           </h2>
-          <span className="text-sm text-slate-500">3 new</span>
+          <span className="text-sm text-slate-500">{messages.length} total</span>
         </div>
         <div className="p-6">
           <div className="space-y-4">
