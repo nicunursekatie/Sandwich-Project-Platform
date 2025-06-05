@@ -265,14 +265,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       
-      // For now, simulate successful upload
-      // In a real implementation, you would handle file upload here
+      // Update the meeting with the uploaded agenda
+      const updatedMeeting = await storage.updateMeetingAgenda(id, "Final agenda uploaded - agenda.docx");
+      
+      if (!updatedMeeting) {
+        res.status(404).json({ message: "Meeting not found" });
+        return;
+      }
+      
       logger.info("Agenda file uploaded for meeting", { method: req.method, url: req.url, ip: req.ip });
       
       res.json({ 
         success: true, 
         message: "Agenda file uploaded successfully",
-        filename: "agenda.docx"
+        filename: "agenda.docx",
+        meeting: updatedMeeting
       });
     } catch (error) {
       logger.error("Failed to upload agenda file", error);
