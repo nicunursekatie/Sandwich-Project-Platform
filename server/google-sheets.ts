@@ -65,7 +65,7 @@ export class GoogleSheetsStorage implements IStorage {
     const headers: { [key: string]: string[] } = {
       'Users': ['id', 'username', 'email', 'fullName'],
       'Projects': ['id', 'title', 'description', 'status', 'assigneeId', 'assigneeName', 'color'],
-      'Messages': ['id', 'sender', 'content', 'timestamp', 'parentId', 'threadId', 'replyCount'],
+      'Messages': ['id', 'sender', 'content', 'timestamp', 'parentId', 'threadId', 'replyCount', 'committee'],
       'WeeklyReports': ['id', 'weekEnding', 'sandwichCount', 'notes', 'submittedBy', 'submittedAt'],
       'SandwichCollections': ['Date Collected', 'Host Group', 'Solo Sandwiches', 'Group Contributors', 'Logged At'],
       'MeetingMinutes': ['id', 'title', 'date', 'summary', 'color'],
