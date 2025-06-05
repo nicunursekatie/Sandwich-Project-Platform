@@ -1,4 +1,4 @@
-import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, Car } from "lucide-react";
+import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, Car, Building2 } from "lucide-react";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
 import ChatHub from "@/components/chat-hub";
@@ -24,6 +24,7 @@ export default function Dashboard() {
     { id: "collections", label: "Collection Log", icon: Sandwich },
     { id: "recipients", label: "Recipients", icon: Users },
     { id: "drivers", label: "Drivers", icon: Car },
+    { id: "development", label: "Development", icon: Building2 },
   ];
 
   const renderContent = () => {

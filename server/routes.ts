@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
+import express from "express";
 import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
 import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
@@ -382,6 +383,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: error.message });
     }
   });
+
+  // Static file serving for documents
+  app.use('/documents', express.static('public/documents'));
 
   const httpServer = createServer(app);
   return httpServer;
