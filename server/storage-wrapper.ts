@@ -115,6 +115,13 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async getMessagesByCommittee(committee: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getMessagesByCommittee(committee),
+      () => this.fallbackStorage.getMessagesByCommittee(committee)
+    );
+  }
+
   async createMessage(message: any) {
     return this.executeWithFallback(
       () => this.primaryStorage.createMessage(message),

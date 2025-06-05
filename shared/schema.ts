@@ -26,6 +26,7 @@ export const messages = pgTable("messages", {
   parentId: integer("parent_id"), // for threading - references another message
   threadId: integer("thread_id"), // groups messages in same thread
   replyCount: integer("reply_count").notNull().default(0), // number of replies
+  committee: text("committee").notNull().default("general"), // committee channel: general, marketing_committee, grant_committee, hosts, group_events
 });
 
 export const weeklyReports = pgTable("weekly_reports", {
