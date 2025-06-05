@@ -174,6 +174,15 @@ export class MemStorage implements IStorage {
       content: "Weekly totals look strong. Great work everyone! We're seeing a 15% increase in sales compared to last week, especially on our signature sandwiches.",
     });
     
+    // Seed a default meeting
+    this.createMeeting({
+      date: "2024-03-20",
+      title: "Weekly Team Meeting",
+      status: "planning",
+      time: "2:00 PM",
+      finalAgenda: null
+    });
+
     // Seed meeting minutes
     this.createMeetingMinutes({
       title: "Weekly Planning Meeting",
