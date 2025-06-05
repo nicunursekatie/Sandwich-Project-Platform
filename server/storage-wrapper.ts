@@ -259,6 +259,20 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async getAllMeetings() {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getAllMeetings(),
+      () => this.fallbackStorage.getAllMeetings()
+    );
+  }
+
+  async getMeetingsByType(type: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getMeetingsByType(type),
+      () => this.fallbackStorage.getMeetingsByType(type)
+    );
+  }
+
   async createMeeting(meeting: any) {
     return this.executeWithFallback(
       () => this.primaryStorage.createMeeting(meeting),
