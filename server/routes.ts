@@ -9,12 +9,18 @@ import { requestLogger, errorLogger, logger } from "./middleware/logger";
 import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Apply global middleware
+  app.use(requestLogger);
+  app.use(generalRateLimit);
+  app.use(sanitizeMiddleware);
+  
   // Projects
   app.get("/api/projects", async (req, res) => {
     try {
       const projects = await storage.getAllProjects();
       res.json(projects);
     } catch (error) {
+      logger.error("Failed to fetch projects", error);
       res.status(500).json({ message: "Failed to fetch projects" });
     }
   });
@@ -92,13 +98,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/sandwich-collections", async (req, res) => {
+  app.post("/api/sandwich-collections", strictRateLimit, async (req, res) => {
     try {
       const collectionData = insertSandwichCollectionSchema.parse(req.body);
       const collection = await storage.createSandwichCollection(collectionData);
       res.status(201).json(collection);
     } catch (error) {
-      res.status(400).json({ message: "Invalid collection data" });
+      if (error instanceof z.ZodError) {
+        logger.warn("Invalid sandwich collection input", { errors: error.errors, ip: req.ip });
+        res.status(400).json({ message: "Invalid collection data", errors: error.errors });
+      } else {
+        logger.error("Failed to create sandwich collection", error);
+        res.status(500).json({ message: "Failed to create collection" });
+      }
     }
   });
 
