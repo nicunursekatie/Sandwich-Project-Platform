@@ -10,7 +10,7 @@ import SandwichCollectionLog from "@/components/sandwich-collection-log";
 import RecipientsManagement from "@/components/recipients-management";
 import DriversManagement from "@/components/drivers-management";
 import MeetingsCalendar from "@/components/meetings-calendar";
-import CommitteeChat from "@/components/committee-chat";
+
 import { useState } from "react";
 import { Link } from "wouter";
 
@@ -32,7 +32,6 @@ export default function Meetings() {
   const meetingSections = [
     { id: "calendar", label: "Meetings Calendar", icon: Calendar },
     { id: "agenda", label: "Meeting Agenda", icon: ClipboardList },
-    { id: "committee-chat", label: "Committee Chat", icon: MessageCircle },
   ];
 
   const renderContent = () => {
@@ -57,8 +56,6 @@ export default function Meetings() {
         return <MeetingsCalendar />;
       case "agenda":
         return <MeetingAgenda />;
-      case "committee-chat":
-        return <CommitteeChat />;
       default:
         return <MeetingsCalendar />;
     }

@@ -1,7 +1,7 @@
 import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, Car } from "lucide-react";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
-import MessageLog from "@/components/message-log";
+import ChatHub from "@/components/chat-hub";
 import MeetingMinutes from "@/components/meeting-minutes";
 import MeetingAgenda from "@/components/meeting-agenda";
 import GoogleDriveLinks from "@/components/google-drive-links";
@@ -33,7 +33,7 @@ export default function Dashboard() {
       case "projects":
         return <ProjectList />;
       case "messages":
-        return <MessageLog />;
+        return <ChatHub />;
       case "meetings":
         return <MeetingAgenda />;
       case "files":
