@@ -86,6 +86,26 @@ export default function CommitteeChat() {
     }
   });
 
+  const deleteMessageMutation = useMutation({
+    mutationFn: async (messageId: number) => {
+      return apiRequest(`/api/messages/${messageId}`, 'DELETE');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/messages', selectedCommittee] });
+      toast({
+        title: "Message deleted",
+        description: "The message has been removed from the chat.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Delete failed",
+        description: "Could not delete the message. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
+
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
@@ -195,7 +215,7 @@ export default function CommitteeChat() {
                 </div>
               ) : (
                 messages.map((message: Message) => (
-                  <div key={message.id} className="flex gap-3">
+                  <div key={message.id} className="flex gap-3 group hover:bg-slate-50 -mx-2 px-2 py-2 rounded">
                     <Avatar className="w-8 h-8">
                       <AvatarFallback>
                         {message.sender.split(' ').map(n => n[0]).join('')}
@@ -214,6 +234,17 @@ export default function CommitteeChat() {
                       <div className="text-slate-700 break-words">
                         {message.content}
                       </div>
+                    </div>
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteMessageMutation.mutate(message.id)}
+                        disabled={deleteMessageMutation.isPending}
+                        className="h-8 w-8 p-0 text-slate-500 hover:text-red-600 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
                 ))
