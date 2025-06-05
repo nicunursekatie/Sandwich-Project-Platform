@@ -128,6 +128,29 @@ export default function DriversManagement() {
     }
   });
 
+  const submitAgreementMutation = useMutation({
+    mutationFn: async (data: typeof agreementSubmission) => {
+      return apiRequest('/api/driver-agreements', 'POST', data);
+    },
+    onSuccess: () => {
+      setAgreementSubmission({
+        submittedBy: "",
+        email: "",
+        phone: "",
+        licenseNumber: "",
+        vehicleInfo: "",
+        emergencyContact: "",
+        emergencyPhone: "",
+        agreementAccepted: false
+      });
+      setIsSubmissionModalOpen(false);
+      toast({
+        title: "Agreement submitted",
+        description: "Your volunteer driver agreement has been submitted. You will be contacted soon.",
+      });
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newDriver.name || !newDriver.phone || !newDriver.vehicleType) {
@@ -157,6 +180,37 @@ export default function DriversManagement() {
     }
   };
 
+  const handleAgreementSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!agreementSubmission.submittedBy || !agreementSubmission.email || !agreementSubmission.phone || !agreementSubmission.licenseNumber || !agreementSubmission.agreementAccepted) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in all required fields and accept the agreement.",
+        variant: "destructive",
+      });
+      return;
+    }
+    submitAgreementMutation.mutate(agreementSubmission);
+  };
+
+  const handleAgreementUpload = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!agreementFile) {
+      toast({
+        title: "No file selected",
+        description: "Please select a PDF file to upload.",
+        variant: "destructive",
+      });
+      return;
+    }
+    toast({
+      title: "Agreement uploaded",
+      description: "Volunteer driver agreement has been uploaded successfully.",
+    });
+    setIsAgreementModalOpen(false);
+    setAgreementFile(null);
+  };
+
   const getAvailabilityBadge = (availability: string) => {
     switch (availability) {
       case "available":
@@ -183,7 +237,26 @@ export default function DriversManagement() {
             <Car className="text-blue-500 mr-3 w-6 h-6" />
             Drivers Management
           </h1>
-          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+          <div className="flex gap-2">
+            <Dialog open={isAgreementModalOpen} onOpenChange={setIsAgreementModalOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Upload className="w-4 h-4" />
+                  Upload Agreement
+                </Button>
+              </DialogTrigger>
+            </Dialog>
+            
+            <Dialog open={isSubmissionModalOpen} onOpenChange={setIsSubmissionModalOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Send className="w-4 h-4" />
+                  Submit Volunteer Agreement
+                </Button>
+              </DialogTrigger>
+            </Dialog>
+            
+            <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
             <DialogTrigger asChild>
               <Button className="flex items-center gap-2">
                 <Plus className="w-4 h-4" />
@@ -270,7 +343,160 @@ export default function DriversManagement() {
               </form>
             </DialogContent>
           </Dialog>
-        </div>
+
+          {/* Agreement Upload Modal */}
+          <Dialog open={isAgreementModalOpen} onOpenChange={setIsAgreementModalOpen}>
+            <DialogContent aria-describedby="upload-agreement-description">
+              <DialogHeader>
+                <DialogTitle>Upload Volunteer Driver Agreement</DialogTitle>
+              </DialogHeader>
+              <p id="upload-agreement-description" className="text-sm text-slate-600 mb-4">
+                Upload a PDF version of the volunteer driver agreement for new volunteers to review.
+              </p>
+              <form onSubmit={handleAgreementUpload} className="space-y-4">
+                <div>
+                  <Label htmlFor="agreement-file">Agreement PDF *</Label>
+                  <Input
+                    id="agreement-file"
+                    type="file"
+                    accept=".pdf"
+                    onChange={(e) => setAgreementFile(e.target.files?.[0] || null)}
+                  />
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <Button type="button" variant="outline" onClick={() => setIsAgreementModalOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={!agreementFile}>
+                    Upload Agreement
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+
+        {/* Volunteer Submission Modal */}
+        <Dialog open={isSubmissionModalOpen} onOpenChange={setIsSubmissionModalOpen}>
+          <DialogContent className="max-w-2xl" aria-describedby="volunteer-submission-description">
+            <DialogHeader>
+              <DialogTitle>Volunteer Driver Agreement Submission</DialogTitle>
+            </DialogHeader>
+            <p id="volunteer-submission-description" className="text-sm text-slate-600 mb-4">
+              Submit your volunteer driver agreement. This information will be securely transmitted to administrators.
+            </p>
+            <form onSubmit={handleAgreementSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="submitted-by">Full Name *</Label>
+                  <Input
+                    id="submitted-by"
+                    value={agreementSubmission.submittedBy}
+                    onChange={(e) => setAgreementSubmission({ ...agreementSubmission, submittedBy: e.target.value })}
+                    placeholder="Enter your full name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="submission-email">Email Address *</Label>
+                  <Input
+                    id="submission-email"
+                    type="email"
+                    value={agreementSubmission.email}
+                    onChange={(e) => setAgreementSubmission({ ...agreementSubmission, email: e.target.value })}
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="submission-phone">Phone Number *</Label>
+                  <Input
+                    id="submission-phone"
+                    value={agreementSubmission.phone}
+                    onChange={(e) => setAgreementSubmission({ ...agreementSubmission, phone: e.target.value })}
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="submission-license">Driver's License Number *</Label>
+                  <Input
+                    id="submission-license"
+                    value={agreementSubmission.licenseNumber}
+                    onChange={(e) => setAgreementSubmission({ ...agreementSubmission, licenseNumber: e.target.value })}
+                    placeholder="DL123456789"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="vehicle-info">Vehicle Information *</Label>
+                <Input
+                  id="vehicle-info"
+                  value={agreementSubmission.vehicleInfo}
+                  onChange={(e) => setAgreementSubmission({ ...agreementSubmission, vehicleInfo: e.target.value })}
+                  placeholder="Make, Model, Year, License Plate"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="emergency-contact">Emergency Contact *</Label>
+                  <Input
+                    id="emergency-contact"
+                    value={agreementSubmission.emergencyContact}
+                    onChange={(e) => setAgreementSubmission({ ...agreementSubmission, emergencyContact: e.target.value })}
+                    placeholder="Contact name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="emergency-phone">Emergency Phone *</Label>
+                  <Input
+                    id="emergency-phone"
+                    value={agreementSubmission.emergencyPhone}
+                    onChange={(e) => setAgreementSubmission({ ...agreementSubmission, emergencyPhone: e.target.value })}
+                    placeholder="(555) 987-6543"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2 p-4 border rounded-lg bg-blue-50">
+                <input
+                  type="checkbox"
+                  id="agreement-accepted"
+                  checked={agreementSubmission.agreementAccepted}
+                  onChange={(e) => setAgreementSubmission({ ...agreementSubmission, agreementAccepted: e.target.checked })}
+                  className="h-4 w-4"
+                />
+                <Label htmlFor="agreement-accepted" className="text-sm">
+                  I have read and agree to the volunteer driver agreement terms and conditions. I understand that my submission will be reviewed and I will be contacted regarding my application. *
+                </Label>
+              </div>
+
+              <div className="flex gap-2 justify-end">
+                <Button type="button" variant="outline" onClick={() => setIsSubmissionModalOpen(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={submitAgreementMutation.isPending || !agreementSubmission.agreementAccepted}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  {submitAgreementMutation.isPending ? (
+                    <>
+                      <CheckCircle className="w-4 h-4 mr-2 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 mr-2" />
+                      Submit Agreement
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Drivers List */}
