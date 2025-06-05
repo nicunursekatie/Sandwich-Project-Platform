@@ -414,6 +414,36 @@ export class GoogleSheetsStorage implements IStorage {
     }
   }
 
+  async deleteMessage(id: number): Promise<boolean> {
+    const messages = await this.getAllMessages();
+    const messageIndex = messages.findIndex(m => m.id === id);
+    
+    if (messageIndex === -1) return false;
+
+    try {
+      // Delete the row from Google Sheets
+      await this.sheets.spreadsheets.batchUpdate({
+        spreadsheetId: this.spreadsheetId,
+        requestBody: {
+          requests: [{
+            deleteDimension: {
+              range: {
+                sheetId: 0, // Messages sheet ID
+                dimension: 'ROWS',
+                startIndex: messageIndex + 1, // +1 because of header
+                endIndex: messageIndex + 2
+              }
+            }
+          }]
+        }
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting message:', error);
+      return false;
+    }
+  }
+
   // Weekly Reports methods
   async getAllWeeklyReports(): Promise<WeeklyReport[]> {
     await this.ensureWorksheets();

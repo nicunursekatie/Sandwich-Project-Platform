@@ -150,6 +150,13 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async deleteMessage(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteMessage(id),
+      () => this.fallbackStorage.deleteMessage(id)
+    );
+  }
+
   // Weekly Reports methods
   async getAllWeeklyReports() {
     return this.executeWithFallback(
