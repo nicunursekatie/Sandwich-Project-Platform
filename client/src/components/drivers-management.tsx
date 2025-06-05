@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Car, Plus, Edit, Trash2, Phone, Mail, MapPin, Calendar } from "lucide-react";
+import { Car, Plus, Edit, Trash2, Phone, Mail, MapPin, Calendar, Upload, FileText, Send, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,6 +26,9 @@ export default function DriversManagement() {
   const { toast } = useToast();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingDriver, setEditingDriver] = useState<Driver | null>(null);
+  const [isAgreementModalOpen, setIsAgreementModalOpen] = useState(false);
+  const [agreementFile, setAgreementFile] = useState<File | null>(null);
+  const [isSubmissionModalOpen, setIsSubmissionModalOpen] = useState(false);
   const [newDriver, setNewDriver] = useState({
     name: "",
     phone: "",
@@ -34,6 +37,16 @@ export default function DriversManagement() {
     licenseNumber: "",
     availability: "available" as const,
     zone: ""
+  });
+  const [agreementSubmission, setAgreementSubmission] = useState({
+    submittedBy: "",
+    email: "",
+    phone: "",
+    licenseNumber: "",
+    vehicleInfo: "",
+    emergencyContact: "",
+    emergencyPhone: "",
+    agreementAccepted: false
   });
 
   // Mock data for drivers
