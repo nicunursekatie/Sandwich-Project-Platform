@@ -42,47 +42,12 @@ export default function MeetingAgenda() {
   });
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
-  // Mock data for now - will integrate with backend
   const { data: agendaItems = [], isLoading: itemsLoading } = useQuery({
-    queryKey: ['/api/agenda-items'],
-    queryFn: () => Promise.resolve([
-      {
-        id: 1,
-        submittedBy: "Sarah Chen",
-        title: "Q1 Budget Review",
-        description: "Review quarterly budget allocations and discuss any adjustments needed for Q2.",
-        status: "approved" as const,
-        submittedAt: "2024-01-15T10:30:00Z"
-      },
-      {
-        id: 2,
-        submittedBy: "Mike Rodriguez",
-        title: "Team Building Event",
-        description: "Proposal for team building activities next month.",
-        status: "pending" as const,
-        submittedAt: "2024-01-16T14:20:00Z"
-      },
-      {
-        id: 3,
-        submittedBy: "Jessica Park",
-        title: "Remote Work Policy Update",
-        description: "Updates to remote work guidelines based on recent feedback.",
-        status: "rejected" as const,
-        submittedAt: "2024-01-17T09:15:00Z"
-      }
-    ])
+    queryKey: ['/api/agenda-items']
   });
 
   const { data: currentMeeting } = useQuery({
-    queryKey: ['/api/current-meeting'],
-    queryFn: () => Promise.resolve({
-      id: 1,
-      title: "Weekly Team Meeting",
-      date: "2024-01-20",
-      time: "14:00",
-      finalAgenda: "",
-      status: "planning" as const
-    })
+    queryKey: ['/api/current-meeting']
   });
 
   const submitItemMutation = useMutation({

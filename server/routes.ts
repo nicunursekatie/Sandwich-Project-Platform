@@ -261,6 +261,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get current meeting
+  app.get("/api/current-meeting", async (req, res) => {
+    try {
+      const meeting = await storage.getCurrentMeeting();
+      res.json(meeting);
+    } catch (error) {
+      logger.error("Failed to get current meeting", error);
+      res.status(500).json({ message: "Failed to get current meeting" });
+    }
+  });
+
+  // Get agenda items
+  app.get("/api/agenda-items", async (req, res) => {
+    try {
+      const items = await storage.getAllAgendaItems();
+      res.json(items);
+    } catch (error) {
+      logger.error("Failed to get agenda items", error);
+      res.status(500).json({ message: "Failed to get agenda items" });
+    }
+  });
+
   app.post("/api/meetings/:id/upload-agenda", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
