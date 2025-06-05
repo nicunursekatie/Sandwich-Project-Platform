@@ -206,10 +206,13 @@ export default function SandwichCollectionForm() {
                       Manage
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
+                  <DialogContent className="sm:max-w-md" aria-describedby="manage-hosts-description">
                     <DialogHeader>
                       <DialogTitle>Manage Hosts</DialogTitle>
                     </DialogHeader>
+                    <p id="manage-hosts-description" className="text-sm text-slate-600 mb-4">
+                      Add, edit, or remove host names from the dropdown list.
+                    </p>
                     <div className="space-y-4">
                       {/* Add New Host */}
                       <div className="flex gap-2">

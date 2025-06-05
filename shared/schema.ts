@@ -63,6 +63,25 @@ export const driveLinks = pgTable("drive_links", {
   iconColor: text("icon_color").notNull(),
 });
 
+export const agendaItems = pgTable("agenda_items", {
+  id: serial("id").primaryKey(),
+  submittedBy: text("submitted_by").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  status: text("status").notNull().default("pending"), // "pending", "approved", "rejected"
+  submittedAt: timestamp("submitted_at").defaultNow().notNull(),
+});
+
+export const meetings = pgTable("meetings", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  date: text("date").notNull(),
+  time: text("time").notNull(),
+  finalAgenda: text("final_agenda"),
+  status: text("status").notNull().default("planning"), // "planning", "agenda_set", "completed"
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertProjectSchema = createInsertSchema(projects).omit({ id: true });

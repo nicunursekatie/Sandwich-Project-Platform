@@ -1,0 +1,378 @@
+import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { Calendar, Clock, User, Plus, CheckCircle, XCircle, Edit3, MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+
+interface AgendaItem {
+  id: number;
+  submittedBy: string;
+  title: string;
+  description: string;
+  status: "pending" | "approved" | "rejected";
+  submittedAt: string;
+}
+
+interface Meeting {
+  id: number;
+  title: string;
+  date: string;
+  time: string;
+  finalAgenda: string;
+  status: "planning" | "agenda_set" | "completed";
+}
+
+export default function MeetingAgenda() {
+  const { toast } = useToast();
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const [isAgendaModalOpen, setIsAgendaModalOpen] = useState(false);
+  const [newItem, setNewItem] = useState({
+    submittedBy: "",
+    title: "",
+    description: ""
+  });
+  const [finalAgenda, setFinalAgenda] = useState("");
+
+  // Mock data for now - will integrate with backend
+  const { data: agendaItems = [], isLoading: itemsLoading } = useQuery({
+    queryKey: ['/api/agenda-items'],
+    queryFn: () => Promise.resolve([
+      {
+        id: 1,
+        submittedBy: "Sarah Chen",
+        title: "Q1 Budget Review",
+        description: "Review quarterly budget allocations and discuss any adjustments needed for Q2.",
+        status: "approved" as const,
+        submittedAt: "2024-01-15T10:30:00Z"
+      },
+      {
+        id: 2,
+        submittedBy: "Mike Rodriguez",
+        title: "Team Building Event",
+        description: "Proposal for team building activities next month.",
+        status: "pending" as const,
+        submittedAt: "2024-01-16T14:20:00Z"
+      },
+      {
+        id: 3,
+        submittedBy: "Jessica Park",
+        title: "Remote Work Policy Update",
+        description: "Updates to remote work guidelines based on recent feedback.",
+        status: "rejected" as const,
+        submittedAt: "2024-01-17T09:15:00Z"
+      }
+    ])
+  });
+
+  const { data: currentMeeting } = useQuery({
+    queryKey: ['/api/current-meeting'],
+    queryFn: () => Promise.resolve({
+      id: 1,
+      title: "Weekly Team Meeting",
+      date: "2024-01-20",
+      time: "14:00",
+      finalAgenda: "",
+      status: "planning" as const
+    })
+  });
+
+  const submitItemMutation = useMutation({
+    mutationFn: async (data: typeof newItem) => {
+      return apiRequest('/api/agenda-items', 'POST', data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/agenda-items'] });
+      setNewItem({ submittedBy: "", title: "", description: "" });
+      setIsSubmitModalOpen(false);
+      toast({
+        title: "Agenda item submitted",
+        description: "Your agenda item has been submitted for review.",
+      });
+    }
+  });
+
+  const updateItemStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: number; status: "approved" | "rejected" }) => {
+      return apiRequest(`/api/agenda-items/${id}`, 'PATCH', { status });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/agenda-items'] });
+      toast({
+        title: "Status updated",
+        description: "Agenda item status has been updated.",
+      });
+    }
+  });
+
+  const publishAgendaMutation = useMutation({
+    mutationFn: async (agenda: string) => {
+      return apiRequest('/api/meetings/1/agenda', 'POST', { finalAgenda: agenda });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/current-meeting'] });
+      setIsAgendaModalOpen(false);
+      toast({
+        title: "Agenda published",
+        description: "The final meeting agenda has been published.",
+      });
+    }
+  });
+
+  const handleSubmitItem = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newItem.submittedBy || !newItem.title) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in your name and agenda item title.",
+        variant: "destructive"
+      });
+      return;
+    }
+    submitItemMutation.mutate(newItem);
+  };
+
+  const handlePublishAgenda = () => {
+    const approvedItems = agendaItems.filter(item => item.status === "approved");
+    const agendaText = approvedItems.map((item, index) => 
+      `${index + 1}. ${item.title}\n   ${item.description}`
+    ).join('\n\n');
+    
+    setFinalAgenda(agendaText);
+    setIsAgendaModalOpen(true);
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "approved":
+        return <Badge variant="default" className="bg-green-100 text-green-800">Approved</Badge>;
+      case "rejected":
+        return <Badge variant="destructive">Rejected</Badge>;
+      default:
+        return <Badge variant="secondary">Pending</Badge>;
+    }
+  };
+
+  if (itemsLoading) {
+    return <div className="p-6">Loading...</div>;
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
+        <div className="px-6 py-4 border-b border-slate-200">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center">
+            <Calendar className="text-blue-500 mr-3 w-6 h-6" />
+            Meetings
+          </h1>
+        </div>
+        
+        {currentMeeting && (
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-slate-900">{currentMeeting.title}</h2>
+                <div className="flex items-center gap-4 text-sm text-slate-600 mt-1">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    {new Date(currentMeeting.date).toLocaleDateString()}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    {currentMeeting.time}
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Dialog open={isSubmitModalOpen} onOpenChange={setIsSubmitModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="flex items-center gap-2">
+                      <Plus className="w-4 h-4" />
+                      Submit Agenda Item
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent aria-describedby="submit-agenda-description">
+                    <DialogHeader>
+                      <DialogTitle>Submit Agenda Item</DialogTitle>
+                    </DialogHeader>
+                    <p id="submit-agenda-description" className="text-sm text-slate-600 mb-4">
+                      Submit an item to be considered for the meeting agenda.
+                    </p>
+                    <form onSubmit={handleSubmitItem} className="space-y-4">
+                      <div>
+                        <Label htmlFor="submitted-by">Your Name *</Label>
+                        <Input
+                          id="submitted-by"
+                          value={newItem.submittedBy}
+                          onChange={(e) => setNewItem({ ...newItem, submittedBy: e.target.value })}
+                          placeholder="Enter your name"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="item-title">Agenda Item Title *</Label>
+                        <Input
+                          id="item-title"
+                          value={newItem.title}
+                          onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
+                          placeholder="Brief title for your agenda item"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="item-description">Description</Label>
+                        <Textarea
+                          id="item-description"
+                          value={newItem.description}
+                          onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+                          placeholder="Provide more details about this agenda item"
+                          rows={3}
+                        />
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button type="button" variant="outline" onClick={() => setIsSubmitModalOpen(false)}>
+                          Cancel
+                        </Button>
+                        <Button type="submit" disabled={submitItemMutation.isPending}>
+                          {submitItemMutation.isPending ? "Submitting..." : "Submit Item"}
+                        </Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+                
+                <Button variant="outline" onClick={handlePublishAgenda}>
+                  <Edit3 className="w-4 h-4 mr-2" />
+                  Create Final Agenda
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Submitted Items for Review */}
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
+        <div className="px-6 py-4 border-b border-slate-200">
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center">
+            <MessageSquare className="text-orange-500 mr-2 w-5 h-5" />
+            Submitted Agenda Items
+          </h2>
+        </div>
+        <div className="p-6">
+          {agendaItems.length === 0 ? (
+            <div className="text-center py-8 text-slate-500">
+              No agenda items submitted yet. Click "Submit Agenda Item" to get started.
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {agendaItems.map((item) => (
+                <Card key={item.id} className="border border-slate-200">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-base">{item.title}</CardTitle>
+                        <div className="flex items-center gap-2 text-sm text-slate-600 mt-1">
+                          <User className="w-3 h-3" />
+                          <span>{item.submittedBy}</span>
+                          <span>•</span>
+                          <span>{new Date(item.submittedAt).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {getStatusBadge(item.status)}
+                        {item.status === "pending" && (
+                          <div className="flex gap-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => updateItemStatusMutation.mutate({ id: item.id, status: "approved" })}
+                              className="text-green-600 hover:text-green-700"
+                            >
+                              <CheckCircle className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => updateItemStatusMutation.mutate({ id: item.id, status: "rejected" })}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <XCircle className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </CardHeader>
+                  {item.description && (
+                    <CardContent className="pt-0">
+                      <p className="text-sm text-slate-600">{item.description}</p>
+                    </CardContent>
+                  )}
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Final Agenda */}
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
+        <div className="px-6 py-4 border-b border-slate-200">
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center">
+            <Edit3 className="text-green-500 mr-2 w-5 h-5" />
+            Final Meeting Agenda
+          </h2>
+        </div>
+        <div className="p-6">
+          {currentMeeting?.finalAgenda ? (
+            <div className="bg-slate-50 p-4 rounded-lg">
+              <pre className="whitespace-pre-wrap text-sm text-slate-700">{currentMeeting.finalAgenda}</pre>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-slate-500">
+              No final agenda published yet. Review submitted items and create the final agenda.
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Publish Agenda Modal */}
+      <Dialog open={isAgendaModalOpen} onOpenChange={setIsAgendaModalOpen}>
+        <DialogContent className="sm:max-w-2xl" aria-describedby="publish-agenda-description">
+          <DialogHeader>
+            <DialogTitle>Create Final Agenda</DialogTitle>
+          </DialogHeader>
+          <p id="publish-agenda-description" className="text-sm text-slate-600 mb-4">
+            Review and edit the final meeting agenda before publishing.
+          </p>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="final-agenda">Meeting Agenda</Label>
+              <Textarea
+                id="final-agenda"
+                value={finalAgenda}
+                onChange={(e) => setFinalAgenda(e.target.value)}
+                rows={12}
+                className="font-mono text-sm"
+              />
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setIsAgendaModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={() => publishAgendaMutation.mutate(finalAgenda)} disabled={publishAgendaMutation.isPending}>
+                {publishAgendaMutation.isPending ? "Publishing..." : "Publish Agenda"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
