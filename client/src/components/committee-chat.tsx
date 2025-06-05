@@ -88,10 +88,16 @@ export default function CommitteeChat() {
 
   const deleteMessageMutation = useMutation({
     mutationFn: async (messageId: number) => {
-      return apiRequest(`/api/messages/${messageId}`, 'DELETE');
+      const response = await apiRequest(`/api/messages/${messageId}`, 'DELETE');
+      if (!response.ok) {
+        throw new Error('Failed to delete message');
+      }
+      return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/messages', selectedCommittee] });
+      // Invalidate all message queries to ensure fresh data
+      queryClient.invalidateQueries({ queryKey: ['/api/messages'] });
+      queryClient.refetchQueries({ queryKey: ['/api/messages', selectedCommittee] });
       toast({
         title: "Message deleted",
         description: "The message has been removed from the chat.",

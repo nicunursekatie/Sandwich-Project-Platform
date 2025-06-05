@@ -80,12 +80,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/messages/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      logger.info(`Attempting to delete message with ID: ${id}`);
+      
+      // Check if message exists before deletion
+      const allMessages = await storage.getAllMessages();
+      const messageExists = allMessages.find(m => m.id === id);
+      logger.info(`Message exists before deletion: ${!!messageExists}`);
+      
       const deleted = await storage.deleteMessage(id);
+      logger.info(`Delete operation result: ${deleted}`);
+      
+      // Check if message still exists after deletion
+      const allMessagesAfter = await storage.getAllMessages();
+      const messageExistsAfter = allMessagesAfter.find(m => m.id === id);
+      logger.info(`Message exists after deletion: ${!!messageExistsAfter}`);
+      
       if (!deleted) {
         return res.status(404).json({ message: "Message not found" });
       }
       res.status(204).send();
     } catch (error) {
+      logger.error("Failed to delete message", error);
       res.status(500).json({ message: "Failed to delete message" });
     }
   });
