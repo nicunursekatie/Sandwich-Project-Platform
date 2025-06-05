@@ -150,6 +150,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete("/api/sandwich-collections/bulk", async (req, res) => {
+    try {
+      const collections = await storage.getAllSandwichCollections();
+      const collectionsToDelete = collections.filter(collection => {
+        const hostName = collection.hostName;
+        return hostName.startsWith('Loc ') || 
+               /^Group [1-8]/.test(hostName);
+      });
+
+      let deletedCount = 0;
+      // Delete in reverse order by ID to maintain consistency
+      const sortedCollections = collectionsToDelete.sort((a, b) => b.id - a.id);
+      
+      for (const collection of sortedCollections) {
+        try {
+          const deleted = await storage.deleteSandwichCollection(collection.id);
+          if (deleted) {
+            deletedCount++;
+          }
+        } catch (error) {
+          console.error(`Failed to delete collection ${collection.id}:`, error);
+        }
+      }
+
+      res.json({ 
+        message: `Successfully deleted ${deletedCount} duplicate entries`,
+        deletedCount,
+        patterns: ['Loc *', 'Group 1-8']
+      });
+    } catch (error) {
+      logger.error("Failed to bulk delete sandwich collections", error);
+      res.status(500).json({ message: "Failed to delete duplicate entries" });
+    }
+  });
+
   app.delete("/api/sandwich-collections/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
