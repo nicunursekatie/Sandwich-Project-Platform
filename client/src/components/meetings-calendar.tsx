@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Calendar, Clock, MapPin, Users, Plus, Filter, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, Clock, MapPin, Users, Plus, Filter, Upload, FileText, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,6 +36,9 @@ export default function MeetingsCalendar() {
   const { toast } = useToast();
   const [selectedType, setSelectedType] = useState<string>("all");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [newMeeting, setNewMeeting] = useState({
     title: "",
     type: "",
@@ -65,6 +68,24 @@ export default function MeetingsCalendar() {
     }
   });
 
+  const uploadAgendaMutation = useMutation({
+    mutationFn: async ({ meetingId, file }: { meetingId: number; file: File }) => {
+      const formData = new FormData();
+      formData.append('agenda', file);
+      return apiRequest(`/api/meetings/${meetingId}/upload-agenda`, 'POST', formData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/meetings'] });
+      setIsUploadModalOpen(false);
+      setUploadedFile(null);
+      setSelectedMeeting(null);
+      toast({
+        title: "Agenda uploaded",
+        description: "The meeting agenda has been uploaded successfully.",
+      });
+    }
+  });
+
   const handleCreateMeeting = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMeeting.title || !newMeeting.type || !newMeeting.date || !newMeeting.time) {
@@ -78,6 +99,19 @@ export default function MeetingsCalendar() {
     createMeetingMutation.mutate(newMeeting);
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setUploadedFile(file);
+    }
+  };
+
+  const handleUploadAgenda = () => {
+    if (uploadedFile && selectedMeeting) {
+      uploadAgendaMutation.mutate({ meetingId: selectedMeeting.id, file: uploadedFile });
+    }
+  };
+
   const getTypeConfig = (type: string) => {
     return meetingTypes.find(t => t.value === type) || { value: type, label: type, color: "bg-gray-100 text-gray-800" };
   };
@@ -86,14 +120,17 @@ export default function MeetingsCalendar() {
     ? allMeetings 
     : allMeetings.filter((meeting: Meeting) => meeting.type === selectedType);
 
-  const groupedMeetings = filteredMeetings.reduce((groups: { [key: string]: Meeting[] }, meeting: Meeting) => {
-    const date = new Date(meeting.date).toDateString();
-    if (!groups[date]) {
-      groups[date] = [];
-    }
-    groups[date].push(meeting);
-    return groups;
-  }, {});
+  const upcomingMeetings = filteredMeetings.filter((meeting: Meeting) => 
+    new Date(meeting.date) >= new Date()
+  ).sort((a: Meeting, b: Meeting) => 
+    new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+
+  const pastMeetings = filteredMeetings.filter((meeting: Meeting) => 
+    new Date(meeting.date) < new Date()
+  ).sort((a: Meeting, b: Meeting) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 
   if (isLoading) {
     return (
@@ -109,7 +146,7 @@ export default function MeetingsCalendar() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Meetings Calendar</h1>
-          <p className="text-slate-600">Manage all your team meetings and committees</p>
+          <p className="text-slate-600">Schedule meetings and upload agendas for your team</p>
         </div>
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
           <DialogTrigger asChild>
@@ -230,16 +267,17 @@ export default function MeetingsCalendar() {
         </div>
       </div>
 
-      {/* Meetings List */}
-      <div className="space-y-6">
-        {Object.keys(groupedMeetings).length === 0 ? (
-          <div className="text-center py-12">
+      {/* Upcoming Meetings */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold text-slate-900">Upcoming Meetings</h2>
+        {upcomingMeetings.length === 0 ? (
+          <div className="text-center py-8">
             <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-2">No meetings scheduled</h3>
+            <h3 className="text-lg font-medium text-slate-900 mb-2">No upcoming meetings</h3>
             <p className="text-slate-500 mb-4">
               {selectedType === "all" 
-                ? "No meetings found. Schedule your first meeting to get started."
-                : `No ${getTypeConfig(selectedType).label.toLowerCase()} meetings scheduled.`
+                ? "No meetings scheduled. Schedule your first meeting to get started."
+                : `No upcoming ${getTypeConfig(selectedType).label.toLowerCase()} meetings scheduled.`
               }
             </p>
             <Button onClick={() => setIsCreateModalOpen(true)}>
@@ -248,71 +286,176 @@ export default function MeetingsCalendar() {
             </Button>
           </div>
         ) : (
-          Object.entries(groupedMeetings)
-            .sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime())
-            .map(([date, meetings]) => (
-              <div key={date}>
-                <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-slate-500" />
-                  {new Date(date).toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
-                </h3>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {meetings.map((meeting: Meeting) => {
-                    const typeConfig = getTypeConfig(meeting.type);
-                    return (
-                      <Card key={meeting.id} className="border border-slate-200 hover:shadow-md transition-shadow">
-                        <CardHeader className="pb-3">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <CardTitle className="text-base font-semibold text-slate-900 mb-1">
-                                {meeting.title}
-                              </CardTitle>
-                              <Badge className={`${typeConfig.color} text-xs`}>
-                                {typeConfig.label}
-                              </Badge>
-                            </div>
-                            <Badge variant={meeting.status === "completed" ? "default" : meeting.status === "agenda_set" ? "secondary" : "outline"}>
-                              {meeting.status.replace("_", " ")}
-                            </Badge>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <div className="space-y-2 text-sm text-slate-600">
-                            <div className="flex items-center gap-2">
-                              <Clock className="w-4 h-4" />
-                              {meeting.time}
-                            </div>
-                            {meeting.location && (
-                              <div className="flex items-center gap-2">
-                                <MapPin className="w-4 h-4" />
-                                {meeting.location}
-                              </div>
-                            )}
-                            {meeting.description && (
-                              <p className="text-slate-600 text-sm mt-2 line-clamp-2">
-                                {meeting.description}
-                              </p>
-                            )}
-                            {meeting.finalAgenda && (
-                              <div className="bg-green-50 border border-green-200 rounded-lg p-2 mt-2">
-                                <p className="text-green-800 text-xs font-medium">Final Agenda Available</p>
-                              </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              </div>
-            ))
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {upcomingMeetings.map((meeting: Meeting) => {
+              const typeConfig = getTypeConfig(meeting.type);
+              return (
+                <Card key={meeting.id} className="border border-slate-200 hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-base font-semibold text-slate-900 mb-1">
+                          {meeting.title}
+                        </CardTitle>
+                        <Badge className={`${typeConfig.color} text-xs mb-2`}>
+                          {typeConfig.label}
+                        </Badge>
+                      </div>
+                      <Badge variant={meeting.status === "completed" ? "default" : meeting.status === "agenda_set" ? "secondary" : "outline"}>
+                        {meeting.status.replace("_", " ")}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="space-y-2 text-sm text-slate-600">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        {new Date(meeting.date).toLocaleDateString()}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        {meeting.time}
+                      </div>
+                      {meeting.location && (
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-4 h-4" />
+                          {meeting.location}
+                        </div>
+                      )}
+                      {meeting.description && (
+                        <p className="text-slate-600 text-sm mt-2 line-clamp-2">
+                          {meeting.description}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-2 pt-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedMeeting(meeting);
+                            setIsUploadModalOpen(true);
+                          }}
+                          className="flex items-center gap-1"
+                        >
+                          <Upload className="w-3 h-3" />
+                          Upload Agenda
+                        </Button>
+                        {meeting.finalAgenda && (
+                          <Badge variant="secondary" className="text-xs">
+                            <FileText className="w-3 h-3 mr-1" />
+                            Agenda Ready
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         )}
       </div>
+
+      {/* Past Meetings */}
+      {pastMeetings.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-slate-900">Past Meetings</h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {pastMeetings.slice(0, 6).map((meeting: Meeting) => {
+              const typeConfig = getTypeConfig(meeting.type);
+              return (
+                <Card key={meeting.id} className="border border-slate-200 opacity-75">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-base font-semibold text-slate-900 mb-1">
+                          {meeting.title}
+                        </CardTitle>
+                        <Badge className={`${typeConfig.color} text-xs`}>
+                          {typeConfig.label}
+                        </Badge>
+                      </div>
+                      <Badge variant="secondary">Completed</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="space-y-2 text-sm text-slate-600">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        {new Date(meeting.date).toLocaleDateString()}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        {meeting.time}
+                      </div>
+                      {meeting.finalAgenda && (
+                        <Badge variant="outline" className="text-xs mt-2">
+                          <FileText className="w-3 h-3 mr-1" />
+                          Agenda Available
+                        </Badge>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Upload Agenda Modal */}
+      <Dialog open={isUploadModalOpen} onOpenChange={setIsUploadModalOpen}>
+        <DialogContent className="sm:max-w-md" aria-describedby="upload-agenda-description">
+          <DialogHeader>
+            <DialogTitle>Upload Meeting Agenda</DialogTitle>
+          </DialogHeader>
+          <p id="upload-agenda-description" className="text-sm text-slate-600 mb-4">
+            Upload the agenda file for {selectedMeeting?.title}.
+          </p>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="agenda-upload">Agenda File</Label>
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
+                <div className="space-y-1 text-center">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                  <div className="flex text-sm text-gray-600">
+                    <label
+                      htmlFor="agenda-upload"
+                      className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"
+                    >
+                      <span>Upload agenda file</span>
+                      <input
+                        id="agenda-upload"
+                        name="agenda-upload"
+                        type="file"
+                        className="sr-only"
+                        accept=".pdf,.doc,.docx,.txt"
+                        onChange={handleFileChange}
+                      />
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
+                  </div>
+                  <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT up to 10MB</p>
+                </div>
+              </div>
+              {uploadedFile && (
+                <p className="mt-2 text-sm text-green-600">Selected: {uploadedFile.name}</p>
+              )}
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setIsUploadModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleUploadAgenda} 
+                disabled={!uploadedFile || uploadAgendaMutation.isPending}
+              >
+                {uploadAgendaMutation.isPending ? "Uploading..." : "Upload Agenda"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
