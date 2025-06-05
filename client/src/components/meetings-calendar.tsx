@@ -46,7 +46,8 @@ export default function MeetingsCalendar() {
   });
 
   const { data: allMeetings = [], isLoading } = useQuery({
-    queryKey: ['/api/meetings']
+    queryKey: ['/api/meetings'],
+    queryFn: () => fetch('/api/meetings').then(res => res.json())
   });
 
   const createMeetingMutation = useMutation({
