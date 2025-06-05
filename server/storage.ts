@@ -404,6 +404,63 @@ export class MemStorage implements IStorage {
     this.driveLinks.set(id, link);
     return link;
   }
+
+  // Agenda Items
+  async getAllAgendaItems(): Promise<AgendaItem[]> {
+    return Array.from(this.agendaItems.values()).sort((a, b) => 
+      new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+    );
+  }
+
+  async createAgendaItem(insertItem: InsertAgendaItem): Promise<AgendaItem> {
+    const id = this.currentIds.agendaItem++;
+    const item: AgendaItem = { 
+      ...insertItem, 
+      id,
+      submittedAt: new Date()
+    };
+    this.agendaItems.set(id, item);
+    return item;
+  }
+
+  async updateAgendaItemStatus(id: number, status: string): Promise<AgendaItem | undefined> {
+    const item = this.agendaItems.get(id);
+    if (!item) return undefined;
+    
+    const updated: AgendaItem = { ...item, status };
+    this.agendaItems.set(id, updated);
+    return updated;
+  }
+
+  // Meetings
+  async getCurrentMeeting(): Promise<Meeting | undefined> {
+    const meetings = Array.from(this.meetings.values());
+    return meetings.find(m => m.status === "planning") || meetings[0];
+  }
+
+  async createMeeting(insertMeeting: InsertMeeting): Promise<Meeting> {
+    const id = this.currentIds.meeting++;
+    const meeting: Meeting = { 
+      ...insertMeeting, 
+      id,
+      createdAt: new Date()
+    };
+    this.meetings.set(id, meeting);
+    return meeting;
+  }
+
+  async updateMeetingAgenda(id: number, agenda: string): Promise<Meeting | undefined> {
+    const meeting = this.meetings.get(id);
+    if (!meeting) return undefined;
+    
+    const updated: Meeting = { 
+      ...meeting, 
+      finalAgenda: agenda,
+      status: "agenda_set"
+    };
+    this.meetings.set(id, updated);
+    return updated;
+  }
 }
 
 import { GoogleSheetsStorage } from './google-sheets';

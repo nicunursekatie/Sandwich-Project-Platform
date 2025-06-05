@@ -223,6 +223,48 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.createDriveLink(link)
     );
   }
+
+  async getAllAgendaItems() {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getAllAgendaItems(),
+      () => this.fallbackStorage.getAllAgendaItems()
+    );
+  }
+
+  async createAgendaItem(item: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createAgendaItem(item),
+      () => this.fallbackStorage.createAgendaItem(item)
+    );
+  }
+
+  async updateAgendaItemStatus(id: number, status: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateAgendaItemStatus(id, status),
+      () => this.fallbackStorage.updateAgendaItemStatus(id, status)
+    );
+  }
+
+  async getCurrentMeeting() {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getCurrentMeeting(),
+      () => this.fallbackStorage.getCurrentMeeting()
+    );
+  }
+
+  async createMeeting(meeting: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createMeeting(meeting),
+      () => this.fallbackStorage.createMeeting(meeting)
+    );
+  }
+
+  async updateMeetingAgenda(id: number, agenda: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateMeetingAgenda(id, agenda),
+      () => this.fallbackStorage.updateMeetingAgenda(id, agenda)
+    );
+  }
 }
 
 export const storage = new StorageWrapper();

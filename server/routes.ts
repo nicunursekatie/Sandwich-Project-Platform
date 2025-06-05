@@ -1,7 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { z } from "zod";
 import { storage } from "./storage-wrapper";
-import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema } from "@shared/schema";
+import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Projects
@@ -154,6 +155,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(links);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch drive links" });
+    }
+  });
+
+  // Agenda Items
+  app.get("/api/agenda-items", async (req, res) => {
+    try {
+      const items = await storage.getAllAgendaItems();
+      res.json(items);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch agenda items" });
+    }
+  });
+
+  app.post("/api/agenda-items", async (req, res) => {
+    try {
+      const insertItemSchema = insertAgendaItemSchema;
+      const itemData = insertItemSchema.parse(req.body);
+      const item = await storage.createAgendaItem(itemData);
+      res.status(201).json(item);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid agenda item data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Failed to create agenda item" });
+      }
+    }
+  });
+
+  app.patch("/api/agenda-items/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body;
+      
+      if (!["pending", "approved", "rejected"].includes(status)) {
+        res.status(400).json({ message: "Invalid status" });
+        return;
+      }
+      
+      const updatedItem = await storage.updateAgendaItemStatus(id, status);
+      if (!updatedItem) {
+        res.status(404).json({ message: "Agenda item not found" });
+        return;
+      }
+      
+      res.json(updatedItem);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update agenda item" });
+    }
+  });
+
+  // Meetings
+  app.get("/api/current-meeting", async (req, res) => {
+    try {
+      const meeting = await storage.getCurrentMeeting();
+      res.json(meeting);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch current meeting" });
+    }
+  });
+
+  app.post("/api/meetings", async (req, res) => {
+    try {
+      const insertMeetingSchema = insertMeetingSchema;
+      const meetingData = insertMeetingSchema.parse(req.body);
+      const meeting = await storage.createMeeting(meetingData);
+      res.status(201).json(meeting);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid meeting data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Failed to create meeting" });
+      }
+    }
+  });
+
+  app.post("/api/meetings/:id/agenda", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { finalAgenda } = req.body;
+      
+      const updatedMeeting = await storage.updateMeetingAgenda(id, finalAgenda);
+      if (!updatedMeeting) {
+        res.status(404).json({ message: "Meeting not found" });
+        return;
+      }
+      
+      res.json(updatedMeeting);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update meeting agenda" });
     }
   });
 
