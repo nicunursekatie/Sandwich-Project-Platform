@@ -87,6 +87,53 @@ export default function SandwichCollectionForm() {
     ));
   };
 
+  // Host management functions
+  const addNewHost = () => {
+    if (newHostName.trim() && !hostOptions.includes(newHostName.trim())) {
+      setHostOptions([...hostOptions.filter(h => h !== "Other"), newHostName.trim(), "Other"]);
+      setNewHostName("");
+      toast({
+        title: "Host added",
+        description: "New host has been added to the list.",
+      });
+    }
+  };
+
+  const startEditingHost = (index: number) => {
+    setEditingHostIndex(index);
+    setEditingHostValue(hostOptions[index]);
+  };
+
+  const saveEditingHost = () => {
+    if (editingHostIndex !== null && editingHostValue.trim()) {
+      const newOptions = [...hostOptions];
+      newOptions[editingHostIndex] = editingHostValue.trim();
+      setHostOptions(newOptions);
+      setEditingHostIndex(null);
+      setEditingHostValue("");
+      toast({
+        title: "Host updated",
+        description: "Host name has been updated.",
+      });
+    }
+  };
+
+  const cancelEditingHost = () => {
+    setEditingHostIndex(null);
+    setEditingHostValue("");
+  };
+
+  const deleteHost = (index: number) => {
+    if (hostOptions[index] !== "Other") {
+      const newOptions = hostOptions.filter((_, i) => i !== index);
+      setHostOptions(newOptions);
+      toast({
+        title: "Host deleted",
+        description: "Host has been removed from the list.",
+      });
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -148,9 +195,85 @@ export default function SandwichCollectionForm() {
             </div>
             
             <div>
-              <Label htmlFor="host-name" className="block text-sm font-medium text-slate-700 mb-1">
-                Host Name *
-              </Label>
+              <div className="flex items-center justify-between mb-1">
+                <Label htmlFor="host-name" className="block text-sm font-medium text-slate-700">
+                  Host Name *
+                </Label>
+                <Dialog open={isHostManagerOpen} onOpenChange={setIsHostManagerOpen}>
+                  <DialogTrigger asChild>
+                    <Button type="button" variant="outline" size="sm" className="h-7 px-2">
+                      <Settings className="w-3 h-3 mr-1" />
+                      Manage
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Manage Hosts</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      {/* Add New Host */}
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Add new host name"
+                          value={newHostName}
+                          onChange={(e) => setNewHostName(e.target.value)}
+                          onKeyPress={(e) => e.key === 'Enter' && addNewHost()}
+                        />
+                        <Button onClick={addNewHost} disabled={!newHostName.trim()}>
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      
+                      {/* Host List */}
+                      <div className="space-y-2 max-h-60 overflow-y-auto">
+                        {hostOptions.map((host, index) => (
+                          <div key={index} className="flex items-center gap-2 p-2 bg-slate-50 rounded">
+                            {editingHostIndex === index ? (
+                              <>
+                                <Input
+                                  value={editingHostValue}
+                                  onChange={(e) => setEditingHostValue(e.target.value)}
+                                  onKeyPress={(e) => e.key === 'Enter' && saveEditingHost()}
+                                  className="flex-1"
+                                />
+                                <Button size="sm" onClick={saveEditingHost}>
+                                  <Settings className="w-3 h-3" />
+                                </Button>
+                                <Button size="sm" variant="outline" onClick={cancelEditingHost}>
+                                  <X className="w-3 h-3" />
+                                </Button>
+                              </>
+                            ) : (
+                              <>
+                                <span className="flex-1 text-sm">{host}</span>
+                                {host !== "Other" && (
+                                  <>
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline" 
+                                      onClick={() => startEditingHost(index)}
+                                    >
+                                      <Edit className="w-3 h-3" />
+                                    </Button>
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline" 
+                                      onClick={() => deleteHost(index)}
+                                      className="text-red-600 hover:text-red-700"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </Button>
+                                  </>
+                                )}
+                              </>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
               <Select value={hostName} onValueChange={setHostName}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select host" />
