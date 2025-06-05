@@ -263,6 +263,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Driver agreement submission route (secure, private)
+  app.post("/api/driver-agreements", async (req, res) => {
+    try {
+      const validatedData = insertDriverAgreementSchema.parse(req.body);
+      
+      // Store in database
+      const agreement = await storage.createDriverAgreement(validatedData);
+      
+      // Send email notification
+      const { sendDriverAgreementNotification } = await import('./sendgrid');
+      const emailSent = await sendDriverAgreementNotification(agreement);
+      
+      if (!emailSent) {
+        console.warn("Failed to send email notification for driver agreement:", agreement.id);
+      }
+      
+      // Return success without sensitive data
+      res.json({ 
+        success: true, 
+        message: "Driver agreement submitted successfully. You will be contacted soon.",
+        id: agreement.id 
+      });
+    } catch (error: any) {
+      console.error("Error submitting driver agreement:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

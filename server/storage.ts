@@ -100,6 +100,7 @@ export class MemStorage implements IStorage {
     this.driveLinks = new Map();
     this.agendaItems = new Map();
     this.meetings = new Map();
+    this.driverAgreements = new Map();
     this.currentIds = {
       user: 1,
       project: 1,
@@ -110,6 +111,7 @@ export class MemStorage implements IStorage {
       driveLink: 1,
       agendaItem: 1,
       meeting: 1,
+      driverAgreement: 1,
     };
     
     this.seedData();
@@ -476,6 +478,17 @@ export class MemStorage implements IStorage {
     };
     this.meetings.set(id, updated);
     return updated;
+  }
+
+  async createDriverAgreement(insertAgreement: InsertDriverAgreement): Promise<DriverAgreement> {
+    const id = this.currentIds.driverAgreement++;
+    const agreement: DriverAgreement = { 
+      ...insertAgreement, 
+      id,
+      submittedAt: new Date()
+    };
+    this.driverAgreements.set(id, agreement);
+    return agreement;
   }
 }
 
