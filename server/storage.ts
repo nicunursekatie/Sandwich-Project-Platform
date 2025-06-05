@@ -1,12 +1,14 @@
 import { 
-  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections,
+  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings,
   type User, type InsertUser, 
   type Project, type InsertProject,
   type Message, type InsertMessage,
   type WeeklyReport, type InsertWeeklyReport,
   type SandwichCollection, type InsertSandwichCollection,
   type MeetingMinutes, type InsertMeetingMinutes,
-  type DriveLink, type InsertDriveLink
+  type DriveLink, type InsertDriveLink,
+  type AgendaItem, type InsertAgendaItem,
+  type Meeting, type InsertMeeting
 } from "@shared/schema";
 
 export interface IStorage {
@@ -47,6 +49,16 @@ export interface IStorage {
   // Drive Links
   getAllDriveLinks(): Promise<DriveLink[]>;
   createDriveLink(link: InsertDriveLink): Promise<DriveLink>;
+  
+  // Agenda Items
+  getAllAgendaItems(): Promise<AgendaItem[]>;
+  createAgendaItem(item: InsertAgendaItem): Promise<AgendaItem>;
+  updateAgendaItemStatus(id: number, status: string): Promise<AgendaItem | undefined>;
+  
+  // Meetings
+  getCurrentMeeting(): Promise<Meeting | undefined>;
+  createMeeting(meeting: InsertMeeting): Promise<Meeting>;
+  updateMeetingAgenda(id: number, agenda: string): Promise<Meeting | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -57,6 +69,8 @@ export class MemStorage implements IStorage {
   private sandwichCollections: Map<number, SandwichCollection>;
   private meetingMinutes: Map<number, MeetingMinutes>;
   private driveLinks: Map<number, DriveLink>;
+  private agendaItems: Map<number, AgendaItem>;
+  private meetings: Map<number, Meeting>;
   private currentIds: {
     user: number;
     project: number;
@@ -65,6 +79,8 @@ export class MemStorage implements IStorage {
     sandwichCollection: number;
     meetingMinutes: number;
     driveLink: number;
+    agendaItem: number;
+    meeting: number;
   };
 
   constructor() {
@@ -75,6 +91,8 @@ export class MemStorage implements IStorage {
     this.sandwichCollections = new Map();
     this.meetingMinutes = new Map();
     this.driveLinks = new Map();
+    this.agendaItems = new Map();
+    this.meetings = new Map();
     this.currentIds = {
       user: 1,
       project: 1,
@@ -83,6 +101,8 @@ export class MemStorage implements IStorage {
       sandwichCollection: 1,
       meetingMinutes: 1,
       driveLink: 1,
+      agendaItem: 1,
+      meeting: 1,
     };
     
     this.seedData();

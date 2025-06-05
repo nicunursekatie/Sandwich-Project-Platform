@@ -90,6 +90,8 @@ export const insertWeeklyReportSchema = createInsertSchema(weeklyReports).omit({
 export const insertSandwichCollectionSchema = createInsertSchema(sandwichCollections).omit({ id: true, submittedAt: true });
 export const insertMeetingMinutesSchema = createInsertSchema(meetingMinutes).omit({ id: true });
 export const insertDriveLinkSchema = createInsertSchema(driveLinks).omit({ id: true });
+export const insertAgendaItemSchema = createInsertSchema(agendaItems).omit({ id: true, submittedAt: true });
+export const insertMeetingSchema = createInsertSchema(meetings).omit({ id: true, createdAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -106,3 +108,7 @@ export type MeetingMinutes = typeof meetingMinutes.$inferSelect;
 export type InsertMeetingMinutes = z.infer<typeof insertMeetingMinutesSchema>;
 export type DriveLink = typeof driveLinks.$inferSelect;
 export type InsertDriveLink = z.infer<typeof insertDriveLinkSchema>;
+export type AgendaItem = typeof agendaItems.$inferSelect;
+export type InsertAgendaItem = z.infer<typeof insertAgendaItemSchema>;
+export type Meeting = typeof meetings.$inferSelect;
+export type InsertMeeting = z.infer<typeof insertMeetingSchema>;
