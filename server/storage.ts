@@ -54,6 +54,7 @@ export interface IStorage {
   getAllAgendaItems(): Promise<AgendaItem[]>;
   createAgendaItem(item: InsertAgendaItem): Promise<AgendaItem>;
   updateAgendaItemStatus(id: number, status: string): Promise<AgendaItem | undefined>;
+  updateAgendaItem(id: number, updates: Partial<AgendaItem>): Promise<AgendaItem | undefined>;
   
   // Meetings
   getCurrentMeeting(): Promise<Meeting | undefined>;
@@ -428,6 +429,15 @@ export class MemStorage implements IStorage {
     if (!item) return undefined;
     
     const updated: AgendaItem = { ...item, status };
+    this.agendaItems.set(id, updated);
+    return updated;
+  }
+
+  async updateAgendaItem(id: number, updates: Partial<AgendaItem>): Promise<AgendaItem | undefined> {
+    const item = this.agendaItems.get(id);
+    if (!item) return undefined;
+    
+    const updated: AgendaItem = { ...item, ...updates };
     this.agendaItems.set(id, updated);
     return updated;
   }

@@ -68,7 +68,7 @@ export const agendaItems = pgTable("agenda_items", {
   submittedBy: text("submitted_by").notNull(),
   title: text("title").notNull(),
   description: text("description"),
-  status: text("status").notNull().default("pending"), // "pending", "approved", "rejected"
+  status: text("status").notNull().default("pending"), // "pending", "approved", "rejected", "postponed"
   submittedAt: timestamp("submitted_at").defaultNow().notNull(),
 });
 

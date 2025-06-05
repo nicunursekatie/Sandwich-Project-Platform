@@ -187,12 +187,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const { status } = req.body;
       
-      if (!["pending", "approved", "rejected"].includes(status)) {
+      if (!["pending", "approved", "rejected", "postponed"].includes(status)) {
         res.status(400).json({ message: "Invalid status" });
         return;
       }
       
       const updatedItem = await storage.updateAgendaItemStatus(id, status);
+      if (!updatedItem) {
+        res.status(404).json({ message: "Agenda item not found" });
+        return;
+      }
+      
+      res.json(updatedItem);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update agenda item" });
+    }
+  });
+
+  app.put("/api/agenda-items/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { title, description } = req.body;
+      
+      const updatedItem = await storage.updateAgendaItem(id, { title, description });
       if (!updatedItem) {
         res.status(404).json({ message: "Agenda item not found" });
         return;

@@ -245,6 +245,13 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async updateAgendaItem(id: number, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateAgendaItem(id, updates),
+      () => this.fallbackStorage.updateAgendaItem(id, updates)
+    );
+  }
+
   async getCurrentMeeting() {
     return this.executeWithFallback(
       () => this.primaryStorage.getCurrentMeeting(),
