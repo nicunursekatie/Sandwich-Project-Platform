@@ -50,7 +50,7 @@ export default function Dashboard() {
         <div className="p-4 border-b border-slate-200">
           <div className="flex items-center space-x-3">
             <Sandwich className="text-amber-500 w-6 h-6" />
-            <h1 className="text-lg font-semibold text-slate-900">Marcy's Project</h1>
+            <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
           </div>
         </div>
 

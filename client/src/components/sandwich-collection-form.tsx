@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Plus, Trash2, Sandwich } from "lucide-react";
+import { Plus, Trash2, Sandwich, Settings, Edit, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
@@ -26,14 +27,18 @@ export default function SandwichCollectionForm() {
     { id: "1", groupName: "", sandwichCount: 0 }
   ]);
 
-  // Common host names for the dropdown
-  const hostOptions = [
+  // Host management state
+  const [hostOptions, setHostOptions] = useState([
     "Sarah Chen",
     "Mike Rodriguez", 
     "Jessica Park",
     "John Doe",
     "Other"
-  ];
+  ]);
+  const [isHostManagerOpen, setIsHostManagerOpen] = useState(false);
+  const [newHostName, setNewHostName] = useState("");
+  const [editingHostIndex, setEditingHostIndex] = useState<number | null>(null);
+  const [editingHostValue, setEditingHostValue] = useState("");
 
   const submitCollectionMutation = useMutation({
     mutationFn: async (data: {
