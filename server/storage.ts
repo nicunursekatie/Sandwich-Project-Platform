@@ -32,6 +32,7 @@ export interface IStorage {
   getThreadMessages(threadId: number): Promise<Message[]>;
   createReply(message: InsertMessage, parentId: number): Promise<Message>;
   updateReplyCount(messageId: number): Promise<void>;
+  deleteMessage(id: number): Promise<boolean>;
   
   // Weekly Reports
   getAllWeeklyReports(): Promise<WeeklyReport[]>;
@@ -400,6 +401,10 @@ export class MemStorage implements IStorage {
       const updatedMessage = { ...message, replyCount };
       this.messages.set(messageId, updatedMessage);
     }
+  }
+
+  async deleteMessage(id: number): Promise<boolean> {
+    return this.messages.delete(id);
   }
 
   // Weekly Report methods
