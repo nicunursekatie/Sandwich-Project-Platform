@@ -215,13 +215,13 @@ export default function CommitteeChat() {
                 </div>
               ) : (
                 messages.map((message: Message) => (
-                  <div key={message.id} className="flex gap-3 group hover:bg-slate-50 -mx-2 px-2 py-2 rounded">
+                  <div key={message.id} className="flex gap-3 group hover:bg-slate-50 -mx-2 px-2 py-2 rounded relative">
                     <Avatar className="w-8 h-8">
                       <AvatarFallback>
                         {message.sender.split(' ').map(n => n[0]).join('')}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 pr-10">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-medium text-slate-900">{message.sender}</span>
                         <span className="text-xs text-slate-500">
@@ -235,15 +235,16 @@ export default function CommitteeChat() {
                         {message.content}
                       </div>
                     </div>
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => deleteMessageMutation.mutate(message.id)}
                         disabled={deleteMessageMutation.isPending}
-                        className="h-8 w-8 p-0 text-slate-500 hover:text-red-600 hover:bg-red-50"
+                        className="h-7 w-7 p-0 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-full"
+                        title="Delete message"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </Button>
                     </div>
                   </div>
