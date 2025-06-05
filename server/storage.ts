@@ -356,7 +356,8 @@ export class MemStorage implements IStorage {
       timestamp: new Date(),
       parentId: insertMessage.parentId || null,
       threadId: insertMessage.threadId || id,
-      replyCount: 0
+      replyCount: 0,
+      committee: insertMessage.committee || "general"
     };
     this.messages.set(id, message);
     return message;
