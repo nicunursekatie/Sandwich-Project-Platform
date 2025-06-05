@@ -170,8 +170,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/agenda-items", async (req, res) => {
     try {
-      const insertItemSchema = insertAgendaItemSchema;
-      const itemData = insertItemSchema.parse(req.body);
+      const itemData = insertAgendaItemSchema.parse(req.body);
       const item = await storage.createAgendaItem(itemData);
       res.status(201).json(item);
     } catch (error) {
@@ -217,7 +216,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/meetings", async (req, res) => {
     try {
-      const insertMeetingSchema = insertMeetingSchema;
       const meetingData = insertMeetingSchema.parse(req.body);
       const meeting = await storage.createMeeting(meetingData);
       res.status(201).json(meeting);
