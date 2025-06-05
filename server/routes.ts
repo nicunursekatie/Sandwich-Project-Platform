@@ -261,7 +261,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/meetings/:id/upload-agenda", uploadRateLimit, async (req, res) => {
+  app.post("/api/meetings/:id/upload-agenda", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
