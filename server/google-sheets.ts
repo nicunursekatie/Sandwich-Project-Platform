@@ -290,7 +290,7 @@ export class GoogleSheetsStorage implements IStorage {
     try {
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.spreadsheetId,
-        range: 'Messages!A:G',
+        range: 'Messages!A:H',
       });
 
       const rows = response.data.values || [];
@@ -303,7 +303,8 @@ export class GoogleSheetsStorage implements IStorage {
         timestamp: new Date(row[3] || Date.now()),
         parentId: row[4] ? parseInt(row[4]) : null,
         threadId: row[5] ? parseInt(row[5]) : null,
-        replyCount: parseInt(row[6]) || 0
+        replyCount: parseInt(row[6]) || 0,
+        committee: row[7] || 'general'
       })).filter(message => message.id > 0);
     } catch (error) {
       console.error('Error getting messages:', error);
@@ -316,6 +317,13 @@ export class GoogleSheetsStorage implements IStorage {
     return messages.slice(-limit);
   }
 
+  async getMessagesByCommittee(committee: string): Promise<Message[]> {
+    const messages = await this.getAllMessages();
+    return messages.filter(m => m.committee === committee).sort((a, b) => 
+      b.timestamp.getTime() - a.timestamp.getTime()
+    );
+  }
+
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
     await this.ensureWorksheets();
     
@@ -326,13 +334,14 @@ export class GoogleSheetsStorage implements IStorage {
       timestamp: new Date(),
       parentId: insertMessage.parentId || null,
       threadId: insertMessage.threadId || id,
-      replyCount: 0
+      replyCount: 0,
+      committee: insertMessage.committee || "general"
     };
 
     try {
       await this.sheets.spreadsheets.values.append({
         spreadsheetId: this.spreadsheetId,
-        range: 'Messages!A:G',
+        range: 'Messages!A:H',
         valueInputOption: 'RAW',
         requestBody: {
           values: [[
@@ -342,7 +351,8 @@ export class GoogleSheetsStorage implements IStorage {
             message.timestamp.toISOString(),
             message.parentId || '',
             message.threadId || '',
-            message.replyCount
+            message.replyCount,
+            message.committee
           ]]
         }
       });
