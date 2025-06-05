@@ -47,6 +47,19 @@ export default function Dashboard() {
         return <RecipientsManagement />;
       case "drivers":
         return <DriversManagement />;
+      case "development":
+        return (
+          <div className="p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Development</h2>
+            <p className="text-gray-600 mb-4">For full development resources and documents, visit the dedicated development page.</p>
+            <button 
+              onClick={() => window.location.href = '/development'} 
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Go to Development Page
+            </button>
+          </div>
+        );
       default:
         return <DashboardOverview onSectionChange={setActiveSection} />;
     }
