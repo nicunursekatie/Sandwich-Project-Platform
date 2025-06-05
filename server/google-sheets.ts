@@ -421,6 +421,22 @@ export class GoogleSheetsStorage implements IStorage {
     if (messageIndex === -1) return false;
 
     try {
+      // Get sheet metadata to find the correct Messages sheet ID
+      const spreadsheetInfo = await this.sheets.spreadsheets.get({
+        spreadsheetId: this.spreadsheetId
+      });
+      
+      const messagesSheet = spreadsheetInfo.data.sheets?.find(
+        sheet => sheet.properties?.title === 'Messages'
+      );
+      
+      if (!messagesSheet || !messagesSheet.properties) {
+        console.error('Messages sheet not found');
+        return false;
+      }
+
+      const sheetId = messagesSheet.properties.sheetId;
+      
       // Delete the row from Google Sheets
       await this.sheets.spreadsheets.batchUpdate({
         spreadsheetId: this.spreadsheetId,
@@ -428,7 +444,7 @@ export class GoogleSheetsStorage implements IStorage {
           requests: [{
             deleteDimension: {
               range: {
-                sheetId: 0, // Messages sheet ID
+                sheetId: sheetId,
                 dimension: 'ROWS',
                 startIndex: messageIndex + 1, // +1 because of header
                 endIndex: messageIndex + 2
@@ -437,6 +453,7 @@ export class GoogleSheetsStorage implements IStorage {
           }]
         }
       });
+      console.log(`Successfully deleted message ${id} from Google Sheets`);
       return true;
     } catch (error) {
       console.error('Error deleting message:', error);
