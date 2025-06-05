@@ -1,4 +1,4 @@
-import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3 } from "lucide-react";
+import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, Car } from "lucide-react";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
 import MessageLog from "@/components/message-log";
@@ -7,6 +7,8 @@ import MeetingAgenda from "@/components/meeting-agenda";
 import GoogleDriveLinks from "@/components/google-drive-links";
 import DashboardOverview from "@/components/dashboard-overview";
 import SandwichCollectionLog from "@/components/sandwich-collection-log";
+import RecipientsManagement from "@/components/recipients-management";
+import DriversManagement from "@/components/drivers-management";
 import { useState } from "react";
 
 export default function Dashboard() {
@@ -20,6 +22,8 @@ export default function Dashboard() {
     { id: "files", label: "Files", icon: FolderOpen },
     { id: "reports", label: "Reports", icon: BarChart3 },
     { id: "collections", label: "Collection Log", icon: Sandwich },
+    { id: "recipients", label: "Recipients", icon: Users },
+    { id: "drivers", label: "Drivers", icon: Car },
   ];
 
   const renderContent = () => {
@@ -38,6 +42,10 @@ export default function Dashboard() {
         return <WeeklySandwichForm />;
       case "collections":
         return <SandwichCollectionLog />;
+      case "recipients":
+        return <RecipientsManagement />;
+      case "drivers":
+        return <DriversManagement />;
       default:
         return <DashboardOverview onSectionChange={setActiveSection} />;
     }
