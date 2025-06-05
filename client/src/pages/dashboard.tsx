@@ -1,9 +1,9 @@
-import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Calendar } from "lucide-react";
-import { Link } from "wouter";
+import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3 } from "lucide-react";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
 import MessageLog from "@/components/message-log";
 import MeetingMinutes from "@/components/meeting-minutes";
+import MeetingAgenda from "@/components/meeting-agenda";
 import GoogleDriveLinks from "@/components/google-drive-links";
 import DashboardOverview from "@/components/dashboard-overview";
 import SandwichCollectionLog from "@/components/sandwich-collection-log";
@@ -31,7 +31,7 @@ export default function Dashboard() {
       case "messages":
         return <MessageLog />;
       case "meetings":
-        return <MeetingMinutes />;
+        return <MeetingAgenda />;
       case "files":
         return <GoogleDriveLinks />;
       case "reports":
@@ -94,17 +94,9 @@ export default function Dashboard() {
       <div className="flex-1 flex flex-col">
         {/* Top Header */}
         <header className="bg-white border-b border-slate-200 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-slate-900 capitalize">
-              {sidebarItems.find(item => item.id === activeSection)?.label}
-            </h2>
-            <Link href="/meetings">
-              <button className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
-                <Calendar className="w-4 h-4" />
-                Go to Meetings
-              </button>
-            </Link>
-          </div>
+          <h2 className="text-xl font-semibold text-slate-900 capitalize">
+            {sidebarItems.find(item => item.id === activeSection)?.label}
+          </h2>
         </header>
 
         {/* Content Area */}
