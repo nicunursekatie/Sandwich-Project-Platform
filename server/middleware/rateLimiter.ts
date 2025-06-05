@@ -9,6 +9,11 @@ interface RateLimitStore {
 
 const store: RateLimitStore = {};
 
+// Function to clear rate limit store (useful for development)
+export function clearRateLimit() {
+  Object.keys(store).forEach(key => delete store[key]);
+}
+
 export interface RateLimitConfig {
   windowMs: number; // Time window in milliseconds
   max: number; // Maximum number of requests per window
@@ -84,6 +89,6 @@ export const strictRateLimit = createRateLimit({
 
 export const uploadRateLimit = createRateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 5, // 5 uploads per minute
+  max: 20, // 20 uploads per minute (more reasonable for testing)
   message: 'Upload rate limit exceeded, please wait before uploading again.'
 });
