@@ -1,5 +1,5 @@
 import { 
-  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings,
+  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements,
   type User, type InsertUser, 
   type Project, type InsertProject,
   type Message, type InsertMessage,
@@ -8,7 +8,8 @@ import {
   type MeetingMinutes, type InsertMeetingMinutes,
   type DriveLink, type InsertDriveLink,
   type AgendaItem, type InsertAgendaItem,
-  type Meeting, type InsertMeeting
+  type Meeting, type InsertMeeting,
+  type DriverAgreement, type InsertDriverAgreement
 } from "@shared/schema";
 
 export interface IStorage {
@@ -60,6 +61,9 @@ export interface IStorage {
   getCurrentMeeting(): Promise<Meeting | undefined>;
   createMeeting(meeting: InsertMeeting): Promise<Meeting>;
   updateMeetingAgenda(id: number, agenda: string): Promise<Meeting | undefined>;
+  
+  // Driver Agreements (admin access only)
+  createDriverAgreement(agreement: InsertDriverAgreement): Promise<DriverAgreement>;
 }
 
 export class MemStorage implements IStorage {
@@ -72,6 +76,7 @@ export class MemStorage implements IStorage {
   private driveLinks: Map<number, DriveLink>;
   private agendaItems: Map<number, AgendaItem>;
   private meetings: Map<number, Meeting>;
+  private driverAgreements: Map<number, DriverAgreement>;
   private currentIds: {
     user: number;
     project: number;
@@ -82,6 +87,7 @@ export class MemStorage implements IStorage {
     driveLink: number;
     agendaItem: number;
     meeting: number;
+    driverAgreement: number;
   };
 
   constructor() {

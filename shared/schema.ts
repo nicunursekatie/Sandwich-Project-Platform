@@ -82,6 +82,19 @@ export const meetings = pgTable("meetings", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const driverAgreements = pgTable("driver_agreements", {
+  id: serial("id").primaryKey(),
+  submittedBy: text("submitted_by").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  licenseNumber: text("license_number").notNull(),
+  vehicleInfo: text("vehicle_info").notNull(),
+  emergencyContact: text("emergency_contact").notNull(),
+  emergencyPhone: text("emergency_phone").notNull(),
+  agreementAccepted: boolean("agreement_accepted").notNull().default(false),
+  submittedAt: timestamp("submitted_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertProjectSchema = createInsertSchema(projects).omit({ id: true });
@@ -92,6 +105,7 @@ export const insertMeetingMinutesSchema = createInsertSchema(meetingMinutes).omi
 export const insertDriveLinkSchema = createInsertSchema(driveLinks).omit({ id: true });
 export const insertAgendaItemSchema = createInsertSchema(agendaItems).omit({ id: true, submittedAt: true });
 export const insertMeetingSchema = createInsertSchema(meetings).omit({ id: true, createdAt: true });
+export const insertDriverAgreementSchema = createInsertSchema(driverAgreements).omit({ id: true, submittedAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -112,3 +126,5 @@ export type AgendaItem = typeof agendaItems.$inferSelect;
 export type InsertAgendaItem = z.infer<typeof insertAgendaItemSchema>;
 export type Meeting = typeof meetings.$inferSelect;
 export type InsertMeeting = z.infer<typeof insertMeetingSchema>;
+export type DriverAgreement = typeof driverAgreements.$inferSelect;
+export type InsertDriverAgreement = z.infer<typeof insertDriverAgreementSchema>;
