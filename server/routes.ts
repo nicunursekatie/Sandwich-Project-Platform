@@ -49,9 +49,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/messages", async (req, res) => {
     try {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
-      const messages = limit 
-        ? await storage.getRecentMessages(limit)
-        : await storage.getAllMessages();
+      const committee = req.query.committee as string;
+      
+      let messages;
+      if (committee) {
+        messages = await storage.getMessagesByCommittee(committee);
+      } else {
+        messages = limit 
+          ? await storage.getRecentMessages(limit)
+          : await storage.getAllMessages();
+      }
+      
       res.json(messages);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch messages" });
