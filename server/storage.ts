@@ -343,9 +343,12 @@ export class MemStorage implements IStorage {
   }
 
   async getMessagesByCommittee(committee: string): Promise<Message[]> {
-    return Array.from(this.messages.values())
-      .filter(message => message.committee === committee)
-      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    const allMessages = Array.from(this.messages.values());
+    console.log(`Debug - All messages:`, allMessages.map(m => ({ id: m.id, committee: m.committee, content: m.content })));
+    console.log(`Debug - Filtering for committee: ${committee}`);
+    const filtered = allMessages.filter(message => message.committee === committee);
+    console.log(`Debug - Filtered messages:`, filtered);
+    return filtered.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
