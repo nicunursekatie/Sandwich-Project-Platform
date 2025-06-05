@@ -2,6 +2,10 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
 import { storage } from "./storage-wrapper";
+import { sendDriverAgreementNotification } from "./sendgrid";
+import { generalRateLimit, strictRateLimit, uploadRateLimit } from "./middleware/rateLimiter";
+import { sanitizeMiddleware } from "./middleware/sanitizer";
+import { requestLogger, errorLogger, logger } from "./middleware/logger";
 import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
