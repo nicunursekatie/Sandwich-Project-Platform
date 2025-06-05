@@ -283,6 +283,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all meetings
+  app.get("/api/meetings", async (req, res) => {
+    try {
+      const meetings = await storage.getAllMeetings();
+      res.json(meetings);
+    } catch (error) {
+      logger.error("Failed to get meetings", error);
+      res.status(500).json({ message: "Failed to get meetings" });
+    }
+  });
+
+  // Get meetings by type
+  app.get("/api/meetings/type/:type", async (req, res) => {
+    try {
+      const { type } = req.params;
+      const meetings = await storage.getMeetingsByType(type);
+      res.json(meetings);
+    } catch (error) {
+      logger.error("Failed to get meetings by type", error);
+      res.status(500).json({ message: "Failed to get meetings by type" });
+    }
+  });
+
   app.post("/api/meetings/:id/upload-agenda", async (req, res) => {
     try {
       const id = parseInt(req.params.id);

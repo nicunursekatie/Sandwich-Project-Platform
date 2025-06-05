@@ -151,7 +151,17 @@ export default function MeetingAgenda() {
           <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">{currentMeeting.title}</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-semibold text-slate-900">{currentMeeting.title}</h2>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setIsEditModalOpen(true)}
+                    className="text-slate-500 hover:text-slate-700"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </Button>
+                </div>
                 <div className="flex items-center gap-4 text-sm text-slate-600 mt-1">
                   <span className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />

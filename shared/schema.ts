@@ -75,8 +75,11 @@ export const agendaItems = pgTable("agenda_items", {
 export const meetings = pgTable("meetings", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
+  type: text("type").notNull(), // "weekly", "marketing_committee", "grant_committee", "core_group", "all_team"
   date: text("date").notNull(),
   time: text("time").notNull(),
+  location: text("location"),
+  description: text("description"),
   finalAgenda: text("final_agenda"),
   status: text("status").notNull().default("planning"), // "planning", "agenda_set", "completed"
   createdAt: timestamp("created_at").defaultNow().notNull(),

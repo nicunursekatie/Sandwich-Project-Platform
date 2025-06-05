@@ -59,6 +59,8 @@ export interface IStorage {
   
   // Meetings
   getCurrentMeeting(): Promise<Meeting | undefined>;
+  getAllMeetings(): Promise<Meeting[]>;
+  getMeetingsByType(type: string): Promise<Meeting[]>;
   createMeeting(meeting: InsertMeeting): Promise<Meeting>;
   updateMeetingAgenda(id: number, agenda: string): Promise<Meeting | undefined>;
   
@@ -174,12 +176,59 @@ export class MemStorage implements IStorage {
       content: "Weekly totals look strong. Great work everyone! We're seeing a 15% increase in sales compared to last week, especially on our signature sandwiches.",
     });
     
-    // Seed a default meeting
+    // Seed different types of meetings
     this.createMeeting({
       date: "2024-03-20",
       title: "Weekly Team Meeting",
+      type: "weekly",
       status: "planning",
       time: "2:00 PM",
+      location: "Main Conference Room",
+      description: "Regular weekly team check-in and project updates",
+      finalAgenda: null
+    });
+
+    this.createMeeting({
+      date: "2024-03-22",
+      title: "Marketing Committee Meeting",
+      type: "marketing_committee",
+      status: "planning",
+      time: "10:00 AM",
+      location: "Marketing Office",
+      description: "Review marketing campaigns and upcoming promotions",
+      finalAgenda: null
+    });
+
+    this.createMeeting({
+      date: "2024-03-25",
+      title: "Grant Committee Review",
+      type: "grant_committee",
+      status: "planning",
+      time: "1:00 PM",
+      location: "Board Room",
+      description: "Review grant applications and funding decisions",
+      finalAgenda: null
+    });
+
+    this.createMeeting({
+      date: "2024-03-27",
+      title: "Core Group Strategy Session",
+      type: "core_group",
+      status: "planning",
+      time: "3:00 PM",
+      location: "Executive Conference Room",
+      description: "Strategic planning and key decision making",
+      finalAgenda: null
+    });
+
+    this.createMeeting({
+      date: "2024-03-29",
+      title: "All Team Quarterly Meeting",
+      type: "all_team",
+      status: "planning",
+      time: "9:00 AM",
+      location: "Main Auditorium",
+      description: "Quarterly all-hands meeting with organization updates",
       finalAgenda: null
     });
 
@@ -463,6 +512,18 @@ export class MemStorage implements IStorage {
   async getCurrentMeeting(): Promise<Meeting | undefined> {
     const meetings = Array.from(this.meetings.values());
     return meetings.find(m => m.status === "planning") || meetings[0];
+  }
+
+  async getAllMeetings(): Promise<Meeting[]> {
+    return Array.from(this.meetings.values()).sort((a, b) => 
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+  }
+
+  async getMeetingsByType(type: string): Promise<Meeting[]> {
+    return Array.from(this.meetings.values())
+      .filter(m => m.type === type)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
   async createMeeting(insertMeeting: InsertMeeting): Promise<Meeting> {
