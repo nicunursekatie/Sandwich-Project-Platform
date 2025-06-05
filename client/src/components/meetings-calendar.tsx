@@ -240,30 +240,28 @@ export default function MeetingsCalendar() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-slate-500" />
-          <span className="text-sm font-medium text-slate-700">Filter by type:</span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-slate-500" />
+            <span className="text-sm font-medium text-slate-700">Filter by type:</span>
+          </div>
+          <Select value={selectedType} onValueChange={setSelectedType}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Select meeting type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Meetings</SelectItem>
+              {meetingTypes.map((type) => (
+                <SelectItem key={type.value} value={type.value}>
+                  {type.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant={selectedType === "all" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedType("all")}
-          >
-            All Meetings
-          </Button>
-          {meetingTypes.map((type) => (
-            <Button
-              key={type.value}
-              variant={selectedType === type.value ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedType(type.value)}
-              className={selectedType === type.value ? "" : "hover:bg-slate-50"}
-            >
-              {type.label}
-            </Button>
-          ))}
+        <div className="text-sm text-slate-600">
+          {filteredMeetings.length} meeting{filteredMeetings.length !== 1 ? 's' : ''} found
         </div>
       </div>
 
