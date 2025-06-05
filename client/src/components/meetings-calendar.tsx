@@ -150,88 +150,100 @@ export default function MeetingsCalendar() {
         </div>
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
           <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
-              <Plus className="w-4 h-4" />
-              Schedule Meeting
+            <Button size="lg" className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700">
+              <Plus className="w-5 h-5" />
+              Schedule New Meeting
             </Button>
           </DialogTrigger>
           <DialogContent aria-describedby="create-meeting-description">
             <DialogHeader>
               <DialogTitle>Schedule New Meeting</DialogTitle>
             </DialogHeader>
-            <p id="create-meeting-description" className="text-sm text-slate-600 mb-4">
-              Create a new meeting for your team or committee.
+            <p id="create-meeting-description" className="text-sm text-slate-600 mb-6">
+              Schedule a new meeting for your team or committee. All fields marked with * are required.
             </p>
-            <form onSubmit={handleCreateMeeting} className="space-y-4">
-              <div>
-                <Label htmlFor="meeting-title">Meeting Title *</Label>
-                <Input
-                  id="meeting-title"
-                  value={newMeeting.title}
-                  onChange={(e) => setNewMeeting({ ...newMeeting, title: e.target.value })}
-                  placeholder="Enter meeting title"
-                />
-              </div>
-              <div>
-                <Label htmlFor="meeting-type">Meeting Type *</Label>
-                <Select value={newMeeting.type} onValueChange={(value) => setNewMeeting({ ...newMeeting, type: value })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select meeting type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {meetingTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            <form onSubmit={handleCreateMeeting} className="space-y-5">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="meeting-date">Date *</Label>
+                  <Label htmlFor="meeting-title" className="text-sm font-medium text-slate-700">Meeting Title *</Label>
+                  <Input
+                    id="meeting-title"
+                    value={newMeeting.title}
+                    onChange={(e) => setNewMeeting({ ...newMeeting, title: e.target.value })}
+                    placeholder="e.g., Weekly Team Sync"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="meeting-type" className="text-sm font-medium text-slate-700">Meeting Type *</Label>
+                  <Select value={newMeeting.type} onValueChange={(value) => setNewMeeting({ ...newMeeting, type: value })}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue placeholder="Choose type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {meetingTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="meeting-date" className="text-sm font-medium text-slate-700">Date *</Label>
                   <Input
                     id="meeting-date"
                     type="date"
                     value={newMeeting.date}
                     onChange={(e) => setNewMeeting({ ...newMeeting, date: e.target.value })}
+                    className="mt-1"
+                    min={new Date().toISOString().split('T')[0]}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="meeting-time">Time *</Label>
+                  <Label htmlFor="meeting-time" className="text-sm font-medium text-slate-700">Time *</Label>
                   <Input
                     id="meeting-time"
                     type="time"
                     value={newMeeting.time}
                     onChange={(e) => setNewMeeting({ ...newMeeting, time: e.target.value })}
+                    className="mt-1"
                   />
                 </div>
               </div>
+              
               <div>
-                <Label htmlFor="meeting-location">Location</Label>
+                <Label htmlFor="meeting-location" className="text-sm font-medium text-slate-700">Location (optional)</Label>
                 <Input
                   id="meeting-location"
                   value={newMeeting.location}
                   onChange={(e) => setNewMeeting({ ...newMeeting, location: e.target.value })}
-                  placeholder="Meeting location"
+                  placeholder="e.g., Conference Room A, Zoom, Main Office"
+                  className="mt-1"
                 />
               </div>
+              
               <div>
-                <Label htmlFor="meeting-description">Description</Label>
+                <Label htmlFor="meeting-description" className="text-sm font-medium text-slate-700">Description (optional)</Label>
                 <Textarea
                   id="meeting-description"
                   value={newMeeting.description}
                   onChange={(e) => setNewMeeting({ ...newMeeting, description: e.target.value })}
-                  placeholder="Meeting agenda or description"
+                  placeholder="Brief description of meeting topics or agenda items"
+                  className="mt-1"
                   rows={3}
                 />
               </div>
-              <div className="flex justify-end space-x-2">
+              
+              <div className="flex justify-end space-x-3 pt-4 border-t border-slate-200">
                 <Button type="button" variant="outline" onClick={() => setIsCreateModalOpen(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={createMeetingMutation.isPending}>
-                  {createMeetingMutation.isPending ? "Creating..." : "Create Meeting"}
+                <Button type="submit" disabled={createMeetingMutation.isPending} className="bg-blue-600 hover:bg-blue-700">
+                  {createMeetingMutation.isPending ? "Scheduling..." : "Schedule Meeting"}
                 </Button>
               </div>
             </form>
@@ -269,18 +281,22 @@ export default function MeetingsCalendar() {
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-slate-900">Upcoming Meetings</h2>
         {upcomingMeetings.length === 0 ? (
-          <div className="text-center py-8">
-            <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-2">No upcoming meetings</h3>
-            <p className="text-slate-500 mb-4">
+          <div className="text-center py-12 bg-slate-50 rounded-lg border-2 border-dashed border-slate-300">
+            <Calendar className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+            <h3 className="text-xl font-medium text-slate-900 mb-2">No upcoming meetings</h3>
+            <p className="text-slate-500 mb-6 max-w-md mx-auto">
               {selectedType === "all" 
-                ? "No meetings scheduled. Schedule your first meeting to get started."
-                : `No upcoming ${getTypeConfig(selectedType).label.toLowerCase()} meetings scheduled.`
+                ? "Ready to schedule your first meeting? Click the button below to get started."
+                : `No upcoming ${getTypeConfig(selectedType).label.toLowerCase()} meetings found. Schedule a new one to get organized.`
               }
             </p>
-            <Button onClick={() => setIsCreateModalOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              Schedule Meeting
+            <Button 
+              size="lg" 
+              onClick={() => setIsCreateModalOpen(true)}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Schedule Your First Meeting
             </Button>
           </div>
         ) : (
