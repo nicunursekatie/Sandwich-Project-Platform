@@ -228,12 +228,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/meetings/:id/agenda", async (req, res) => {
+  app.post("/api/meetings/:id/upload-agenda", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const { finalAgenda } = req.body;
       
-      const updatedMeeting = await storage.updateMeetingAgenda(id, finalAgenda);
+      // For demo purposes, we'll just mark the agenda as uploaded
+      // In a real implementation, you'd handle file storage here
+      const updatedMeeting = await storage.updateMeetingAgenda(id, "agenda-uploaded");
       if (!updatedMeeting) {
         res.status(404).json({ message: "Meeting not found" });
         return;
@@ -241,7 +242,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(updatedMeeting);
     } catch (error) {
-      res.status(500).json({ message: "Failed to update meeting agenda" });
+      res.status(500).json({ message: "Failed to upload meeting agenda" });
     }
   });
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Calendar, Clock, User, Plus, CheckCircle, XCircle, Edit3, MessageSquare } from "lucide-react";
+import { Calendar, Clock, User, Plus, CheckCircle, XCircle, Upload, MessageSquare, FileText, File } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,13 +32,13 @@ interface Meeting {
 export default function MeetingAgenda() {
   const { toast } = useToast();
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
-  const [isAgendaModalOpen, setIsAgendaModalOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [newItem, setNewItem] = useState({
     submittedBy: "",
     title: "",
     description: ""
   });
-  const [finalAgenda, setFinalAgenda] = useState("");
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   // Mock data for now - will integrate with backend
   const { data: agendaItems = [], isLoading: itemsLoading } = useQuery({
@@ -111,16 +111,19 @@ export default function MeetingAgenda() {
     }
   });
 
-  const publishAgendaMutation = useMutation({
-    mutationFn: async (agenda: string) => {
-      return apiRequest('/api/meetings/1/agenda', 'POST', { finalAgenda: agenda });
+  const uploadAgendaMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('agenda', file);
+      return apiRequest('/api/meetings/1/upload-agenda', 'POST', formData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/current-meeting'] });
-      setIsAgendaModalOpen(false);
+      setIsUploadModalOpen(false);
+      setUploadedFile(null);
       toast({
-        title: "Agenda published",
-        description: "The final meeting agenda has been published.",
+        title: "Agenda uploaded",
+        description: "The final meeting agenda has been uploaded.",
       });
     }
   });
@@ -138,14 +141,17 @@ export default function MeetingAgenda() {
     submitItemMutation.mutate(newItem);
   };
 
-  const handlePublishAgenda = () => {
-    const approvedItems = agendaItems.filter(item => item.status === "approved");
-    const agendaText = approvedItems.map((item, index) => 
-      `${index + 1}. ${item.title}\n   ${item.description}`
-    ).join('\n\n');
-    
-    setFinalAgenda(agendaText);
-    setIsAgendaModalOpen(true);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setUploadedFile(file);
+    }
+  };
+
+  const handleUploadAgenda = () => {
+    if (uploadedFile) {
+      uploadAgendaMutation.mutate(uploadedFile);
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -246,9 +252,9 @@ export default function MeetingAgenda() {
                   </DialogContent>
                 </Dialog>
                 
-                <Button variant="outline" onClick={handlePublishAgenda}>
-                  <Edit3 className="w-4 h-4 mr-2" />
-                  Create Final Agenda
+                <Button variant="outline" onClick={() => setIsUploadModalOpen(true)}>
+                  <Upload className="w-4 h-4 mr-2" />
+                  Upload Final Agenda
                 </Button>
               </div>
             </div>
@@ -325,49 +331,77 @@ export default function MeetingAgenda() {
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
         <div className="px-6 py-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center">
-            <Edit3 className="text-green-500 mr-2 w-5 h-5" />
+            <FileText className="text-green-500 mr-2 w-5 h-5" />
             Final Meeting Agenda
           </h2>
         </div>
         <div className="p-6">
           {currentMeeting?.finalAgenda ? (
             <div className="bg-slate-50 p-4 rounded-lg">
-              <pre className="whitespace-pre-wrap text-sm text-slate-700">{currentMeeting.finalAgenda}</pre>
+              <div className="flex items-center gap-2 mb-3">
+                <File className="w-4 h-4 text-slate-600" />
+                <span className="text-sm font-medium text-slate-700">Uploaded Agenda</span>
+              </div>
+              <div className="text-sm text-slate-600">
+                Final agenda file has been uploaded and is available for the meeting.
+              </div>
             </div>
           ) : (
             <div className="text-center py-8 text-slate-500">
-              No final agenda published yet. Review submitted items and create the final agenda.
+              No final agenda uploaded yet. Upload the final agenda file to complete meeting preparation.
             </div>
           )}
         </div>
       </div>
 
-      {/* Publish Agenda Modal */}
-      <Dialog open={isAgendaModalOpen} onOpenChange={setIsAgendaModalOpen}>
-        <DialogContent className="sm:max-w-2xl" aria-describedby="publish-agenda-description">
+      {/* Upload Agenda Modal */}
+      <Dialog open={isUploadModalOpen} onOpenChange={setIsUploadModalOpen}>
+        <DialogContent className="sm:max-w-md" aria-describedby="upload-agenda-description">
           <DialogHeader>
-            <DialogTitle>Create Final Agenda</DialogTitle>
+            <DialogTitle>Upload Final Agenda</DialogTitle>
           </DialogHeader>
-          <p id="publish-agenda-description" className="text-sm text-slate-600 mb-4">
-            Review and edit the final meeting agenda before publishing.
+          <p id="upload-agenda-description" className="text-sm text-slate-600 mb-4">
+            Upload the final meeting agenda file.
           </p>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="final-agenda">Meeting Agenda</Label>
-              <Textarea
-                id="final-agenda"
-                value={finalAgenda}
-                onChange={(e) => setFinalAgenda(e.target.value)}
-                rows={12}
-                className="font-mono text-sm"
-              />
+              <Label htmlFor="agenda-upload">Agenda File</Label>
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
+                <div className="space-y-1 text-center">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                  <div className="flex text-sm text-gray-600">
+                    <label
+                      htmlFor="agenda-upload"
+                      className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"
+                    >
+                      <span>Upload agenda file</span>
+                      <input
+                        id="agenda-upload"
+                        name="agenda-upload"
+                        type="file"
+                        className="sr-only"
+                        accept=".pdf,.doc,.docx,.txt"
+                        onChange={handleFileChange}
+                      />
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
+                  </div>
+                  <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT up to 10MB</p>
+                </div>
+              </div>
+              {uploadedFile && (
+                <p className="mt-2 text-sm text-green-600">Selected: {uploadedFile.name}</p>
+              )}
             </div>
             <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setIsAgendaModalOpen(false)}>
+              <Button variant="outline" onClick={() => setIsUploadModalOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={() => publishAgendaMutation.mutate(finalAgenda)} disabled={publishAgendaMutation.isPending}>
-                {publishAgendaMutation.isPending ? "Publishing..." : "Publish Agenda"}
+              <Button 
+                onClick={handleUploadAgenda} 
+                disabled={!uploadedFile || uploadAgendaMutation.isPending}
+              >
+                {uploadAgendaMutation.isPending ? "Uploading..." : "Upload Agenda"}
               </Button>
             </div>
           </div>
