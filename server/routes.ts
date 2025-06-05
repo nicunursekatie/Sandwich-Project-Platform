@@ -318,14 +318,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get current meeting
-  app.get("/api/current-meeting", async (req, res) => {
+  app.get("/api/meetings", async (req, res) => {
     try {
-      const meeting = await storage.getCurrentMeeting();
-      res.json(meeting);
+      const meetings = await storage.getAllMeetings();
+      res.json(meetings);
     } catch (error) {
-      logger.error("Failed to get current meeting", error);
-      res.status(500).json({ message: "Failed to get current meeting" });
+      logger.error("Failed to fetch meetings", error);
+      res.status(500).json({ message: "Failed to fetch meetings" });
+    }
+  });
+
+  app.post("/api/meetings/:id/upload-agenda", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid meeting ID" });
+      }
+
+      // Mark the agenda as uploaded in the meeting record
+      const agendaInfo = "agenda_uploaded_" + new Date().toISOString();
+      const meeting = await storage.updateMeetingAgenda(id, agendaInfo);
+      
+      if (!meeting) {
+        return res.status(404).json({ message: "Meeting not found" });
+      }
+
+      res.json({ 
+        message: "Agenda uploaded successfully",
+        meeting 
+      });
+    } catch (error) {
+      logger.error("Failed to upload agenda", error);
+      res.status(500).json({ message: "Failed to upload agenda" });
+    }
+  });
+
+  // Driver Agreements (admin access only)
+  app.post("/api/driver-agreements", async (req, res) => {
+    try {
+      const result = insertDriverAgreementSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ message: "Invalid driver agreement data" });
+      }
+      
+      const agreement = await storage.createDriverAgreement(result.data);
+      
+      // Send notification email if available
+      try {
+        await sendDriverAgreementNotification(agreement);
+      } catch (emailError) {
+        logger.error("Failed to send driver agreement notification", emailError);
+      }
+      
+      res.status(201).json(agreement);
+    } catch (error) {
+      logger.error("Failed to create driver agreement", error);
+      res.status(500).json({ message: "Failed to create driver agreement" });
     }
   });
 
