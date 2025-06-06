@@ -13,6 +13,8 @@ import type { Project } from "@shared/schema";
 export default function ProjectList() {
   const { toast } = useToast();
   const [showAddForm, setShowAddForm] = useState(false);
+  const [claimingProjectId, setClaimingProjectId] = useState<number | null>(null);
+  const [assigneeName, setAssigneeName] = useState("");
   const [newProject, setNewProject] = useState({
     title: "",
     description: "",
@@ -24,17 +26,19 @@ export default function ProjectList() {
   });
 
   const claimProjectMutation = useMutation({
-    mutationFn: async (projectId: number) => {
+    mutationFn: async ({ projectId, assigneeName }: { projectId: number; assigneeName: string }) => {
       const response = await apiRequest("POST", `/api/projects/${projectId}/claim`, {
-        assigneeName: "John Doe"
+        assigneeName
       });
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      setClaimingProjectId(null);
+      setAssigneeName("");
       toast({
         title: "Project claimed successfully",
-        description: "The project has been assigned to you.",
+        description: "The project has been assigned.",
       });
     },
     onError: () => {
@@ -80,6 +84,26 @@ export default function ProjectList() {
       return;
     }
     createProjectMutation.mutate(newProject);
+  };
+
+  const handleClaimProject = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!assigneeName.trim()) {
+      toast({
+        title: "Missing assignee name",
+        description: "Please enter the name of the person claiming this project.",
+        variant: "destructive"
+      });
+      return;
+    }
+    if (claimingProjectId) {
+      claimProjectMutation.mutate({ projectId: claimingProjectId, assigneeName });
+    }
+  };
+
+  const startClaimingProject = (projectId: number) => {
+    setClaimingProjectId(projectId);
+    setAssigneeName("");
   };
 
   const getStatusColor = (status: string) => {
@@ -237,35 +261,76 @@ export default function ProjectList() {
 
         <div className="space-y-3">
           {projects.map((project) => (
-            <div 
-              key={project.id} 
-              className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
-            >
-              <div className="flex items-center space-x-3">
-                <span className={`w-3 h-3 rounded-full ${getStatusColor(project.status)}`}></span>
-                <div>
-                  <h3 className="font-medium text-slate-900">{project.title}</h3>
-                  <p className="text-sm text-slate-600">{project.description}</p>
+            <div key={project.id} className="bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+              <div className="flex items-center justify-between p-3">
+                <div className="flex items-center space-x-3">
+                  <span className={`w-3 h-3 rounded-full ${getStatusColor(project.status)}`}></span>
+                  <div>
+                    <h3 className="font-medium text-slate-900">{project.title}</h3>
+                    <p className="text-sm text-slate-600">{project.description}</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className={getStatusBadge(project.status)}>
+                    {getStatusText(project.status)}
+                  </span>
+                  {project.status === "available" ? (
+                    claimingProjectId === project.id ? (
+                      <div className="text-sm text-slate-500">Claiming...</div>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => startClaimingProject(project.id)}
+                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200"
+                      >
+                        Claim
+                      </Button>
+                    )
+                  ) : project.assigneeName ? (
+                    <span className="text-sm text-slate-500">Assigned to {project.assigneeName}</span>
+                  ) : null}
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <span className={getStatusBadge(project.status)}>
-                  {getStatusText(project.status)}
-                </span>
-                {project.status === "available" ? (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => claimProjectMutation.mutate(project.id)}
-                    disabled={claimProjectMutation.isPending}
-                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200"
-                  >
-                    {claimProjectMutation.isPending ? "Claiming..." : "Claim"}
-                  </Button>
-                ) : project.assigneeName ? (
-                  <span className="text-sm text-slate-500">Assigned to {project.assigneeName}</span>
-                ) : null}
-              </div>
+              
+              {/* Claim form */}
+              {claimingProjectId === project.id && (
+                <div className="px-3 pb-3 border-t border-slate-200 bg-slate-25">
+                  <form onSubmit={handleClaimProject} className="flex items-center gap-2 pt-3">
+                    <div className="flex-1">
+                      <Label htmlFor="assignee-name" className="sr-only">
+                        Assignee Name
+                      </Label>
+                      <Input
+                        id="assignee-name"
+                        type="text"
+                        placeholder="Enter assignee name"
+                        value={assigneeName}
+                        onChange={(e) => setAssigneeName(e.target.value)}
+                        className="text-sm"
+                        autoFocus
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      size="sm"
+                      disabled={claimProjectMutation.isPending || !assigneeName.trim()}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      {claimProjectMutation.isPending ? "Claiming..." : "Assign"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setClaimingProjectId(null)}
+                      disabled={claimProjectMutation.isPending}
+                    >
+                      Cancel
+                    </Button>
+                  </form>
+                </div>
+              )}
             </div>
           ))}
         </div>
