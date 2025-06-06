@@ -44,7 +44,18 @@ class StorageWrapper implements IStorage {
     try {
       return await operation();
     } catch (error) {
-      console.warn('Google Sheets operation failed, using fallback:', error);
+      // Check if it's a rate limit error
+      if (error.status === 429) {
+        console.warn('Google Sheets rate limit exceeded, temporarily using memory storage');
+        // Temporarily disable Google Sheets to avoid further rate limit errors
+        this.useGoogleSheets = false;
+        setTimeout(() => {
+          this.useGoogleSheets = true;
+          console.log('Re-enabling Google Sheets after rate limit cooldown');
+        }, 60000); // Re-enable after 1 minute
+      } else {
+        console.warn('Google Sheets operation failed, using fallback:', error);
+      }
       return fallbackOperation();
     }
   }
