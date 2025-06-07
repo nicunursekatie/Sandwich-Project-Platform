@@ -1,5 +1,5 @@
 import { 
-  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements,
+  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts,
   type User, type InsertUser, 
   type Project, type InsertProject,
   type Message, type InsertMessage,
@@ -671,6 +671,95 @@ export class MemStorage implements IStorage {
 }
 
 import { GoogleSheetsStorage } from './google-sheets';
+import { db } from './db';
+import { eq } from 'drizzle-orm';
+
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id.toString()));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+
+  // Host methods for database storage
+  async getAllHosts(): Promise<Host[]> {
+    return await db.select().from(hosts);
+  }
+
+  async getHost(id: number): Promise<Host | undefined> {
+    const [host] = await db.select().from(hosts).where(eq(hosts.id, id));
+    return host || undefined;
+  }
+
+  async createHost(insertHost: InsertHost): Promise<Host> {
+    const [host] = await db
+      .insert(hosts)
+      .values(insertHost)
+      .returning();
+    return host;
+  }
+
+  async updateHost(id: number, updates: Partial<Host>): Promise<Host | undefined> {
+    const [host] = await db
+      .update(hosts)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(hosts.id, id))
+      .returning();
+    return host || undefined;
+  }
+
+  async deleteHost(id: number): Promise<boolean> {
+    const result = await db.delete(hosts).where(eq(hosts.id, id));
+    return result.rowCount > 0;
+  }
+
+  // Placeholder methods for other functionality - would be implemented in a real database storage
+  async getAllProjects(): Promise<Project[]> { return []; }
+  async getProject(id: number): Promise<Project | undefined> { return undefined; }
+  async createProject(project: InsertProject): Promise<Project> { throw new Error('Not implemented'); }
+  async updateProject(id: number, updates: Partial<Project>): Promise<Project | undefined> { return undefined; }
+  async getAllMessages(): Promise<Message[]> { return []; }
+  async getRecentMessages(limit: number): Promise<Message[]> { return []; }
+  async getMessagesByCommittee(committee: string): Promise<Message[]> { return []; }
+  async createMessage(message: InsertMessage): Promise<Message> { throw new Error('Not implemented'); }
+  async getThreadMessages(threadId: number): Promise<Message[]> { return []; }
+  async createReply(message: InsertMessage, parentId: number): Promise<Message> { throw new Error('Not implemented'); }
+  async updateReplyCount(messageId: number): Promise<void> {}
+  async deleteMessage(id: number): Promise<boolean> { return false; }
+  async getAllWeeklyReports(): Promise<WeeklyReport[]> { return []; }
+  async createWeeklyReport(report: InsertWeeklyReport): Promise<WeeklyReport> { throw new Error('Not implemented'); }
+  async getAllSandwichCollections(): Promise<SandwichCollection[]> { return []; }
+  async createSandwichCollection(collection: InsertSandwichCollection): Promise<SandwichCollection> { throw new Error('Not implemented'); }
+  async updateSandwichCollection(id: number, updates: Partial<SandwichCollection>): Promise<SandwichCollection | undefined> { return undefined; }
+  async deleteSandwichCollection(id: number): Promise<boolean> { return false; }
+  async getAllMeetingMinutes(): Promise<MeetingMinutes[]> { return []; }
+  async getRecentMeetingMinutes(limit: number): Promise<MeetingMinutes[]> { return []; }
+  async createMeetingMinutes(minutes: InsertMeetingMinutes): Promise<MeetingMinutes> { throw new Error('Not implemented'); }
+  async getAllDriveLinks(): Promise<DriveLink[]> { return []; }
+  async createDriveLink(link: InsertDriveLink): Promise<DriveLink> { throw new Error('Not implemented'); }
+  async getAllAgendaItems(): Promise<AgendaItem[]> { return []; }
+  async createAgendaItem(item: InsertAgendaItem): Promise<AgendaItem> { throw new Error('Not implemented'); }
+  async updateAgendaItemStatus(id: number, status: string): Promise<AgendaItem | undefined> { return undefined; }
+  async updateAgendaItem(id: number, updates: Partial<AgendaItem>): Promise<AgendaItem | undefined> { return undefined; }
+  async getCurrentMeeting(): Promise<Meeting | undefined> { return undefined; }
+  async getAllMeetings(): Promise<Meeting[]> { return []; }
+  async getMeetingsByType(type: string): Promise<Meeting[]> { return []; }
+  async createMeeting(meeting: InsertMeeting): Promise<Meeting> { throw new Error('Not implemented'); }
+  async updateMeetingAgenda(id: number, agenda: string): Promise<Meeting | undefined> { return undefined; }
+  async createDriverAgreement(agreement: InsertDriverAgreement): Promise<DriverAgreement> { throw new Error('Not implemented'); }
+}
 
 // Create storage instance with error handling
 let storageInstance: IStorage;

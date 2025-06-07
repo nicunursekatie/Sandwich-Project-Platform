@@ -7,7 +7,7 @@ import { sendDriverAgreementNotification } from "./sendgrid";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
-import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema } from "@shared/schema";
+import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertHostSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply global middleware
@@ -507,6 +507,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Error submitting driver agreement:", error);
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Hosts API endpoints
+  app.get("/api/hosts", async (req, res) => {
+    try {
+      const hosts = await storage.getAllHosts();
+      res.json(hosts);
+    } catch (error) {
+      logger.error("Failed to get hosts", error);
+      res.status(500).json({ message: "Failed to get hosts" });
+    }
+  });
+
+  app.get("/api/hosts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const host = await storage.getHost(id);
+      if (!host) {
+        return res.status(404).json({ message: "Host not found" });
+      }
+      res.json(host);
+    } catch (error) {
+      logger.error("Failed to get host", error);
+      res.status(500).json({ message: "Failed to get host" });
+    }
+  });
+
+  app.post("/api/hosts", async (req, res) => {
+    try {
+      const hostData = insertHostSchema.parse(req.body);
+      const host = await storage.createHost(hostData);
+      res.status(201).json(host);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        logger.warn("Invalid host input", { errors: error.errors, ip: req.ip });
+        res.status(400).json({ message: "Invalid host data", errors: error.errors });
+      } else {
+        logger.error("Failed to create host", error);
+        res.status(500).json({ message: "Failed to create host" });
+      }
+    }
+  });
+
+  app.put("/api/hosts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const host = await storage.updateHost(id, updates);
+      if (!host) {
+        return res.status(404).json({ message: "Host not found" });
+      }
+      res.json(host);
+    } catch (error) {
+      logger.error("Failed to update host", error);
+      res.status(500).json({ message: "Failed to update host" });
+    }
+  });
+
+  app.delete("/api/hosts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const deleted = await storage.deleteHost(id);
+      if (!deleted) {
+        return res.status(404).json({ message: "Host not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      logger.error("Failed to delete host", error);
+      res.status(500).json({ message: "Failed to delete host" });
     }
   });
 

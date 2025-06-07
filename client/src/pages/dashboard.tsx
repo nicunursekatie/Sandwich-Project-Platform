@@ -9,6 +9,7 @@ import DashboardOverview from "@/components/dashboard-overview";
 import SandwichCollectionLog from "@/components/sandwich-collection-log";
 import RecipientsManagement from "@/components/recipients-management";
 import DriversManagement from "@/components/drivers-management";
+import HostsManagement from "@/components/hosts-management";
 import Development from "@/pages/development";
 import { useState } from "react";
 
@@ -25,6 +26,7 @@ export default function Dashboard() {
     { id: "collections", label: "Collection Log", icon: Sandwich },
     { id: "recipients", label: "Recipients", icon: Users },
     { id: "drivers", label: "Drivers", icon: Car },
+    { id: "hosts", label: "Hosts", icon: Building2 },
     { id: "development", label: "Development", icon: Building2 },
   ];
 

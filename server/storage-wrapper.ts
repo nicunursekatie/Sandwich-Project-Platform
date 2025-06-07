@@ -381,6 +381,42 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.createDriverAgreement(agreement)
     );
   }
+
+  // Host methods
+  async getAllHosts() {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getAllHosts(),
+      () => this.fallbackStorage.getAllHosts()
+    );
+  }
+
+  async getHost(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getHost(id),
+      () => this.fallbackStorage.getHost(id)
+    );
+  }
+
+  async createHost(host: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createHost(host),
+      () => this.fallbackStorage.createHost(host)
+    );
+  }
+
+  async updateHost(id: number, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateHost(id, updates),
+      () => this.fallbackStorage.updateHost(id, updates)
+    );
+  }
+
+  async deleteHost(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteHost(id),
+      () => this.fallbackStorage.deleteHost(id)
+    );
+  }
 }
 
 export const storage = new StorageWrapper();
