@@ -15,23 +15,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(generalRateLimit);
   app.use(sanitizeMiddleware);
 
+  // Simple session storage
+  let currentUser: any = null;
+
   // Authentication routes
   app.get('/api/auth/user', (req, res) => {
-    // Return authenticated user for team access
-    res.json({
+    if (currentUser) {
+      res.json(currentUser);
+    } else {
+      res.status(401).json({ message: "Not authenticated" });
+    }
+  });
+
+  app.get('/api/login', (req, res) => {
+    // Simulate login by setting current user
+    currentUser = {
       id: "1",
       email: "team@sandwichproject.org",
       firstName: "Team",
       lastName: "Member",
       profileImageUrl: null
-    });
-  });
-
-  app.get('/api/login', (req, res) => {
+    };
     res.redirect('/');
   });
 
   app.get('/api/logout', (req, res) => {
+    // Clear current user
+    currentUser = null;
     res.redirect('/');
   });
   
