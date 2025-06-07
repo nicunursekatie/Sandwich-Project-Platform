@@ -54,16 +54,16 @@ export default function Development() {
                         size="sm" 
                         variant="outline"
                         className="border-green-300 dark:border-green-700 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/30"
-                        onClick={() => handleDownload('501c3-determination-letter.pdf')}
+                        onClick={() => handleDownload('FinalLetter_87-0939484_THESANDWICHPROJECT_08172021_00 (1).tiff')}
                       >
                         <Download className="w-4 h-4 mr-2" />
-                        Download PDF
+                        Download Document
                       </Button>
                       <Button 
                         size="sm" 
                         variant="ghost"
                         className="text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/30"
-                        onClick={() => window.open('/documents/501c3-determination-letter.pdf', '_blank')}
+                        onClick={() => window.open('/documents/FinalLetter_87-0939484_THESANDWICHPROJECT_08172021_00 (1).tiff', '_blank')}
                       >
                         <ExternalLink className="w-4 h-4 mr-2" />
                         View Online
