@@ -432,8 +432,12 @@ export class MemStorage implements IStorage {
     );
   }
 
-  async createSandwichCollection(insertCollection: InsertSandwichCollection): Promise<SandwichCollection> {
-    const id = this.currentIds.sandwichCollection++;
+  async createSandwichCollection(insertCollection: InsertSandwichCollection & {id?: number}): Promise<SandwichCollection> {
+    const id = insertCollection.id || this.currentIds.sandwichCollection++;
+    // Update currentIds if a higher ID is provided
+    if (insertCollection.id && insertCollection.id >= this.currentIds.sandwichCollection) {
+      this.currentIds.sandwichCollection = insertCollection.id + 1;
+    }
     const collection: SandwichCollection = { 
       ...insertCollection, 
       id, 

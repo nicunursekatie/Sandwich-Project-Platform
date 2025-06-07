@@ -204,7 +204,16 @@ class StorageWrapper implements IStorage {
 
   async createSandwichCollection(collection: any) {
     return this.executeWithFallback(
-      () => this.primaryStorage.createSandwichCollection(collection),
+      async () => {
+        const result = await this.primaryStorage.createSandwichCollection(collection);
+        // Also create in fallback storage to keep them synchronized
+        try {
+          await this.fallbackStorage.createSandwichCollection({...collection, id: result.id});
+        } catch (error) {
+          console.warn('Failed to sync collection to fallback storage:', error);
+        }
+        return result;
+      },
       () => this.fallbackStorage.createSandwichCollection(collection)
     );
   }
