@@ -1,6 +1,7 @@
 import type { IStorage } from './storage';
 import { MemStorage } from './storage';
 import { GoogleSheetsStorage } from './google-sheets';
+import { DatabaseStorage } from './database-storage';
 
 class StorageWrapper implements IStorage {
   private primaryStorage: IStorage;
@@ -11,19 +12,12 @@ class StorageWrapper implements IStorage {
   constructor() {
     this.fallbackStorage = new MemStorage();
     
-    if (this.hasGoogleSheetsCredentials()) {
-      try {
-        this.primaryStorage = new GoogleSheetsStorage();
-        this.useGoogleSheets = true;
-        console.log('Google Sheets storage initialized');
-        // Initialize synchronization in the background
-        this.syncDataFromGoogleSheets();
-      } catch (error) {
-        console.warn('Google Sheets initialization failed, using memory storage:', error);
-        this.primaryStorage = this.fallbackStorage;
-      }
-    } else {
-      console.log('Google Sheets credentials not provided, using memory storage');
+    try {
+      // Use database storage as primary for persistence across deployments
+      this.primaryStorage = new DatabaseStorage();
+      console.log('Database storage initialized');
+    } catch (error) {
+      console.log('Failed to initialize database storage, using memory storage');
       this.primaryStorage = this.fallbackStorage;
     }
   }
