@@ -75,10 +75,10 @@ export default function ProjectList() {
 
   const handleCreateProject = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newProject.title.trim() || !newProject.description.trim()) {
+    if (!newProject.title.trim()) {
       toast({
-        title: "Missing information",
-        description: "Please fill in both title and description.",
+        title: "Missing title",
+        description: "Please enter a project title.",
         variant: "destructive"
       });
       return;
@@ -249,7 +249,7 @@ export default function ProjectList() {
                 </Button>
                 <Button
                   type="submit"
-                  disabled={createProjectMutation.isPending || !newProject.title.trim() || !newProject.description.trim()}
+                  disabled={createProjectMutation.isPending || !newProject.title.trim()}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   {createProjectMutation.isPending ? "Creating..." : "Create Project"}
