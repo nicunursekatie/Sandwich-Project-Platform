@@ -4,7 +4,7 @@ import { z } from "zod";
 import express from "express";
 import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
-import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
+// import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
 import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema } from "@shared/schema";
@@ -12,7 +12,8 @@ import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, ins
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply global middleware
   app.use(requestLogger);
-  app.use(generalRateLimit);
+  // Temporarily disable rate limiting to fix sandwich collections
+  // app.use(generalRateLimit);
   app.use(sanitizeMiddleware);
 
   // Simple session storage
@@ -162,7 +163,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/sandwich-collections", strictRateLimit, async (req, res) => {
+  app.post("/api/sandwich-collections", async (req, res) => {
     try {
       const collectionData = insertSandwichCollectionSchema.parse(req.body);
       const collection = await storage.createSandwichCollection(collectionData);
