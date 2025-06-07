@@ -6,6 +6,7 @@ class StorageWrapper implements IStorage {
   private primaryStorage: IStorage;
   private fallbackStorage: IStorage;
   private useGoogleSheets: boolean = false;
+  private deletedIds: Set<number> = new Set(); // Track deleted items to prevent re-sync
 
   constructor() {
     this.fallbackStorage = new MemStorage();
@@ -33,14 +34,22 @@ class StorageWrapper implements IStorage {
     try {
       // Sync sandwich collections to memory storage
       const collections = await this.primaryStorage.getAllSandwichCollections();
+      let syncedCount = 0;
+      
       for (const collection of collections) {
+        // Skip items that have been deleted
+        if (this.deletedIds.has(collection.id)) {
+          continue;
+        }
+        
         try {
           await this.fallbackStorage.createSandwichCollection(collection);
+          syncedCount++;
         } catch (error) {
           // Ignore duplicates or other sync errors
         }
       }
-      console.log(`Synchronized ${collections.length} sandwich collections to memory storage`);
+      console.log(`Synchronized ${syncedCount} sandwich collections to memory storage`);
     } catch (error) {
       console.warn('Failed to sync data from Google Sheets:', error);
     }

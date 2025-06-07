@@ -593,9 +593,64 @@ export class GoogleSheetsStorage implements IStorage {
   }
 
   async deleteSandwichCollection(id: number): Promise<boolean> {
-    // Google Sheets delete not implemented - return false to trigger fallback
-    console.log(`Delete operation for sandwich collection ${id} not implemented in Google Sheets, using fallback storage`);
-    return false;
+    try {
+      await this.ensureWorksheets();
+      const sheet = this.sheets.spreadsheets.values;
+      
+      // Get all data to find the row to delete
+      const response = await sheet.get({
+        spreadsheetId: this.spreadsheetId,
+        range: 'SandwichCollections!A:F'
+      });
+      
+      const rows = response.data.values || [];
+      
+      // Find the row with the matching ID (skip header row)
+      let rowIndex = -1;
+      for (let i = 1; i < rows.length; i++) {
+        if (parseInt(rows[i][0]) === id) {
+          rowIndex = i + 1; // Google Sheets is 1-indexed
+          break;
+        }
+      }
+      
+      if (rowIndex === -1) {
+        console.log(`Sandwich collection ${id} not found in Google Sheets`);
+        return false;
+      }
+      
+      // Delete the row by clearing its content and then removing it
+      await this.sheets.spreadsheets.batchUpdate({
+        spreadsheetId: this.spreadsheetId,
+        resource: {
+          requests: [{
+            deleteDimension: {
+              range: {
+                sheetId: await this.getSheetId('SandwichCollections'),
+                dimension: 'ROWS',
+                startIndex: rowIndex - 1,
+                endIndex: rowIndex
+              }
+            }
+          }]
+        }
+      });
+      
+      console.log(`Successfully deleted sandwich collection ${id} from Google Sheets`);
+      return true;
+    } catch (error) {
+      console.error(`Failed to delete sandwich collection ${id} from Google Sheets:`, error);
+      return false;
+    }
+  }
+
+  private async getSheetId(sheetName: string): Promise<number> {
+    const response = await this.sheets.spreadsheets.get({
+      spreadsheetId: this.spreadsheetId
+    });
+    
+    const sheet = response.data.sheets?.find(s => s.properties?.title === sheetName);
+    return sheet?.properties?.sheetId || 0;
   }
 
   // Meeting Minutes methods
