@@ -50,6 +50,8 @@ export default function Dashboard() {
         return <RecipientsManagement />;
       case "drivers":
         return <DriversManagement />;
+      case "hosts":
+        return <HostsManagement />;
       case "development":
         return <Development />;
       default:
