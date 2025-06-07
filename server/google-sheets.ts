@@ -587,15 +587,15 @@ export class GoogleSheetsStorage implements IStorage {
   }
 
   async updateSandwichCollection(id: number, updates: Partial<SandwichCollection>): Promise<SandwichCollection | undefined> {
-    // For Google Sheets, we'll need to find and update the row
-    // This is a simplified implementation - in production you'd want more sophisticated row management
-    throw new Error('Update not implemented for Google Sheets - use fallback storage');
+    // Google Sheets update not implemented - return undefined to trigger fallback
+    console.log(`Update operation for sandwich collection ${id} not implemented in Google Sheets, using fallback storage`);
+    return undefined;
   }
 
   async deleteSandwichCollection(id: number): Promise<boolean> {
-    // For Google Sheets, we'll need to find and delete the row
-    // This is a simplified implementation - in production you'd want more sophisticated row management
-    throw new Error('Delete not implemented for Google Sheets - use fallback storage');
+    // Google Sheets delete not implemented - return false to trigger fallback
+    console.log(`Delete operation for sandwich collection ${id} not implemented in Google Sheets, using fallback storage`);
+    return false;
   }
 
   // Meeting Minutes methods

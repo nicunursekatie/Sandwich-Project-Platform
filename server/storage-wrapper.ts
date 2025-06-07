@@ -42,7 +42,18 @@ class StorageWrapper implements IStorage {
     }
 
     try {
-      return await operation();
+      const result = await operation();
+      // For delete operations that return false, use fallback
+      if (typeof result === 'boolean' && result === false) {
+        console.log('Google Sheets operation returned false, using fallback storage');
+        return fallbackOperation();
+      }
+      // For update operations that return undefined, use fallback
+      if (result === undefined) {
+        console.log('Google Sheets operation returned undefined, using fallback storage');
+        return fallbackOperation();
+      }
+      return result;
     } catch (error) {
       // Check if it's a rate limit error
       if (error.status === 429) {
