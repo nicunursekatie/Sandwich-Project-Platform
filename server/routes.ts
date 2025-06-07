@@ -14,6 +14,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(requestLogger);
   app.use(generalRateLimit);
   app.use(sanitizeMiddleware);
+
+  // Authentication routes
+  app.get('/api/auth/user', (req, res) => {
+    // Return authenticated user for team access
+    res.json({
+      id: "1",
+      email: "team@sandwichproject.org",
+      firstName: "Team",
+      lastName: "Member",
+      profileImageUrl: null
+    });
+  });
+
+  app.get('/api/login', (req, res) => {
+    res.redirect('/');
+  });
+
+  app.get('/api/logout', (req, res) => {
+    res.redirect('/');
+  });
   
   // Projects
   app.get("/api/projects", async (req, res) => {
