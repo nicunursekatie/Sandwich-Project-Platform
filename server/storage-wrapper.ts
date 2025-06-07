@@ -226,10 +226,13 @@ class StorageWrapper implements IStorage {
 
   // Sandwich Collections methods
   async getAllSandwichCollections() {
-    return this.executeWithFallback(
+    const collections = await this.executeWithFallback(
       () => this.primaryStorage.getAllSandwichCollections(),
       () => this.fallbackStorage.getAllSandwichCollections()
     );
+    
+    // Filter out deleted items
+    return collections.filter(collection => !this.deletedIds.has(collection.id));
   }
 
   async createSandwichCollection(collection: any) {
@@ -256,10 +259,20 @@ class StorageWrapper implements IStorage {
   }
 
   async deleteSandwichCollection(id: number) {
-    return this.executeWithFallback(
+    // Track the deleted ID to prevent re-sync
+    this.deletedIds.add(id);
+    
+    const result = await this.executeWithFallback(
       () => this.primaryStorage.deleteSandwichCollection(id),
       () => this.fallbackStorage.deleteSandwichCollection(id)
     );
+    
+    // If deletion fails, remove from tracking
+    if (!result) {
+      this.deletedIds.delete(id);
+    }
+    
+    return result;
   }
 
   // Meeting Minutes methods
