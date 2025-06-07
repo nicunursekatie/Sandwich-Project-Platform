@@ -13,11 +13,8 @@ import {
 } from "@shared/schema";
 
 export interface IStorage {
-  // Users (for Replit Auth)
-  getUser(id: string): Promise<User | undefined>;
-  upsertUser(user: UpsertUser): Promise<User>;
-  
-  // Legacy user methods (for existing functionality)
+  // Users
+  getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   

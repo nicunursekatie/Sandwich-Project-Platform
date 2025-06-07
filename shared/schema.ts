@@ -152,4 +152,3 @@ export type DriverAgreement = typeof driverAgreements.$inferSelect;
 export type InsertDriverAgreement = z.infer<typeof insertDriverAgreementSchema>;
 
 export type UpsertUser = typeof users.$inferInsert;
-export type User = typeof users.$inferSelect;
