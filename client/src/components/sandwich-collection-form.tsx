@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Plus, Trash2, Sandwich, Settings, Edit, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import type { Host } from "@shared/schema";
 
 interface GroupCollection {
   id: string;
@@ -27,19 +28,21 @@ export default function SandwichCollectionForm() {
     { id: "1", groupName: "", sandwichCount: 0 }
   ]);
 
-  // Host management state
-  const [hostOptions, setHostOptions] = useState([
-    "Alex Thompson",
-    "Maria Gonzalez", 
-    "David Kim",
-    "Rachel Williams",
-    "James Anderson",
-    "Other"
-  ]);
-  const [isHostManagerOpen, setIsHostManagerOpen] = useState(false);
-  const [newHostName, setNewHostName] = useState("");
-  const [editingHostIndex, setEditingHostIndex] = useState<number | null>(null);
-  const [editingHostValue, setEditingHostValue] = useState("");
+  // Fetch active hosts from the database
+  const { data: hosts = [] } = useQuery<Host[]>({
+    queryKey: ['/api/hosts'],
+    queryFn: async () => {
+      const response = await fetch('/api/hosts');
+      if (!response.ok) throw new Error('Failed to fetch hosts');
+      return response.json();
+    }
+  });
+
+  // Filter active hosts and add "Other" option
+  const activeHosts = hosts.filter(host => host.status === "active");
+  const hostOptions = [...activeHosts.map(host => host.name), "Other"];
+
+
 
   const submitCollectionMutation = useMutation({
     mutationFn: async (data: {
@@ -88,52 +91,7 @@ export default function SandwichCollectionForm() {
     ));
   };
 
-  // Host management functions
-  const addNewHost = () => {
-    if (newHostName.trim() && !hostOptions.includes(newHostName.trim())) {
-      setHostOptions([...hostOptions.filter(h => h !== "Other"), newHostName.trim(), "Other"]);
-      setNewHostName("");
-      toast({
-        title: "Host added",
-        description: "New host has been added to the list.",
-      });
-    }
-  };
 
-  const startEditingHost = (index: number) => {
-    setEditingHostIndex(index);
-    setEditingHostValue(hostOptions[index]);
-  };
-
-  const saveEditingHost = () => {
-    if (editingHostIndex !== null && editingHostValue.trim()) {
-      const newOptions = [...hostOptions];
-      newOptions[editingHostIndex] = editingHostValue.trim();
-      setHostOptions(newOptions);
-      setEditingHostIndex(null);
-      setEditingHostValue("");
-      toast({
-        title: "Host updated",
-        description: "Host name has been updated.",
-      });
-    }
-  };
-
-  const cancelEditingHost = () => {
-    setEditingHostIndex(null);
-    setEditingHostValue("");
-  };
-
-  const deleteHost = (index: number) => {
-    if (hostOptions[index] !== "Other") {
-      const newOptions = hostOptions.filter((_, i) => i !== index);
-      setHostOptions(newOptions);
-      toast({
-        title: "Host deleted",
-        description: "Host has been removed from the list.",
-      });
-    }
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

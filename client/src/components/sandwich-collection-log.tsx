@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useState } from "react";
-import type { SandwichCollection } from "@shared/schema";
+import type { SandwichCollection, Host } from "@shared/schema";
 
 export default function SandwichCollectionLog() {
   const { toast } = useToast();
@@ -24,15 +24,19 @@ export default function SandwichCollectionLog() {
     queryKey: ["/api/sandwich-collections"]
   });
 
-  // Collection host names for the dropdown
-  const hostOptions = [
-    "Alex Thompson",
-    "Maria Gonzalez", 
-    "David Kim",
-    "Rachel Williams",
-    "James Anderson",
-    "Other"
-  ];
+  // Fetch active hosts from the database
+  const { data: hosts = [] } = useQuery<Host[]>({
+    queryKey: ['/api/hosts'],
+    queryFn: async () => {
+      const response = await fetch('/api/hosts');
+      if (!response.ok) throw new Error('Failed to fetch hosts');
+      return response.json();
+    }
+  });
+
+  // Filter active hosts and add "Other" option
+  const activeHosts = hosts.filter(host => host.status === "active");
+  const hostOptions = [...activeHosts.map(host => host.name), "Other"];
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
