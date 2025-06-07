@@ -9,7 +9,8 @@ import {
   type DriveLink, type InsertDriveLink,
   type AgendaItem, type InsertAgendaItem,
   type Meeting, type InsertMeeting,
-  type DriverAgreement, type InsertDriverAgreement
+  type DriverAgreement, type InsertDriverAgreement,
+  type Host, type InsertHost
 } from "@shared/schema";
 
 export interface IStorage {
@@ -88,6 +89,7 @@ export class MemStorage implements IStorage {
   private agendaItems: Map<number, AgendaItem>;
   private meetings: Map<number, Meeting>;
   private driverAgreements: Map<number, DriverAgreement>;
+  private hosts: Map<number, Host>;
   private currentIds: {
     user: number;
     project: number;
@@ -99,6 +101,7 @@ export class MemStorage implements IStorage {
     agendaItem: number;
     meeting: number;
     driverAgreement: number;
+    host: number;
   };
 
   constructor() {
@@ -112,6 +115,7 @@ export class MemStorage implements IStorage {
     this.agendaItems = new Map();
     this.meetings = new Map();
     this.driverAgreements = new Map();
+    this.hosts = new Map();
     this.currentIds = {
       user: 1,
       project: 1,
@@ -123,6 +127,7 @@ export class MemStorage implements IStorage {
       agendaItem: 1,
       meeting: 1,
       driverAgreement: 1,
+      host: 1,
     };
     
     this.seedData();
@@ -294,6 +299,47 @@ export class MemStorage implements IStorage {
       url: "https://drive.google.com/drive/folders/team-resources",
       icon: "users",
       iconColor: "purple"
+    });
+
+    // Seed hosts
+    this.createHost({
+      name: "Alex Thompson",
+      email: "alex.thompson@email.com",
+      phone: "(555) 111-2222",
+      status: "active",
+      notes: "Regular Saturday collections"
+    });
+
+    this.createHost({
+      name: "Maria Gonzalez",
+      email: "maria.gonzalez@email.com",
+      phone: "(555) 333-4444",
+      status: "active",
+      notes: "Specializes in large group events"
+    });
+
+    this.createHost({
+      name: "David Kim",
+      email: "david.kim@email.com",
+      phone: "(555) 555-6666",
+      status: "active",
+      notes: "Weekday collections preferred"
+    });
+
+    this.createHost({
+      name: "Rachel Williams",
+      email: "rachel.williams@email.com",
+      phone: "(555) 777-8888",
+      status: "active",
+      notes: "Available for emergency collections"
+    });
+
+    this.createHost({
+      name: "James Anderson",
+      email: "james.anderson@email.com",
+      phone: "(555) 999-0000",
+      status: "inactive",
+      notes: "On temporary leave"
     });
   }
 
@@ -583,6 +629,44 @@ export class MemStorage implements IStorage {
     };
     this.driverAgreements.set(id, agreement);
     return agreement;
+  }
+
+  // Host methods
+  async getAllHosts(): Promise<Host[]> {
+    return Array.from(this.hosts.values());
+  }
+
+  async getHost(id: number): Promise<Host | undefined> {
+    return this.hosts.get(id);
+  }
+
+  async createHost(insertHost: InsertHost): Promise<Host> {
+    const id = this.currentIds.host++;
+    const host: Host = { 
+      ...insertHost, 
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.hosts.set(id, host);
+    return host;
+  }
+
+  async updateHost(id: number, updates: Partial<Host>): Promise<Host | undefined> {
+    const host = this.hosts.get(id);
+    if (!host) return undefined;
+    
+    const updatedHost: Host = { 
+      ...host, 
+      ...updates, 
+      updatedAt: new Date()
+    };
+    this.hosts.set(id, updatedHost);
+    return updatedHost;
+  }
+
+  async deleteHost(id: number): Promise<boolean> {
+    return this.hosts.delete(id);
   }
 }
 
