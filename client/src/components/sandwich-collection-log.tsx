@@ -24,12 +24,13 @@ export default function SandwichCollectionLog() {
     queryKey: ["/api/sandwich-collections"]
   });
 
-  // Common host names for the dropdown
+  // Collection host names for the dropdown
   const hostOptions = [
-    "Sarah Chen",
-    "Mike Rodriguez", 
-    "Jessica Park",
-    "John Doe",
+    "Alex Thompson",
+    "Maria Gonzalez", 
+    "David Kim",
+    "Rachel Williams",
+    "James Anderson",
     "Other"
   ];
 

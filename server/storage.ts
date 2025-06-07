@@ -68,6 +68,13 @@ export interface IStorage {
   
   // Driver Agreements (admin access only)
   createDriverAgreement(agreement: InsertDriverAgreement): Promise<DriverAgreement>;
+  
+  // Hosts
+  getAllHosts(): Promise<Host[]>;
+  getHost(id: number): Promise<Host | undefined>;
+  createHost(host: InsertHost): Promise<Host>;
+  updateHost(id: number, updates: Partial<Host>): Promise<Host | undefined>;
+  deleteHost(id: number): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {

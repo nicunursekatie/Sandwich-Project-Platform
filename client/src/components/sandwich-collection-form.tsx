@@ -29,10 +29,11 @@ export default function SandwichCollectionForm() {
 
   // Host management state
   const [hostOptions, setHostOptions] = useState([
-    "Sarah Chen",
-    "Mike Rodriguez", 
-    "Jessica Park",
-    "John Doe",
+    "Alex Thompson",
+    "Maria Gonzalez", 
+    "David Kim",
+    "Rachel Williams",
+    "James Anderson",
     "Other"
   ]);
   const [isHostManagerOpen, setIsHostManagerOpen] = useState(false);
