@@ -15,6 +15,8 @@ class StorageWrapper implements IStorage {
         this.primaryStorage = new GoogleSheetsStorage();
         this.useGoogleSheets = true;
         console.log('Google Sheets storage initialized');
+        // Initialize synchronization in the background
+        this.syncDataFromGoogleSheets();
       } catch (error) {
         console.warn('Google Sheets initialization failed, using memory storage:', error);
         this.primaryStorage = this.fallbackStorage;
@@ -22,6 +24,25 @@ class StorageWrapper implements IStorage {
     } else {
       console.log('Google Sheets credentials not provided, using memory storage');
       this.primaryStorage = this.fallbackStorage;
+    }
+  }
+
+  private async syncDataFromGoogleSheets() {
+    if (!this.useGoogleSheets) return;
+    
+    try {
+      // Sync sandwich collections to memory storage
+      const collections = await this.primaryStorage.getAllSandwichCollections();
+      for (const collection of collections) {
+        try {
+          await this.fallbackStorage.createSandwichCollection(collection);
+        } catch (error) {
+          // Ignore duplicates or other sync errors
+        }
+      }
+      console.log(`Synchronized ${collections.length} sandwich collections to memory storage`);
+    } catch (error) {
+      console.warn('Failed to sync data from Google Sheets:', error);
     }
   }
 
