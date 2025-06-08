@@ -120,7 +120,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteSandwichCollection(id: number): Promise<boolean> {
     const result = await db.delete(sandwichCollections).where(eq(sandwichCollections.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   // Meeting Minutes
@@ -219,7 +219,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteHost(id: number): Promise<boolean> {
     const result = await db.delete(hosts).where(eq(hosts.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   async updateCollectionHostNames(oldHostName: string, newHostName: string): Promise<number> {
@@ -252,6 +252,6 @@ export class DatabaseStorage implements IStorage {
 
   async deleteRecipient(id: number): Promise<boolean> {
     const result = await db.delete(recipients).where(eq(recipients.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 }
