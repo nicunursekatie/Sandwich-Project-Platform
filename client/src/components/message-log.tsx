@@ -107,7 +107,7 @@ export default function MessageLog() {
 
   const onSubmit = (data: MessageFormData) => {
     const messageData = replyingTo 
-      ? { ...data, parentId: replyingTo.id, threadId: replyingTo.threadId || replyingTo.id }
+      ? { ...data, sender: userName || "Anonymous", parentId: replyingTo.id, threadId: replyingTo.threadId || replyingTo.id }
       : data;
     sendMessageMutation.mutate(messageData);
   };
@@ -173,8 +173,56 @@ export default function MessageLog() {
       <div className="px-4 py-3 border-b border-slate-200 flex items-center">
         <Hash className="w-4 h-4 text-slate-500 mr-2" />
         <h2 className="text-lg font-bold text-slate-900">team-chat</h2>
-        <div className="ml-auto text-xs text-slate-500">
-          {messages.length} {messages.length === 1 ? 'message' : 'messages'}
+        <div className="ml-auto flex items-center gap-3">
+          {userName && (
+            <div className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">
+              <User className="w-4 h-4" />
+              {userName}
+            </div>
+          )}
+          <Dialog open={isNameDialogOpen} onOpenChange={setIsNameDialogOpen}>
+            <DialogTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  setTempUserName(userName);
+                  setIsNameDialogOpen(true);
+                }}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                {userName ? "Change Name" : "Set Name"}
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Set Your Chat Name</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="username">Display Name</Label>
+                  <Input
+                    id="username"
+                    value={tempUserName}
+                    onChange={(e) => setTempUserName(e.target.value)}
+                    placeholder="Enter your name for chat messages"
+                    onKeyPress={(e) => e.key === 'Enter' && saveUserName()}
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setIsNameDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={saveUserName} disabled={!tempUserName.trim()}>
+                    Save Name
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+          <div className="text-xs text-slate-500">
+            {messages.length} {messages.length === 1 ? 'message' : 'messages'}
+          </div>
         </div>
       </div>
 

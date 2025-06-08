@@ -303,10 +303,7 @@ export default function SandwichCollectionLog() {
 
   const batchEditMutation = useMutation({
     mutationFn: async (data: { ids: number[], updates: Partial<SandwichCollection> }) => {
-      const response = await apiRequest("/api/sandwich-collections/batch-edit", {
-        method: "PATCH",
-        body: JSON.stringify(data)
-      });
+      const response = await apiRequest("PATCH", "/api/sandwich-collections/batch-edit", data);
       return response.json();
     },
     onSuccess: (result: any) => {
@@ -330,10 +327,7 @@ export default function SandwichCollectionLog() {
 
   const batchDeleteMutation = useMutation({
     mutationFn: async (ids: number[]) => {
-      const response = await apiRequest("/api/sandwich-collections/batch-delete", {
-        method: "DELETE",
-        body: JSON.stringify({ ids })
-      });
+      const response = await apiRequest("DELETE", "/api/sandwich-collections/batch-delete", { ids });
       return response.json();
     },
     onSuccess: (result: any) => {
