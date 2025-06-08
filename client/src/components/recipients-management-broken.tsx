@@ -25,8 +25,6 @@ export default function RecipientsManagement() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingRecipient, setEditingRecipient] = useState<Recipient | null>(null);
-  const [importFile, setImportFile] = useState<File | null>(null);
-  const [importResults, setImportResults] = useState<{ imported: number; skipped: number } | null>(null);
   const [newRecipient, setNewRecipient] = useState({
     name: "",
     phone: "",
@@ -35,117 +33,96 @@ export default function RecipientsManagement() {
     preferences: "",
     status: "active" as const
   });
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importResults, setImportResults] = useState<any>(null);
 
   const { data: recipients = [], isLoading } = useQuery({
-    queryKey: ["/api/recipients"],
+    queryKey: ['/api/recipients'],
   });
 
   const createRecipientMutation = useMutation({
-    mutationFn: (recipient: any) => apiRequest("/api/recipients", {
-      method: "POST",
-      body: JSON.stringify(recipient),
-    }),
+    mutationFn: async (data: typeof newRecipient) => {
+      return apiRequest('/api/recipients', 'POST', data);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
+      queryClient.invalidateQueries({ queryKey: ['/api/recipients'] });
+      setNewRecipient({ name: "", phone: "", email: "", address: "", preferences: "", status: "active" });
       setIsAddModalOpen(false);
-      setNewRecipient({
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
-        preferences: "",
-        status: "active"
-      });
       toast({
-        title: "Success",
-        description: "Recipient added successfully",
+        title: "Recipient added",
+        description: "New recipient has been added successfully.",
       });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to add recipient",
-        variant: "destructive",
-      });
-    },
+    }
   });
 
   const updateRecipientMutation = useMutation({
-    mutationFn: ({ id, ...updates }: any) => apiRequest(`/api/recipients/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(updates),
-    }),
+    mutationFn: async ({ id, ...data }: Partial<Recipient> & { id: number }) => {
+      return apiRequest(`/api/recipients/${id}`, 'PUT', data);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
+      queryClient.invalidateQueries({ queryKey: ['/api/recipients'] });
       setEditingRecipient(null);
       toast({
-        title: "Success",
-        description: "Recipient updated successfully",
+        title: "Recipient updated",
+        description: "Recipient information has been updated.",
       });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to update recipient",
-        variant: "destructive",
-      });
-    },
+    }
   });
 
   const deleteRecipientMutation = useMutation({
-    mutationFn: (id: number) => apiRequest(`/api/recipients/${id}`, {
-      method: "DELETE",
-    }),
+    mutationFn: async (id: number) => {
+      return apiRequest(`/api/recipients/${id}`, 'DELETE');
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
+      queryClient.invalidateQueries({ queryKey: ['/api/recipients'] });
       toast({
-        title: "Success",
-        description: "Recipient deleted successfully",
+        title: "Recipient deleted",
+        description: "Recipient has been removed from the system.",
       });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to delete recipient",
-        variant: "destructive",
-      });
-    },
+    }
   });
 
   const importRecipientsMutation = useMutation({
-    mutationFn: (file: File) => {
+    mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append('file', file);
-      return fetch('/api/recipients/import', {
+
+      const response = await fetch('/api/recipients/import', {
         method: 'POST',
         body: formData,
-      }).then(res => res.json());
+      });
+
+      if (!response.ok) {
+        throw new Error('Import failed');
+      }
+
+      return response.json();
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
+      queryClient.invalidateQueries({ queryKey: ['/api/recipients'] });
       setImportResults(data);
       setImportFile(null);
       toast({
-        title: "Import Complete",
-        description: `Successfully imported ${data.imported} recipients`,
+        title: "Import completed",
+        description: `Successfully imported ${data.imported || 0} recipients.`,
       });
     },
     onError: () => {
       toast({
-        title: "Import Error",
-        description: "Failed to import recipients",
-        variant: "destructive",
+        title: "Import failed",
+        description: "There was an error importing the file.",
+        variant: "destructive"
       });
-    },
+    }
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newRecipient.name || !newRecipient.phone) {
       toast({
-        title: "Validation Error",
-        description: "Name and phone are required",
-        variant: "destructive",
+        title: "Missing information",
+        description: "Please fill in the recipient name and phone number.",
+        variant: "destructive"
       });
       return;
     }
@@ -157,8 +134,9 @@ export default function RecipientsManagement() {
   };
 
   const handleUpdate = () => {
-    if (!editingRecipient) return;
-    updateRecipientMutation.mutate(editingRecipient);
+    if (editingRecipient) {
+      updateRecipientMutation.mutate(editingRecipient);
+    }
   };
 
   const handleDelete = (id: number) => {
@@ -170,8 +148,16 @@ export default function RecipientsManagement() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImportFile(file);
-      setImportResults(null);
+      const fileType = file.name.toLowerCase();
+      if (fileType.endsWith('.csv') || fileType.endsWith('.xlsx') || fileType.endsWith('.xls')) {
+        setImportFile(file);
+      } else {
+        toast({
+          title: "Invalid file type",
+          description: "Please select a CSV or Excel file.",
+          variant: "destructive"
+        });
+      }
     }
   };
 
@@ -209,7 +195,7 @@ export default function RecipientsManagement() {
                 <p id="import-recipients-description" className="text-sm text-slate-600 mb-4">
                   Upload a CSV or Excel file with recipient data. Required columns: name, phone. Optional: email, address, preferences, status.
                 </p>
-                
+
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="file-upload">Select File</Label>
@@ -258,7 +244,6 @@ export default function RecipientsManagement() {
                 </div>
               </DialogContent>
             </Dialog>
-
             <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
               <DialogTrigger asChild>
                 <Button className="flex items-center gap-2">
@@ -267,77 +252,76 @@ export default function RecipientsManagement() {
                 </Button>
               </DialogTrigger>
               <DialogContent aria-describedby="add-recipient-description">
-                <DialogHeader>
-                  <DialogTitle>Add New Recipient</DialogTitle>
-                </DialogHeader>
-                <p id="add-recipient-description" className="text-sm text-slate-600 mb-4">
-                  Add a new recipient to the system for sandwich deliveries.
-                </p>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <Label htmlFor="name">Name *</Label>
-                    <Input
-                      id="name"
-                      value={newRecipient.name}
-                      onChange={(e) => setNewRecipient({ ...newRecipient, name: e.target.value })}
-                      placeholder="Enter recipient name"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone">Phone Number *</Label>
-                    <Input
-                      id="phone"
-                      value={newRecipient.phone}
-                      onChange={(e) => setNewRecipient({ ...newRecipient, phone: e.target.value })}
-                      placeholder="(555) 123-4567"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={newRecipient.email}
-                      onChange={(e) => setNewRecipient({ ...newRecipient, email: e.target.value })}
-                      placeholder="email@example.com"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="address">Address</Label>
-                    <Input
-                      id="address"
-                      value={newRecipient.address}
-                      onChange={(e) => setNewRecipient({ ...newRecipient, address: e.target.value })}
-                      placeholder="123 Main St, City, State 12345"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="preferences">Preferences</Label>
-                    <Input
-                      id="preferences"
-                      value={newRecipient.preferences}
-                      onChange={(e) => setNewRecipient({ ...newRecipient, preferences: e.target.value })}
-                      placeholder="Dietary restrictions or preferences"
-                    />
-                  </div>
-                  <div className="flex justify-end space-x-2">
-                    <Button type="button" variant="outline" onClick={() => setIsAddModalOpen(false)}>
-                      Cancel
-                    </Button>
-                    <Button type="submit" disabled={createRecipientMutation.isPending}>
-                      {createRecipientMutation.isPending ? "Adding..." : "Add Recipient"}
-                    </Button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
+              <DialogHeader>
+                <DialogTitle>Add New Recipient</DialogTitle>
+              </DialogHeader>
+              <p id="add-recipient-description" className="text-sm text-slate-600 mb-4">
+                Add a new recipient to the system for sandwich deliveries.
+              </p>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Name *</Label>
+                  <Input
+                    id="name"
+                    value={newRecipient.name}
+                    onChange={(e) => setNewRecipient({ ...newRecipient, name: e.target.value })}
+                    placeholder="Enter recipient name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="phone">Phone Number *</Label>
+                  <Input
+                    id="phone"
+                    value={newRecipient.phone}
+                    onChange={(e) => setNewRecipient({ ...newRecipient, phone: e.target.value })}
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={newRecipient.email}
+                    onChange={(e) => setNewRecipient({ ...newRecipient, email: e.target.value })}
+                    placeholder="email@example.com"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="address">Address</Label>
+                  <Input
+                    id="address"
+                    value={newRecipient.address}
+                    onChange={(e) => setNewRecipient({ ...newRecipient, address: e.target.value })}
+                    placeholder="123 Main St, City, State 12345"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="preferences">Preferences</Label>
+                  <Input
+                    id="preferences"
+                    value={newRecipient.preferences}
+                    onChange={(e) => setNewRecipient({ ...newRecipient, preferences: e.target.value })}
+                    placeholder="Dietary restrictions or preferences"
+                  />
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <Button type="button" variant="outline" onClick={() => setIsAddModalOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={createRecipientMutation.isPending}>
+                    {createRecipientMutation.isPending ? "Adding..." : "Add Recipient"}
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
       {/* Recipients List */}
       <div className="grid gap-4">
-        {recipients.map((recipient: any) => (
+        {recipients.map((recipient) => (
           <Card key={recipient.id} className="border border-slate-200">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
@@ -393,7 +377,7 @@ export default function RecipientsManagement() {
             </CardContent>
           </Card>
         ))}
-        
+
         {recipients.length === 0 && (
           <div className="text-center py-12 text-slate-500">
             No recipients found. Add a new recipient to get started.
@@ -421,7 +405,7 @@ export default function RecipientsManagement() {
                 />
               </div>
               <div>
-                <Label htmlFor="edit-phone">Phone</Label>
+                <Label htmlFor="edit-phone">Phone Number</Label>
                 <Input
                   id="edit-phone"
                   value={editingRecipient.phone}
