@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { hosts, sandwichCollections, projects, messages, weeklyReports, meetingMinutes, driveLinks, agendaItems, meetings, driverAgreements } from "@shared/schema";
+import { hosts, sandwichCollections, projects, messages, weeklyReports, meetingMinutes, driveLinks, agendaItems, meetings, driverAgreements, recipients } from "@shared/schema";
 import { eq, count } from "drizzle-orm";
 
 export async function initializeDatabase() {
@@ -13,8 +13,9 @@ export async function initializeDatabase() {
     const [projectsCount] = await db.select({ count: count() }).from(projects);
     const [messagesCount] = await db.select({ count: count() }).from(messages);
     const [collectionsCount] = await db.select({ count: count() }).from(sandwichCollections);
+    const [recipientsCount] = await db.select({ count: count() }).from(recipients);
 
-    console.log("Table counts - Hosts:", hostsCount.count, "Projects:", projectsCount.count, "Messages:", messagesCount.count, "Collections:", collectionsCount.count);
+    console.log("Table counts - Hosts:", hostsCount.count, "Projects:", projectsCount.count, "Messages:", messagesCount.count, "Collections:", collectionsCount.count, "Recipients:", recipientsCount.count);
 
     // Only seed if ALL tables are completely empty (first time setup)
     if (hostsCount.count === 0 && projectsCount.count === 0 && messagesCount.count === 0 && collectionsCount.count === 0) {
@@ -85,6 +86,45 @@ export async function initializeDatabase() {
           hostName: "Rachel Williams", 
           individualSandwiches: 12,
           groupCollections: "Finance: 7"
+        }
+      ]);
+    }
+
+    // Seed recipients if empty
+    if (recipientsCount.count === 0) {
+      console.log("Seeding recipients table...");
+      await db.insert(recipients).values([
+        {
+          name: "John Doe",
+          phone: "(555) 123-4567",
+          email: "john.doe@email.com",
+          address: "123 Main St, City, State 12345",
+          preferences: "No nuts, vegetarian options preferred",
+          status: "active"
+        },
+        {
+          name: "Jane Smith", 
+          phone: "(555) 987-6543",
+          email: "jane.smith@email.com",
+          address: "456 Oak Ave, City, State 12345",
+          preferences: "Gluten-free bread only",
+          status: "active"
+        },
+        {
+          name: "Mike Johnson",
+          phone: "(555) 456-7890",
+          email: "mike.johnson@email.com", 
+          address: "789 Pine St, City, State 12345",
+          preferences: "Regular sandwiches",
+          status: "active"
+        },
+        {
+          name: "Sarah Williams",
+          phone: "(555) 321-0987",
+          email: "sarah.williams@email.com",
+          address: "321 Elm St, City, State 12345", 
+          preferences: "Turkey and ham only",
+          status: "inactive"
         }
       ]);
     }
