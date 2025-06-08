@@ -734,32 +734,6 @@ export default function PhoneDirectory() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="contacts" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Phone className="w-5 h-5" />
-                General Contacts
-              </CardTitle>
-              <CardDescription>
-                Contact information for general contacts and volunteers
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {filteredContacts.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  {searchTerm ? 'No contacts found matching your search.' : 'No contacts found.'}
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredContacts.map((contact) => (
-                    <ContactCard key={contact.id} contact={contact} />
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
 
       {/* Summary Stats */}
