@@ -261,12 +261,19 @@ export default function HostsManagement() {
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {hosts.map((host) => (
-            <Card key={host.id} className="hover:shadow-md transition-shadow">
+            <Card 
+              key={host.id} 
+              className={`hover:shadow-md transition-shadow ${
+                host.status === 'inactive' 
+                  ? 'bg-gray-50 border-gray-300 opacity-80' 
+                  : ''
+              }`}
+            >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-2">
-                    <User className="w-5 h-5 text-slate-600" />
-                    <CardTitle className="text-base">{host.name}</CardTitle>
+                    <User className={`w-5 h-5 ${host.status === 'inactive' ? 'text-gray-400' : 'text-slate-600'}`} />
+                    <CardTitle className={`text-base ${host.status === 'inactive' ? 'text-gray-600' : ''}`}>{host.name}</CardTitle>
                   </div>
                   <Badge 
                     variant={host.status === "active" ? "default" : "secondary"}

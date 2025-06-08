@@ -752,9 +752,22 @@ export default function SandwichCollectionLog() {
             const groupData = parseGroupCollections(collection.groupCollections);
             const totalSandwiches = calculateTotal(collection);
             const isSelected = selectedCollections.has(collection.id);
+            
+            // Check if the host is inactive
+            const hostData = hosts.find(h => h.name === collection.hostName);
+            const isInactiveHost = hostData?.status === 'inactive';
 
             return (
-              <div key={collection.id} className={`border border-slate-200 rounded-lg p-4 ${isSelected ? 'bg-blue-50 border-blue-200' : ''}`}>
+              <div 
+                key={collection.id} 
+                className={`border rounded-lg p-4 ${
+                  isSelected 
+                    ? 'bg-blue-50 border-blue-200' 
+                    : isInactiveHost 
+                      ? 'bg-gray-50 border-gray-300 opacity-75' 
+                      : 'border-slate-200'
+                }`}
+              >
                 {/* Header */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
@@ -768,19 +781,24 @@ export default function SandwichCollectionLog() {
                         <Square className="w-4 h-4 text-slate-400 hover:text-slate-600" />
                       )}
                     </button>
-                    <div className="flex items-center text-slate-700">
-                      <Calendar className="w-4 h-4 mr-1" />
+                    <div className={`flex items-center ${isInactiveHost ? 'text-gray-600' : 'text-slate-700'}`}>
+                      <Calendar className={`w-4 h-4 mr-1 ${isInactiveHost ? 'text-gray-500' : ''}`} />
                       <span className="font-medium">{formatDate(collection.collectionDate)}</span>
                     </div>
-                    <div className="flex items-center text-slate-600">
-                      <User className="w-4 h-4 mr-1" />
+                    <div className={`flex items-center ${isInactiveHost ? 'text-gray-500' : 'text-slate-600'}`}>
+                      <User className={`w-4 h-4 mr-1 ${isInactiveHost ? 'text-gray-400' : ''}`} />
                       <span>{collection.hostName}</span>
+                      {isInactiveHost && (
+                        <span className="ml-2 text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">
+                          Inactive Host
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="text-right mr-3">
-                      <div className="text-lg font-semibold text-slate-900">{totalSandwiches}</div>
-                      <div className="text-xs text-slate-500">total sandwiches</div>
+                      <div className={`text-lg font-semibold ${isInactiveHost ? 'text-gray-700' : 'text-slate-900'}`}>{totalSandwiches}</div>
+                      <div className={`text-xs ${isInactiveHost ? 'text-gray-500' : 'text-slate-500'}`}>total sandwiches</div>
                     </div>
                     <Button
                       variant="outline"
