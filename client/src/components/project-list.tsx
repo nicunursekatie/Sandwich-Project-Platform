@@ -328,8 +328,28 @@ export default function ProjectList() {
 
         <div className="space-y-3">
           {projects.map((project) => (
-            <div key={project.id} className="bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
-              <div className="flex items-center justify-between p-3">
+            <div key={project.id} className="bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors relative">
+              {/* Action buttons in top right corner */}
+              <div className="absolute top-2 right-2 flex gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => startEditingProject(project)}
+                  className="h-6 w-6 p-0 text-slate-500 hover:text-slate-700 hover:bg-slate-200"
+                >
+                  <Edit className="w-3 h-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleDeleteProject(project.id, project.title)}
+                  className="h-6 w-6 p-0 text-slate-500 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
+
+              <div className="flex items-center justify-between p-3 pr-16">
                 <div className="flex items-center space-x-3">
                   <span className={`w-3 h-3 rounded-full ${getStatusColor(project.status)}`}></span>
                   <div>
@@ -357,23 +377,6 @@ export default function ProjectList() {
                   ) : project.assigneeName ? (
                     <span className="text-sm text-slate-500">Assigned to {project.assigneeName}</span>
                   ) : null}
-                  
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => startEditingProject(project)}
-                    className="text-slate-600 hover:text-slate-700"
-                  >
-                    <Edit className="w-3 h-3" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDeleteProject(project.id, project.title)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </Button>
                 </div>
               </div>
               
