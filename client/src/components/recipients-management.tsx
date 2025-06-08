@@ -33,38 +33,8 @@ export default function RecipientsManagement() {
     status: "active" as const
   });
 
-  // Mock data for recipients
   const { data: recipients = [], isLoading } = useQuery({
     queryKey: ['/api/recipients'],
-    queryFn: () => Promise.resolve([
-      {
-        id: 1,
-        name: "Sarah Chen",
-        phone: "(555) 123-4567",
-        email: "sarah.chen@email.com",
-        address: "123 Main St, City, State 12345",
-        preferences: "No mayo, extra lettuce",
-        status: "active" as const
-      },
-      {
-        id: 2,
-        name: "Mike Rodriguez",
-        phone: "(555) 234-5678",
-        email: "mike.rodriguez@email.com",
-        address: "456 Oak Ave, City, State 12345",
-        preferences: "Vegetarian options only",
-        status: "active" as const
-      },
-      {
-        id: 3,
-        name: "Jessica Park",
-        phone: "(555) 345-6789",
-        email: "jessica.park@email.com",
-        address: "789 Pine St, City, State 12345",
-        preferences: "Gluten-free bread",
-        status: "inactive" as const
-      }
-    ])
   });
 
   const createRecipientMutation = useMutation({

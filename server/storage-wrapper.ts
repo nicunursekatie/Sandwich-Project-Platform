@@ -411,6 +411,42 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.deleteHost(id)
     );
   }
+
+  // Recipients methods
+  async getAllRecipients() {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getAllRecipients(),
+      () => this.fallbackStorage.getAllRecipients()
+    );
+  }
+
+  async getRecipient(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getRecipient(id),
+      () => this.fallbackStorage.getRecipient(id)
+    );
+  }
+
+  async createRecipient(recipient: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createRecipient(recipient),
+      () => this.fallbackStorage.createRecipient(recipient)
+    );
+  }
+
+  async updateRecipient(id: number, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateRecipient(id, updates),
+      () => this.fallbackStorage.updateRecipient(id, updates)
+    );
+  }
+
+  async deleteRecipient(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteRecipient(id),
+      () => this.fallbackStorage.deleteRecipient(id)
+    );
+  }
 }
 
 export const storage = new StorageWrapper();
