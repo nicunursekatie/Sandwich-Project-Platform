@@ -221,7 +221,11 @@ export default function SandwichCollectionLog() {
   // Mutations for update and delete
   const updateMutation = useMutation({
     mutationFn: async (data: { id: number; updates: any }) => {
-      return await apiRequest("PUT", `/api/sandwich-collections/${data.id}`, data.updates);
+      const response = await apiRequest(`/api/sandwich-collections/${data.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data.updates)
+      });
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
@@ -242,7 +246,10 @@ export default function SandwichCollectionLog() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      return await apiRequest("DELETE", `/api/sandwich-collections/${id}`);
+      const response = await apiRequest(`/api/sandwich-collections/${id}`, {
+        method: 'DELETE'
+      });
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
@@ -301,7 +308,8 @@ export default function SandwichCollectionLog() {
 
   const analyzeDuplicatesMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest("GET", "/api/sandwich-collections/analyze-duplicates");
+      const response = await fetch("/api/sandwich-collections/analyze-duplicates");
+      if (!response.ok) throw new Error('Failed to analyze duplicates');
       return response.json() as Promise<DuplicateAnalysis>;
     },
     onSuccess: (result: DuplicateAnalysis) => {
@@ -323,7 +331,12 @@ export default function SandwichCollectionLog() {
 
   const cleanDuplicatesMutation = useMutation({
     mutationFn: async (mode: 'exact' | 'suspicious') => {
-      const response = await apiRequest("DELETE", "/api/sandwich-collections/clean-duplicates", { mode });
+      const response = await fetch("/api/sandwich-collections/clean-duplicates", {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode })
+      });
+      if (!response.ok) throw new Error('Failed to clean duplicates');
       return response.json();
     },
     onSuccess: (result: any) => {
