@@ -329,7 +329,11 @@ export default function SandwichCollectionLog() {
 
   const batchEditMutation = useMutation({
     mutationFn: async (data: { ids: number[], updates: Partial<SandwichCollection> }) => {
-      const response = await apiRequest("PATCH", "/api/sandwich-collections/batch-edit", data);
+      const response = await fetch("/api/sandwich-collections/batch-edit", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
       return response.json();
     },
     onSuccess: (result: any) => {
