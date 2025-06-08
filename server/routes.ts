@@ -859,7 +859,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Import recipients from CSV/XLSX
-  app.post('/api/recipients/import', upload.single('file'), async (req: Request, res: Response) => {
+  app.post('/api/recipients/import', upload.single('file'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No file uploaded" });

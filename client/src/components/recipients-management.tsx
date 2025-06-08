@@ -188,6 +188,61 @@ export default function RecipientsManagement() {
                   Import CSV/XLSX
                 </Button>
               </DialogTrigger>
+              <DialogContent aria-describedby="import-recipients-description">
+                <DialogHeader>
+                  <DialogTitle>Import Recipients from CSV/XLSX</DialogTitle>
+                </DialogHeader>
+                <p id="import-recipients-description" className="text-sm text-slate-600 mb-4">
+                  Upload a CSV or Excel file with recipient data. Required columns: name, phone. Optional: email, address, preferences, status.
+                </p>
+                
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="file-upload">Select File</Label>
+                    <Input
+                      id="file-upload"
+                      type="file"
+                      accept=".csv,.xlsx,.xls"
+                      onChange={handleFileSelect}
+                      className="mt-1"
+                    />
+                    {importFile && (
+                      <p className="text-sm text-green-600 mt-2">
+                        Selected: {importFile.name}
+                      </p>
+                    )}
+                  </div>
+
+                  {importResults && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <h4 className="font-medium text-green-800">Import Results</h4>
+                      <p className="text-sm text-green-700 mt-1">
+                        Successfully imported {importResults.imported} recipients
+                        {importResults.skipped > 0 && `, skipped ${importResults.skipped} duplicates`}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setIsImportModalOpen(false);
+                        setImportFile(null);
+                        setImportResults(null);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleImport}
+                      disabled={!importFile || importRecipientsMutation.isPending}
+                    >
+                      {importRecipientsMutation.isPending ? "Importing..." : "Import"}
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
             </Dialog>
             <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
               <DialogTrigger asChild>
@@ -196,7 +251,7 @@ export default function RecipientsManagement() {
                   Add Recipient
                 </Button>
               </DialogTrigger>
-            <DialogContent aria-describedby="add-recipient-description">
+              <DialogContent aria-describedby="add-recipient-description">
               <DialogHeader>
                 <DialogTitle>Add New Recipient</DialogTitle>
               </DialogHeader>
@@ -262,65 +317,6 @@ export default function RecipientsManagement() {
             </DialogContent>
           </Dialog>
         </div>
-
-        {/* Import Modal */}
-        <Dialog open={isImportModalOpen} onOpenChange={setIsImportModalOpen}>
-          <DialogContent aria-describedby="import-recipients-description">
-            <DialogHeader>
-              <DialogTitle>Import Recipients from CSV/XLSX</DialogTitle>
-            </DialogHeader>
-            <p id="import-recipients-description" className="text-sm text-slate-600 mb-4">
-              Upload a CSV or Excel file with recipient data. Required columns: name, phone. Optional: email, address, preferences, status.
-            </p>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="file-upload">Select File</Label>
-                <Input
-                  id="file-upload"
-                  type="file"
-                  accept=".csv,.xlsx,.xls"
-                  onChange={handleFileSelect}
-                  className="mt-1"
-                />
-                {importFile && (
-                  <p className="text-sm text-green-600 mt-2">
-                    Selected: {importFile.name}
-                  </p>
-                )}
-              </div>
-
-              {importResults && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h4 className="font-medium text-green-800">Import Results</h4>
-                  <p className="text-sm text-green-700 mt-1">
-                    Successfully imported {importResults.imported} recipients
-                    {importResults.skipped > 0 && `, skipped ${importResults.skipped} duplicates`}
-                  </p>
-                </div>
-              )}
-
-              <div className="flex justify-end gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setIsImportModalOpen(false);
-                    setImportFile(null);
-                    setImportResults(null);
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleImport}
-                  disabled={!importFile || importRecipientsMutation.isPending}
-                >
-                  {importRecipientsMutation.isPending ? "Importing..." : "Import"}
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
 
       {/* Recipients List */}
