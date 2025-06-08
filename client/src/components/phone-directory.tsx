@@ -269,6 +269,17 @@ export default function PhoneDirectory() {
               </div>
             )}
           </div>
+          <div className="flex flex-col gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setEditingHost(host)}
+              className="flex items-center gap-1"
+            >
+              <Edit className="w-3 h-3" />
+              Edit
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -328,6 +339,17 @@ export default function PhoneDirectory() {
               </div>
             )}
           </div>
+          <div className="flex flex-col gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setEditingRecipient(recipient)}
+              className="flex items-center gap-1"
+            >
+              <Edit className="w-3 h-3" />
+              Edit
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -350,6 +372,25 @@ export default function PhoneDirectory() {
         <div>
           <h2 className="text-2xl font-bold text-slate-900">Phone Directory</h2>
           <p className="text-slate-600">Contact information for hosts and recipients</p>
+        </div>
+        <div className="flex items-center gap-2">
+          {activeTab === "hosts" ? (
+            <Button 
+              onClick={() => setIsAddingHost(true)}
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Host
+            </Button>
+          ) : (
+            <Button 
+              onClick={() => setIsAddingRecipient(true)}
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Recipient
+            </Button>
+          )}
         </div>
       </div>
 
@@ -504,6 +545,329 @@ export default function PhoneDirectory() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Add Host Dialog */}
+      <Dialog open={isAddingHost} onOpenChange={setIsAddingHost}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Host Location</DialogTitle>
+            <DialogDescription>
+              Add a new host location for sandwich collection
+            </DialogDescription>
+          </DialogHeader>
+          <HostForm
+            onSubmit={(data) => createHostMutation.mutate(data)}
+            onCancel={() => setIsAddingHost(false)}
+            isLoading={createHostMutation.isPending}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Host Dialog */}
+      <Dialog open={!!editingHost} onOpenChange={(open) => !open && setEditingHost(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Host Location</DialogTitle>
+            <DialogDescription>
+              Update host location information
+            </DialogDescription>
+          </DialogHeader>
+          {editingHost && (
+            <HostForm
+              initialData={editingHost}
+              onSubmit={(data) => updateHostMutation.mutate({ id: editingHost.id, data })}
+              onCancel={() => setEditingHost(null)}
+              isLoading={updateHostMutation.isPending}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Recipient Dialog */}
+      <Dialog open={isAddingRecipient} onOpenChange={setIsAddingRecipient}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Recipient</DialogTitle>
+            <DialogDescription>
+              Add a new recipient for sandwich delivery
+            </DialogDescription>
+          </DialogHeader>
+          <RecipientForm
+            onSubmit={(data) => createRecipientMutation.mutate(data)}
+            onCancel={() => setIsAddingRecipient(false)}
+            isLoading={createRecipientMutation.isPending}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Recipient Dialog */}
+      <Dialog open={!!editingRecipient} onOpenChange={(open) => !open && setEditingRecipient(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Recipient</DialogTitle>
+            <DialogDescription>
+              Update recipient information
+            </DialogDescription>
+          </DialogHeader>
+          {editingRecipient && (
+            <RecipientForm
+              initialData={editingRecipient}
+              onSubmit={(data) => updateRecipientMutation.mutate({ id: editingRecipient.id, data })}
+              onCancel={() => setEditingRecipient(null)}
+              isLoading={updateRecipientMutation.isPending}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+
+// Host Form Component
+const HostForm = ({ 
+  initialData, 
+  onSubmit, 
+  onCancel, 
+  isLoading 
+}: {
+  initialData?: Host;
+  onSubmit: (data: z.infer<typeof insertHostSchema>) => void;
+  onCancel: () => void;
+  isLoading: boolean;
+}) => {
+  const form = useForm<z.infer<typeof insertHostSchema>>({
+    resolver: zodResolver(insertHostSchema),
+    defaultValues: {
+      name: initialData?.name || "",
+      address: initialData?.address || "",
+      status: initialData?.status || "active",
+      notes: initialData?.notes || "",
+    },
+  });
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Location Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter host location name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Address</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Enter full address" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Status</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="notes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Notes</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Additional notes about this location" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex justify-end gap-2 pt-4">
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Saving..." : initialData ? "Update Host" : "Add Host"}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+};
+
+// Recipient Form Component
+const RecipientForm = ({ 
+  initialData, 
+  onSubmit, 
+  onCancel, 
+  isLoading 
+}: {
+  initialData?: Recipient;
+  onSubmit: (data: z.infer<typeof insertRecipientSchema>) => void;
+  onCancel: () => void;
+  isLoading: boolean;
+}) => {
+  const form = useForm<z.infer<typeof insertRecipientSchema>>({
+    resolver: zodResolver(insertRecipientSchema),
+    defaultValues: {
+      name: initialData?.name || "",
+      contactName: initialData?.contactName || "",
+      phone: initialData?.phone || "",
+      email: initialData?.email || "",
+      address: initialData?.address || "",
+      status: initialData?.status || "active",
+      preferences: initialData?.preferences || "",
+    },
+  });
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Organization Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter organization name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="contactName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Contact Person</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter contact person name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone Number</FormLabel>
+              <FormControl>
+                <Input placeholder="(555) 123-4567" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="contact@organization.org" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Address</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Enter full address" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Status</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="preferences"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Delivery Preferences</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Special delivery instructions or preferences" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex justify-end gap-2 pt-4">
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Saving..." : initialData ? "Update Recipient" : "Add Recipient"}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+};
