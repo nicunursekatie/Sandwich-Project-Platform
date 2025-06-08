@@ -4,6 +4,7 @@ import { z } from "zod";
 import express from "express";
 import multer from "multer";
 import { parse } from 'csv-parse/sync';
+import fs from 'fs/promises';
 import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
@@ -255,8 +256,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No CSV file uploaded" });
       }
 
-      const fs = require('fs');
-      const csvContent = fs.readFileSync(req.file.path, 'utf-8');
+      const fs = await import('fs/promises');
+      const csvContent = await fs.readFile(req.file.path, 'utf-8');
       
       // Parse CSV
       const records = parse(csvContent, {
@@ -317,7 +318,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Clean up uploaded file
-      fs.unlinkSync(req.file.path);
+      await fs.unlink(req.file.path);
 
       const result = {
         totalRecords: records.length,
@@ -333,8 +334,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Clean up uploaded file if it exists
       if (req.file?.path) {
         try {
-          const fs = require('fs');
-          fs.unlinkSync(req.file.path);
+          const fs = await import('fs/promises');
+          await fs.unlink(req.file.path);
         } catch (cleanupError) {
           logger.error("Failed to clean up uploaded file", cleanupError);
         }
