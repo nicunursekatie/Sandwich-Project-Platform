@@ -31,9 +31,22 @@ export const projects = pgTable("projects", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   status: text("status").notNull(), // 'available', 'in_progress', 'planning', 'completed'
+  priority: text("priority").notNull().default("medium"), // 'low', 'medium', 'high', 'urgent'
+  category: text("category").notNull().default("general"), // 'general', 'marketing', 'operations', 'grants', 'events'
   assigneeId: integer("assignee_id"),
   assigneeName: text("assignee_name"),
+  dueDate: text("due_date"), // ISO date string
+  startDate: text("start_date"), // ISO date string
+  completionDate: text("completion_date"), // ISO date string
+  progressPercentage: integer("progress_percentage").notNull().default(0), // 0-100
+  notes: text("notes"), // Additional project notes
+  attachments: text("attachments"), // JSON string of file attachments
+  tags: text("tags"), // JSON array of tags
+  estimatedHours: integer("estimated_hours"), // Estimated work hours
+  actualHours: integer("actual_hours"), // Actual hours worked
   color: text("color").notNull().default("blue"), // for status indicator
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export const messages = pgTable("messages", {
