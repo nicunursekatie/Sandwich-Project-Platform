@@ -790,7 +790,7 @@ export default function SandwichCollectionLog() {
                       <span>{collection.hostName}</span>
                       {isInactiveHost && (
                         <span className="ml-2 text-xs bg-gray-300 text-gray-800 px-2 py-0.5 rounded-full font-medium">
-                          Inactive Host
+                          INACTIVE HOST
                         </span>
                       )}
                     </div>
