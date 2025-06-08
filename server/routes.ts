@@ -569,18 +569,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const csvContent = await fs.readFile(req.file.path, 'utf-8');
       logger.info(`CSV content preview: ${csvContent.substring(0, 200)}...`);
 
-      // Parse CSV
-      const records = parse(csvContent, {
-        columns: true,
-        skip_empty_lines: true,
-        trim: true,
-        delimiter: ',',
-        quote: '"'
-      });
+      // Check if this is the complex format with weekly totals
+      const lines = csvContent.split('\n');
+      let isComplexFormat = false;
+      let startRow = 0;
+      
+      // Check for complex format indicators
+      if (lines[0].includes('WEEK #') || lines[0].includes('Hosts:')) {
+        isComplexFormat = true;
+        // Find the row with actual data (skip header rows)
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].match(/^\d+,/) && lines[i].includes('TRUE')) {
+            startRow = i;
+            break;
+          }
+        }
+      }
+      
+      let records = [];
+      
+      if (isComplexFormat) {
+        logger.info(`Complex format detected, starting from row ${startRow + 1}`);
+        // Parse the complex format manually
+        for (let i = startRow; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line || !line.includes('TRUE')) continue;
+          
+          const parts = line.split(',');
+          if (parts.length >= 5 && parts[4]) {
+            // Extract data: Week, Date, Total sandwiches
+            const weekNum = parts[0];
+            const date = parts[3];
+            const totalSandwiches = parts[4].replace(/[",]/g, '');
+            
+            if (date && totalSandwiches && !isNaN(parseInt(totalSandwiches))) {
+              records.push({
+                'Host Name': `Week ${weekNum} Total`,
+                'Sandwich Count': totalSandwiches,
+                'Date': date,
+                'Logged By': 'CSV Import',
+                'Notes': `Weekly total import from complex spreadsheet`,
+                'Created At': new Date().toISOString()
+              });
+            }
+          }
+        }
+      } else {
+        // Parse normal CSV format
+        records = parse(csvContent, {
+          columns: true,
+          skip_empty_lines: true,
+          trim: true,
+          delimiter: ',',
+          quote: '"'
+        });
+      }
       
       logger.info(`Parsed ${records.length} records`);
       if (records.length > 0) {
-        logger.info(`First record keys: ${JSON.stringify(Object.keys(records[0]))}`);
         logger.info(`First record: ${JSON.stringify(records[0])}`);
       }
 
