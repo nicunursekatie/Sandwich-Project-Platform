@@ -51,7 +51,7 @@ export default function SandwichCollectionLog() {
     createdAtFrom: "",
     createdAtTo: ""
   });
-  
+
   const [sortConfig, setSortConfig] = useState({
     field: "collectionDate" as keyof SandwichCollection,
     direction: "desc" as "asc" | "desc"
@@ -77,27 +77,27 @@ export default function SandwichCollectionLog() {
       if (searchFilters.hostName && !collection.hostName.toLowerCase().includes(searchFilters.hostName.toLowerCase())) {
         return false;
       }
-      
+
       // Collection date range filter
       if (searchFilters.collectionDateFrom) {
         const collectionDate = new Date(collection.collectionDate);
         const fromDate = new Date(searchFilters.collectionDateFrom);
         if (collectionDate < fromDate) return false;
       }
-      
+
       if (searchFilters.collectionDateTo) {
         const collectionDate = new Date(collection.collectionDate);
         const toDate = new Date(searchFilters.collectionDateTo);
         if (collectionDate > toDate) return false;
       }
-      
+
       // Created at date range filter
       if (searchFilters.createdAtFrom) {
         const createdDate = new Date(collection.submittedAt);
         const fromDate = new Date(searchFilters.createdAtFrom);
         if (createdDate < fromDate) return false;
       }
-      
+
       if (searchFilters.createdAtTo) {
         const createdDate = new Date(collection.submittedAt);
         const toDate = new Date(searchFilters.createdAtTo);
@@ -105,13 +105,13 @@ export default function SandwichCollectionLog() {
         toDate.setHours(23, 59, 59, 999);
         if (createdDate > toDate) return false;
       }
-      
+
       return true;
     })
     .sort((a, b) => {
       const aValue = a[sortConfig.field];
       const bValue = b[sortConfig.field];
-      
+
       // Handle different data types
       let comparison = 0;
       if (typeof aValue === 'string' && typeof bValue === 'string') {
@@ -126,7 +126,7 @@ export default function SandwichCollectionLog() {
         const bDate = new Date(bValue as string);
         comparison = aDate.getTime() - bDate.getTime();
       }
-      
+
       return sortConfig.direction === 'asc' ? comparison : -comparison;
     });
 
@@ -365,13 +365,13 @@ export default function SandwichCollectionLog() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Batch edit error response:", errorData);
         throw new Error(errorData.message || "Failed to update collections");
       }
-      
+
       const result = await response.json();
       console.log("Batch edit success response:", result);
       return result;
@@ -508,7 +508,7 @@ export default function SandwichCollectionLog() {
   const submitBatchEdit = () => {
     console.log("submitBatchEdit called with batchEditData:", batchEditData);
     console.log("selectedCollections:", Array.from(selectedCollections));
-    
+
     const updates: Partial<SandwichCollection> = {};
     if (batchEditData.hostName) updates.hostName = batchEditData.hostName;
     if (batchEditData.collectionDate) updates.collectionDate = batchEditData.collectionDate;
@@ -563,7 +563,7 @@ export default function SandwichCollectionLog() {
 
   const handleUpdate = () => {
     if (!editingCollection) return;
-    
+
     updateMutation.mutate({
       id: editingCollection.id,
       updates: {
@@ -814,7 +814,7 @@ export default function SandwichCollectionLog() {
             const groupData = parseGroupCollections(collection.groupCollections);
             const totalSandwiches = calculateTotal(collection);
             const isSelected = selectedCollections.has(collection.id);
-            
+
             // Check if the host is inactive
             const hostData = hosts.find(h => h.name === collection.hostName);
             const isInactiveHost = hostData?.status === 'inactive';
@@ -961,7 +961,7 @@ export default function SandwichCollectionLog() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             {totalPages > 1 && (
               <div className="flex items-center space-x-2">
                 <Button
@@ -980,12 +980,12 @@ export default function SandwichCollectionLog() {
                 >
                   Previous
                 </Button>
-                
+
                 <div className="flex items-center space-x-1">
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                     const pageNumber = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
                     if (pageNumber > totalPages) return null;
-                    
+
                     return (
                       <Button
                         key={pageNumber}
@@ -999,7 +999,7 @@ export default function SandwichCollectionLog() {
                     );
                   })}
                 </div>
-                
+
                 <Button
                   variant="outline"
                   size="sm"
@@ -1018,7 +1018,7 @@ export default function SandwichCollectionLog() {
                 </Button>
               </div>
             )}
-            
+
             <div className="text-sm text-slate-600">
               Page {currentPage} of {totalPages}
             </div>
@@ -1126,7 +1126,7 @@ export default function SandwichCollectionLog() {
                 onChange={(e) => setEditFormData({ ...editFormData, collectionDate: e.target.value })}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="edit-host">Host Name</Label>
               <Select value={editFormData.hostName} onValueChange={(value) => setEditFormData({ ...editFormData, hostName: value })}>
@@ -1140,7 +1140,7 @@ export default function SandwichCollectionLog() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div>
               <Label htmlFor="edit-individual">Individual Sandwiches</Label>
               <Input
@@ -1151,7 +1151,7 @@ export default function SandwichCollectionLog() {
                 onChange={(e) => setEditFormData({ ...editFormData, individualSandwiches: e.target.value })}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="edit-groups">Group Collections (JSON format)</Label>
               <Input
@@ -1161,7 +1161,7 @@ export default function SandwichCollectionLog() {
                 placeholder='[{"groupName": "Youth Group", "sandwichCount": 100}]'
               />
             </div>
-            
+
             <div className="flex justify-end space-x-2 pt-4">
               <Button variant="outline" onClick={() => setEditingCollection(null)}>
                 Cancel
@@ -1187,7 +1187,7 @@ export default function SandwichCollectionLog() {
             <p className="text-sm text-slate-600">
               Editing {selectedCollections.size} selected collections. Leave fields empty to keep existing values.
             </p>
-            
+
             <div>
               <Label htmlFor="batch-date">Collection Date</Label>
               <Input
@@ -1197,7 +1197,7 @@ export default function SandwichCollectionLog() {
                 onChange={(e) => setBatchEditData({ ...batchEditData, collectionDate: e.target.value })}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="batch-host">Host Name</Label>
               <Select value={batchEditData.hostName} onValueChange={(value) => setBatchEditData({ ...batchEditData, hostName: value })}>
@@ -1211,7 +1211,7 @@ export default function SandwichCollectionLog() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="flex justify-end space-x-2 pt-4">
               <Button variant="outline" onClick={() => setShowBatchEdit(false)}>
                 Cancel

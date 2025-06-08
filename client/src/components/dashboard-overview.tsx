@@ -71,6 +71,48 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
   return (
     <div className="space-y-6">
+      {/* Total Counts Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold">Total Collections</h3>
+              <p className="text-3xl font-bold">{totalCollectedSandwiches.toLocaleString()}</p>
+              <p className="text-green-100">sandwiches collected</p>
+            </div>
+            <div className="bg-white bg-opacity-20 p-3 rounded-full">
+              <TrendingUp className="w-8 h-8" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold">Weekly Reports</h3>
+              <p className="text-3xl font-bold">{totalSandwiches.toLocaleString()}</p>
+              <p className="text-blue-100">sandwiches reported</p>
+            </div>
+            <div className="bg-white bg-opacity-20 p-3 rounded-full">
+              <BarChart3 className="w-8 h-8" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold">Total Entries</h3>
+              <p className="text-3xl font-bold">{collections.length.toLocaleString()}</p>
+              <p className="text-purple-100">collection entries</p>
+            </div>
+            <div className="bg-white bg-opacity-20 p-3 rounded-full">
+              <Users className="w-8 h-8" />
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Sandwich Collection Form */}
       <SandwichCollectionForm />
 

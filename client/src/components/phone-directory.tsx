@@ -1139,7 +1139,7 @@ const ContactForm = ({
   onCancel, 
   isLoading 
 }: {
-  initialData?: Contact;
+  initialData?: GeneralContact;
   onSubmit: (data: z.infer<typeof insertContactSchema>) => void;
   onCancel: () => void;
   isLoading: boolean;
