@@ -349,15 +349,15 @@ export default function ProjectList() {
                 </Button>
               </div>
 
-              <div className="flex items-center justify-between p-3 pr-16">
-                <div className="flex items-center space-x-3">
-                  <span className={`w-3 h-3 rounded-full ${getStatusColor(project.status)}`}></span>
-                  <div>
+              <div className="flex items-start justify-between p-3">
+                <div className="flex items-center space-x-3 flex-1">
+                  <span className={`w-3 h-3 rounded-full ${getStatusColor(project.status)} mt-1`}></span>
+                  <div className="flex-1">
                     <h3 className="font-medium text-slate-900">{project.title}</h3>
                     <p className="text-sm text-slate-600">{project.description}</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 flex-wrap justify-end gap-y-1 ml-2" style={{ maxWidth: 'calc(100% - 60px)' }}>
                   <span className={getStatusBadge(project.status)}>
                     {getStatusText(project.status)}
                   </span>
