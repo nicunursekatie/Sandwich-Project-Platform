@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useState, useRef } from "react";
+import * as React from "react";
 import type { SandwichCollection, Host } from "@shared/schema";
 
 interface ImportResult {
@@ -56,6 +57,8 @@ export default function SandwichCollectionLog() {
     direction: "desc" as "asc" | "desc"
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(50);
   const [editFormData, setEditFormData] = useState({
     collectionDate: "",
     hostName: "",
@@ -126,6 +129,18 @@ export default function SandwichCollectionLog() {
       
       return sortConfig.direction === 'asc' ? comparison : -comparison;
     });
+
+  // Pagination logic
+  const totalItems = filteredCollections.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedCollections = filteredCollections.slice(startIndex, endIndex);
+
+  // Reset to first page when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchFilters, sortConfig]);
 
   // Fetch active hosts from the database
   const { data: hosts = [] } = useQuery<Host[]>({
@@ -662,7 +677,7 @@ export default function SandwichCollectionLog() {
           <div className="flex items-center justify-between mt-4">
             <div className="flex items-center space-x-4">
               <div className="text-sm text-slate-600">
-                Showing {filteredCollections.length} of {collections.length} entries
+                Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} entries ({collections.length} total)
               </div>
               <div className="flex items-center space-x-2">
                 <Label className="text-sm font-medium text-slate-700">Sort by:</Label>
@@ -710,7 +725,7 @@ export default function SandwichCollectionLog() {
         </div>
       )}
       <div className="p-6">
-        {filteredCollections.length > 0 && (
+        {paginatedCollections.length > 0 && (
           <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-slate-200">
             <button
               onClick={() => handleSelectAll(!selectedCollections.size || selectedCollections.size < filteredCollections.length)}
@@ -731,7 +746,7 @@ export default function SandwichCollectionLog() {
           </div>
         )}
         <div className="space-y-4">
-          {filteredCollections.map((collection) => {
+          {paginatedCollections.map((collection) => {
             const groupData = parseGroupCollections(collection.groupCollections);
             const totalSandwiches = calculateTotal(collection);
             const isSelected = selectedCollections.has(collection.id);
@@ -845,6 +860,86 @@ export default function SandwichCollectionLog() {
             </div>
           )}
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
+            <div className="flex items-center space-x-4">
+              <Select value={itemsPerPage.toString()} onValueChange={(value) => {
+                setItemsPerPage(Number(value));
+                setCurrentPage(1);
+              }}>
+                <SelectTrigger className="w-32">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="25">25 per page</SelectItem>
+                  <SelectItem value="50">50 per page</SelectItem>
+                  <SelectItem value="100">100 per page</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+              >
+                First
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              
+              <div className="flex items-center space-x-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  const pageNumber = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+                  if (pageNumber > totalPages) return null;
+                  
+                  return (
+                    <Button
+                      key={pageNumber}
+                      variant={pageNumber === currentPage ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(pageNumber)}
+                      className="w-10"
+                    >
+                      {pageNumber}
+                    </Button>
+                  );
+                })}
+              </div>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+              >
+                Last
+              </Button>
+            </div>
+            
+            <div className="text-sm text-slate-600">
+              Page {currentPage} of {totalPages}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Duplicate Analysis Modal */}
