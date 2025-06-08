@@ -188,40 +188,41 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
       {/* Recent Messages */}
       <div className="bg-white rounded-lg border border-slate-200">
-        <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-slate-900">Recent Messages</h2>
+        <div className="px-4 py-3 border-b border-slate-200 flex justify-between items-center">
+          <h2 className="text-base font-semibold text-slate-900">Recent Messages</h2>
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => onSectionChange("messages")}
+            className="text-xs px-2 py-1"
           >
             View All
           </Button>
         </div>
-        <div className="p-6">
-          <div className="space-y-3">
+        <div className="p-4">
+          <div className="space-y-2">
             {recentMessages.map((message) => (
               <div 
                 key={message.id} 
-                className="p-3 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
+                className="p-2 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
                 onClick={() => onSectionChange("messages")}
               >
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-medium text-slate-900 text-sm">{message.sender}</span>
+                <div className="flex justify-between items-start mb-1">
+                  <span className="text-sm font-medium text-slate-900">{message.sender}</span>
                   <span className="text-xs text-slate-500">
                     {new Date(message.timestamp).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-sm text-slate-600">
-                  {message.content.length > 80 
-                    ? message.content.substring(0, 80) + "..." 
+                <p className="text-xs text-slate-600">
+                  {message.content.length > 60 
+                    ? message.content.substring(0, 60) + "..." 
                     : message.content}
                 </p>
               </div>
             ))}
             
             {recentMessages.length === 0 && (
-              <p className="text-slate-500 text-center py-4">No recent messages</p>
+              <p className="text-slate-500 text-center py-3 text-sm">No recent messages</p>
             )}
           </div>
         </div>
@@ -229,38 +230,39 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
       {/* Recent Meeting Minutes */}
       <div className="bg-white rounded-lg border border-slate-200">
-        <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-slate-900">Recent Meetings</h2>
+        <div className="px-4 py-3 border-b border-slate-200 flex justify-between items-center">
+          <h2 className="text-base font-semibold text-slate-900">Recent Meetings</h2>
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => onSectionChange("meetings")}
+            className="text-xs px-2 py-1"
           >
             View All
           </Button>
         </div>
-        <div className="p-6">
-          <div className="space-y-3">
+        <div className="p-4">
+          <div className="space-y-2">
             {recentMinutes.map((minute) => (
               <div 
                 key={minute.id} 
-                className="p-3 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
+                className="p-2 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
                 onClick={() => onSectionChange("meetings")}
               >
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-medium text-slate-900 text-sm">{minute.title}</span>
+                <div className="flex justify-between items-start mb-1">
+                  <span className="text-sm font-medium text-slate-900">{minute.title}</span>
                   <span className="text-xs text-slate-500">{minute.date}</span>
                 </div>
-                <p className="text-sm text-slate-600">
-                  {minute.summary.length > 80 
-                    ? minute.summary.substring(0, 80) + "..." 
+                <p className="text-xs text-slate-600">
+                  {minute.summary.length > 70 
+                    ? minute.summary.substring(0, 70) + "..." 
                     : minute.summary}
                 </p>
               </div>
             ))}
             
             {recentMinutes.length === 0 && (
-              <p className="text-slate-500 text-center py-4">No recent meetings</p>
+              <p className="text-slate-500 text-center py-3 text-sm">No recent meetings</p>
             )}
           </div>
         </div>
