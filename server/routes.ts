@@ -388,6 +388,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Batch edit sandwich collections
+  app.patch("/api/sandwich-collections/batch-edit", async (req, res) => {
+    try {
+      const { ids, updates } = req.body;
+      
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ message: "Invalid or empty IDs array" });
+      }
+
+      if (!updates || Object.keys(updates).length === 0) {
+        return res.status(400).json({ message: "No updates provided" });
+      }
+
+      let updatedCount = 0;
+      const errors = [];
+
+      for (const id of ids) {
+        try {
+          const updated = await storage.updateSandwichCollection(id, updates);
+          if (updated) {
+            updatedCount++;
+          } else {
+            errors.push(`Collection with ID ${id} not found`);
+          }
+        } catch (error) {
+          errors.push(`Failed to update collection ${id}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+      }
+
+      res.json({
+        message: `Successfully updated ${updatedCount} of ${ids.length} collections`,
+        updatedCount,
+        totalRequested: ids.length,
+        errors: errors.length > 0 ? errors.slice(0, 5) : undefined
+      });
+    } catch (error) {
+      logger.error("Failed to batch edit collections", error);
+      res.status(500).json({ message: "Failed to batch edit collections" });
+    }
+  });
+
+  // Batch delete sandwich collections
+  app.delete("/api/sandwich-collections/batch-delete", async (req, res) => {
+    try {
+      const { ids } = req.body;
+      
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ message: "Invalid or empty IDs array" });
+      }
+
+      let deletedCount = 0;
+      const errors = [];
+
+      // Delete in reverse order to maintain consistency
+      const sortedIds = ids.sort((a, b) => b - a);
+
+      for (const id of sortedIds) {
+        try {
+          const deleted = await storage.deleteSandwichCollection(id);
+          if (deleted) {
+            deletedCount++;
+          } else {
+            errors.push(`Collection with ID ${id} not found`);
+          }
+        } catch (error) {
+          errors.push(`Failed to delete collection ${id}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+      }
+
+      res.json({
+        message: `Successfully deleted ${deletedCount} of ${ids.length} collections`,
+        deletedCount,
+        totalRequested: ids.length,
+        errors: errors.length > 0 ? errors.slice(0, 5) : undefined
+      });
+    } catch (error) {
+      logger.error("Failed to batch delete collections", error);
+      res.status(500).json({ message: "Failed to batch delete collections" });
+    }
+  });
+
   // CSV Import for Sandwich Collections
   app.post("/api/import-collections", upload.single('csvFile'), async (req, res) => {
     try {

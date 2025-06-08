@@ -482,16 +482,47 @@ export default function SandwichCollectionLog() {
         </div>
       </div>
       <div className="p-6">
+        {collections.length > 0 && (
+          <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-slate-200">
+            <button
+              onClick={() => handleSelectAll(!selectedCollections.size || selectedCollections.size < collections.length)}
+              className="flex items-center space-x-2 text-sm text-slate-600 hover:text-slate-900"
+            >
+              {selectedCollections.size === collections.length ? (
+                <CheckSquare className="w-4 h-4" />
+              ) : (
+                <Square className="w-4 h-4" />
+              )}
+              <span>Select All</span>
+            </button>
+            {selectedCollections.size > 0 && (
+              <span className="text-sm text-slate-500">
+                {selectedCollections.size} of {collections.length} selected
+              </span>
+            )}
+          </div>
+        )}
         <div className="space-y-4">
           {collections.map((collection) => {
             const groupData = parseGroupCollections(collection.groupCollections);
             const totalSandwiches = calculateTotal(collection);
+            const isSelected = selectedCollections.has(collection.id);
 
             return (
-              <div key={collection.id} className="border border-slate-200 rounded-lg p-4">
+              <div key={collection.id} className={`border border-slate-200 rounded-lg p-4 ${isSelected ? 'bg-blue-50 border-blue-200' : ''}`}>
                 {/* Header */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
+                    <button
+                      onClick={() => handleSelectCollection(collection.id, !isSelected)}
+                      className="flex items-center"
+                    >
+                      {isSelected ? (
+                        <CheckSquare className="w-4 h-4 text-blue-600" />
+                      ) : (
+                        <Square className="w-4 h-4 text-slate-400 hover:text-slate-600" />
+                      )}
+                    </button>
                     <div className="flex items-center text-slate-700">
                       <Calendar className="w-4 h-4 mr-1" />
                       <span className="font-medium">{formatDate(collection.collectionDate)}</span>
@@ -727,6 +758,56 @@ export default function SandwichCollectionLog() {
                 disabled={updateMutation.isPending}
               >
                 {updateMutation.isPending ? "Updating..." : "Update Collection"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Batch Edit Modal */}
+      <Dialog open={showBatchEdit} onOpenChange={setShowBatchEdit}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Batch Edit Collections</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-slate-600">
+              Editing {selectedCollections.size} selected collections. Leave fields empty to keep existing values.
+            </p>
+            
+            <div>
+              <Label htmlFor="batch-date">Collection Date</Label>
+              <Input
+                id="batch-date"
+                type="date"
+                value={batchEditData.collectionDate}
+                onChange={(e) => setBatchEditData({ ...batchEditData, collectionDate: e.target.value })}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="batch-host">Host Name</Label>
+              <Select value={batchEditData.hostName} onValueChange={(value) => setBatchEditData({ ...batchEditData, hostName: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select host (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {hostOptions.map((host) => (
+                    <SelectItem key={host} value={host}>{host}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button variant="outline" onClick={() => setShowBatchEdit(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={submitBatchEdit}
+                disabled={batchEditMutation.isPending}
+              >
+                {batchEditMutation.isPending ? "Updating..." : "Update Collections"}
               </Button>
             </div>
           </div>
