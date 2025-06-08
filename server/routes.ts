@@ -297,6 +297,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/sandwich-collections/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid collection ID" });
+      }
       const deleted = await storage.deleteSandwichCollection(id);
       if (!deleted) {
         return res.status(404).json({ message: "Collection not found" });
@@ -392,6 +395,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const hostName = collection.hostName.toLowerCase();
           return hostName.startsWith('loc ') || 
                  hostName.match(/^group \d-\d$/) ||
+                 hostName.match(/^group \d+$/) ||  // Matches "Group 8", "Group 1", etc.
                  hostName.includes('test') ||
                  hostName.includes('duplicate');
         });
@@ -405,12 +409,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       for (const collection of sortedCollections) {
         try {
-          const deleted = await storage.deleteSandwichCollection(collection.id);
+          // Ensure ID is a valid number
+          const id = Number(collection.id);
+          if (isNaN(id)) {
+            errors.push(`Invalid collection ID: ${collection.id}`);
+            continue;
+          }
+          
+          const deleted = await storage.deleteSandwichCollection(id);
           if (deleted) {
             deletedCount++;
           }
         } catch (error) {
-          errors.push(`Failed to delete collection ${collection.id}: ${error.message}`);
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          errors.push(`Failed to delete collection ${collection.id}: ${errorMessage}`);
           console.error(`Failed to delete collection ${collection.id}:`, error);
         }
       }
