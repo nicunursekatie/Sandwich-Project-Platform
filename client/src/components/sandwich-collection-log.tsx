@@ -130,6 +130,58 @@ export default function SandwichCollectionLog() {
     }
   });
 
+  const importMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('csvFile', file);
+
+      const response = await fetch('/api/import-collections', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      return response.json() as Promise<ImportResult>;
+    },
+    onSuccess: (result: ImportResult) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      toast({
+        title: "Import completed",
+        description: `Successfully imported ${result.successCount} of ${result.totalRecords} records.`,
+      });
+      if (result.errorCount > 0) {
+        console.log("Import errors:", result.errors);
+      }
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    },
+    onError: (error) => {
+      toast({
+        title: "Import failed",
+        description: error instanceof Error ? error.message : "Failed to import CSV file",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type === 'text/csv') {
+      importMutation.mutate(file);
+    } else {
+      toast({
+        title: "Invalid file",
+        description: "Please select a valid CSV file.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleEdit = (collection: SandwichCollection) => {
     setEditingCollection(collection);
     setEditFormData({
@@ -182,11 +234,34 @@ export default function SandwichCollectionLog() {
   return (
     <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
       <div className="px-6 py-4 border-b border-slate-200">
-        <h2 className="text-lg font-semibold text-slate-900 flex items-center">
-          <Sandwich className="text-amber-500 mr-2 w-5 h-5" />
-          Collection Log
-        </h2>
-        <p className="text-sm text-slate-500 mt-1">{collections.length} total entries</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900 flex items-center">
+              <Sandwich className="text-amber-500 mr-2 w-5 h-5" />
+              Collection Log
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">{collections.length} total entries</p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={importMutation.isPending}
+              className="flex items-center"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              {importMutation.isPending ? "Importing..." : "Import CSV"}
+            </Button>
+          </div>
+        </div>
       </div>
       <div className="p-6">
         <div className="space-y-4">
