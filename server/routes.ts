@@ -569,27 +569,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const csvContent = await fs.readFile(req.file.path, 'utf-8');
       logger.info(`CSV content preview: ${csvContent.substring(0, 200)}...`);
 
-      // Check if this is the complex format with weekly totals
+      // Detect CSV format type
       const lines = csvContent.split('\n');
-      let isComplexFormat = false;
-      let startRow = 0;
+      let formatType = 'standard';
       
-      // Check for complex format indicators
+      // Check for complex weekly totals format
       if (lines[0].includes('WEEK #') || lines[0].includes('Hosts:')) {
-        isComplexFormat = true;
+        formatType = 'complex';
+      }
+      // Check for structured weekly data format
+      else if (lines[0].includes('Week_Number') && lines[0].includes('Total_Sandwiches')) {
+        formatType = 'structured';
+      }
+      
+      let records = [];
+      
+      if (formatType === 'complex') {
+        logger.info('Complex weekly totals format detected');
         // Find the row with actual data (skip header rows)
+        let startRow = 0;
         for (let i = 0; i < lines.length; i++) {
           if (lines[i].match(/^\d+,/) && lines[i].includes('TRUE')) {
             startRow = i;
             break;
           }
         }
-      }
-      
-      let records = [];
-      
-      if (isComplexFormat) {
-        logger.info(`Complex format detected, starting from row ${startRow + 1}`);
+        
         // Parse the complex format manually
         for (let i = startRow; i < lines.length; i++) {
           const line = lines[i].trim();
@@ -597,7 +602,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           const parts = line.split(',');
           if (parts.length >= 5 && parts[4]) {
-            // Extract data: Week, Date, Total sandwiches
             const weekNum = parts[0];
             const date = parts[3];
             const totalSandwiches = parts[4].replace(/[",]/g, '');
@@ -614,7 +618,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           }
         }
+      } else if (formatType === 'structured') {
+        logger.info('Structured weekly data format detected');
+        // Parse the structured format
+        const parsedData = parse(csvContent, {
+          columns: true,
+          skip_empty_lines: true,
+          trim: true,
+          delimiter: ',',
+          quote: '"'
+        });
+        
+        // Convert structured data to standard format
+        for (const row of parsedData) {
+          if (row.Week_Number && row.Date && row.Total_Sandwiches && parseInt(row.Total_Sandwiches) > 0) {
+            // Parse the date to a more readable format
+            const date = new Date(row.Date);
+            const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
+            
+            records.push({
+              'Host Name': `Week ${row.Week_Number} Complete Data`,
+              'Sandwich Count': row.Total_Sandwiches,
+              'Date': formattedDate,
+              'Logged By': 'CSV Import',
+              'Notes': `Structured weekly data import with location and group details`,
+              'Created At': new Date().toISOString()
+            });
+          }
+        }
       } else {
+        logger.info('Standard CSV format detected');
         // Parse normal CSV format
         records = parse(csvContent, {
           columns: true,
