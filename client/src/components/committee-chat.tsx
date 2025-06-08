@@ -115,11 +115,7 @@ export default function CommitteeChat() {
 
   const deleteMessageMutation = useMutation({
     mutationFn: async (messageId: number) => {
-      const response = await apiRequest(`/api/messages/${messageId}`, 'DELETE');
-      if (!response.ok) {
-        throw new Error('Failed to delete message');
-      }
-      return response;
+      return apiRequest('DELETE', `/api/messages/${messageId}`);
     },
     onSuccess: () => {
       // Invalidate all message queries to ensure fresh data
@@ -178,6 +174,54 @@ export default function CommitteeChat() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Committee Chat</h1>
           <p className="text-slate-600">Collaborate with your team committees</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {userName && (
+            <div className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">
+              <User className="w-4 h-4" />
+              {userName}
+            </div>
+          )}
+          <Dialog open={isNameDialogOpen} onOpenChange={setIsNameDialogOpen}>
+            <DialogTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  setTempUserName(userName);
+                  setIsNameDialogOpen(true);
+                }}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                {userName ? "Change Name" : "Set Name"}
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Set Your Chat Name</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="username">Display Name</Label>
+                  <Input
+                    id="username"
+                    value={tempUserName}
+                    onChange={(e) => setTempUserName(e.target.value)}
+                    placeholder="Enter your name for chat messages"
+                    onKeyPress={(e) => e.key === 'Enter' && saveUserName()}
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setIsNameDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={saveUserName} disabled={!tempUserName.trim()}>
+                    Save Name
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
