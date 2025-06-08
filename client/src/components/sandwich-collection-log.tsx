@@ -326,7 +326,12 @@ export default function SandwichCollectionLog() {
 
   const batchDeleteMutation = useMutation({
     mutationFn: async (ids: number[]) => {
-      return await apiRequest("DELETE", "/api/sandwich-collections/batch-delete", { ids });
+      const response = await fetch("/api/sandwich-collections/batch-delete", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids })
+      });
+      return response.json();
     },
     onSuccess: (result: any) => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
