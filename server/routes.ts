@@ -256,7 +256,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No CSV file uploaded" });
       }
 
-      const fs = await import('fs/promises');
       const csvContent = await fs.readFile(req.file.path, 'utf-8');
       
       // Parse CSV
@@ -334,7 +333,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Clean up uploaded file if it exists
       if (req.file?.path) {
         try {
-          const fs = await import('fs/promises');
           await fs.unlink(req.file.path);
         } catch (cleanupError) {
           logger.error("Failed to clean up uploaded file", cleanupError);
