@@ -68,7 +68,7 @@ interface GeneralContact {
 
 export default function PhoneDirectory() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("hosts");
+  const [activeTab, setActiveTab] = useState("contacts");
   const [isAddingHost, setIsAddingHost] = useState(false);
   const [isAddingRecipient, setIsAddingRecipient] = useState(false);
   const [isAddingContact, setIsAddingContact] = useState(false);
@@ -543,7 +543,7 @@ export default function PhoneDirectory() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-slate-900">Phone Directory</h2>
-          <p className="text-slate-600">Contact information for hosts and recipients</p>
+          <p className="text-slate-600">Contact information for hosts, recipients, and general contacts</p>
         </div>
         <div className="flex items-center gap-2">
           {activeTab === "hosts" && (
@@ -622,6 +622,15 @@ export default function PhoneDirectory() {
                 <Download className="w-4 h-4" />
                 Export Recipients
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => exportToCSV(contacts, 'contacts-directory.csv')}
+                className="flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Export Contacts
+              </Button>
             </div>
           </div>
         </CardContent>
@@ -630,6 +639,10 @@ export default function PhoneDirectory() {
       {/* Directory Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="contacts" className="flex items-center gap-2 font-semibold">
+            <Phone className="w-4 h-4" />
+            Contacts ({filteredContacts.length})
+          </TabsTrigger>
           <TabsTrigger value="hosts" className="flex items-center gap-2">
             <Users className="w-4 h-4" />
             Hosts ({filteredHosts.length})
@@ -638,11 +651,34 @@ export default function PhoneDirectory() {
             <User className="w-4 h-4" />
             Recipients ({filteredRecipients.length})
           </TabsTrigger>
-          <TabsTrigger value="contacts" className="flex items-center gap-2">
-            <Phone className="w-4 h-4" />
-            Contacts ({filteredContacts.length})
-          </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="contacts" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Phone className="w-5 h-5" />
+                General Contacts
+              </CardTitle>
+              <CardDescription>
+                Contact information for general contacts and volunteers
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {filteredContacts.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  {searchTerm ? 'No contacts found matching your search.' : 'No contacts found.'}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredContacts.map((contact) => (
+                    <ContactCard key={contact.id} contact={contact} />
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="hosts" className="space-y-4">
           <Card>
