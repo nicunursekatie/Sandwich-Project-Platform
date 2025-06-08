@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Sandwich, Calendar, User, Users, Edit, Trash2 } from "lucide-react";
+import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -7,11 +7,19 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import type { SandwichCollection, Host } from "@shared/schema";
+
+interface ImportResult {
+  totalRecords: number;
+  successCount: number;
+  errorCount: number;
+  errors: string[];
+}
 
 export default function SandwichCollectionLog() {
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [editingCollection, setEditingCollection] = useState<SandwichCollection | null>(null);
   const [editFormData, setEditFormData] = useState({
     collectionDate: "",
