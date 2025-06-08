@@ -241,17 +241,22 @@ class StorageWrapper implements IStorage {
     // Track the deleted ID to prevent re-sync
     this.deletedIds.add(id);
     
-    const result = await this.executeWithFallback(
-      () => this.primaryStorage.deleteSandwichCollection(id),
-      () => this.fallbackStorage.deleteSandwichCollection(id)
-    );
-    
-    // If deletion fails, remove from tracking
-    if (!result) {
+    try {
+      // Use only database storage for faster deletes
+      const result = await this.primaryStorage.deleteSandwichCollection(id);
+      
+      // If deletion fails, remove from tracking
+      if (!result) {
+        this.deletedIds.delete(id);
+      }
+      
+      return result;
+    } catch (error) {
+      // If database fails, remove from tracking and fallback
       this.deletedIds.delete(id);
+      console.warn('Database delete failed, trying fallback storage:', error);
+      return this.fallbackStorage.deleteSandwichCollection(id);
     }
-    
-    return result;
   }
 
   // Meeting Minutes methods
