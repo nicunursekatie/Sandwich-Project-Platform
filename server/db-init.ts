@@ -6,11 +6,13 @@ export async function initializeDatabase() {
   try {
     console.log("Checking database initialization...");
 
-    // Check if hosts table has data
+    // Check if any core data exists - if any table has data, skip all seeding
     const [hostsCount] = await db.select({ count: count() }).from(hosts);
+    const [projectsCount] = await db.select({ count: count() }).from(projects);
+    const [messagesCount] = await db.select({ count: count() }).from(messages);
     
-    // Only seed if tables are empty
-    if (hostsCount.count === 0) {
+    // Only seed if ALL tables are completely empty (first time setup)
+    if (hostsCount.count === 0 && projectsCount.count === 0 && messagesCount.count === 0) {
       console.log("Seeding hosts table...");
       await db.insert(hosts).values([
         {
