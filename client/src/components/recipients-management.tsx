@@ -252,68 +252,68 @@ export default function RecipientsManagement() {
                 </Button>
               </DialogTrigger>
               <DialogContent aria-describedby="add-recipient-description">
-              <DialogHeader>
-                <DialogTitle>Add New Recipient</DialogTitle>
-              </DialogHeader>
-              <p id="add-recipient-description" className="text-sm text-slate-600 mb-4">
-                Add a new recipient to the system for sandwich deliveries.
-              </p>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Name *</Label>
-                  <Input
-                    id="name"
-                    value={newRecipient.name}
-                    onChange={(e) => setNewRecipient({ ...newRecipient, name: e.target.value })}
-                    placeholder="Enter recipient name"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="phone">Phone Number *</Label>
-                  <Input
-                    id="phone"
-                    value={newRecipient.phone}
-                    onChange={(e) => setNewRecipient({ ...newRecipient, phone: e.target.value })}
-                    placeholder="(555) 123-4567"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={newRecipient.email}
-                    onChange={(e) => setNewRecipient({ ...newRecipient, email: e.target.value })}
-                    placeholder="email@example.com"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="address">Address</Label>
-                  <Input
-                    id="address"
-                    value={newRecipient.address}
-                    onChange={(e) => setNewRecipient({ ...newRecipient, address: e.target.value })}
-                    placeholder="123 Main St, City, State 12345"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="preferences">Preferences</Label>
-                  <Input
-                    id="preferences"
-                    value={newRecipient.preferences}
-                    onChange={(e) => setNewRecipient({ ...newRecipient, preferences: e.target.value })}
-                    placeholder="Dietary restrictions or preferences"
-                  />
-                </div>
-                <div className="flex justify-end space-x-2">
-                  <Button type="button" variant="outline" onClick={() => setIsAddModalOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={createRecipientMutation.isPending}>
-                    {createRecipientMutation.isPending ? "Adding..." : "Add Recipient"}
-                  </Button>
-                </div>
-              </form>
+                <DialogHeader>
+                  <DialogTitle>Add New Recipient</DialogTitle>
+                </DialogHeader>
+                <p id="add-recipient-description" className="text-sm text-slate-600 mb-4">
+                  Add a new recipient to the system for sandwich deliveries.
+                </p>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="name">Name *</Label>
+                    <Input
+                      id="name"
+                      value={newRecipient.name}
+                      onChange={(e) => setNewRecipient({ ...newRecipient, name: e.target.value })}
+                      placeholder="Enter recipient name"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone">Phone Number *</Label>
+                    <Input
+                      id="phone"
+                      value={newRecipient.phone}
+                      onChange={(e) => setNewRecipient({ ...newRecipient, phone: e.target.value })}
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={newRecipient.email}
+                      onChange={(e) => setNewRecipient({ ...newRecipient, email: e.target.value })}
+                      placeholder="email@example.com"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="address">Address</Label>
+                    <Input
+                      id="address"
+                      value={newRecipient.address}
+                      onChange={(e) => setNewRecipient({ ...newRecipient, address: e.target.value })}
+                      placeholder="123 Main St, City, State 12345"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="preferences">Preferences</Label>
+                    <Input
+                      id="preferences"
+                      value={newRecipient.preferences}
+                      onChange={(e) => setNewRecipient({ ...newRecipient, preferences: e.target.value })}
+                      placeholder="Dietary restrictions or preferences"
+                    />
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    <Button type="button" variant="outline" onClick={() => setIsAddModalOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={createRecipientMutation.isPending}>
+                      {createRecipientMutation.isPending ? "Adding..." : "Add Recipient"}
+                    </Button>
+                  </div>
+                </form>
             </DialogContent>
           </Dialog>
         </div>
