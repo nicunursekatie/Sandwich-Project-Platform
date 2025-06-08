@@ -73,7 +73,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getThreadMessages(threadId: number): Promise<Message[]> {
-    return await db.select().from(messages).where(eq(messages.threadId, threadId)).orderBy(messages.createdAt);
+    return await db.select().from(messages).where(eq(messages.threadId, threadId)).orderBy(messages.timestamp);
   }
 
   async createReply(insertMessage: InsertMessage, parentId: number): Promise<Message> {
@@ -90,7 +90,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteMessage(id: number): Promise<boolean> {
     const result = await db.delete(messages).where(eq(messages.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   // Weekly Reports
@@ -149,7 +149,7 @@ export class DatabaseStorage implements IStorage {
 
   // Agenda Items
   async getAllAgendaItems(): Promise<AgendaItem[]> {
-    return await db.select().from(agendaItems).orderBy(agendaItems.createdAt);
+    return await db.select().from(agendaItems).orderBy(agendaItems.id);
   }
 
   async createAgendaItem(insertItem: InsertAgendaItem): Promise<AgendaItem> {
@@ -157,8 +157,9 @@ export class DatabaseStorage implements IStorage {
     return item;
   }
 
-  async updateAgendaItemStatus(id: number, status: string): Promise<void> {
-    await db.update(agendaItems).set({ status }).where(eq(agendaItems.id, id));
+  async updateAgendaItemStatus(id: number, status: string): Promise<AgendaItem | undefined> {
+    const [item] = await db.update(agendaItems).set({ status }).where(eq(agendaItems.id, id)).returning();
+    return item || undefined;
   }
 
   async updateAgendaItem(id: number, updates: Partial<AgendaItem>): Promise<AgendaItem | undefined> {
