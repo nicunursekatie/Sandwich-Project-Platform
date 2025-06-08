@@ -89,13 +89,19 @@ export default function SandwichCollectionLog() {
   const calculateTotal = (collection: SandwichCollection) => {
     let groupTotal = 0;
     try {
+      // Handle JSON format
       const groupData = JSON.parse(collection.groupCollections || "[]");
       if (Array.isArray(groupData)) {
         groupTotal = groupData.reduce((sum: number, group: any) => sum + (group.sandwichCount || 0), 0);
       }
     } catch (error) {
-      // If parsing fails, treat as 0
-      groupTotal = 0;
+      // Handle text format like "Marketing Team: 8, Development: 6"
+      if (collection.groupCollections && collection.groupCollections !== "[]") {
+        const matches = collection.groupCollections.match(/(\d+)/g);
+        if (matches) {
+          groupTotal = matches.reduce((sum, num) => sum + parseInt(num), 0);
+        }
+      }
     }
     return collection.individualSandwiches + groupTotal;
   };
@@ -104,6 +110,20 @@ export default function SandwichCollectionLog() {
     try {
       return JSON.parse(groupCollectionsJson || "[]");
     } catch {
+      // Handle text format by converting to array
+      if (groupCollectionsJson && groupCollectionsJson !== "[]") {
+        const parts = groupCollectionsJson.split(',');
+        return parts.map(part => {
+          const match = part.match(/([^:]+):\s*(\d+)/);
+          if (match) {
+            return {
+              groupName: match[1].trim(),
+              sandwichCount: parseInt(match[2])
+            };
+          }
+          return null;
+        }).filter(item => item !== null);
+      }
       return [];
     }
   };
