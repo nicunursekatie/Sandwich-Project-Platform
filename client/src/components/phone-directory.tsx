@@ -442,7 +442,92 @@ export default function PhoneDirectory() {
     </Card>
   );
 
-  if (hostsLoading || recipientsLoading) {
+  const ContactCard = ({ contact }: { contact: GeneralContact }) => (
+    <Card className="mb-4">
+      <CardContent className="pt-4">
+        <div className="flex items-start gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-3">
+              <Phone className="w-5 h-5 text-purple-600" />
+              <h3 className="font-bold text-lg text-gray-900">{contact.name}</h3>
+              {contact.status === 'inactive' && (
+                <Badge variant="secondary">Inactive</Badge>
+              )}
+            </div>
+            
+            {contact.organization && (
+              <div className="text-sm text-gray-600 mb-2">
+                <strong>Organization:</strong> {contact.organization}
+              </div>
+            )}
+            
+            {contact.role && (
+              <div className="text-sm text-gray-600 mb-2">
+                <strong>Role:</strong> {contact.role}
+              </div>
+            )}
+            
+            <div className="flex items-center gap-3 mb-3">
+              <a 
+                href={`tel:${contact.phone}`} 
+                className="flex items-center gap-2 bg-purple-50 hover:bg-purple-100 px-3 py-2 rounded-lg transition-colors group"
+              >
+                <Phone className="w-4 h-4 text-purple-600" />
+                <span className="font-medium text-purple-700 text-lg">
+                  {formatPhone(contact.phone)}
+                </span>
+              </a>
+              
+              {contact.email && (
+                <a 
+                  href={`mailto:${contact.email}`} 
+                  className="flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors"
+                >
+                  <Mail className="w-4 h-4" />
+                  <span className="text-sm">{contact.email}</span>
+                </a>
+              )}
+            </div>
+            
+            {contact.address && (
+              <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                <MapPin className="w-4 h-4" />
+                <span>{contact.address}</span>
+              </div>
+            )}
+            
+            {contact.notes && (
+              <div className="text-sm text-gray-600">
+                <strong>Notes:</strong> {contact.notes}
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setEditingContact(contact)}
+              className="flex items-center gap-1"
+            >
+              <Edit className="w-3 h-3" />
+              Edit
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => deleteContactMutation.mutate(contact.id)}
+              className="flex items-center gap-1 text-red-600 hover:text-red-700"
+            >
+              <Trash2 className="w-3 h-3" />
+              Delete
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  if (hostsLoading || recipientsLoading || contactsLoading) {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
@@ -544,7 +629,7 @@ export default function PhoneDirectory() {
 
       {/* Directory Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="hosts" className="flex items-center gap-2">
             <Users className="w-4 h-4" />
             Hosts ({filteredHosts.length})
@@ -552,6 +637,10 @@ export default function PhoneDirectory() {
           <TabsTrigger value="recipients" className="flex items-center gap-2">
             <User className="w-4 h-4" />
             Recipients ({filteredRecipients.length})
+          </TabsTrigger>
+          <TabsTrigger value="contacts" className="flex items-center gap-2">
+            <Phone className="w-4 h-4" />
+            Contacts ({filteredContacts.length})
           </TabsTrigger>
         </TabsList>
 
@@ -602,6 +691,33 @@ export default function PhoneDirectory() {
                 <div className="space-y-4">
                   {filteredRecipients.map((recipient) => (
                     <RecipientCard key={recipient.id} recipient={recipient} />
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="contacts" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Phone className="w-5 h-5" />
+                General Contacts
+              </CardTitle>
+              <CardDescription>
+                Contact information for general contacts and volunteers
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {filteredContacts.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  {searchTerm ? 'No contacts found matching your search.' : 'No contacts found.'}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredContacts.map((contact) => (
+                    <ContactCard key={contact.id} contact={contact} />
                   ))}
                 </div>
               )}
@@ -712,6 +828,43 @@ export default function PhoneDirectory() {
               onSubmit={(data) => updateRecipientMutation.mutate({ id: editingRecipient.id, data })}
               onCancel={() => setEditingRecipient(null)}
               isLoading={updateRecipientMutation.isPending}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Contact Dialog */}
+      <Dialog open={isAddingContact} onOpenChange={setIsAddingContact}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Contact</DialogTitle>
+            <DialogDescription>
+              Add a new general contact
+            </DialogDescription>
+          </DialogHeader>
+          <ContactForm
+            onSubmit={(data) => createContactMutation.mutate(data)}
+            onCancel={() => setIsAddingContact(false)}
+            isLoading={createContactMutation.isPending}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Contact Dialog */}
+      <Dialog open={!!editingContact} onOpenChange={(open) => !open && setEditingContact(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Contact</DialogTitle>
+            <DialogDescription>
+              Update contact information
+            </DialogDescription>
+          </DialogHeader>
+          {editingContact && (
+            <ContactForm
+              initialData={editingContact}
+              onSubmit={(data) => updateContactMutation.mutate({ id: editingContact.id, data })}
+              onCancel={() => setEditingContact(null)}
+              isLoading={updateContactMutation.isPending}
             />
           )}
         </DialogContent>
