@@ -17,13 +17,16 @@ import { useState } from "react";
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
 
-  const sidebarItems = [
+  const mainSidebarItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "projects", label: "Projects", icon: ListTodo },
     { id: "messages", label: "Messages", icon: MessageCircle },
     { id: "meetings", label: "Meetings", icon: ClipboardList },
     { id: "files", label: "Files", icon: FolderOpen },
     { id: "documents", label: "Documents", icon: FileText },
+  ];
+
+  const toolkitItems = [
     { id: "reports", label: "Reports", icon: BarChart3 },
     { id: "collections", label: "Collection Log", icon: Sandwich },
     { id: "recipients", label: "Recipients", icon: Users },
@@ -77,26 +80,57 @@ export default function Dashboard() {
 
         {/* Navigation */}
         <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {sidebarItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <li key={item.id}>
-                  <button
-                    onClick={() => setActiveSection(item.id)}
-                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
-                      activeSection === item.id
-                        ? "bg-blue-50 text-blue-700 border border-blue-200"
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span>{item.label}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="space-y-6">
+            {/* Main Navigation */}
+            <div>
+              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Main</h3>
+              <ul className="space-y-2">
+                {mainSidebarItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li key={item.id}>
+                      <button
+                        onClick={() => setActiveSection(item.id)}
+                        className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                          activeSection === item.id
+                            ? "bg-blue-50 text-blue-700 border border-blue-200"
+                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span>{item.label}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* Toolkit Navigation */}
+            <div>
+              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Toolkit</h3>
+              <ul className="space-y-2">
+                {toolkitItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li key={item.id}>
+                      <button
+                        onClick={() => setActiveSection(item.id)}
+                        className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                          activeSection === item.id
+                            ? "bg-blue-50 text-blue-700 border border-blue-200"
+                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span>{item.label}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
         </nav>
 
         {/* User Info */}
@@ -115,7 +149,7 @@ export default function Dashboard() {
         {/* Top Header */}
         <header className="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
           <h2 className="text-xl font-semibold text-slate-900 capitalize">
-            {sidebarItems.find(item => item.id === activeSection)?.label}
+            {[...mainSidebarItems, ...toolkitItems].find(item => item.id === activeSection)?.label}
           </h2>
           <button
             onClick={() => window.location.href = '/api/logout'}

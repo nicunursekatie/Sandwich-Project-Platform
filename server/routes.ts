@@ -942,9 +942,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const status = normalizedRecord.status || 'active';
 
           // Check for duplicate (by phone number)
-          const existingRecipient = await storage.getAllRecipients();
-          const phoneToCheck = String(phone).trim();
-          const isDuplicate = existingRecipient.some(r => r.phone === phoneToCheck);
+          const existingRecipients = await storage.getAllRecipients();
+          const phoneToCheck = String(phone).trim().replace(/\D/g, ''); // Remove non-digits for comparison
+          const isDuplicate = existingRecipients.some(r => {
+            const existingPhone = r.phone.replace(/\D/g, '');
+            return existingPhone === phoneToCheck;
+          });
 
           if (isDuplicate) {
             errors.push(`Row skipped: Duplicate phone number "${phoneToCheck}"`);
