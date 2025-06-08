@@ -919,9 +919,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
             normalizedRecord[normalizedKey] = record[key];
           });
 
-          // Required fields validation
-          const name = normalizedRecord.name || normalizedRecord['recipient name'] || normalizedRecord['full name'];
-          const phone = normalizedRecord.phone || normalizedRecord['phone number'] || normalizedRecord.mobile;
+          // Required fields validation - support more column variations
+          const name = normalizedRecord.name || 
+                      normalizedRecord['recipient name'] || 
+                      normalizedRecord['full name'] ||
+                      normalizedRecord['organization'] ||
+                      normalizedRecord['org'] ||
+                      normalizedRecord['client name'];
+          const phone = normalizedRecord.phone || 
+                       normalizedRecord['phone number'] || 
+                       normalizedRecord['mobile'] ||
+                       normalizedRecord['phone#'] ||
+                       normalizedRecord['contact phone'];
 
           if (!name || !phone) {
             errors.push(`Row skipped: Missing required fields (name: "${name}", phone: "${phone}")`);
@@ -938,7 +947,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Optional fields with defaults
           const email = normalizedRecord.email || normalizedRecord['email address'] || null;
           const address = normalizedRecord.address || normalizedRecord.location || null;
-          const preferences = normalizedRecord.preferences || normalizedRecord.notes || normalizedRecord.dietary || null;
+          const preferences = normalizedRecord.preferences || 
+                            normalizedRecord.notes || 
+                            normalizedRecord.dietary || 
+                            normalizedRecord['sandwich type'] ||
+                            normalizedRecord['weekly estimate'] ||
+                            normalizedRecord['tsp contact'] ||
+                            null;
           const status = normalizedRecord.status || 'active';
 
           // Check for duplicate (by phone number)
