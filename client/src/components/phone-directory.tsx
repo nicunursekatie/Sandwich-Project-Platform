@@ -1,11 +1,21 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Phone, Mail, MapPin, Search, Download, User, Users, Star, Building2 } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { insertHostSchema, insertHostContactSchema, insertRecipientSchema } from "@shared/schema";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { Phone, Mail, MapPin, Search, Download, User, Users, Star, Building2, Plus, Edit, Trash2 } from "lucide-react";
 
 interface Host {
   id: number;
@@ -44,6 +54,11 @@ interface Recipient {
 export default function PhoneDirectory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("hosts");
+  const [isAddingHost, setIsAddingHost] = useState(false);
+  const [isAddingRecipient, setIsAddingRecipient] = useState(false);
+  const [editingHost, setEditingHost] = useState<Host | null>(null);
+  const [editingRecipient, setEditingRecipient] = useState<Recipient | null>(null);
+  const { toast } = useToast();
 
   // Fetch hosts (temporarily using existing endpoint until backend is updated)
   const { data: hosts = [], isLoading: hostsLoading } = useQuery<HostWithContacts[]>({
@@ -77,6 +92,59 @@ export default function PhoneDirectory() {
   // Fetch recipients
   const { data: recipients = [], isLoading: recipientsLoading } = useQuery<Recipient[]>({
     queryKey: ["/api/recipients"],
+  });
+
+  // Mutations for CRUD operations
+  const createHostMutation = useMutation({
+    mutationFn: (data: z.infer<typeof insertHostSchema>) => apiRequest(`/api/hosts`, "POST", data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
+      setIsAddingHost(false);
+      toast({ title: "Host added successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to add host", variant: "destructive" });
+    },
+  });
+
+  const updateHostMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<z.infer<typeof insertHostSchema>> }) => 
+      apiRequest(`/api/hosts/${id}`, "PATCH", data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
+      setEditingHost(null);
+      toast({ title: "Host updated successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to update host", variant: "destructive" });
+    },
+  });
+
+  const createRecipientMutation = useMutation({
+    mutationFn: (data: z.infer<typeof insertRecipientSchema>) => apiRequest(`/api/recipients`, "POST", data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
+      setIsAddingRecipient(false);
+      toast({ title: "Recipient added successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to add recipient", variant: "destructive" });
+    },
+  });
+
+  const updateRecipientMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<z.infer<typeof insertRecipientSchema>> }) => 
+      apiRequest(`/api/recipients/${id}`, "PATCH", data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
+      setEditingRecipient(null);
+      toast({ title: "Recipient updated successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to update recipient", variant: "destructive" });
+    },
   });
 
   // Filter functions
