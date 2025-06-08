@@ -219,4 +219,12 @@ export class DatabaseStorage implements IStorage {
     const result = await db.delete(hosts).where(eq(hosts.id, id));
     return result.rowCount > 0;
   }
+
+  async updateCollectionHostNames(oldHostName: string, newHostName: string): Promise<number> {
+    const result = await db
+      .update(sandwichCollections)
+      .set({ hostName: newHostName })
+      .where(eq(sandwichCollections.hostName, oldHostName));
+    return result.rowCount ?? 0;
+  }
 }

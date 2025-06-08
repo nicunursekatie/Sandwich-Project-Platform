@@ -44,6 +44,7 @@ export interface IStorage {
   createSandwichCollection(collection: InsertSandwichCollection): Promise<SandwichCollection>;
   updateSandwichCollection(id: number, updates: Partial<SandwichCollection>): Promise<SandwichCollection | undefined>;
   deleteSandwichCollection(id: number): Promise<boolean>;
+  updateCollectionHostNames(oldHostName: string, newHostName: string): Promise<number>;
   
   // Meeting Minutes
   getAllMeetingMinutes(): Promise<MeetingMinutes[]>;
