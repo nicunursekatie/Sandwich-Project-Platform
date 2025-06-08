@@ -71,7 +71,19 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
   return (
     <div className="space-y-6">
-
+      {/* Total Collections Card */}
+      <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-md p-4 text-white">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-medium">Total Collections</h3>
+            <p className="text-xl font-bold">{totalCollectedSandwiches.toLocaleString()}</p>
+            <p className="text-xs text-green-100">sandwiches collected</p>
+          </div>
+          <div className="bg-white bg-opacity-20 p-2 rounded-full">
+            <TrendingUp className="w-5 h-5" />
+          </div>
+        </div>
+      </div>
 
       {/* Sandwich Collection Form */}
       <SandwichCollectionForm />
