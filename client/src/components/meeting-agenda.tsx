@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Calendar, Clock, User, Plus, CheckCircle, XCircle, Upload, MessageSquare, FileText, File, Edit, Pause } from "lucide-react";
+import { Calendar, Clock, User, Plus, CheckCircle, XCircle, Upload, MessageSquare, FileText, File, Edit, Pause, Video, Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
@@ -23,9 +24,12 @@ interface AgendaItem {
 interface Meeting {
   id: number;
   title: string;
+  type: string;
   date: string;
   time: string;
-  finalAgenda: string;
+  location?: string;
+  description?: string;
+  finalAgenda?: string;
   status: "planning" | "agenda_set" | "completed";
 }
 
@@ -42,17 +46,23 @@ export default function MeetingAgenda() {
   });
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
-  const { data: agendaItems = [], isLoading: itemsLoading } = useQuery({
+  const { data: agendaItems = [], isLoading: itemsLoading } = useQuery<AgendaItem[]>({
     queryKey: ['/api/agenda-items']
   });
 
-  const { data: currentMeeting } = useQuery({
+  const { data: currentMeeting } = useQuery<Meeting>({
     queryKey: ['/api/current-meeting']
   });
 
   const submitItemMutation = useMutation({
     mutationFn: async (data: typeof newItem) => {
-      return apiRequest('/api/agenda-items', 'POST', data);
+      const response = await fetch('/api/agenda-items', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (!response.ok) throw new Error('Failed to submit agenda item');
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/agenda-items'] });
@@ -67,7 +77,13 @@ export default function MeetingAgenda() {
 
   const updateItemStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: number; status: "approved" | "rejected" }) => {
-      return apiRequest(`/api/agenda-items/${id}`, 'PATCH', { status });
+      const response = await fetch(`/api/agenda-items/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      if (!response.ok) throw new Error('Failed to update status');
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/agenda-items'] });
@@ -82,7 +98,12 @@ export default function MeetingAgenda() {
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append('agenda', file);
-      return apiRequest('/api/meetings/1/upload-agenda', 'POST', formData);
+      const response = await fetch('/api/meetings/1/upload-agenda', {
+        method: 'POST',
+        body: formData
+      });
+      if (!response.ok) throw new Error('Failed to upload agenda');
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/current-meeting'] });

@@ -216,12 +216,12 @@ export default function MeetingsCalendar() {
               </div>
               
               <div>
-                <Label htmlFor="meeting-location" className="text-sm font-medium text-slate-700">Location (optional)</Label>
+                <Label htmlFor="meeting-location" className="text-sm font-medium text-slate-700">Location / Google Meet Link (optional)</Label>
                 <Input
                   id="meeting-location"
                   value={newMeeting.location}
                   onChange={(e) => setNewMeeting({ ...newMeeting, location: e.target.value })}
-                  placeholder="e.g., Conference Room A, Zoom, Main Office"
+                  placeholder="e.g., https://meet.google.com/xyz-abc-def or Conference Room A"
                   className="mt-1"
                 />
               </div>
