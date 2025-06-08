@@ -20,7 +20,23 @@ export default function ProjectList() {
   const [newProject, setNewProject] = useState({
     title: "",
     description: "",
-    status: "available"
+    status: "available",
+    priority: "medium",
+    category: "general",
+    assigneeId: null,
+    assigneeName: "",
+    dueDate: "",
+    startDate: "",
+    estimatedHours: "",
+    actualHours: "",
+    progress: 0,
+    notes: "",
+    tags: "",
+    dependencies: "",
+    resources: "",
+    milestones: "",
+    riskAssessment: "",
+    successCriteria: ""
   });
   
   const { data: projects = [], isLoading } = useQuery<Project[]>({
@@ -59,7 +75,27 @@ export default function ProjectList() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
-      setNewProject({ title: "", description: "", status: "available" });
+      setNewProject({
+        title: "",
+        description: "",
+        status: "available",
+        priority: "medium",
+        category: "general",
+        assigneeId: null,
+        assigneeName: "",
+        dueDate: "",
+        startDate: "",
+        estimatedHours: "",
+        actualHours: "",
+        progress: 0,
+        notes: "",
+        tags: "",
+        dependencies: "",
+        resources: "",
+        milestones: "",
+        riskAssessment: "",
+        successCriteria: ""
+      });
       setShowAddForm(false);
       toast({
         title: "Project created successfully",
@@ -271,6 +307,48 @@ export default function ProjectList() {
                 </div>
                 
                 <div>
+                  <Label htmlFor="project-category" className="text-sm font-medium text-slate-700">
+                    Category
+                  </Label>
+                  <Select 
+                    value={newProject.category} 
+                    onValueChange={(value) => setNewProject({ ...newProject, category: value })}
+                  >
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="general">General</SelectItem>
+                      <SelectItem value="operations">Operations</SelectItem>
+                      <SelectItem value="outreach">Outreach</SelectItem>
+                      <SelectItem value="technology">Technology</SelectItem>
+                      <SelectItem value="logistics">Logistics</SelectItem>
+                      <SelectItem value="fundraising">Fundraising</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="project-priority" className="text-sm font-medium text-slate-700">
+                    Priority
+                  </Label>
+                  <Select 
+                    value={newProject.priority} 
+                    onValueChange={(value) => setNewProject({ ...newProject, priority: value })}
+                  >
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                      <SelectItem value="urgent">Urgent</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
                   <Label htmlFor="project-status" className="text-sm font-medium text-slate-700">
                     Status
                   </Label>
@@ -289,6 +367,60 @@ export default function ProjectList() {
                     </SelectContent>
                   </Select>
                 </div>
+
+                <div>
+                  <Label htmlFor="assignee-name" className="text-sm font-medium text-slate-700">
+                    Assignee Name
+                  </Label>
+                  <Input
+                    id="assignee-name"
+                    type="text"
+                    placeholder="Person responsible for this project"
+                    value={newProject.assigneeName}
+                    onChange={(e) => setNewProject({ ...newProject, assigneeName: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="start-date" className="text-sm font-medium text-slate-700">
+                    Start Date
+                  </Label>
+                  <Input
+                    id="start-date"
+                    type="date"
+                    value={newProject.startDate}
+                    onChange={(e) => setNewProject({ ...newProject, startDate: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="due-date" className="text-sm font-medium text-slate-700">
+                    Due Date
+                  </Label>
+                  <Input
+                    id="due-date"
+                    type="date"
+                    value={newProject.dueDate}
+                    onChange={(e) => setNewProject({ ...newProject, dueDate: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="estimated-hours" className="text-sm font-medium text-slate-700">
+                    Estimated Hours
+                  </Label>
+                  <Input
+                    id="estimated-hours"
+                    type="number"
+                    placeholder="0"
+                    value={newProject.estimatedHours}
+                    onChange={(e) => setNewProject({ ...newProject, estimatedHours: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
               </div>
               
               <div>
@@ -301,6 +433,78 @@ export default function ProjectList() {
                   value={newProject.description}
                   onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
                   rows={3}
+                  className="mt-1"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="tags" className="text-sm font-medium text-slate-700">
+                    Tags (comma-separated)
+                  </Label>
+                  <Input
+                    id="tags"
+                    type="text"
+                    placeholder="volunteer, urgent, community"
+                    value={newProject.tags}
+                    onChange={(e) => setNewProject({ ...newProject, tags: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="dependencies" className="text-sm font-medium text-slate-700">
+                    Dependencies
+                  </Label>
+                  <Input
+                    id="dependencies"
+                    type="text"
+                    placeholder="Other projects or resources needed"
+                    value={newProject.dependencies}
+                    onChange={(e) => setNewProject({ ...newProject, dependencies: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="resources" className="text-sm font-medium text-slate-700">
+                  Required Resources
+                </Label>
+                <Textarea
+                  id="resources"
+                  placeholder="Materials, tools, or support needed for this project"
+                  value={newProject.resources}
+                  onChange={(e) => setNewProject({ ...newProject, resources: e.target.value })}
+                  rows={2}
+                  className="mt-1"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="success-criteria" className="text-sm font-medium text-slate-700">
+                  Success Criteria
+                </Label>
+                <Textarea
+                  id="success-criteria"
+                  placeholder="How will we know this project is successful?"
+                  value={newProject.successCriteria}
+                  onChange={(e) => setNewProject({ ...newProject, successCriteria: e.target.value })}
+                  rows={2}
+                  className="mt-1"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="notes" className="text-sm font-medium text-slate-700">
+                  Additional Notes
+                </Label>
+                <Textarea
+                  id="notes"
+                  placeholder="Any additional information or comments"
+                  value={newProject.notes}
+                  onChange={(e) => setNewProject({ ...newProject, notes: e.target.value })}
+                  rows={2}
                   className="mt-1"
                 />
               </div>
