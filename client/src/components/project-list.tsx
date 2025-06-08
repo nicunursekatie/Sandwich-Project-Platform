@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { ListTodo, Plus, X } from "lucide-react";
+import { ListTodo, Plus, X, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,7 @@ export default function ProjectList() {
   const { toast } = useToast();
   const [showAddForm, setShowAddForm] = useState(false);
   const [claimingProjectId, setClaimingProjectId] = useState<number | null>(null);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [assigneeName, setAssigneeName] = useState("");
   const [newProject, setNewProject] = useState({
     title: "",
@@ -73,6 +74,49 @@ export default function ProjectList() {
     }
   });
 
+  const updateProjectMutation = useMutation({
+    mutationFn: async ({ id, ...updates }: { id: number } & Partial<Project>) => {
+      return apiRequest("PUT", `/api/projects/${id}`, updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      setEditingProject(null);
+      toast({
+        title: "Project updated successfully",
+        description: "The project has been updated.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Failed to update project",
+        description: "Please try again later.",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const deleteProjectMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest(`/api/projects/${id}`, {
+        method: "DELETE",
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      toast({
+        title: "Project deleted successfully",
+        description: "The project has been removed.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Failed to delete project",
+        description: "Please try again later.",
+        variant: "destructive"
+      });
+    }
+  });
+
   const handleCreateProject = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newProject.title.trim()) {
@@ -84,6 +128,25 @@ export default function ProjectList() {
       return;
     }
     createProjectMutation.mutate(newProject);
+  };
+
+  const handleUpdateProject = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProject || !editingProject.title.trim()) {
+      toast({
+        title: "Missing title",
+        description: "Please enter a project title.",
+        variant: "destructive"
+      });
+      return;
+    }
+    updateProjectMutation.mutate(editingProject);
+  };
+
+  const handleDeleteProject = (id: number, title: string) => {
+    if (confirm(`Are you sure you want to delete "${title}"? This action cannot be undone.`)) {
+      deleteProjectMutation.mutate(id);
+    }
   };
 
   const handleClaimProject = (e: React.FormEvent) => {
@@ -104,6 +167,11 @@ export default function ProjectList() {
   const startClaimingProject = (projectId: number) => {
     setClaimingProjectId(projectId);
     setAssigneeName("");
+  };
+
+  const startEditingProject = (project: Project) => {
+    setEditingProject(project);
+    setShowAddForm(false);
   };
 
   const getStatusColor = (status: string) => {

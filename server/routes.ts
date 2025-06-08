@@ -25,6 +25,24 @@ const upload = multer({
   }
 });
 
+// Configure multer for import operations (memory storage)
+const importUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+    const allowedExtensions = ['.csv', '.xls', '.xlsx'];
+    const hasValidType = allowedTypes.includes(file.mimetype);
+    const hasValidExtension = allowedExtensions.some(ext => file.originalname.toLowerCase().endsWith(ext));
+    
+    if (hasValidType || hasValidExtension) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only CSV and Excel files are allowed'));
+    }
+  }
+});
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply global middleware
   app.use(requestLogger);
@@ -859,7 +877,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Import recipients from CSV/XLSX
-  app.post('/api/recipients/import', upload.single('file'), async (req, res) => {
+  app.post('/api/recipients/import', importUpload.single('file'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No file uploaded" });
