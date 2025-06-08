@@ -2,12 +2,27 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
 import express from "express";
+import multer from "multer";
+import { parse } from 'csv-parse/sync';
 import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
 import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertHostSchema } from "@shared/schema";
+
+// Configure multer for file uploads
+const upload = multer({ 
+  dest: 'uploads/',
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'text/csv' || file.originalname.endsWith('.csv')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only CSV files are allowed'));
+    }
+  }
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply global middleware
@@ -230,6 +245,106 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete collection" });
+    }
+  });
+
+  // CSV Import for Sandwich Collections
+  app.post("/api/import-collections", upload.single('csvFile'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No CSV file uploaded" });
+      }
+
+      const fs = require('fs');
+      const csvContent = fs.readFileSync(req.file.path, 'utf-8');
+      
+      // Parse CSV
+      const records = parse(csvContent, {
+        columns: true,
+        skip_empty_lines: true,
+        trim: true
+      });
+
+      let successCount = 0;
+      let errorCount = 0;
+      const errors: string[] = [];
+
+      // Process each record
+      for (let i = 0; i < records.length; i++) {
+        const record = records[i];
+        
+        try {
+          // Validate required fields
+          if (!record['Host Name'] || !record['Sandwich Count'] || !record['Date']) {
+            throw new Error(`Missing required fields in row ${i + 1}`);
+          }
+
+          // Parse sandwich count as integer
+          const sandwichCount = parseInt(record['Sandwich Count']);
+          if (isNaN(sandwichCount)) {
+            throw new Error(`Invalid sandwich count "${record['Sandwich Count']}" in row ${i + 1}`);
+          }
+
+          // Parse dates
+          let collectionDate = record['Date'];
+          let submittedAt = new Date();
+          
+          // Try to parse Created At if provided
+          if (record['Created At']) {
+            const parsedDate = new Date(record['Created At']);
+            if (!isNaN(parsedDate.getTime())) {
+              submittedAt = parsedDate;
+            }
+          }
+
+          // Create sandwich collection
+          await storage.createSandwichCollection({
+            hostName: record['Host Name'].trim(),
+            individualSandwiches: sandwichCount,
+            collectionDate: collectionDate.trim(),
+            groupCollections: '[]', // Default empty JSON array
+            submittedAt: submittedAt
+          });
+
+          successCount++;
+          
+        } catch (error) {
+          errorCount++;
+          const errorMsg = `Row ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`;
+          errors.push(errorMsg);
+          logger.error(errorMsg);
+        }
+      }
+
+      // Clean up uploaded file
+      fs.unlinkSync(req.file.path);
+
+      const result = {
+        totalRecords: records.length,
+        successCount,
+        errorCount,
+        errors: errors.slice(0, 10) // Return first 10 errors
+      };
+
+      logger.info(`CSV import completed: ${successCount}/${records.length} records imported`);
+      res.json(result);
+
+    } catch (error) {
+      // Clean up uploaded file if it exists
+      if (req.file?.path) {
+        try {
+          const fs = require('fs');
+          fs.unlinkSync(req.file.path);
+        } catch (cleanupError) {
+          logger.error("Failed to clean up uploaded file", cleanupError);
+        }
+      }
+      
+      logger.error("CSV import failed", error);
+      res.status(500).json({ 
+        message: "Failed to import CSV file",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 
