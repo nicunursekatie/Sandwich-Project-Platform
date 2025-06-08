@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X } from "lucide-react";
+import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -50,6 +50,11 @@ export default function SandwichCollectionLog() {
     createdAtFrom: "",
     createdAtTo: ""
   });
+  
+  const [sortConfig, setSortConfig] = useState({
+    field: "collectionDate" as keyof SandwichCollection,
+    direction: "desc" as "asc" | "desc"
+  });
   const [showFilters, setShowFilters] = useState(false);
   const [editFormData, setEditFormData] = useState({
     collectionDate: "",
@@ -62,43 +67,65 @@ export default function SandwichCollectionLog() {
     queryKey: ["/api/sandwich-collections"]
   });
 
-  // Filter collections based on search criteria
-  const filteredCollections = collections.filter(collection => {
-    // Host name filter
-    if (searchFilters.hostName && !collection.hostName.toLowerCase().includes(searchFilters.hostName.toLowerCase())) {
-      return false;
-    }
-    
-    // Collection date range filter
-    if (searchFilters.collectionDateFrom) {
-      const collectionDate = new Date(collection.collectionDate);
-      const fromDate = new Date(searchFilters.collectionDateFrom);
-      if (collectionDate < fromDate) return false;
-    }
-    
-    if (searchFilters.collectionDateTo) {
-      const collectionDate = new Date(collection.collectionDate);
-      const toDate = new Date(searchFilters.collectionDateTo);
-      if (collectionDate > toDate) return false;
-    }
-    
-    // Created at date range filter
-    if (searchFilters.createdAtFrom) {
-      const createdDate = new Date(collection.submittedAt);
-      const fromDate = new Date(searchFilters.createdAtFrom);
-      if (createdDate < fromDate) return false;
-    }
-    
-    if (searchFilters.createdAtTo) {
-      const createdDate = new Date(collection.submittedAt);
-      const toDate = new Date(searchFilters.createdAtTo);
-      // Add 23:59:59 to include the entire day
-      toDate.setHours(23, 59, 59, 999);
-      if (createdDate > toDate) return false;
-    }
-    
-    return true;
-  });
+  // Filter and sort collections
+  const filteredCollections = collections
+    .filter(collection => {
+      // Host name filter
+      if (searchFilters.hostName && !collection.hostName.toLowerCase().includes(searchFilters.hostName.toLowerCase())) {
+        return false;
+      }
+      
+      // Collection date range filter
+      if (searchFilters.collectionDateFrom) {
+        const collectionDate = new Date(collection.collectionDate);
+        const fromDate = new Date(searchFilters.collectionDateFrom);
+        if (collectionDate < fromDate) return false;
+      }
+      
+      if (searchFilters.collectionDateTo) {
+        const collectionDate = new Date(collection.collectionDate);
+        const toDate = new Date(searchFilters.collectionDateTo);
+        if (collectionDate > toDate) return false;
+      }
+      
+      // Created at date range filter
+      if (searchFilters.createdAtFrom) {
+        const createdDate = new Date(collection.submittedAt);
+        const fromDate = new Date(searchFilters.createdAtFrom);
+        if (createdDate < fromDate) return false;
+      }
+      
+      if (searchFilters.createdAtTo) {
+        const createdDate = new Date(collection.submittedAt);
+        const toDate = new Date(searchFilters.createdAtTo);
+        // Add 23:59:59 to include the entire day
+        toDate.setHours(23, 59, 59, 999);
+        if (createdDate > toDate) return false;
+      }
+      
+      return true;
+    })
+    .sort((a, b) => {
+      const aValue = a[sortConfig.field];
+      const bValue = b[sortConfig.field];
+      
+      // Handle different data types
+      let comparison = 0;
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        comparison = aValue.localeCompare(bValue);
+      } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+        comparison = aValue - bValue;
+      } else if (aValue instanceof Date && bValue instanceof Date) {
+        comparison = aValue.getTime() - bValue.getTime();
+      } else {
+        // Handle date strings
+        const aDate = new Date(aValue as string);
+        const bDate = new Date(bValue as string);
+        comparison = aDate.getTime() - bDate.getTime();
+      }
+      
+      return sortConfig.direction === 'asc' ? comparison : -comparison;
+    });
 
   // Fetch active hosts from the database
   const { data: hosts = [] } = useQuery<Host[]>({
@@ -607,8 +634,36 @@ export default function SandwichCollectionLog() {
             </div>
           </div>
           <div className="flex items-center justify-between mt-4">
-            <div className="text-sm text-slate-600">
-              Showing {filteredCollections.length} of {collections.length} entries
+            <div className="flex items-center space-x-4">
+              <div className="text-sm text-slate-600">
+                Showing {filteredCollections.length} of {collections.length} entries
+              </div>
+              <div className="flex items-center space-x-2">
+                <Label className="text-sm font-medium text-slate-700">Sort by:</Label>
+                <Select
+                  value={sortConfig.field}
+                  onValueChange={(value) => setSortConfig(prev => ({ ...prev, field: value as keyof SandwichCollection }))}
+                >
+                  <SelectTrigger className="w-40">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="collectionDate">Collection Date</SelectItem>
+                    <SelectItem value="hostName">Host Name</SelectItem>
+                    <SelectItem value="individualSandwiches">Sandwich Count</SelectItem>
+                    <SelectItem value="submittedAt">Created Date</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSortConfig(prev => ({ ...prev, direction: prev.direction === 'asc' ? 'desc' : 'asc' }))}
+                  className="flex items-center space-x-1"
+                >
+                  {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                  <span>{sortConfig.direction === 'asc' ? 'Asc' : 'Desc'}</span>
+                </Button>
+              </div>
             </div>
             <Button
               variant="outline"
