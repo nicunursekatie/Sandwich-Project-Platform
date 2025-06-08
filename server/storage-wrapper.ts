@@ -447,6 +447,13 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.deleteRecipient(id)
     );
   }
+
+  async updateCollectionHostNames(oldHostName: string, newHostName: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateCollectionHostNames(oldHostName, newHostName),
+      () => this.fallbackStorage.updateCollectionHostNames(oldHostName, newHostName)
+    );
+  }
 }
 
 export const storage = new StorageWrapper();
