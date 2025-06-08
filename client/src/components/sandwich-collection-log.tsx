@@ -371,7 +371,7 @@ export default function SandwichCollectionLog() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedCollections(new Set(collections.map(c => c.id)));
+      setSelectedCollections(new Set(filteredCollections.map(c => c.id)));
     } else {
       setSelectedCollections(new Set());
     }
@@ -635,13 +635,13 @@ export default function SandwichCollectionLog() {
         </div>
       )}
       <div className="p-6">
-        {collections.length > 0 && (
+        {filteredCollections.length > 0 && (
           <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-slate-200">
             <button
-              onClick={() => handleSelectAll(!selectedCollections.size || selectedCollections.size < collections.length)}
+              onClick={() => handleSelectAll(!selectedCollections.size || selectedCollections.size < filteredCollections.length)}
               className="flex items-center space-x-2 text-sm text-slate-600 hover:text-slate-900"
             >
-              {selectedCollections.size === collections.length ? (
+              {selectedCollections.size === filteredCollections.length ? (
                 <CheckSquare className="w-4 h-4" />
               ) : (
                 <Square className="w-4 h-4" />
@@ -656,7 +656,7 @@ export default function SandwichCollectionLog() {
           </div>
         )}
         <div className="space-y-4">
-          {collections.map((collection) => {
+          {filteredCollections.map((collection) => {
             const groupData = parseGroupCollections(collection.groupCollections);
             const totalSandwiches = calculateTotal(collection);
             const isSelected = selectedCollections.has(collection.id);
@@ -761,6 +761,12 @@ export default function SandwichCollectionLog() {
           {collections.length === 0 && (
             <div className="text-center py-8 text-slate-500">
               No collection entries found. Use the form above to record sandwich collections.
+            </div>
+          )}
+
+          {collections.length > 0 && filteredCollections.length === 0 && (
+            <div className="text-center py-8 text-slate-500">
+              No entries match the current filters. Try adjusting your search criteria.
             </div>
           )}
         </div>
