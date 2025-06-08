@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { MessageCircle, Send, Hash, MessageSquare, ChevronRight } from "lucide-react";
+import { MessageCircle, Send, Hash, MessageSquare, ChevronRight, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -22,6 +24,31 @@ export default function MessageLog() {
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [replyingTo, setReplyingTo] = useState<Message | null>(null);
+  const [userName, setUserName] = useState("");
+  const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
+  const [tempUserName, setTempUserName] = useState("");
+
+  // Load user name from localStorage on component mount
+  useEffect(() => {
+    const savedName = localStorage.getItem('chatUserName');
+    if (savedName) {
+      setUserName(savedName);
+    }
+  }, []);
+
+  const saveUserName = () => {
+    if (tempUserName.trim()) {
+      const trimmedName = tempUserName.trim();
+      setUserName(trimmedName);
+      localStorage.setItem('chatUserName', trimmedName);
+      setIsNameDialogOpen(false);
+      setTempUserName("");
+      toast({
+        title: "Name saved",
+        description: `Your chat name has been set to "${trimmedName}".`,
+      });
+    }
+  };
   
   const { data: messages = [], isLoading } = useQuery<Message[]>({
     queryKey: ["/api/messages"]

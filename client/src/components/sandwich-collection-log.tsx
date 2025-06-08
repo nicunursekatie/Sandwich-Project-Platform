@@ -280,10 +280,7 @@ export default function SandwichCollectionLog() {
 
   const cleanDuplicatesMutation = useMutation({
     mutationFn: async (mode: 'exact' | 'suspicious') => {
-      const response = await apiRequest("/api/sandwich-collections/clean-duplicates", {
-        method: "DELETE",
-        body: JSON.stringify({ mode })
-      });
+      const response = await apiRequest("DELETE", "/api/sandwich-collections/clean-duplicates", { mode });
       return response.json();
     },
     onSuccess: (result: any) => {
