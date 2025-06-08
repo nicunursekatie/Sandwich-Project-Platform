@@ -131,10 +131,22 @@ export const driverAgreements = pgTable("driver_agreements", {
 
 export const hosts = pgTable("hosts", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email"),
-  phone: text("phone"),
+  name: text("name").notNull(), // Location name (e.g., "Alpharetta", "Roswell Community Center")
+  address: text("address"),
   status: text("status").notNull().default("active"), // 'active', 'inactive'
+  notes: text("notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const hostContacts = pgTable("host_contacts", {
+  id: serial("id").primaryKey(),
+  hostId: integer("host_id").notNull(),
+  name: text("name").notNull(), // Contact person name
+  role: text("role").notNull(), // 'primary', 'backup', 'coordinator', 'manager', 'volunteer'
+  phone: text("phone").notNull(),
+  email: text("email"),
+  isPrimary: boolean("is_primary").notNull().default(false),
   notes: text("notes"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -177,6 +189,7 @@ export const insertAgendaItemSchema = createInsertSchema(agendaItems).omit({ id:
 export const insertMeetingSchema = createInsertSchema(meetings).omit({ id: true, createdAt: true });
 export const insertDriverAgreementSchema = createInsertSchema(driverAgreements).omit({ id: true, submittedAt: true });
 export const insertHostSchema = createInsertSchema(hosts).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertHostContactSchema = createInsertSchema(hostContacts).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertRecipientSchema = createInsertSchema(recipients).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertProjectDocumentSchema = createInsertSchema(projectDocuments).omit({ id: true, uploadedAt: true });
 
@@ -203,6 +216,8 @@ export type DriverAgreement = typeof driverAgreements.$inferSelect;
 export type InsertDriverAgreement = z.infer<typeof insertDriverAgreementSchema>;
 export type Host = typeof hosts.$inferSelect;
 export type InsertHost = z.infer<typeof insertHostSchema>;
+export type HostContact = typeof hostContacts.$inferSelect;
+export type InsertHostContact = z.infer<typeof insertHostContactSchema>;
 export type Recipient = typeof recipients.$inferSelect;
 export type InsertRecipient = z.infer<typeof insertRecipientSchema>;
 export type ProjectDocument = typeof projectDocuments.$inferSelect;

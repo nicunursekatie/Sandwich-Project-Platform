@@ -5,22 +5,37 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Phone, Mail, MapPin, Search, Download, User, Users } from "lucide-react";
+import { Phone, Mail, MapPin, Search, Download, User, Users, Star, Building2 } from "lucide-react";
 
 interface Host {
   id: number;
   name: string;
-  email: string | null;
-  phone: string | null;
   address: string | null;
+  status: 'active' | 'inactive';
   notes: string | null;
+}
+
+interface HostContact {
+  id: number;
+  hostId: number;
+  name: string;
+  role: string;
+  phone: string;
+  email: string | null;
+  isPrimary: boolean;
+  notes: string | null;
+}
+
+interface HostWithContacts extends Host {
+  contacts: HostContact[];
 }
 
 interface Recipient {
   id: number;
   name: string;
+  contactName: string | null;
   email: string | null;
-  phone: string | null;
+  phone: string;
   address: string | null;
   preferences: string | null;
   status: 'active' | 'inactive';
@@ -30,9 +45,33 @@ export default function PhoneDirectory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("hosts");
 
-  // Fetch hosts
-  const { data: hosts = [], isLoading: hostsLoading } = useQuery<Host[]>({
-    queryKey: ["/api/hosts"],
+  // Fetch hosts (temporarily using existing endpoint until backend is updated)
+  const { data: hosts = [], isLoading: hostsLoading } = useQuery<HostWithContacts[]>({
+    queryKey: ["/api/hosts-with-contacts"],
+    queryFn: async () => {
+      // For now, fetch hosts and mock the contact structure
+      const response = await fetch("/api/hosts");
+      const hostData = await response.json();
+      
+      // Transform existing host data to new structure with mock contacts
+      return hostData.map((host: any) => ({
+        id: host.id,
+        name: host.name,
+        address: host.address || null,
+        status: host.status || 'active',
+        notes: host.notes,
+        contacts: host.phone ? [{
+          id: host.id * 1000,
+          hostId: host.id,
+          name: "Primary Contact",
+          role: "primary",
+          phone: host.phone,
+          email: host.email,
+          isPrimary: true,
+          notes: null
+        }] : []
+      }));
+    }
   });
 
   // Fetch recipients
@@ -43,13 +82,17 @@ export default function PhoneDirectory() {
   // Filter functions
   const filteredHosts = hosts.filter(host =>
     host.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (host.phone && host.phone.includes(searchTerm)) ||
-    (host.email && host.email.toLowerCase().includes(searchTerm.toLowerCase()))
+    host.contacts.some(contact => 
+      contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contact.phone.includes(searchTerm) ||
+      (contact.email && contact.email.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
   );
 
   const filteredRecipients = recipients.filter(recipient =>
     recipient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (recipient.phone && recipient.phone.includes(searchTerm)) ||
+    (recipient.contactName && recipient.contactName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    recipient.phone.includes(searchTerm) ||
     (recipient.email && recipient.email.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
@@ -82,57 +125,140 @@ export default function PhoneDirectory() {
     return phone;
   };
 
-  const ContactCard = ({ contact, type }: { contact: Host | Recipient; type: 'host' | 'recipient' }) => (
+  const HostCard = ({ host }: { host: HostWithContacts }) => (
     <Card className="mb-4">
       <CardContent className="pt-4">
-        <div className="flex items-start justify-between">
+        <div className="flex items-start gap-4">
           <div className="flex-1">
-            <h3 className="font-semibold text-lg flex items-center gap-2">
-              {type === 'host' ? <Users className="w-4 h-4" /> : <User className="w-4 h-4" />}
-              {contact.name}
-              {type === 'recipient' && (contact as Recipient).status === 'inactive' && (
+            <div className="flex items-center gap-2 mb-3">
+              <Building2 className="w-5 h-5 text-blue-600" />
+              <h3 className="font-bold text-lg text-gray-900">{host.name}</h3>
+              {host.status === 'inactive' && (
                 <Badge variant="secondary">Inactive</Badge>
               )}
-            </h3>
+            </div>
             
-            <div className="mt-2 space-y-2">
-              {contact.phone && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Phone className="w-4 h-4" />
-                  <a href={`tel:${contact.phone}`} className="hover:text-blue-600">
-                    {formatPhone(contact.phone)}
-                  </a>
-                </div>
-              )}
-              
-              {contact.email && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Mail className="w-4 h-4" />
-                  <a href={`mailto:${contact.email}`} className="hover:text-blue-600">
-                    {contact.email}
-                  </a>
-                </div>
-              )}
-              
-              {contact.address && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <MapPin className="w-4 h-4" />
-                  <span>{contact.address}</span>
-                </div>
-              )}
-              
-              {type === 'host' && (contact as Host).notes && (
-                <div className="text-sm text-gray-600">
-                  <strong>Notes:</strong> {(contact as Host).notes}
-                </div>
-              )}
-              
-              {type === 'recipient' && (contact as Recipient).preferences && (
-                <div className="text-sm text-gray-600">
-                  <strong>Preferences:</strong> {(contact as Recipient).preferences}
-                </div>
+            {host.address && (
+              <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                <MapPin className="w-4 h-4" />
+                <span>{host.address}</span>
+              </div>
+            )}
+            
+            {host.contacts.length === 0 ? (
+              <div className="text-gray-500 text-sm italic">No contact information available</div>
+            ) : (
+              <div className="space-y-3">
+                {host.contacts.map((contact) => (
+                  <div key={contact.id} className="border-l-2 border-blue-200 pl-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-gray-900">{contact.name}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {contact.role}
+                        </Badge>
+                        {contact.isPrimary && (
+                          <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 mb-2">
+                      <a 
+                        href={`tel:${contact.phone}`} 
+                        className="flex items-center gap-2 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors group"
+                      >
+                        <Phone className="w-4 h-4 text-blue-600" />
+                        <span className="font-medium text-blue-700 text-lg">
+                          {formatPhone(contact.phone)}
+                        </span>
+                      </a>
+                      
+                      {contact.email && (
+                        <a 
+                          href={`mailto:${contact.email}`} 
+                          className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors"
+                        >
+                          <Mail className="w-4 h-4" />
+                          <span className="text-sm">{contact.email}</span>
+                        </a>
+                      )}
+                    </div>
+                    
+                    {contact.notes && (
+                      <div className="text-xs text-gray-500">
+                        <strong>Notes:</strong> {contact.notes}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {host.notes && (
+              <div className="mt-3 pt-3 border-t border-gray-200 text-sm text-gray-600">
+                <strong>Location Notes:</strong> {host.notes}
+              </div>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  const RecipientCard = ({ recipient }: { recipient: Recipient }) => (
+    <Card className="mb-4">
+      <CardContent className="pt-4">
+        <div className="flex items-start gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-3">
+              <User className="w-5 h-5 text-green-600" />
+              <h3 className="font-bold text-lg text-gray-900">{recipient.name}</h3>
+              {recipient.status === 'inactive' && (
+                <Badge variant="secondary">Inactive</Badge>
               )}
             </div>
+            
+            {recipient.contactName && (
+              <div className="text-sm text-gray-600 mb-2">
+                <strong>Contact:</strong> {recipient.contactName}
+              </div>
+            )}
+            
+            <div className="flex items-center gap-3 mb-3">
+              <a 
+                href={`tel:${recipient.phone}`} 
+                className="flex items-center gap-2 bg-green-50 hover:bg-green-100 px-3 py-2 rounded-lg transition-colors group"
+              >
+                <Phone className="w-4 h-4 text-green-600" />
+                <span className="font-medium text-green-700 text-lg">
+                  {formatPhone(recipient.phone)}
+                </span>
+              </a>
+              
+              {recipient.email && (
+                <a 
+                  href={`mailto:${recipient.email}`} 
+                  className="flex items-center gap-2 text-gray-600 hover:text-green-600 transition-colors"
+                >
+                  <Mail className="w-4 h-4" />
+                  <span className="text-sm">{recipient.email}</span>
+                </a>
+              )}
+            </div>
+            
+            {recipient.address && (
+              <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                <MapPin className="w-4 h-4" />
+                <span>{recipient.address}</span>
+              </div>
+            )}
+            
+            {recipient.preferences && (
+              <div className="text-sm text-gray-600">
+                <strong>Preferences:</strong> {recipient.preferences}
+              </div>
+            )}
           </div>
         </div>
       </CardContent>
