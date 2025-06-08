@@ -8,9 +8,16 @@ export default function PhoneDirectoryPage() {
 
   const sidebarItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/" },
+    { id: "projects", label: "Projects", icon: ListTodo, path: "/" },
+    { id: "messages", label: "Messages", icon: MessageCircle, path: "/" },
     { id: "meetings", label: "Meetings", icon: ClipboardList, path: "/meetings" },
-    { id: "development", label: "Development", icon: FileText, path: "/development" },
+    { id: "toolkit", label: "Toolkit", icon: FileText, path: "/" },
+    { id: "collections", label: "Collections", icon: BarChart3, path: "/" },
+    { id: "hosts", label: "Hosts", icon: Building2, path: "/" },
+    { id: "recipients", label: "Recipients", icon: Users, path: "/" },
     { id: "directory", label: "Phone Directory", icon: Phone, path: "/phone-directory" },
+    { id: "drivers", label: "Drivers", icon: Car, path: "/" },
+    { id: "development", label: "Development", icon: FileText, path: "/development" },
   ];
 
   return (

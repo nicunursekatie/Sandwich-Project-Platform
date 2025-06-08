@@ -251,4 +251,29 @@ export const insertHostedFileSchema = createInsertSchema(hostedFiles).omit({
 export type HostedFile = typeof hostedFiles.$inferSelect;
 export type InsertHostedFile = z.infer<typeof insertHostedFileSchema>;
 
+// General Contacts table (for people who aren't hosts or recipients)
+export const contacts = pgTable("contacts", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  organization: text("organization"),
+  role: text("role"),
+  phone: text("phone").notNull(),
+  email: text("email"),
+  address: text("address"),
+  notes: text("notes"),
+  category: text("category").notNull().default("general"), // volunteer, board, vendor, donor, etc.
+  status: text("status").notNull().default("active"), // active, inactive
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
+});
+
+export const insertContactSchema = createInsertSchema(contacts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export type Contact = typeof contacts.$inferSelect;
+export type InsertContact = z.infer<typeof insertContactSchema>;
+
 export type UpsertUser = typeof users.$inferInsert;

@@ -1,5 +1,5 @@
 import { 
-  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, recipients,
+  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, recipients, contacts,
   type User, type InsertUser, 
   type Project, type InsertProject,
   type Message, type InsertMessage,
@@ -11,7 +11,8 @@ import {
   type Meeting, type InsertMeeting,
   type DriverAgreement, type InsertDriverAgreement,
   type Host, type InsertHost,
-  type Recipient, type InsertRecipient
+  type Recipient, type InsertRecipient,
+  type Contact, type InsertContact
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql } from "drizzle-orm";
