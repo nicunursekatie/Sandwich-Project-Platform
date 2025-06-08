@@ -316,6 +316,7 @@ export default function RecipientsManagement() {
                 </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
       </div>
 
