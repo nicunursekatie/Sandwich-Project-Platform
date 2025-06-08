@@ -56,15 +56,15 @@ export class DatabaseStorage implements IStorage {
 
   // Messages
   async getAllMessages(): Promise<Message[]> {
-    return await db.select().from(messages).orderBy(desc(messages.createdAt));
+    return await db.select().from(messages).orderBy(messages.id);
   }
 
   async getRecentMessages(limit: number): Promise<Message[]> {
-    return await db.select().from(messages).orderBy(desc(messages.createdAt)).limit(limit);
+    return await db.select().from(messages).orderBy(messages.id).limit(limit);
   }
 
   async getMessagesByCommittee(committee: string): Promise<Message[]> {
-    return await db.select().from(messages).where(eq(messages.committee, committee)).orderBy(desc(messages.createdAt));
+    return await db.select().from(messages).where(eq(messages.committee, committee)).orderBy(messages.id);
   }
 
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
