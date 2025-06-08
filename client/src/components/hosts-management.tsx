@@ -36,10 +36,24 @@ export default function HostsManagement() {
 
   const createHostMutation = useMutation({
     mutationFn: async (data: InsertHost) => {
-      const response = await apiRequest('POST', '/api/hosts', data);
+      console.log('Creating host with data:', data);
+      const response = await fetch('/api/hosts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Host creation failed:', response.status, errorText);
+        throw new Error(`Failed to create host: ${response.status} ${errorText}`);
+      }
       return response.json();
     },
     onSuccess: () => {
+      console.log('Host created successfully');
       queryClient.invalidateQueries({ queryKey: ['/api/hosts'] });
       setNewHost({ name: "", email: "", phone: "", status: "active", notes: "" });
       setIsAddModalOpen(false);
@@ -48,10 +62,11 @@ export default function HostsManagement() {
         description: "New host has been added successfully.",
       });
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error('Host creation error:', error);
       toast({
         title: "Error",
-        description: "Failed to add host. Please try again.",
+        description: `Failed to add host: ${error.message}`,
         variant: "destructive",
       });
     }
@@ -59,7 +74,14 @@ export default function HostsManagement() {
 
   const updateHostMutation = useMutation({
     mutationFn: async (data: { id: number; updates: Partial<Host> }) => {
-      const response = await apiRequest('PUT', `/api/hosts/${data.id}`, data.updates);
+      const response = await fetch(`/api/hosts/${data.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data.updates),
+      });
+      if (!response.ok) throw new Error('Failed to update host');
       return response.json();
     },
     onSuccess: () => {
@@ -81,7 +103,10 @@ export default function HostsManagement() {
 
   const deleteHostMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest('DELETE', `/api/hosts/${id}`);
+      const response = await fetch(`/api/hosts/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete host');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/hosts'] });
