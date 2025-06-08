@@ -177,8 +177,7 @@ export default function SandwichCollectionLog() {
   // Mutations for update and delete
   const updateMutation = useMutation({
     mutationFn: async (data: { id: number; updates: any }) => {
-      const response = await apiRequest("PUT", `/api/sandwich-collections/${data.id}`, data.updates);
-      return response.json();
+      return await apiRequest("PUT", `/api/sandwich-collections/${data.id}`, data.updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
@@ -199,7 +198,7 @@ export default function SandwichCollectionLog() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/sandwich-collections/${id}`);
+      return await apiRequest("DELETE", `/api/sandwich-collections/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
@@ -327,8 +326,7 @@ export default function SandwichCollectionLog() {
 
   const batchDeleteMutation = useMutation({
     mutationFn: async (ids: number[]) => {
-      const response = await apiRequest("DELETE", "/api/sandwich-collections/batch-delete", { ids });
-      return response.json();
+      return await apiRequest("DELETE", "/api/sandwich-collections/batch-delete", { ids });
     },
     onSuccess: (result: any) => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
