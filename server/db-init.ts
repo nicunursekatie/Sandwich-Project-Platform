@@ -5,13 +5,17 @@ import { eq, count } from "drizzle-orm";
 export async function initializeDatabase() {
   try {
     console.log("Checking database initialization...");
+    console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
+    console.log("DATABASE_URL preview:", process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 20) + "..." : "not set");
 
-    // Check if any core data exists - if any table has data, skip all seeding
+    // Check each table independently and seed if empty
     const [hostsCount] = await db.select({ count: count() }).from(hosts);
     const [projectsCount] = await db.select({ count: count() }).from(projects);
     const [messagesCount] = await db.select({ count: count() }).from(messages);
     const [collectionsCount] = await db.select({ count: count() }).from(sandwichCollections);
-    
+
+    console.log("Table counts - Hosts:", hostsCount.count, "Projects:", projectsCount.count, "Messages:", messagesCount.count, "Collections:", collectionsCount.count);
+
     // Only seed if ALL tables are completely empty (first time setup)
     if (hostsCount.count === 0 && projectsCount.count === 0 && messagesCount.count === 0 && collectionsCount.count === 0) {
       console.log("Seeding hosts table...");
