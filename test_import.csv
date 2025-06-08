@@ -1,3 +1,4 @@
-Host Name,Sandwich Count,Date,Logged By,Notes,Created At
-"Test Group",100,2024-01-01,"Katie","Test import",2024-01-01
-"Another Group",50,2024-01-02,"Katie","Another test",2024-01-02
+Collection Date,Host Name,Individual Sandwiches,Group Collections
+2020-04-22,Early Collections - No Location Data,317,
+2020-04-29,Early Collections - No Location Data,530,
+2020-05-06,Early Collections - No Location Data,290,

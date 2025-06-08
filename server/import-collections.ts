@@ -29,6 +29,7 @@ export async function importCollectionsFromCSV(filePath: string) {
   if (records.length > 0) {
     console.log('Available columns in CSV:', Object.keys(records[0]));
     console.log('First record sample:', records[0]);
+    console.log('Second record sample:', records[1]);
   }
 
   let successCount = 0;
@@ -53,7 +54,7 @@ export async function importCollectionsFromCSV(filePath: string) {
       
       if (!sandwichCountStr) {
         const availableKeys = Object.keys(record).join(', ');
-        throw new Error(`Missing Sandwich Count (available columns: ${availableKeys}) in row ${i + 1}`);
+        throw new Error(`Missing Individual Sandwiches (available columns: ${availableKeys}) in row ${i + 1}`);
       }
       
       if (!date) {

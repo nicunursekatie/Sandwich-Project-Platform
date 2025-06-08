@@ -675,41 +675,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Debug log the record structure
           logger.info(`Processing row ${i + 1}:`, JSON.stringify(record));
           
+          // Check for alternative column names
+          const hostName = record['Host Name'] || record['Host'] || record['host_name'] || record['HostName'];
+          const sandwichCountStr = record['Individual Sandwiches'] || record['Sandwich Count'] || record['Count'] || record['sandwich_count'] || record['SandwichCount'] || record['Sandwiches'];
+          const date = record['Collection Date'] || record['Date'] || record['date'] || record['CollectionDate'];
+          
           // Validate required fields with more detailed error reporting
-          if (!record['Host Name']) {
-            throw new Error(`Missing Host Name in row ${i + 1}`);
+          if (!hostName) {
+            const availableKeys = Object.keys(record).join(', ');
+            throw new Error(`Missing Host Name (available columns: ${availableKeys}) in row ${i + 1}`);
           }
-          if (!record['Sandwich Count']) {
-            throw new Error(`Missing Sandwich Count in row ${i + 1}`);
+          if (!sandwichCountStr) {
+            const availableKeys = Object.keys(record).join(', ');
+            throw new Error(`Missing Individual Sandwiches (available columns: ${availableKeys}) in row ${i + 1}`);
           }
-          if (!record['Date']) {
-            throw new Error(`Missing Date in row ${i + 1}`);
+          if (!date) {
+            const availableKeys = Object.keys(record).join(', ');
+            throw new Error(`Missing Collection Date (available columns: ${availableKeys}) in row ${i + 1}`);
           }
 
           // Parse sandwich count as integer
-          const sandwichCount = parseInt(record['Sandwich Count']);
+          const sandwichCount = parseInt(sandwichCountStr.toString().trim());
           if (isNaN(sandwichCount)) {
-            throw new Error(`Invalid sandwich count "${record['Sandwich Count']}" in row ${i + 1}`);
+            throw new Error(`Invalid sandwich count "${sandwichCountStr}" in row ${i + 1}`);
           }
 
           // Parse dates
-          let collectionDate = record['Date'];
+          let collectionDate = date;
           let submittedAt = new Date();
 
           // Try to parse Created At if provided
-          if (record['Created At']) {
-            const parsedDate = new Date(record['Created At']);
+          const createdAt = record['Created At'] || record['created_at'] || record['CreatedAt'];
+          if (createdAt) {
+            const parsedDate = new Date(createdAt);
             if (!isNaN(parsedDate.getTime())) {
               submittedAt = parsedDate;
             }
           }
 
+          // Handle Group Collections data
+          const groupCollectionsStr = record['Group Collections'] || '';
+          let groupCollections = '[]';
+          if (groupCollectionsStr && groupCollectionsStr.trim() !== '') {
+            // If it's a number, convert to simple array format
+            const groupCount = parseInt(groupCollectionsStr.trim());
+            if (!isNaN(groupCount) && groupCount > 0) {
+              groupCollections = JSON.stringify([{ count: groupCount, description: 'Group Collection' }]);
+            }
+          }
+
           // Create sandwich collection
           await storage.createSandwichCollection({
-            hostName: record['Host Name'].trim(),
+            hostName: hostName.trim(),
             individualSandwiches: sandwichCount,
             collectionDate: collectionDate.trim(),
-            groupCollections: '[]', // Default empty JSON array
+            groupCollections: groupCollections,
             submittedAt: submittedAt
           });
 
