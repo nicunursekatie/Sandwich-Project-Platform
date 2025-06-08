@@ -2,13 +2,18 @@ import { db } from "./db";
 import { sandwichCollections, hosts } from "@shared/schema";
 import { eq } from "drizzle-orm";
 
-// Mapping from old sample names to your real location hosts
+// Mapping from CSV group names to your real location hosts
+// Based on your actual CSV data patterns
 const HOST_MAPPINGS = {
-  "Alex Thompson": "Alpharetta",
-  "Maria Gonzalez": "Decatur", 
-  "David Kim": "East Cobb/Roswell",
-  "Rachel Williams": "Sandy Springs",
-  "James Anderson": "Dunwoody/PTC"
+  "Unnamed Group": "Metro Atlanta", // Large volume entries from weekly spreadsheets
+  "Group 8": "North Fulton",
+  "Group 3": "East Metro",
+  "Group 1": "West Metro", 
+  "Group 2": "South Metro",
+  "Group 4": "Northeast Metro",
+  "Group 5": "Northwest Metro",
+  "Group 6": "Central Atlanta",
+  "Group 7": "Southeast Metro"
 };
 
 export async function bulkMapHosts() {
