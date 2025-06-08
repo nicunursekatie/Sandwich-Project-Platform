@@ -137,6 +137,8 @@ export default function SandwichCollectionLog() {
   const endIndex = startIndex + itemsPerPage;
   const paginatedCollections = filteredCollections.slice(startIndex, endIndex);
 
+
+
   // Reset to first page when filters change
   React.useEffect(() => {
     setCurrentPage(1);
@@ -862,7 +864,7 @@ export default function SandwichCollectionLog() {
         </div>
 
         {/* Pagination Controls */}
-        {totalPages > 1 && (
+        {totalItems > 0 && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
             <div className="flex items-center space-x-4">
               <Select value={itemsPerPage.toString()} onValueChange={(value) => {
@@ -880,60 +882,62 @@ export default function SandwichCollectionLog() {
               </Select>
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(1)}
-                disabled={currentPage === 1}
-              >
-                First
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </Button>
-              
-              <div className="flex items-center space-x-1">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const pageNumber = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
-                  if (pageNumber > totalPages) return null;
-                  
-                  return (
-                    <Button
-                      key={pageNumber}
-                      variant={pageNumber === currentPage ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrentPage(pageNumber)}
-                      className="w-10"
-                    >
-                      {pageNumber}
-                    </Button>
-                  );
-                })}
+            {totalPages > 1 && (
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                >
+                  First
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                
+                <div className="flex items-center space-x-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    const pageNumber = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+                    if (pageNumber > totalPages) return null;
+                    
+                    return (
+                      <Button
+                        key={pageNumber}
+                        variant={pageNumber === currentPage ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(pageNumber)}
+                        className="w-10"
+                      >
+                        {pageNumber}
+                      </Button>
+                    );
+                  })}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                >
+                  Last
+                </Button>
               </div>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(totalPages)}
-                disabled={currentPage === totalPages}
-              >
-                Last
-              </Button>
-            </div>
+            )}
             
             <div className="text-sm text-slate-600">
               Page {currentPage} of {totalPages}
