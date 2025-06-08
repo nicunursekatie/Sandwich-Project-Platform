@@ -53,7 +53,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/logout', (req, res) => {
     res.redirect('/');
   });
-  
+
   // Projects
   app.get("/api/projects", async (req, res) => {
     try {
@@ -80,16 +80,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const { assigneeName } = req.body;
-      
+
       const updatedProject = await storage.updateProject(id, {
         status: "in_progress",
         assigneeName: assigneeName || "You"
       });
-      
+
       if (!updatedProject) {
         return res.status(404).json({ message: "Project not found" });
       }
-      
+
       res.json(updatedProject);
     } catch (error) {
       res.status(500).json({ message: "Failed to claim project" });
@@ -101,7 +101,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
       const committee = req.query.committee as string;
-      
+
       let messages;
       if (committee) {
         messages = await storage.getMessagesByCommittee(committee);
@@ -110,7 +110,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ? await storage.getRecentMessages(limit)
           : await storage.getAllMessages();
       }
-      
+
       res.json(messages);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch messages" });
@@ -213,7 +213,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let deletedCount = 0;
       // Delete in reverse order by ID to maintain consistency
       const sortedCollections = collectionsToDelete.sort((a, b) => b.id - a.id);
-      
+
       for (const collection of sortedCollections) {
         try {
           const deleted = await storage.deleteSandwichCollection(collection.id);
@@ -249,6 +249,127 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Analyze duplicates in sandwich collections
+  app.get("/api/sandwich-collections/analyze-duplicates", async (req, res) => {
+    try {
+      const collections = await storage.getAllSandwichCollections();
+
+      // Group by date, host, and sandwich counts to find exact duplicates
+      const duplicateGroups = new Map();
+      const suspiciousPatterns = [];
+
+      collections.forEach(collection => {
+        const key = `${collection.collectionDate}-${collection.hostName}-${collection.individualSandwiches}-${collection.groupCollections}`;
+
+        if (!duplicateGroups.has(key)) {
+          duplicateGroups.set(key, []);
+        }
+        duplicateGroups.get(key).push(collection);
+
+        // Check for suspicious patterns
+        const hostName = collection.hostName.toLowerCase();
+        if (hostName.startsWith('loc ') || 
+            hostName.match(/^group \d-\d$/) ||
+            hostName.includes('test') ||
+            hostName.includes('duplicate')) {
+          suspiciousPatterns.push(collection);
+        }
+      });
+
+      // Find actual duplicates (groups with more than 1 entry)
+      const duplicates = Array.from(duplicateGroups.values())
+        .filter(group => group.length > 1)
+        .map(group => ({
+          entries: group,
+          count: group.length,
+          keepNewest: group.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())[0],
+          toDelete: group.slice(1)
+        }));
+
+      res.json({
+        totalCollections: collections.length,
+        duplicateGroups: duplicates.length,
+        totalDuplicateEntries: duplicates.reduce((sum, group) => sum + group.toDelete.length, 0),
+        suspiciousPatterns: suspiciousPatterns.length,
+        duplicates,
+        suspiciousEntries: suspiciousPatterns
+      });
+    } catch (error) {
+      logger.error("Failed to analyze duplicates", error);
+      res.status(500).json({ message: "Failed to analyze duplicates" });
+    }
+  });
+
+  // Clean duplicates from sandwich collections
+  app.delete("/api/sandwich-collections/clean-duplicates", async (req, res) => {
+    try {
+      const { mode = 'exact' } = req.body; // 'exact' or 'suspicious'
+      const collections = await storage.getAllSandwichCollections();
+
+      let collectionsToDelete = [];
+
+      if (mode === 'exact') {
+        // Find exact duplicates based on date, host, and counts
+        const duplicateGroups = new Map();
+
+        collections.forEach(collection => {
+          const key = `${collection.collectionDate}-${collection.hostName}-${collection.individualSandwiches}-${collection.groupCollections}`;
+
+          if (!duplicateGroups.has(key)) {
+            duplicateGroups.set(key, []);
+          }
+          duplicateGroups.get(key).push(collection);
+        });
+
+        // Keep only the newest entry from each duplicate group
+        duplicateGroups.forEach(group => {
+          if (group.length > 1) {
+            const sorted = group.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+            collectionsToDelete.push(...sorted.slice(1)); // Keep first (newest), delete rest
+          }
+        });
+      } else if (mode === 'suspicious') {
+        // Remove entries with suspicious patterns
+        collectionsToDelete = collections.filter(collection => {
+          const hostName = collection.hostName.toLowerCase();
+          return hostName.startsWith('loc ') || 
+                 hostName.match(/^group \d-\d$/) ||
+                 hostName.includes('test') ||
+                 hostName.includes('duplicate');
+        });
+      }
+
+      let deletedCount = 0;
+      const errors = [];
+
+      // Delete in reverse order by ID to maintain consistency
+      const sortedCollections = collectionsToDelete.sort((a, b) => b.id - a.id);
+
+      for (const collection of sortedCollections) {
+        try {
+          const deleted = await storage.deleteSandwichCollection(collection.id);
+          if (deleted) {
+            deletedCount++;
+          }
+        } catch (error) {
+          errors.push(`Failed to delete collection ${collection.id}: ${error.message}`);
+          console.error(`Failed to delete collection ${collection.id}:`, error);
+        }
+      }
+
+      res.json({ 
+        message: `Successfully cleaned ${deletedCount} duplicate entries using ${mode} mode`,
+        deletedCount,
+        totalFound: collectionsToDelete.length,
+        errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
+        mode
+      });
+    } catch (error) {
+      logger.error("Failed to clean duplicates", error);
+      res.status(500).json({ message: "Failed to clean duplicate entries" });
+    }
+  });
+
   // CSV Import for Sandwich Collections
   app.post("/api/import-collections", upload.single('csvFile'), async (req, res) => {
     try {
@@ -257,7 +378,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const csvContent = await fs.readFile(req.file.path, 'utf-8');
-      
+
       // Parse CSV
       const records = parse(csvContent, {
         columns: true,
@@ -272,7 +393,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Process each record
       for (let i = 0; i < records.length; i++) {
         const record = records[i];
-        
+
         try {
           // Validate required fields
           if (!record['Host Name'] || !record['Sandwich Count'] || !record['Date']) {
@@ -288,7 +409,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Parse dates
           let collectionDate = record['Date'];
           let submittedAt = new Date();
-          
+
           // Try to parse Created At if provided
           if (record['Created At']) {
             const parsedDate = new Date(record['Created At']);
@@ -307,7 +428,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
 
           successCount++;
-          
+
         } catch (error) {
           errorCount++;
           const errorMsg = `Row ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`;
@@ -338,7 +459,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           logger.error("Failed to clean up uploaded file", cleanupError);
         }
       }
-      
+
       logger.error("CSV import failed", error);
       res.status(500).json({ 
         message: "Failed to import CSV file",
@@ -408,18 +529,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const { status } = req.body;
-      
+
       if (!["pending", "approved", "rejected", "postponed"].includes(status)) {
         res.status(400).json({ message: "Invalid status" });
         return;
       }
-      
+
       const updatedItem = await storage.updateAgendaItemStatus(id, status);
       if (!updatedItem) {
         res.status(404).json({ message: "Agenda item not found" });
         return;
       }
-      
+
       res.json(updatedItem);
     } catch (error) {
       res.status(500).json({ message: "Failed to update agenda item" });
@@ -430,13 +551,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const { title, description } = req.body;
-      
+
       const updatedItem = await storage.updateAgendaItem(id, { title, description });
       if (!updatedItem) {
         res.status(404).json({ message: "Agenda item not found" });
         return;
       }
-      
+
       res.json(updatedItem);
     } catch (error) {
       res.status(500).json({ message: "Failed to update agenda item" });
@@ -487,7 +608,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Mark the agenda as uploaded in the meeting record
       const agendaInfo = "agenda_uploaded_" + new Date().toISOString();
       const meeting = await storage.updateMeetingAgenda(id, agendaInfo);
-      
+
       if (!meeting) {
         return res.status(404).json({ message: "Meeting not found" });
       }
@@ -509,16 +630,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!result.success) {
         return res.status(400).json({ message: "Invalid driver agreement data" });
       }
-      
+
       const agreement = await storage.createDriverAgreement(result.data);
-      
+
       // Send notification email if available
       try {
         await sendDriverAgreementNotification(agreement);
       } catch (emailError) {
         logger.error("Failed to send driver agreement notification", emailError);
       }
-      
+
       res.status(201).json(agreement);
     } catch (error) {
       logger.error("Failed to create driver agreement", error);
@@ -563,17 +684,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/meetings/:id/upload-agenda", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      
+
       // Update the meeting with the uploaded agenda
       const updatedMeeting = await storage.updateMeetingAgenda(id, "Final agenda uploaded - agenda.docx");
-      
+
       if (!updatedMeeting) {
         res.status(404).json({ message: "Meeting not found" });
         return;
       }
-      
+
       logger.info("Agenda file uploaded for meeting", { method: req.method, url: req.url, ip: req.ip });
-      
+
       res.json({ 
         success: true, 
         message: "Agenda file uploaded successfully",
@@ -592,18 +713,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/driver-agreements", async (req, res) => {
     try {
       const validatedData = insertDriverAgreementSchema.parse(req.body);
-      
+
       // Store in database
       const agreement = await storage.createDriverAgreement(validatedData);
-      
+
       // Send email notification
       const { sendDriverAgreementNotification } = await import('./sendgrid');
       const emailSent = await sendDriverAgreementNotification(agreement);
-      
+
       if (!emailSent) {
         console.warn("Failed to send email notification for driver agreement:", agreement.id);
       }
-      
+
       // Return success without sensitive data
       res.json({ 
         success: true, 

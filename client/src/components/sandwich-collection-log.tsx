@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload } from "lucide-react";
+import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -17,10 +17,26 @@ interface ImportResult {
   errors: string[];
 }
 
+interface DuplicateAnalysis {
+  totalCollections: number;
+  duplicateGroups: number;
+  totalDuplicateEntries: number;
+  suspiciousPatterns: number;
+  duplicates: Array<{
+    entries: SandwichCollection[];
+    count: number;
+    keepNewest: SandwichCollection;
+    toDelete: SandwichCollection[];
+  }>;
+  suspiciousEntries: SandwichCollection[];
+}
+
 export default function SandwichCollectionLog() {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [editingCollection, setEditingCollection] = useState<SandwichCollection | null>(null);
+  const [showDuplicateAnalysis, setShowDuplicateAnalysis] = useState(false);
+  const [duplicateAnalysis, setDuplicateAnalysis] = useState<DuplicateAnalysis | null>(null);
   const [editFormData, setEditFormData] = useState({
     collectionDate: "",
     hostName: "",
@@ -169,6 +185,51 @@ export default function SandwichCollectionLog() {
     }
   });
 
+  const analyzeDuplicatesMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("GET", "/api/sandwich-collections/analyze-duplicates");
+      return response.json() as Promise<DuplicateAnalysis>;
+    },
+    onSuccess: (result: DuplicateAnalysis) => {
+      setDuplicateAnalysis(result);
+      setShowDuplicateAnalysis(true);
+      toast({
+        title: "Analysis complete",
+        description: `Found ${result.totalDuplicateEntries} duplicate entries and ${result.suspiciousPatterns} suspicious patterns.`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Analysis failed",
+        description: "Failed to analyze duplicates. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const cleanDuplicatesMutation = useMutation({
+    mutationFn: async (mode: 'exact' | 'suspicious') => {
+      const response = await apiRequest("DELETE", "/api/sandwich-collections/clean-duplicates", { mode });
+      return response.json();
+    },
+    onSuccess: (result: any) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      setShowDuplicateAnalysis(false);
+      setDuplicateAnalysis(null);
+      toast({
+        title: "Cleanup completed",
+        description: `Successfully cleaned ${result.deletedCount} duplicate entries.`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Cleanup failed",
+        description: "Failed to clean duplicates. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === 'text/csv') {
@@ -250,6 +311,16 @@ export default function SandwichCollectionLog() {
               onChange={handleFileUpload}
               className="hidden"
             />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => analyzeDuplicatesMutation.mutate()}
+              disabled={analyzeDuplicatesMutation.isPending}
+              className="flex items-center"
+            >
+              <Scan className="w-4 h-4 mr-2" />
+              {analyzeDuplicatesMutation.isPending ? "Analyzing..." : "Check Duplicates"}
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -363,6 +434,90 @@ export default function SandwichCollectionLog() {
           )}
         </div>
       </div>
+
+      {/* Duplicate Analysis Modal */}
+      <Dialog open={showDuplicateAnalysis} onOpenChange={setShowDuplicateAnalysis}>
+        <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center">
+              <AlertTriangle className="w-5 h-5 mr-2 text-amber-500" />
+              Duplicate Analysis Results
+            </DialogTitle>
+          </DialogHeader>
+          {duplicateAnalysis && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-lg">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-slate-900">{duplicateAnalysis.totalCollections}</div>
+                  <div className="text-sm text-slate-600">Total Collections</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-red-600">{duplicateAnalysis.totalDuplicateEntries}</div>
+                  <div className="text-sm text-slate-600">Duplicate Entries</div>
+                </div>
+              </div>
+
+              {duplicateAnalysis.totalDuplicateEntries > 0 && (
+                <div className="space-y-3">
+                  <h3 className="font-medium text-slate-900">Exact Duplicates</h3>
+                  {duplicateAnalysis.duplicates.map((group, index) => (
+                    <div key={index} className="border border-slate-200 rounded-lg p-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">{group.entries[0].hostName} - {group.entries[0].collectionDate}</span>
+                        <span className="text-sm text-slate-600">{group.count} entries</span>
+                      </div>
+                      <div className="text-sm text-slate-600">
+                        Will keep newest entry (ID: {group.keepNewest.id}) and remove {group.toDelete.length} duplicates
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {duplicateAnalysis.suspiciousPatterns > 0 && (
+                <div className="space-y-3">
+                  <h3 className="font-medium text-slate-900">Suspicious Patterns ({duplicateAnalysis.suspiciousPatterns})</h3>
+                  <div className="max-h-32 overflow-y-auto space-y-1">
+                    {duplicateAnalysis.suspiciousEntries.slice(0, 10).map((entry) => (
+                      <div key={entry.id} className="text-sm text-slate-600 border-l-2 border-amber-300 pl-2">
+                        {entry.hostName} - {entry.collectionDate} (ID: {entry.id})
+                      </div>
+                    ))}
+                    {duplicateAnalysis.suspiciousEntries.length > 10 && (
+                      <div className="text-sm text-slate-500">... and {duplicateAnalysis.suspiciousEntries.length - 10} more</div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end space-x-2 pt-4 border-t">
+                <Button variant="outline" onClick={() => setShowDuplicateAnalysis(false)}>
+                  Cancel
+                </Button>
+                {duplicateAnalysis.suspiciousPatterns > 0 && (
+                  <Button 
+                    variant="outline"
+                    onClick={() => cleanDuplicatesMutation.mutate('suspicious')}
+                    disabled={cleanDuplicatesMutation.isPending}
+                    className="text-amber-600 hover:text-amber-700"
+                  >
+                    Clean Suspicious ({duplicateAnalysis.suspiciousPatterns})
+                  </Button>
+                )}
+                {duplicateAnalysis.totalDuplicateEntries > 0 && (
+                  <Button 
+                    onClick={() => cleanDuplicatesMutation.mutate('exact')}
+                    disabled={cleanDuplicatesMutation.isPending}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    {cleanDuplicatesMutation.isPending ? "Cleaning..." : `Clean Duplicates (${duplicateAnalysis.totalDuplicateEntries})`}
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Modal */}
       <Dialog open={!!editingCollection} onOpenChange={(open) => !open && setEditingCollection(null)}>

@@ -1,4 +1,4 @@
-import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, Car, Building2 } from "lucide-react";
+import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, Car, Building2, FileText } from "lucide-react";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
 import ChatHub from "@/components/chat-hub";
@@ -10,6 +10,7 @@ import SandwichCollectionLog from "@/components/sandwich-collection-log";
 import RecipientsManagement from "@/components/recipients-management";
 import DriversManagement from "@/components/drivers-management";
 import HostsManagement from "@/components/hosts-management";
+import { DocumentsBrowser } from "@/components/documents-browser";
 import Development from "@/pages/development";
 import { useState } from "react";
 
@@ -22,6 +23,7 @@ export default function Dashboard() {
     { id: "messages", label: "Messages", icon: MessageCircle },
     { id: "meetings", label: "Meetings", icon: ClipboardList },
     { id: "files", label: "Files", icon: FolderOpen },
+    { id: "documents", label: "Documents", icon: FileText },
     { id: "reports", label: "Reports", icon: BarChart3 },
     { id: "collections", label: "Collection Log", icon: Sandwich },
     { id: "recipients", label: "Recipients", icon: Users },
@@ -42,6 +44,8 @@ export default function Dashboard() {
         return <MeetingAgenda />;
       case "files":
         return <GoogleDriveLinks />;
+      case "documents":
+        return <DocumentsBrowser />;
       case "reports":
         return <WeeklySandwichForm />;
       case "collections":

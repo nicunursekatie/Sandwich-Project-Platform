@@ -165,4 +165,32 @@ export type InsertDriverAgreement = z.infer<typeof insertDriverAgreementSchema>;
 export type Host = typeof hosts.$inferSelect;
 export type InsertHost = z.infer<typeof insertHostSchema>;
 
+// Hosted Files table
+export const hostedFiles = pgTable("hosted_files", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  fileName: text("file_name").notNull(),
+  originalName: text("original_name").notNull(),
+  filePath: text("file_path").notNull(),
+  fileSize: integer("file_size").notNull(),
+  mimeType: text("mime_type").notNull(),
+  category: text("category").notNull().default("general"), // toolkit, forms, guides, etc.
+  uploadedBy: text("uploaded_by").notNull(),
+  isPublic: boolean("is_public").notNull().default(true),
+  downloadCount: integer("download_count").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
+});
+
+export const insertHostedFileSchema = createInsertSchema(hostedFiles).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  downloadCount: true
+});
+
+export type HostedFile = typeof hostedFiles.$inferSelect;
+export type InsertHostedFile = z.infer<typeof insertHostedFileSchema>;
+
 export type UpsertUser = typeof users.$inferInsert;
