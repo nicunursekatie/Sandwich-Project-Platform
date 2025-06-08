@@ -72,42 +72,42 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
   return (
     <div className="space-y-6">
       {/* Total Counts Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-md p-4 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">Total Collections</h3>
-              <p className="text-3xl font-bold">{totalCollectedSandwiches.toLocaleString()}</p>
-              <p className="text-green-100">sandwiches collected</p>
+              <h3 className="text-sm font-medium">Total Collections</h3>
+              <p className="text-xl font-bold">{totalCollectedSandwiches.toLocaleString()}</p>
+              <p className="text-xs text-green-100">sandwiches collected</p>
             </div>
-            <div className="bg-white bg-opacity-20 p-3 rounded-full">
-              <TrendingUp className="w-8 h-8" />
+            <div className="bg-white bg-opacity-20 p-2 rounded-full">
+              <TrendingUp className="w-5 h-5" />
             </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-md p-4 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">Weekly Reports</h3>
-              <p className="text-3xl font-bold">{totalSandwiches.toLocaleString()}</p>
-              <p className="text-blue-100">sandwiches reported</p>
+              <h3 className="text-sm font-medium">Weekly Reports</h3>
+              <p className="text-xl font-bold">{totalSandwiches.toLocaleString()}</p>
+              <p className="text-xs text-blue-100">sandwiches reported</p>
             </div>
-            <div className="bg-white bg-opacity-20 p-3 rounded-full">
-              <BarChart3 className="w-8 h-8" />
+            <div className="bg-white bg-opacity-20 p-2 rounded-full">
+              <BarChart3 className="w-5 h-5" />
             </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+        <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow-md p-4 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">Total Entries</h3>
-              <p className="text-3xl font-bold">{collections.length.toLocaleString()}</p>
-              <p className="text-purple-100">collection entries</p>
+              <h3 className="text-sm font-medium">Total Entries</h3>
+              <p className="text-xl font-bold">{collections.length.toLocaleString()}</p>
+              <p className="text-xs text-purple-100">collection entries</p>
             </div>
-            <div className="bg-white bg-opacity-20 p-3 rounded-full">
-              <Users className="w-8 h-8" />
+            <div className="bg-white bg-opacity-20 p-2 rounded-full">
+              <Users className="w-5 h-5" />
             </div>
           </div>
         </div>
@@ -118,29 +118,29 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
       {/* Weekly Totals Summary */}
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-        <div className="px-6 py-4 border-b border-slate-200">
-          <h2 className="text-lg font-semibold text-slate-900 flex items-center">
-            <BarChart3 className="text-green-500 mr-2 w-5 h-5" />
+        <div className="px-4 py-3 border-b border-slate-200">
+          <h2 className="text-base font-semibold text-slate-900 flex items-center">
+            <BarChart3 className="text-green-500 mr-2 w-4 h-4" />
             Weekly Totals Summary
           </h2>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-2 gap-6">
+        <div className="p-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <div className="text-sm font-medium text-slate-700 mb-2">Total Weekly Reports</div>
-              <div className="text-2xl font-bold text-green-600">{totalSandwiches}</div>
-              <div className="text-sm text-slate-500">sandwiches reported</div>
+              <div className="text-xs font-medium text-slate-700 mb-1">Total Weekly Reports</div>
+              <div className="text-lg font-bold text-green-600">{totalSandwiches}</div>
+              <div className="text-xs text-slate-500">sandwiches reported</div>
             </div>
             <div>
-              <div className="text-sm font-medium text-slate-700 mb-2">Total Collections</div>
-              <div className="text-2xl font-bold text-blue-600">{totalCollectedSandwiches}</div>
-              <div className="text-sm text-slate-500">sandwiches collected</div>
+              <div className="text-xs font-medium text-slate-700 mb-1">Total Collections</div>
+              <div className="text-lg font-bold text-blue-600">{totalCollectedSandwiches}</div>
+              <div className="text-xs text-slate-500">sandwiches collected</div>
             </div>
           </div>
-          <div className="mt-4 pt-4 border-t border-slate-200">
+          <div className="mt-3 pt-3 border-t border-slate-200">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-slate-700">Recent Reports</span>
-              <span className="text-sm text-slate-500">{reports.length} total reports</span>
+              <span className="text-xs font-medium text-slate-700">Recent Reports</span>
+              <span className="text-xs text-slate-500">{reports.length} total reports</span>
             </div>
           </div>
         </div>
@@ -148,28 +148,29 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
       {/* Upcoming Projects */}
       <div className="bg-white rounded-lg border border-slate-200">
-        <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-slate-900">Upcoming Projects</h2>
+        <div className="px-4 py-3 border-b border-slate-200 flex justify-between items-center">
+          <h2 className="text-base font-semibold text-slate-900">Upcoming Projects</h2>
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => onSectionChange("projects")}
+            className="text-xs px-2 py-1"
           >
             View All
           </Button>
         </div>
-        <div className="p-6">
-          <div className="space-y-3">
+        <div className="p-4">
+          <div className="space-y-2">
             {upcomingProjects.map((project) => (
               <div 
                 key={project.id} 
-                className="p-3 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
+                className="p-2 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
                 onClick={() => onSectionChange("projects")}
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-medium text-slate-900">{project.title}</h3>
-                    <p className="text-sm text-slate-600">{project.description}</p>
+                    <h3 className="text-sm font-medium text-slate-900">{project.title}</h3>
+                    <p className="text-xs text-slate-600">{project.description}</p>
                   </div>
                   <span className="text-xs text-slate-500">
                     {project.status === "available" ? "Available" : "Planning"}
@@ -179,7 +180,7 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
             ))}
             
             {upcomingProjects.length === 0 && (
-              <p className="text-slate-500 text-center py-4">No upcoming projects</p>
+              <p className="text-slate-500 text-center py-3 text-sm">No upcoming projects</p>
             )}
           </div>
         </div>
