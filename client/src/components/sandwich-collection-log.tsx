@@ -764,7 +764,7 @@ export default function SandwichCollectionLog() {
                   isSelected 
                     ? 'bg-blue-50 border-blue-200' 
                     : isInactiveHost 
-                      ? 'bg-gray-50 border-gray-300 opacity-75' 
+                      ? 'bg-gray-100 border-gray-400 opacity-70' 
                       : 'border-slate-200'
                 }`}
               >
@@ -789,7 +789,7 @@ export default function SandwichCollectionLog() {
                       <User className={`w-4 h-4 mr-1 ${isInactiveHost ? 'text-gray-400' : ''}`} />
                       <span>{collection.hostName}</span>
                       {isInactiveHost && (
-                        <span className="ml-2 text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">
+                        <span className="ml-2 text-xs bg-gray-300 text-gray-800 px-2 py-0.5 rounded-full font-medium">
                           Inactive Host
                         </span>
                       )}

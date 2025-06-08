@@ -265,7 +265,7 @@ export default function HostsManagement() {
               key={host.id} 
               className={`hover:shadow-md transition-shadow ${
                 host.status === 'inactive' 
-                  ? 'bg-gray-50 border-gray-300 opacity-80' 
+                  ? 'bg-gray-100 border-gray-400 opacity-70' 
                   : ''
               }`}
             >
