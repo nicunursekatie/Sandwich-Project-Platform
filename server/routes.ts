@@ -294,6 +294,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Clean duplicates from sandwich collections (must be before :id route)
+  app.delete("/api/sandwich-collections/clean-duplicates", async (req, res) => {
+    try {
+      const { mode = 'exact' } = req.body; // 'exact' or 'suspicious'
+      const collections = await storage.getAllSandwichCollections();
+
+      let collectionsToDelete = [];
+
+      if (mode === 'exact') {
+        // Find exact duplicates based on date, host, and counts
+        const duplicateGroups = new Map();
+
+        collections.forEach(collection => {
+          const key = `${collection.collectionDate}-${collection.hostName}-${collection.individualSandwiches}-${collection.groupCollections}`;
+
+          if (!duplicateGroups.has(key)) {
+            duplicateGroups.set(key, []);
+          }
+          duplicateGroups.get(key).push(collection);
+        });
+
+        // Keep only the newest entry from each duplicate group
+        duplicateGroups.forEach(group => {
+          if (group.length > 1) {
+            const sorted = group.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+            collectionsToDelete.push(...sorted.slice(1)); // Keep first (newest), delete rest
+          }
+        });
+      } else if (mode === 'suspicious') {
+        // Remove entries with suspicious patterns
+        collectionsToDelete = collections.filter(collection => {
+          const hostName = collection.hostName.toLowerCase();
+          return hostName.startsWith('loc ') || 
+                 hostName.match(/^group \d-\d$/) ||
+                 hostName.match(/^group \d+$/) ||  // Matches "Group 8", "Group 1", etc.
+                 hostName.includes('test') ||
+                 hostName.includes('duplicate');
+        });
+      }
+
+      let deletedCount = 0;
+      const errors = [];
+
+      // Delete in reverse order by ID to maintain consistency
+      const sortedCollections = collectionsToDelete.sort((a, b) => b.id - a.id);
+
+      for (const collection of sortedCollections) {
+        try {
+          // Ensure ID is a valid number
+          const id = Number(collection.id);
+          if (isNaN(id)) {
+            errors.push(`Invalid collection ID: ${collection.id}`);
+            continue;
+          }
+          
+          const deleted = await storage.deleteSandwichCollection(id);
+          if (deleted) {
+            deletedCount++;
+          }
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          errors.push(`Failed to delete collection ${collection.id}: ${errorMessage}`);
+          console.error(`Failed to delete collection ${collection.id}:`, error);
+        }
+      }
+
+      res.json({ 
+        message: `Successfully cleaned ${deletedCount} duplicate entries using ${mode} mode`,
+        deletedCount,
+        totalRequested: collectionsToDelete.length,
+        errors: errors.length > 0 ? errors.slice(0, 5) : undefined
+      });
+    } catch (error) {
+      console.error("Failed to clean duplicates", error);
+      res.status(500).json({ message: "Failed to clean duplicate entries" });
+    }
+  });
+
   app.delete("/api/sandwich-collections/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
