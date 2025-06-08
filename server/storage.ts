@@ -526,6 +526,17 @@ export class MemStorage implements IStorage {
     return this.sandwichCollections.delete(id);
   }
 
+  async updateCollectionHostNames(oldHostName: string, newHostName: string): Promise<number> {
+    let updatedCount = 0;
+    for (const collection of this.sandwichCollections.values()) {
+      if (collection.hostName === oldHostName) {
+        collection.hostName = newHostName;
+        updatedCount++;
+      }
+    }
+    return updatedCount;
+  }
+
   // Meeting Minutes methods
   async getAllMeetingMinutes(): Promise<MeetingMinutes[]> {
     return Array.from(this.meetingMinutes.values());
