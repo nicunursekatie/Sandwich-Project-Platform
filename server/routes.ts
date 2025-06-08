@@ -929,16 +929,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
             continue;
           }
 
+          // Skip empty rows
+          if (!String(name).trim() || !String(phone).trim()) {
+            skipped++;
+            continue;
+          }
+
           // Optional fields with defaults
           const email = normalizedRecord.email || normalizedRecord['email address'] || null;
           const address = normalizedRecord.address || normalizedRecord.location || null;
           const preferences = normalizedRecord.preferences || normalizedRecord.notes || normalizedRecord.dietary || null;
           const status = normalizedRecord.status || 'active';
 
+          // Check for duplicate (by phone number)
+          const existingRecipient = await storage.getAllRecipients();
+          const phoneToCheck = String(phone).trim();
+          const isDuplicate = existingRecipient.some(r => r.phone === phoneToCheck);
+
+          if (isDuplicate) {
+            errors.push(`Row skipped: Duplicate phone number "${phoneToCheck}"`);
+            skipped++;
+            continue;
+          }
+
           // Create recipient
           await storage.createRecipient({
             name: String(name).trim(),
-            phone: String(phone).trim(),
+            phone: phoneToCheck,
             email: email ? String(email).trim() : null,
             address: address ? String(address).trim() : null,
             preferences: preferences ? String(preferences).trim() : null,
@@ -947,6 +964,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           imported++;
         } catch (error) {
+          console.error('Import error:', error);
           errors.push(`Row skipped: ${error instanceof Error ? error.message : 'Unknown error'}`);
           skipped++;
         }

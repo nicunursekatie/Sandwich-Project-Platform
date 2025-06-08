@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import type { Project } from "@shared/schema";
@@ -97,9 +98,7 @@ export default function ProjectList() {
 
   const deleteProjectMutation = useMutation({
     mutationFn: async (id: number) => {
-      return apiRequest(`/api/projects/${id}`, {
-        method: "DELETE",
-      });
+      return apiRequest("DELETE", `/api/projects/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
@@ -358,6 +357,23 @@ export default function ProjectList() {
                   ) : project.assigneeName ? (
                     <span className="text-sm text-slate-500">Assigned to {project.assigneeName}</span>
                   ) : null}
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => startEditingProject(project)}
+                    className="text-slate-600 hover:text-slate-700"
+                  >
+                    <Edit className="w-3 h-3" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDeleteProject(project.id, project.title)}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </Button>
                 </div>
               </div>
               
@@ -402,7 +418,89 @@ export default function ProjectList() {
             </div>
           ))}
         </div>
-        
+
+        {/* Edit Project Modal */}
+        {editingProject && (
+          <Dialog open={!!editingProject} onOpenChange={() => setEditingProject(null)}>
+            <DialogContent aria-describedby="edit-project-description">
+              <DialogHeader>
+                <DialogTitle>Edit Project</DialogTitle>
+              </DialogHeader>
+              <p id="edit-project-description" className="text-sm text-slate-600 mb-4">
+                Update project information and status.
+              </p>
+              <form onSubmit={handleUpdateProject} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-title" className="text-sm font-medium text-slate-700">
+                      Project Title
+                    </Label>
+                    <Input
+                      id="edit-title"
+                      type="text"
+                      placeholder="Enter project title"
+                      value={editingProject.title}
+                      onChange={(e) => setEditingProject({ ...editingProject, title: e.target.value })}
+                      className="mt-1"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="edit-status" className="text-sm font-medium text-slate-700">
+                      Status
+                    </Label>
+                    <Select 
+                      value={editingProject.status} 
+                      onValueChange={(value) => setEditingProject({ ...editingProject, status: value })}
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="available">Available</SelectItem>
+                        <SelectItem value="planning">Planning</SelectItem>
+                        <SelectItem value="in_progress">In Progress</SelectItem>
+                        <SelectItem value="completed">Completed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="edit-description" className="text-sm font-medium text-slate-700">
+                    Description
+                  </Label>
+                  <Textarea
+                    id="edit-description"
+                    placeholder="Describe the project details and requirements"
+                    value={editingProject.description}
+                    onChange={(e) => setEditingProject({ ...editingProject, description: e.target.value })}
+                    rows={3}
+                    className="mt-1"
+                  />
+                </div>
+                
+                <div className="flex justify-end gap-2 pt-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setEditingProject(null)}
+                    disabled={updateProjectMutation.isPending}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={updateProjectMutation.isPending || !editingProject.title.trim()}
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    {updateProjectMutation.isPending ? "Updating..." : "Update Project"}
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        )}
 
       </div>
     </div>
