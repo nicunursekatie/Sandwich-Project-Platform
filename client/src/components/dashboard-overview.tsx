@@ -116,35 +116,7 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
       {/* Sandwich Collection Form */}
       <SandwichCollectionForm />
 
-      {/* Weekly Totals Summary */}
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-        <div className="px-3 py-2 border-b border-slate-200">
-          <h2 className="text-sm font-semibold text-slate-900 flex items-center">
-            <BarChart3 className="text-green-500 mr-1 w-3 h-3" />
-            Weekly Totals Summary
-          </h2>
-        </div>
-        <div className="p-3">
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <div className="text-xs font-medium text-slate-700 mb-1">Weekly Reports</div>
-              <div className="text-sm font-bold text-green-600">{totalSandwiches}</div>
-              <div className="text-xs text-slate-500">reported</div>
-            </div>
-            <div>
-              <div className="text-xs font-medium text-slate-700 mb-1">Collections</div>
-              <div className="text-base font-bold text-blue-600">{totalCollectedSandwiches}</div>
-              <div className="text-xs text-slate-500">collected</div>
-            </div>
-          </div>
-          <div className="mt-2 pt-2 border-t border-slate-200">
-            <div className="flex justify-between items-center">
-              <span className="text-xs font-medium text-slate-700">Recent Reports</span>
-              <span className="text-xs text-slate-500">{reports.length} total</span>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* Upcoming Projects */}
       <div className="bg-white rounded-lg border border-slate-200">
