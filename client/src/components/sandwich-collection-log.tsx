@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X, ArrowUp, ArrowDown } from "lucide-react";
+import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X, ArrowUp, ArrowDown, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -396,6 +396,46 @@ export default function SandwichCollectionLog() {
     }
   });
 
+  // Export function
+  const exportToCSV = () => {
+    if (!collections || collections.length === 0) {
+      toast({
+        title: "No data to export",
+        description: "There are no collections to export.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const headers = ["ID", "Host Name", "Individual Sandwiches", "Collection Date", "Group Collections", "Submitted At"];
+    const csvData = [
+      headers.join(","),
+      ...collections.map((collection: SandwichCollection) => [
+        collection.id,
+        `"${collection.hostName}"`,
+        collection.individualSandwiches,
+        `"${collection.collectionDate}"`,
+        `"${collection.groupCollections}"`,
+        `"${new Date(collection.submittedAt).toLocaleString()}"`
+      ].join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `sandwich-collections-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({
+      title: "Export successful",
+      description: `Exported ${collections.length} collections to CSV.`,
+    });
+  };
+
   const batchDeleteMutation = useMutation({
     mutationFn: async (ids: number[]) => {
       const response = await fetch("/api/sandwich-collections/batch-delete", {
@@ -572,6 +612,15 @@ export default function SandwichCollectionLog() {
             <p className="text-sm text-slate-500 mt-1">{collections.length} total entries</p>
           </div>
           <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportToCSV}
+              className="flex items-center space-x-1"
+            >
+              <Download className="w-4 h-4" />
+              <span>Export CSV</span>
+            </Button>
             <Button
               variant="outline"
               size="sm"
