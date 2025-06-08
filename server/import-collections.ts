@@ -109,7 +109,7 @@ export async function importCollectionsFromCSV(filePath: string) {
 }
 
 // CLI execution
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const csvPath = process.argv[2];
   
   if (!csvPath) {
