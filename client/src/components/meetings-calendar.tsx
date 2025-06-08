@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Calendar, Clock, MapPin, Users, Plus, Filter, Upload, FileText, Edit, Trash2 } from "lucide-react";
+import { Calendar, Clock, MapPin, Users, Plus, Filter, Upload, FileText, Edit, Trash2, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,7 +55,13 @@ export default function MeetingsCalendar() {
 
   const createMeetingMutation = useMutation({
     mutationFn: async (data: typeof newMeeting) => {
-      return apiRequest('/api/meetings', 'POST', data);
+      const response = await fetch('/api/meetings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (!response.ok) throw new Error('Failed to create meeting');
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/meetings'] });
@@ -72,7 +78,12 @@ export default function MeetingsCalendar() {
     mutationFn: async ({ meetingId, file }: { meetingId: number; file: File }) => {
       const formData = new FormData();
       formData.append('agenda', file);
-      return apiRequest(`/api/meetings/${meetingId}/upload-agenda`, 'POST', formData);
+      const response = await fetch(`/api/meetings/${meetingId}/upload-agenda`, {
+        method: 'POST',
+        body: formData
+      });
+      if (!response.ok) throw new Error('Failed to upload agenda');
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/meetings'] });
@@ -332,8 +343,24 @@ export default function MeetingsCalendar() {
                       </div>
                       {meeting.location && (
                         <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4" />
-                          {meeting.location}
+                          {meeting.location.includes('meet.google.com') ? (
+                            <>
+                              <Video className="w-4 h-4" />
+                              <a 
+                                href={meeting.location} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:text-blue-800 underline"
+                              >
+                                Join Google Meet
+                              </a>
+                            </>
+                          ) : (
+                            <>
+                              <MapPin className="w-4 h-4" />
+                              {meeting.location}
+                            </>
+                          )}
                         </div>
                       )}
                       {meeting.description && (
