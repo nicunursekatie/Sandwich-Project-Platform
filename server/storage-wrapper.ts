@@ -400,18 +400,8 @@ class StorageWrapper implements IStorage {
   // Recipients methods
   async getAllRecipients() {
     return this.executeWithFallback(
-      async () => {
-        console.log('Attempting to get recipients from database storage...');
-        const result = await this.primaryStorage.getAllRecipients();
-        console.log('Database storage returned recipients:', result.length);
-        return result;
-      },
-      async () => {
-        console.log('Using fallback storage for recipients...');
-        const result = await this.fallbackStorage.getAllRecipients();
-        console.log('Fallback storage returned recipients:', result.length);
-        return result;
-      }
+      () => this.primaryStorage.getAllRecipients(),
+      () => this.fallbackStorage.getAllRecipients()
     );
   }
 

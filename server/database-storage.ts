@@ -95,7 +95,7 @@ export class DatabaseStorage implements IStorage {
 
   // Weekly Reports
   async getAllWeeklyReports(): Promise<WeeklyReport[]> {
-    return await db.select().from(weeklyReports).orderBy(desc(weeklyReports.createdAt));
+    return await db.select().from(weeklyReports).orderBy(weeklyReports.id);
   }
 
   async createWeeklyReport(insertReport: InsertWeeklyReport): Promise<WeeklyReport> {
@@ -125,11 +125,11 @@ export class DatabaseStorage implements IStorage {
 
   // Meeting Minutes
   async getAllMeetingMinutes(): Promise<MeetingMinutes[]> {
-    return await db.select().from(meetingMinutes).orderBy(desc(meetingMinutes.createdAt));
+    return await db.select().from(meetingMinutes).orderBy(meetingMinutes.id);
   }
 
   async getRecentMeetingMinutes(limit: number): Promise<MeetingMinutes[]> {
-    return await db.select().from(meetingMinutes).orderBy(desc(meetingMinutes.createdAt)).limit(limit);
+    return await db.select().from(meetingMinutes).orderBy(meetingMinutes.id).limit(limit);
   }
 
   async createMeetingMinutes(insertMinutes: InsertMeetingMinutes): Promise<MeetingMinutes> {
@@ -139,7 +139,7 @@ export class DatabaseStorage implements IStorage {
 
   // Drive Links
   async getAllDriveLinks(): Promise<DriveLink[]> {
-    return await db.select().from(driveLinks).orderBy(desc(driveLinks.createdAt));
+    return await db.select().from(driveLinks).orderBy(driveLinks.id);
   }
 
   async createDriveLink(insertLink: InsertDriveLink): Promise<DriveLink> {
