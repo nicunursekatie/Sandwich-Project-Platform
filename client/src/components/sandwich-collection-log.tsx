@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan } from "lucide-react";
+import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -37,6 +37,12 @@ export default function SandwichCollectionLog() {
   const [editingCollection, setEditingCollection] = useState<SandwichCollection | null>(null);
   const [showDuplicateAnalysis, setShowDuplicateAnalysis] = useState(false);
   const [duplicateAnalysis, setDuplicateAnalysis] = useState<DuplicateAnalysis | null>(null);
+  const [selectedCollections, setSelectedCollections] = useState<Set<number>>(new Set());
+  const [showBatchEdit, setShowBatchEdit] = useState(false);
+  const [batchEditData, setBatchEditData] = useState({
+    hostName: "",
+    collectionDate: ""
+  });
   const [editFormData, setEditFormData] = useState({
     collectionDate: "",
     hostName: "",
@@ -58,9 +64,8 @@ export default function SandwichCollectionLog() {
     }
   });
 
-  // Filter active hosts and add "Other" option
-  const activeHosts = hosts.filter(host => host.status === "active");
-  const hostOptions = [...activeHosts.map(host => host.name), "Other"];
+  // Include all hosts (active and inactive) for collection assignment
+  const hostOptions = [...hosts.map(host => host.name), "Other"];
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -209,7 +214,10 @@ export default function SandwichCollectionLog() {
 
   const cleanDuplicatesMutation = useMutation({
     mutationFn: async (mode: 'exact' | 'suspicious') => {
-      const response = await apiRequest("DELETE", "/api/sandwich-collections/clean-duplicates", { mode });
+      const response = await apiRequest("/api/sandwich-collections/clean-duplicates", {
+        method: "DELETE",
+        body: JSON.stringify({ mode })
+      });
       return response.json();
     },
     onSuccess: (result: any) => {
@@ -230,6 +238,58 @@ export default function SandwichCollectionLog() {
     }
   });
 
+  const batchEditMutation = useMutation({
+    mutationFn: async (data: { ids: number[], updates: Partial<SandwichCollection> }) => {
+      const response = await apiRequest("/api/sandwich-collections/batch-edit", {
+        method: "PATCH",
+        body: JSON.stringify(data)
+      });
+      return response.json();
+    },
+    onSuccess: (result: any) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      setSelectedCollections(new Set());
+      setShowBatchEdit(false);
+      setBatchEditData({ hostName: "", collectionDate: "" });
+      toast({
+        title: "Batch edit completed",
+        description: `Successfully updated ${result.updatedCount} collections.`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Batch edit failed",
+        description: "Failed to update collections. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const batchDeleteMutation = useMutation({
+    mutationFn: async (ids: number[]) => {
+      const response = await apiRequest("/api/sandwich-collections/batch-delete", {
+        method: "DELETE",
+        body: JSON.stringify({ ids })
+      });
+      return response.json();
+    },
+    onSuccess: (result: any) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      setSelectedCollections(new Set());
+      toast({
+        title: "Batch delete completed",
+        description: `Successfully deleted ${result.deletedCount} collections.`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Batch delete failed",
+        description: "Failed to delete collections. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === 'text/csv') {
@@ -240,6 +300,71 @@ export default function SandwichCollectionLog() {
         description: "Please select a valid CSV file.",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedCollections(new Set(collections.map(c => c.id)));
+    } else {
+      setSelectedCollections(new Set());
+    }
+  };
+
+  const handleSelectCollection = (id: number, checked: boolean) => {
+    const newSelected = new Set(selectedCollections);
+    if (checked) {
+      newSelected.add(id);
+    } else {
+      newSelected.delete(id);
+    }
+    setSelectedCollections(newSelected);
+  };
+
+  const handleBatchEdit = () => {
+    if (selectedCollections.size === 0) {
+      toast({
+        title: "No collections selected",
+        description: "Please select collections to edit.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setShowBatchEdit(true);
+  };
+
+  const submitBatchEdit = () => {
+    const updates: Partial<SandwichCollection> = {};
+    if (batchEditData.hostName) updates.hostName = batchEditData.hostName;
+    if (batchEditData.collectionDate) updates.collectionDate = batchEditData.collectionDate;
+
+    if (Object.keys(updates).length === 0) {
+      toast({
+        title: "No changes specified",
+        description: "Please specify at least one field to update.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    batchEditMutation.mutate({
+      ids: Array.from(selectedCollections),
+      updates
+    });
+  };
+
+  const handleBatchDelete = () => {
+    if (selectedCollections.size === 0) {
+      toast({
+        title: "No collections selected",
+        description: "Please select collections to delete.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (confirm(`Are you sure you want to delete ${selectedCollections.size} selected collections? This action cannot be undone.`)) {
+      batchDeleteMutation.mutate(Array.from(selectedCollections));
     }
   };
 
@@ -304,6 +429,28 @@ export default function SandwichCollectionLog() {
             <p className="text-sm text-slate-500 mt-1">{collections.length} total entries</p>
           </div>
           <div className="flex items-center space-x-2">
+            {selectedCollections.size > 0 && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleBatchEdit}
+                  className="flex items-center"
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit ({selectedCollections.size})
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleBatchDelete}
+                  className="flex items-center text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete ({selectedCollections.size})
+                </Button>
+              </>
+            )}
             <input
               ref={fileInputRef}
               type="file"

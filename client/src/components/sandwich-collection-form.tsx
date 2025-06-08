@@ -37,9 +37,8 @@ export default function SandwichCollectionForm() {
     }
   });
 
-  // Filter active hosts and add "Other" option
-  const activeHosts = hosts.filter(host => host.status === "active");
-  const hostOptions = [...activeHosts.map(host => host.name), "Other"];
+  // Include all hosts (active and inactive) for collection assignment
+  const hostOptions = [...hosts.map(host => host.name), "Other"];
 
   const submitCollectionMutation = useMutation({
     mutationFn: async (data: {
