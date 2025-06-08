@@ -567,13 +567,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const csvContent = await fs.readFile(req.file.path, 'utf-8');
+      logger.info(`CSV content preview: ${csvContent.substring(0, 200)}...`);
 
       // Parse CSV
       const records = parse(csvContent, {
         columns: true,
         skip_empty_lines: true,
-        trim: true
+        trim: true,
+        delimiter: ',',
+        quote: '"'
       });
+      
+      logger.info(`Parsed ${records.length} records`);
+      if (records.length > 0) {
+        logger.info(`First record keys: ${JSON.stringify(Object.keys(records[0]))}`);
+        logger.info(`First record: ${JSON.stringify(records[0])}`);
+      }
 
       let successCount = 0;
       let errorCount = 0;
@@ -584,9 +593,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const record = records[i];
 
         try {
-          // Validate required fields
-          if (!record['Host Name'] || !record['Sandwich Count'] || !record['Date']) {
-            throw new Error(`Missing required fields in row ${i + 1}`);
+          // Debug log the record structure
+          logger.info(`Processing row ${i + 1}:`, JSON.stringify(record));
+          
+          // Validate required fields with more detailed error reporting
+          if (!record['Host Name']) {
+            throw new Error(`Missing Host Name in row ${i + 1}`);
+          }
+          if (!record['Sandwich Count']) {
+            throw new Error(`Missing Sandwich Count in row ${i + 1}`);
+          }
+          if (!record['Date']) {
+            throw new Error(`Missing Date in row ${i + 1}`);
           }
 
           // Parse sandwich count as integer
