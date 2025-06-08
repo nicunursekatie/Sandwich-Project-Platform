@@ -40,7 +40,6 @@ export const projects = pgTable("projects", {
   completionDate: text("completion_date"), // ISO date string
   progressPercentage: integer("progress_percentage").notNull().default(0), // 0-100
   notes: text("notes"), // Additional project notes
-  attachments: text("attachments"), // JSON string of file attachments
   tags: text("tags"), // JSON array of tags
   estimatedHours: integer("estimated_hours"), // Estimated work hours
   actualHours: integer("actual_hours"), // Actual hours worked
@@ -144,13 +143,26 @@ export const hosts = pgTable("hosts", {
 export const recipients = pgTable("recipients", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
+  contactName: text("contact_name"), // Contact person name
   phone: text("phone").notNull(),
   email: text("email"),
   address: text("address"),
   preferences: text("preferences"),
+  weeklyEstimate: integer("weekly_estimate"), // Estimated weekly sandwich count
   status: text("status").notNull().default("active"), // 'active', 'inactive'
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const projectDocuments = pgTable("project_documents", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  fileName: text("file_name").notNull(),
+  originalName: text("original_name").notNull(),
+  fileSize: integer("file_size").notNull(),
+  mimeType: text("mime_type").notNull(),
+  uploadedBy: text("uploaded_by").notNull(),
+  uploadedAt: timestamp("uploaded_at").notNull().defaultNow(),
 });
 
 // Insert schemas
@@ -166,6 +178,7 @@ export const insertMeetingSchema = createInsertSchema(meetings).omit({ id: true,
 export const insertDriverAgreementSchema = createInsertSchema(driverAgreements).omit({ id: true, submittedAt: true });
 export const insertHostSchema = createInsertSchema(hosts).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertRecipientSchema = createInsertSchema(recipients).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertProjectDocumentSchema = createInsertSchema(projectDocuments).omit({ id: true, uploadedAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -192,6 +205,8 @@ export type Host = typeof hosts.$inferSelect;
 export type InsertHost = z.infer<typeof insertHostSchema>;
 export type Recipient = typeof recipients.$inferSelect;
 export type InsertRecipient = z.infer<typeof insertRecipientSchema>;
+export type ProjectDocument = typeof projectDocuments.$inferSelect;
+export type InsertProjectDocument = z.infer<typeof insertProjectDocumentSchema>;
 
 // Hosted Files table
 export const hostedFiles = pgTable("hosted_files", {
