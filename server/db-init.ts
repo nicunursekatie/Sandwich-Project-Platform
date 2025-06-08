@@ -95,36 +95,188 @@ export async function initializeDatabase() {
       console.log("Seeding recipients table...");
       await db.insert(recipients).values([
         {
-          name: "John Doe",
-          phone: "(555) 123-4567",
-          email: "john.doe@email.com",
-          address: "123 Main St, City, State 12345",
-          preferences: "No nuts, vegetarian options preferred",
+          name: "Boys and Girls Club",
+          phone: "404-516-0938",
+          email: "kevin.johnson@uss.salvationarmy.org",
+          address: "Downtown (west side)",
+          preferences: "turkey, Weekly Estimate: 100",
           status: "active"
         },
         {
-          name: "Jane Smith", 
-          phone: "(555) 987-6543",
-          email: "jane.smith@email.com",
-          address: "456 Oak Ave, City, State 12345",
-          preferences: "Gluten-free bread only",
+          name: "Community Assistance Center",
+          phone: "954-350-2756",
+          email: "gretty.figueroa@ourcac.org",
+          address: "Sandy Springs",
+          preferences: "deli only, Weekly Estimate: 200",
           status: "active"
         },
         {
-          name: "Mike Johnson",
-          phone: "(555) 456-7890",
-          email: "mike.johnson@email.com", 
-          address: "789 Pine St, City, State 12345",
-          preferences: "Regular sandwiches",
+          name: "Cross Cultural Ministries",
+          phone: "404-790-0459",
+          email: null,
+          address: "Dunwoody (Karen)",
+          preferences: null,
           status: "active"
         },
         {
-          name: "Sarah Williams",
-          phone: "(555) 321-0987",
-          email: "sarah.williams@email.com",
-          address: "321 Elm St, City, State 12345", 
-          preferences: "Turkey and ham only",
-          status: "inactive"
+          name: "Focus Recovery (Veterans Program)",
+          phone: "404-247-6447",
+          email: null,
+          address: "Dunwoody (Karen)",
+          preferences: null,
+          status: "active"
+        },
+        {
+          name: "Gateway Center",
+          phone: "404-215-6651",
+          email: "dbenton@gatewatctr.org",
+          address: "Downtown",
+          preferences: "deli (will take pbj if necessary), Weekly Estimate: 700-1000+",
+          status: "active"
+        },
+        {
+          name: "Giving Grace /Remerge",
+          phone: "678-437-2024",
+          email: null,
+          address: "Dunwoody (Karen)",
+          preferences: "pb&j, Weekly Estimate: 100",
+          status: "active"
+        },
+        {
+          name: "Hope Atlanta",
+          phone: null,
+          email: "aolvey@hopeatlanta.org",
+          address: "Midtown (Ponce/Boulevard)",
+          preferences: null,
+          status: "active"
+        },
+        {
+          name: "Intown Cares",
+          phone: null,
+          email: "Laura.DeGroot@intowncares.org",
+          address: "Midtown (Ponce/Boulevard)",
+          preferences: null,
+          status: "active"
+        },
+        {
+          name: "Lettum Eat",
+          phone: "850-381-5936",
+          email: "info@lettumeat.com",
+          address: "Snellville",
+          preferences: null,
+          status: "active"
+        },
+        {
+          name: "Melody (City of Atlanta/Hope Atlanta)",
+          phone: "470-233-2362",
+          email: "rland@hopeatlanta.org",
+          address: "Downtown",
+          preferences: "60 deli & 60 pbj, Weekly Estimate: 120",
+          status: "active"
+        },
+        {
+          name: "Omega Support Center",
+          phone: "770-362-6627",
+          email: "omegaservesall@gmail.com",
+          address: "Tucker",
+          preferences: null,
+          status: "active"
+        },
+        {
+          name: "St. Vincent de Paul (Outreach Program)",
+          phone: null,
+          email: "aseeley@svdpgeorgia.org",
+          address: "Chamblee",
+          preferences: "deli (will take pbj), Weekly Estimate: 500+",
+          status: "active"
+        },
+        {
+          name: "The Elizabeth Foundation",
+          phone: "404-468-6503",
+          email: "tracy@elizabethfoundation.org",
+          address: "Buckhead",
+          preferences: null,
+          status: "active"
+        },
+        {
+          name: "The Shrine of The Immaculate Conception",
+          phone: "404-840-6267",
+          email: "tilla@catholicshrineatlanta.org",
+          address: "Downtown",
+          preferences: "deli and want pbj weekly, Weekly Estimate: 500 (varies)",
+          status: "active"
+        },
+        {
+          name: "The Table on Delk",
+          phone: "407-509-2799",
+          email: "thetableondelk@gmail.com",
+          address: "Marietta",
+          preferences: null,
+          status: "active"
+        },
+        {
+          name: "The Zone (Davis Direction Foundation)",
+          phone: "404-437-8522",
+          email: "daniel.spinney@davisdirection.com",
+          address: "Marietta",
+          preferences: null,
+          status: "active"
+        },
+        {
+          name: "Toco Hills Community Alliance",
+          phone: "404-375-9875",
+          email: "lisa@tocohillsalliance.org",
+          address: "Toco Hills/Emory",
+          preferences: null,
+          status: "active"
+        },
+        {
+          name: "Zaban Paradies Center",
+          phone: "770-687-7520",
+          email: "rnation@zabanparadiescenter.org",
+          address: "Midtown",
+          preferences: "deli, Weekly Estimate: 300",
+          status: "active"
+        },
+        {
+          name: "Eye Believe Foundation",
+          phone: null,
+          email: null,
+          address: null,
+          preferences: "any, Weekly Estimate: 1000-3000",
+          status: "active"
+        },
+        {
+          name: "True Worship / Angie's Kitchen",
+          phone: "404-287-8292",
+          email: "helen@angieskitchen.org",
+          address: null,
+          preferences: "as requested consistently",
+          status: "active"
+        },
+        {
+          name: "City of Atlanta Mayor's Office Initiative",
+          phone: "404-215-6600",
+          email: "chchu@atlantaga.gov",
+          address: null,
+          preferences: "by request consistently",
+          status: "active"
+        },
+        {
+          name: "Operation Peace",
+          phone: "404-347-4040",
+          email: "opeace@bellsouth.net",
+          address: null,
+          preferences: "as needed consistently",
+          status: "active"
+        },
+        {
+          name: "The Goodman Group",
+          phone: "757-338-2668",
+          email: "thegoodmangrouporg@gmail.com",
+          address: null,
+          preferences: "as requested (often)",
+          status: "active"
         }
       ]);
     }
