@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Send, Users, MessageCircle, Hash, Trash2 } from "lucide-react";
+import { Send, Users, MessageCircle, Hash, Trash2, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
@@ -62,6 +64,31 @@ export default function CommitteeChat() {
   const { toast } = useToast();
   const [selectedCommittee, setSelectedCommittee] = useState("general");
   const [newMessage, setNewMessage] = useState("");
+  const [userName, setUserName] = useState("");
+  const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
+  const [tempUserName, setTempUserName] = useState("");
+
+  // Load user name from localStorage on component mount
+  useEffect(() => {
+    const savedName = localStorage.getItem('chatUserName');
+    if (savedName) {
+      setUserName(savedName);
+    }
+  }, []);
+
+  const saveUserName = () => {
+    if (tempUserName.trim()) {
+      const trimmedName = tempUserName.trim();
+      setUserName(trimmedName);
+      localStorage.setItem('chatUserName', trimmedName);
+      setIsNameDialogOpen(false);
+      setTempUserName("");
+      toast({
+        title: "Name saved",
+        description: `Your chat name has been set to "${trimmedName}".`,
+      });
+    }
+  };
 
   const { data: messages = [], isLoading } = useQuery({
     queryKey: ['/api/messages', selectedCommittee],
@@ -72,7 +99,7 @@ export default function CommitteeChat() {
     mutationFn: async (data: { content: string; committee: string }) => {
       return apiRequest('/api/messages', 'POST', {
         content: data.content,
-        sender: "John Doe", // This would come from auth
+        sender: userName || "Anonymous",
         committee: data.committee
       });
     },
