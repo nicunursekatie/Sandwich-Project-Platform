@@ -1,5 +1,5 @@
 import { 
-  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, recipients,
+  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, recipients, contacts,
   type User, type InsertUser, 
   type Project, type InsertProject,
   type Message, type InsertMessage,
@@ -11,7 +11,8 @@ import {
   type Meeting, type InsertMeeting,
   type DriverAgreement, type InsertDriverAgreement,
   type Host, type InsertHost,
-  type Recipient, type InsertRecipient
+  type Recipient, type InsertRecipient,
+  type Contact, type InsertContact
 } from "@shared/schema";
 
 export interface IStorage {
@@ -85,6 +86,13 @@ export interface IStorage {
   createRecipient(recipient: InsertRecipient): Promise<Recipient>;
   updateRecipient(id: number, updates: Partial<Recipient>): Promise<Recipient | undefined>;
   deleteRecipient(id: number): Promise<boolean>;
+  
+  // General Contacts
+  getAllContacts(): Promise<Contact[]>;
+  getContact(id: number): Promise<Contact | undefined>;
+  createContact(contact: InsertContact): Promise<Contact>;
+  updateContact(id: number, updates: Partial<Contact>): Promise<Contact | undefined>;
+  deleteContact(id: number): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {

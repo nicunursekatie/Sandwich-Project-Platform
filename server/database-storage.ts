@@ -255,4 +255,29 @@ export class DatabaseStorage implements IStorage {
     const result = await db.delete(recipients).where(eq(recipients.id, id));
     return (result.rowCount ?? 0) > 0;
   }
+
+  // General Contacts
+  async getAllContacts(): Promise<Contact[]> {
+    return await db.select().from(contacts).orderBy(contacts.name);
+  }
+
+  async getContact(id: number): Promise<Contact | undefined> {
+    const [contact] = await db.select().from(contacts).where(eq(contacts.id, id));
+    return contact || undefined;
+  }
+
+  async createContact(insertContact: InsertContact): Promise<Contact> {
+    const [contact] = await db.insert(contacts).values(insertContact).returning();
+    return contact;
+  }
+
+  async updateContact(id: number, updates: Partial<Contact>): Promise<Contact | undefined> {
+    const [contact] = await db.update(contacts).set(updates).where(eq(contacts.id, id)).returning();
+    return contact || undefined;
+  }
+
+  async deleteContact(id: number): Promise<boolean> {
+    const result = await db.delete(contacts).where(eq(contacts.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
 }
