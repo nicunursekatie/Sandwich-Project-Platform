@@ -78,6 +78,13 @@ export interface IStorage {
   createHost(host: InsertHost): Promise<Host>;
   updateHost(id: number, updates: Partial<Host>): Promise<Host | undefined>;
   deleteHost(id: number): Promise<boolean>;
+  
+  // Recipients
+  getAllRecipients(): Promise<Recipient[]>;
+  getRecipient(id: number): Promise<Recipient | undefined>;
+  createRecipient(recipient: InsertRecipient): Promise<Recipient>;
+  updateRecipient(id: number, updates: Partial<Recipient>): Promise<Recipient | undefined>;
+  deleteRecipient(id: number): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -92,6 +99,7 @@ export class MemStorage implements IStorage {
   private meetings: Map<number, Meeting>;
   private driverAgreements: Map<number, DriverAgreement>;
   private hosts: Map<number, Host>;
+  private recipients: Map<number, Recipient>;
   private currentIds: {
     user: number;
     project: number;
@@ -104,6 +112,7 @@ export class MemStorage implements IStorage {
     meeting: number;
     driverAgreement: number;
     host: number;
+    recipient: number;
   };
 
   constructor() {
@@ -118,6 +127,7 @@ export class MemStorage implements IStorage {
     this.meetings = new Map();
     this.driverAgreements = new Map();
     this.hosts = new Map();
+    this.recipients = new Map();
     this.currentIds = {
       user: 1,
       project: 1,
@@ -130,6 +140,7 @@ export class MemStorage implements IStorage {
       meeting: 1,
       driverAgreement: 1,
       host: 1,
+      recipient: 1,
     };
     
     this.seedData();
@@ -669,6 +680,44 @@ export class MemStorage implements IStorage {
 
   async deleteHost(id: number): Promise<boolean> {
     return this.hosts.delete(id);
+  }
+
+  // Recipients
+  async getAllRecipients(): Promise<Recipient[]> {
+    return Array.from(this.recipients.values());
+  }
+
+  async getRecipient(id: number): Promise<Recipient | undefined> {
+    return this.recipients.get(id);
+  }
+
+  async createRecipient(insertRecipient: InsertRecipient): Promise<Recipient> {
+    const id = this.currentIds.recipient++;
+    const recipient: Recipient = { 
+      ...insertRecipient, 
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.recipients.set(id, recipient);
+    return recipient;
+  }
+
+  async updateRecipient(id: number, updates: Partial<Recipient>): Promise<Recipient | undefined> {
+    const recipient = this.recipients.get(id);
+    if (!recipient) return undefined;
+    
+    const updatedRecipient: Recipient = { 
+      ...recipient, 
+      ...updates, 
+      updatedAt: new Date()
+    };
+    this.recipients.set(id, updatedRecipient);
+    return updatedRecipient;
+  }
+
+  async deleteRecipient(id: number): Promise<boolean> {
+    return this.recipients.delete(id);
   }
 }
 
