@@ -1,4 +1,4 @@
-import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, Car, Building2, FileText } from "lucide-react";
+import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, Car, Building2, FileText, Phone } from "lucide-react";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
 import ChatHub from "@/components/chat-hub";
@@ -11,6 +11,7 @@ import RecipientsManagement from "@/components/recipients-management";
 import DriversManagement from "@/components/drivers-management";
 import HostsManagement from "@/components/hosts-management";
 import { DocumentsBrowser } from "@/components/documents-browser";
+import PhoneDirectory from "@/components/phone-directory";
 import Development from "@/pages/development";
 import { useState } from "react";
 
@@ -26,6 +27,7 @@ export default function Dashboard() {
     { id: "collections", label: "Collections", icon: Sandwich },
     { id: "hosts", label: "Hosts", icon: Building2 },
     { id: "recipients", label: "Recipients", icon: Users },
+    { id: "directory", label: "Phone Directory", icon: Phone },
   ];
 
   const renderContent = () => {
@@ -141,6 +143,8 @@ export default function Dashboard() {
         return <HostsManagement />;
       case "recipients":
         return <RecipientsManagement />;
+      case "directory":
+        return <PhoneDirectory />;
       default:
         return <DashboardOverview onSectionChange={setActiveSection} />;
     }
