@@ -10,7 +10,7 @@ import { sendDriverAgreementNotification } from "./sendgrid";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
-import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertHostSchema } from "@shared/schema";
+import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertHostSchema, insertRecipientSchema } from "@shared/schema";
 
 // Configure multer for file uploads
 const upload = multer({ 
@@ -804,6 +804,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       logger.error("Failed to delete host", error);
       res.status(500).json({ message: "Failed to delete host" });
+    }
+  });
+
+  // Recipients
+  app.get("/api/recipients", async (req, res) => {
+    try {
+      const recipients = await storage.getAllRecipients();
+      res.json(recipients);
+    } catch (error) {
+      logger.error("Failed to fetch recipients", error);
+      res.status(500).json({ message: "Failed to fetch recipients" });
+    }
+  });
+
+  app.post("/api/recipients", async (req, res) => {
+    try {
+      const recipientData = insertRecipientSchema.parse(req.body);
+      const recipient = await storage.createRecipient(recipientData);
+      res.status(201).json(recipient);
+    } catch (error) {
+      logger.error("Failed to create recipient", error);
+      res.status(400).json({ message: "Invalid recipient data" });
+    }
+  });
+
+  app.put("/api/recipients/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const updatedRecipient = await storage.updateRecipient(id, updates);
+      if (!updatedRecipient) {
+        return res.status(404).json({ message: "Recipient not found" });
+      }
+      res.json(updatedRecipient);
+    } catch (error) {
+      logger.error("Failed to update recipient", error);
+      res.status(500).json({ message: "Failed to update recipient" });
+    }
+  });
+
+  app.delete("/api/recipients/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const deleted = await storage.deleteRecipient(id);
+      if (!deleted) {
+        return res.status(404).json({ message: "Recipient not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      logger.error("Failed to delete recipient", error);
+      res.status(500).json({ message: "Failed to delete recipient" });
     }
   });
 
