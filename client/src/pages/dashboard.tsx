@@ -22,15 +22,10 @@ export default function Dashboard() {
     { id: "projects", label: "Projects", icon: ListTodo },
     { id: "messages", label: "Messages", icon: MessageCircle },
     { id: "meetings", label: "Meetings", icon: ClipboardList },
-    { id: "files", label: "Files", icon: FolderOpen },
-    { id: "documents", label: "Documents", icon: FileText },
-    { id: "toolkit", label: "Toolkit", icon: BarChart3 },
-    { id: "reports", label: "Reports", icon: BarChart3 },
-    { id: "collections", label: "Collection Log", icon: Sandwich },
-    { id: "recipients", label: "Recipients", icon: Users },
-    { id: "drivers", label: "Drivers", icon: Car },
+    { id: "toolkit", label: "Toolkit", icon: FileText },
+    { id: "collections", label: "Collections", icon: Sandwich },
     { id: "hosts", label: "Hosts", icon: Building2 },
-    { id: "development", label: "Development", icon: Building2 },
+    { id: "recipients", label: "Recipients", icon: Users },
   ];
 
   const renderContent = () => {
@@ -43,16 +38,12 @@ export default function Dashboard() {
         return <ChatHub />;
       case "meetings":
         return <MeetingAgenda />;
-      case "files":
-        return <GoogleDriveLinks />;
-      case "documents":
-        return <DocumentsBrowser />;
       case "toolkit":
         return (
           <div className="space-y-6">
             <div className="flex items-center gap-4 mb-6">
               <div className="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-xl">
-                <BarChart3 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Training Toolkit</h1>
@@ -64,37 +55,37 @@ export default function Dashboard() {
                 {
                   title: "Food Safety Volunteers Guide",
                   description: "Essential food safety guidelines for all volunteers",
-                  path: "/documents/20230525-TSP-Food Safety Volunteers.pdf",
+                  path: "/20230525-TSP-Food Safety Volunteers_1749341916234.pdf",
                   category: "Safety"
                 },
                 {
                   title: "Deli Sandwich Making 101",
                   description: "Step-by-step guide for preparing deli sandwiches",
-                  path: "/documents/20240622-TSP-Deli Sandwich Making 101.pdf",
+                  path: "/20240622-TSP-Deli Sandwich Making 101_1749341916236.pdf",
                   category: "Training"
                 },
                 {
                   title: "PBJ Sandwich Making 101", 
                   description: "Instructions for peanut butter and jelly sandwich preparation",
-                  path: "/documents/20250622-TSP-PBJ Sandwich Making 101.pdf",
+                  path: "/20250622-TSP-PBJ Sandwich Making 101_1749341916236.pdf",
                   category: "Training"
                 },
                 {
                   title: "Deli Labels",
                   description: "Printable labels for deli sandwich packaging",
-                  path: "/documents/Deli labels.pdf",
+                  path: "/Deli labels_1749341916236.pdf",
                   category: "Resources"
                 },
                 {
                   title: "PBJ Labels",
                   description: "Printable labels for PBJ sandwich packaging", 
-                  path: "/documents/Pbj labels.pdf",
+                  path: "/Pbj labels_1749341916237.pdf",
                   category: "Resources"
                 },
                 {
                   title: "Sandwich Inventory List",
                   description: "Current inventory tracking spreadsheet for 3 oz portions",
-                  path: "/documents/TSP Sandwich Inventory List for 3 ozs.xlsx",
+                  path: "/TSP Sandwich Inventory List for 3 ozs_1749341916237.xlsx",
                   category: "Operations"
                 }
               ].map((doc, index) => (
@@ -144,18 +135,12 @@ export default function Dashboard() {
             </div>
           </div>
         );
-      case "reports":
-        return <WeeklySandwichForm />;
       case "collections":
         return <SandwichCollectionLog />;
-      case "recipients":
-        return <RecipientsManagement />;
-      case "drivers":
-        return <DriversManagement />;
       case "hosts":
         return <HostsManagement />;
-      case "development":
-        return <Development />;
+      case "recipients":
+        return <RecipientsManagement />;
       default:
         return <DashboardOverview onSectionChange={setActiveSection} />;
     }
