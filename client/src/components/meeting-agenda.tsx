@@ -162,50 +162,22 @@ export default function MeetingAgenda() {
       {/* Header */}
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
         <div className="px-6 py-4 border-b border-slate-200">
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center">
-            <Calendar className="text-blue-500 mr-3 w-6 h-6" />
-            Meetings
-          </h1>
-        </div>
-        
-        {currentMeeting && (
-          <div className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-lg font-semibold text-slate-900">{currentMeeting.title}</h2>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setIsEditModalOpen(true)}
-                    className="text-slate-500 hover:text-slate-700"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                </div>
-                <div className="flex items-center gap-4 text-sm text-slate-600 mt-1">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    {new Date(currentMeeting.date).toLocaleDateString()}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    {currentMeeting.time}
-                  </span>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Dialog open={isSubmitModalOpen} onOpenChange={setIsSubmitModalOpen}>
-                  <DialogTrigger asChild>
-                    <Button className="flex items-center gap-2">
-                      <Plus className="w-4 h-4" />
-                      Submit Agenda Item
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent aria-describedby="submit-agenda-description">
-                    <DialogHeader>
-                      <DialogTitle>Submit Agenda Item</DialogTitle>
-                    </DialogHeader>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-slate-900 flex items-center">
+              <Calendar className="text-blue-500 mr-3 w-6 h-6" />
+              Meeting Agenda
+            </h1>
+            <Dialog open={isSubmitModalOpen} onOpenChange={setIsSubmitModalOpen}>
+              <DialogTrigger asChild>
+                <Button className="flex items-center gap-2">
+                  <Plus className="w-4 h-4" />
+                  Submit Agenda Item
+                </Button>
+              </DialogTrigger>
+              <DialogContent aria-describedby="submit-agenda-description">
+                <DialogHeader>
+                  <DialogTitle>Submit Agenda Item</DialogTitle>
+                </DialogHeader>
                     <p id="submit-agenda-description" className="text-sm text-slate-600 mb-4">
                       Submit an item to be considered for the meeting agenda.
                     </p>
@@ -248,8 +220,37 @@ export default function MeetingAgenda() {
                       </div>
                     </form>
                   </DialogContent>
-                </Dialog>
-                
+            </Dialog>
+          </div>
+        </div>
+        
+        {currentMeeting && (
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-semibold text-slate-900">{currentMeeting.title}</h2>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setIsEditModalOpen(true)}
+                    className="text-slate-500 hover:text-slate-700"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="flex items-center gap-4 text-sm text-slate-600 mt-1">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    {new Date(currentMeeting.date).toLocaleDateString()}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    {currentMeeting.time}
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-2">
                 <Button variant="outline" onClick={() => setIsUploadModalOpen(true)}>
                   <Upload className="w-4 h-4 mr-2" />
                   Upload Final Agenda
