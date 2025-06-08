@@ -302,7 +302,21 @@ export default function PhoneDirectory() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => exportToCSV(hosts, 'hosts-directory.csv')}
+                onClick={() => {
+                  const hostExportData = hosts.flatMap(host => 
+                    host.contacts.map(contact => ({
+                      location: host.name,
+                      contactName: contact.name,
+                      role: contact.role,
+                      phone: contact.phone,
+                      email: contact.email || '',
+                      isPrimary: contact.isPrimary ? 'Yes' : 'No',
+                      address: host.address || '',
+                      notes: contact.notes || ''
+                    }))
+                  );
+                  exportToCSV(hostExportData, 'hosts-directory.csv');
+                }}
                 className="flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
@@ -354,7 +368,7 @@ export default function PhoneDirectory() {
               ) : (
                 <div className="space-y-4">
                   {filteredHosts.map((host) => (
-                    <ContactCard key={host.id} contact={host} type="host" />
+                    <HostCard key={host.id} host={host} />
                   ))}
                 </div>
               )}
@@ -381,7 +395,7 @@ export default function PhoneDirectory() {
               ) : (
                 <div className="space-y-4">
                   {filteredRecipients.map((recipient) => (
-                    <ContactCard key={recipient.id} contact={recipient} type="recipient" />
+                    <RecipientCard key={recipient.id} recipient={recipient} />
                   ))}
                 </div>
               )}
@@ -402,7 +416,7 @@ export default function PhoneDirectory() {
               <Users className="w-8 h-8 text-blue-500" />
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              {hosts.filter(h => h.phone).length} with phone numbers
+              {hosts.filter(h => h.contacts.length > 0).length} with contacts
             </p>
           </CardContent>
         </Card>
