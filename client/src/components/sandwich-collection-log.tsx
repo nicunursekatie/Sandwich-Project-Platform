@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare } from "lucide-react";
+import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -43,6 +43,14 @@ export default function SandwichCollectionLog() {
     hostName: "",
     collectionDate: ""
   });
+  const [searchFilters, setSearchFilters] = useState({
+    hostName: "",
+    collectionDateFrom: "",
+    collectionDateTo: "",
+    createdAtFrom: "",
+    createdAtTo: ""
+  });
+  const [showFilters, setShowFilters] = useState(false);
   const [editFormData, setEditFormData] = useState({
     collectionDate: "",
     hostName: "",
@@ -52,6 +60,44 @@ export default function SandwichCollectionLog() {
 
   const { data: collections = [], isLoading } = useQuery<SandwichCollection[]>({
     queryKey: ["/api/sandwich-collections"]
+  });
+
+  // Filter collections based on search criteria
+  const filteredCollections = collections.filter(collection => {
+    // Host name filter
+    if (searchFilters.hostName && !collection.hostName.toLowerCase().includes(searchFilters.hostName.toLowerCase())) {
+      return false;
+    }
+    
+    // Collection date range filter
+    if (searchFilters.collectionDateFrom) {
+      const collectionDate = new Date(collection.collectionDate);
+      const fromDate = new Date(searchFilters.collectionDateFrom);
+      if (collectionDate < fromDate) return false;
+    }
+    
+    if (searchFilters.collectionDateTo) {
+      const collectionDate = new Date(collection.collectionDate);
+      const toDate = new Date(searchFilters.collectionDateTo);
+      if (collectionDate > toDate) return false;
+    }
+    
+    // Created at date range filter
+    if (searchFilters.createdAtFrom) {
+      const createdDate = new Date(collection.submittedAt);
+      const fromDate = new Date(searchFilters.createdAtFrom);
+      if (createdDate < fromDate) return false;
+    }
+    
+    if (searchFilters.createdAtTo) {
+      const createdDate = new Date(collection.submittedAt);
+      const toDate = new Date(searchFilters.createdAtTo);
+      // Add 23:59:59 to include the entire day
+      toDate.setHours(23, 59, 59, 999);
+      if (createdDate > toDate) return false;
+    }
+    
+    return true;
   });
 
   // Fetch active hosts from the database
@@ -449,6 +495,15 @@ export default function SandwichCollectionLog() {
             <p className="text-sm text-slate-500 mt-1">{collections.length} total entries</p>
           </div>
           <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center space-x-1"
+            >
+              <Filter className="w-4 h-4" />
+              <span>Filter</span>
+            </Button>
             {selectedCollections.size > 0 && (
               <>
                 <Button
@@ -501,6 +556,84 @@ export default function SandwichCollectionLog() {
           </div>
         </div>
       </div>
+
+      {/* Filter Panel */}
+      {showFilters && (
+        <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div>
+              <Label htmlFor="hostFilter" className="text-sm font-medium text-slate-700">Host/Location Name</Label>
+              <Input
+                id="hostFilter"
+                placeholder="Search by host name..."
+                value={searchFilters.hostName}
+                onChange={(e) => setSearchFilters(prev => ({ ...prev, hostName: e.target.value }))}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="collectionFromDate" className="text-sm font-medium text-slate-700">Collection Date From</Label>
+              <Input
+                id="collectionFromDate"
+                type="date"
+                value={searchFilters.collectionDateFrom}
+                onChange={(e) => setSearchFilters(prev => ({ ...prev, collectionDateFrom: e.target.value }))}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="collectionToDate" className="text-sm font-medium text-slate-700">Collection Date To</Label>
+              <Input
+                id="collectionToDate"
+                type="date"
+                value={searchFilters.collectionDateTo}
+                onChange={(e) => setSearchFilters(prev => ({ ...prev, collectionDateTo: e.target.value }))}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="createdFromDate" className="text-sm font-medium text-slate-700">Created Date From</Label>
+              <Input
+                id="createdFromDate"
+                type="date"
+                value={searchFilters.createdAtFrom}
+                onChange={(e) => setSearchFilters(prev => ({ ...prev, createdAtFrom: e.target.value }))}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="createdToDate" className="text-sm font-medium text-slate-700">Created Date To</Label>
+              <Input
+                id="createdToDate"
+                type="date"
+                value={searchFilters.createdAtTo}
+                onChange={(e) => setSearchFilters(prev => ({ ...prev, createdAtTo: e.target.value }))}
+                className="mt-1"
+              />
+            </div>
+          </div>
+          <div className="flex items-center justify-between mt-4">
+            <div className="text-sm text-slate-600">
+              Showing {filteredCollections.length} of {collections.length} entries
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSearchFilters({
+                hostName: "",
+                collectionDateFrom: "",
+                collectionDateTo: "",
+                createdAtFrom: "",
+                createdAtTo: ""
+              })}
+              className="flex items-center space-x-1"
+            >
+              <X className="w-4 h-4" />
+              <span>Clear Filters</span>
+            </Button>
+          </div>
+        </div>
+      )}
       <div className="p-6">
         {collections.length > 0 && (
           <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-slate-200">
