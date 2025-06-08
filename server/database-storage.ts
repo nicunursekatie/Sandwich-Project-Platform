@@ -227,4 +227,29 @@ export class DatabaseStorage implements IStorage {
       .where(eq(sandwichCollections.hostName, oldHostName));
     return result.rowCount ?? 0;
   }
+
+  // Recipients
+  async getAllRecipients(): Promise<Recipient[]> {
+    return await db.select().from(recipients).orderBy(recipients.name);
+  }
+
+  async getRecipient(id: number): Promise<Recipient | undefined> {
+    const [recipient] = await db.select().from(recipients).where(eq(recipients.id, id));
+    return recipient || undefined;
+  }
+
+  async createRecipient(insertRecipient: InsertRecipient): Promise<Recipient> {
+    const [recipient] = await db.insert(recipients).values(insertRecipient).returning();
+    return recipient;
+  }
+
+  async updateRecipient(id: number, updates: Partial<Recipient>): Promise<Recipient | undefined> {
+    const [recipient] = await db.update(recipients).set(updates).where(eq(recipients.id, id)).returning();
+    return recipient || undefined;
+  }
+
+  async deleteRecipient(id: number): Promise<boolean> {
+    const result = await db.delete(recipients).where(eq(recipients.id, id));
+    return result.rowCount > 0;
+  }
 }

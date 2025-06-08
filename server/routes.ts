@@ -858,6 +858,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Import recipients from CSV/XLSX
+  app.post('/api/recipients/import', upload.single('file'), async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const fileExtension = req.file.originalname.toLowerCase().split('.').pop();
+      let records: any[] = [];
+
+      if (fileExtension === 'csv') {
+        // Parse CSV
+        const csvContent = req.file.buffer.toString('utf-8');
+        const { parse } = await import('csv-parse/sync');
+        records = parse(csvContent, {
+          columns: true,
+          skip_empty_lines: true,
+          trim: true
+        });
+      } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
+        // Parse Excel
+        const XLSX = await import('xlsx');
+        const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        records = XLSX.utils.sheet_to_json(sheet);
+      } else {
+        return res.status(400).json({ message: "Unsupported file format" });
+      }
+
+      let imported = 0;
+      let skipped = 0;
+      const errors: string[] = [];
+
+      for (const record of records) {
+        try {
+          // Normalize column names (case-insensitive)
+          const normalizedRecord: any = {};
+          Object.keys(record).forEach(key => {
+            const normalizedKey = key.toLowerCase().trim();
+            normalizedRecord[normalizedKey] = record[key];
+          });
+
+          // Required fields validation
+          const name = normalizedRecord.name || normalizedRecord['recipient name'] || normalizedRecord['full name'];
+          const phone = normalizedRecord.phone || normalizedRecord['phone number'] || normalizedRecord.mobile;
+
+          if (!name || !phone) {
+            errors.push(`Row skipped: Missing required fields (name: "${name}", phone: "${phone}")`);
+            skipped++;
+            continue;
+          }
+
+          // Optional fields with defaults
+          const email = normalizedRecord.email || normalizedRecord['email address'] || null;
+          const address = normalizedRecord.address || normalizedRecord.location || null;
+          const preferences = normalizedRecord.preferences || normalizedRecord.notes || normalizedRecord.dietary || null;
+          const status = normalizedRecord.status || 'active';
+
+          // Create recipient
+          await storage.createRecipient({
+            name: String(name).trim(),
+            phone: String(phone).trim(),
+            email: email ? String(email).trim() : null,
+            address: address ? String(address).trim() : null,
+            preferences: preferences ? String(preferences).trim() : null,
+            status: String(status).toLowerCase() === 'inactive' ? 'inactive' : 'active'
+          });
+
+          imported++;
+        } catch (error) {
+          errors.push(`Row skipped: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          skipped++;
+        }
+      }
+
+      res.json({
+        imported,
+        skipped,
+        total: records.length,
+        errors: errors.slice(0, 10) // Limit error messages
+      });
+
+    } catch (error) {
+      logger.error("Failed to import recipients", error);
+      res.status(500).json({ message: "Failed to process import file" });
+    }
+  });
+
   // Static file serving for documents
   app.use('/documents', express.static('public/documents'));
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Users, Plus, Edit, Trash2, Phone, Mail, MapPin } from "lucide-react";
+import { Users, Plus, Edit, Trash2, Phone, Mail, MapPin, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +23,7 @@ interface Recipient {
 export default function RecipientsManagement() {
   const { toast } = useToast();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingRecipient, setEditingRecipient] = useState<Recipient | null>(null);
   const [newRecipient, setNewRecipient] = useState({
     name: "",
@@ -32,6 +33,8 @@ export default function RecipientsManagement() {
     preferences: "",
     status: "active" as const
   });
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importResults, setImportResults] = useState<any>(null);
 
   const { data: recipients = [], isLoading } = useQuery({
     queryKey: ['/api/recipients'],
@@ -79,6 +82,40 @@ export default function RecipientsManagement() {
     }
   });
 
+  const importRecipientsMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch('/api/recipients/import', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error('Import failed');
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/recipients'] });
+      setImportResults(data);
+      setImportFile(null);
+      toast({
+        title: "Import completed",
+        description: `Successfully imported ${data.imported || 0} recipients.`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Import failed",
+        description: "There was an error importing the file.",
+        variant: "destructive"
+      });
+    }
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newRecipient.name || !newRecipient.phone) {
@@ -108,6 +145,28 @@ export default function RecipientsManagement() {
     }
   };
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const fileType = file.name.toLowerCase();
+      if (fileType.endsWith('.csv') || fileType.endsWith('.xlsx') || fileType.endsWith('.xls')) {
+        setImportFile(file);
+      } else {
+        toast({
+          title: "Invalid file type",
+          description: "Please select a CSV or Excel file.",
+          variant: "destructive"
+        });
+      }
+    }
+  };
+
+  const handleImport = () => {
+    if (importFile) {
+      importRecipientsMutation.mutate(importFile);
+    }
+  };
+
   if (isLoading) {
     return <div className="p-6">Loading recipients...</div>;
   }
@@ -121,13 +180,22 @@ export default function RecipientsManagement() {
             <Users className="text-blue-500 mr-3 w-6 h-6" />
             Recipients Management
           </h1>
-          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
-                <Plus className="w-4 h-4" />
-                Add Recipient
-              </Button>
-            </DialogTrigger>
+          <div className="flex gap-2">
+            <Dialog open={isImportModalOpen} onOpenChange={setIsImportModalOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Upload className="w-4 h-4" />
+                  Import CSV/XLSX
+                </Button>
+              </DialogTrigger>
+            </Dialog>
+            <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+              <DialogTrigger asChild>
+                <Button className="flex items-center gap-2">
+                  <Plus className="w-4 h-4" />
+                  Add Recipient
+                </Button>
+              </DialogTrigger>
             <DialogContent aria-describedby="add-recipient-description">
               <DialogHeader>
                 <DialogTitle>Add New Recipient</DialogTitle>
@@ -194,6 +262,65 @@ export default function RecipientsManagement() {
             </DialogContent>
           </Dialog>
         </div>
+
+        {/* Import Modal */}
+        <Dialog open={isImportModalOpen} onOpenChange={setIsImportModalOpen}>
+          <DialogContent aria-describedby="import-recipients-description">
+            <DialogHeader>
+              <DialogTitle>Import Recipients from CSV/XLSX</DialogTitle>
+            </DialogHeader>
+            <p id="import-recipients-description" className="text-sm text-slate-600 mb-4">
+              Upload a CSV or Excel file with recipient data. Required columns: name, phone. Optional: email, address, preferences, status.
+            </p>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="file-upload">Select File</Label>
+                <Input
+                  id="file-upload"
+                  type="file"
+                  accept=".csv,.xlsx,.xls"
+                  onChange={handleFileSelect}
+                  className="mt-1"
+                />
+                {importFile && (
+                  <p className="text-sm text-green-600 mt-2">
+                    Selected: {importFile.name}
+                  </p>
+                )}
+              </div>
+
+              {importResults && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h4 className="font-medium text-green-800">Import Results</h4>
+                  <p className="text-sm text-green-700 mt-1">
+                    Successfully imported {importResults.imported} recipients
+                    {importResults.skipped > 0 && `, skipped ${importResults.skipped} duplicates`}
+                  </p>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsImportModalOpen(false);
+                    setImportFile(null);
+                    setImportResults(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleImport}
+                  disabled={!importFile || importRecipientsMutation.isPending}
+                >
+                  {importRecipientsMutation.isPending ? "Importing..." : "Import"}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Recipients List */}
