@@ -42,8 +42,8 @@ export async function importCollectionsFromCSV(filePath: string) {
     try {
       // Check for alternative column names
       const hostName = record['Host Name'] || record['Host'] || record['host_name'] || record['HostName'];
-      const sandwichCountStr = record['Sandwich Count'] || record['Count'] || record['sandwich_count'] || record['SandwichCount'] || record['Sandwiches'];
-      const date = record['Date'] || record['date'] || record['Collection Date'] || record['CollectionDate'];
+      const sandwichCountStr = record['Individual Sandwiches'] || record['Sandwich Count'] || record['Count'] || record['sandwich_count'] || record['SandwichCount'] || record['Sandwiches'];
+      const date = record['Collection Date'] || record['Date'] || record['date'] || record['CollectionDate'];
       
       // Validate required fields with better error messages
       if (!hostName) {
@@ -80,12 +80,23 @@ export async function importCollectionsFromCSV(filePath: string) {
         }
       }
 
+      // Handle Group Collections data
+      const groupCollectionsStr = record['Group Collections'] || '';
+      let groupCollections = '[]';
+      if (groupCollectionsStr && groupCollectionsStr.trim() !== '') {
+        // If it's a number, convert to simple array format
+        const groupCount = parseInt(groupCollectionsStr.trim());
+        if (!isNaN(groupCount) && groupCount > 0) {
+          groupCollections = JSON.stringify([{ count: groupCount, description: 'Group Collection' }]);
+        }
+      }
+
       // Insert into database
       await db.insert(sandwichCollections).values({
         hostName: hostName.trim(),
         individualSandwiches: sandwichCount,
         collectionDate: collectionDate.trim(),
-        groupCollections: '[]', // Default empty JSON array
+        groupCollections: groupCollections,
         submittedAt: submittedAt
       });
 
