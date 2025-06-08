@@ -61,36 +61,21 @@ class StorageWrapper implements IStorage {
     operation: () => Promise<T>,
     fallbackOperation: () => Promise<T>
   ): Promise<T> {
-    if (!this.useGoogleSheets) {
-      return fallbackOperation();
-    }
-
     try {
       const result = await operation();
       // For delete operations that return false, use fallback
       if (typeof result === 'boolean' && result === false) {
-        console.log('Google Sheets operation returned false, using fallback storage');
+        console.log('Primary storage operation returned false, using fallback storage');
         return fallbackOperation();
       }
       // For update operations that return undefined, use fallback
       if (result === undefined) {
-        console.log('Google Sheets operation returned undefined, using fallback storage');
+        console.log('Primary storage operation returned undefined, using fallback storage');
         return fallbackOperation();
       }
       return result;
     } catch (error) {
-      // Check if it's a rate limit error
-      if (error.status === 429) {
-        console.warn('Google Sheets rate limit exceeded, temporarily using memory storage');
-        // Temporarily disable Google Sheets to avoid further rate limit errors
-        this.useGoogleSheets = false;
-        setTimeout(() => {
-          this.useGoogleSheets = true;
-          console.log('Re-enabling Google Sheets after rate limit cooldown');
-        }, 60000); // Re-enable after 1 minute
-      } else {
-        console.warn('Google Sheets operation failed, using fallback:', error);
-      }
+      console.warn('Primary storage operation failed, using fallback:', error);
       return fallbackOperation();
     }
   }
@@ -415,8 +400,18 @@ class StorageWrapper implements IStorage {
   // Recipients methods
   async getAllRecipients() {
     return this.executeWithFallback(
-      () => this.primaryStorage.getAllRecipients(),
-      () => this.fallbackStorage.getAllRecipients()
+      async () => {
+        console.log('Attempting to get recipients from database storage...');
+        const result = await this.primaryStorage.getAllRecipients();
+        console.log('Database storage returned recipients:', result.length);
+        return result;
+      },
+      async () => {
+        console.log('Using fallback storage for recipients...');
+        const result = await this.fallbackStorage.getAllRecipients();
+        console.log('Fallback storage returned recipients:', result.length);
+        return result;
+      }
     );
   }
 
