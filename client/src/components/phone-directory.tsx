@@ -51,13 +51,30 @@ interface Recipient {
   status: 'active' | 'inactive';
 }
 
+interface GeneralContact {
+  id: number;
+  name: string;
+  organization?: string;
+  role?: string;
+  phone: string;
+  email?: string;
+  address?: string;
+  notes?: string;
+  category: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export default function PhoneDirectory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("hosts");
   const [isAddingHost, setIsAddingHost] = useState(false);
   const [isAddingRecipient, setIsAddingRecipient] = useState(false);
+  const [isAddingContact, setIsAddingContact] = useState(false);
   const [editingHost, setEditingHost] = useState<Host | null>(null);
   const [editingRecipient, setEditingRecipient] = useState<Recipient | null>(null);
+  const [editingContact, setEditingContact] = useState<GeneralContact | null>(null);
   const { toast } = useToast();
 
   // Fetch hosts (temporarily using existing endpoint until backend is updated)
@@ -92,6 +109,11 @@ export default function PhoneDirectory() {
   // Fetch recipients
   const { data: recipients = [], isLoading: recipientsLoading } = useQuery<Recipient[]>({
     queryKey: ["/api/recipients"],
+  });
+
+  // Fetch general contacts
+  const { data: contacts = [], isLoading: contactsLoading } = useQuery<GeneralContact[]>({
+    queryKey: ["/api/contacts"],
   });
 
   // Mutations for CRUD operations
@@ -163,6 +185,71 @@ export default function PhoneDirectory() {
     recipient.phone.includes(searchTerm) ||
     (recipient.email && recipient.email.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  const filteredContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (contact.organization && contact.organization.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    contact.phone.includes(searchTerm) ||
+    (contact.email && contact.email.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  // Contact mutations
+  const createContactMutation = useMutation({
+    mutationFn: (data: z.infer<typeof insertContactSchema>) => apiRequest(`/api/contacts`, "POST", data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/contacts"] });
+      setIsAddingContact(false);
+      toast({
+        title: "Success",
+        description: "Contact created successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to create contact",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const updateContactMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<GeneralContact> }) => 
+      apiRequest(`/api/contacts/${id}`, "PATCH", data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/contacts"] });
+      setEditingContact(null);
+      toast({
+        title: "Success",
+        description: "Contact updated successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update contact",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteContactMutation = useMutation({
+    mutationFn: (id: number) => apiRequest(`/api/contacts/${id}`, "DELETE"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/contacts"] });
+      toast({
+        title: "Success",
+        description: "Contact deleted successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete contact",
+        variant: "destructive",
+      });
+    },
+  });
 
   // Export functions
   const exportToCSV = (data: any[], filename: string) => {
@@ -374,7 +461,7 @@ export default function PhoneDirectory() {
           <p className="text-slate-600">Contact information for hosts and recipients</p>
         </div>
         <div className="flex items-center gap-2">
-          {activeTab === "hosts" ? (
+          {activeTab === "hosts" && (
             <Button 
               onClick={() => setIsAddingHost(true)}
               className="flex items-center gap-2"
@@ -382,13 +469,23 @@ export default function PhoneDirectory() {
               <Plus className="w-4 h-4" />
               Add Host
             </Button>
-          ) : (
+          )}
+          {activeTab === "recipients" && (
             <Button 
               onClick={() => setIsAddingRecipient(true)}
               className="flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Add Recipient
+            </Button>
+          )}
+          {activeTab === "contacts" && (
+            <Button 
+              onClick={() => setIsAddingContact(true)}
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Contact
             </Button>
           )}
         </div>
