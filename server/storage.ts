@@ -108,6 +108,7 @@ export class MemStorage implements IStorage {
   private driverAgreements: Map<number, DriverAgreement>;
   private hosts: Map<number, Host>;
   private recipients: Map<number, Recipient>;
+  private contacts: Map<number, Contact>;
   private currentIds: {
     user: number;
     project: number;
@@ -121,6 +122,7 @@ export class MemStorage implements IStorage {
     driverAgreement: number;
     host: number;
     recipient: number;
+    contact: number;
   };
 
   constructor() {
@@ -136,6 +138,7 @@ export class MemStorage implements IStorage {
     this.driverAgreements = new Map();
     this.hosts = new Map();
     this.recipients = new Map();
+    this.contacts = new Map();
     this.currentIds = {
       user: 1,
       project: 1,
@@ -149,6 +152,7 @@ export class MemStorage implements IStorage {
       driverAgreement: 1,
       host: 1,
       recipient: 1,
+      contact: 1,
     };
     
     // No sample data - start with clean storage
@@ -527,6 +531,51 @@ export class MemStorage implements IStorage {
 
   async deleteRecipient(id: number): Promise<boolean> {
     return this.recipients.delete(id);
+  }
+
+  // General Contacts methods
+  async getAllContacts(): Promise<Contact[]> {
+    return Array.from(this.contacts.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  async getContact(id: number): Promise<Contact | undefined> {
+    return this.contacts.get(id);
+  }
+
+  async createContact(insertContact: InsertContact): Promise<Contact> {
+    const id = this.currentIds.contact++;
+    const now = new Date();
+    const contact: Contact = {
+      id,
+      ...insertContact,
+      createdAt: now,
+      updatedAt: now,
+      status: insertContact.status || "active",
+      email: insertContact.email || null,
+      address: insertContact.address || null,
+      organization: insertContact.organization || null,
+      role: insertContact.role || null,
+      notes: insertContact.notes || null,
+    };
+    this.contacts.set(id, contact);
+    return contact;
+  }
+
+  async updateContact(id: number, updates: Partial<Contact>): Promise<Contact | undefined> {
+    const contact = this.contacts.get(id);
+    if (!contact) return undefined;
+    
+    const updatedContact: Contact = { 
+      ...contact, 
+      ...updates, 
+      updatedAt: new Date()
+    };
+    this.contacts.set(id, updatedContact);
+    return updatedContact;
+  }
+
+  async deleteContact(id: number): Promise<boolean> {
+    return this.contacts.delete(id);
   }
 }
 
