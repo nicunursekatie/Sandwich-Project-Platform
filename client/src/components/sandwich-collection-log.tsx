@@ -329,12 +329,22 @@ export default function SandwichCollectionLog() {
 
   const batchEditMutation = useMutation({
     mutationFn: async (data: { ids: number[], updates: Partial<SandwichCollection> }) => {
+      console.log("Batch edit request:", data);
       const response = await fetch("/api/sandwich-collections/batch-edit", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
-      return response.json();
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Batch edit error response:", errorData);
+        throw new Error(errorData.message || "Failed to update collections");
+      }
+      
+      const result = await response.json();
+      console.log("Batch edit success response:", result);
+      return result;
     },
     onSuccess: (result: any) => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
@@ -343,13 +353,14 @@ export default function SandwichCollectionLog() {
       setBatchEditData({ hostName: "", collectionDate: "" });
       toast({
         title: "Batch edit completed",
-        description: `Successfully updated ${result.updatedCount} collections.`,
+        description: `Successfully updated ${result.updatedCount} of ${result.totalRequested} collections.`,
       });
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error("Batch edit mutation error:", error);
       toast({
         title: "Batch edit failed",
-        description: "Failed to update collections. Please try again.",
+        description: error.message || "Failed to update collections. Please try again.",
         variant: "destructive",
       });
     }
@@ -425,11 +436,17 @@ export default function SandwichCollectionLog() {
   };
 
   const submitBatchEdit = () => {
+    console.log("submitBatchEdit called with batchEditData:", batchEditData);
+    console.log("selectedCollections:", Array.from(selectedCollections));
+    
     const updates: Partial<SandwichCollection> = {};
     if (batchEditData.hostName) updates.hostName = batchEditData.hostName;
     if (batchEditData.collectionDate) updates.collectionDate = batchEditData.collectionDate;
 
+    console.log("Prepared updates:", updates);
+
     if (Object.keys(updates).length === 0) {
+      console.log("No updates to apply");
       toast({
         title: "No changes specified",
         description: "Please specify at least one field to update.",
@@ -437,6 +454,11 @@ export default function SandwichCollectionLog() {
       });
       return;
     }
+
+    console.log("Submitting batch edit with:", {
+      ids: Array.from(selectedCollections),
+      updates
+    });
 
     batchEditMutation.mutate({
       ids: Array.from(selectedCollections),
