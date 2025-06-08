@@ -4,12 +4,7 @@ import { db } from './db';
 import { sandwichCollections } from '../shared/schema';
 
 interface CSVRow {
-  'Host Name': string;
-  'Sandwich Count': string;
-  'Date': string;
-  'Logged By': string;
-  'Notes': string;
-  'Created At': string;
+  [key: string]: string;
 }
 
 export async function importCollectionsFromCSV(filePath: string) {
@@ -29,6 +24,12 @@ export async function importCollectionsFromCSV(filePath: string) {
   });
 
   console.log(`Found ${records.length} records in CSV`);
+  
+  // Debug: Log the first record to see the actual column names
+  if (records.length > 0) {
+    console.log('Available columns in CSV:', Object.keys(records[0]));
+    console.log('First record sample:', records[0]);
+  }
 
   let successCount = 0;
   let errorCount = 0;
@@ -39,24 +40,41 @@ export async function importCollectionsFromCSV(filePath: string) {
     const record = records[i];
     
     try {
-      // Validate required fields
-      if (!record['Host Name'] || !record['Sandwich Count'] || !record['Date']) {
-        throw new Error(`Missing required fields in row ${i + 1}`);
+      // Check for alternative column names
+      const hostName = record['Host Name'] || record['Host'] || record['host_name'] || record['HostName'];
+      const sandwichCountStr = record['Sandwich Count'] || record['Count'] || record['sandwich_count'] || record['SandwichCount'] || record['Sandwiches'];
+      const date = record['Date'] || record['date'] || record['Collection Date'] || record['CollectionDate'];
+      
+      // Validate required fields with better error messages
+      if (!hostName) {
+        const availableKeys = Object.keys(record).join(', ');
+        throw new Error(`Missing Host Name (available columns: ${availableKeys}) in row ${i + 1}`);
+      }
+      
+      if (!sandwichCountStr) {
+        const availableKeys = Object.keys(record).join(', ');
+        throw new Error(`Missing Sandwich Count (available columns: ${availableKeys}) in row ${i + 1}`);
+      }
+      
+      if (!date) {
+        const availableKeys = Object.keys(record).join(', ');
+        throw new Error(`Missing Date (available columns: ${availableKeys}) in row ${i + 1}`);
       }
 
       // Parse sandwich count as integer
-      const sandwichCount = parseInt(record['Sandwich Count']);
+      const sandwichCount = parseInt(sandwichCountStr.toString().trim());
       if (isNaN(sandwichCount)) {
-        throw new Error(`Invalid sandwich count "${record['Sandwich Count']}" in row ${i + 1}`);
+        throw new Error(`Invalid sandwich count "${sandwichCountStr}" in row ${i + 1}`);
       }
 
       // Parse dates
-      let collectionDate = record['Date'];
+      let collectionDate = date;
       let submittedAt = new Date();
       
       // Try to parse Created At if provided
-      if (record['Created At']) {
-        const parsedDate = new Date(record['Created At']);
+      const createdAt = record['Created At'] || record['created_at'] || record['CreatedAt'];
+      if (createdAt) {
+        const parsedDate = new Date(createdAt);
         if (!isNaN(parsedDate.getTime())) {
           submittedAt = parsedDate;
         }
@@ -64,7 +82,7 @@ export async function importCollectionsFromCSV(filePath: string) {
 
       // Insert into database
       await db.insert(sandwichCollections).values({
-        hostName: record['Host Name'].trim(),
+        hostName: hostName.trim(),
         individualSandwiches: sandwichCount,
         collectionDate: collectionDate.trim(),
         groupCollections: '[]', // Default empty JSON array
