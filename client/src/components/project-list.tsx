@@ -201,7 +201,16 @@ export default function ProjectList() {
       });
       return;
     }
-    updateProjectMutation.mutate(editingProject);
+    
+    // Auto-update status based on assignee
+    const updatedProject = { ...editingProject };
+    if (updatedProject.assigneeName && updatedProject.assigneeName.trim() && updatedProject.status === "available") {
+      updatedProject.status = "in_progress";
+    } else if (!updatedProject.assigneeName && updatedProject.status === "in_progress") {
+      updatedProject.status = "available";
+    }
+    
+    updateProjectMutation.mutate(updatedProject);
   };
 
   const handleDeleteProject = (id: number, title: string) => {
