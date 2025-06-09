@@ -65,6 +65,7 @@ export default function SandwichCollectionLog() {
     individualSandwiches: "",
     groupCollections: ""
   });
+  const [editGroupCollections, setEditGroupCollections] = useState<Array<{id: string, groupName: string, sandwichCount: number}>>([]);
 
   const { data: collections = [], isLoading } = useQuery<SandwichCollection[]>({
     queryKey: ["/api/sandwich-collections"]
@@ -563,10 +564,28 @@ export default function SandwichCollectionLog() {
       individualSandwiches: collection.individualSandwiches.toString(),
       groupCollections: collection.groupCollections
     });
+    
+    // Parse existing group collections for editing
+    const parsedGroups = parseGroupCollections(collection.groupCollections || "");
+    if (parsedGroups.length > 0) {
+      setEditGroupCollections(parsedGroups.map((group: any, index: number) => ({
+        id: `edit-${index}`,
+        groupName: group.groupName,
+        sandwichCount: group.sandwichCount
+      })));
+    } else {
+      setEditGroupCollections([{ id: "edit-1", groupName: "", sandwichCount: 0 }]);
+    }
   };
 
   const handleUpdate = () => {
     if (!editingCollection) return;
+
+    // Convert editGroupCollections back to string format
+    const validGroups = editGroupCollections.filter(g => g.groupName.trim() && g.sandwichCount > 0);
+    const groupCollectionsString = validGroups.length > 0 
+      ? JSON.stringify(validGroups.map(g => ({ groupName: g.groupName, sandwichCount: g.sandwichCount })))
+      : '';
 
     updateMutation.mutate({
       id: editingCollection.id,
@@ -574,9 +593,27 @@ export default function SandwichCollectionLog() {
         collectionDate: editFormData.collectionDate,
         hostName: editFormData.hostName,
         individualSandwiches: parseInt(editFormData.individualSandwiches) || 0,
-        groupCollections: editFormData.groupCollections
+        groupCollections: groupCollectionsString
       }
     });
+  };
+
+  // Helper functions for edit group collections
+  const addEditGroupRow = () => {
+    const newId = `edit-${Date.now()}`;
+    setEditGroupCollections([...editGroupCollections, { id: newId, groupName: "", sandwichCount: 0 }]);
+  };
+
+  const removeEditGroupRow = (id: string) => {
+    if (editGroupCollections.length > 1) {
+      setEditGroupCollections(editGroupCollections.filter(group => group.id !== id));
+    }
+  };
+
+  const updateEditGroupCollection = (id: string, field: 'groupName' | 'sandwichCount', value: string | number) => {
+    setEditGroupCollections(editGroupCollections.map(group => 
+      group.id === id ? { ...group, [field]: value } : group
+    ));
   };
 
   const handleDelete = (id: number) => {
@@ -1157,13 +1194,45 @@ export default function SandwichCollectionLog() {
             </div>
 
             <div>
-              <Label htmlFor="edit-groups">Group Collections (JSON format)</Label>
-              <Input
-                id="edit-groups"
-                value={editFormData.groupCollections}
-                onChange={(e) => setEditFormData({ ...editFormData, groupCollections: e.target.value })}
-                placeholder='[{"groupName": "Youth Group", "sandwichCount": 100}]'
-              />
+              <div className="flex items-center justify-between">
+                <Label>Group Collections</Label>
+                <Button type="button" variant="outline" size="sm" onClick={addEditGroupRow}>
+                  <Plus className="w-4 h-4 mr-1" />
+                  Add Group
+                </Button>
+              </div>
+              
+              <div className="space-y-3 mt-2">
+                {editGroupCollections.map((group) => (
+                  <div key={group.id} className="flex gap-3 items-center">
+                    <Input
+                      placeholder="Group name"
+                      value={group.groupName}
+                      onChange={(e) => updateEditGroupCollection(group.id, "groupName", e.target.value)}
+                      className="flex-1"
+                    />
+                    <Input
+                      type="number"
+                      min="0"
+                      placeholder="Count"
+                      value={group.sandwichCount || ""}
+                      onChange={(e) => updateEditGroupCollection(group.id, "sandwichCount", parseInt(e.target.value) || 0)}
+                      className="w-24"
+                    />
+                    {editGroupCollections.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeEditGroupRow(group.id)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="flex justify-end space-x-2 pt-4">
