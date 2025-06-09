@@ -29,7 +29,7 @@ export const users = pgTable("users", {
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
-  description: text("description").notNull(),
+  description: text("description"),
   status: text("status").notNull(), // 'available', 'in_progress', 'planning', 'completed'
   priority: text("priority").notNull().default("medium"), // 'low', 'medium', 'high', 'urgent'
   category: text("category").notNull().default("general"), // 'general', 'marketing', 'operations', 'grants', 'events'
