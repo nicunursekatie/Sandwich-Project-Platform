@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Calendar, Clock, User, Plus, CheckCircle, XCircle, Upload, MessageSquare, FileText, File, Edit, Pause, Video, Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,10 +36,9 @@ interface Meeting {
 
 export default function MeetingAgenda() {
   const { toast } = useToast();
+  const [selectedMeetingId, setSelectedMeetingId] = useState<number | null>(null);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<AgendaItem | null>(null);
   const [newItem, setNewItem] = useState({
     submittedBy: "",
     title: "",
@@ -47,20 +46,39 @@ export default function MeetingAgenda() {
   });
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
+  const { data: meetings = [], isLoading: meetingsLoading } = useQuery<Meeting[]>({
+    queryKey: ['/api/meetings']
+  });
+
   const { data: agendaItems = [], isLoading: itemsLoading } = useQuery<AgendaItem[]>({
     queryKey: ['/api/agenda-items']
   });
 
-  const { data: currentMeeting } = useQuery<Meeting>({
-    queryKey: ['/api/current-meeting']
-  });
+  // Filter agenda items for selected meeting
+  const selectedMeetingAgendaItems = selectedMeetingId 
+    ? agendaItems.filter(item => item.meetingId === selectedMeetingId)
+    : [];
+
+  // Get selected meeting details
+  const selectedMeeting = selectedMeetingId 
+    ? meetings.find(m => m.id === selectedMeetingId)
+    : null;
+
+  // Auto-select first upcoming meeting if none selected
+  useEffect(() => {
+    if (!selectedMeetingId && meetings.length > 0) {
+      const upcomingMeeting = meetings.find(m => m.status === "planning" || m.status === "agenda_set") || meetings[0];
+      setSelectedMeetingId(upcomingMeeting.id);
+    }
+  }, [meetings, selectedMeetingId]);
 
   const submitItemMutation = useMutation({
     mutationFn: async (data: typeof newItem) => {
+      if (!selectedMeetingId) throw new Error('No meeting selected');
       const response = await fetch('/api/agenda-items', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify({ ...data, meetingId: selectedMeetingId })
       });
       if (!response.ok) throw new Error('Failed to submit agenda item');
       return response.json();
@@ -97,9 +115,10 @@ export default function MeetingAgenda() {
 
   const uploadAgendaMutation = useMutation({
     mutationFn: async (file: File) => {
+      if (!selectedMeetingId) throw new Error('No meeting selected');
       const formData = new FormData();
       formData.append('agenda', file);
-      const response = await fetch('/api/meetings/1/upload-agenda', {
+      const response = await fetch(`/api/meetings/${selectedMeetingId}/upload-agenda`, {
         method: 'POST',
         body: formData
       });
@@ -107,22 +126,22 @@ export default function MeetingAgenda() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/current-meeting'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/meetings'] });
       setIsUploadModalOpen(false);
       setUploadedFile(null);
       toast({
         title: "Agenda uploaded",
-        description: "The final meeting agenda has been uploaded.",
+        description: "The meeting agenda has been uploaded successfully.",
       });
     }
   });
 
   const handleSubmitItem = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newItem.submittedBy || !newItem.title) {
+    if (!selectedMeetingId) {
       toast({
-        title: "Missing information",
-        description: "Please fill in your name and agenda item title.",
+        title: "No meeting selected",
+        description: "Please select a meeting before submitting agenda items.",
         variant: "destructive"
       });
       return;
@@ -130,14 +149,8 @@ export default function MeetingAgenda() {
     submitItemMutation.mutate(newItem);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setUploadedFile(file);
-    }
-  };
-
-  const handleUploadAgenda = () => {
+  const handleUploadAgenda = (e: React.FormEvent) => {
+    e.preventDefault();
     if (uploadedFile) {
       uploadAgendaMutation.mutate(uploadedFile);
     }
@@ -154,7 +167,18 @@ export default function MeetingAgenda() {
     }
   };
 
-  if (itemsLoading) {
+  const getMeetingTypeColor = (type: string) => {
+    switch (type) {
+      case "weekly": return "bg-blue-100 text-blue-800";
+      case "marketing_committee": return "bg-purple-100 text-purple-800";
+      case "grant_committee": return "bg-green-100 text-green-800";
+      case "core_group": return "bg-orange-100 text-orange-800";
+      case "all_team": return "bg-red-100 text-red-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  if (itemsLoading || meetingsLoading) {
     return <div className="p-6">Loading...</div>;
   }
 
@@ -166,100 +190,141 @@ export default function MeetingAgenda() {
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-slate-900 flex items-center">
               <Calendar className="text-blue-500 mr-3 w-6 h-6" />
-              Meeting Agenda
+              Meeting Agenda Management
             </h1>
             <Dialog open={isSubmitModalOpen} onOpenChange={setIsSubmitModalOpen}>
               <DialogTrigger asChild>
-                <Button className="flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
+                <Button size="lg" disabled={!selectedMeetingId}>
+                  <Plus className="w-5 h-5 mr-2" />
                   Submit Agenda Item
                 </Button>
               </DialogTrigger>
-              <DialogContent aria-describedby="submit-agenda-description">
+              <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Submit Agenda Item</DialogTitle>
                 </DialogHeader>
-                    <p id="submit-agenda-description" className="text-sm text-slate-600 mb-4">
-                      Submit an item to be considered for the meeting agenda.
-                    </p>
-                    <form onSubmit={handleSubmitItem} className="space-y-4">
-                      <div>
-                        <Label htmlFor="submitted-by">Your Name *</Label>
-                        <Input
-                          id="submitted-by"
-                          value={newItem.submittedBy}
-                          onChange={(e) => setNewItem({ ...newItem, submittedBy: e.target.value })}
-                          placeholder="Enter your name"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="item-title">Agenda Item Title *</Label>
-                        <Input
-                          id="item-title"
-                          value={newItem.title}
-                          onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
-                          placeholder="Brief title for your agenda item"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="item-description">Description</Label>
-                        <Textarea
-                          id="item-description"
-                          value={newItem.description}
-                          onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
-                          placeholder="Provide more details about this agenda item"
-                          rows={3}
-                        />
-                      </div>
-                      <div className="flex justify-end space-x-2">
-                        <Button type="button" variant="outline" onClick={() => setIsSubmitModalOpen(false)}>
-                          Cancel
-                        </Button>
-                        <Button type="submit" disabled={submitItemMutation.isPending}>
-                          {submitItemMutation.isPending ? "Submitting..." : "Submit Item"}
-                        </Button>
-                      </div>
-                    </form>
-                  </DialogContent>
+                <form onSubmit={handleSubmitItem} className="space-y-4">
+                  <div>
+                    <Label htmlFor="submittedBy">Your Name</Label>
+                    <Input
+                      id="submittedBy"
+                      value={newItem.submittedBy}
+                      onChange={(e) => setNewItem({ ...newItem, submittedBy: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="title">Agenda Item Title</Label>
+                    <Input
+                      id="title"
+                      value={newItem.title}
+                      onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      value={newItem.description}
+                      onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button type="button" variant="outline" onClick={() => setIsSubmitModalOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={submitItemMutation.isPending}>
+                      Submit Item
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
             </Dialog>
           </div>
         </div>
         
-        {currentMeeting && (
-          <div className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-lg font-semibold text-slate-900">{currentMeeting.title}</h2>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setIsEditModalOpen(true)}
-                    className="text-slate-500 hover:text-slate-700"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
+        <div className="p-6">
+          {/* Meeting Selector */}
+          <div className="mb-6">
+            <Label htmlFor="meeting-select" className="text-sm font-medium text-slate-700 mb-2 block">
+              Select Meeting
+            </Label>
+            <Select value={selectedMeetingId?.toString() || ""} onValueChange={(value) => setSelectedMeetingId(parseInt(value))}>
+              <SelectTrigger className="w-full max-w-md">
+                <SelectValue placeholder="Choose a meeting..." />
+              </SelectTrigger>
+              <SelectContent>
+                {meetings.map((meeting) => (
+                  <SelectItem key={meeting.id} value={meeting.id.toString()}>
+                    {meeting.title} - {new Date(meeting.date).toLocaleDateString()}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {selectedMeeting && (
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-lg font-semibold text-slate-900">{selectedMeeting.title}</h2>
+                    <Badge className={getMeetingTypeColor(selectedMeeting.type)}>
+                      {selectedMeeting.type.replace('_', ' ')}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-4 text-sm text-slate-600 mt-1">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      {new Date(selectedMeeting.date).toLocaleDateString()}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      {selectedMeeting.time}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4 text-sm text-slate-600 mt-1">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    {new Date(currentMeeting.date).toLocaleDateString()}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    {currentMeeting.time}
-                  </span>
+                <div className="flex gap-2">
+                  <Dialog open={isUploadModalOpen} onOpenChange={setIsUploadModalOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline">
+                        <Upload className="w-4 h-4 mr-2" />
+                        Upload Final Agenda
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Upload Final Agenda</DialogTitle>
+                      </DialogHeader>
+                      <form onSubmit={handleUploadAgenda} className="space-y-4">
+                        <div>
+                          <Label htmlFor="agenda-file">Select Agenda File</Label>
+                          <Input
+                            id="agenda-file"
+                            type="file"
+                            accept=".pdf,.doc,.docx"
+                            onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
+                            required
+                          />
+                        </div>
+                        <div className="flex justify-end gap-2">
+                          <Button type="button" variant="outline" onClick={() => setIsUploadModalOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button type="submit" disabled={uploadAgendaMutation.isPending}>
+                            Upload
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </div>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setIsUploadModalOpen(true)}>
-                  <Upload className="w-4 h-4 mr-2" />
-                  Upload Final Agenda
-                </Button>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Submitted Items for Review */}
@@ -271,13 +336,13 @@ export default function MeetingAgenda() {
           </h2>
         </div>
         <div className="p-6">
-          {agendaItems.length === 0 ? (
+          {selectedMeetingAgendaItems.length === 0 ? (
             <div className="text-center py-8 text-slate-500">
-              No agenda items submitted yet. Click "Submit Agenda Item" to get started.
+              {selectedMeeting ? `No agenda items submitted for ${selectedMeeting.title} yet.` : 'Select a meeting to view agenda items.'}
             </div>
           ) : (
             <div className="space-y-4">
-              {agendaItems.map((item) => (
+              {selectedMeetingAgendaItems.map((item) => (
                 <Card key={item.id} className="border border-slate-200">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
@@ -315,11 +380,9 @@ export default function MeetingAgenda() {
                       </div>
                     </div>
                   </CardHeader>
-                  {item.description && (
-                    <CardContent className="pt-0">
-                      <p className="text-sm text-slate-600">{item.description}</p>
-                    </CardContent>
-                  )}
+                  <CardContent className="pt-0">
+                    <p className="text-sm text-slate-600">{item.description}</p>
+                  </CardContent>
                 </Card>
               ))}
             </div>
@@ -336,77 +399,23 @@ export default function MeetingAgenda() {
           </h2>
         </div>
         <div className="p-6">
-          {currentMeeting?.finalAgenda ? (
+          {selectedMeeting?.finalAgenda ? (
             <div className="bg-slate-50 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-3">
                 <File className="w-4 h-4 text-slate-600" />
                 <span className="text-sm font-medium text-slate-700">Uploaded Agenda</span>
               </div>
               <div className="text-sm text-slate-600">
-                Final agenda file has been uploaded and is available for the meeting.
+                Final agenda file has been uploaded and is available for {selectedMeeting.title}.
               </div>
             </div>
           ) : (
             <div className="text-center py-8 text-slate-500">
-              No final agenda uploaded yet. Upload the final agenda file to complete meeting preparation.
+              {selectedMeeting ? `No final agenda uploaded for ${selectedMeeting.title} yet.` : 'Select a meeting to view final agenda status.'}
             </div>
           )}
         </div>
       </div>
-
-      {/* Upload Agenda Modal */}
-      <Dialog open={isUploadModalOpen} onOpenChange={setIsUploadModalOpen}>
-        <DialogContent className="sm:max-w-md" aria-describedby="upload-agenda-description">
-          <DialogHeader>
-            <DialogTitle>Upload Final Agenda</DialogTitle>
-          </DialogHeader>
-          <p id="upload-agenda-description" className="text-sm text-slate-600 mb-4">
-            Upload the final meeting agenda file.
-          </p>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="agenda-upload">Agenda File</Label>
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
-                <div className="space-y-1 text-center">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="flex text-sm text-gray-600">
-                    <label
-                      htmlFor="agenda-upload"
-                      className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"
-                    >
-                      <span>Upload agenda file</span>
-                      <input
-                        id="agenda-upload"
-                        name="agenda-upload"
-                        type="file"
-                        className="sr-only"
-                        accept=".pdf,.doc,.docx,.txt"
-                        onChange={handleFileChange}
-                      />
-                    </label>
-                    <p className="pl-1">or drag and drop</p>
-                  </div>
-                  <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT up to 10MB</p>
-                </div>
-              </div>
-              {uploadedFile && (
-                <p className="mt-2 text-sm text-green-600">Selected: {uploadedFile.name}</p>
-              )}
-            </div>
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setIsUploadModalOpen(false)}>
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleUploadAgenda} 
-                disabled={!uploadedFile || uploadAgendaMutation.isPending}
-              >
-                {uploadAgendaMutation.isPending ? "Uploading..." : "Upload Agenda"}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
