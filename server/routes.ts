@@ -121,7 +121,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
-      const updatedProject = await storage.updateProject(id, updates);
+      
+      // Filter out timestamp fields that shouldn't be updated directly
+      const { createdAt, updatedAt, ...validUpdates } = updates;
+      
+      const updatedProject = await storage.updateProject(id, validUpdates);
       
       if (!updatedProject) {
         return res.status(404).json({ message: "Project not found" });
