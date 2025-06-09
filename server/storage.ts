@@ -26,6 +26,7 @@ export interface IStorage {
   getProject(id: number): Promise<Project | undefined>;
   createProject(project: InsertProject): Promise<Project>;
   updateProject(id: number, updates: Partial<Project>): Promise<Project | undefined>;
+  deleteProject(id: number): Promise<boolean>;
   
   // Messages
   getAllMessages(): Promise<Message[]>;
@@ -197,6 +198,10 @@ export class MemStorage implements IStorage {
     const updatedProject = { ...project, ...updates };
     this.projects.set(id, updatedProject);
     return updatedProject;
+  }
+
+  async deleteProject(id: number): Promise<boolean> {
+    return this.projects.delete(id);
   }
 
   // Message methods

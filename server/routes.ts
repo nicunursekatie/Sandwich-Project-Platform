@@ -114,6 +114,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.put("/api/projects/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const updatedProject = await storage.updateProject(id, updates);
+      
+      if (!updatedProject) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      res.json(updatedProject);
+    } catch (error) {
+      logger.error("Failed to update project", error);
+      res.status(500).json({ message: "Failed to update project" });
+    }
+  });
+
+  app.delete("/api/projects/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const deleted = await storage.deleteProject(id);
+      if (!deleted) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      logger.error("Failed to delete project", error);
+      res.status(500).json({ message: "Failed to delete project" });
+    }
+  });
+
   // Messages
   app.get("/api/messages", async (req, res) => {
     try {

@@ -55,6 +55,11 @@ export class DatabaseStorage implements IStorage {
     return project || undefined;
   }
 
+  async deleteProject(id: number): Promise<boolean> {
+    const result = await db.delete(projects).where(eq(projects.id, id));
+    return result.rowCount > 0;
+  }
+
   // Messages
   async getAllMessages(): Promise<Message[]> {
     return await db.select().from(messages).orderBy(messages.id);
