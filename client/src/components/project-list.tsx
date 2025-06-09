@@ -89,7 +89,13 @@ export default function ProjectList() {
         riskAssessment: projectData.riskAssessment || null,
         successCriteria: projectData.successCriteria || null
       };
+      console.log("Sending project data:", transformedData);
       const response = await apiRequest("POST", "/api/projects", transformedData);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API Error:", response.status, errorText);
+        throw new Error(`API Error: ${response.status} ${errorText}`);
+      }
       return response.json();
     },
     onSuccess: () => {
@@ -121,7 +127,8 @@ export default function ProjectList() {
         description: "The new project has been added to the list.",
       });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Project creation error:", error);
       toast({
         title: "Failed to create project",
         description: "Please check your input and try again.",
