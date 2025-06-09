@@ -225,10 +225,7 @@ export default function SandwichCollectionLog() {
   // Mutations for update and delete
   const updateMutation = useMutation({
     mutationFn: async (data: { id: number; updates: any }) => {
-      const response = await apiRequest(`/api/sandwich-collections/${data.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(data.updates)
-      });
+      const response = await apiRequest('PUT', `/api/sandwich-collections/${data.id}`, data.updates);
       return response.json();
     },
     onSuccess: () => {
@@ -250,9 +247,7 @@ export default function SandwichCollectionLog() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await apiRequest(`/api/sandwich-collections/${id}`, {
-        method: 'DELETE'
-      });
+      const response = await apiRequest('DELETE', `/api/sandwich-collections/${id}`);
       // Don't try to parse JSON for 204 responses
       return response.status === 204 ? null : response.json();
     },

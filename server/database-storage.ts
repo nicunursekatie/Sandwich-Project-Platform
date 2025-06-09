@@ -51,7 +51,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateProject(id: number, updates: Partial<Project>): Promise<Project | undefined> {
-    const [project] = await db.update(projects).set(updates).where(eq(projects.id, id)).returning();
+    // Ensure updatedAt is set to current timestamp
+    const updateData = {
+      ...updates,
+      updatedAt: new Date()
+    };
+    const [project] = await db.update(projects).set(updateData).where(eq(projects.id, id)).returning();
     return project || undefined;
   }
 
