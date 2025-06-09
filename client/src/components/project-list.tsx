@@ -70,7 +70,26 @@ export default function ProjectList() {
 
   const createProjectMutation = useMutation({
     mutationFn: async (projectData: typeof newProject) => {
-      const response = await apiRequest("POST", "/api/projects", projectData);
+      // Transform the data to match backend schema
+      const transformedData = {
+        ...projectData,
+        estimatedHours: projectData.estimatedHours ? parseInt(projectData.estimatedHours) || null : null,
+        actualHours: projectData.actualHours ? parseInt(projectData.actualHours) || null : null,
+        progress: parseInt(projectData.progress.toString()) || 0,
+        // Remove empty strings to let backend handle defaults
+        assigneeName: projectData.assigneeName || null,
+        dueDate: projectData.dueDate || null,
+        startDate: projectData.startDate || null,
+        description: projectData.description || null,
+        notes: projectData.notes || null,
+        tags: projectData.tags || null,
+        dependencies: projectData.dependencies || null,
+        resources: projectData.resources || null,
+        milestones: projectData.milestones || null,
+        riskAssessment: projectData.riskAssessment || null,
+        successCriteria: projectData.successCriteria || null
+      };
+      const response = await apiRequest("POST", "/api/projects", transformedData);
       return response.json();
     },
     onSuccess: () => {
