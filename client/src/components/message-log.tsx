@@ -105,6 +105,26 @@ export default function MessageLog() {
     }
   });
 
+  const deleteMessageMutation = useMutation({
+    mutationFn: async (messageId: number) => {
+      return apiRequest('DELETE', `/api/messages/${messageId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/messages'] });
+      toast({
+        title: "Message deleted",
+        description: "The message has been removed from the chat.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Delete failed",
+        description: "Could not delete the message. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
+
   const onSubmit = (data: MessageFormData) => {
     const messageData = replyingTo 
       ? { ...data, sender: userName || "Anonymous", parentId: replyingTo.id, threadId: replyingTo.threadId || replyingTo.id }
@@ -293,6 +313,16 @@ export default function MessageLog() {
                       <MessageSquare className="w-3 h-3 mr-1" />
                       Reply
                     </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs text-slate-500 hover:text-red-600"
+                      onClick={() => deleteMessageMutation.mutate(message.id)}
+                      disabled={deleteMessageMutation.isPending}
+                      title="Delete message"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
                   </div>
 
                   {/* Thread replies preview */}
@@ -310,7 +340,7 @@ export default function MessageLog() {
                       
                       {/* Show latest reply preview */}
                       {latestReply && (
-                        <div className="flex items-start gap-2 text-sm">
+                        <div className="group/reply flex items-start gap-2 text-sm hover:bg-slate-100 -mx-2 px-2 py-1 rounded">
                           <Avatar className={`w-6 h-6 ${getAvatarColor(latestReply.sender)}`}>
                             <AvatarFallback className="text-white text-xs">
                               {getInitials(latestReply.sender)}
@@ -326,6 +356,16 @@ export default function MessageLog() {
                                 : latestReply.content}
                             </span>
                           </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-5 w-5 p-0 text-slate-400 hover:text-red-600 opacity-0 group-hover/reply:opacity-100 transition-opacity"
+                            onClick={() => deleteMessageMutation.mutate(latestReply.id)}
+                            disabled={deleteMessageMutation.isPending}
+                            title="Delete reply"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
                         </div>
                       )}
                       
@@ -333,7 +373,7 @@ export default function MessageLog() {
                       {threadReplies.length > 1 && (
                         <div className="mt-2 space-y-1">
                           {threadReplies.slice(0, -1).map((reply) => (
-                            <div key={reply.id} className="flex items-start gap-2 text-sm">
+                            <div key={reply.id} className="group/reply flex items-start gap-2 text-sm hover:bg-slate-100 -mx-2 px-2 py-1 rounded">
                               <Avatar className={`w-6 h-6 ${getAvatarColor(reply.sender)}`}>
                                 <AvatarFallback className="text-white text-xs">
                                   {getInitials(reply.sender)}
@@ -349,6 +389,16 @@ export default function MessageLog() {
                                     : reply.content}
                                 </span>
                               </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-5 w-5 p-0 text-slate-400 hover:text-red-600 opacity-0 group-hover/reply:opacity-100 transition-opacity"
+                                onClick={() => deleteMessageMutation.mutate(reply.id)}
+                                disabled={deleteMessageMutation.isPending}
+                                title="Delete reply"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
                             </div>
                           ))}
                         </div>
