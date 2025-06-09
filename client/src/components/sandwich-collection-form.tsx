@@ -47,10 +47,7 @@ export default function SandwichCollectionForm() {
       individualSandwiches: number;
       groupCollections: string;
     }) => {
-      const response = await apiRequest('/api/sandwich-collections', {
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
+      const response = await apiRequest('POST', '/api/sandwich-collections', data);
       return response.json();
     },
     onSuccess: () => {

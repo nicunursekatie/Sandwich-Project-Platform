@@ -97,7 +97,7 @@ export default function CommitteeChat() {
 
   const createMessageMutation = useMutation({
     mutationFn: async (data: { content: string; committee: string }) => {
-      return apiRequest('/api/messages', 'POST', {
+      return apiRequest('POST', '/api/messages', {
         content: data.content,
         sender: userName || "Anonymous",
         committee: data.committee

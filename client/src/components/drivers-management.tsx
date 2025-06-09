@@ -61,7 +61,7 @@ export default function DriversManagement() {
 
   // Add driver mutation
   const addDriverMutation = useMutation({
-    mutationFn: (driver: typeof newDriver) => apiRequest("/api/drivers", "POST", driver),
+    mutationFn: (driver: typeof newDriver) => apiRequest("POST", "/api/drivers", driver),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/drivers"] });
       setNewDriver({
@@ -84,7 +84,7 @@ export default function DriversManagement() {
   // Update driver mutation
   const updateDriverMutation = useMutation({
     mutationFn: ({ id, updates }: { id: number; updates: Partial<Driver> }) =>
-      apiRequest(`/api/drivers/${id}`, "PATCH", updates),
+      apiRequest("PATCH", `/api/drivers/${id}`, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/drivers"] });
       setEditingDriver(null);
@@ -100,7 +100,7 @@ export default function DriversManagement() {
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append("agreement", file);
-      return apiRequest("/api/driver-agreement/upload", "POST", formData);
+      return apiRequest("POST", "/api/driver-agreement/upload", formData);
     },
     onSuccess: () => {
       setAgreementFile(null);
@@ -115,7 +115,7 @@ export default function DriversManagement() {
   // Submit volunteer agreement mutation
   const submitVolunteerMutation = useMutation({
     mutationFn: (data: typeof volunteerForm) =>
-      apiRequest("/api/driver-agreement/submit", "POST", data),
+      apiRequest("POST", "/api/driver-agreement/submit", data),
     onSuccess: () => {
       setVolunteerForm({
         submittedBy: "",
