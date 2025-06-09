@@ -158,7 +158,10 @@ export default function SandwichCollectionLog() {
   const hostOptions = [...hosts.map(host => host.name), "Other"];
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    // Parse date as local date to avoid timezone issues
+    const [year, month, day] = dateString.split('-').map(Number);
+    const localDate = new Date(year, month - 1, day);
+    return localDate.toLocaleDateString('en-US', {
       weekday: 'short',
       year: 'numeric',
       month: 'short',
