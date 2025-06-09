@@ -14,6 +14,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface AgendaItem {
   id: number;
+  meetingId: number;
   submittedBy: string;
   title: string;
   description: string;

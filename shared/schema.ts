@@ -96,6 +96,7 @@ export const driveLinks = pgTable("drive_links", {
 
 export const agendaItems = pgTable("agenda_items", {
   id: serial("id").primaryKey(),
+  meetingId: integer("meeting_id").notNull(), // Links to specific meeting
   submittedBy: text("submitted_by").notNull(),
   title: text("title").notNull(),
   description: text("description"),
