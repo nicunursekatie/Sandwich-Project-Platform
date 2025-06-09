@@ -256,7 +256,18 @@ export class GoogleSheetsStorage implements IStorage {
     
     if (projectIndex === -1) return undefined;
 
-    const updatedProject = { ...projects[projectIndex], ...updates };
+    const currentProject = projects[projectIndex];
+    const updateData = { ...updates };
+    
+    // Auto-update status based on assignee changes
+    if (updateData.assigneeName && updateData.assigneeName.trim() && currentProject.status === "available") {
+      updateData.status = "in_progress";
+    }
+    else if (updateData.assigneeName === "" && currentProject.status === "in_progress") {
+      updateData.status = "available";
+    }
+
+    const updatedProject = { ...currentProject, ...updateData };
     
     try {
       await this.sheets.spreadsheets.values.update({

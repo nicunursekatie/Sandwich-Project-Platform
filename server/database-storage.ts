@@ -51,11 +51,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateProject(id: number, updates: Partial<Project>): Promise<Project | undefined> {
-    // Ensure updatedAt is set to current timestamp
-    const updateData = {
-      ...updates,
-      updatedAt: new Date()
-    };
+    // Get the current project to check its current state
+    const currentProject = await this.getProject(id);
+    if (!currentProject) return undefined;
+
+    // Auto-update status based on assignee changes
+    const updateData = { ...updates, updatedAt: new Date() };
+    
+    // If assigneeName is being set and project is currently available, change to in_progress
+    if (updateData.assigneeName && updateData.assigneeName.trim() && currentProject.status === "available") {
+      updateData.status = "in_progress";
+    }
+    // If assigneeName is being removed and project is currently in_progress, change to available
+    else if (updateData.assigneeName === "" && currentProject.status === "in_progress") {
+      updateData.status = "available";
+    }
+
     const [project] = await db.update(projects).set(updateData).where(eq(projects.id, id)).returning();
     return project || undefined;
   }
