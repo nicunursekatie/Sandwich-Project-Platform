@@ -249,7 +249,8 @@ export default function SandwichCollectionLog() {
       const response = await apiRequest(`/api/sandwich-collections/${id}`, {
         method: 'DELETE'
       });
-      return response.json();
+      // Don't try to parse JSON for 204 responses
+      return response.status === 204 ? null : response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
