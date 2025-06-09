@@ -280,6 +280,12 @@ export default function PhoneDirectory() {
     return phone;
   };
 
+  const cleanAddress = (address: string | null) => {
+    if (!address) return null;
+    // Remove parenthetical information like "(Karen)" or "(west side)"
+    return address.replace(/\s*\([^)]*\)/g, '').trim();
+  };
+
   const HostCard = ({ host }: { host: HostWithContacts }) => (
     <Card className="mb-4">
       <CardContent className="pt-4">
@@ -416,13 +422,7 @@ export default function PhoneDirectory() {
             {recipient.address && (
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
                 <MapPin className="w-4 h-4" />
-                <span>{recipient.address}</span>
-              </div>
-            )}
-            
-            {recipient.preferences && (
-              <div className="text-sm text-gray-600">
-                <strong>Preferences:</strong> {recipient.preferences}
+                <span>{cleanAddress(recipient.address)}</span>
               </div>
             )}
           </div>
