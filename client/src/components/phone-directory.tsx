@@ -78,6 +78,7 @@ export default function PhoneDirectory() {
   const [editingHost, setEditingHost] = useState<Host | null>(null);
   const [editingRecipient, setEditingRecipient] = useState<Recipient | null>(null);
   const [editingContact, setEditingContact] = useState<GeneralContact | null>(null);
+  const [editingHostContact, setEditingHostContact] = useState<HostContact | null>(null);
   const [isImporting, setIsImporting] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const { toast } = useToast();
@@ -302,6 +303,45 @@ export default function PhoneDirectory() {
     },
   });
 
+  // Host contact mutations
+  const updateHostContactMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<HostContact> }) => 
+      apiRequest(`/api/host-contacts/${id}`, "PATCH", data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
+      setEditingHostContact(null);
+      toast({
+        title: "Success",
+        description: "Host contact updated successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update host contact",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteHostContactMutation = useMutation({
+    mutationFn: (id: number) => apiRequest(`/api/host-contacts/${id}`, "DELETE"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
+      toast({
+        title: "Success",
+        description: "Host contact deleted successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete host contact",
+        variant: "destructive",
+      });
+    },
+  });
+
   // Export functions
   const exportToCSV = (data: any[], filename: string) => {
     const headers = Object.keys(data[0] || {});
@@ -372,6 +412,26 @@ export default function PhoneDirectory() {
                         {contact.isPrimary && (
                           <Star className="w-3 h-3 text-yellow-500 fill-current" />
                         )}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setEditingHostContact(contact)}
+                          className="flex items-center gap-1 h-7 px-2"
+                        >
+                          <Edit className="w-3 h-3" />
+                          Edit
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteHostContactMutation.mutate(contact.id)}
+                          className="flex items-center gap-1 h-7 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          Delete
+                        </Button>
                       </div>
                     </div>
                     
@@ -498,6 +558,15 @@ export default function PhoneDirectory() {
             >
               <Edit className="w-3 h-3" />
               Edit
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => deleteRecipientMutation.mutate(recipient.id)}
+              className="flex items-center gap-1 text-red-600 hover:text-red-700"
+            >
+              <Trash2 className="w-3 h-3" />
+              Delete
             </Button>
           </div>
         </div>
@@ -970,6 +1039,47 @@ export default function PhoneDirectory() {
                 setSelectedHostForContact(null);
               }}
               isLoading={createHostContactMutation.isPending}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Host Contact Dialog */}
+      <Dialog open={!!editingHostContact} onOpenChange={(open) => !open && setEditingHostContact(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Host Contact</DialogTitle>
+            <DialogDescription>
+              Update contact information
+            </DialogDescription>
+          </DialogHeader>
+          {editingHostContact && (
+            <HostContactForm
+              hostId={editingHostContact.hostId}
+              initialData={editingHostContact}
+              onSubmit={(data) => updateHostContactMutation.mutate({ id: editingHostContact.id, data })}
+              onCancel={() => setEditingHostContact(null)}
+              isLoading={updateHostContactMutation.isPending}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Recipient Dialog */}
+      <Dialog open={!!editingRecipient} onOpenChange={(open) => !open && setEditingRecipient(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Recipient</DialogTitle>
+            <DialogDescription>
+              Update recipient information
+            </DialogDescription>
+          </DialogHeader>
+          {editingRecipient && (
+            <RecipientForm
+              initialData={editingRecipient}
+              onSubmit={(data) => updateRecipientMutation.mutate({ id: editingRecipient.id, data })}
+              onCancel={() => setEditingRecipient(null)}
+              isLoading={updateRecipientMutation.isPending}
             />
           )}
         </DialogContent>
