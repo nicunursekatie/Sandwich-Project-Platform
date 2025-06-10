@@ -93,7 +93,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Project creation error details:", error);
       logger.error("Failed to create project", error);
-      res.status(400).json({ message: "Invalid project data", error: error.message });
+      res.status(400).json({ 
+        message: "Invalid project data", 
+        error: error instanceof Error ? error.message : "Unknown error" 
+      });
     }
   });
 
@@ -239,7 +242,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(collection);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        logger.warn("Invalid sandwich collection input", { errors: error.errors, ip: req.ip });
+        logger.warn("Invalid sandwich collection input", { error: error.errors, ip: req.ip });
         res.status(400).json({ message: "Invalid collection data", errors: error.errors });
       } else {
         logger.error("Failed to create sandwich collection", error);
@@ -716,7 +719,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         try {
           // Debug log the record structure
-          logger.info(`Processing row ${i + 1}:`, JSON.stringify(record));
+          logger.info(`Processing row ${i + 1}:`, { record: JSON.stringify(record) });
           
           // Check for alternative column names
           const hostName = record['Host Name'] || record['Host'] || record['host_name'] || record['HostName'];

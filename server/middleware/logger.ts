@@ -11,6 +11,7 @@ export interface LogEntry {
   statusCode?: number;
   responseTime?: number;
   error?: any;
+  errors?: any; // For validation errors
 }
 
 class Logger {
