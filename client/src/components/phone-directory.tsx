@@ -89,13 +89,15 @@ export default function PhoneDirectory() {
   });
 
   // Fetch all host contacts in a separate query
-  const { data: allHostContacts = [], isLoading: hostContactsLoading } = useQuery<HostContact[]>({
+  const { data: allHostContacts = [], isLoading: hostContactsLoading, refetch: refetchHostContacts } = useQuery<HostContact[]>({
     queryKey: ["/api/host-contacts"],
     staleTime: 0, // Always refetch to ensure fresh data
+    cacheTime: 0, // Don't cache the data
     refetchOnMount: true,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       try {
-        const response = await fetch("/api/host-contacts");
+        const response = await fetch("/api/host-contacts?" + Date.now()); // Cache busting
         return response.ok ? await response.json() : [];
       } catch (error) {
         console.error('Failed to fetch host contacts:', error);
@@ -103,6 +105,11 @@ export default function PhoneDirectory() {
       }
     }
   });
+
+  // Force refetch when component mounts
+  React.useEffect(() => {
+    refetchHostContacts();
+  }, []);
 
   // Combine hosts with their contacts
   const hosts: HostWithContacts[] = hostsData.map(host => ({
@@ -226,6 +233,7 @@ export default function PhoneDirectory() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/host-contacts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/contacts"] });
       setImportDialogOpen(false);
       toast({ 
