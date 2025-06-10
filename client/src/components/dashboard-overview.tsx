@@ -29,9 +29,16 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
     queryKey: ["/api/weekly-reports"]
   });
 
-  const { data: collections = [] } = useQuery<SandwichCollection[]>({
-    queryKey: ["/api/sandwich-collections"]
+  const { data: collectionsResponse } = useQuery({
+    queryKey: ["/api/sandwich-collections"],
+    queryFn: async () => {
+      const response = await fetch('/api/sandwich-collections?limit=1000');
+      if (!response.ok) throw new Error('Failed to fetch collections');
+      return response.json();
+    }
   });
+
+  const collections = collectionsResponse?.collections || [];
 
   const getProjectStatusCounts = () => {
     const counts = {

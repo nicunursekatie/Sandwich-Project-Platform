@@ -994,7 +994,7 @@ export default function SandwichCollectionLog() {
           <div className="flex items-center justify-between mt-4">
             <div className="flex items-center space-x-4">
               <div className="text-sm text-slate-600">
-                Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} entries ({collections.length} total)
+                Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} entries
               </div>
               <div className="flex items-center space-x-2">
                 <Label className="text-sm font-medium text-slate-700">Sort by:</Label>
