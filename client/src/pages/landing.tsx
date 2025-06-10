@@ -29,8 +29,20 @@ export default function Landing() {
     retry: false,
   });
 
-  // Calculate humanized statistics from real data
-  const totalSandwiches = collections?.reduce((sum: number, collection: any) => sum + (collection.individualSandwiches || 0), 0) || 0;
+  // Calculate humanized statistics from real data (matching dashboard calculation)
+  const totalSandwiches = collections?.reduce((sum: number, collection: any) => {
+    let groupTotal = 0;
+    try {
+      const groupData = JSON.parse(collection.groupCollections || "[]");
+      if (Array.isArray(groupData)) {
+        groupTotal = groupData.reduce((groupSum: number, group: any) => groupSum + (group.sandwichCount || 0), 0);
+      }
+    } catch (error) {
+      // If parsing fails, treat as 0
+      groupTotal = 0;
+    }
+    return sum + (collection.individualSandwiches || 0) + groupTotal;
+  }, 0) || 0;
   const weeklyAverage = collections?.length > 0 ? Math.round(totalSandwiches / Math.max(1, collections.length)) : 0;
   const totalCollections = collections?.length || 0;
 
