@@ -80,32 +80,41 @@ export default function PhoneDirectory() {
   const [editingContact, setEditingContact] = useState<GeneralContact | null>(null);
   const { toast } = useToast();
 
-  // Fetch hosts (temporarily using existing endpoint until backend is updated)
+  // Fetch hosts with their contacts
   const { data: hosts = [], isLoading: hostsLoading } = useQuery<HostWithContacts[]>({
     queryKey: ["/api/hosts-with-contacts"],
     queryFn: async () => {
-      // For now, fetch hosts and mock the contact structure
       const response = await fetch("/api/hosts");
       const hostData = await response.json();
       
-      // Transform existing host data to new structure with mock contacts
-      return hostData.map((host: any) => ({
-        id: host.id,
-        name: host.name,
-        address: host.address || null,
-        status: host.status || 'active',
-        notes: host.notes,
-        contacts: host.phone ? [{
-          id: host.id * 1000,
-          hostId: host.id,
-          name: "Primary Contact",
-          role: "primary",
-          phone: host.phone,
-          email: host.email,
-          isPrimary: true,
-          notes: null
-        }] : []
-      }));
+      // Fetch contacts for each host
+      const hostsWithContacts = await Promise.all(
+        hostData.map(async (host: any) => {
+          try {
+            const contactsResponse = await fetch(`/api/hosts/${host.id}/contacts`);
+            const contacts = contactsResponse.ok ? await contactsResponse.json() : [];
+            return {
+              id: host.id,
+              name: host.name,
+              address: host.address || null,
+              status: host.status || 'active',
+              notes: host.notes,
+              contacts: contacts
+            };
+          } catch (error) {
+            return {
+              id: host.id,
+              name: host.name,
+              address: host.address || null,
+              status: host.status || 'active',
+              notes: host.notes,
+              contacts: []
+            };
+          }
+        })
+      );
+      
+      return hostsWithContacts;
     }
   });
 

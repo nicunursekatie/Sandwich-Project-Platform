@@ -95,6 +95,12 @@ export interface IStorage {
   createContact(contact: InsertContact): Promise<Contact>;
   updateContact(id: number, updates: Partial<Contact>): Promise<Contact | undefined>;
   deleteContact(id: number): Promise<boolean>;
+  
+  // Host Contacts
+  createHostContact(contact: InsertHostContact): Promise<HostContact>;
+  getHostContacts(hostId: number): Promise<HostContact[]>;
+  updateHostContact(id: number, updates: Partial<HostContact>): Promise<HostContact | undefined>;
+  deleteHostContact(id: number): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -109,6 +115,7 @@ export class MemStorage implements IStorage {
   private meetings: Map<number, Meeting>;
   private driverAgreements: Map<number, DriverAgreement>;
   private hosts: Map<number, Host>;
+  private hostContacts: Map<number, HostContact>;
   private recipients: Map<number, Recipient>;
   private contacts: Map<number, Contact>;
   private currentIds: {
@@ -123,6 +130,7 @@ export class MemStorage implements IStorage {
     meeting: number;
     driverAgreement: number;
     host: number;
+    hostContact: number;
     recipient: number;
     contact: number;
   };
@@ -139,6 +147,7 @@ export class MemStorage implements IStorage {
     this.meetings = new Map();
     this.driverAgreements = new Map();
     this.hosts = new Map();
+    this.hostContacts = new Map();
     this.recipients = new Map();
     this.contacts = new Map();
     this.currentIds = {
@@ -153,6 +162,7 @@ export class MemStorage implements IStorage {
       meeting: 1,
       driverAgreement: 1,
       host: 1,
+      hostContact: 1,
       recipient: 1,
       contact: 1,
     };
@@ -582,6 +592,43 @@ export class MemStorage implements IStorage {
 
   async deleteContact(id: number): Promise<boolean> {
     return this.contacts.delete(id);
+  }
+
+  // Host Contact methods
+  async createHostContact(insertContact: InsertHostContact): Promise<HostContact> {
+    const id = this.currentIds.hostContact++;
+    const now = new Date();
+    const contact: HostContact = {
+      id,
+      ...insertContact,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.hostContacts.set(id, contact);
+    return contact;
+  }
+
+  async getHostContacts(hostId: number): Promise<HostContact[]> {
+    return Array.from(this.hostContacts.values())
+      .filter(contact => contact.hostId === hostId)
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  async updateHostContact(id: number, updates: Partial<HostContact>): Promise<HostContact | undefined> {
+    const contact = this.hostContacts.get(id);
+    if (!contact) return undefined;
+    
+    const updatedContact: HostContact = { 
+      ...contact, 
+      ...updates, 
+      updatedAt: new Date()
+    };
+    this.hostContacts.set(id, updatedContact);
+    return updatedContact;
+  }
+
+  async deleteHostContact(id: number): Promise<boolean> {
+    return this.hostContacts.delete(id);
   }
 }
 

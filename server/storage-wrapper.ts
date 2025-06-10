@@ -487,6 +487,35 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.deleteContact(id)
     );
   }
+
+  // Host Contacts methods
+  async createHostContact(contact: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createHostContact(contact),
+      () => this.fallbackStorage.createHostContact(contact)
+    );
+  }
+
+  async getHostContacts(hostId: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getHostContacts(hostId),
+      () => this.fallbackStorage.getHostContacts(hostId)
+    );
+  }
+
+  async updateHostContact(id: number, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateHostContact(id, updates),
+      () => this.fallbackStorage.updateHostContact(id, updates)
+    );
+  }
+
+  async deleteHostContact(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteHostContact(id),
+      () => this.fallbackStorage.deleteHostContact(id)
+    );
+  }
 }
 
 export const storage = new StorageWrapper();
