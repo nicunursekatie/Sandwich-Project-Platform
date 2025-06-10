@@ -184,6 +184,17 @@ export default function PhoneDirectory() {
     },
   });
 
+  const deleteRecipientMutation = useMutation({
+    mutationFn: (id: number) => apiRequest(`/api/recipients/${id}`, "DELETE"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
+      toast({ title: "Recipient deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete recipient", variant: "destructive" });
+    },
+  });
+
   const createHostContactMutation = useMutation({
     mutationFn: (data: z.infer<typeof insertHostContactSchema>) => apiRequest("/api/host-contacts", "POST", data),
     onSuccess: () => {
