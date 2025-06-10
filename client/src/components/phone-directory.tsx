@@ -84,7 +84,7 @@ export default function PhoneDirectory() {
   const { toast } = useToast();
 
   // Optimized: Fetch hosts with contacts in single query
-  const { data: hosts = [], isLoading: hostsLoading } = useQuery<HostWithContacts[]>({
+  const { data: hosts = [], isLoading } = useQuery<HostWithContacts[]>({
     queryKey: ["/api/hosts-with-contacts"],
   });
 
@@ -691,7 +691,7 @@ export default function PhoneDirectory() {
     </Card>
   );
 
-  if (hostsLoading || recipientsLoading || contactsLoading) {
+  if (isLoading || recipientsLoading || contactsLoading) {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
