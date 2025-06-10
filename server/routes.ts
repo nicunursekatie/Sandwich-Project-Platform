@@ -1248,13 +1248,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
-      const host = await storage.updateHost(id, updates);
+      
+      console.log('PATCH host update - ID:', id, 'Updates:', JSON.stringify(updates, null, 2));
+      
+      // Clean up any problematic timestamp fields that might be strings
+      const cleanUpdates = { ...updates };
+      if (cleanUpdates.createdAt) delete cleanUpdates.createdAt;
+      if (cleanUpdates.updatedAt) delete cleanUpdates.updatedAt;
+      
+      console.log('Cleaned updates:', JSON.stringify(cleanUpdates, null, 2));
+      
+      const host = await storage.updateHost(id, cleanUpdates);
       if (!host) {
         return res.status(404).json({ error: "Host not found" });
       }
       res.json(host);
     } catch (error) {
       logger.error("Failed to update host", error);
+      console.error("Host update error details:", error);
       res.status(500).json({ error: "Failed to update host" });
     }
   });
