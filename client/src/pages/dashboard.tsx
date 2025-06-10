@@ -225,12 +225,11 @@ export default function Dashboard() {
               onClick={async () => {
                 try {
                   await fetch('/api/logout', { method: 'POST' });
-                  queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
-                  queryClient.clear();
-                  window.location.href = '/';
                 } catch (error) {
+                  console.error('Logout error:', error);
+                } finally {
                   queryClient.clear();
-                  window.location.href = '/';
+                  window.location.reload();
                 }
               }}
               className="text-slate-400 hover:text-slate-600"
