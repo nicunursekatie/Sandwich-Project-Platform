@@ -66,9 +66,23 @@ export default function SandwichCollectionLog() {
     groupCollections: ""
   });
   const [editGroupCollections, setEditGroupCollections] = useState<Array<{id: string, groupName: string, sandwichCount: number}>>([]);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newCollectionData, setNewCollectionData] = useState({
+    collectionDate: "",
+    hostName: "",
+    individualSandwiches: "",
+    groupCollections: ""
+  });
+  const [newGroupCollections, setNewGroupCollections] = useState<Array<{id: string, groupName: string, sandwichCount: number}>>([
+    { id: Math.random().toString(36), groupName: "", sandwichCount: 0 }
+  ]);
 
   const { data: collections = [], isLoading } = useQuery<SandwichCollection[]>({
     queryKey: ["/api/sandwich-collections"]
+  });
+
+  const { data: hostsList = [] } = useQuery<Host[]>({
+    queryKey: ["/api/hosts"]
   });
 
   // Filter and sort collections
