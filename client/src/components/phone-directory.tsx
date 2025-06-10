@@ -142,8 +142,10 @@ export default function PhoneDirectory() {
   });
 
   const updateHostMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<z.infer<typeof insertHostSchema>> }) => 
-      apiRequest("PUT", `/api/hosts/${id}`, data),
+    mutationFn: ({ id, data, isReassignment }: { id: number; data: Partial<z.infer<typeof insertHostSchema>>; isReassignment?: boolean }) => {
+      console.log('Updating host with:', { id, data, isReassignment });
+      return apiRequest("PUT", `/api/hosts/${id}`, data);
+    },
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/host-contacts"] });
@@ -159,7 +161,8 @@ export default function PhoneDirectory() {
         toast({ title: "Host updated successfully" });
       }
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Host update error:', error);
       toast({ title: "Failed to update host", variant: "destructive" });
     },
   });
@@ -1193,15 +1196,16 @@ const HostForm = ({
 
   const handleSubmit = (data: z.infer<typeof insertHostSchema>) => {
     if (useExistingLocation && selectedExistingHost && initialData) {
-      // We're reassigning to an existing location - merge this host's contacts
+      // We're reassigning to an existing location - send the target host's information
       const selectedHost = allHosts.find(h => h.id.toString() === selectedExistingHost);
       if (selectedHost) {
-        // Update with the selected host's information
+        console.log('Reassigning host:', initialData.name, 'to:', selectedHost.name);
+        // Send the target host's information to trigger reassignment logic
         onSubmit({
-          ...data,
           name: selectedHost.name,
           address: selectedHost.address || "",
-          notes: selectedHost.notes || ""
+          notes: selectedHost.notes || "",
+          status: data.status || "active"
         });
       }
     } else {

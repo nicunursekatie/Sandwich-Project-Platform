@@ -1132,12 +1132,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const updates = req.body;
       
-      // Check if this is a location reassignment (when the host name matches an existing host)
+      // Get current host info
       const currentHost = await storage.getHost(id);
       if (!currentHost) {
         return res.status(404).json({ message: "Host not found" });
       }
 
+      console.log('Host update request:', { currentHostName: currentHost.name, newName: updates.name });
+
+      // Check if this is a location reassignment (when the host name matches an existing host)
       const allHosts = await storage.getAllHosts();
       const targetHost = allHosts.find(h => 
         h.id !== id && 
@@ -1145,34 +1148,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       if (targetHost) {
+        console.log('Reassignment detected: moving contacts from', currentHost.name, 'to', targetHost.name);
+        
         // This is a location reassignment - merge contacts to the target host
         const contactsToMove = await storage.getHostContacts(id);
+        console.log('Moving', contactsToMove.length, 'contacts');
         
         // Update all contacts to point to the target host
         for (const contact of contactsToMove) {
+          console.log('Moving contact:', contact.name, 'from host', id, 'to host', targetHost.id);
           await storage.updateHostContact(contact.id, { 
             hostId: targetHost.id 
           });
         }
 
         // Update any sandwich collections that reference the old host name
-        await storage.updateCollectionHostNames(currentHost.name, targetHost.name);
+        const collectionsUpdated = await storage.updateCollectionHostNames(currentHost.name, targetHost.name);
+        console.log('Updated', collectionsUpdated, 'sandwich collection records');
 
         // Delete the original host since its contacts have been moved
         await storage.deleteHost(id);
+        console.log('Deleted original host:', currentHost.name);
 
-        // Return the target host with updated information
-        const updatedTargetHost = await storage.updateHost(targetHost.id, {
-          status: updates.status || targetHost.status,
-          notes: updates.notes || targetHost.notes
-        });
-
+        // Return the target host with success message
         res.json({
-          ...updatedTargetHost,
-          message: `Host reassigned successfully. ${contactsToMove.length} contacts moved to ${targetHost.name}.`
+          ...targetHost,
+          message: `Host reassigned successfully. ${contactsToMove.length} contacts moved from "${currentHost.name}" to "${targetHost.name}".`
         });
       } else {
         // Normal host update
+        console.log('Normal host update for:', currentHost.name);
         const host = await storage.updateHost(id, updates);
         if (!host) {
           return res.status(404).json({ message: "Host not found" });

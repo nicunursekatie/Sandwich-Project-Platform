@@ -38,6 +38,7 @@ export default function RecipientsManagement() {
 
   const { data: recipients = [], isLoading } = useQuery({
     queryKey: ["/api/recipients"],
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
   });
 
   const createRecipientMutation = useMutation({
@@ -209,7 +210,7 @@ export default function RecipientsManagement() {
                 <p id="import-recipients-description" className="text-sm text-slate-600 mb-4">
                   Upload a CSV or Excel file with recipient data. Required columns: name, phone. Optional: email, address, preferences, status.
                 </p>
-                
+
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="file-upload">Select File</Label>
@@ -393,7 +394,7 @@ export default function RecipientsManagement() {
             </CardContent>
           </Card>
         ))}
-        
+
         {recipients.length === 0 && (
           <div className="text-center py-12 text-slate-500">
             No recipients found. Add a new recipient to get started.
