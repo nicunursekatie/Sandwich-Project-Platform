@@ -1264,6 +1264,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.patch("/api/host-contacts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const updatedContact = await storage.updateHostContact(id, updates);
+      if (!updatedContact) {
+        return res.status(404).json({ message: "Host contact not found" });
+      }
+      res.json(updatedContact);
+    } catch (error) {
+      logger.error("Failed to update host contact", error);
+      res.status(500).json({ message: "Failed to update host contact" });
+    }
+  });
+
   app.delete("/api/host-contacts/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -1315,6 +1330,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.patch("/api/recipients/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const updatedRecipient = await storage.updateRecipient(id, updates);
+      if (!updatedRecipient) {
+        return res.status(404).json({ message: "Recipient not found" });
+      }
+      res.json(updatedRecipient);
+    } catch (error) {
+      logger.error("Failed to update recipient", error);
+      res.status(500).json({ message: "Failed to update recipient" });
+    }
+  });
+
   app.delete("/api/recipients/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -1352,6 +1382,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.put("/api/contacts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const updatedContact = await storage.updateContact(id, updates);
+      if (!updatedContact) {
+        return res.status(404).json({ message: "Contact not found" });
+      }
+      res.json(updatedContact);
+    } catch (error) {
+      logger.error("Failed to update contact", error);
+      res.status(500).json({ message: "Failed to update contact" });
+    }
+  });
+
+  app.patch("/api/contacts/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
