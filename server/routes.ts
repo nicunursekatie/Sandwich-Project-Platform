@@ -44,6 +44,9 @@ const importUpload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Import and use the new modular routes
+  const { apiRoutes } = await import("./routes/index");
+  app.use(apiRoutes);
   // Apply global middleware
   app.use(requestLogger);
   // Temporarily disable rate limiting to fix sandwich collections
