@@ -37,7 +37,7 @@ declare global {
 // Temporary simple authentication for testing
 export function setupTempAuth(app: Express) {
   // Simple login endpoint that creates a test admin user
-  app.post("/api/temp-login", async (req, res) => {
+  app.post("/api/temp-login", async (req: any, res) => {
     try {
       // Create or get a test admin user
       const testUser = {
@@ -62,7 +62,7 @@ export function setupTempAuth(app: Express) {
   });
 
   // Get current user endpoint
-  app.get("/api/auth/user", (req, res) => {
+  app.get("/api/auth/user", (req: any, res) => {
     if (req.session.user) {
       res.json(req.session.user);
     } else {
@@ -71,7 +71,7 @@ export function setupTempAuth(app: Express) {
   });
 
   // Logout endpoint
-  app.post("/api/logout", (req, res) => {
+  app.post("/api/logout", (req: any, res) => {
     req.session.destroy(() => {
       res.json({ success: true });
     });
@@ -79,7 +79,7 @@ export function setupTempAuth(app: Express) {
 }
 
 // Middleware to check if user is authenticated
-export const isAuthenticated: RequestHandler = (req, res, next) => {
+export const isAuthenticated: RequestHandler = (req: any, res, next) => {
   if (req.session.user) {
     req.user = req.session.user;
     return next();
@@ -89,7 +89,7 @@ export const isAuthenticated: RequestHandler = (req, res, next) => {
 
 // Permission checking middleware
 export const requirePermission = (permission: string): RequestHandler => {
-  return (req, res, next) => {
+  return (req: any, res, next) => {
     const user = req.session.user;
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });

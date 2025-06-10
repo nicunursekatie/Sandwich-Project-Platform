@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
 import express from "express";
+import session from "express-session";
 import multer from "multer";
 import { parse } from 'csv-parse/sync';
 import fs from 'fs/promises';
@@ -45,7 +46,6 @@ const importUpload = multer({
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Add session middleware
-  const session = (await import('express-session')).default;
   app.use(session({
     secret: process.env.SESSION_SECRET || 'temp-secret-key',
     resave: false,

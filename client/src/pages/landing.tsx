@@ -8,8 +8,19 @@ import { DocumentsBrowser } from "@/components/documents-browser";
 export default function Landing() {
   const [showToolkit, setShowToolkit] = useState(false);
   
-  const handleLogin = () => {
-    window.location.href = "/api/login";
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('/api/temp-login', { method: 'POST' });
+      if (response.ok) {
+        window.location.href = "/";
+      } else {
+        // Fallback to login page if temp auth fails
+        window.location.href = "/api/login";
+      }
+    } catch (error) {
+      // Fallback to login page
+      window.location.href = "/api/login";
+    }
   };
 
   // Fetch real statistics for public display
