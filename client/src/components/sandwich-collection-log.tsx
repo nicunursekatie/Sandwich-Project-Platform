@@ -13,6 +13,7 @@ import * as React from "react";
 import type { SandwichCollection, Host } from "@shared/schema";
 import BulkDataManager from "@/components/bulk-data-manager";
 
+
 interface ImportResult {
   totalRecords: number;
   successCount: number;
@@ -741,17 +742,10 @@ export default function SandwichCollectionLog() {
         </div>
       </div>
       
-      <Tabs defaultValue="collections" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mx-6 mt-4">
-          <TabsTrigger value="collections">Collection Log</TabsTrigger>
-          <TabsTrigger value="data-management">Data Management</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="collections" className="mt-0">
-          <div className="px-6 py-4">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-slate-500">{collections.length} total entries</p>
-              <div className="flex items-center space-x-2">
+      <div className="px-6 py-4">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm text-slate-500">{collections.length} total entries</p>
+          <div className="flex items-center space-x-2">
             <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
               <DialogTrigger asChild>
                 <Button
@@ -1526,17 +1520,6 @@ export default function SandwichCollectionLog() {
           </div>
         </DialogContent>
       </Dialog>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="data-management" className="mt-0">
-          <div className="px-6 py-4">
-            <BulkDataManager />
-          </div>
-        </TabsContent>
-      </Tabs>
     </div>
   );
 }
