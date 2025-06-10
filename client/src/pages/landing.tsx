@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Users, Calendar, MessageSquare, Sandwich, TrendingUp, MapPin } from "lucide-react";
+import { Heart, Users, Calendar, MessageSquare, TrendingUp, MapPin } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { DocumentsBrowser } from "@/components/documents-browser";
+import tspLogo from "@assets/CMYK_PRINT_TSP-01_1749585167435.png";
+import tspTransparent from "@assets/TSP_transparent_1749585167445.png";
 
 export default function Landing() {
   const [showToolkit, setShowToolkit] = useState(false);
@@ -81,11 +83,12 @@ export default function Landing() {
         {/* Hero Section */}
         <div className="text-center space-y-6">
           <div className="flex justify-center">
-            <Heart className="h-16 w-16 text-red-500" />
+            <img 
+              src={tspLogo} 
+              alt="The Sandwich Project" 
+              className="h-24 w-auto"
+            />
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white">
-            The Sandwich Project
-          </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             A community-driven initiative connecting volunteers, hosts, and recipients 
             to fight hunger one sandwich at a time. Building food security through 
@@ -109,7 +112,11 @@ export default function Landing() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="text-center bg-white/80 backdrop-blur dark:bg-gray-800/80">
             <CardHeader>
-              <Sandwich className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+              <img 
+                src={tspTransparent} 
+                alt="TSP Logo" 
+                className="h-12 w-12 mx-auto mb-4 object-contain"
+              />
               <CardTitle className="text-2xl font-bold">{totalSandwiches.toLocaleString()}</CardTitle>
               <CardDescription className="font-semibold">Sandwiches Delivered</CardDescription>
             </CardHeader>
