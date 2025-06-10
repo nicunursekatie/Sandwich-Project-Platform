@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/authUtils";
 import { PERMISSIONS } from "@/lib/authUtils";
+import { queryClient } from "@/lib/queryClient";
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -210,10 +211,16 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <span className="text-sm text-slate-600">Welcome, {user?.firstName || 'Team'}</span>
             <button 
-              onClick={() => {
-                fetch('/api/logout', { method: 'POST' })
-                  .then(() => window.location.href = '/')
-                  .catch(() => window.location.href = '/');
+              onClick={async () => {
+                try {
+                  await fetch('/api/logout', { method: 'POST' });
+                  queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+                  queryClient.clear();
+                  window.location.href = '/';
+                } catch (error) {
+                  queryClient.clear();
+                  window.location.href = '/';
+                }
               }}
               className="text-slate-400 hover:text-slate-600"
             >

@@ -2,6 +2,7 @@ import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardLi
 import PhoneDirectory from "@/components/phone-directory";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
+import { queryClient } from "@/lib/queryClient";
 
 export default function PhoneDirectoryPage() {
   const [location] = useLocation();
@@ -62,10 +63,16 @@ export default function PhoneDirectoryPage() {
           <div className="flex items-center justify-between">
             <span className="text-sm text-slate-600">Welcome, Team</span>
             <button 
-              onClick={() => {
-                fetch('/api/logout', { method: 'POST' })
-                  .then(() => window.location.href = '/')
-                  .catch(() => window.location.href = '/');
+              onClick={async () => {
+                try {
+                  await fetch('/api/logout', { method: 'POST' });
+                  queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+                  queryClient.clear();
+                  window.location.href = '/';
+                } catch (error) {
+                  queryClient.clear();
+                  window.location.href = '/';
+                }
               }}
               className="text-slate-400 hover:text-slate-600"
             >
