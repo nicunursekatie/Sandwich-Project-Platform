@@ -185,7 +185,12 @@ export default function HostsManagementConsolidated() {
     if (!editingHost) return;
     updateHostMutation.mutate({
       id: editingHost.id,
-      updates: editingHost
+      updates: {
+        name: editingHost.name,
+        address: editingHost.address,
+        status: editingHost.status,
+        notes: editingHost.notes
+      }
     });
   };
 
