@@ -12,6 +12,7 @@ import DriversManagement from "@/components/drivers-management";
 import HostsManagement from "@/components/hosts-management";
 import { DocumentsBrowser } from "@/components/documents-browser";
 import PhoneDirectory from "@/components/phone-directory";
+import BulkDataManager from "@/components/bulk-data-manager";
 import Development from "@/pages/development";
 import { useState } from "react";
 
@@ -27,7 +28,9 @@ export default function Dashboard() {
     { id: "collections", label: "Collections", icon: Sandwich },
     { id: "hosts", label: "Hosts", icon: Building2 },
     { id: "recipients", label: "Recipients", icon: Users },
+    { id: "drivers", label: "Drivers", icon: Car },
     { id: "directory", label: "Phone Directory", icon: Phone },
+    { id: "bulk-data", label: "Bulk Data", icon: BarChart3 },
     { id: "development", label: "Development", icon: FolderOpen },
   ];
 
@@ -144,8 +147,12 @@ export default function Dashboard() {
         return <HostsManagement />;
       case "recipients":
         return <RecipientsManagement />;
+      case "drivers":
+        return <DriversManagement />;
       case "directory":
         return <PhoneDirectory />;
+      case "bulk-data":
+        return <BulkDataManager />;
       case "development":
         return <Development />;
       default:
