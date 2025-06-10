@@ -160,6 +160,19 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(sandwichCollections).orderBy(desc(sandwichCollections.collectionDate));
   }
 
+  async getSandwichCollections(limit: number, offset: number): Promise<SandwichCollection[]> {
+    return await db.select()
+      .from(sandwichCollections)
+      .orderBy(desc(sandwichCollections.collectionDate))
+      .limit(limit)
+      .offset(offset);
+  }
+
+  async getSandwichCollectionsCount(): Promise<number> {
+    const result = await db.select({ count: sql<number>`count(*)` }).from(sandwichCollections);
+    return result[0].count;
+  }
+
   async createSandwichCollection(insertCollection: InsertSandwichCollection): Promise<SandwichCollection> {
     const [collection] = await db.insert(sandwichCollections).values(insertCollection).returning();
     return collection;

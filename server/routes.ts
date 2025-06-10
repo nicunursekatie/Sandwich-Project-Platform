@@ -279,8 +279,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Sandwich Collections
   app.get("/api/sandwich-collections", async (req, res) => {
     try {
-      const collections = await storage.getAllSandwichCollections();
-      res.json(collections);
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 50;
+      const offset = (page - 1) * limit;
+
+      const result = await storage.getSandwichCollections(limit, offset);
+      const totalCount = await storage.getSandwichCollectionsCount();
+      
+      res.json({
+        collections: result,
+        pagination: {
+          page,
+          limit,
+          total: totalCount,
+          totalPages: Math.ceil(totalCount / limit),
+          hasNext: page < Math.ceil(totalCount / limit),
+          hasPrev: page > 1
+        }
+      });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch sandwich collections" });
     }

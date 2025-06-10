@@ -26,10 +26,17 @@ export default function Landing() {
   };
 
   // Fetch real statistics for public display
-  const { data: collections } = useQuery({
+  const { data: collectionsResponse } = useQuery({
     queryKey: ['/api/sandwich-collections'],
+    queryFn: async () => {
+      const response = await fetch('/api/sandwich-collections?limit=1000');
+      if (!response.ok) throw new Error('Failed to fetch collections');
+      return response.json();
+    },
     retry: false,
   });
+
+  const collections = collectionsResponse?.collections || [];
 
   // Calculate humanized statistics from real data (matching dashboard calculation)
   const totalSandwiches = collections?.reduce((sum: number, collection: any) => {

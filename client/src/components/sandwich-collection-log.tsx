@@ -77,9 +77,17 @@ export default function SandwichCollectionLog() {
     { id: Math.random().toString(36), groupName: "", sandwichCount: 0 }
   ]);
 
-  const { data: collections = [], isLoading } = useQuery<SandwichCollection[]>({
-    queryKey: ["/api/sandwich-collections"]
+  const { data: collectionsResponse, isLoading } = useQuery({
+    queryKey: ["/api/sandwich-collections", currentPage, itemsPerPage],
+    queryFn: async () => {
+      const response = await fetch(`/api/sandwich-collections?page=${currentPage}&limit=${itemsPerPage}`);
+      if (!response.ok) throw new Error('Failed to fetch collections');
+      return response.json();
+    }
   });
+
+  const collections = collectionsResponse?.collections || [];
+  const pagination = collectionsResponse?.pagination;
 
   const { data: hostsList = [] } = useQuery<Host[]>({
     queryKey: ["/api/hosts"]
