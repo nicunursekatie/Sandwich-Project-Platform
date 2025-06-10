@@ -1,17 +1,15 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X, ArrowUp, ArrowDown, Download, Plus, Database } from "lucide-react";
+import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X, ArrowUp, ArrowDown, Download, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useState, useRef } from "react";
 import * as React from "react";
 import type { SandwichCollection, Host } from "@shared/schema";
-import BulkDataManager from "@/components/bulk-data-manager";
 
 interface ImportResult {
   totalRecords: number;
@@ -734,27 +732,11 @@ export default function SandwichCollectionLog() {
           <div>
             <h2 className="text-lg font-semibold text-slate-900 flex items-center">
               <Sandwich className="text-amber-500 mr-2 w-5 h-5" />
-              Collections
+              Collection Log
             </h2>
-            <p className="text-sm text-slate-500 mt-1">Manage collection records and data</p>
+            <p className="text-sm text-slate-500 mt-1">{collections.length} total entries</p>
           </div>
-        </div>
-      </div>
-      
-      <Tabs defaultValue="collections" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 px-6 py-2 bg-slate-50">
-          <TabsTrigger value="collections">Collection Log</TabsTrigger>
-          <TabsTrigger value="data-management" className="text-xs">
-            <Database className="w-3 h-3 mr-1" />
-            Data Management
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="collections" className="mt-0">
-          <div className="px-6 py-4 border-b border-slate-100">
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500">{collections.length} total entries</p>
-              <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2">
             <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
               <DialogTrigger asChild>
                 <Button
@@ -1531,12 +1513,32 @@ export default function SandwichCollectionLog() {
       </Dialog>
             </div>
           </div>
-        </TabsContent>
-        
-        <TabsContent value="data-management" className="mt-0">
-          <BulkDataManager />
-        </TabsContent>
-      </Tabs>
+        </div>
+      </div>
+      
+      {/* Data Management Footer Section */}
+      <div className="border-t border-slate-100 bg-slate-50/50 px-6 py-3">
+        <details className="group">
+          <summary className="cursor-pointer flex items-center justify-between text-sm font-medium text-slate-600 hover:text-slate-700">
+            <span className="flex items-center gap-2">
+              📊 Data Management Tools
+              <span className="text-xs text-slate-500">(Admin)</span>
+            </span>
+            <span className="group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <div className="mt-3 pt-3 border-t border-slate-200">
+            <p className="text-xs text-slate-500 mb-3">Advanced tools for bulk operations and data analysis</p>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => window.open('/collections?tab=data-management', '_blank')}
+                className="text-xs px-3 py-1.5 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+              >
+                Open Data Manager
+              </button>
+            </div>
+          </div>
+        </details>
+      </div>
     </div>
   );
 }
