@@ -170,7 +170,7 @@ export class DatabaseStorage implements IStorage {
 
   async getSandwichCollectionsCount(): Promise<number> {
     const result = await db.select({ count: sql<number>`count(*)` }).from(sandwichCollections);
-    return result[0].count;
+    return Number(result[0].count);
   }
 
   async createSandwichCollection(insertCollection: InsertSandwichCollection): Promise<SandwichCollection> {

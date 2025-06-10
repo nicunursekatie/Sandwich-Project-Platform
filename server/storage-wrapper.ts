@@ -255,7 +255,7 @@ class StorageWrapper implements IStorage {
   }
 
   async getSandwichCollectionsCount() {
-    return await this.executeWithFallback(
+    const result = await this.executeWithFallback(
       () => this.primaryStorage.getSandwichCollectionsCount(),
       async () => {
         // Fallback: get all and count
@@ -263,6 +263,7 @@ class StorageWrapper implements IStorage {
         return all.length;
       }
     );
+    return Number(result);
   }
 
   async createSandwichCollection(collection: any) {

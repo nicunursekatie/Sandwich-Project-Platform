@@ -1857,8 +1857,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json({
-        totalRecords,
-        processedRecords: totalRecords,
+        totalRecords: Number(totalRecords),
+        processedRecords: Number(totalRecords),
         mappedRecords,
         unmappedRecords
       });
