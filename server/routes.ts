@@ -69,26 +69,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // app.use(generalRateLimit);
   app.use(sanitizeMiddleware);
 
-  // Simple session storage - auto-login for easy access
-  const currentUser = {
-    id: "1",
-    email: "team@sandwichproject.org", 
-    firstName: "Team",
-    lastName: "Member",
-    profileImageUrl: null
-  };
-
-  // Authentication routes
-  app.get('/api/auth/user', (req, res) => {
-    res.json(currentUser);
+  // User management routes
+  app.get('/api/users', isAuthenticated, requirePermission('view_users'), async (req, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
   });
 
-  app.get('/api/login', (req, res) => {
-    res.redirect('/');
+  app.patch('/api/users/:id', isAuthenticated, requirePermission('manage_users'), async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { role, permissions } = req.body;
+      const updatedUser = await storage.updateUser(id, { role, permissions });
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ message: "Failed to update user" });
+    }
   });
 
-  app.get('/api/logout', (req, res) => {
-    res.redirect('/');
+  app.patch('/api/users/:id/status', isAuthenticated, requirePermission('manage_users'), async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { isActive } = req.body;
+      const updatedUser = await storage.updateUser(id, { isActive });
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user status:", error);
+      res.status(500).json({ message: "Failed to update user status" });
+    }
   });
 
   // Projects

@@ -280,5 +280,3 @@ export const insertContactSchema = createInsertSchema(contacts).omit({
 
 export type Contact = typeof contacts.$inferSelect;
 export type InsertContact = z.infer<typeof insertContactSchema>;
-
-export type UpsertUser = typeof users.$inferInsert;
