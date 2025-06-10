@@ -265,7 +265,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateHost(id: number, updates: Partial<Host>): Promise<Host | undefined> {
-    const [host] = await db.update(hosts).set(updates).where(eq(hosts.id, id)).returning();
+    const [host] = await db.update(hosts)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(hosts.id, id))
+      .returning();
     return host || undefined;
   }
 

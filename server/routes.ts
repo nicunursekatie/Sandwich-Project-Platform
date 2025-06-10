@@ -1244,6 +1244,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.patch("/api/hosts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const host = await storage.updateHost(id, updates);
+      if (!host) {
+        return res.status(404).json({ error: "Host not found" });
+      }
+      res.json(host);
+    } catch (error) {
+      logger.error("Failed to update host", error);
+      res.status(500).json({ error: "Failed to update host" });
+    }
+  });
+
   app.delete("/api/hosts/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
