@@ -111,10 +111,11 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* Real-time Statistics */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="text-center bg-white/80 backdrop-blur dark:bg-gray-800/80">
-            <CardHeader>
+        {/* Real-time Statistics - Hidden when toolkit is shown */}
+        {!showToolkit && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="text-center bg-white/80 backdrop-blur dark:bg-gray-800/80">
+              <CardHeader>
               <img 
                 src={tspTransparent} 
                 alt="TSP Logo" 
@@ -160,7 +161,8 @@ export default function Landing() {
               <p className="text-sm text-gray-600 dark:text-gray-400">estimated community impact</p>
             </CardContent>
           </Card>
-        </div>
+          </div>
+        )}
 
         {/* Volunteer Toolkit Section */}
         {showToolkit && (
