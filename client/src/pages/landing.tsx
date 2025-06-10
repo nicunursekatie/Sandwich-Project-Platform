@@ -162,6 +162,23 @@ export default function Landing() {
           </Card>
         </div>
 
+        {/* Volunteer Toolkit Section */}
+        {showToolkit && (
+          <Card className="bg-blue-50 dark:bg-blue-900 border-2 border-blue-500">
+            <CardHeader className="text-center">
+              <CardTitle className="text-3xl text-blue-600 dark:text-blue-300">
+                🛠️ Volunteer Toolkit
+              </CardTitle>
+              <CardDescription className="text-lg">
+                Essential documents and training materials for The Sandwich Project volunteers
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DocumentsBrowser />
+            </CardContent>
+          </Card>
+        )}
+
         {/* Efficiency Metrics Section */}
         <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-2 border-green-200 dark:border-green-700">
           <CardHeader className="text-center">
@@ -206,25 +223,7 @@ export default function Landing() {
           </CardContent>
         </Card>
 
-        {/* Debug: Show toolkit state */}
-        <div className="text-center text-sm text-gray-500 my-2">
-          Toolkit state: {showToolkit ? 'SHOWN' : 'HIDDEN'}
-        </div>
 
-        {/* Volunteer Toolkit Section */}
-        {showToolkit ? (
-          <div className="w-full bg-red-500 text-white p-8 my-8 text-center">
-            <h1 className="text-6xl font-bold mb-4">TOOLKIT IS VISIBLE!</h1>
-            <p className="text-2xl">This proves the conditional rendering works</p>
-            <div className="bg-white text-black rounded-lg p-6 mt-4">
-              <DocumentsBrowser />
-            </div>
-          </div>
-        ) : (
-          <div className="w-full bg-gray-200 text-gray-600 p-4 my-4 text-center">
-            <p>Toolkit is hidden - click button to show</p>
-          </div>
-        )}
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-6">
