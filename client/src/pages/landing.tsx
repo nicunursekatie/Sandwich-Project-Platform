@@ -208,17 +208,17 @@ export default function Landing() {
 
         {/* Volunteer Toolkit Section */}
         {showToolkit && (
-          <Card className="bg-white dark:bg-gray-800">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl">Volunteer Toolkit</CardTitle>
-              <CardDescription className="text-lg">
-                Everything you need to organize and participate in sandwich collections
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="w-full bg-blue-100 border-4 border-blue-600 rounded-lg p-8 my-8">
+            <h2 className="text-4xl font-bold text-blue-800 text-center mb-4">
+              🛠️ Volunteer Toolkit
+            </h2>
+            <p className="text-lg text-center text-gray-700 mb-6">
+              Essential documents and training materials for The Sandwich Project volunteers
+            </p>
+            <div className="bg-white rounded-lg p-6 shadow-lg">
               <DocumentsBrowser />
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
 
         {/* Features Grid */}
