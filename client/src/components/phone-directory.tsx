@@ -89,13 +89,16 @@ export default function PhoneDirectory() {
   });
 
   // Fetch all host contacts in a separate query
-  const { data: allHostContacts = [] } = useQuery<HostContact[]>({
+  const { data: allHostContacts = [], isLoading: hostContactsLoading } = useQuery<HostContact[]>({
     queryKey: ["/api/host-contacts"],
+    staleTime: 0, // Always refetch to ensure fresh data
+    refetchOnMount: true,
     queryFn: async () => {
       try {
         const response = await fetch("/api/host-contacts");
         return response.ok ? await response.json() : [];
       } catch (error) {
+        console.error('Failed to fetch host contacts:', error);
         return [];
       }
     }
@@ -106,6 +109,12 @@ export default function PhoneDirectory() {
     ...host,
     contacts: allHostContacts.filter(contact => contact.hostId === host.id)
   }));
+
+  // Debug logging to track data flow
+  console.log('Debug - hostsData count:', hostsData.length);
+  console.log('Debug - allHostContacts count:', allHostContacts.length);
+  console.log('Debug - first few host contacts:', allHostContacts.slice(0, 3));
+  console.log('Debug - hosts with contacts:', hosts.filter(h => h.contacts.length > 0).length);
 
 
 
