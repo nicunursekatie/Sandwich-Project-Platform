@@ -1,5 +1,5 @@
 import { 
-  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, recipients, contacts,
+  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts,
   type User, type InsertUser, 
   type Project, type InsertProject,
   type Message, type InsertMessage,
@@ -11,6 +11,7 @@ import {
   type Meeting, type InsertMeeting,
   type DriverAgreement, type InsertDriverAgreement,
   type Host, type InsertHost,
+  type HostContact, type InsertHostContact,
   type Recipient, type InsertRecipient,
   type Contact, type InsertContact
 } from "@shared/schema";
