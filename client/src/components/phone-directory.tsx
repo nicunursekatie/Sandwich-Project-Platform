@@ -69,7 +69,7 @@ interface GeneralContact {
 
 export default function PhoneDirectory() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("contacts");
+  const [activeTab, setActiveTab] = useState("hosts");
   const [isAddingHost, setIsAddingHost] = useState(false);
   const [isAddingRecipient, setIsAddingRecipient] = useState(false);
   const [isAddingContact, setIsAddingContact] = useState(false);
@@ -106,6 +106,8 @@ export default function PhoneDirectory() {
     ...host,
     contacts: allHostContacts.filter(contact => contact.hostId === host.id)
   }));
+
+
 
   // Fetch recipients
   const { data: recipients = [], isLoading: recipientsLoading } = useQuery<Recipient[]>({
@@ -236,6 +238,9 @@ export default function PhoneDirectory() {
       (contact.email && contact.email.toLowerCase().includes(searchTerm.toLowerCase()))
     )
   );
+  
+  console.log('searchTerm:', searchTerm);
+  console.log('filteredHosts:', filteredHosts.length, 'hosts');
 
   const filteredRecipients = recipients.filter(recipient =>
     recipient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
