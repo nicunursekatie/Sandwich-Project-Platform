@@ -44,20 +44,39 @@ const importUpload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup authentication first
-  const { setupAuth, isAuthenticated, requireRole, requirePermission } = await import("./replitAuth");
-  await setupAuth(app);
+  // Add session middleware
+  const session = (await import('express-session')).default;
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'temp-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+  }));
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
+  // Setup temporary authentication
+  const { setupTempAuth, isAuthenticated, requirePermission } = await import("./temp-auth");
+  setupTempAuth(app);
+
+  // Add a simple login page for testing
+  app.get('/api/login', (req, res) => {
+    res.send(`
+      <html>
+        <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
+          <h2>Login as Test Admin</h2>
+          <button onclick="login()" style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+            Login as Admin
+          </button>
+          <script>
+            function login() {
+              fetch('/api/temp-login', { method: 'POST' })
+                .then(res => res.json())
+                .then(() => window.location.href = '/')
+                .catch(err => alert('Login failed'));
+            }
+          </script>
+        </body>
+      </html>
+    `);
   });
 
   // Import and use the new modular routes

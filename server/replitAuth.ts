@@ -78,10 +78,15 @@ export async function setupAuth(app: Express) {
     tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
     verified: passport.AuthenticateCallback
   ) => {
-    const user = {};
-    updateUserSession(user, tokens);
-    await upsertUser(tokens.claims());
-    verified(null, user);
+    try {
+      const user = {};
+      updateUserSession(user, tokens);
+      await upsertUser(tokens.claims());
+      verified(null, user);
+    } catch (error) {
+      console.error("Verification error:", error);
+      verified(error);
+    }
   };
 
   for (const domain of process.env
@@ -109,9 +114,23 @@ export async function setupAuth(app: Express) {
   });
 
   app.get("/api/callback", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
-      successReturnToOrRedirect: "/",
-      failureRedirect: "/api/login",
+    passport.authenticate(`replitauth:${req.hostname}`, (err, user, info) => {
+      if (err) {
+        console.error("Authentication callback error:", err);
+        return res.redirect("/api/login");
+      }
+      if (!user) {
+        console.error("No user returned from authentication:", info);
+        return res.redirect("/api/login");
+      }
+      req.logIn(user, (loginErr) => {
+        if (loginErr) {
+          console.error("Login error:", loginErr);
+          return res.redirect("/api/login");
+        }
+        console.log("Authentication successful, redirecting to /");
+        return res.redirect("/");
+      });
     })(req, res, next);
   });
 
