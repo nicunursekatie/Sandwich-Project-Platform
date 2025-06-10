@@ -101,7 +101,10 @@ export default function Landing() {
             <Button 
               variant="outline" 
               size="lg"
-              onClick={() => setShowToolkit(!showToolkit)}
+              onClick={() => {
+                console.log('Toolkit button clicked, current state:', showToolkit);
+                setShowToolkit(!showToolkit);
+              }}
             >
               {showToolkit ? 'Hide' : 'View'} Volunteer Toolkit
             </Button>
