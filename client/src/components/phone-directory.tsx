@@ -149,11 +149,11 @@ export default function PhoneDirectory() {
       queryClient.invalidateQueries({ queryKey: ["/api/host-contacts"] });
       setEditingHost(null);
       
-      if (response.message) {
+      if (response && typeof response === 'object' && 'message' in response) {
         // This was a location reassignment
         toast({ 
           title: "Location reassigned successfully", 
-          description: response.message 
+          description: (response as any).message 
         });
       } else {
         toast({ title: "Host updated successfully" });
@@ -1724,7 +1724,7 @@ const ContactForm = ({
             <FormItem>
               <FormLabel>Organization</FormLabel>
               <FormControl>
-                <Input placeholder="Enter organization name" {...field} />
+                <Input placeholder="Enter organization name" {...field} value={field.value || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
