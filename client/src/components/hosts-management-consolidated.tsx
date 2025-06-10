@@ -374,16 +374,17 @@ export default function HostsManagementConsolidated() {
                 </div>
               )}
               
-              <div className="flex justify-between items-center space-x-2 pt-2">
+              <div className="flex flex-col space-y-2 pt-2">
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={() => setSelectedHost(host)}
+                  className="w-full"
                 >
                   <Users className="w-3 h-3 mr-1" />
                   View Details
                 </Button>
-                <div className="flex space-x-1">
+                <div className="flex space-x-2">
                   <Dialog open={editingHost?.id === host.id} onOpenChange={(open) => !open && setEditingHost(null)}>
                     <DialogTrigger asChild>
                       <Button 
@@ -391,6 +392,7 @@ export default function HostsManagementConsolidated() {
                         size="sm"
                         disabled={!canEdit}
                         onClick={() => setEditingHost(host)}
+                        className="flex-1"
                       >
                         <Edit className="w-3 h-3 mr-1" />
                         Edit
@@ -459,7 +461,7 @@ export default function HostsManagementConsolidated() {
                     variant="outline" 
                     size="sm"
                     onClick={() => handleDeleteHost(host.id)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-1"
                     disabled={deleteHostMutation.isPending || !canEdit}
                   >
                     <Trash2 className="w-3 h-3 mr-1" />
