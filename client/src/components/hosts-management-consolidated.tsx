@@ -52,7 +52,7 @@ export default function HostsManagementConsolidated() {
 
   const createHostMutation = useMutation({
     mutationFn: async (data: InsertHost) => {
-      return await apiRequest('/api/hosts', 'POST', data);
+      return await apiRequest('POST', '/api/hosts', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/hosts-with-contacts'] });
@@ -74,7 +74,7 @@ export default function HostsManagementConsolidated() {
 
   const updateHostMutation = useMutation({
     mutationFn: async (data: { id: number; updates: Partial<Host> }) => {
-      return await apiRequest(`/api/hosts/${data.id}`, 'PATCH', data.updates);
+      return await apiRequest('PATCH', `/api/hosts/${data.id}`, data.updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/hosts-with-contacts'] });
@@ -95,7 +95,7 @@ export default function HostsManagementConsolidated() {
 
   const deleteHostMutation = useMutation({
     mutationFn: async (id: number) => {
-      return await apiRequest(`/api/hosts/${id}`, 'DELETE');
+      return await apiRequest('DELETE', `/api/hosts/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/hosts-with-contacts'] });
@@ -115,7 +115,7 @@ export default function HostsManagementConsolidated() {
 
   const createContactMutation = useMutation({
     mutationFn: async (data: InsertHostContact) => {
-      return await apiRequest('/api/host-contacts', 'POST', data);
+      return await apiRequest('POST', '/api/host-contacts', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/hosts-with-contacts'] });
@@ -137,7 +137,7 @@ export default function HostsManagementConsolidated() {
 
   const updateContactMutation = useMutation({
     mutationFn: async (data: { id: number; updates: Partial<HostContact> }) => {
-      return await apiRequest(`/api/host-contacts/${data.id}`, 'PATCH', data.updates);
+      return await apiRequest('PATCH', `/api/host-contacts/${data.id}`, data.updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/hosts-with-contacts'] });
@@ -158,7 +158,7 @@ export default function HostsManagementConsolidated() {
 
   const deleteContactMutation = useMutation({
     mutationFn: async (id: number) => {
-      return await apiRequest(`/api/host-contacts/${id}`, 'DELETE');
+      return await apiRequest('DELETE', `/api/host-contacts/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/hosts-with-contacts'] });
