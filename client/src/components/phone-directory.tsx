@@ -238,9 +238,7 @@ export default function PhoneDirectory() {
       (contact.email && contact.email.toLowerCase().includes(searchTerm.toLowerCase()))
     )
   );
-  
-  console.log('searchTerm:', searchTerm);
-  console.log('filteredHosts:', filteredHosts.length, 'hosts');
+
 
   const filteredRecipients = recipients.filter(recipient =>
     recipient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
