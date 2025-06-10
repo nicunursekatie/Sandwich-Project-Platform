@@ -939,6 +939,26 @@ export default function PhoneDirectory() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Host Contact Dialog */}
+      <Dialog open={isAddingHostContact} onOpenChange={setIsAddingHostContact}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Add Contact for {selectedHostForContact?.name}</DialogTitle>
+          </DialogHeader>
+          {selectedHostForContact && (
+            <HostContactForm
+              hostId={selectedHostForContact.id}
+              onSubmit={createHostContactMutation.mutate}
+              onCancel={() => {
+                setIsAddingHostContact(false);
+                setSelectedHostForContact(null);
+              }}
+              isLoading={createHostContactMutation.isPending}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
