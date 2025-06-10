@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -1182,6 +1183,130 @@ const RecipientForm = ({
   );
 };
 
+// Host Contact Form Component
+const HostContactForm = ({ 
+  hostId,
+  initialData, 
+  onSubmit, 
+  onCancel, 
+  isLoading 
+}: {
+  hostId: number;
+  initialData?: HostContact;
+  onSubmit: (data: z.infer<typeof insertHostContactSchema>) => void;
+  onCancel: () => void;
+  isLoading?: boolean;
+}) => {
+  const form = useForm<z.infer<typeof insertHostContactSchema>>({
+    resolver: zodResolver(insertHostContactSchema),
+    defaultValues: {
+      hostId,
+      name: initialData?.name || "",
+      role: initialData?.role || "coordinator",
+      phone: initialData?.phone || "",
+      email: initialData?.email || "",
+      isPrimary: initialData?.isPrimary || false,
+      notes: initialData?.notes || ""
+    }
+  });
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Contact Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Full name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Role</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="primary">Primary Contact</SelectItem>
+                  <SelectItem value="backup">Backup Contact</SelectItem>
+                  <SelectItem value="coordinator">Coordinator</SelectItem>
+                  <SelectItem value="manager">Manager</SelectItem>
+                  <SelectItem value="volunteer">Volunteer</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone Number</FormLabel>
+              <FormControl>
+                <Input placeholder="(555) 123-4567" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email (Optional)</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="email@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="notes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Notes (Optional)</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Additional notes about this contact" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex justify-end space-x-2">
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Adding..." : "Add Contact"}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+};
+
 // Contact Form Component
 const ContactForm = ({ 
   initialData, 
@@ -1192,7 +1317,7 @@ const ContactForm = ({
   initialData?: GeneralContact;
   onSubmit: (data: z.infer<typeof insertContactSchema>) => void;
   onCancel: () => void;
-  isLoading: boolean;
+  isLoading?: boolean;
 }) => {
   const form = useForm<z.infer<typeof insertContactSchema>>({
     resolver: zodResolver(insertContactSchema),

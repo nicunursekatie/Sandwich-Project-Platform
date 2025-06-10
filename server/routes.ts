@@ -10,7 +10,7 @@ import { sendDriverAgreementNotification } from "./sendgrid";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
-import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertHostSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
+import { insertProjectSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
 
 // Configure multer for file uploads
 const upload = multer({ 
@@ -1153,6 +1153,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       logger.error("Failed to delete host", error);
       res.status(500).json({ message: "Failed to delete host" });
+    }
+  });
+
+  // Host Contacts
+  app.post("/api/host-contacts", async (req, res) => {
+    try {
+      const contactData = insertHostContactSchema.parse(req.body);
+      const contact = await storage.createHostContact(contactData);
+      res.status(201).json(contact);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid host contact data", errors: error.errors });
+      } else {
+        logger.error("Failed to create host contact", error);
+        res.status(500).json({ message: "Failed to create host contact" });
+      }
+    }
+  });
+
+  app.get("/api/hosts/:hostId/contacts", async (req, res) => {
+    try {
+      const hostId = parseInt(req.params.hostId);
+      const contacts = await storage.getHostContacts(hostId);
+      res.json(contacts);
+    } catch (error) {
+      logger.error("Failed to get host contacts", error);
+      res.status(500).json({ message: "Failed to get host contacts" });
+    }
+  });
+
+  app.put("/api/host-contacts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const updatedContact = await storage.updateHostContact(id, updates);
+      if (!updatedContact) {
+        return res.status(404).json({ message: "Host contact not found" });
+      }
+      res.json(updatedContact);
+    } catch (error) {
+      logger.error("Failed to update host contact", error);
+      res.status(500).json({ message: "Failed to update host contact" });
+    }
+  });
+
+  app.delete("/api/host-contacts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const deleted = await storage.deleteHostContact(id);
+      if (!deleted) {
+        return res.status(404).json({ message: "Host contact not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      logger.error("Failed to delete host contact", error);
+      res.status(500).json({ message: "Failed to delete host contact" });
     }
   });
 

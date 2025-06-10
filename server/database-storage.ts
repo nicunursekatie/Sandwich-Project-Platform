@@ -301,4 +301,27 @@ export class DatabaseStorage implements IStorage {
     const result = await db.delete(contacts).where(eq(contacts.id, id));
     return (result.rowCount ?? 0) > 0;
   }
+
+  // Host Contact methods
+  async createHostContact(insertContact: InsertHostContact): Promise<HostContact> {
+    const [contact] = await db.insert(hostContacts).values(insertContact).returning();
+    return contact;
+  }
+
+  async getHostContacts(hostId: number): Promise<HostContact[]> {
+    return await db.select().from(hostContacts).where(eq(hostContacts.hostId, hostId));
+  }
+
+  async updateHostContact(id: number, updates: Partial<HostContact>): Promise<HostContact | undefined> {
+    const [contact] = await db.update(hostContacts)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(hostContacts.id, id))
+      .returning();
+    return contact;
+  }
+
+  async deleteHostContact(id: number): Promise<boolean> {
+    const result = await db.delete(hostContacts).where(eq(hostContacts.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
 }
