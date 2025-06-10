@@ -43,7 +43,14 @@ export default function Landing() {
     }
     return sum + (collection.individualSandwiches || 0) + groupTotal;
   }, 0) || 0;
-  const weeklyAverage = collections?.length > 0 ? Math.round(totalSandwiches / Math.max(1, collections.length)) : 0;
+  // Calculate proper weekly average based on program duration
+  const weeklyAverage = collections?.length > 0 ? (() => {
+    const dates = collections.map(c => new Date(c.collectionDate)).sort((a, b) => a.getTime() - b.getTime());
+    const firstDate = dates[0];
+    const lastDate = dates[dates.length - 1];
+    const weeksDiff = Math.max(1, Math.ceil((lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24 * 7)));
+    return Math.round(totalSandwiches / weeksDiff);
+  })() : 0;
   const totalCollections = collections?.length || 0;
 
   return (
