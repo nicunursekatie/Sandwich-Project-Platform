@@ -184,7 +184,10 @@ export default function HostsManagement() {
         
         <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button 
+              className="bg-blue-600 hover:bg-blue-700" 
+              disabled={!canEdit}
+            >
               <Plus className="w-4 h-4 mr-2" />
               Add Host
             </Button>
@@ -314,6 +317,7 @@ export default function HostsManagement() {
                       <Button 
                         variant="outline" 
                         size="sm"
+                        disabled={!canEdit}
                         onClick={() => setEditingHost(host)}
                       >
                         <Edit className="w-3 h-3 mr-1" />
