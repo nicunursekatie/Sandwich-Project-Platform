@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -89,8 +89,8 @@ export default function PhoneDirectory() {
   });
 
   // Fetch all host contacts in a separate query
-  const { data: allHostContacts = [], isLoading: hostContactsLoading, refetch: refetchHostContacts } = useQuery({
-    queryKey: ["/api/host-contacts", Date.now()], // Cache busting in query key
+  const { data: allHostContacts = [], isLoading: hostContactsLoading } = useQuery({
+    queryKey: ["/api/host-contacts"],
     queryFn: async (): Promise<HostContact[]> => {
       try {
         const response = await fetch("/api/host-contacts");
@@ -102,16 +102,24 @@ export default function PhoneDirectory() {
     }
   });
 
-  // Force refetch when component mounts
-  useEffect(() => {
-    refetchHostContacts();
-  }, [refetchHostContacts]);
-
   // Combine hosts with their contacts
   const hosts: HostWithContacts[] = hostsData.map(host => ({
     ...host,
     contacts: allHostContacts.filter(contact => contact.hostId === host.id)
   }));
+
+  // Debug logging
+  console.log('Debug - hostsData length:', hostsData.length);
+  console.log('Debug - allHostContacts length:', allHostContacts.length);
+  if (allHostContacts.length > 0) {
+    console.log('Debug - first contact:', allHostContacts[0]);
+    console.log('Debug - sample contact hostId:', allHostContacts[0]?.hostId);
+  }
+  if (hostsData.length > 0) {
+    console.log('Debug - first host:', hostsData[0]);
+    console.log('Debug - first host id:', hostsData[0]?.id);
+  }
+  console.log('Debug - hosts with contacts:', hosts.filter(h => h.contacts.length > 0).length);
 
 
 
