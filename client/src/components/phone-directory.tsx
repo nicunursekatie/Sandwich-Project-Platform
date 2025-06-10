@@ -147,12 +147,21 @@ export default function PhoneDirectory() {
 
   const updateHostMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<z.infer<typeof insertHostSchema>> }) => 
-      apiRequest(`/api/hosts/${id}`, "PATCH", data),
-    onSuccess: () => {
+      apiRequest(`/api/hosts/${id}`, "PUT", data),
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
       setEditingHost(null);
-      toast({ title: "Host updated successfully" });
+      
+      if (response.message) {
+        // This was a location reassignment
+        toast({ 
+          title: "Location reassigned successfully", 
+          description: response.message 
+        });
+      } else {
+        toast({ title: "Host updated successfully" });
+      }
     },
     onError: () => {
       toast({ title: "Failed to update host", variant: "destructive" });
@@ -1139,6 +1148,14 @@ const HostForm = ({
   onCancel: () => void;
   isLoading: boolean;
 }) => {
+  const [useExistingLocation, setUseExistingLocation] = useState(false);
+  const [selectedExistingHost, setSelectedExistingHost] = useState<string>("");
+  
+  // Fetch all hosts for location selection
+  const { data: allHosts = [] } = useQuery<Host[]>({
+    queryKey: ["/api/hosts"],
+  });
+
   const form = useForm<z.infer<typeof insertHostSchema>>({
     resolver: zodResolver(insertHostSchema),
     defaultValues: {
@@ -1149,36 +1166,138 @@ const HostForm = ({
     },
   });
 
+  const handleExistingLocationChange = (hostId: string) => {
+    setSelectedExistingHost(hostId);
+    const selectedHost = allHosts.find(h => h.id.toString() === hostId);
+    if (selectedHost) {
+      form.setValue("name", selectedHost.name);
+      form.setValue("address", selectedHost.address || "");
+      form.setValue("notes", selectedHost.notes || "");
+    }
+  };
+
+  const handleSubmit = (data: z.infer<typeof insertHostSchema>) => {
+    if (useExistingLocation && selectedExistingHost && initialData) {
+      // We're reassigning to an existing location - merge this host's contacts
+      const selectedHost = allHosts.find(h => h.id.toString() === selectedExistingHost);
+      if (selectedHost) {
+        // Update with the selected host's information
+        onSubmit({
+          ...data,
+          name: selectedHost.name,
+          address: selectedHost.address || "",
+          notes: selectedHost.notes || ""
+        });
+      }
+    } else {
+      // Normal create/update operation
+      onSubmit(data);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter host location name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        {initialData && (
+          <div className="space-y-3 p-4 bg-blue-50 rounded-lg border">
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="use-existing"
+                checked={useExistingLocation}
+                onCheckedChange={setUseExistingLocation}
+              />
+              <label htmlFor="use-existing" className="text-sm font-medium">
+                Reassign to existing location
+              </label>
+            </div>
+            <p className="text-xs text-gray-600">
+              Enable this to move contacts from this location to an existing host location
+            </p>
+            
+            {useExistingLocation && (
+              <FormField
+                control={form.control}
+                name="name"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Select Existing Location</FormLabel>
+                    <Select onValueChange={handleExistingLocationChange} value={selectedExistingHost}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Choose a location to reassign to" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {allHosts
+                          .filter(h => h.id !== initialData.id) // Don't show current host
+                          .map((host) => (
+                            <SelectItem key={host.id} value={host.id.toString()}>
+                              {host.name}
+                              {host.address && (
+                                <span className="text-xs text-gray-500 ml-2">
+                                  - {host.address.substring(0, 50)}...
+                                </span>
+                              )}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>
+                      Contacts from "{initialData.name}" will be moved to the selected location
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
+        )}
 
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Address</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Enter full address" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {(!useExistingLocation || !initialData) && (
+          <>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter host location name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Enter full address" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Notes</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Additional notes about this location" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )}
 
         <FormField
           control={form.control}
@@ -1202,26 +1321,14 @@ const HostForm = ({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="notes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Notes</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Additional notes about this location" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Saving..." : initialData ? "Update Host" : "Add Host"}
+            {isLoading ? "Saving..." : 
+             useExistingLocation && initialData ? "Reassign Location" :
+             initialData ? "Update Host" : "Add Host"}
           </Button>
         </div>
       </form>

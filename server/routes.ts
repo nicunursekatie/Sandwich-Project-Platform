@@ -1131,11 +1131,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
-      const host = await storage.updateHost(id, updates);
-      if (!host) {
+      
+      // Check if this is a location reassignment (when the host name matches an existing host)
+      const currentHost = await storage.getHost(id);
+      if (!currentHost) {
         return res.status(404).json({ message: "Host not found" });
       }
-      res.json(host);
+
+      const allHosts = await storage.getAllHosts();
+      const targetHost = allHosts.find(h => 
+        h.id !== id && 
+        h.name.toLowerCase().trim() === updates.name.toLowerCase().trim()
+      );
+
+      if (targetHost) {
+        // This is a location reassignment - merge contacts to the target host
+        const contactsToMove = await storage.getHostContacts(id);
+        
+        // Update all contacts to point to the target host
+        for (const contact of contactsToMove) {
+          await storage.updateHostContact(contact.id, { 
+            hostId: targetHost.id 
+          });
+        }
+
+        // Update any sandwich collections that reference the old host name
+        await storage.updateCollectionHostNames(currentHost.name, targetHost.name);
+
+        // Delete the original host since its contacts have been moved
+        await storage.deleteHost(id);
+
+        // Return the target host with updated information
+        const updatedTargetHost = await storage.updateHost(targetHost.id, {
+          status: updates.status || targetHost.status,
+          notes: updates.notes || targetHost.notes
+        });
+
+        res.json({
+          ...updatedTargetHost,
+          message: `Host reassigned successfully. ${contactsToMove.length} contacts moved to ${targetHost.name}.`
+        });
+      } else {
+        // Normal host update
+        const host = await storage.updateHost(id, updates);
+        if (!host) {
+          return res.status(404).json({ message: "Host not found" });
+        }
+        res.json(host);
+      }
     } catch (error) {
       logger.error("Failed to update host", error);
       res.status(500).json({ message: "Failed to update host" });
