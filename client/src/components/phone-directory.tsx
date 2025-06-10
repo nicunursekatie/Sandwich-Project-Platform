@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -89,15 +89,11 @@ export default function PhoneDirectory() {
   });
 
   // Fetch all host contacts in a separate query
-  const { data: allHostContacts = [], isLoading: hostContactsLoading, refetch: refetchHostContacts } = useQuery<HostContact[]>({
-    queryKey: ["/api/host-contacts"],
-    staleTime: 0, // Always refetch to ensure fresh data
-    cacheTime: 0, // Don't cache the data
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
-    queryFn: async () => {
+  const { data: allHostContacts = [], isLoading: hostContactsLoading, refetch: refetchHostContacts } = useQuery({
+    queryKey: ["/api/host-contacts", Date.now()], // Cache busting in query key
+    queryFn: async (): Promise<HostContact[]> => {
       try {
-        const response = await fetch("/api/host-contacts?" + Date.now()); // Cache busting
+        const response = await fetch("/api/host-contacts");
         return response.ok ? await response.json() : [];
       } catch (error) {
         console.error('Failed to fetch host contacts:', error);
@@ -107,9 +103,9 @@ export default function PhoneDirectory() {
   });
 
   // Force refetch when component mounts
-  React.useEffect(() => {
+  useEffect(() => {
     refetchHostContacts();
-  }, []);
+  }, [refetchHostContacts]);
 
   // Combine hosts with their contacts
   const hosts: HostWithContacts[] = hostsData.map(host => ({
@@ -117,11 +113,7 @@ export default function PhoneDirectory() {
     contacts: allHostContacts.filter(contact => contact.hostId === host.id)
   }));
 
-  // Debug logging to track data flow
-  console.log('Debug - hostsData count:', hostsData.length);
-  console.log('Debug - allHostContacts count:', allHostContacts.length);
-  console.log('Debug - first few host contacts:', allHostContacts.slice(0, 3));
-  console.log('Debug - hosts with contacts:', hosts.filter(h => h.contacts.length > 0).length);
+
 
 
 
