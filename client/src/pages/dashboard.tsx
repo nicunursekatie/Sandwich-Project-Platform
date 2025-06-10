@@ -222,15 +222,8 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <span className="text-sm text-slate-600">Welcome, {user?.firstName || 'Team'}</span>
             <button 
-              onClick={async () => {
-                try {
-                  await fetch('/api/logout', { method: 'POST' });
-                } catch (error) {
-                  console.error('Logout error:', error);
-                } finally {
-                  queryClient.clear();
-                  window.location.reload();
-                }
+              onClick={() => {
+                window.location.href = '/api/logout';
               }}
               className="text-slate-400 hover:text-slate-600"
             >
