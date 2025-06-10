@@ -1517,6 +1517,31 @@ const HostContactForm = ({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
+          name="hostId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Host Location</FormLabel>
+              <Select onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select host location" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {hostsData.map((host) => (
+                    <SelectItem key={host.id} value={host.id.toString()}>
+                      {host.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
