@@ -208,8 +208,15 @@ export default function Dashboard() {
         {/* User Info */}
         <div className="p-4 border-t border-slate-200">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-600">Welcome, John</span>
-            <button className="text-slate-400 hover:text-slate-600">
+            <span className="text-sm text-slate-600">Welcome, {user?.firstName || 'Team'}</span>
+            <button 
+              onClick={() => {
+                fetch('/api/logout', { method: 'POST' })
+                  .then(() => window.location.href = '/')
+                  .catch(() => window.location.href = '/');
+              }}
+              className="text-slate-400 hover:text-slate-600"
+            >
               <LogOut className="w-4 h-4" />
             </button>
           </div>

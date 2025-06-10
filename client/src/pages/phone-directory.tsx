@@ -61,7 +61,14 @@ export default function PhoneDirectoryPage() {
         <div className="p-4 border-t border-slate-200">
           <div className="flex items-center justify-between">
             <span className="text-sm text-slate-600">Welcome, Team</span>
-            <button className="text-slate-400 hover:text-slate-600">
+            <button 
+              onClick={() => {
+                fetch('/api/logout', { method: 'POST' })
+                  .then(() => window.location.href = '/')
+                  .catch(() => window.location.href = '/');
+              }}
+              className="text-slate-400 hover:text-slate-600"
+            >
               <LogOut className="w-4 h-4" />
             </button>
           </div>
