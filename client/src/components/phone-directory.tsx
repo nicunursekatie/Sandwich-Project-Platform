@@ -994,6 +994,14 @@ export default function PhoneDirectory() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Import Dialog */}
+      <FileImportDialog 
+        open={importDialogOpen}
+        onOpenChange={setImportDialogOpen}
+        onImport={(file) => importContactsMutation.mutate(file)}
+        isLoading={importContactsMutation.isPending}
+      />
     </div>
   );
 }
@@ -1530,5 +1538,88 @@ const ContactForm = ({
         </div>
       </form>
     </Form>
+  );
+};
+
+// File Import Dialog Component
+const FileImportDialog = ({ open, onOpenChange, onImport, isLoading }: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onImport: (file: File) => void;
+  isLoading: boolean;
+}) => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleImport = () => {
+    if (selectedFile) {
+      onImport(selectedFile);
+      setSelectedFile(null);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Import Host & Driver Contacts</DialogTitle>
+          <DialogDescription>
+            Upload an Excel file (.xlsx) containing host locations and contact information
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="space-y-4">
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <FileSpreadsheet className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+            <div className="text-sm text-gray-600 mb-4">
+              Select your Excel file with host and driver contact data
+            </div>
+            <Input
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={handleFileSelect}
+              className="cursor-pointer"
+            />
+          </div>
+
+          {selectedFile && (
+            <div className="bg-blue-50 p-3 rounded-lg">
+              <div className="flex items-center gap-2">
+                <FileSpreadsheet className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium text-blue-800">
+                  {selectedFile.name}
+                </span>
+              </div>
+              <div className="text-xs text-blue-600 mt-1">
+                {(selectedFile.size / 1024).toFixed(1)} KB
+              </div>
+            </div>
+          )}
+
+          <div className="text-xs text-gray-500">
+            <strong>Expected format:</strong> Excel file with columns for host names, contact names, roles, phone numbers, and email addresses.
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-2 pt-4">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleImport} 
+            disabled={!selectedFile || isLoading}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            {isLoading ? "Importing..." : "Import Contacts"}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

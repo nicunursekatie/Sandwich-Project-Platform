@@ -1439,6 +1439,154 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Import host and driver contacts from Excel/CSV
+  app.post('/api/import-contacts', importUpload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const fileExtension = req.file.originalname.toLowerCase().split('.').pop();
+      let records: any[] = [];
+
+      if (fileExtension === 'csv') {
+        // Parse CSV
+        const csvContent = req.file.buffer.toString('utf-8');
+        const { parse } = await import('csv-parse/sync');
+        records = parse(csvContent, {
+          columns: true,
+          skip_empty_lines: true,
+          trim: true
+        });
+      } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
+        // Parse Excel
+        const XLSX = await import('xlsx');
+        const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        records = XLSX.utils.sheet_to_json(sheet);
+      } else {
+        return res.status(400).json({ message: "Unsupported file format" });
+      }
+
+      let hostsCreated = 0;
+      let contactsImported = 0;
+      let skipped = 0;
+      const errors: string[] = [];
+
+      // Process each record from the Excel file
+      for (const record of records) {
+        try {
+          // Normalize field names (case-insensitive)
+          const normalizedRecord: any = {};
+          Object.keys(record).forEach(key => {
+            normalizedRecord[key.toLowerCase().trim()] = record[key];
+          });
+
+          // Extract host/location information
+          const hostName = normalizedRecord.location || 
+                          normalizedRecord.host || 
+                          normalizedRecord['host location'] ||
+                          normalizedRecord.site ||
+                          normalizedRecord.venue;
+
+          // Extract contact information
+          const contactName = normalizedRecord.name || 
+                             normalizedRecord['contact name'] ||
+                             normalizedRecord['driver name'] ||
+                             normalizedRecord['volunteer name'];
+
+          const phone = normalizedRecord.phone || 
+                       normalizedRecord['phone number'] ||
+                       normalizedRecord.mobile ||
+                       normalizedRecord.cell;
+
+          const email = normalizedRecord.email || 
+                       normalizedRecord['email address'] ||
+                       null;
+
+          const role = normalizedRecord.role || 
+                      normalizedRecord.position ||
+                      normalizedRecord.type ||
+                      'Contact';
+
+          // Skip if missing essential data
+          if (!hostName || !contactName || !phone) {
+            skipped++;
+            continue;
+          }
+
+          // Find or create host
+          const existingHosts = await storage.getAllHosts();
+          let host = existingHosts.find(h => 
+            h.name.toLowerCase().trim() === String(hostName).toLowerCase().trim()
+          );
+
+          if (!host) {
+            // Create new host
+            host = await storage.createHost({
+              name: String(hostName).trim(),
+              address: normalizedRecord.address || null,
+              status: 'active',
+              notes: null
+            });
+            hostsCreated++;
+          }
+
+          // Clean phone number
+          const cleanPhone = String(phone).trim().replace(/\D/g, '');
+          if (cleanPhone.length < 10) {
+            errors.push(`Skipped ${contactName}: Invalid phone number`);
+            skipped++;
+            continue;
+          }
+
+          // Check for duplicate contact
+          const existingContacts = await storage.getHostContacts(host.id);
+          const isDuplicate = existingContacts.some(c => 
+            c.phone.replace(/\D/g, '') === cleanPhone
+          );
+
+          if (isDuplicate) {
+            errors.push(`Skipped ${contactName}: Duplicate phone number`);
+            skipped++;
+            continue;
+          }
+
+          // Create host contact
+          await storage.createHostContact({
+            hostId: host.id,
+            name: String(contactName).trim(),
+            role: String(role).trim(),
+            phone: cleanPhone,
+            email: email ? String(email).trim() : null,
+            isPrimary: false, // Can be updated manually later
+            notes: normalizedRecord.notes || null
+          });
+
+          contactsImported++;
+
+        } catch (error) {
+          errors.push(`Error processing record: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          skipped++;
+        }
+      }
+
+      res.json({
+        message: "Import completed",
+        imported: contactsImported,
+        hosts: hostsCreated,
+        skipped,
+        total: records.length,
+        errors: errors.slice(0, 10) // Limit error messages
+      });
+
+    } catch (error) {
+      logger.error("Failed to import contacts", error);
+      res.status(500).json({ message: "Failed to process import file" });
+    }
+  });
+
   // Static file serving for documents
   app.use('/documents', express.static('public/documents'));
 
