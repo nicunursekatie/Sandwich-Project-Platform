@@ -5,6 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import BulkDataManager from "@/components/bulk-data-manager";
 
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -742,7 +744,14 @@ export default function SandwichCollectionLog() {
         </div>
       </div>
       
-      <div className="px-6 py-4">
+      <Tabs defaultValue="collections" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mx-6 mt-4">
+          <TabsTrigger value="collections">Collection Log</TabsTrigger>
+          <TabsTrigger value="data-management">Data Management</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="collections" className="mt-0">
+          <div className="px-6 py-4">
             <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-slate-500">{collections.length} total entries</p>
           <div className="flex items-center space-x-2">
