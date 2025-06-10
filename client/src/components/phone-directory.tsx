@@ -72,6 +72,8 @@ export default function PhoneDirectory() {
   const [isAddingHost, setIsAddingHost] = useState(false);
   const [isAddingRecipient, setIsAddingRecipient] = useState(false);
   const [isAddingContact, setIsAddingContact] = useState(false);
+  const [isAddingHostContact, setIsAddingHostContact] = useState(false);
+  const [selectedHostForContact, setSelectedHostForContact] = useState<Host | null>(null);
   const [editingHost, setEditingHost] = useState<Host | null>(null);
   const [editingRecipient, setEditingRecipient] = useState<Recipient | null>(null);
   const [editingContact, setEditingContact] = useState<GeneralContact | null>(null);
@@ -166,6 +168,19 @@ export default function PhoneDirectory() {
     },
     onError: () => {
       toast({ title: "Failed to update recipient", variant: "destructive" });
+    },
+  });
+
+  const createHostContactMutation = useMutation({
+    mutationFn: (data: z.infer<typeof insertHostContactSchema>) => apiRequest("/api/host-contacts", "POST", data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
+      setIsAddingHostContact(false);
+      setSelectedHostForContact(null);
+      toast({ title: "Contact added successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to add contact", variant: "destructive" });
     },
   });
 
@@ -363,6 +378,18 @@ export default function PhoneDirectory() {
             )}
           </div>
           <div className="flex flex-col gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSelectedHostForContact(host);
+                setIsAddingHostContact(true);
+              }}
+              className="flex items-center gap-1"
+            >
+              <Plus className="w-3 h-3" />
+              Add Contact
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -875,6 +902,29 @@ export default function PhoneDirectory() {
               onSubmit={(data) => updateContactMutation.mutate({ id: editingContact.id, data })}
               onCancel={() => setEditingContact(null)}
               isLoading={updateContactMutation.isPending}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Host Contact Dialog */}
+      <Dialog open={isAddingHostContact} onOpenChange={(open) => !open && setIsAddingHostContact(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Contact to {selectedHostForContact?.name}</DialogTitle>
+            <DialogDescription>
+              Add a new contact person for this host location
+            </DialogDescription>
+          </DialogHeader>
+          {selectedHostForContact && (
+            <HostContactForm
+              hostId={selectedHostForContact.id}
+              onSubmit={(data) => createHostContactMutation.mutate(data)}
+              onCancel={() => {
+                setIsAddingHostContact(false);
+                setSelectedHostForContact(null);
+              }}
+              isLoading={createHostContactMutation.isPending}
             />
           )}
         </DialogContent>
