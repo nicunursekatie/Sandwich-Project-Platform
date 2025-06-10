@@ -20,6 +20,8 @@ export interface IStorage {
   // Users (required for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  getAllUsers(): Promise<User[]>;
+  updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
   
   // Legacy user methods (for backwards compatibility)
   getUserByUsername(username: string): Promise<User | undefined>;

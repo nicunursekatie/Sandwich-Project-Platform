@@ -95,6 +95,20 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async getAllUsers() {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getAllUsers(),
+      () => this.fallbackStorage.getAllUsers()
+    );
+  }
+
+  async updateUser(id: string, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateUser(id, updates),
+      () => this.fallbackStorage.updateUser(id, updates)
+    );
+  }
+
   // Legacy user methods (for backwards compatibility)
   async getUserByUsername(username: string) {
     return this.executeWithFallback(
