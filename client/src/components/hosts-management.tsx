@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Users, Plus, Edit, Trash2, Phone, Mail, User, AlertCircle } from "lucide-react";
+import { Users, Plus, Edit, Trash2, Phone, Mail, User, AlertCircle, MapPin, Star, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,11 +9,28 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 import type { Host, InsertHost } from "@shared/schema";
+
+interface HostContact {
+  id: number;
+  hostId: number;
+  name: string;
+  role: string;
+  phone: string;
+  email: string | null;
+  isPrimary: boolean;
+  notes: string | null;
+}
+
+interface HostWithContacts extends Host {
+  contacts: HostContact[];
+}
 
 export default function HostsManagement() {
   const { toast } = useToast();
@@ -22,32 +39,33 @@ export default function HostsManagement() {
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingHost, setEditingHost] = useState<Host | null>(null);
+  const [selectedHost, setSelectedHost] = useState<HostWithContacts | null>(null);
+  const [isAddingContact, setIsAddingContact] = useState(false);
+  const [editingContact, setEditingContact] = useState<HostContact | null>(null);
   const [newHost, setNewHost] = useState<InsertHost>({
     name: "",
-    email: "",
-    phone: "",
+    address: "",
     status: "active",
     notes: ""
   });
+  const [newContact, setNewContact] = useState({
+    name: "",
+    role: "",
+    phone: "",
+    email: "",
+    isPrimary: false,
+    notes: ""
+  });
 
-  const { data: hosts = [], isLoading } = useQuery<Host[]>({
-    queryKey: ['/api/hosts'],
-    queryFn: async () => {
-      const response = await fetch('/api/hosts');
-      if (!response.ok) throw new Error('Failed to fetch hosts');
-      return response.json();
-    }
+  const { data: hosts = [], isLoading } = useQuery<HostWithContacts[]>({
+    queryKey: ['/api/hosts-with-contacts'],
   });
 
   const createHostMutation = useMutation({
     mutationFn: async (data: InsertHost) => {
-      console.log('Creating host with data:', data);
-      const response = await fetch('/api/hosts', {
+      return await apiRequest('/api/hosts', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        body: data,
       });
       
       if (!response.ok) {
@@ -292,18 +310,44 @@ export default function HostsManagement() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
-                {host.email && (
+                {host.address && (
                   <div className="flex items-center text-sm text-slate-600">
-                    <Mail className="w-4 h-4 mr-2" />
-                    <span className="truncate">{host.email}</span>
+                    <MapPin className="w-4 h-4 mr-2" />
+                    <span className="truncate">{host.address}</span>
                   </div>
                 )}
-                {host.phone && (
-                  <div className="flex items-center text-sm text-slate-600">
-                    <Phone className="w-4 h-4 mr-2" />
-                    <span>{host.phone}</span>
+                
+                {/* Display contacts */}
+                {host.contacts && host.contacts.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-xs font-medium text-slate-700">Contacts:</div>
+                    {host.contacts.slice(0, 2).map((contact) => (
+                      <div key={contact.id} className="space-y-1 border-l-2 border-blue-200 pl-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-slate-700">{contact.name}</span>
+                          {contact.isPrimary && <Star className="w-3 h-3 text-yellow-500 fill-current" />}
+                        </div>
+                        <div className="text-xs text-slate-600">{contact.role}</div>
+                        <div className="flex items-center text-xs text-slate-600">
+                          <Phone className="w-3 h-3 mr-1" />
+                          {contact.phone}
+                        </div>
+                        {contact.email && (
+                          <div className="flex items-center text-xs text-slate-600">
+                            <Mail className="w-3 h-3 mr-1" />
+                            {contact.email}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    {host.contacts.length > 2 && (
+                      <div className="text-xs text-slate-500">
+                        +{host.contacts.length - 2} more contacts
+                      </div>
+                    )}
                   </div>
                 )}
+                
                 {host.notes && (
                   <div className="flex items-start text-sm text-slate-600">
                     <AlertCircle className="w-4 h-4 mr-2 mt-0.5" />
@@ -311,7 +355,16 @@ export default function HostsManagement() {
                   </div>
                 )}
                 
-                <div className="flex justify-end space-x-2 pt-2">
+                <div className="flex justify-between items-center space-x-2 pt-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setSelectedHost(host)}
+                  >
+                    <Users className="w-3 h-3 mr-1" />
+                    View Details
+                  </Button>
+                  <div className="flex space-x-1">
                   <Dialog open={editingHost?.id === host.id} onOpenChange={(open) => !open && setEditingHost(null)}>
                     <DialogTrigger asChild>
                       <Button 
@@ -405,6 +458,7 @@ export default function HostsManagement() {
                     <Trash2 className="w-3 h-3 mr-1" />
                     Delete
                   </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
