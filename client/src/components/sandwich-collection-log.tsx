@@ -1,15 +1,17 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X, ArrowUp, ArrowDown, Download, Plus } from "lucide-react";
+import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X, ArrowUp, ArrowDown, Download, Plus, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useState, useRef } from "react";
 import * as React from "react";
 import type { SandwichCollection, Host } from "@shared/schema";
+import BulkDataManager from "@/components/bulk-data-manager";
 
 interface ImportResult {
   totalRecords: number;
@@ -732,11 +734,24 @@ export default function SandwichCollectionLog() {
           <div>
             <h2 className="text-lg font-semibold text-slate-900 flex items-center">
               <Sandwich className="text-amber-500 mr-2 w-5 h-5" />
-              Collection Log
+              Collections
             </h2>
-            <p className="text-sm text-slate-500 mt-1">{collections.length} total entries</p>
+            <p className="text-sm text-slate-500 mt-1">Manage collection data and bulk operations</p>
           </div>
-          <div className="flex items-center space-x-2">
+        </div>
+      </div>
+      
+      <Tabs defaultValue="collections" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mx-6 mt-4">
+          <TabsTrigger value="collections">Collection Log</TabsTrigger>
+          <TabsTrigger value="data-management">Data Management</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="collections" className="mt-0">
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-sm text-slate-500">{collections.length} total entries</p>
+              <div className="flex items-center space-x-2">
             <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
               <DialogTrigger asChild>
                 <Button
@@ -1511,6 +1526,17 @@ export default function SandwichCollectionLog() {
           </div>
         </DialogContent>
       </Dialog>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="data-management" className="mt-0">
+          <div className="px-6 py-4">
+            <BulkDataManager />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
