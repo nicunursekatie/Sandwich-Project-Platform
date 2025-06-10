@@ -80,14 +80,22 @@ class StorageWrapper implements IStorage {
     }
   }
 
-  // User methods
-  async getUser(id: number) {
+  // User methods (required for Replit Auth)
+  async getUser(id: string) {
     return this.executeWithFallback(
       () => this.primaryStorage.getUser(id),
       () => this.fallbackStorage.getUser(id)
     );
   }
 
+  async upsertUser(user: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.upsertUser(user),
+      () => this.fallbackStorage.upsertUser(user)
+    );
+  }
+
+  // Legacy user methods (for backwards compatibility)
   async getUserByUsername(username: string) {
     return this.executeWithFallback(
       () => this.primaryStorage.getUserByUsername(username),

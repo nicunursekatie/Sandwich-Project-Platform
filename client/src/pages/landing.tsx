@@ -1,123 +1,75 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sandwich, Users, Calendar, MessageCircle, BarChart3, Shield } from "lucide-react";
+import { Heart, Users, Calendar, MessageSquare } from "lucide-react";
 
 export default function Landing() {
+  const handleLogin = () => {
+    window.location.href = "/api/login";
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <Sandwich className="w-12 h-12 text-amber-600" />
-            <h1 className="text-4xl font-bold text-gray-900">The Sandwich Project</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
+      <div className="max-w-4xl w-full space-y-8">
+        {/* Hero Section */}
+        <div className="text-center space-y-6">
+          <div className="flex justify-center">
+            <Heart className="h-16 w-16 text-red-500" />
           </div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            A comprehensive team communication and collaboration platform for managing projects, 
-            scheduling meetings, and coordinating community outreach efforts.
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+            The Sandwich Project
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            A comprehensive team collaboration platform empowering nonprofits with intelligent project management tools and seamless communication capabilities.
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto">
-          <Card>
+        <div className="grid md:grid-cols-3 gap-6">
+          <Card className="text-center">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-blue-600" />
-                Project Management
-              </CardTitle>
+              <Users className="h-12 w-12 text-blue-500 mx-auto mb-4" />
+              <CardTitle>Team Management</CardTitle>
               <CardDescription>
-                Track and assign projects, monitor progress, and coordinate team efforts
+                Manage hosts, volunteers, and drivers with comprehensive contact and role management
               </CardDescription>
             </CardHeader>
           </Card>
 
-          <Card>
+          <Card className="text-center">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MessageCircle className="w-5 h-5 text-green-600" />
-                Committee Communication
-              </CardTitle>
+              <Calendar className="h-12 w-12 text-green-500 mx-auto mb-4" />
+              <CardTitle>Project Coordination</CardTitle>
               <CardDescription>
-                Dedicated chat channels for different committees and working groups
+                Track sandwich collections, coordinate meetings, and manage project workflows
               </CardDescription>
             </CardHeader>
           </Card>
 
-          <Card>
+          <Card className="text-center">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-purple-600" />
-                Meeting Coordination
-              </CardTitle>
+              <MessageSquare className="h-12 w-12 text-purple-500 mx-auto mb-4" />
+              <CardTitle>Communication Hub</CardTitle>
               <CardDescription>
-                Schedule meetings, manage agendas, and track action items
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-orange-600" />
-                Activity Tracking
-              </CardTitle>
-              <CardDescription>
-                Monitor weekly reports, collection logs, and community impact metrics
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Sandwich className="w-5 h-5 text-amber-600" />
-                Collection Management
-              </CardTitle>
-              <CardDescription>
-                Track sandwich collections, manage volunteers, and coordinate distribution
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-red-600" />
-                Secure Access
-              </CardTitle>
-              <CardDescription>
-                Role-based access control and secure document management
+                Real-time messaging, committee discussions, and comprehensive reporting tools
               </CardDescription>
             </CardHeader>
           </Card>
         </div>
 
         {/* Login Section */}
-        <div className="text-center">
-          <Card className="max-w-md mx-auto">
-            <CardHeader>
-              <CardTitle>Team Member Access</CardTitle>
-              <CardDescription>
-                Login to access the team communication platform
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button 
-                onClick={() => window.location.href = '/api/login'}
-                className="w-full bg-amber-600 hover:bg-amber-700 text-white"
-                size="lg"
-              >
-                Login with Replit
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center mt-12 text-gray-500">
-          <p>© 2024 The Sandwich Project. A 501(c)(3) non-profit organization.</p>
-        </div>
+        <Card className="max-w-md mx-auto">
+          <CardHeader className="text-center">
+            <CardTitle>Welcome to TSP</CardTitle>
+            <CardDescription>
+              Sign in with your account to access the platform
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <Button onClick={handleLogin} size="lg" className="w-full">
+              Sign In with Replit
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
