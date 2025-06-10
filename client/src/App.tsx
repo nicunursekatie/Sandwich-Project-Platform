@@ -8,6 +8,7 @@ import Dashboard from "@/pages/dashboard";
 import Meetings from "@/pages/meetings";
 import Development from "@/pages/development";
 import PhoneDirectoryPage from "@/pages/phone-directory";
+import RoleDemo from "@/pages/role-demo";
 import Landing from "@/pages/landing";
 import NotFound from "@/pages/not-found";
 
@@ -35,6 +36,7 @@ function Router() {
           <Route path="/meetings" component={Meetings} />
           <Route path="/development" component={Development} />
           <Route path="/phone-directory" component={PhoneDirectoryPage} />
+          <Route path="/role-demo" component={RoleDemo} />
         </>
       )}
       <Route component={NotFound} />
