@@ -743,7 +743,7 @@ export default function SandwichCollectionLog() {
       </div>
       
       <div className="px-6 py-4">
-        <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-slate-500">{collections.length} total entries</p>
           <div className="flex items-center space-x-2">
             <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
@@ -1520,6 +1520,15 @@ export default function SandwichCollectionLog() {
           </div>
         </DialogContent>
       </Dialog>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="data-management" className="mt-0">
+          <div className="px-6 py-4">
+            <BulkDataManager />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
