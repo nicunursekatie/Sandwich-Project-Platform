@@ -1037,7 +1037,11 @@ export default function PhoneDirectory() {
               initialData={editingContact}
               onSubmit={(data) => updateContactMutation.mutate({ id: editingContact.id, data: {
                 ...data,
-                organization: data.organization || undefined
+                organization: data.organization || undefined,
+                role: data.role || undefined,
+                address: data.address || undefined,
+                notes: data.notes || undefined,
+                email: data.email || undefined
               } })}
               onCancel={() => setEditingContact(null)}
               isLoading={updateContactMutation.isPending}
@@ -1393,7 +1397,7 @@ const RecipientForm = ({
             <FormItem>
               <FormLabel>Contact Person</FormLabel>
               <FormControl>
-                <Input placeholder="Enter contact person name" {...field} />
+                <Input placeholder="Enter contact person name" {...field} value={field.value || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -1421,7 +1425,7 @@ const RecipientForm = ({
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="contact@organization.org" {...field} />
+                <Input type="email" placeholder="contact@organization.org" {...field} value={field.value || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -1435,7 +1439,7 @@ const RecipientForm = ({
             <FormItem>
               <FormLabel>Address</FormLabel>
               <FormControl>
-                <Textarea placeholder="Enter full address" {...field} />
+                <Textarea placeholder="Enter full address" {...field} value={field.value || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -1471,7 +1475,7 @@ const RecipientForm = ({
             <FormItem>
               <FormLabel>Delivery Preferences</FormLabel>
               <FormControl>
-                <Textarea placeholder="Special delivery instructions or preferences" {...field} />
+                <Textarea placeholder="Special delivery instructions or preferences" {...field} value={field.value || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -1608,7 +1612,7 @@ const HostContactForm = ({
             <FormItem>
               <FormLabel>Email (Optional)</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="email@example.com" {...field} />
+                <Input type="email" placeholder="email@example.com" {...field} value={field.value || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -1622,7 +1626,7 @@ const HostContactForm = ({
             <FormItem>
               <FormLabel>Notes (Optional)</FormLabel>
               <FormControl>
-                <Textarea placeholder="Additional notes about this contact" {...field} />
+                <Textarea placeholder="Additional notes about this contact" {...field} value={field.value || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -1706,7 +1710,7 @@ const ContactForm = ({
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="Enter email address" {...field} />
+                <Input type="email" placeholder="Enter email address" {...field} value={field.value || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -1734,7 +1738,7 @@ const ContactForm = ({
             <FormItem>
               <FormLabel>Role</FormLabel>
               <FormControl>
-                <Input placeholder="Enter role or title" {...field} />
+                <Input placeholder="Enter role or title" {...field} value={field.value || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -1748,7 +1752,7 @@ const ContactForm = ({
             <FormItem>
               <FormLabel>Address</FormLabel>
               <FormControl>
-                <Textarea placeholder="Enter address" {...field} />
+                <Textarea placeholder="Enter address" {...field} value={field.value || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -1784,7 +1788,7 @@ const ContactForm = ({
             <FormItem>
               <FormLabel>Notes</FormLabel>
               <FormControl>
-                <Textarea placeholder="Additional notes or information" {...field} />
+                <Textarea placeholder="Additional notes or information" {...field} value={field.value || ""} />
               </FormControl>
               <FormMessage />
             </FormItem>
