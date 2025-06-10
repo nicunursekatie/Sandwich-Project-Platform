@@ -1,6 +1,6 @@
 import { 
   users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts,
-  type User, type InsertUser, 
+  type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type Message, type InsertMessage,
   type WeeklyReport, type InsertWeeklyReport,
@@ -17,8 +17,11 @@ import {
 } from "@shared/schema";
 
 export interface IStorage {
-  // Users
-  getUser(id: number): Promise<User | undefined>;
+  // Users (required for Replit Auth)
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
+  
+  // Legacy user methods (for backwards compatibility)
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   
