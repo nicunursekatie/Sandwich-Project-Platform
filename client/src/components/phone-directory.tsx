@@ -734,7 +734,7 @@ export default function PhoneDirectory() {
               className="flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
-              Add Host
+              Add Location
             </Button>
           )}
           {activeTab === "recipients" && (
@@ -968,7 +968,7 @@ export default function PhoneDirectory() {
       <Dialog open={isAddingHost} onOpenChange={setIsAddingHost}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New Host Location</DialogTitle>
+            <DialogTitle>Add New Location</DialogTitle>
             <DialogDescription>
               Add a new host location for sandwich collection
             </DialogDescription>
