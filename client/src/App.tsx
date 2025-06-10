@@ -26,23 +26,18 @@ function Router() {
     );
   }
 
+  // If not authenticated, always show Landing page
+  if (!isAuthenticated) {
+    return <Landing />;
+  }
+
   return (
     <Switch>
-      {!isAuthenticated ? (
-        <>
-          <Route path="/" component={Landing} />
-          <Route path="/role-demo" component={RoleDemo} />
-          <Route component={() => <Landing />} />
-        </>
-      ) : (
-        <>
-          <Route path="/" component={Dashboard} />
-          <Route path="/meetings" component={Meetings} />
-          <Route path="/development" component={Development} />
-          <Route path="/phone-directory" component={PhoneDirectoryPage} />
-          <Route path="/role-demo" component={RoleDemo} />
-        </>
-      )}
+      <Route path="/" component={Dashboard} />
+      <Route path="/meetings" component={Meetings} />
+      <Route path="/development" component={Development} />
+      <Route path="/phone-directory" component={PhoneDirectoryPage} />
+      <Route path="/role-demo" component={RoleDemo} />
       <Route component={NotFound} />
     </Switch>
   );
