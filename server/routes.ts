@@ -1245,6 +1245,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.patch("/api/hosts/:id", async (req, res) => {
+    console.log(`🔥 PATCH route hit for host ${req.params.id}`);
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
@@ -1260,8 +1261,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const host = await storage.updateHost(id, cleanUpdates);
       if (!host) {
+        console.log('Host not found in storage for ID:', id);
         return res.status(404).json({ error: "Host not found" });
       }
+      console.log('Host updated successfully:', host);
       res.json(host);
     } catch (error) {
       logger.error("Failed to update host", error);
