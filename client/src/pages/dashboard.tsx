@@ -162,6 +162,16 @@ export default function Dashboard() {
         return <DriversManagement />;
       case "directory":
         return <PhoneDirectory />;
+      case "role-demo":
+        return (
+          <div className="p-6">
+            <iframe 
+              src="/role-demo" 
+              className="w-full h-screen border-0 rounded-lg"
+              title="Role Demo"
+            />
+          </div>
+        );
       case "bulk-data":
         return <BulkDataManager />;
       case "development":
