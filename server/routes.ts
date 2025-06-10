@@ -1464,7 +1464,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-        records = XLSX.utils.sheet_to_json(sheet);
+        const rawData = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+        
+        // Handle Excel files where headers are in the first data row
+        if (rawData.length > 0) {
+          const firstRow = rawData[0];
+          const hasGenericHeaders = Object.keys(firstRow).some(key => key.startsWith('__EMPTY'));
+          
+          if (hasGenericHeaders && rawData.length > 1) {
+            // Use the first row as headers and map the rest of the data
+            const headers = Object.values(firstRow) as string[];
+            records = rawData.slice(1).map(row => {
+              const mappedRow: any = {};
+              const values = Object.values(row) as string[];
+              headers.forEach((header, index) => {
+                if (header && header.trim()) {
+                  mappedRow[header.trim()] = values[index] || '';
+                }
+              });
+              return mappedRow;
+            });
+          } else {
+            records = rawData;
+          }
+        }
       } else {
         return res.status(400).json({ message: "Unsupported file format" });
       }
@@ -1483,15 +1506,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
             normalizedRecord[key.toLowerCase().trim()] = record[key];
           });
 
-          // Extract host/location information
-          const hostName = normalizedRecord.location || 
+          // Extract host/location information from your Excel structure
+          const hostName = normalizedRecord.area || 
+                          normalizedRecord.location || 
                           normalizedRecord.host || 
                           normalizedRecord['host location'] ||
                           normalizedRecord.site ||
                           normalizedRecord.venue;
 
-          // Extract contact information
-          const contactName = normalizedRecord.name || 
+          // Extract contact information - combine first and last name
+          const firstName = normalizedRecord['first name'] || normalizedRecord.firstname || '';
+          const lastName = normalizedRecord['last name'] || normalizedRecord.lastname || '';
+          const contactName = `${firstName} ${lastName}`.trim() || 
+                             normalizedRecord.name || 
                              normalizedRecord['contact name'] ||
                              normalizedRecord['driver name'] ||
                              normalizedRecord['volunteer name'];
@@ -1508,7 +1535,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const role = normalizedRecord.role || 
                       normalizedRecord.position ||
                       normalizedRecord.type ||
-                      'Contact';
+                      'Host/Driver';
 
           // Skip if missing essential data
           if (!hostName || !contactName || !phone) {
