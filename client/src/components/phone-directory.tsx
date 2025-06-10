@@ -167,6 +167,18 @@ export default function PhoneDirectory() {
     },
   });
 
+  const deleteHostMutation = useMutation({
+    mutationFn: (id: number) => apiRequest("DELETE", `/api/hosts/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/host-contacts"] });
+      toast({ title: "Host location deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete host location", variant: "destructive" });
+    },
+  });
+
   const createRecipientMutation = useMutation({
     mutationFn: (data: z.infer<typeof insertRecipientSchema>) => apiRequest("POST", `/api/recipients`, data),
     onSuccess: () => {
@@ -518,6 +530,20 @@ export default function PhoneDirectory() {
             >
               <Edit className="w-3 h-3" />
               Edit
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (confirm(`Are you sure you want to delete the host location "${host.name}"? This will also delete all associated contacts.`)) {
+                  deleteHostMutation.mutate(host.id);
+                }
+              }}
+              className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+              disabled={deleteHostMutation.isPending}
+            >
+              <Trash2 className="w-3 h-3" />
+              Delete
             </Button>
           </div>
         </div>
