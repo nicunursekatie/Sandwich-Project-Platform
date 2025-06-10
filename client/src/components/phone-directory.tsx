@@ -16,7 +16,7 @@ import { z } from "zod";
 import { insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Phone, Mail, MapPin, Search, Download, User, Users, Star, Building2, Plus, Edit, Trash2 } from "lucide-react";
+import { Phone, Mail, MapPin, Search, Download, User, Users, Star, Building2, Plus, Edit, Trash2, Upload, FileSpreadsheet } from "lucide-react";
 
 interface Host {
   id: number;
@@ -78,6 +78,8 @@ export default function PhoneDirectory() {
   const [editingHost, setEditingHost] = useState<Host | null>(null);
   const [editingRecipient, setEditingRecipient] = useState<Recipient | null>(null);
   const [editingContact, setEditingContact] = useState<GeneralContact | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
   const { toast } = useToast();
 
   // Fetch hosts with their contacts
@@ -191,6 +193,30 @@ export default function PhoneDirectory() {
     },
     onError: () => {
       toast({ title: "Failed to add contact", variant: "destructive" });
+    },
+  });
+
+  const importContactsMutation = useMutation({
+    mutationFn: (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      return fetch('/api/import-contacts', {
+        method: 'POST',
+        body: formData,
+      }).then(res => res.json());
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/contacts"] });
+      setImportDialogOpen(false);
+      toast({ 
+        title: "Import completed successfully", 
+        description: `Imported ${data.imported} contacts and ${data.hosts} host locations`
+      });
+    },
+    onError: () => {
+      toast({ title: "Failed to import contacts", variant: "destructive" });
     },
   });
 
@@ -627,6 +653,15 @@ export default function PhoneDirectory() {
               />
             </div>
             <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setImportDialogOpen(true)}
+                className="flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+              >
+                <Upload className="w-4 h-4" />
+                Import Excel
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
