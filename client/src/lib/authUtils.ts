@@ -4,48 +4,39 @@ export function isUnauthorizedError(error: Error): boolean {
 
 export const USER_ROLES = {
   ADMIN: 'admin',
-  COORDINATOR: 'coordinator', 
+  COMMITTEE_MEMBER: 'committee_member',
+  HOST: 'host',
+  DRIVER: 'driver',
   VOLUNTEER: 'volunteer',
+  RECIPIENT: 'recipient',
   VIEWER: 'viewer'
 } as const;
 
 export const PERMISSIONS = {
-  // Project management
-  CREATE_PROJECTS: 'create_projects',
-  EDIT_PROJECTS: 'edit_projects',
-  DELETE_PROJECTS: 'delete_projects',
+  // Core access
+  VIEW_PHONE_DIRECTORY: 'view_phone_directory',
+  
+  // Editing permissions (admin only)
+  EDIT_DATA: 'edit_data',
+  DELETE_DATA: 'delete_data',
+  
+  // Chat access
+  GENERAL_CHAT: 'general_chat',
+  COMMITTEE_CHAT: 'committee_chat',
+  HOST_CHAT: 'host_chat',
+  DRIVER_CHAT: 'driver_chat',
+  RECIPIENT_CHAT: 'recipient_chat',
+  
+  // Toolkit access (public but tracked)
+  TOOLKIT_ACCESS: 'toolkit_access',
+  
+  // Data viewing (most users)
+  VIEW_COLLECTIONS: 'view_collections',
+  VIEW_REPORTS: 'view_reports',
   VIEW_PROJECTS: 'view_projects',
   
-  // Host management
-  MANAGE_HOSTS: 'manage_hosts',
-  VIEW_HOSTS: 'view_hosts',
-  
-  // Sandwich collections
-  CREATE_COLLECTIONS: 'create_collections',
-  EDIT_COLLECTIONS: 'edit_collections',
-  DELETE_COLLECTIONS: 'delete_collections',
-  VIEW_COLLECTIONS: 'view_collections',
-  
-  // Driver management
-  MANAGE_DRIVERS: 'manage_drivers',
-  VIEW_DRIVERS: 'view_drivers',
-  
-  // Messages and communication
-  CREATE_MESSAGES: 'create_messages',
-  DELETE_MESSAGES: 'delete_messages',
-  VIEW_MESSAGES: 'view_messages',
-  
-  // Reports and analytics
-  VIEW_REPORTS: 'view_reports',
-  EXPORT_DATA: 'export_data',
-  
   // User management
-  MANAGE_USERS: 'manage_users',
-  VIEW_USERS: 'view_users',
-  
-  // Meetings
-  MANAGE_MEETINGS: 'manage_meetings',
-  VIEW_MEETINGS: 'view_meetings'
+  MANAGE_USERS: 'manage_users'
 } as const;
 
 export function hasRole(user: any, requiredRoles: string[]): boolean {
@@ -84,45 +75,60 @@ export function getDefaultPermissionsForRole(role: string): string[] {
     case USER_ROLES.ADMIN:
       return Object.values(PERMISSIONS);
     
-    case USER_ROLES.COORDINATOR:
+    case USER_ROLES.COMMITTEE_MEMBER:
       return [
-        PERMISSIONS.VIEW_PROJECTS,
-        PERMISSIONS.EDIT_PROJECTS,
-        PERMISSIONS.CREATE_PROJECTS,
-        PERMISSIONS.VIEW_HOSTS,
-        PERMISSIONS.MANAGE_HOSTS,
+        PERMISSIONS.VIEW_PHONE_DIRECTORY,
+        PERMISSIONS.GENERAL_CHAT,
+        PERMISSIONS.COMMITTEE_CHAT,
+        PERMISSIONS.TOOLKIT_ACCESS,
         PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.CREATE_COLLECTIONS,
-        PERMISSIONS.EDIT_COLLECTIONS,
-        PERMISSIONS.VIEW_DRIVERS,
-        PERMISSIONS.MANAGE_DRIVERS,
-        PERMISSIONS.VIEW_MESSAGES,
-        PERMISSIONS.CREATE_MESSAGES,
         PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_MEETINGS,
-        PERMISSIONS.MANAGE_MEETINGS
+        PERMISSIONS.VIEW_PROJECTS
+      ];
+    
+    case USER_ROLES.HOST:
+      return [
+        PERMISSIONS.VIEW_PHONE_DIRECTORY,
+        PERMISSIONS.GENERAL_CHAT,
+        PERMISSIONS.HOST_CHAT,
+        PERMISSIONS.TOOLKIT_ACCESS,
+        PERMISSIONS.VIEW_COLLECTIONS,
+        PERMISSIONS.VIEW_REPORTS,
+        PERMISSIONS.VIEW_PROJECTS
+      ];
+    
+    case USER_ROLES.DRIVER:
+      return [
+        PERMISSIONS.VIEW_PHONE_DIRECTORY,
+        PERMISSIONS.GENERAL_CHAT,
+        PERMISSIONS.DRIVER_CHAT,
+        PERMISSIONS.TOOLKIT_ACCESS,
+        PERMISSIONS.VIEW_COLLECTIONS,
+        PERMISSIONS.VIEW_REPORTS,
+        PERMISSIONS.VIEW_PROJECTS
       ];
     
     case USER_ROLES.VOLUNTEER:
       return [
-        PERMISSIONS.VIEW_PROJECTS,
-        PERMISSIONS.VIEW_HOSTS,
+        PERMISSIONS.GENERAL_CHAT,
+        PERMISSIONS.TOOLKIT_ACCESS,
         PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.CREATE_COLLECTIONS,
-        PERMISSIONS.VIEW_DRIVERS,
-        PERMISSIONS.VIEW_MESSAGES,
-        PERMISSIONS.CREATE_MESSAGES,
-        PERMISSIONS.VIEW_MEETINGS
+        PERMISSIONS.VIEW_REPORTS,
+        PERMISSIONS.VIEW_PROJECTS
+      ];
+    
+    case USER_ROLES.RECIPIENT:
+      return [
+        PERMISSIONS.GENERAL_CHAT,
+        PERMISSIONS.RECIPIENT_CHAT,
+        PERMISSIONS.VIEW_COLLECTIONS
       ];
     
     case USER_ROLES.VIEWER:
       return [
-        PERMISSIONS.VIEW_PROJECTS,
-        PERMISSIONS.VIEW_HOSTS,
         PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.VIEW_DRIVERS,
-        PERMISSIONS.VIEW_MESSAGES,
-        PERMISSIONS.VIEW_MEETINGS
+        PERMISSIONS.VIEW_REPORTS,
+        PERMISSIONS.VIEW_PROJECTS
       ];
     
     default:

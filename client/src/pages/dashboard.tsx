@@ -15,11 +15,16 @@ import PhoneDirectory from "@/components/phone-directory";
 import BulkDataManager from "@/components/bulk-data-manager";
 import Development from "@/pages/development";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission } from "@/lib/authUtils";
+import { PERMISSIONS } from "@/lib/authUtils";
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
+  const { user } = useAuth();
 
-  const sidebarItems = [
+  // Filter sidebar items based on user permissions
+  const allSidebarItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "projects", label: "Projects", icon: ListTodo },
     { id: "messages", label: "Messages", icon: MessageCircle },
@@ -29,10 +34,14 @@ export default function Dashboard() {
     { id: "hosts", label: "Hosts", icon: Building2 },
     { id: "recipients", label: "Recipients", icon: Users },
     { id: "drivers", label: "Drivers", icon: Car },
-    { id: "directory", label: "Phone Directory", icon: Phone },
+    { id: "directory", label: "Phone Directory", icon: Phone, permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
     { id: "bulk-data", label: "Bulk Data", icon: BarChart3 },
     { id: "development", label: "Development", icon: FolderOpen },
   ];
+
+  const sidebarItems = allSidebarItems.filter(item => 
+    !item.permission || hasPermission(user, item.permission)
+  );
 
   const renderContent = () => {
     switch (activeSection) {
