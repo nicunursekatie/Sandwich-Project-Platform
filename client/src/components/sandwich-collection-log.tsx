@@ -1511,34 +1511,6 @@ export default function SandwichCollectionLog() {
           </div>
         </DialogContent>
       </Dialog>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Data Management Footer Section */}
-      <div className="border-t border-slate-100 bg-slate-50/50 px-6 py-3">
-        <details className="group">
-          <summary className="cursor-pointer flex items-center justify-between text-sm font-medium text-slate-600 hover:text-slate-700">
-            <span className="flex items-center gap-2">
-              📊 Data Management Tools
-              <span className="text-xs text-slate-500">(Admin)</span>
-            </span>
-            <span className="group-open:rotate-180 transition-transform">▼</span>
-          </summary>
-          <div className="mt-3 pt-3 border-t border-slate-200">
-            <p className="text-xs text-slate-500 mb-3">Advanced tools for bulk operations and data analysis</p>
-            <div className="flex gap-2">
-              <button 
-                onClick={() => window.open('/collections?tab=data-management', '_blank')}
-                className="text-xs px-3 py-1.5 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
-              >
-                Open Data Manager
-              </button>
-            </div>
-          </div>
-        </details>
-      </div>
     </div>
   );
 }
