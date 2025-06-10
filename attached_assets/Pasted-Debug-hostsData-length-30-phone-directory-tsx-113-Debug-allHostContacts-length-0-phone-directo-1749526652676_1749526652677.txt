@@ -1,0 +1,24 @@
+Debug - hostsData length: 30
+phone-directory.tsx:113 Debug - allHostContacts length: 0
+phone-directory.tsx:119 Debug - first host: {id: 1, name: 'Alpharetta', address: null, status: 'Active', notes: null, …}
+phone-directory.tsx:120 Debug - first host id: 1
+phone-directory.tsx:122 Debug - hosts with contacts: 0
+phone-directory.tsx:112 Debug - hostsData length: 30
+phone-directory.tsx:113 Debug - allHostContacts length: 0
+phone-directory.tsx:119 Debug - first host: {id: 1, name: 'Alpharetta', address: null, status: 'Active', notes: null, …}
+phone-directory.tsx:120 Debug - first host id: 1
+phone-directory.tsx:122 Debug - hosts with contacts: 0
+phone-directory.tsx:112 Debug - hostsData length: 30
+phone-directory.tsx:113 Debug - allHostContacts length: 0
+phone-directory.tsx:119 Debug - first host: {id: 1, name: 'Alpharetta', address: null, status: 'Active', notes: null, …}
+phone-directory.tsx:120 Debug - first host id: 1
+phone-directory.tsx:122 Debug - hosts with contacts: 0
+app:1 The resource https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.Understand this warning
+app:1 The resource https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.Understand this warning
+phone-directory.tsx:112 Debug - hostsData length: 30
+phone-directory.tsx:113 Debug - allHostContacts length: 36
+phone-directory.tsx:115 Debug - first contact: {id: 7, hostId: 1, name: 'Karen Cohen', role: 'Host/driver', phone: '4044517942', …}
+phone-directory.tsx:116 Debug - sample contact hostId: 1
+phone-directory.tsx:119 Debug - first host: {id: 1, name: 'Alpharetta', address: null, status: 'Active', notes: null, …}
+phone-directory.tsx:120 Debug - first host id: 1
+phone-directory.tsx:122 Debug - hosts with contacts: 21

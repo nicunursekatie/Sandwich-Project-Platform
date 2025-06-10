@@ -102,24 +102,16 @@ export default function PhoneDirectory() {
     }
   });
 
-  // Combine hosts with their contacts
-  const hosts: HostWithContacts[] = hostsData.map(host => ({
+  // Wait for both queries to complete before combining data
+  const isLoading = hostsLoading || hostContactsLoading;
+  
+  // Combine hosts with their contacts only when both queries are complete
+  const hosts: HostWithContacts[] = isLoading ? [] : hostsData.map(host => ({
     ...host,
     contacts: allHostContacts.filter(contact => contact.hostId === host.id)
   }));
 
-  // Debug logging
-  console.log('Debug - hostsData length:', hostsData.length);
-  console.log('Debug - allHostContacts length:', allHostContacts.length);
-  if (allHostContacts.length > 0) {
-    console.log('Debug - first contact:', allHostContacts[0]);
-    console.log('Debug - sample contact hostId:', allHostContacts[0]?.hostId);
-  }
-  if (hostsData.length > 0) {
-    console.log('Debug - first host:', hostsData[0]);
-    console.log('Debug - first host id:', hostsData[0]?.id);
-  }
-  console.log('Debug - hosts with contacts:', hosts.filter(h => h.contacts.length > 0).length);
+
 
 
 
@@ -859,7 +851,11 @@ export default function PhoneDirectory() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {filteredHosts.length === 0 ? (
+              {isLoading ? (
+                <div className="text-center py-8 text-gray-500">
+                  Loading host directory...
+                </div>
+              ) : filteredHosts.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   {searchTerm ? 'No hosts found matching your search.' : 'No hosts found.'}
                 </div>
