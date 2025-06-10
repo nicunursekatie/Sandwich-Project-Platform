@@ -5,7 +5,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BulkDataManager from "@/components/bulk-data-manager";
 
 import { useToast } from "@/hooks/use-toast";
@@ -745,7 +744,7 @@ export default function SandwichCollectionLog() {
       </div>
       
       <div className="px-6 py-4">
-            <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-slate-500">{collections.length} total entries</p>
           <div className="flex items-center space-x-2">
             <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
@@ -1522,6 +1521,7 @@ export default function SandwichCollectionLog() {
           </div>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }
