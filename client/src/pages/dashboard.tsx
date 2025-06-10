@@ -28,6 +28,7 @@ export default function Dashboard() {
     { id: "hosts", label: "Hosts", icon: Building2 },
     { id: "recipients", label: "Recipients", icon: Users },
     { id: "directory", label: "Phone Directory", icon: Phone },
+    { id: "development", label: "Development", icon: FolderOpen },
   ];
 
   const renderContent = () => {
@@ -145,6 +146,8 @@ export default function Dashboard() {
         return <RecipientsManagement />;
       case "directory":
         return <PhoneDirectory />;
+      case "development":
+        return <Development />;
       default:
         return <DashboardOverview onSectionChange={setActiveSection} />;
     }
