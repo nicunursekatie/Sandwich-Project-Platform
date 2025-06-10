@@ -201,7 +201,7 @@ export default function PhoneDirectory() {
   });
 
   const createHostContactMutation = useMutation({
-    mutationFn: (data: z.infer<typeof insertHostContactSchema>) => apiRequest("/api/host-contacts", "POST", data),
+    mutationFn: (data: z.infer<typeof insertHostContactSchema>) => apiRequest("POST", "/api/host-contacts", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/host-contacts"] });
       setIsAddingHostContact(false);
@@ -265,7 +265,7 @@ export default function PhoneDirectory() {
 
   // Contact mutations
   const createContactMutation = useMutation({
-    mutationFn: (data: z.infer<typeof insertContactSchema>) => apiRequest(`/api/contacts`, "POST", data),
+    mutationFn: (data: z.infer<typeof insertContactSchema>) => apiRequest("POST", `/api/contacts`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/contacts"] });
       setIsAddingContact(false);
@@ -285,7 +285,7 @@ export default function PhoneDirectory() {
 
   const updateContactMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<GeneralContact> }) => 
-      apiRequest(`/api/contacts/${id}`, "PATCH", data),
+      apiRequest("PATCH", `/api/contacts/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/contacts"] });
       setEditingContact(null);
@@ -304,7 +304,7 @@ export default function PhoneDirectory() {
   });
 
   const deleteContactMutation = useMutation({
-    mutationFn: (id: number) => apiRequest(`/api/contacts/${id}`, "DELETE"),
+    mutationFn: (id: number) => apiRequest("DELETE", `/api/contacts/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/contacts"] });
       toast({
@@ -1035,7 +1035,10 @@ export default function PhoneDirectory() {
           {editingContact && (
             <ContactForm
               initialData={editingContact}
-              onSubmit={(data) => updateContactMutation.mutate({ id: editingContact.id, data })}
+              onSubmit={(data) => updateContactMutation.mutate({ id: editingContact.id, data: {
+                ...data,
+                organization: data.organization || undefined
+              } })}
               onCancel={() => setEditingContact(null)}
               isLoading={updateContactMutation.isPending}
             />
@@ -1281,7 +1284,7 @@ const HostForm = ({
                 <FormItem>
                   <FormLabel>Address</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Enter full address" {...field} />
+                    <Textarea placeholder="Enter full address" {...field} value={field.value || ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -1295,7 +1298,7 @@ const HostForm = ({
                 <FormItem>
                   <FormLabel>Notes</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Additional notes about this location" {...field} />
+                    <Textarea placeholder="Additional notes about this location" {...field} value={field.value || ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
