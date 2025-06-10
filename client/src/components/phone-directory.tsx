@@ -129,7 +129,7 @@ export default function PhoneDirectory() {
 
   // Mutations for CRUD operations
   const createHostMutation = useMutation({
-    mutationFn: (data: z.infer<typeof insertHostSchema>) => apiRequest(`/api/hosts`, "POST", data),
+    mutationFn: (data: z.infer<typeof insertHostSchema>) => apiRequest("POST", `/api/hosts`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
@@ -143,7 +143,7 @@ export default function PhoneDirectory() {
 
   const updateHostMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<z.infer<typeof insertHostSchema>> }) => 
-      apiRequest(`/api/hosts/${id}`, "PUT", data),
+      apiRequest("PUT", `/api/hosts/${id}`, data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/host-contacts"] });
@@ -165,7 +165,7 @@ export default function PhoneDirectory() {
   });
 
   const createRecipientMutation = useMutation({
-    mutationFn: (data: z.infer<typeof insertRecipientSchema>) => apiRequest(`/api/recipients`, "POST", data),
+    mutationFn: (data: z.infer<typeof insertRecipientSchema>) => apiRequest("POST", `/api/recipients`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
       setIsAddingRecipient(false);
@@ -178,7 +178,7 @@ export default function PhoneDirectory() {
 
   const updateRecipientMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<z.infer<typeof insertRecipientSchema>> }) => 
-      apiRequest(`/api/recipients/${id}`, "PATCH", data),
+      apiRequest("PATCH", `/api/recipients/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
       setEditingRecipient(null);
@@ -190,7 +190,7 @@ export default function PhoneDirectory() {
   });
 
   const deleteRecipientMutation = useMutation({
-    mutationFn: (id: number) => apiRequest(`/api/recipients/${id}`, "DELETE"),
+    mutationFn: (id: number) => apiRequest("DELETE", `/api/recipients/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
       toast({ title: "Recipient deleted successfully" });
@@ -324,7 +324,7 @@ export default function PhoneDirectory() {
   // Host contact mutations
   const updateHostContactMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<HostContact> }) => 
-      apiRequest(`/api/host-contacts/${id}`, "PATCH", data),
+      apiRequest("PATCH", `/api/host-contacts/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
       setEditingHostContact(null);
@@ -343,7 +343,7 @@ export default function PhoneDirectory() {
   });
 
   const deleteHostContactMutation = useMutation({
-    mutationFn: (id: number) => apiRequest(`/api/host-contacts/${id}`, "DELETE"),
+    mutationFn: (id: number) => apiRequest("DELETE", `/api/host-contacts/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
       toast({
