@@ -9,7 +9,7 @@ import DashboardOverview from "@/components/dashboard-overview";
 import SandwichCollectionLog from "@/components/sandwich-collection-log";
 import RecipientsManagement from "@/components/recipients-management";
 import DriversManagement from "@/components/drivers-management";
-import HostsManagement from "@/components/hosts-management";
+import HostsManagement from "@/components/hosts-management-consolidated";
 import { DocumentsBrowser } from "@/components/documents-browser";
 import PhoneDirectory from "@/components/phone-directory";
 import BulkDataManager from "@/components/bulk-data-manager";

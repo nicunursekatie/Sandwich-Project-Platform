@@ -67,18 +67,10 @@ export default function HostsManagement() {
         method: 'POST',
         body: data,
       });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Host creation failed:', response.status, errorText);
-        throw new Error(`Failed to create host: ${response.status} ${errorText}`);
-      }
-      return response.json();
     },
     onSuccess: () => {
-      console.log('Host created successfully');
-      queryClient.invalidateQueries({ queryKey: ['/api/hosts'] });
-      setNewHost({ name: "", email: "", phone: "", status: "active", notes: "" });
+      queryClient.invalidateQueries({ queryKey: ['/api/hosts-with-contacts'] });
+      setNewHost({ name: "", address: "", status: "active", notes: "" });
       setIsAddModalOpen(false);
       toast({
         title: "Host added",
@@ -86,7 +78,6 @@ export default function HostsManagement() {
       });
     },
     onError: (error: any) => {
-      console.error('Host creation error:', error);
       toast({
         title: "Error",
         description: `Failed to add host: ${error.message}`,
