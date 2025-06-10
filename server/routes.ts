@@ -1835,6 +1835,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Collection statistics for bulk data manager
+  app.get("/api/collection-stats", async (req, res) => {
+    try {
+      const totalRecords = await storage.getSandwichCollectionsCount();
+      const allCollections = await storage.getAllSandwichCollections();
+      
+      // Count mapped vs unmapped records based on host assignment
+      const hosts = await storage.getAllHosts();
+      const hostNames = new Set(hosts.map(h => h.name));
+      
+      let mappedRecords = 0;
+      let unmappedRecords = 0;
+      
+      for (const collection of allCollections) {
+        if (hostNames.has(collection.hostName)) {
+          mappedRecords++;
+        } else {
+          unmappedRecords++;
+        }
+      }
+      
+      res.json({
+        totalRecords,
+        processedRecords: totalRecords,
+        mappedRecords,
+        unmappedRecords
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch collection statistics" });
+    }
+  });
+
+  // Host mapping statistics
+  app.get("/api/host-mapping-stats", async (req, res) => {
+    try {
+      const allCollections = await storage.getAllSandwichCollections();
+      const hosts = await storage.getAllHosts();
+      const hostNames = new Set(hosts.map(h => h.name));
+      
+      // Group collections by host name and count them
+      const hostCounts = new Map<string, number>();
+      
+      for (const collection of allCollections) {
+        const count = hostCounts.get(collection.hostName) || 0;
+        hostCounts.set(collection.hostName, count + 1);
+      }
+      
+      // Convert to array with mapping status
+      const mappingStats = Array.from(hostCounts.entries()).map(([hostName, count]) => ({
+        hostName,
+        count,
+        mapped: hostNames.has(hostName)
+      })).sort((a, b) => b.count - a.count); // Sort by count descending
+      
+      res.json(mappingStats);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch host mapping statistics" });
+    }
+  });
+
   // Static file serving for documents
   app.use('/documents', express.static('public/documents'));
 
