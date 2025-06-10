@@ -1061,6 +1061,7 @@ export default function PhoneDirectory() {
                 setSelectedHostForContact(null);
               }}
               isLoading={createHostContactMutation.isPending}
+              hosts={hostsData}
             />
           )}
         </DialogContent>
@@ -1082,6 +1083,7 @@ export default function PhoneDirectory() {
               onSubmit={(data) => updateHostContactMutation.mutate({ id: editingHostContact.id, data })}
               onCancel={() => setEditingHostContact(null)}
               isLoading={updateHostContactMutation.isPending}
+              hosts={hostsData}
             />
           )}
         </DialogContent>
@@ -1122,6 +1124,7 @@ export default function PhoneDirectory() {
                 setSelectedHostForContact(null);
               }}
               isLoading={createHostContactMutation.isPending}
+              hosts={hostsData}
             />
           )}
         </DialogContent>
@@ -1491,13 +1494,15 @@ const HostContactForm = ({
   initialData, 
   onSubmit, 
   onCancel, 
-  isLoading 
+  isLoading,
+  hosts
 }: {
   hostId: number;
   initialData?: HostContact;
   onSubmit: (data: z.infer<typeof insertHostContactSchema>) => void;
   onCancel: () => void;
   isLoading?: boolean;
+  hosts: Host[];
 }) => {
   const form = useForm<z.infer<typeof insertHostContactSchema>>({
     resolver: zodResolver(insertHostContactSchema),
@@ -1528,7 +1533,7 @@ const HostContactForm = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {hostsData.map((host) => (
+                  {hosts.map((host) => (
                     <SelectItem key={host.id} value={host.id.toString()}>
                       {host.name}
                     </SelectItem>
