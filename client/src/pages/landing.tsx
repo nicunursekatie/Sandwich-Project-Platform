@@ -169,7 +169,7 @@ export default function Landing() {
           </CardHeader>
           <CardContent className="flex justify-center">
             <Button onClick={handleLogin} size="lg" className="w-full">
-              Sign In with Replit
+              Access Platform
             </Button>
           </CardContent>
         </Card>
