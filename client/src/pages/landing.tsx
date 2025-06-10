@@ -51,7 +51,29 @@ export default function Landing() {
     const weeksDiff = Math.max(1, Math.ceil((lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24 * 7)));
     return Math.round(totalSandwiches / weeksDiff);
   })() : 0;
-  const totalCollections = collections?.length || 0;
+  // Calculate record week and efficiency metrics
+  const recordWeek = collections?.length > 0 ? (() => {
+    // Group by week and calculate totals
+    const weeklyTotals = collections.reduce((weeks: { [key: string]: number }, collection) => {
+      const weekKey = collection.collectionDate;
+      let groupTotal = 0;
+      try {
+        const groupData = JSON.parse(collection.groupCollections || "[]");
+        if (Array.isArray(groupData)) {
+          groupTotal = groupData.reduce((sum: number, group: any) => sum + (group.sandwichCount || 0), 0);
+        }
+      } catch (error) {
+        groupTotal = 0;
+      }
+      const total = (collection.individualSandwiches || 0) + groupTotal;
+      weeks[weekKey] = (weeks[weekKey] || 0) + total;
+      return weeks;
+    }, {});
+    
+    return Math.max(...Object.values(weeklyTotals));
+  })() : 0;
+  
+  const costPerSandwich = 3.5; // Average of $2.67-$5.35 range
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
@@ -110,11 +132,11 @@ export default function Landing() {
           <Card className="text-center bg-white/80 backdrop-blur dark:bg-gray-800/80">
             <CardHeader>
               <TrendingUp className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-              <CardTitle className="text-2xl font-bold">{totalCollections.toLocaleString()}</CardTitle>
-              <CardDescription className="font-semibold">Total Collections</CardDescription>
+              <CardTitle className="text-2xl font-bold">{recordWeek.toLocaleString()}</CardTitle>
+              <CardDescription className="font-semibold">Record Week</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600 dark:text-gray-400">community events organized</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">highest weekly sandwich collection</p>
             </CardContent>
           </Card>
 
@@ -129,6 +151,50 @@ export default function Landing() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Efficiency Metrics Section */}
+        <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-2 border-green-200 dark:border-green-700">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-200">
+              Proven Impact Efficiency
+            </CardTitle>
+            <CardDescription className="text-lg text-green-700 dark:text-green-300">
+              Data-backed claims with measurable results
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
+                <div className="text-2xl font-bold text-green-600">${costPerSandwich.toFixed(2)}</div>
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Cost Per Sandwich</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">vs. $100M+ corporate marketing budgets</div>
+              </div>
+              <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
+                <div className="text-2xl font-bold text-blue-600">200-400x</div>
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">More Efficient</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">impact per dollar vs. city programs</div>
+              </div>
+              <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
+                <div className="text-2xl font-bold text-purple-600">962%</div>
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">5-Year Growth</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">from 42,647 to 452,683 annually</div>
+              </div>
+              <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
+                <div className="text-2xl font-bold text-red-600">70+</div>
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Mile Radius</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">distributed infrastructure coverage</div>
+              </div>
+            </div>
+            <div className="mt-6 text-center">
+              <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 px-4 py-2 rounded-full">
+                <TrendingUp className="w-4 h-4 text-green-600" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Crisis Response: +100% surge capacity proven during Hurricane week
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Volunteer Toolkit Section */}
         {showToolkit && (
