@@ -11,10 +11,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 import type { Host, InsertHost } from "@shared/schema";
 
 export default function HostsManagement() {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
+  
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingHost, setEditingHost] = useState<Host | null>(null);
   const [newHost, setNewHost] = useState<InsertHost>({

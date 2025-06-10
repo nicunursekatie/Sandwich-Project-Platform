@@ -48,7 +48,7 @@ export default function Landing() {
               size="lg"
               onClick={() => setShowToolkit(!showToolkit)}
             >
-              Volunteer Toolkit
+              {showToolkit ? 'Hide' : 'View'} Volunteer Toolkit
             </Button>
           </div>
         </div>
