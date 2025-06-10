@@ -159,18 +159,11 @@ export default function SandwichCollectionLog() {
     setCurrentPage(1);
   }, [searchFilters, sortConfig]);
 
-  // Fetch active hosts from the database
-  const { data: hosts = [] } = useQuery<Host[]>({
-    queryKey: ['/api/hosts'],
-    queryFn: async () => {
-      const response = await fetch('/api/hosts');
-      if (!response.ok) throw new Error('Failed to fetch hosts');
-      return response.json();
-    }
-  });
+  // Get unique host names from collections for filtering
+  const uniqueHostNames = Array.from(new Set(collections.map(c => c.hostName))).sort();
 
   // Include all hosts (active and inactive) for collection assignment
-  const hostOptions = [...hosts.map(host => host.name), "Other"];
+  const hostOptions = [...hostsList.map(host => host.name), "Other"];
 
   const formatDate = (dateString: string) => {
     // Parse date as local date to avoid timezone issues
@@ -276,6 +269,34 @@ export default function SandwichCollectionLog() {
       toast({
         title: "Error",
         description: "Failed to delete collection. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const createMutation = useMutation({
+    mutationFn: async (data: any) => {
+      return await apiRequest('POST', '/api/sandwich-collections', data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      setShowAddForm(false);
+      setNewCollectionData({
+        collectionDate: "",
+        hostName: "",
+        individualSandwiches: "",
+        groupCollections: ""
+      });
+      setNewGroupCollections([{ id: Math.random().toString(36), groupName: "", sandwichCount: 0 }]);
+      toast({
+        title: "Collection added",
+        description: "The sandwich collection has been added successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Add failed",
+        description: "Failed to add the collection. Please try again.",
         variant: "destructive",
       });
     }
@@ -631,6 +652,54 @@ export default function SandwichCollectionLog() {
     }
   };
 
+  const handleNewCollectionSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newCollectionData.collectionDate || !newCollectionData.hostName) {
+      toast({
+        title: "Missing required fields",
+        description: "Please fill in the collection date and host name.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Format group collections similar to other collection forms
+    const formattedGroupCollections = newGroupCollections
+      .filter(group => group.groupName.trim() && group.sandwichCount > 0)
+      .map(group => `${group.groupName}: ${group.sandwichCount}`)
+      .join('; ');
+
+    const submissionData = {
+      collectionDate: newCollectionData.collectionDate,
+      hostName: newCollectionData.hostName,
+      individualSandwiches: parseInt(newCollectionData.individualSandwiches) || 0,
+      groupCollections: formattedGroupCollections
+    };
+
+    createMutation.mutate(submissionData);
+  };
+
+  const addNewGroupRow = () => {
+    setNewGroupCollections([...newGroupCollections, { 
+      id: Math.random().toString(36), 
+      groupName: "", 
+      sandwichCount: 0 
+    }]);
+  };
+
+  const removeNewGroupRow = (id: string) => {
+    if (newGroupCollections.length > 1) {
+      setNewGroupCollections(newGroupCollections.filter(group => group.id !== id));
+    }
+  };
+
+  const updateNewGroupCollection = (id: string, field: 'groupName' | 'sandwichCount', value: string | number) => {
+    setNewGroupCollections(newGroupCollections.map(group => 
+      group.id === id ? { ...group, [field]: value } : group
+    ));
+  };
+
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
@@ -662,6 +731,134 @@ export default function SandwichCollectionLog() {
             <p className="text-sm text-slate-500 mt-1">{collections.length} total entries</p>
           </div>
           <div className="flex items-center space-x-2">
+            <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center space-x-1"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add Collection</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Add New Collection</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleNewCollectionSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="collectionDate">Collection Date *</Label>
+                      <Input
+                        id="collectionDate"
+                        type="date"
+                        value={newCollectionData.collectionDate}
+                        onChange={(e) => setNewCollectionData(prev => ({
+                          ...prev,
+                          collectionDate: e.target.value
+                        }))}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="hostName">Host Name *</Label>
+                      <Select
+                        value={newCollectionData.hostName}
+                        onValueChange={(value) => setNewCollectionData(prev => ({
+                          ...prev,
+                          hostName: value
+                        }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a host" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {hostOptions.map((hostName, index) => (
+                            <SelectItem key={index} value={hostName}>
+                              {hostName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="individualSandwiches">Individual Sandwiches</Label>
+                    <Input
+                      id="individualSandwiches"
+                      type="number"
+                      min="0"
+                      value={newCollectionData.individualSandwiches}
+                      onChange={(e) => setNewCollectionData(prev => ({
+                        ...prev,
+                        individualSandwiches: e.target.value
+                      }))}
+                      placeholder="0"
+                    />
+                  </div>
+
+                  <div>
+                    <Label>Group Collections</Label>
+                    {newGroupCollections.map((group, index) => (
+                      <div key={group.id} className="flex items-center space-x-2 mt-2">
+                        <Input
+                          placeholder="Group name"
+                          value={group.groupName}
+                          onChange={(e) => updateNewGroupCollection(group.id, 'groupName', e.target.value)}
+                          className="flex-1"
+                        />
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="Count"
+                          value={group.sandwichCount}
+                          onChange={(e) => updateNewGroupCollection(group.id, 'sandwichCount', parseInt(e.target.value) || 0)}
+                          className="w-24"
+                        />
+                        {newGroupCollections.length > 1 && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => removeNewGroupRow(group.id)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={addNewGroupRow}
+                      className="mt-2"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Group
+                    </Button>
+                  </div>
+
+                  <div className="flex justify-end space-x-2 pt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowAddForm(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={createMutation.isPending}
+                    >
+                      {createMutation.isPending ? "Adding..." : "Add Collection"}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
             <Button
               variant="outline"
               size="sm"
@@ -866,7 +1063,7 @@ export default function SandwichCollectionLog() {
             const isSelected = selectedCollections.has(collection.id);
 
             // Check if the host is inactive
-            const hostData = hosts.find(h => h.name === collection.hostName);
+            const hostData = hostsList.find(h => h.name === collection.hostName);
             const isInactiveHost = hostData?.status === 'inactive';
 
             return (
