@@ -206,18 +206,23 @@ export default function Landing() {
           </CardContent>
         </Card>
 
+        {/* Debug: Show toolkit state */}
+        <div className="text-center text-sm text-gray-500 my-2">
+          Toolkit state: {showToolkit ? 'SHOWN' : 'HIDDEN'}
+        </div>
+
         {/* Volunteer Toolkit Section */}
-        {showToolkit && (
-          <div className="w-full bg-blue-100 border-4 border-blue-600 rounded-lg p-8 my-8">
-            <h2 className="text-4xl font-bold text-blue-800 text-center mb-4">
-              🛠️ Volunteer Toolkit
-            </h2>
-            <p className="text-lg text-center text-gray-700 mb-6">
-              Essential documents and training materials for The Sandwich Project volunteers
-            </p>
-            <div className="bg-white rounded-lg p-6 shadow-lg">
+        {showToolkit ? (
+          <div className="w-full bg-red-500 text-white p-8 my-8 text-center">
+            <h1 className="text-6xl font-bold mb-4">TOOLKIT IS VISIBLE!</h1>
+            <p className="text-2xl">This proves the conditional rendering works</p>
+            <div className="bg-white text-black rounded-lg p-6 mt-4">
               <DocumentsBrowser />
             </div>
+          </div>
+        ) : (
+          <div className="w-full bg-gray-200 text-gray-600 p-4 my-4 text-center">
+            <p>Toolkit is hidden - click button to show</p>
           </div>
         )}
 
