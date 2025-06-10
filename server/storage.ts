@@ -178,18 +178,69 @@ export class MemStorage implements IStorage {
     // No sample data - start with clean storage
   }
 
-  // User methods
-  async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+  // User methods (required for Replit Auth)
+  async getUser(id: string): Promise<User | undefined> {
+    for (const user of this.users.values()) {
+      if (user.id === id) {
+        return user;
+      }
+    }
+    return undefined;
   }
 
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const existingUser = await this.getUser(userData.id);
+    if (existingUser) {
+      const updated: User = { ...existingUser, ...userData, updatedAt: new Date() };
+      this.users.set(Number(userData.id), updated);
+      return updated;
+    } else {
+      const newUser: User = {
+        id: userData.id,
+        email: userData.email || null,
+        firstName: userData.firstName || null,
+        lastName: userData.lastName || null,
+        profileImageUrl: userData.profileImageUrl || null,
+        role: userData.role || 'volunteer',
+        permissions: userData.permissions || {},
+        isActive: userData.isActive ?? true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      this.users.set(Number(userData.id), newUser);
+      return newUser;
+    }
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
+  }
+
+  async updateUser(id: string, updates: Partial<User>): Promise<User | undefined> {
+    const user = await this.getUser(id);
+    if (!user) return undefined;
+    
+    const updated: User = { ...user, ...updates, updatedAt: new Date() };
+    this.users.set(Number(id), updated);
+    return updated;
+  }
+
+  // Legacy user methods (for backwards compatibility)
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.username === username);
+    return Array.from(this.users.values()).find(user => user.email === username);
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentIds.user++;
-    const user: User = { ...insertUser, id };
+    const user: User = { 
+      ...insertUser, 
+      id: id.toString(),
+      role: 'volunteer',
+      permissions: {},
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
     this.users.set(id, user);
     return user;
   }
@@ -322,6 +373,15 @@ export class MemStorage implements IStorage {
     return Array.from(this.sandwichCollections.values()).sort((a, b) => 
       new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
     );
+  }
+
+  async getSandwichCollections(limit: number, offset: number): Promise<SandwichCollection[]> {
+    const all = await this.getAllSandwichCollections();
+    return all.slice(offset, offset + limit);
+  }
+
+  async getSandwichCollectionsCount(): Promise<number> {
+    return this.sandwichCollections.size;
   }
 
   async createSandwichCollection(insertCollection: InsertSandwichCollection & {id?: number}): Promise<SandwichCollection> {
