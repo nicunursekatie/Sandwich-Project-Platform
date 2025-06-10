@@ -83,43 +83,29 @@ export default function PhoneDirectory() {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  // Fetch hosts with their contacts
-  const { data: hosts = [], isLoading: hostsLoading } = useQuery<HostWithContacts[]>({
-    queryKey: ["/api/hosts-with-contacts"],
+  // Fetch hosts
+  const { data: hostsData = [], isLoading: hostsLoading } = useQuery<Host[]>({
+    queryKey: ["/api/hosts"],
+  });
+
+  // Fetch all host contacts in a separate query
+  const { data: allHostContacts = [] } = useQuery<HostContact[]>({
+    queryKey: ["/api/host-contacts"],
     queryFn: async () => {
-      const response = await fetch("/api/hosts");
-      const hostData = await response.json();
-      
-      // Fetch contacts for each host
-      const hostsWithContacts = await Promise.all(
-        hostData.map(async (host: any) => {
-          try {
-            const contactsResponse = await fetch(`/api/hosts/${host.id}/contacts`);
-            const contacts = contactsResponse.ok ? await contactsResponse.json() : [];
-            return {
-              id: host.id,
-              name: host.name,
-              address: host.address || null,
-              status: host.status || 'active',
-              notes: host.notes,
-              contacts: contacts
-            };
-          } catch (error) {
-            return {
-              id: host.id,
-              name: host.name,
-              address: host.address || null,
-              status: host.status || 'active',
-              notes: host.notes,
-              contacts: []
-            };
-          }
-        })
-      );
-      
-      return hostsWithContacts;
+      try {
+        const response = await fetch("/api/host-contacts");
+        return response.ok ? await response.json() : [];
+      } catch (error) {
+        return [];
+      }
     }
   });
+
+  // Combine hosts with their contacts
+  const hosts: HostWithContacts[] = hostsData.map(host => ({
+    ...host,
+    contacts: allHostContacts.filter(contact => contact.hostId === host.id)
+  }));
 
   // Fetch recipients
   const { data: recipients = [], isLoading: recipientsLoading } = useQuery<Recipient[]>({
@@ -150,7 +136,7 @@ export default function PhoneDirectory() {
       apiRequest(`/api/hosts/${id}`, "PUT", data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/host-contacts"] });
       setEditingHost(null);
       
       if (response.message) {
@@ -207,7 +193,7 @@ export default function PhoneDirectory() {
   const createHostContactMutation = useMutation({
     mutationFn: (data: z.infer<typeof insertHostContactSchema>) => apiRequest("/api/host-contacts", "POST", data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/host-contacts"] });
       setIsAddingHostContact(false);
       setSelectedHostForContact(null);
       toast({ title: "Contact added successfully" });

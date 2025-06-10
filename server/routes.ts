@@ -1200,6 +1200,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Host Contacts
+  app.get("/api/host-contacts", async (req, res) => {
+    try {
+      // Get all host contacts across all hosts
+      const hosts = await storage.getAllHosts();
+      const allContacts = [];
+      
+      for (const host of hosts) {
+        const contacts = await storage.getHostContacts(host.id);
+        allContacts.push(...contacts);
+      }
+      
+      res.json(allContacts);
+    } catch (error) {
+      logger.error("Failed to get all host contacts", error);
+      res.status(500).json({ message: "Failed to get host contacts" });
+    }
+  });
+
   app.post("/api/host-contacts", async (req, res) => {
     try {
       const contactData = insertHostContactSchema.parse(req.body);
