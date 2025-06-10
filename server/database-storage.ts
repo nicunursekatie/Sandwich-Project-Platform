@@ -325,4 +325,15 @@ export class DatabaseStorage implements IStorage {
     const result = await db.delete(hostContacts).where(eq(hostContacts.id, id));
     return (result.rowCount ?? 0) > 0;
   }
+
+  // Optimized query to get all hosts with their contacts in one call
+  async getAllHostsWithContacts(): Promise<Array<Host & { contacts: HostContact[] }>> {
+    const hostsData = await db.select().from(hosts).orderBy(hosts.name);
+    const contactsData = await db.select().from(hostContacts);
+    
+    return hostsData.map(host => ({
+      ...host,
+      contacts: contactsData.filter(contact => contact.hostId === host.id)
+    }));
+  }
 }

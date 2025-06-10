@@ -381,6 +381,13 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async getAllHostsWithContacts() {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getAllHostsWithContacts(),
+      () => this.fallbackStorage.getAllHostsWithContacts()
+    );
+  }
+
   async getHost(id: number) {
     return this.executeWithFallback(
       () => this.primaryStorage.getHost(id),

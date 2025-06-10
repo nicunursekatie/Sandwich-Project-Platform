@@ -83,33 +83,15 @@ export default function PhoneDirectory() {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  // Fetch hosts
-  const { data: hostsData = [], isLoading: hostsLoading } = useQuery<Host[]>({
+  // Optimized: Fetch hosts with contacts in single query
+  const { data: hosts = [], isLoading: hostsLoading } = useQuery<HostWithContacts[]>({
+    queryKey: ["/api/hosts-with-contacts"],
+  });
+
+  // Keep separate hosts query for forms that need the basic host list
+  const { data: hostsData = [] } = useQuery<Host[]>({
     queryKey: ["/api/hosts"],
   });
-
-  // Fetch all host contacts in a separate query
-  const { data: allHostContacts = [], isLoading: hostContactsLoading } = useQuery({
-    queryKey: ["/api/host-contacts"],
-    queryFn: async (): Promise<HostContact[]> => {
-      try {
-        const response = await fetch("/api/host-contacts");
-        return response.ok ? await response.json() : [];
-      } catch (error) {
-        console.error('Failed to fetch host contacts:', error);
-        return [];
-      }
-    }
-  });
-
-  // Wait for both queries to complete before combining data
-  const isLoading = hostsLoading || hostContactsLoading;
-  
-  // Combine hosts with their contacts only when both queries are complete
-  const hosts: HostWithContacts[] = isLoading ? [] : hostsData.map(host => ({
-    ...host,
-    contacts: allHostContacts.filter(contact => contact.hostId === host.id)
-  }));
 
 
 

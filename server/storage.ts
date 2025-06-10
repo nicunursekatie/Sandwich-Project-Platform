@@ -77,6 +77,7 @@ export interface IStorage {
   
   // Hosts
   getAllHosts(): Promise<Host[]>;
+  getAllHostsWithContacts(): Promise<Array<Host & { contacts: HostContact[] }>>;
   getHost(id: number): Promise<Host | undefined>;
   createHost(host: InsertHost): Promise<Host>;
   updateHost(id: number, updates: Partial<Host>): Promise<Host | undefined>;

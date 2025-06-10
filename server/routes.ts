@@ -1296,6 +1296,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Optimized endpoint to get all hosts with their contacts in one call
+  app.get("/api/hosts-with-contacts", async (req, res) => {
+    try {
+      const hostsWithContacts = await storage.getAllHostsWithContacts();
+      res.json(hostsWithContacts);
+    } catch (error) {
+      logger.error("Failed to fetch hosts with contacts", error);
+      res.status(500).json({ message: "Failed to fetch hosts with contacts" });
+    }
+  });
+
   // Recipients
   app.get("/api/recipients", async (req, res) => {
     try {
