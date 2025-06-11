@@ -71,6 +71,7 @@ export default function SandwichCollectionLog() {
   });
   const [editGroupCollections, setEditGroupCollections] = useState<Array<{id: string, groupName: string, sandwichCount: number}>>([]);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showDataManagement, setShowDataManagement] = useState(false);
   const [newCollectionData, setNewCollectionData] = useState({
     collectionDate: "",
     hostName: "",
@@ -740,6 +741,15 @@ export default function SandwichCollectionLog() {
             </h2>
             <p className="text-sm text-slate-500 mt-1">Manage collection data and bulk operations</p>
           </div>
+          <Button
+            onClick={() => setShowDataManagement(true)}
+            variant="outline"
+            size="sm"
+            className="flex items-center space-x-2"
+          >
+            <Database className="w-4 h-4" />
+            <span>Data Management</span>
+          </Button>
         </div>
       </div>
       
@@ -1521,7 +1531,16 @@ export default function SandwichCollectionLog() {
           </div>
         </DialogContent>
       </Dialog>
-      </div>
+
+      {/* Data Management Dialog */}
+      <Dialog open={showDataManagement} onOpenChange={setShowDataManagement}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Data Management Center</DialogTitle>
+          </DialogHeader>
+          <BulkDataManager />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
