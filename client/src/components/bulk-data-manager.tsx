@@ -45,6 +45,12 @@ export default function BulkDataManager() {
   // Fetch collections for selected host
   const { data: hostCollections, isLoading: hostCollectionsLoading } = useQuery({
     queryKey: ['/api/collections-by-host', selectedHost],
+    queryFn: async () => {
+      if (!selectedHost) return [];
+      const response = await fetch(`/api/collections-by-host/${encodeURIComponent(selectedHost)}`);
+      if (!response.ok) throw new Error('Failed to fetch host collections');
+      return response.json();
+    },
     enabled: !!selectedHost,
   });
 

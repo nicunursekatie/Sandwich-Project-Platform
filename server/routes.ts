@@ -1403,6 +1403,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get collections by host name
+  app.get("/api/collections-by-host/:hostName", async (req, res) => {
+    try {
+      const hostName = decodeURIComponent(req.params.hostName);
+      const collections = await storage.getAllSandwichCollections();
+      
+      // Filter collections by host name (case insensitive)
+      const hostCollections = collections.filter(collection => 
+        collection.hostName.toLowerCase() === hostName.toLowerCase()
+      );
+      
+      res.json(hostCollections);
+    } catch (error) {
+      logger.error("Failed to fetch collections by host", error);
+      res.status(500).json({ message: "Failed to fetch collections by host" });
+    }
+  });
+
   // Recipients
   app.get("/api/recipients", async (req, res) => {
     try {
@@ -1849,7 +1867,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let unmappedRecords = 0;
       
       for (const collection of allCollections) {
-        if (hostNames.has(collection.hostName)) {
+        // Consider "groups" as mapped hosts
+        if (hostNames.has(collection.hostName) || collection.hostName.toLowerCase().includes('group')) {
           mappedRecords++;
         } else {
           unmappedRecords++;
@@ -1883,10 +1902,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Convert to array with mapping status
+      // Consider "groups" as mapped hosts
       const mappingStats = Array.from(hostCounts.entries()).map(([hostName, count]) => ({
         hostName,
         count,
-        mapped: hostNames.has(hostName)
+        mapped: hostNames.has(hostName) || hostName.toLowerCase().includes('group')
       })).sort((a, b) => b.count - a.count); // Sort by count descending
       
       res.json(mappingStats);
