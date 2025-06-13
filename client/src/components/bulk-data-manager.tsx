@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Database, FileText, MapPin, BarChart3, RefreshCw } from "lucide-react";
+import { Database, FileText, MapPin, BarChart3, RefreshCw, ArrowLeft } from "lucide-react";
 
 interface MappingStats {
   hostName: string;
@@ -26,6 +27,8 @@ export default function BulkDataManager() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("overview");
+  const [selectedHost, setSelectedHost] = useState<string | null>(null);
+  const [showHostRecords, setShowHostRecords] = useState(false);
 
   // Fetch collection statistics
   const { data: stats, isLoading: statsLoading } = useQuery({
@@ -37,6 +40,12 @@ export default function BulkDataManager() {
   const { data: mappingStats, isLoading: mappingLoading } = useQuery({
     queryKey: ['/api/host-mapping-stats'],
     refetchInterval: 5000,
+  });
+
+  // Fetch collections for selected host
+  const { data: hostCollections, isLoading: hostCollectionsLoading } = useQuery({
+    queryKey: ['/api/collections-by-host', selectedHost],
+    enabled: !!selectedHost,
   });
 
   // Run bulk mapping
@@ -67,6 +76,11 @@ export default function BulkDataManager() {
   // Calculate progress percentage
   const progress = stats ? 
     Math.round((stats.mappedRecords / stats.totalRecords) * 100) : 0;
+
+  const handleHostClick = (hostName: string) => {
+    setSelectedHost(hostName);
+    setShowHostRecords(true);
+  };
 
   return (
     <div className="space-y-6">
@@ -178,7 +192,11 @@ export default function BulkDataManager() {
               ) : (
                 <div className="space-y-3">
                   {mappingStats?.map((stat: MappingStats, index: number) => (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div 
+                      key={index} 
+                      className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                      onClick={() => handleHostClick(stat.hostName)}
+                    >
                       <div className="flex items-center space-x-3">
                         <div className="w-3 h-3 rounded-full bg-blue-500"></div>
                         <span className="font-medium">{stat.hostName}</span>
@@ -242,6 +260,66 @@ export default function BulkDataManager() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Host Records Dialog */}
+      <Dialog open={showHostRecords} onOpenChange={setShowHostRecords}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <div className="flex items-center space-x-2">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowHostRecords(false)}
+                className="p-1"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </Button>
+              <DialogTitle>Records for {selectedHost}</DialogTitle>
+            </div>
+          </DialogHeader>
+          <div className="space-y-4">
+            {hostCollectionsLoading ? (
+              <div className="text-center py-8">Loading records...</div>
+            ) : (
+              <div className="space-y-3">
+                {hostCollections?.map((collection: any, index: number) => (
+                  <div key={collection.id || index} className="border rounded-lg p-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div>
+                        <span className="font-medium text-gray-600">Date:</span>
+                        <div>{collection.collectionDate}</div>
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-600">Host:</span>
+                        <div>{collection.hostName}</div>
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-600">Individual:</span>
+                        <div>{collection.individualSandwiches || 0}</div>
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-600">Groups:</span>
+                        <div>{collection.groupCollections || 0}</div>
+                      </div>
+                      {collection.notes && (
+                        <div className="col-span-2 md:col-span-4">
+                          <span className="font-medium text-gray-600">Notes:</span>
+                          <div className="text-gray-700">{collection.notes}</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {hostCollections && hostCollections.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    No records found for this host
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
