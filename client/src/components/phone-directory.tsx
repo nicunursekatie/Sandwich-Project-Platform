@@ -1599,6 +1599,7 @@ const HostContactForm = ({
                 <SelectContent>
                   <SelectItem value="primary">Primary Contact</SelectItem>
                   <SelectItem value="backup">Backup Contact</SelectItem>
+                  <SelectItem value="lead">Lead</SelectItem>
                   <SelectItem value="coordinator">Coordinator</SelectItem>
                   <SelectItem value="manager">Manager</SelectItem>
                   <SelectItem value="volunteer">Volunteer</SelectItem>
