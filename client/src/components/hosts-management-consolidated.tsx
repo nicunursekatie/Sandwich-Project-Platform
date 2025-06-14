@@ -222,6 +222,25 @@ export default function HostsManagementConsolidated() {
     }
   };
 
+  // Helper function to render role badges with special styling for leads
+  const RoleBadge = ({ role }: { role: string }) => {
+    if (role.toLowerCase() === 'lead') {
+      return (
+        <div className="flex items-center gap-1">
+          <Badge className="bg-gradient-to-r from-amber-400 to-orange-500 text-white font-semibold shadow-md border-0 flex items-center gap-1 px-2 py-1">
+            <Crown className="w-3 h-3" />
+            LEAD
+          </Badge>
+        </div>
+      );
+    }
+    return (
+      <Badge variant="outline" className="text-xs">
+        {role}
+      </Badge>
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -351,7 +370,9 @@ export default function HostsManagementConsolidated() {
                         <span className="text-sm font-medium text-slate-700">{contact.name}</span>
                         {contact.isPrimary && <Star className="w-3 h-3 text-yellow-500 fill-current" />}
                       </div>
-                      <div className="text-xs text-slate-600">{contact.role}</div>
+                      <div className="flex items-center">
+                        <RoleBadge role={contact.role} />
+                      </div>
                       <div className="flex items-center text-xs text-slate-600">
                         <Phone className="w-3 h-3 mr-1" />
                         {contact.phone}
@@ -611,7 +632,9 @@ export default function HostsManagementConsolidated() {
                               </Badge>
                             )}
                           </div>
-                          <div className="text-sm text-slate-600">{contact.role}</div>
+                          <div className="flex items-center">
+                            <RoleBadge role={contact.role} />
+                          </div>
                           <div className="flex items-center text-sm text-slate-600">
                             <Phone className="w-4 h-4 mr-2" />
                             {contact.phone}
