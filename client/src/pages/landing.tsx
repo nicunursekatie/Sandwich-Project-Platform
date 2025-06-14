@@ -154,16 +154,7 @@ export default function Landing() {
             </CardContent>
           </Card>
 
-          <Card className="text-center bg-white/80 backdrop-blur dark:bg-gray-800/80">
-            <CardHeader>
-              <Users className="h-12 w-12 text-red-600 mx-auto mb-4" />
-              <CardTitle className="text-2xl font-bold">{Math.round(totalSandwiches / 3).toLocaleString()}</CardTitle>
-              <CardDescription className="font-semibold">People Served</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 dark:text-gray-400">estimated community impact</p>
-            </CardContent>
-          </Card>
+
           </div>
         )}
 
