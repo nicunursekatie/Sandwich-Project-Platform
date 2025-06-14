@@ -22,6 +22,7 @@ export default function SandwichCollectionForm() {
   const today = new Date().toISOString().split('T')[0];
   const [collectionDate, setCollectionDate] = useState(today);
   const [hostName, setHostName] = useState("");
+  const [isCustomHost, setIsCustomHost] = useState(false);
   const [individualSandwiches, setIndividualSandwiches] = useState("");
   const [groupCollections, setGroupCollections] = useState<GroupCollection[]>([
     { id: "1", groupName: "", sandwichCount: 0 }
@@ -52,8 +53,10 @@ export default function SandwichCollectionForm() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/sandwich-collections'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/hosts'] });
       // Reset form
       setHostName("");
+      setIsCustomHost(false);
       setIndividualSandwiches("");
       setGroupCollections([{ id: "1", groupName: "", sandwichCount: 0 }]);
       toast({
@@ -87,7 +90,7 @@ export default function SandwichCollectionForm() {
     ));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!collectionDate || !hostName || !individualSandwiches) {
@@ -99,6 +102,24 @@ export default function SandwichCollectionForm() {
       return;
     }
 
+    // Check if host exists and create if needed
+    if (isCustomHost || !hosts.some(h => h.name === hostName)) {
+      try {
+        await apiRequest('POST', '/api/hosts', {
+          name: hostName.trim(),
+          address: '',
+          phone: '',
+          email: '',
+          status: 'active'
+        });
+        // Refresh hosts list
+        queryClient.invalidateQueries({ queryKey: ['/api/hosts'] });
+      } catch (error) {
+        // Host might already exist, continue with collection creation
+        console.log('Host creation skipped (may already exist):', error);
+      }
+    }
+
     const validGroupCollections = groupCollections.filter(g => g.groupName.trim() && g.sandwichCount > 0);
     const groupCollectionsString = validGroupCollections.length > 0 
       ? validGroupCollections.map(g => `${g.groupName}: ${g.sandwichCount}`).join(', ')
@@ -106,7 +127,7 @@ export default function SandwichCollectionForm() {
 
     submitCollectionMutation.mutate({
       collectionDate,
-      hostName,
+      hostName: hostName.trim(),
       individualSandwiches: parseInt(individualSandwiches),
       groupCollections: groupCollectionsString
     });
@@ -137,18 +158,60 @@ export default function SandwichCollectionForm() {
 
           <div className="space-y-2">
             <Label htmlFor="hostName">Host Name</Label>
-            <Select value={hostName} onValueChange={setHostName}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select host" />
-              </SelectTrigger>
-              <SelectContent>
-                {hostOptions.map((host) => (
-                  <SelectItem key={host} value={host}>
-                    {host}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {isCustomHost ? (
+              <div className="flex gap-2">
+                <Input
+                  id="hostName"
+                  value={hostName}
+                  onChange={(e) => setHostName(e.target.value)}
+                  placeholder="Enter custom host name"
+                  required
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setIsCustomHost(false);
+                    setHostName("");
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Select value={hostName} onValueChange={(value) => {
+                  if (value === "Other") {
+                    setIsCustomHost(true);
+                    setHostName("");
+                  } else {
+                    setHostName(value);
+                  }
+                }}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Select host" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {hostOptions.map((host) => (
+                      <SelectItem key={host} value={host}>
+                        {host}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {hostName && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setIsCustomHost(true);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
