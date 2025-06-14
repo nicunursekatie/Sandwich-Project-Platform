@@ -535,9 +535,11 @@ export default function CollectionAnalytics() {
                           <Edit className="w-4 h-4 text-gray-400 inline ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </td>
                         <td className="p-2 text-right">{collection.individualSandwiches || 0}</td>
-                        <td className="p-2 text-right">{collection.groupCollections || 0}</td>
+                        <td className="p-2 text-right">{
+                          Array.isArray(collection.groupCollections) ? 0 : (collection.groupCollections || 0)
+                        }</td>
                         <td className="p-2 text-right font-medium">
-                          {Number(collection.individualSandwiches || 0) + Number(collection.groupCollections || 0)}
+                          {Number(collection.individualSandwiches || 0) + Number(Array.isArray(collection.groupCollections) ? 0 : (collection.groupCollections || 0))}
                         </td>
                         <td className="p-2 text-xs text-gray-500">
                           {new Date(collection.submittedAt).toLocaleDateString()}
