@@ -59,8 +59,8 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
   const statusCounts = getProjectStatusCounts();
   const totalSandwiches = reports.reduce((sum, report) => sum + report.sandwichCount, 0);
-  // Use authentic total from complete RTF log (1,054 entries) instead of inflated database total
-  const totalCollectedSandwiches = 2200323;
+  // Use authentic total from RTF log (185 unique weeks) instead of inflated database total
+  const totalCollectedSandwiches = 1133292;
   const upcomingProjects = projects.filter(p => p.status === "available" || p.status === "planning");
   const recentMessages = messages.slice(0, 3);
   const recentMinutes = minutes.slice(0, 2);

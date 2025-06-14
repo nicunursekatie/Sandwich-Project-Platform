@@ -10,84 +10,57 @@ from datetime import datetime
 from collections import defaultdict
 
 def parse_complete_rtf_log(filename):
-    """Parse the complete RTF file to extract all collection entries"""
+    """Parse the complete RTF file to extract weekly totals (not individual locations)"""
     with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
         content = f.read()
     
-    collections = []
+    # Dictionary to aggregate by week
+    weekly_totals = defaultdict(lambda: {'count': 0, 'date': '', 'locations': []})
     
-    # More comprehensive regex to catch all week entries with dates and counts
-    # This should catch the format: Week XXX (MM/DD/YYYY): number sandwiches
+    # Pattern to catch all week entries with dates and counts
     week_pattern = r'Week\s+(\d+)\s*\([^\)]*(\d{1,2}\/\d{1,2}\/\d{4})[^\)]*\):\s*([0-9,]+)\s*sandwiches'
     matches = re.findall(week_pattern, content, re.IGNORECASE)
     
-    print(f"Found {len(matches)} week entries with complete date/count info")
+    print(f"Found {len(matches)} individual location entries")
     
-    # Also try alternative patterns for entries that might be formatted differently
-    alt_pattern = r'Week\s+(\d+).*?(\d{1,2}\/\d{1,2}\/\d{4}).*?([0-9,]+)\s*sandwiches'
-    alt_matches = re.findall(alt_pattern, content, re.IGNORECASE)
-    
-    print(f"Found {len(alt_matches)} entries with alternative pattern")
-    
-    # Combine and deduplicate
-    all_matches = list(set(matches + alt_matches))
-    print(f"Total unique entries: {len(all_matches)}")
-    
-    for week_num, date_str, count_str in all_matches:
+    for week_num, date_str, count_str in matches:
         try:
-            # Clean up the count
+            week_num = int(week_num)
             count = int(count_str.replace(',', ''))
             
-            # Parse date
-            date_obj = datetime.strptime(date_str, '%m/%d/%Y')
-            iso_date = date_obj.strftime('%Y-%m-%d')
+            # Handle malformed dates (0/ instead of 10/)
+            if date_str.startswith('0/'):
+                date_str = '10/' + date_str[2:]
             
-            collections.append({
-                'week': int(week_num),
-                'date': iso_date,
-                'count': count,
-                'original_date': date_str,
-                'raw_count': count_str
-            })
+            # Parse date
+            try:
+                date_obj = datetime.strptime(date_str, '%m/%d/%Y')
+                iso_date = date_obj.strftime('%Y-%m-%d')
+            except ValueError:
+                # Skip entries with unparseable dates
+                continue
+            
+            # Aggregate by week number
+            if not weekly_totals[week_num]['date']:
+                weekly_totals[week_num]['date'] = iso_date
+                weekly_totals[week_num]['original_date'] = date_str
+            
+            weekly_totals[week_num]['count'] += count
+            weekly_totals[week_num]['locations'].append(count)
+            
         except (ValueError, IndexError) as e:
             print(f"Could not parse: Week {week_num}, {date_str}, {count_str} - {e}")
     
-    # If we still don't have enough entries, try a more general approach
-    if len(collections) < 1000:
-        print("Trying broader pattern matching...")
-        
-        # Look for any line with Week followed by numbers and sandwich counts
-        lines = content.split('\n')
-        for line in lines:
-            if 'week' in line.lower() and 'sandwich' in line.lower():
-                # Extract week number
-                week_match = re.search(r'week\s+(\d+)', line, re.IGNORECASE)
-                # Extract date
-                date_match = re.search(r'(\d{1,2}\/\d{1,2}\/\d{4})', line)
-                # Extract count
-                count_match = re.search(r'([0-9,]+)\s*sandwiches', line, re.IGNORECASE)
-                
-                if week_match and date_match and count_match:
-                    try:
-                        week_num = int(week_match.group(1))
-                        date_str = date_match.group(1)
-                        count = int(count_match.group(1).replace(',', ''))
-                        
-                        date_obj = datetime.strptime(date_str, '%m/%d/%Y')
-                        iso_date = date_obj.strftime('%Y-%m-%d')
-                        
-                        # Check if this entry already exists
-                        key = f"{week_num}_{iso_date}"
-                        if not any(f"{c['week']}_{c['date']}" == key for c in collections):
-                            collections.append({
-                                'week': week_num,
-                                'date': iso_date,
-                                'count': count,
-                                'original_date': date_str,
-                                'raw_count': count_match.group(1)
-                            })
-                    except (ValueError, IndexError):
-                        continue
+    # Convert to list format
+    collections = []
+    for week_num, data in weekly_totals.items():
+        collections.append({
+            'week': week_num,
+            'date': data['date'],
+            'count': data['count'],
+            'original_date': data['original_date'],
+            'location_count': len(data['locations'])
+        })
     
     return collections
 
