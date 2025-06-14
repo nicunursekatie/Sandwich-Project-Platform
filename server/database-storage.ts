@@ -110,7 +110,7 @@ export class DatabaseStorage implements IStorage {
 
   // Project Tasks
   async getProjectTasks(projectId: number): Promise<ProjectTask[]> {
-    return await db.select().from(projectTasks).where(eq(projectTasks.projectId, projectId)).orderBy(projectTasks.order);
+    return await db.select().from(projectTasks).where(eq(projectTasks.projectId, projectId)).orderBy(projectTasks.orderNum);
   }
 
   async createProjectTask(insertTask: InsertProjectTask): Promise<ProjectTask> {
