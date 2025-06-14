@@ -1,0 +1,689 @@
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { TrendingUp, Calendar, Users, MapPin, AlertTriangle, BarChart3, PieChart as PieChartIcon, Crown, Clock } from "lucide-react";
+import type { SandwichCollection } from "@shared/schema";
+
+interface AnalyticsData {
+  totalCollections: number;
+  totalSandwiches: number;
+  uniqueHosts: number;
+  dateRange: { start: string; end: string };
+  avgPerCollection: number;
+  topHosts: Array<{ host: string; count: number; total: number }>;
+  monthlyTrends: Array<{ month: string; collections: number; sandwiches: number }>;
+  weeklyPatterns: Array<{ day: string; collections: number; avg: number }>;
+  hostDistribution: Array<{ name: string; value: number; color: string }>;
+  qualityMetrics: {
+    withGroups: number;
+    withoutGroups: number;
+    missingData: number;
+    suspiciousEntries: number;
+  };
+  ogAnalysis: {
+    ogCollections: number;
+    ogSandwiches: number;
+    preLocationPeriod: string;
+    locationBasedPeriod: string;
+  };
+}
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC658', '#FF7C7C', '#8DD1E1', '#D084D0'];
+
+export default function CollectionAnalytics() {
+  const [dateFilter, setDateFilter] = useState({ start: "", end: "" });
+  const [hostFilter, setHostFilter] = useState("");
+  const [selectedMetric, setSelectedMetric] = useState("sandwiches");
+
+  const { data: collections = [], isLoading } = useQuery({
+    queryKey: ["/api/sandwich-collections", { limit: 10000 }],
+    queryFn: async () => {
+      const response = await fetch("/api/sandwich-collections?limit=10000");
+      if (!response.ok) throw new Error('Failed to fetch collections');
+      const data = await response.json();
+      return data.collections as SandwichCollection[];
+    }
+  });
+
+  const analyticsData: AnalyticsData | null = useMemo(() => {
+    if (!collections.length) return null;
+
+    // Filter collections based on criteria
+    let filteredCollections = collections;
+    
+    if (dateFilter.start) {
+      filteredCollections = filteredCollections.filter(c => c.collectionDate >= dateFilter.start);
+    }
+    if (dateFilter.end) {
+      filteredCollections = filteredCollections.filter(c => c.collectionDate <= dateFilter.end);
+    }
+    if (hostFilter) {
+      filteredCollections = filteredCollections.filter(c => 
+        c.hostName.toLowerCase().includes(hostFilter.toLowerCase())
+      );
+    }
+
+    const totalCollections = filteredCollections.length;
+    const totalSandwiches = filteredCollections.reduce((sum, c) => sum + (c.individualSandwiches || 0), 0);
+    const uniqueHosts = new Set(filteredCollections.map(c => c.hostName)).size;
+    
+    // Date range
+    const dates = filteredCollections.map(c => c.collectionDate).sort();
+    const dateRange = {
+      start: dates[0] || "",
+      end: dates[dates.length - 1] || ""
+    };
+
+    // Top hosts analysis
+    const hostStats = new Map();
+    filteredCollections.forEach(c => {
+      const host = c.hostName;
+      if (!hostStats.has(host)) {
+        hostStats.set(host, { count: 0, total: 0 });
+      }
+      const stats = hostStats.get(host);
+      stats.count++;
+      stats.total += (c.individualSandwiches || 0);
+    });
+
+    const topHosts = Array.from(hostStats.entries())
+      .map(([host, stats]) => ({ host, count: stats.count, total: stats.total }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 10);
+
+    // Monthly trends
+    const monthlyData = new Map();
+    filteredCollections.forEach(c => {
+      const month = c.collectionDate.substring(0, 7); // YYYY-MM
+      if (!monthlyData.has(month)) {
+        monthlyData.set(month, { collections: 0, sandwiches: 0 });
+      }
+      const data = monthlyData.get(month);
+      data.collections++;
+      data.sandwiches += (c.individualSandwiches || 0);
+    });
+
+    const monthlyTrends = Array.from(monthlyData.entries())
+      .map(([month, data]) => ({ month, ...data }))
+      .sort((a, b) => a.month.localeCompare(b.month));
+
+    // Weekly patterns (day of week analysis)
+    const weeklyData = new Map();
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    
+    filteredCollections.forEach(c => {
+      const day = new Date(c.collectionDate).getDay();
+      const dayName = dayNames[day];
+      if (!weeklyData.has(dayName)) {
+        weeklyData.set(dayName, { collections: 0, total: 0 });
+      }
+      const data = weeklyData.get(dayName);
+      data.collections++;
+      data.total += (c.individualSandwiches || 0);
+    });
+
+    const weeklyPatterns = dayNames.map(day => {
+      const data = weeklyData.get(day) || { collections: 0, total: 0 };
+      return {
+        day,
+        collections: data.collections,
+        avg: data.collections > 0 ? Math.round(data.total / data.collections) : 0
+      };
+    });
+
+    // Host distribution for pie chart
+    const hostDistribution = topHosts.slice(0, 8).map((host, index) => ({
+      name: host.host.length > 15 ? host.host.substring(0, 15) + "..." : host.host,
+      value: host.total,
+      color: COLORS[index % COLORS.length]
+    }));
+
+    // Quality metrics
+    const withGroups = filteredCollections.filter(c => ((c.groupCollections as number) || 0) > 0).length;
+    const withoutGroups = totalCollections - withGroups;
+    const missingData = filteredCollections.filter(c => 
+      !c.hostName || c.hostName.trim() === "" || (c.individualSandwiches || 0) === 0
+    ).length;
+    const suspiciousEntries = filteredCollections.filter(c => {
+      const hostName = c.hostName.toLowerCase();
+      return hostName.includes('test') || hostName.includes('duplicate') || 
+             hostName.match(/^group \d+$/) || hostName.startsWith('loc ');
+    }).length;
+
+    // OG Sandwich Project analysis
+    const ogCollections = filteredCollections.filter(c => c.hostName === 'OG Sandwich Project');
+    const ogSandwiches = ogCollections.reduce((sum, c) => sum + (c.individualSandwiches || 0), 0);
+    const ogDates = ogCollections.map(c => c.collectionDate).sort();
+    const preLocationPeriod = ogDates.length > 0 ? `${ogDates[0]} to ${ogDates[ogDates.length - 1]}` : "No data";
+    
+    const locationBasedCollections = filteredCollections.filter(c => 
+      c.hostName !== 'OG Sandwich Project' && c.hostName && c.hostName.trim() !== ""
+    );
+    const locationDates = locationBasedCollections.map(c => c.collectionDate).sort();
+    const locationBasedPeriod = locationDates.length > 0 ? `${locationDates[0]} to ${locationDates[locationDates.length - 1]}` : "No data";
+
+    return {
+      totalCollections,
+      totalSandwiches,
+      uniqueHosts,
+      dateRange,
+      avgPerCollection: totalCollections > 0 ? Math.round(totalSandwiches / totalCollections) : 0,
+      topHosts,
+      monthlyTrends,
+      weeklyPatterns,
+      hostDistribution,
+      qualityMetrics: {
+        withGroups,
+        withoutGroups,
+        missingData,
+        suspiciousEntries
+      },
+      ogAnalysis: {
+        ogCollections: ogCollections.length,
+        ogSandwiches,
+        preLocationPeriod,
+        locationBasedPeriod
+      }
+    };
+  }, [collections, dateFilter, hostFilter]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-2 text-sm text-gray-600">Loading analytics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!analyticsData) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <p className="text-center text-gray-500">No data available for analysis</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold">Collection Analytics</h2>
+          <p className="text-sm text-gray-600">
+            Comprehensive analysis of {analyticsData.totalCollections.toLocaleString()} collections
+          </p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <BarChart3 className="w-5 h-5 text-blue-600" />
+          <span className="text-sm font-medium">Data Insights</span>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Filters</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <Label htmlFor="start-date">Start Date</Label>
+              <Input
+                id="start-date"
+                type="date"
+                value={dateFilter.start}
+                onChange={(e) => setDateFilter(prev => ({ ...prev, start: e.target.value }))}
+              />
+            </div>
+            <div>
+              <Label htmlFor="end-date">End Date</Label>
+              <Input
+                id="end-date"
+                type="date"
+                value={dateFilter.end}
+                onChange={(e) => setDateFilter(prev => ({ ...prev, end: e.target.value }))}
+              />
+            </div>
+            <div>
+              <Label htmlFor="host-filter">Host Filter</Label>
+              <Input
+                id="host-filter"
+                placeholder="Search hosts..."
+                value={hostFilter}
+                onChange={(e) => setHostFilter(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="metric-select">Primary Metric</Label>
+              <Select value={selectedMetric} onValueChange={setSelectedMetric}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="sandwiches">Sandwiches</SelectItem>
+                  <SelectItem value="collections">Collections</SelectItem>
+                  <SelectItem value="average">Average per Collection</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          {(dateFilter.start || dateFilter.end || hostFilter) && (
+            <div className="mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setDateFilter({ start: "", end: "" });
+                  setHostFilter("");
+                }}
+              >
+                Clear Filters
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <TrendingUp className="w-8 h-8 text-blue-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Total Collections</p>
+                <p className="text-2xl font-bold">{analyticsData.totalCollections.toLocaleString()}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <Users className="w-8 h-8 text-green-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Total Sandwiches</p>
+                <p className="text-2xl font-bold">{analyticsData.totalSandwiches.toLocaleString()}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <MapPin className="w-8 h-8 text-purple-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Unique Hosts</p>
+                <p className="text-2xl font-bold">{analyticsData.uniqueHosts}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <BarChart3 className="w-8 h-8 text-amber-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Avg per Collection</p>
+                <p className="text-2xl font-bold">{analyticsData.avgPerCollection}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Analytics Tabs */}
+      <Tabs defaultValue="trends" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="trends">Trends</TabsTrigger>
+          <TabsTrigger value="hosts">Host Analysis</TabsTrigger>
+          <TabsTrigger value="patterns">Patterns</TabsTrigger>
+          <TabsTrigger value="quality">Data Quality</TabsTrigger>
+          <TabsTrigger value="historical">Historical</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="trends" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Monthly Trends</CardTitle>
+              <CardDescription>Collection activity and sandwich totals over time</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={400}>
+                <LineChart data={analyticsData.monthlyTrends}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis yAxisId="left" />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip />
+                  <Bar yAxisId="left" dataKey="collections" fill="#8884d8" name="Collections" />
+                  <Line yAxisId="right" type="monotone" dataKey="sandwiches" stroke="#82ca9d" strokeWidth={2} name="Sandwiches" />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="hosts" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Performing Hosts</CardTitle>
+                <CardDescription>Hosts by total sandwich contributions</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={analyticsData.topHosts}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="host" angle={-45} textAnchor="end" height={100} />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="total" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Host Distribution</CardTitle>
+                <CardDescription>Sandwich contribution breakdown</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={analyticsData.hostDistribution}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {analyticsData.hostDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Host Performance Table</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left p-2">Host</th>
+                      <th className="text-right p-2">Collections</th>
+                      <th className="text-right p-2">Total Sandwiches</th>
+                      <th className="text-right p-2">Avg per Collection</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {analyticsData.topHosts.map((host, index) => (
+                      <tr key={index} className="border-b">
+                        <td className="p-2 font-medium">
+                          {host.host === 'OG Sandwich Project' && (
+                            <Crown className="w-4 h-4 text-amber-500 inline mr-2" />
+                          )}
+                          {host.host}
+                        </td>
+                        <td className="p-2 text-right">{host.count}</td>
+                        <td className="p-2 text-right">{host.total.toLocaleString()}</td>
+                        <td className="p-2 text-right">{Math.round(host.total / host.count)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="patterns" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Weekly Patterns</CardTitle>
+              <CardDescription>Collection activity by day of week</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={analyticsData.weeklyPatterns}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" />
+                  <YAxis yAxisId="left" />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip />
+                  <Bar yAxisId="left" dataKey="collections" fill="#8884d8" name="Collections" />
+                  <Bar yAxisId="right" dataKey="avg" fill="#82ca9d" name="Avg Sandwiches" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="quality" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <Users className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">With Group Data</p>
+                    <p className="text-2xl font-bold text-green-600">{analyticsData.qualityMetrics.withGroups}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Users className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Individual Only</p>
+                    <p className="text-2xl font-bold text-blue-600">{analyticsData.qualityMetrics.withoutGroups}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
+                    <AlertTriangle className="w-4 h-4 text-amber-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Missing Data</p>
+                    <p className="text-2xl font-bold text-amber-600">{analyticsData.qualityMetrics.missingData}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                    <AlertTriangle className="w-4 h-4 text-red-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Suspicious</p>
+                    <p className="text-2xl font-bold text-red-600">{analyticsData.qualityMetrics.suspiciousEntries}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Data Quality Summary</CardTitle>
+              <CardDescription>Overview of data completeness and accuracy</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span>Collections with complete data</span>
+                  <Badge variant="secondary">
+                    {((analyticsData.totalCollections - analyticsData.qualityMetrics.missingData) / analyticsData.totalCollections * 100).toFixed(1)}%
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Collections with group data</span>
+                  <Badge variant="secondary">
+                    {(analyticsData.qualityMetrics.withGroups / analyticsData.totalCollections * 100).toFixed(1)}%
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Data quality score</span>
+                  <Badge variant={analyticsData.qualityMetrics.suspiciousEntries > analyticsData.totalCollections * 0.05 ? "destructive" : "default"}>
+                    {((analyticsData.totalCollections - analyticsData.qualityMetrics.suspiciousEntries - analyticsData.qualityMetrics.missingData) / analyticsData.totalCollections * 100).toFixed(1)}%
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="historical" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Crown className="w-5 h-5 text-amber-500 mr-2" />
+                  OG Sandwich Project Era
+                </CardTitle>
+                <CardDescription>Pre-location based collection period</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span>Total Collections</span>
+                    <Badge variant="secondary">{analyticsData.ogAnalysis.ogCollections}</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Total Sandwiches</span>
+                    <Badge variant="secondary">{analyticsData.ogAnalysis.ogSandwiches.toLocaleString()}</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Time Period</span>
+                    <Badge variant="outline" className="text-xs">{analyticsData.ogAnalysis.preLocationPeriod}</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Avg per Collection</span>
+                    <Badge variant="secondary">
+                      {analyticsData.ogAnalysis.ogCollections > 0 ? 
+                        Math.round(analyticsData.ogAnalysis.ogSandwiches / analyticsData.ogAnalysis.ogCollections) : 0}
+                    </Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <MapPin className="w-5 h-5 text-blue-500 mr-2" />
+                  Location-Based Era
+                </CardTitle>
+                <CardDescription>Host-specific collection tracking</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span>Total Collections</span>
+                    <Badge variant="secondary">
+                      {analyticsData.totalCollections - analyticsData.ogAnalysis.ogCollections}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Total Sandwiches</span>
+                    <Badge variant="secondary">
+                      {(analyticsData.totalSandwiches - analyticsData.ogAnalysis.ogSandwiches).toLocaleString()}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Time Period</span>
+                    <Badge variant="outline" className="text-xs">{analyticsData.ogAnalysis.locationBasedPeriod}</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Unique Hosts</span>
+                    <Badge variant="secondary">{analyticsData.uniqueHosts - 1}</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Historical Timeline</CardTitle>
+              <CardDescription>Evolution of collection tracking methods</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
+                    <Crown className="w-4 h-4 text-amber-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">OG Sandwich Project Period</h4>
+                    <p className="text-sm text-gray-600">
+                      Centralized tracking without specific host locations. 
+                      {analyticsData.ogAnalysis.ogCollections} collections totaling {analyticsData.ogAnalysis.ogSandwiches.toLocaleString()} sandwiches.
+                    </p>
+                    <Badge variant="outline" className="mt-2">{analyticsData.ogAnalysis.preLocationPeriod}</Badge>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <MapPin className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Location-Based Tracking</h4>
+                    <p className="text-sm text-gray-600">
+                      Transition to host-specific tracking with detailed location data. 
+                      {analyticsData.uniqueHosts - 1} unique hosts providing detailed collection information.
+                    </p>
+                    <Badge variant="outline" className="mt-2">{analyticsData.ogAnalysis.locationBasedPeriod}</Badge>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}

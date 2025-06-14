@@ -9,6 +9,7 @@ import Meetings from "@/pages/meetings";
 import Development from "@/pages/development";
 import PhoneDirectoryPage from "@/pages/phone-directory";
 import RoleDemo from "@/pages/role-demo";
+import Analytics from "@/pages/analytics";
 import Landing from "@/pages/landing";
 import NotFound from "@/pages/not-found";
 
@@ -38,6 +39,7 @@ function Router() {
       <Route path="/development" component={Development} />
       <Route path="/phone-directory" component={PhoneDirectoryPage} />
       <Route path="/role-demo" component={RoleDemo} />
+      <Route path="/analytics" component={Analytics} />
       <Route component={NotFound} />
     </Switch>
   );
