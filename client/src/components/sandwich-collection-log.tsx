@@ -443,43 +443,57 @@ export default function SandwichCollectionLog() {
   });
 
   // Export function
-  const exportToCSV = () => {
-    if (!collections || collections.length === 0) {
+  const exportToCSV = async () => {
+    try {
+      // Fetch all collections data for export
+      const response = await fetch('/api/sandwich-collections?limit=10000');
+      if (!response.ok) throw new Error('Failed to fetch all collections');
+      const allCollectionsData = await response.json();
+      const allCollections = allCollectionsData.collections || [];
+
+      if (allCollections.length === 0) {
+        toast({
+          title: "No data to export",
+          description: "There are no collections to export.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const headers = ["ID", "Host Name", "Individual Sandwiches", "Collection Date", "Group Collections", "Submitted At"];
+      const csvData = [
+        headers.join(","),
+        ...allCollections.map((collection: SandwichCollection) => [
+          collection.id,
+          `"${collection.hostName}"`,
+          collection.individualSandwiches,
+          `"${collection.collectionDate}"`,
+          `"${collection.groupCollections}"`,
+          `"${new Date(collection.submittedAt).toLocaleString()}"`
+        ].join(","))
+      ].join("\n");
+
+      const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", `sandwich-collections-all-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
       toast({
-        title: "No data to export",
-        description: "There are no collections to export.",
+        title: "Export successful",
+        description: `All ${allCollections.length} collections exported to CSV.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Export failed",
+        description: "Failed to export collections data.",
         variant: "destructive",
       });
-      return;
     }
-
-    const headers = ["ID", "Host Name", "Individual Sandwiches", "Collection Date", "Group Collections", "Submitted At"];
-    const csvData = [
-      headers.join(","),
-      ...collections.map((collection: SandwichCollection) => [
-        collection.id,
-        `"${collection.hostName}"`,
-        collection.individualSandwiches,
-        `"${collection.collectionDate}"`,
-        `"${collection.groupCollections}"`,
-        `"${new Date(collection.submittedAt).toLocaleString()}"`
-      ].join(","))
-    ].join("\n");
-
-    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", `sandwich-collections-${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    toast({
-      title: "Export successful",
-      description: `Exported ${collections.length} collections to CSV.`,
-    });
   };
 
   const batchDeleteMutation = useMutation({
