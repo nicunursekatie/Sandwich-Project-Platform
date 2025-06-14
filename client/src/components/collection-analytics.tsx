@@ -57,15 +57,30 @@ export default function CollectionAnalytics() {
 
   const { toast } = useToast();
 
-  // Helper function to normalize group data
-  const getGroupCount = (groupCollections: any): number => {
-    if (Array.isArray(groupCollections)) {
-      if (groupCollections.length === 0) return 0;
+  // Helper function to normalize group data from various formats
+  const parseGroupCollections = (groupCollections: any): number => {
+    if (!groupCollections) return 0;
+    
+    if (typeof groupCollections === 'string') {
+      try {
+        const parsed = JSON.parse(groupCollections);
+        if (Array.isArray(parsed)) {
+          return parsed.reduce((total: number, group: any) => 
+            total + (Number(group.sandwichCount) || 0), 0
+          );
+        } else {
+          return Number(parsed) || 0;
+        }
+      } catch {
+        return Number(groupCollections) || 0;
+      }
+    } else if (Array.isArray(groupCollections)) {
       return groupCollections.reduce((total: number, group: any) => 
-        total + (group.sandwichCount || 0), 0
+        total + (Number(group.sandwichCount) || 0), 0
       );
+    } else {
+      return Number(groupCollections) || 0;
     }
-    return Number(groupCollections || 0);
   };
 
   // Mutation for updating collections
@@ -128,13 +143,13 @@ export default function CollectionAnalytics() {
       if (hostFilter && !collection.hostName?.toLowerCase().includes(hostFilter.toLowerCase())) return false;
       
       // Sandwich count filters
-      const totalSandwiches = (collection.individualSandwiches || 0) + getGroupCount(collection.groupCollections);
+      const totalSandwiches = (collection.individualSandwiches || 0) + parseGroupCollections(collection.groupCollections);
       if (sandwichFilter.min && totalSandwiches < Number(sandwichFilter.min)) return false;
       if (sandwichFilter.max && totalSandwiches > Number(sandwichFilter.max)) return false;
       
       // Collection type filters
-      if (collectionTypeFilter === "with-groups" && getGroupCount(collection.groupCollections) === 0) return false;
-      if (collectionTypeFilter === "individual-only" && getGroupCount(collection.groupCollections) > 0) return false;
+      if (collectionTypeFilter === "with-groups" && parseGroupCollections(collection.groupCollections) === 0) return false;
+      if (collectionTypeFilter === "individual-only" && parseGroupCollections(collection.groupCollections) > 0) return false;
       if (collectionTypeFilter === "og-project" && collection.hostName !== "OG Sandwich Project") return false;
       if (collectionTypeFilter === "location-based" && collection.hostName === "OG Sandwich Project") return false;
       
@@ -146,25 +161,28 @@ export default function CollectionAnalytics() {
     if (!collections.length) return null;
 
     console.log("Collections data:", collections.slice(0, 3)); // Debug first 3 collections
-    console.log("Filtered collections length:", filteredCollections.length);
+    console.log("Sample groupCollections data:", collections.slice(0, 5).map(c => ({
+      id: c.id,
+      groupCollections: c.groupCollections,
+      type: typeof c.groupCollections,
+      isArray: Array.isArray(c.groupCollections)
+    })));
 
     const totalCollections = filteredCollections.length;
     const totalSandwiches = filteredCollections.reduce((sum, c) => {
       const individual = Number(c.individualSandwiches || 0);
-      let groups = 0;
-      
-      if (Array.isArray(c.groupCollections)) {
-        if (c.groupCollections.length > 0) {
-          groups = c.groupCollections.reduce((total: number, group: any) => 
-            total + (Number(group.sandwichCount) || 0), 0
-          );
-        }
-      } else {
-        groups = Number(c.groupCollections || 0);
-      }
-      
+      const groups = parseGroupCollections(c.groupCollections);
       const rowTotal = individual + groups;
-      console.log(`Collection ${c.id}: individual=${individual}, groups=${groups}, total=${rowTotal}`);
+      
+      if (c.id === 2164) { // Debug one specific collection
+        console.log(`Collection ${c.id} detailed:`, {
+          groupCollections: c.groupCollections,
+          groupType: typeof c.groupCollections,
+          individual,
+          groups,
+          rowTotal
+        });
+      }
       
       return sum + rowTotal;
     }, 0);
@@ -191,16 +209,7 @@ export default function CollectionAnalytics() {
       stats.count++;
       
       const individual = Number(c.individualSandwiches || 0);
-      let groups = 0;
-      if (Array.isArray(c.groupCollections)) {
-        if (c.groupCollections.length > 0) {
-          groups = c.groupCollections.reduce((total: number, group: any) => 
-            total + (Number(group.sandwichCount) || 0), 0
-          );
-        }
-      } else {
-        groups = Number(c.groupCollections || 0);
-      }
+      const groups = parseGroupCollections(c.groupCollections);
       
       stats.total += individual + groups;
     });
@@ -239,16 +248,7 @@ export default function CollectionAnalytics() {
       const data = weeklyData.get(dayName);
       data.collections++;
       const individual = Number(c.individualSandwiches || 0);
-      let groups = 0;
-      if (Array.isArray(c.groupCollections)) {
-        if (c.groupCollections.length > 0) {
-          groups = c.groupCollections.reduce((total: number, group: any) => 
-            total + (Number(group.sandwichCount) || 0), 0
-          );
-        }
-      } else {
-        groups = Number(c.groupCollections || 0);
-      }
+      const groups = parseGroupCollections(c.groupCollections);
       data.total += individual + groups;
     });
 
@@ -269,17 +269,7 @@ export default function CollectionAnalytics() {
     }));
 
     // Quality metrics
-    const withGroups = filteredCollections.filter(c => {
-      if (Array.isArray(c.groupCollections)) {
-        if (c.groupCollections.length > 0) {
-          return c.groupCollections.reduce((total: number, group: any) => 
-            total + (Number(group.sandwichCount) || 0), 0
-          ) > 0;
-        }
-        return false;
-      }
-      return Number(c.groupCollections || 0) > 0;
-    }).length;
+    const withGroups = filteredCollections.filter(c => parseGroupCollections(c.groupCollections) > 0).length;
     const withoutGroups = totalCollections - withGroups;
     const missingData = filteredCollections.filter(c => 
       !c.hostName || c.hostName.trim() === "" || (c.individualSandwiches || 0) === 0
