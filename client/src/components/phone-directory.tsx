@@ -16,7 +16,7 @@ import { z } from "zod";
 import { insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Phone, Mail, MapPin, Search, Download, User, Users, Star, Building2, Plus, Edit, Trash2, Upload, FileSpreadsheet } from "lucide-react";
+import { Phone, Mail, MapPin, Search, Download, User, Users, Star, Building2, Plus, Edit, Trash2, Upload, FileSpreadsheet, Crown } from "lucide-react";
 
 interface Host {
   id: number;
@@ -398,6 +398,25 @@ export default function PhoneDirectory() {
     return address.replace(/\s*\([^)]*\)/g, '').trim();
   };
 
+  // Helper function to render role badges with special styling for leads
+  const RoleBadge = ({ role }: { role: string }) => {
+    if (role.toLowerCase() === 'lead') {
+      return (
+        <div className="flex items-center gap-1">
+          <Badge className="bg-gradient-to-r from-amber-400 to-orange-500 text-white font-semibold shadow-md border-0 flex items-center gap-1 px-2 py-1">
+            <Crown className="w-3 h-3" />
+            LEAD
+          </Badge>
+        </div>
+      );
+    }
+    return (
+      <Badge variant="outline" className="text-xs">
+        {role}
+      </Badge>
+    );
+  };
+
   const HostCard = ({ host }: { host: HostWithContacts }) => (
     <Card className="mb-4">
       <CardContent className="pt-4">
@@ -427,9 +446,7 @@ export default function PhoneDirectory() {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-gray-900">{contact.name}</span>
-                        <Badge variant="outline" className="text-xs">
-                          {contact.role}
-                        </Badge>
+                        <RoleBadge role={contact.role} />
                         {contact.isPrimary && (
                           <Star className="w-3 h-3 text-yellow-500 fill-current" />
                         )}
@@ -629,8 +646,9 @@ export default function PhoneDirectory() {
             )}
             
             {contact.role && (
-              <div className="text-sm text-gray-600 mb-2">
-                <strong>Role:</strong> {contact.role}
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm text-gray-600 font-medium">Role:</span>
+                <RoleBadge role={contact.role} />
               </div>
             )}
             
