@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MessageLog from "@/components/message-log";
 import CommitteeChat from "@/components/committee-chat";
+import HostChat from "@/components/host-chat";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, USER_ROLES } from "@/lib/authUtils";
 import { PERMISSIONS } from "@/lib/authUtils";
@@ -21,7 +22,7 @@ export default function ChatHub() {
   }
 
   if (hasPermission(user, PERMISSIONS.HOST_CHAT)) {
-    availableTabs.push({ value: "hosts", label: "Host Chat", component: <MessageLog committee="hosts" /> });
+    availableTabs.push({ value: "hosts", label: "Host Chat", component: <HostChat /> });
   }
 
   if (hasPermission(user, PERMISSIONS.DRIVER_CHAT)) {
