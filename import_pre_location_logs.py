@@ -94,25 +94,21 @@ def import_pre_location_logs(file_path):
                         pass
                 
                 if collection_date and sandwich_count > 0:
-                    # Insert into sandwich_collections table
+                    # Insert into sandwich_collections table using actual schema
                     insert_query = """
                         INSERT INTO sandwich_collections 
-                        (host_name, collection_date, individual_sandwiches, group_sandwiches, 
-                         total_sandwiches, notes, created_at, updated_at)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                        (host_name, collection_date, individual_sandwiches, group_collections, submitted_at)
+                        VALUES (%s, %s, %s, %s, %s)
                     """
                     
                     current_time = datetime.now()
-                    notes = "Imported from pre-location logs - historical data before multiple collection sites"
+                    group_collections_json = "[]"  # Empty array since these are pre-location logs
                     
                     cursor.execute(insert_query, (
                         "OG Sandwich Project",
-                        collection_date,
-                        sandwich_count,  # individual_sandwiches
-                        0,              # group_sandwiches
-                        sandwich_count, # total_sandwiches
-                        notes,
-                        current_time,
+                        collection_date.strftime('%Y-%m-%d'),
+                        sandwich_count,
+                        group_collections_json,
                         current_time
                     ))
                     

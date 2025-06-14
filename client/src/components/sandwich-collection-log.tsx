@@ -1109,6 +1109,20 @@ export default function SandwichCollectionLog() {
                 onChange={(e) => handleFilterChange({ hostName: e.target.value })}
                 className="mt-1"
               />
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button
+                  onClick={() => handleFilterChange({ hostName: "OG Sandwich Project" })}
+                  className="px-3 py-1 text-xs bg-amber-100 text-amber-800 border border-amber-300 rounded-full hover:bg-amber-200 transition-colors"
+                >
+                  👑 Historical OG Project
+                </button>
+                <button
+                  onClick={() => handleFilterChange({ hostName: "" })}
+                  className="px-3 py-1 text-xs bg-slate-100 text-slate-700 border border-slate-300 rounded-full hover:bg-slate-200 transition-colors"
+                >
+                  All Locations
+                </button>
+              </div>
             </div>
             <div>
               <Label htmlFor="collectionFromDate" className="text-sm font-medium text-slate-700">Collection Date From</Label>
@@ -1257,6 +1271,11 @@ export default function SandwichCollectionLog() {
                     <div className={`flex items-center ${isInactiveHost ? 'text-gray-500' : 'text-slate-600'}`}>
                       <User className={`w-4 h-4 mr-1 ${isInactiveHost ? 'text-gray-400' : ''}`} />
                       <span>{collection.hostName}</span>
+                      {collection.hostName === 'OG Sandwich Project' && (
+                        <span className="ml-2 text-xs bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 px-2 py-0.5 rounded-full font-medium border border-amber-300">
+                          👑 HISTORICAL
+                        </span>
+                      )}
                       {isInactiveHost && (
                         <span className="ml-2 text-xs bg-gray-300 text-gray-800 px-2 py-0.5 rounded-full font-medium">
                           INACTIVE HOST
