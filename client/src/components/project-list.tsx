@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { ListTodo, Plus, X, Edit, Trash2, Upload, File, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,7 @@ import type { Project } from "@shared/schema";
 
 export default function ProjectList() {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const [showAddForm, setShowAddForm] = useState(false);
   const [claimingProjectId, setClaimingProjectId] = useState<number | null>(null);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -567,13 +569,20 @@ export default function ProjectList() {
 
         <div className="space-y-3">
           {projects.map((project) => (
-            <div key={project.id} className="bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors relative">
+            <div 
+              key={project.id} 
+              className="bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors relative cursor-pointer"
+              onClick={() => setLocation(`/projects/${project.id}`)}
+            >
               {/* Action buttons in top right corner */}
               <div className="absolute top-2 right-2 flex gap-1">
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => startEditingProject(project)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    startEditingProject(project);
+                  }}
                   className="h-6 w-6 p-0 text-slate-500 hover:text-slate-700 hover:bg-slate-200"
                 >
                   <Edit className="w-3 h-3" />
@@ -581,7 +590,10 @@ export default function ProjectList() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => handleDeleteProject(project.id, project.title)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteProject(project.id, project.title);
+                  }}
                   className="h-6 w-6 p-0 text-slate-500 hover:text-red-700 hover:bg-red-50"
                 >
                   <Trash2 className="w-3 h-3" />
