@@ -172,7 +172,7 @@ export default function Landing() {
                 <div className="text-2xl font-bold text-blue-600">200-400x</div>
                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300">More Cost-Effective</div>
                 <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">vs. municipal food assistance programs</div>
-                <div className="text-xs text-gray-500 dark:text-gray-500 mt-1 italic">Source: Internal analysis comparing cost per meal served</div>
+                <div className="text-xs text-gray-500 dark:text-gray-500 mt-1 italic">Source: Atlanta 2024 city budget analysis vs. TSP performance data</div>
               </div>
               <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
                 <div className="text-2xl font-bold text-purple-600">962%</div>
