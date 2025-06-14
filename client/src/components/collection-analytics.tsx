@@ -160,35 +160,12 @@ export default function CollectionAnalytics() {
   const analyticsData: AnalyticsData | null = useMemo(() => {
     if (!collections.length) return null;
 
-    console.log("Collections data:", collections.slice(0, 3)); // Debug first 3 collections
-    console.log("Sample groupCollections data:", collections.slice(0, 5).map(c => ({
-      id: c.id,
-      groupCollections: c.groupCollections,
-      type: typeof c.groupCollections,
-      isArray: Array.isArray(c.groupCollections)
-    })));
-
     const totalCollections = filteredCollections.length;
     const totalSandwiches = filteredCollections.reduce((sum, c) => {
       const individual = Number(c.individualSandwiches || 0);
       const groups = parseGroupCollections(c.groupCollections);
-      const rowTotal = individual + groups;
-      
-      if (c.id === 2164) { // Debug one specific collection
-        console.log(`Collection ${c.id} detailed:`, {
-          groupCollections: c.groupCollections,
-          groupType: typeof c.groupCollections,
-          individual,
-          groups,
-          rowTotal
-        });
-      }
-      
-      return sum + rowTotal;
+      return sum + individual + groups;
     }, 0);
-    
-    console.log("Final totalSandwiches:", totalSandwiches);
-    console.log("Final totalCollections:", totalCollections);
     const uniqueHosts = new Set(filteredCollections.map(c => c.hostName)).size;
     
     // Date range
@@ -228,7 +205,7 @@ export default function CollectionAnalytics() {
       }
       const data = monthlyData.get(month);
       data.collections++;
-      data.sandwiches += (c.individualSandwiches || 0) + getGroupCount(c.groupCollections);
+      data.sandwiches += (c.individualSandwiches || 0) + parseGroupCollections(c.groupCollections);
     });
 
     const monthlyTrends = Array.from(monthlyData.entries())
