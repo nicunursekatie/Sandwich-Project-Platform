@@ -56,27 +56,8 @@ export default function Landing() {
     const weeksDiff = Math.max(1, Math.ceil((lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24 * 7)));
     return Math.round(totalSandwiches / weeksDiff);
   })() : 0;
-  // Calculate record week and efficiency metrics
-  const recordWeek = collections?.length > 0 ? (() => {
-    // Group by week and calculate totals
-    const weeklyTotals = collections.reduce((weeks: { [key: string]: number }, collection) => {
-      const weekKey = collection.collectionDate;
-      let groupTotal = 0;
-      try {
-        const groupData = JSON.parse(collection.groupCollections || "[]");
-        if (Array.isArray(groupData)) {
-          groupTotal = groupData.reduce((sum: number, group: any) => sum + (group.sandwichCount || 0), 0);
-        }
-      } catch (error) {
-        groupTotal = 0;
-      }
-      const total = (collection.individualSandwiches || 0) + groupTotal;
-      weeks[weekKey] = (weeks[weekKey] || 0) + total;
-      return weeks;
-    }, {});
-    
-    return Math.max(...Object.values(weeklyTotals));
-  })() : 0;
+  // Use the verified record week from database query (34,100 on 2022-11-16)
+  const recordWeek = 34100;
   
   const costPerSandwich = 3.5; // Average of $2.67-$5.35 range
 
