@@ -1136,7 +1136,7 @@ export default function SandwichCollectionLog() {
                 id="createdFromDate"
                 type="date"
                 value={searchFilters.createdAtFrom}
-                onChange={(e) => setSearchFilters(prev => ({ ...prev, createdAtFrom: e.target.value }))}
+                onChange={(e) => handleFilterChange({ createdAtFrom: e.target.value })}
                 className="mt-1"
               />
             </div>
@@ -1146,7 +1146,7 @@ export default function SandwichCollectionLog() {
                 id="createdToDate"
                 type="date"
                 value={searchFilters.createdAtTo}
-                onChange={(e) => setSearchFilters(prev => ({ ...prev, createdAtTo: e.target.value }))}
+                onChange={(e) => handleFilterChange({ createdAtTo: e.target.value })}
                 className="mt-1"
               />
             </div>
@@ -1160,7 +1160,7 @@ export default function SandwichCollectionLog() {
                 <Label className="text-sm font-medium text-slate-700">Sort by:</Label>
                 <Select
                   value={sortConfig.field}
-                  onValueChange={(value) => setSortConfig(prev => ({ ...prev, field: value as keyof SandwichCollection }))}
+                  onValueChange={(value) => handleSortChange(value as keyof SandwichCollection)}
                 >
                   <SelectTrigger className="w-40">
                     <SelectValue />
@@ -1175,7 +1175,7 @@ export default function SandwichCollectionLog() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setSortConfig(prev => ({ ...prev, direction: prev.direction === 'asc' ? 'desc' : 'asc' }))}
+                  onClick={handleSortDirectionChange}
                   className="flex items-center space-x-1"
                 >
                   {sortConfig.direction === 'asc' ? '↑' : '↓'}
@@ -1186,13 +1186,7 @@ export default function SandwichCollectionLog() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setSearchFilters({
-                hostName: "",
-                collectionDateFrom: "",
-                collectionDateTo: "",
-                createdAtFrom: "",
-                createdAtTo: ""
-              })}
+              onClick={handleClearFilters}
               className="flex items-center space-x-1"
             >
               <X className="w-4 h-4" />
