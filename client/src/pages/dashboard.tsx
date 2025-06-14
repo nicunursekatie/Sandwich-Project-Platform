@@ -13,6 +13,7 @@ import HostsManagement from "@/components/hosts-management-consolidated";
 import { DocumentsBrowser } from "@/components/documents-browser";
 import PhoneDirectory from "@/components/phone-directory";
 import BulkDataManager from "@/components/bulk-data-manager";
+import CollectionAnalytics from "@/components/collection-analytics";
 import Development from "@/pages/development";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
@@ -36,6 +37,7 @@ export default function Dashboard() {
     { id: "recipients", label: "Recipients", icon: Users },
     { id: "drivers", label: "Drivers", icon: Car },
     { id: "directory", label: "Phone Directory", icon: Phone, permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
+    { id: "analytics", label: "Data Analytics", icon: BarChart3 },
     { id: "role-demo", label: "Role Demo", icon: Users },
     { id: "development", label: "Development", icon: FolderOpen },
   ];
@@ -161,6 +163,8 @@ export default function Dashboard() {
         return <DriversManagement />;
       case "directory":
         return <PhoneDirectory />;
+      case "analytics":
+        return <CollectionAnalytics />;
       case "role-demo":
         return (
           <div className="p-6">

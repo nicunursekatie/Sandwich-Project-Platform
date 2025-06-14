@@ -146,7 +146,7 @@ export default function CollectionAnalytics() {
     }));
 
     // Quality metrics
-    const withGroups = filteredCollections.filter(c => ((c.groupCollections as number) || 0) > 0).length;
+    const withGroups = filteredCollections.filter(c => (Number(c.groupCollections) || 0) > 0).length;
     const withoutGroups = totalCollections - withGroups;
     const missingData = filteredCollections.filter(c => 
       !c.hostName || c.hostName.trim() === "" || (c.individualSandwiches || 0) === 0
