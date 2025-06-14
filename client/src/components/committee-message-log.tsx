@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { MessageCircle, Send, User } from "lucide-react";
+import { MessageCircle, Send, User, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -50,6 +50,26 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
     }
   });
 
+  const deleteMessageMutation = useMutation({
+    mutationFn: async (messageId: number) => {
+      return await apiRequest('DELETE', `/api/messages/${messageId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/messages', committee] });
+      toast({
+        title: "Message deleted",
+        description: "The message has been removed",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete message",
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
 
@@ -76,18 +96,29 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
             </div>
           ) : (
             messages.map((message) => (
-              <div key={message.id} className="flex space-x-3">
+              <div key={message.id} className="flex space-x-3 group">
                 <Avatar className="w-8 h-8">
                   <AvatarFallback className="bg-gray-500 text-white text-xs">
                     {message.sender?.split(' ').map(n => n[0]).join('').slice(0, 2) || 'TM'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <span className="font-medium text-sm">{message.sender}</span>
-                    <span className="text-xs text-gray-500">
-                      {new Date(message.timestamp).toLocaleTimeString()}
-                    </span>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium text-sm">{message.sender}</span>
+                      <span className="text-xs text-gray-500">
+                        {new Date(message.timestamp).toLocaleTimeString()}
+                      </span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => deleteMessageMutation.mutate(message.id)}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                      disabled={deleteMessageMutation.isPending}
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
                   </div>
                   <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3">
                     <p className="text-sm">{message.content}</p>
