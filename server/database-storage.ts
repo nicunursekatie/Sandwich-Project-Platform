@@ -1,7 +1,9 @@
 import { 
-  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts,
+  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
+  type ProjectTask, type InsertProjectTask,
+  type ProjectComment, type InsertProjectComment,
   type Message, type InsertMessage,
   type WeeklyReport, type InsertWeeklyReport,
   type SandwichCollection, type InsertSandwichCollection,
