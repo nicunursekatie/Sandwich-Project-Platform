@@ -77,8 +77,8 @@ export default function CollectionAnalytics() {
     setEditForm({
       collectionDate: collection.collectionDate,
       hostName: collection.hostName,
-      individualSandwiches: collection.individualSandwiches || 0,
-      groupCollections: collection.groupCollections || 0,
+      individualSandwiches: Number(collection.individualSandwiches || 0),
+      groupCollections: Number(collection.groupCollections || 0),
     });
   };
 
@@ -861,6 +861,63 @@ export default function CollectionAnalytics() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Edit Dialog */}
+      <Dialog open={!!editingCollection} onOpenChange={() => setEditingCollection(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Collection</DialogTitle>
+            <DialogDescription>
+              Update the details for this sandwich collection record.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-date">Collection Date</Label>
+              <Input
+                id="edit-date"
+                type="date"
+                value={editForm.collectionDate}
+                onChange={(e) => setEditForm(prev => ({ ...prev, collectionDate: e.target.value }))}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-host">Host Name</Label>
+              <Input
+                id="edit-host"
+                value={editForm.hostName}
+                onChange={(e) => setEditForm(prev => ({ ...prev, hostName: e.target.value }))}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-individual">Individual Sandwiches</Label>
+              <Input
+                id="edit-individual"
+                type="number"
+                value={editForm.individualSandwiches}
+                onChange={(e) => setEditForm(prev => ({ ...prev, individualSandwiches: Number(e.target.value) }))}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-groups">Group Collections</Label>
+              <Input
+                id="edit-groups"
+                type="number"
+                value={editForm.groupCollections}
+                onChange={(e) => setEditForm(prev => ({ ...prev, groupCollections: Number(e.target.value) }))}
+              />
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setEditingCollection(null)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSaveEdit} disabled={updateMutation.isPending}>
+                {updateMutation.isPending ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
