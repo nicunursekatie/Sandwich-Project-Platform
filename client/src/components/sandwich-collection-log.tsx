@@ -82,12 +82,85 @@ export default function SandwichCollectionLog() {
     { id: Math.random().toString(36), groupName: "", sandwichCount: 0 }
   ]);
 
+  // Determine if we need all data for sorting/filtering
+  const needsAllData = showFilters || Object.values(searchFilters).some(v => v) || 
+                      sortConfig.field !== "collectionDate" || sortConfig.direction !== "desc";
+
   const { data: collectionsResponse, isLoading } = useQuery({
-    queryKey: ["/api/sandwich-collections", currentPage, itemsPerPage],
+    queryKey: ["/api/sandwich-collections", needsAllData ? "all" : currentPage, needsAllData ? "all" : itemsPerPage, searchFilters, sortConfig],
     queryFn: async () => {
-      const response = await fetch(`/api/sandwich-collections?page=${currentPage}&limit=${itemsPerPage}`);
-      if (!response.ok) throw new Error('Failed to fetch collections');
-      return response.json();
+      if (needsAllData) {
+        // Fetch all records for sorting/filtering
+        const response = await fetch('/api/sandwich-collections?limit=10000');
+        if (!response.ok) throw new Error('Failed to fetch collections');
+        const data = await response.json();
+        
+        // Apply client-side filtering
+        let filteredCollections = data.collections || [];
+        
+        if (searchFilters.hostName) {
+          filteredCollections = filteredCollections.filter((c: any) => 
+            c.hostName?.toLowerCase().includes(searchFilters.hostName.toLowerCase())
+          );
+        }
+        
+        if (searchFilters.collectionDateFrom) {
+          filteredCollections = filteredCollections.filter((c: any) => 
+            c.collectionDate >= searchFilters.collectionDateFrom
+          );
+        }
+        
+        if (searchFilters.collectionDateTo) {
+          filteredCollections = filteredCollections.filter((c: any) => 
+            c.collectionDate <= searchFilters.collectionDateTo
+          );
+        }
+        
+        if (searchFilters.createdAtFrom) {
+          filteredCollections = filteredCollections.filter((c: any) => 
+            c.createdAt >= searchFilters.createdAtFrom
+          );
+        }
+        
+        if (searchFilters.createdAtTo) {
+          filteredCollections = filteredCollections.filter((c: any) => 
+            c.createdAt <= searchFilters.createdAtTo
+          );
+        }
+        
+        // Apply client-side sorting
+        filteredCollections.sort((a: any, b: any) => {
+          const aVal = a[sortConfig.field];
+          const bVal = b[sortConfig.field];
+          
+          if (aVal === bVal) return 0;
+          if (aVal === null || aVal === undefined) return 1;
+          if (bVal === null || bVal === undefined) return -1;
+          
+          const comparison = aVal < bVal ? -1 : 1;
+          return sortConfig.direction === "asc" ? comparison : -comparison;
+        });
+        
+        // Apply pagination to the sorted/filtered results
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedResults = filteredCollections.slice(startIndex, endIndex);
+        
+        return {
+          collections: paginatedResults,
+          pagination: {
+            currentPage,
+            totalPages: Math.ceil(filteredCollections.length / itemsPerPage),
+            totalItems: filteredCollections.length,
+            itemsPerPage
+          }
+        };
+      } else {
+        // Use server-side pagination for default view
+        const response = await fetch(`/api/sandwich-collections?page=${currentPage}&limit=${itemsPerPage}`);
+        if (!response.ok) throw new Error('Failed to fetch collections');
+        return response.json();
+      }
     }
   });
 
@@ -738,6 +811,33 @@ export default function SandwichCollectionLog() {
     ));
   };
 
+  // Handler functions that reset page when sorting/filtering
+  const handleSortChange = (field: keyof SandwichCollection) => {
+    setSortConfig(prev => ({ ...prev, field }));
+    setCurrentPage(1);
+  };
+
+  const handleSortDirectionChange = () => {
+    setSortConfig(prev => ({ ...prev, direction: prev.direction === 'asc' ? 'desc' : 'asc' }));
+    setCurrentPage(1);
+  };
+
+  const handleFilterChange = (filterUpdates: Partial<typeof searchFilters>) => {
+    setSearchFilters(prev => ({ ...prev, ...filterUpdates }));
+    setCurrentPage(1);
+  };
+
+  const handleClearFilters = () => {
+    setSearchFilters({
+      hostName: "",
+      collectionDateFrom: "",
+      collectionDateTo: "",
+      createdAtFrom: "",
+      createdAtTo: ""
+    });
+    setCurrentPage(1);
+  };
+
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
@@ -1006,7 +1106,7 @@ export default function SandwichCollectionLog() {
                 id="hostFilter"
                 placeholder="Search by host name..."
                 value={searchFilters.hostName}
-                onChange={(e) => setSearchFilters(prev => ({ ...prev, hostName: e.target.value }))}
+                onChange={(e) => handleFilterChange({ hostName: e.target.value })}
                 className="mt-1"
               />
             </div>
@@ -1016,7 +1116,7 @@ export default function SandwichCollectionLog() {
                 id="collectionFromDate"
                 type="date"
                 value={searchFilters.collectionDateFrom}
-                onChange={(e) => setSearchFilters(prev => ({ ...prev, collectionDateFrom: e.target.value }))}
+                onChange={(e) => handleFilterChange({ collectionDateFrom: e.target.value })}
                 className="mt-1"
               />
             </div>
@@ -1026,7 +1126,7 @@ export default function SandwichCollectionLog() {
                 id="collectionToDate"
                 type="date"
                 value={searchFilters.collectionDateTo}
-                onChange={(e) => setSearchFilters(prev => ({ ...prev, collectionDateTo: e.target.value }))}
+                onChange={(e) => handleFilterChange({ collectionDateTo: e.target.value })}
                 className="mt-1"
               />
             </div>
