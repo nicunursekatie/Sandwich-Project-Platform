@@ -57,6 +57,17 @@ export default function CollectionAnalytics() {
 
   const { toast } = useToast();
 
+  // Helper function to normalize group data
+  const getGroupCount = (groupCollections: any): number => {
+    if (Array.isArray(groupCollections)) {
+      if (groupCollections.length === 0) return 0;
+      return groupCollections.reduce((total: number, group: any) => 
+        total + (group.sandwichCount || 0), 0
+      );
+    }
+    return Number(groupCollections || 0);
+  };
+
   // Mutation for updating collections
   const updateMutation = useMutation({
     mutationFn: async (data: { id: number; updates: Partial<SandwichCollection> }) => {
@@ -130,17 +141,6 @@ export default function CollectionAnalytics() {
       return true;
     });
   }, [collections, dateFilter, hostFilter, sandwichFilter, collectionTypeFilter]);
-
-  // Helper function to normalize group data
-  const getGroupCount = (groupCollections: any): number => {
-    if (Array.isArray(groupCollections)) {
-      if (groupCollections.length === 0) return 0;
-      return groupCollections.reduce((total: number, group: any) => 
-        total + (group.sandwichCount || 0), 0
-      );
-    }
-    return Number(groupCollections || 0);
-  };
 
   const analyticsData: AnalyticsData | null = useMemo(() => {
     if (!collections.length) return null;
