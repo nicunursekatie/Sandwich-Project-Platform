@@ -677,7 +677,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Clean duplicates from sandwich collections
   app.delete("/api/sandwich-collections/clean-duplicates", async (req, res) => {
     try {
-      const { mode = 'exact' } = req.body; // 'exact' or 'suspicious'
+      const { mode = 'exact' } = req.body; // 'exact', 'suspicious', or 'og-duplicates'
       const collections = await storage.getAllSandwichCollections();
 
       let collectionsToDelete = [];
