@@ -36,8 +36,8 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
       if (!response.ok) throw new Error('Failed to fetch stats');
       return response.json();
     },
-    staleTime: 30000, // Cache for 30 seconds
-    refetchOnWindowFocus: true // Refetch when window gains focus
+    staleTime: 0, // Always fetch fresh data to show corrected totals
+    refetchOnWindowFocus: true
   });
 
   const getProjectStatusCounts = () => {
