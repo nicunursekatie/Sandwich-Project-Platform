@@ -295,6 +295,60 @@ export class MemStorage implements IStorage {
     return this.projects.delete(id);
   }
 
+  // Project Task methods
+  async getProjectTasks(projectId: number): Promise<ProjectTask[]> {
+    return Array.from(this.projectTasks.values())
+      .filter(task => task.projectId === projectId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async createProjectTask(insertTask: InsertProjectTask): Promise<ProjectTask> {
+    const id = this.currentIds.projectTask++;
+    const task: ProjectTask = { 
+      ...insertTask, 
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.projectTasks.set(id, task);
+    return task;
+  }
+
+  async updateProjectTask(id: number, updates: Partial<ProjectTask>): Promise<ProjectTask | undefined> {
+    const task = this.projectTasks.get(id);
+    if (!task) return undefined;
+    
+    const updatedTask = { ...task, ...updates, updatedAt: new Date() };
+    this.projectTasks.set(id, updatedTask);
+    return updatedTask;
+  }
+
+  async deleteProjectTask(id: number): Promise<boolean> {
+    return this.projectTasks.delete(id);
+  }
+
+  // Project Comment methods
+  async getProjectComments(projectId: number): Promise<ProjectComment[]> {
+    return Array.from(this.projectComments.values())
+      .filter(comment => comment.projectId === projectId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async createProjectComment(insertComment: InsertProjectComment): Promise<ProjectComment> {
+    const id = this.currentIds.projectComment++;
+    const comment: ProjectComment = { 
+      ...insertComment, 
+      id,
+      createdAt: new Date()
+    };
+    this.projectComments.set(id, comment);
+    return comment;
+  }
+
+  async deleteProjectComment(id: number): Promise<boolean> {
+    return this.projectComments.delete(id);
+  }
+
   // Message methods
   async getAllMessages(): Promise<Message[]> {
     return Array.from(this.messages.values()).sort((a, b) => 

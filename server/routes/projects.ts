@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { storage } from "../storage-wrapper";
 import { sanitizeMiddleware } from "../middleware/sanitizer";
-import { insertProjectSchema } from "@shared/schema";
+import { insertProjectSchema, insertProjectTaskSchema, insertProjectCommentSchema } from "@shared/schema";
 
 const router = Router();
 
@@ -71,6 +71,105 @@ router.delete("/projects/:id", async (req, res) => {
   } catch (error) {
     console.error("Error deleting project:", error);
     res.status(500).json({ error: "Failed to delete project" });
+  }
+});
+
+// Project Task routes
+router.get("/projects/:projectId/tasks", async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId);
+    const tasks = await storage.getProjectTasks(projectId);
+    res.json(tasks);
+  } catch (error) {
+    console.error("Error fetching project tasks:", error);
+    res.status(500).json({ error: "Failed to fetch tasks" });
+  }
+});
+
+router.post("/projects/:projectId/tasks", sanitizeMiddleware, async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId);
+    const taskData = { ...req.body, projectId };
+    const result = insertProjectTaskSchema.safeParse(taskData);
+    if (!result.success) {
+      return res.status(400).json({ error: result.error.message });
+    }
+    const task = await storage.createProjectTask(result.data);
+    res.status(201).json(task);
+  } catch (error) {
+    console.error("Error creating project task:", error);
+    res.status(500).json({ error: "Failed to create task" });
+  }
+});
+
+router.patch("/projects/:projectId/tasks/:taskId", sanitizeMiddleware, async (req, res) => {
+  try {
+    const taskId = parseInt(req.params.taskId);
+    const updates = req.body;
+    const task = await storage.updateProjectTask(taskId, updates);
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+    res.json(task);
+  } catch (error) {
+    console.error("Error updating project task:", error);
+    res.status(500).json({ error: "Failed to update task" });
+  }
+});
+
+router.delete("/projects/:projectId/tasks/:taskId", async (req, res) => {
+  try {
+    const taskId = parseInt(req.params.taskId);
+    const success = await storage.deleteProjectTask(taskId);
+    if (!success) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+    res.status(204).send();
+  } catch (error) {
+    console.error("Error deleting project task:", error);
+    res.status(500).json({ error: "Failed to delete task" });
+  }
+});
+
+// Project Comment routes
+router.get("/projects/:projectId/comments", async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId);
+    const comments = await storage.getProjectComments(projectId);
+    res.json(comments);
+  } catch (error) {
+    console.error("Error fetching project comments:", error);
+    res.status(500).json({ error: "Failed to fetch comments" });
+  }
+});
+
+router.post("/projects/:projectId/comments", sanitizeMiddleware, async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId);
+    const commentData = { ...req.body, projectId };
+    const result = insertProjectCommentSchema.safeParse(commentData);
+    if (!result.success) {
+      return res.status(400).json({ error: result.error.message });
+    }
+    const comment = await storage.createProjectComment(result.data);
+    res.status(201).json(comment);
+  } catch (error) {
+    console.error("Error creating project comment:", error);
+    res.status(500).json({ error: "Failed to create comment" });
+  }
+});
+
+router.delete("/projects/:projectId/comments/:commentId", async (req, res) => {
+  try {
+    const commentId = parseInt(req.params.commentId);
+    const success = await storage.deleteProjectComment(commentId);
+    if (!success) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+    res.status(204).send();
+  } catch (error) {
+    console.error("Error deleting project comment:", error);
+    res.status(500).json({ error: "Failed to delete comment" });
   }
 });
 
