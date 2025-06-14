@@ -772,7 +772,7 @@ export default function SandwichCollectionLog() {
       
       <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-4">
-          <p className="text-sm text-slate-500">{collections.length} total entries</p>
+          <p className="text-sm text-slate-500">{totalItems} total entries</p>
           <div className="flex items-center space-x-2">
             <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
               <DialogTrigger asChild>
@@ -1094,7 +1094,7 @@ export default function SandwichCollectionLog() {
             </button>
             {selectedCollections.size > 0 && (
               <span className="text-sm text-slate-500">
-                {selectedCollections.size} of {collections.length} selected
+                {selectedCollections.size} of {filteredCollections.length} selected
               </span>
             )}
           </div>
