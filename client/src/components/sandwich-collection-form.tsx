@@ -145,8 +145,20 @@ export default function SandwichCollectionForm() {
 
     const validGroupCollections = groupCollections.filter(g => g.groupName.trim() && g.sandwichCount > 0);
     const groupCollectionsString = validGroupCollections.length > 0 
-      ? validGroupCollections.map(g => `${g.groupName}: ${g.sandwichCount}`).join(', ')
-      : '';
+      ? JSON.stringify(validGroupCollections.map(g => ({ 
+          name: g.groupName.trim(), 
+          count: g.sandwichCount 
+        })))
+      : '[]';
+
+    console.log('Form submission data:', {
+      collectionDate,
+      hostName: hostName.trim(),
+      individualSandwiches: parseInt(individualSandwiches),
+      groupCollections: groupCollectionsString,
+      rawGroupCollections: groupCollections,
+      validGroupCollections
+    });
 
     submitCollectionMutation.mutate({
       collectionDate,

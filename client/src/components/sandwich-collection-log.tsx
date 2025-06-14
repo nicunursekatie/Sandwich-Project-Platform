@@ -622,11 +622,11 @@ export default function SandwichCollectionLog() {
   const handleUpdate = () => {
     if (!editingCollection) return;
 
-    // Convert editGroupCollections back to string format
+    // Convert editGroupCollections back to JSON format with consistent property names
     const validGroups = editGroupCollections.filter(g => g.groupName.trim() && g.sandwichCount > 0);
     const groupCollectionsString = validGroups.length > 0 
-      ? JSON.stringify(validGroups.map(g => ({ groupName: g.groupName, sandwichCount: g.sandwichCount })))
-      : '';
+      ? JSON.stringify(validGroups.map(g => ({ name: g.groupName.trim(), count: g.sandwichCount })))
+      : '[]';
 
     updateMutation.mutate({
       id: editingCollection.id,
@@ -675,11 +675,14 @@ export default function SandwichCollectionLog() {
       return;
     }
 
-    // Format group collections similar to other collection forms
-    const formattedGroupCollections = newGroupCollections
-      .filter(group => group.groupName.trim() && group.sandwichCount > 0)
-      .map(group => `${group.groupName}: ${group.sandwichCount}`)
-      .join('; ');
+    // Format group collections as JSON to match the schema
+    const validGroupCollections = newGroupCollections.filter(group => group.groupName.trim() && group.sandwichCount > 0);
+    const formattedGroupCollections = validGroupCollections.length > 0 
+      ? JSON.stringify(validGroupCollections.map(g => ({ 
+          name: g.groupName.trim(), 
+          count: g.sandwichCount 
+        })))
+      : '[]';
 
     const submissionData = {
       collectionDate: newCollectionData.collectionDate,
