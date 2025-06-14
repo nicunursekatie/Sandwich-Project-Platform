@@ -150,7 +150,7 @@ export default function CommitteeChat() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-gray-900">
+    <div className="flex flex-col h-[600px] bg-white dark:bg-gray-900 border rounded-lg">
       {/* Header */}
       <div className="border-b p-4 flex items-center">
         <Button
