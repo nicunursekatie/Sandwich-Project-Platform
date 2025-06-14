@@ -1,7 +1,9 @@
 import { 
-  users, projects, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts,
+  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
+  type ProjectTask, type InsertProjectTask,
+  type ProjectComment, type InsertProjectComment,
   type Message, type InsertMessage,
   type WeeklyReport, type InsertWeeklyReport,
   type SandwichCollection, type InsertSandwichCollection,
@@ -33,6 +35,17 @@ export interface IStorage {
   createProject(project: InsertProject): Promise<Project>;
   updateProject(id: number, updates: Partial<Project>): Promise<Project | undefined>;
   deleteProject(id: number): Promise<boolean>;
+  
+  // Project Tasks
+  getProjectTasks(projectId: number): Promise<ProjectTask[]>;
+  createProjectTask(task: InsertProjectTask): Promise<ProjectTask>;
+  updateProjectTask(id: number, updates: Partial<ProjectTask>): Promise<ProjectTask | undefined>;
+  deleteProjectTask(id: number): Promise<boolean>;
+  
+  // Project Comments
+  getProjectComments(projectId: number): Promise<ProjectComment[]>;
+  createProjectComment(comment: InsertProjectComment): Promise<ProjectComment>;
+  deleteProjectComment(id: number): Promise<boolean>;
   
   // Messages
   getAllMessages(): Promise<Message[]>;
@@ -114,6 +127,8 @@ export interface IStorage {
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private projects: Map<number, Project>;
+  private projectTasks: Map<number, ProjectTask>;
+  private projectComments: Map<number, ProjectComment>;
   private messages: Map<number, Message>;
   private weeklyReports: Map<number, WeeklyReport>;
   private sandwichCollections: Map<number, SandwichCollection>;
@@ -129,6 +144,8 @@ export class MemStorage implements IStorage {
   private currentIds: {
     user: number;
     project: number;
+    projectTask: number;
+    projectComment: number;
     message: number;
     weeklyReport: number;
     sandwichCollection: number;
@@ -146,6 +163,8 @@ export class MemStorage implements IStorage {
   constructor() {
     this.users = new Map();
     this.projects = new Map();
+    this.projectTasks = new Map();
+    this.projectComments = new Map();
     this.messages = new Map();
     this.weeklyReports = new Map();
     this.sandwichCollections = new Map();
@@ -161,6 +180,8 @@ export class MemStorage implements IStorage {
     this.currentIds = {
       user: 1,
       project: 1,
+      projectTask: 1,
+      projectComment: 1,
       message: 1,
       weeklyReport: 1,
       sandwichCollection: 1,
