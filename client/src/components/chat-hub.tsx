@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MessageLog from "@/components/message-log";
 import CommitteeChat from "@/components/committee-chat";
 import HostChat from "@/components/host-chat";
+import CommitteeMessageLog from "@/components/committee-message-log";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, USER_ROLES } from "@/lib/authUtils";
 import { PERMISSIONS } from "@/lib/authUtils";
@@ -14,7 +15,7 @@ export default function ChatHub() {
   const availableTabs = [];
 
   if (hasPermission(user, PERMISSIONS.GENERAL_CHAT)) {
-    availableTabs.push({ value: "general", label: "General Chat", component: <MessageLog committee="general" /> });
+    availableTabs.push({ value: "general", label: "General Chat", component: <CommitteeMessageLog committee="general" /> });
   }
 
   if (hasPermission(user, PERMISSIONS.COMMITTEE_CHAT)) {
@@ -26,11 +27,11 @@ export default function ChatHub() {
   }
 
   if (hasPermission(user, PERMISSIONS.DRIVER_CHAT)) {
-    availableTabs.push({ value: "drivers", label: "Driver Chat", component: <MessageLog committee="drivers" /> });
+    availableTabs.push({ value: "drivers", label: "Driver Chat", component: <CommitteeMessageLog committee="drivers" /> });
   }
 
   if (hasPermission(user, PERMISSIONS.RECIPIENT_CHAT)) {
-    availableTabs.push({ value: "recipients", label: "Recipient Chat", component: <MessageLog committee="recipients" /> });
+    availableTabs.push({ value: "recipients", label: "Recipient Chat", component: <CommitteeMessageLog committee="recipients" /> });
   }
 
   const defaultTab = availableTabs.length > 0 ? availableTabs[0].value : "general";
