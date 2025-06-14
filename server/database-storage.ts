@@ -108,6 +108,41 @@ export class DatabaseStorage implements IStorage {
     return result.rowCount > 0;
   }
 
+  // Project Tasks
+  async getProjectTasks(projectId: number): Promise<ProjectTask[]> {
+    return await db.select().from(projectTasks).where(eq(projectTasks.projectId, projectId)).orderBy(projectTasks.order);
+  }
+
+  async createProjectTask(insertTask: InsertProjectTask): Promise<ProjectTask> {
+    const [task] = await db.insert(projectTasks).values(insertTask).returning();
+    return task;
+  }
+
+  async updateProjectTask(id: number, updates: Partial<ProjectTask>): Promise<ProjectTask | undefined> {
+    const [task] = await db.update(projectTasks).set(updates).where(eq(projectTasks.id, id)).returning();
+    return task || undefined;
+  }
+
+  async deleteProjectTask(id: number): Promise<boolean> {
+    const result = await db.delete(projectTasks).where(eq(projectTasks.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  // Project Comments
+  async getProjectComments(projectId: number): Promise<ProjectComment[]> {
+    return await db.select().from(projectComments).where(eq(projectComments.projectId, projectId)).orderBy(desc(projectComments.createdAt));
+  }
+
+  async createProjectComment(insertComment: InsertProjectComment): Promise<ProjectComment> {
+    const [comment] = await db.insert(projectComments).values(insertComment).returning();
+    return comment;
+  }
+
+  async deleteProjectComment(id: number): Promise<boolean> {
+    const result = await db.delete(projectComments).where(eq(projectComments.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
   // Messages
   async getAllMessages(): Promise<Message[]> {
     return await db.select().from(messages).orderBy(messages.id);

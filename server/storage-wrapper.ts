@@ -160,6 +160,57 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  // Project Task methods
+  async getProjectTasks(projectId: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getProjectTasks(projectId),
+      () => this.fallbackStorage.getProjectTasks(projectId)
+    );
+  }
+
+  async createProjectTask(task: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createProjectTask(task),
+      () => this.fallbackStorage.createProjectTask(task)
+    );
+  }
+
+  async updateProjectTask(id: number, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateProjectTask(id, updates),
+      () => this.fallbackStorage.updateProjectTask(id, updates)
+    );
+  }
+
+  async deleteProjectTask(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteProjectTask(id),
+      () => this.fallbackStorage.deleteProjectTask(id)
+    );
+  }
+
+  // Project Comment methods
+  async getProjectComments(projectId: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getProjectComments(projectId),
+      () => this.fallbackStorage.getProjectComments(projectId)
+    );
+  }
+
+  async createProjectComment(comment: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createProjectComment(comment),
+      () => this.fallbackStorage.createProjectComment(comment)
+    );
+  }
+
+  async deleteProjectComment(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteProjectComment(id),
+      () => this.fallbackStorage.deleteProjectComment(id)
+    );
+  }
+
   // Message methods
   async getAllMessages() {
     return this.executeWithFallback(
