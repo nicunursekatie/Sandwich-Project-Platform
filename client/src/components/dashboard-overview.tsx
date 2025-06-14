@@ -29,16 +29,16 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
     queryKey: ["/api/weekly-reports"]
   });
 
-  const { data: collectionsResponse } = useQuery({
-    queryKey: ["/api/sandwich-collections"],
+  const { data: statsData } = useQuery({
+    queryKey: ["/api/sandwich-collections/stats"],
     queryFn: async () => {
-      const response = await fetch('/api/sandwich-collections?limit=1000');
-      if (!response.ok) throw new Error('Failed to fetch collections');
+      const response = await fetch('/api/sandwich-collections/stats');
+      if (!response.ok) throw new Error('Failed to fetch stats');
       return response.json();
-    }
+    },
+    staleTime: 0, // Always refetch to ensure latest data
+    cacheTime: 0  // Don't cache the response
   });
-
-  const collections = collectionsResponse?.collections || [];
 
   const getProjectStatusCounts = () => {
     const counts = {
@@ -59,19 +59,7 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
   const statusCounts = getProjectStatusCounts();
   const totalSandwiches = reports.reduce((sum, report) => sum + report.sandwichCount, 0);
-  const totalCollectedSandwiches = collections.reduce((sum, collection) => {
-    let groupTotal = 0;
-    try {
-      const groupData = JSON.parse(collection.groupCollections || "[]");
-      if (Array.isArray(groupData)) {
-        groupTotal = groupData.reduce((groupSum: number, group: any) => groupSum + (group.sandwichCount || 0), 0);
-      }
-    } catch (error) {
-      // If parsing fails, treat as 0
-      groupTotal = 0;
-    }
-    return sum + collection.individualSandwiches + groupTotal;
-  }, 0);
+  const totalCollectedSandwiches = statsData?.completeTotalSandwiches || 0;
   const upcomingProjects = projects.filter(p => p.status === "available" || p.status === "planning");
   const recentMessages = messages.slice(0, 3);
   const recentMinutes = minutes.slice(0, 2);

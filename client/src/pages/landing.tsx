@@ -26,6 +26,16 @@ export default function Landing() {
   };
 
   // Fetch real statistics for public display
+  const { data: statsData } = useQuery({
+    queryKey: ['/api/sandwich-collections/stats'],
+    queryFn: async () => {
+      const response = await fetch('/api/sandwich-collections/stats');
+      if (!response.ok) throw new Error('Failed to fetch stats');
+      return response.json();
+    },
+    retry: false,
+  });
+
   const { data: collectionsResponse } = useQuery({
     queryKey: ['/api/sandwich-collections'],
     queryFn: async () => {
@@ -37,21 +47,7 @@ export default function Landing() {
   });
 
   const collections = collectionsResponse?.collections || [];
-
-  // Calculate humanized statistics from real data (matching dashboard calculation)
-  const totalSandwiches = collections?.reduce((sum: number, collection: any) => {
-    let groupTotal = 0;
-    try {
-      const groupData = JSON.parse(collection.groupCollections || "[]");
-      if (Array.isArray(groupData)) {
-        groupTotal = groupData.reduce((groupSum: number, group: any) => groupSum + (group.sandwichCount || 0), 0);
-      }
-    } catch (error) {
-      // If parsing fails, treat as 0
-      groupTotal = 0;
-    }
-    return sum + (collection.individualSandwiches || 0) + groupTotal;
-  }, 0) || 0;
+  const totalSandwiches = statsData?.completeTotalSandwiches || 0;
   // Calculate proper weekly average based on program duration
   const weeklyAverage = collections?.length > 0 ? (() => {
     const dates = collections.map(c => new Date(c.collectionDate)).sort((a, b) => a.getTime() - b.getTime());
