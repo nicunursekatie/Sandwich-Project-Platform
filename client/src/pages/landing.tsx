@@ -169,19 +169,10 @@ export default function Landing() {
           <CardContent>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">200-400x</div>
-                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">More Cost-Effective</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">vs. municipal food assistance programs</div>
-                <div className="text-xs text-gray-500 dark:text-gray-500 mt-1 italic">
-                  Source: <a 
-                    href="/attached_assets/Pasted-Data-Backed-Claims-with-Sources-Budget-smaller-than-corporate-marketing-THE-MATH-Source-202-1749584968068_1749584968069.txt" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="underline hover:text-blue-600 transition-colors"
-                  >
-                    Atlanta 2024 city budget analysis vs. TSP performance data
-                  </a>
-                </div>
+                <div className="text-2xl font-bold text-blue-600">1.85M+</div>
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Sandwiches Served</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">total impact since inception</div>
+                <div className="text-xs text-gray-500 dark:text-gray-500 mt-1 italic">Source: Database collection records</div>
               </div>
               <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
                 <div className="text-2xl font-bold text-purple-600">962%</div>
