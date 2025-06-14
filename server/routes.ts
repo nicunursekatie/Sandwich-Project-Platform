@@ -276,6 +276,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Sandwich Collections Stats - Complete totals including individual + group collections
+  app.get("/api/sandwich-collections/stats", isAuthenticated, async (req, res) => {
+    try {
+      const collections = await storage.getAllSandwichCollections();
+      
+      let individualTotal = 0;
+      let groupTotal = 0;
+      
+      collections.forEach(collection => {
+        individualTotal += collection.individualSandwiches || 0;
+        
+        // Calculate group collections total
+        try {
+          const groupData = JSON.parse(collection.groupCollections || "[]");
+          if (Array.isArray(groupData)) {
+            groupTotal += groupData.reduce((sum: number, group: any) => sum + (group.sandwichCount || 0), 0);
+          }
+        } catch (error) {
+          // Handle text format like "Marketing Team: 8, Development: 6"
+          if (collection.groupCollections && collection.groupCollections !== "[]") {
+            const matches = collection.groupCollections.match(/(\d+)/g);
+            if (matches) {
+              groupTotal += matches.reduce((sum, num) => sum + parseInt(num), 0);
+            }
+          }
+        }
+      });
+      
+      res.json({
+        totalEntries: collections.length,
+        individualSandwiches: individualTotal,
+        groupSandwiches: groupTotal,
+        completeTotalSandwiches: individualTotal + groupTotal
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch sandwich collection stats" });
+    }
+  });
+
   // Sandwich Collections
   app.get("/api/sandwich-collections", async (req, res) => {
     try {

@@ -782,7 +782,20 @@ export default function SandwichCollectionLog() {
       
       <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-4">
-          <p className="text-sm text-slate-500">{totalItems} total entries</p>
+          <div className="flex items-center space-x-4">
+            <p className="text-sm text-slate-500">{totalItems} total entries</p>
+            {totalStats && (
+              <div className="flex items-center space-x-4 text-sm">
+                <span className="text-slate-600">
+                  <span className="font-medium text-amber-600">{totalStats.completeTotalSandwiches.toLocaleString()}</span> total sandwiches
+                </span>
+                <span className="text-slate-400">|</span>
+                <span className="text-slate-500">
+                  {totalStats.individualSandwiches.toLocaleString()} individual + {totalStats.groupSandwiches.toLocaleString()} group
+                </span>
+              </div>
+            )}
+          </div>
           <div className="flex items-center space-x-2">
             <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
               <DialogTrigger asChild>
