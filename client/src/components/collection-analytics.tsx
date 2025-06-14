@@ -568,36 +568,10 @@ export default function CollectionAnalytics() {
                           <Edit className="w-4 h-4 text-gray-400 inline ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </td>
                         <td className="p-2 text-right">{collection.individualSandwiches || 0}</td>
-                        <td className="p-2 text-right">{
-                          (() => {
-                            if (Array.isArray(collection.groupCollections)) {
-                              if (collection.groupCollections.length === 0) return 0;
-                              // Handle array of group objects with sandwichCount
-                              return collection.groupCollections.reduce((total: number, group: any) => 
-                                total + (group.sandwichCount || 0), 0
-                              );
-                            }
-                            return collection.groupCollections || 0;
-                          })()
-                        }</td>
+                        <td className="p-2 text-right">{parseGroupCollections(collection.groupCollections)}</td>
                         <td className="p-2 text-right font-medium">
-                          {(() => {
-                            const individual = Number(collection.individualSandwiches || 0);
-                            let groups = 0;
-                            
-                            if (Array.isArray(collection.groupCollections)) {
-                              if (collection.groupCollections.length > 0) {
-                                groups = collection.groupCollections.reduce((total: number, group: any) => 
-                                  total + (group.sandwichCount || 0), 0
-                                );
-                              }
-                            } else {
-                              groups = Number(collection.groupCollections || 0);
-                            }
-                            
-                            return individual + groups;
-                          })()
-                        }</td>
+                          {Number(collection.individualSandwiches || 0) + parseGroupCollections(collection.groupCollections)}
+                        </td>
                         <td className="p-2 text-xs text-gray-500">
                           {new Date(collection.submittedAt).toLocaleDateString()}
                         </td>
