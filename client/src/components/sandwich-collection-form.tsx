@@ -151,14 +151,7 @@ export default function SandwichCollectionForm() {
         })))
       : '[]';
 
-    console.log('Form submission data:', {
-      collectionDate,
-      hostName: hostName.trim(),
-      individualSandwiches: parseInt(individualSandwiches),
-      groupCollections: groupCollectionsString,
-      rawGroupCollections: groupCollections,
-      validGroupCollections
-    });
+
 
     submitCollectionMutation.mutate({
       collectionDate,
