@@ -39,7 +39,27 @@ export default function SandwichCollectionForm() {
   });
 
   // Include all hosts (active and inactive) for collection assignment
-  const hostOptions = [...hosts.map(host => host.name), "Other"];
+  const hostOptions = [...hosts.map(host => host.name), "Groups", "Other"];
+
+  // Mutation for creating new hosts
+  const createHostMutation = useMutation({
+    mutationFn: async (hostData: {
+      name: string;
+      address: string;
+      phone: string;
+      email: string;
+      status: string;
+    }) => {
+      const response = await apiRequest('POST', '/api/hosts', hostData);
+      return response.json();
+    },
+    onSuccess: () => {
+      // Refresh all host-related queries to update dropdown and management sections
+      queryClient.invalidateQueries({ queryKey: ['/api/hosts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/hosts-with-contacts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/recipients'] });
+    }
+  });
 
   const submitCollectionMutation = useMutation({
     mutationFn: async (data: {
@@ -102,18 +122,21 @@ export default function SandwichCollectionForm() {
       return;
     }
 
-    // Check if host exists and create if needed
-    if (isCustomHost || !hosts.some(h => h.name === hostName)) {
+    // Check if host exists and create if needed (skip for "Groups")
+    if (hostName !== "Groups" && (isCustomHost || !hosts.some(h => h.name === hostName))) {
       try {
-        await apiRequest('POST', '/api/hosts', {
+        await createHostMutation.mutateAsync({
           name: hostName.trim(),
           address: '',
           phone: '',
           email: '',
           status: 'active'
         });
-        // Refresh hosts list
-        queryClient.invalidateQueries({ queryKey: ['/api/hosts'] });
+        
+        toast({
+          title: "New host location created",
+          description: `"${hostName.trim()}" has been added to host locations.`,
+        });
       } catch (error) {
         // Host might already exist, continue with collection creation
         console.log('Host creation skipped (may already exist):', error);
@@ -186,6 +209,7 @@ export default function SandwichCollectionForm() {
                     setHostName("");
                   } else {
                     setHostName(value);
+                    setIsCustomHost(false);
                   }
                 }}>
                   <SelectTrigger className="flex-1">
@@ -194,7 +218,8 @@ export default function SandwichCollectionForm() {
                   <SelectContent>
                     {hostOptions.map((host) => (
                       <SelectItem key={host} value={host}>
-                        {host}
+                        {host === "Groups" ? "Groups (no location)" : 
+                         host === "Other" ? "Other (create new location)" : host}
                       </SelectItem>
                     ))}
                   </SelectContent>
