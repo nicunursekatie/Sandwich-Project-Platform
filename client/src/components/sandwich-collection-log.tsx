@@ -1092,6 +1092,16 @@ export default function SandwichCollectionLog() {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => cleanDuplicatesMutation.mutate('og-duplicates')}
+              disabled={cleanDuplicatesMutation.isPending}
+              className="flex items-center bg-amber-50 border-amber-300 text-amber-800 hover:bg-amber-100"
+            >
+              <span className="mr-2">👑</span>
+              {cleanDuplicatesMutation.isPending ? "Cleaning..." : "Clean OG Duplicates"}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => fileInputRef.current?.click()}
               disabled={importMutation.isPending}
               className="flex items-center"
