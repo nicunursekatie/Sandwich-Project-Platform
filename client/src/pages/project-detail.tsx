@@ -205,15 +205,16 @@ export default function ProjectDetail() {
   const progressPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
-          <Button onClick={() => setLocation("/projects")} variant="ghost" size="sm">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Projects
-          </Button>
-          <div className="flex items-center gap-2">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="p-6 max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <Button onClick={() => setLocation("/projects")} variant="ghost" size="sm">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Projects
+            </Button>
+            <div className="flex items-center gap-2">
             <div className={`w-3 h-3 rounded-full ${getStatusColor(project.status || "")}`}></div>
             <Badge variant="outline" className="capitalize">
               {project.status?.replace("_", " ") || "No Status"}
@@ -221,10 +222,10 @@ export default function ProjectDetail() {
             <Badge className={`${getPriorityColor(project.priority || "")} text-white capitalize`}>
               {project.priority || "No Priority"}
             </Badge>
+            </div>
           </div>
-        </div>
-        
-        <div className="flex items-center gap-2">
+          
+          <div className="flex items-center gap-2">
           {editingProject ? (
             <>
               <Button onClick={handleProjectSave} disabled={updateProjectMutation.isPending}>
@@ -604,6 +605,7 @@ export default function ProjectDetail() {
           </Card>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }
