@@ -479,7 +479,7 @@ export default function CollectionAnalytics() {
                         <td className="p-2 text-right">{collection.individualSandwiches || 0}</td>
                         <td className="p-2 text-right">{collection.groupCollections || 0}</td>
                         <td className="p-2 text-right font-medium">
-                          {(collection.individualSandwiches || 0) + (collection.groupCollections || 0)}
+                          {(collection.individualSandwiches || 0) + Number(collection.groupCollections || 0)}
                         </td>
                         <td className="p-2 text-xs text-gray-500">
                           {new Date(collection.submittedAt).toLocaleDateString()}
