@@ -59,7 +59,7 @@ export default function Landing() {
   // Use the verified record week from database query (34,100 on 2022-11-16)
   const recordWeek = 34100;
   
-  const costPerSandwich = 3.5; // Average of $2.67-$5.35 range
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
@@ -167,12 +167,7 @@ export default function Landing() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">${costPerSandwich.toFixed(2)}</div>
-                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Cost Per Sandwich</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">vs. $100M+ corporate marketing budgets</div>
-              </div>
+            <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600">200-400x</div>
                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300">More Efficient</div>
