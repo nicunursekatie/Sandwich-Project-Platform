@@ -41,6 +41,8 @@ export default function CollectionAnalytics() {
   const [dateFilter, setDateFilter] = useState({ start: "", end: "" });
   const [hostFilter, setHostFilter] = useState("");
   const [selectedMetric, setSelectedMetric] = useState("sandwiches");
+  const [sandwichFilter, setSandwichFilter] = useState({ min: "", max: "" });
+  const [collectionTypeFilter, setCollectionTypeFilter] = useState("all");
 
   const { data: collections = [], isLoading } = useQuery({
     queryKey: ["/api/sandwich-collections", { limit: 10000 }],
@@ -52,23 +54,36 @@ export default function CollectionAnalytics() {
     }
   });
 
+  // Filter collections based on search criteria
+  const filteredCollections = useMemo(() => {
+    return collections.filter((collection: SandwichCollection) => {
+      // Date filters
+      if (dateFilter.start && collection.collectionDate < dateFilter.start) return false;
+      if (dateFilter.end && collection.collectionDate > dateFilter.end) return false;
+      
+      // Host name filter
+      if (hostFilter && !collection.hostName?.toLowerCase().includes(hostFilter.toLowerCase())) return false;
+      
+      // Sandwich count filters
+      const totalSandwiches = (collection.individualSandwiches || 0) + Number(collection.groupCollections || 0);
+      if (sandwichFilter.min && totalSandwiches < Number(sandwichFilter.min)) return false;
+      if (sandwichFilter.max && totalSandwiches > Number(sandwichFilter.max)) return false;
+      
+      // Collection type filters
+      if (collectionTypeFilter === "with-groups" && !collection.groupCollections) return false;
+      if (collectionTypeFilter === "individual-only" && collection.groupCollections) return false;
+      if (collectionTypeFilter === "og-project" && collection.hostName !== "OG Sandwich Project") return false;
+      if (collectionTypeFilter === "location-based" && collection.hostName === "OG Sandwich Project") return false;
+      
+      return true;
+    });
+  }, [collections, dateFilter, hostFilter, sandwichFilter, collectionTypeFilter]);
+
   const analyticsData: AnalyticsData | null = useMemo(() => {
     if (!collections.length) return null;
 
-    // Filter collections based on criteria
-    let filteredCollections = collections;
-    
-    if (dateFilter.start) {
-      filteredCollections = filteredCollections.filter(c => c.collectionDate >= dateFilter.start);
-    }
-    if (dateFilter.end) {
-      filteredCollections = filteredCollections.filter(c => c.collectionDate <= dateFilter.end);
-    }
-    if (hostFilter) {
-      filteredCollections = filteredCollections.filter(c => 
-        c.hostName.toLowerCase().includes(hostFilter.toLowerCase())
-      );
-    }
+    // Use filtered collections for analytics when filters are applied
+    let dataCollections = filteredCollections;
 
     const totalCollections = filteredCollections.length;
     const totalSandwiches = filteredCollections.reduce((sum, c) => sum + (c.individualSandwiches || 0), 0);
@@ -231,13 +246,14 @@ export default function CollectionAnalytics() {
         </div>
       </div>
 
-      {/* Filters */}
+      {/* Advanced Filters */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Filters</CardTitle>
+          <CardTitle className="text-lg">Search & Filter Collection Logs</CardTitle>
+          <CardDescription>Search by any characteristic to view matching collection logs</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <div>
               <Label htmlFor="start-date">Start Date</Label>
               <Input
@@ -257,13 +273,51 @@ export default function CollectionAnalytics() {
               />
             </div>
             <div>
-              <Label htmlFor="host-filter">Host Filter</Label>
+              <Label htmlFor="host-filter">Host Name</Label>
               <Input
                 id="host-filter"
-                placeholder="Search hosts..."
+                placeholder="Type host name..."
                 value={hostFilter}
                 onChange={(e) => setHostFilter(e.target.value)}
               />
+            </div>
+            <div>
+              <Label htmlFor="sandwich-min">Min Sandwiches</Label>
+              <Input
+                id="sandwich-min"
+                type="number"
+                placeholder="e.g. 100"
+                value={sandwichFilter.min}
+                onChange={(e) => setSandwichFilter(prev => ({ ...prev, min: e.target.value }))}
+              />
+            </div>
+            <div>
+              <Label htmlFor="sandwich-max">Max Sandwiches</Label>
+              <Input
+                id="sandwich-max"
+                type="number"
+                placeholder="e.g. 500"
+                value={sandwichFilter.max}
+                onChange={(e) => setSandwichFilter(prev => ({ ...prev, max: e.target.value }))}
+              />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div>
+              <Label htmlFor="collection-type">Collection Type</Label>
+              <Select value={collectionTypeFilter} onValueChange={setCollectionTypeFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Collections</SelectItem>
+                  <SelectItem value="with-groups">With Group Collections</SelectItem>
+                  <SelectItem value="individual-only">Individual Only</SelectItem>
+                  <SelectItem value="og-project">OG Sandwich Project</SelectItem>
+                  <SelectItem value="location-based">Location-Based</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="metric-select">Primary Metric</Label>
@@ -278,21 +332,34 @@ export default function CollectionAnalytics() {
                 </SelectContent>
               </Select>
             </div>
-          </div>
-          {(dateFilter.start || dateFilter.end || hostFilter) && (
-            <div className="mt-4">
+            <div className="flex items-end">
               <Button
                 variant="outline"
-                size="sm"
+                size="default"
                 onClick={() => {
                   setDateFilter({ start: "", end: "" });
                   setHostFilter("");
+                  setSandwichFilter({ min: "", max: "" });
+                  setCollectionTypeFilter("all");
                 }}
+                className="w-full"
               >
-                Clear Filters
+                Clear All Filters
               </Button>
             </div>
-          )}
+          </div>
+          
+          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+            <p className="text-sm text-blue-800">
+              <strong>Results:</strong> {filteredCollections.length} collections found
+              {hostFilter && ` • Host contains "${hostFilter}"`}
+              {dateFilter.start && ` • From ${dateFilter.start}`}
+              {dateFilter.end && ` • To ${dateFilter.end}`}
+              {sandwichFilter.min && ` • Min ${sandwichFilter.min} sandwiches`}
+              {sandwichFilter.max && ` • Max ${sandwichFilter.max} sandwiches`}
+              {collectionTypeFilter !== "all" && ` • Type: ${collectionTypeFilter}`}
+            </p>
+          </div>
         </CardContent>
       </Card>
 
@@ -375,6 +442,58 @@ export default function CollectionAnalytics() {
                   <Line yAxisId="right" type="monotone" dataKey="sandwiches" stroke="#82ca9d" strokeWidth={2} name="Sandwiches" />
                 </LineChart>
               </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Filtered Collections Table */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Filtered Collection Logs</CardTitle>
+              <CardDescription>
+                {filteredCollections.length} collections matching current filters
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left p-2">Date</th>
+                      <th className="text-left p-2">Host</th>
+                      <th className="text-right p-2">Individual</th>
+                      <th className="text-right p-2">Groups</th>
+                      <th className="text-right p-2">Total</th>
+                      <th className="text-left p-2">Submitted</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCollections.slice(0, 100).map((collection) => (
+                      <tr key={collection.id} className="border-b hover:bg-gray-50">
+                        <td className="p-2">{collection.collectionDate}</td>
+                        <td className="p-2">
+                          {collection.hostName === 'OG Sandwich Project' && (
+                            <Crown className="w-4 h-4 text-amber-500 inline mr-2" />
+                          )}
+                          {collection.hostName}
+                        </td>
+                        <td className="p-2 text-right">{collection.individualSandwiches || 0}</td>
+                        <td className="p-2 text-right">{collection.groupCollections || 0}</td>
+                        <td className="p-2 text-right font-medium">
+                          {(collection.individualSandwiches || 0) + (collection.groupCollections || 0)}
+                        </td>
+                        <td className="p-2 text-xs text-gray-500">
+                          {new Date(collection.submittedAt).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {filteredCollections.length > 100 && (
+                  <div className="mt-4 text-center text-sm text-gray-500">
+                    Showing first 100 of {filteredCollections.length} matching collections
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
