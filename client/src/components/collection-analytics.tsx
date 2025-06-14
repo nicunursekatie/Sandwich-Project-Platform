@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
-import { TrendingUp, Calendar, Users, MapPin, AlertTriangle, BarChart3, PieChart as PieChartIcon, Crown, Clock, Edit } from "lucide-react";
+import { TrendingUp, Calendar, Users, MapPin, AlertTriangle, BarChart3, PieChart as PieChartIcon, Crown, Clock, Edit, CheckSquare, Square } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import type { SandwichCollection } from "@shared/schema";
@@ -54,6 +54,12 @@ export default function CollectionAnalytics() {
     individualSandwiches: 0,
     groupCollections: 0,
   });
+  const [selectedCollections, setSelectedCollections] = useState<Set<number>>(new Set());
+  const [showBatchEdit, setShowBatchEdit] = useState(false);
+  const [batchEditData, setBatchEditData] = useState({
+    hostName: "",
+    collectionDate: ""
+  });
 
   const { toast } = useToast();
 
@@ -95,6 +101,41 @@ export default function CollectionAnalytics() {
     },
     onError: () => {
       toast({ title: "Error", description: "Failed to update collection", variant: "destructive" });
+    },
+  });
+
+  // Mutation for batch editing collections
+  const batchEditMutation = useMutation({
+    mutationFn: async (data: { ids: number[], updates: Partial<SandwichCollection> }) => {
+      const response = await fetch("/api/sandwich-collections/batch-edit", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update collections");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      setShowBatchEdit(false);
+      setBatchEditData({ hostName: "", collectionDate: "" });
+      setSelectedCollections(new Set());
+      toast({
+        title: "Success",
+        description: `Successfully updated ${selectedCollections.size} collections`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update collections",
+        variant: "destructive",
+      });
     },
   });
 
