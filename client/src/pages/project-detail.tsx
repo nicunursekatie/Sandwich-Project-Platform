@@ -215,18 +215,18 @@ export default function ProjectDetail() {
               Back to Projects
             </Button>
             <div className="flex items-center gap-2">
-            <div className={`w-3 h-3 rounded-full ${getStatusColor(project.status || "")}`}></div>
-            <Badge variant="outline" className="capitalize">
-              {project.status?.replace("_", " ") || "No Status"}
-            </Badge>
-            <Badge className={`${getPriorityColor(project.priority || "")} text-white capitalize`}>
-              {project.priority || "No Priority"}
-            </Badge>
+              <div className={`w-3 h-3 rounded-full ${getStatusColor(project.status || "")}`}></div>
+              <Badge variant="outline" className="capitalize">
+                {project.status?.replace("_", " ") || "No Status"}
+              </Badge>
+              <Badge className={`${getPriorityColor(project.priority || "")} text-white capitalize`}>
+                {project.priority || "No Priority"}
+              </Badge>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-          {editingProject ? (
+            {editingProject ? (
             <>
               <Button onClick={handleProjectSave} disabled={updateProjectMutation.isPending}>
                 <Save className="w-4 h-4 mr-2" />
