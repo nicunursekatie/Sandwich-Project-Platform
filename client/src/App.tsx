@@ -10,6 +10,8 @@ import Development from "@/pages/development";
 import PhoneDirectoryPage from "@/pages/phone-directory";
 import RoleDemo from "@/pages/role-demo";
 import Analytics from "@/pages/analytics";
+import Projects from "@/pages/projects";
+import ProjectDetail from "@/pages/project-detail";
 import Landing from "@/pages/landing";
 import NotFound from "@/pages/not-found";
 
@@ -40,6 +42,8 @@ function Router() {
       <Route path="/phone-directory" component={PhoneDirectoryPage} />
       <Route path="/role-demo" component={RoleDemo} />
       <Route path="/analytics" component={Analytics} />
+      <Route path="/projects" component={Projects} />
+      <Route path="/projects/:id" component={ProjectDetail} />
       <Route component={NotFound} />
     </Switch>
   );

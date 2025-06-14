@@ -33,7 +33,7 @@ export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description"),
-  status: text("status").notNull(), // 'available', 'in_progress', 'planning', 'completed'
+  status: text("status").notNull(), // 'waiting', 'available', 'in_progress', 'completed'
   priority: text("priority").notNull().default("medium"), // 'low', 'medium', 'high', 'urgent'
   category: text("category").notNull().default("general"), // 'general', 'marketing', 'operations', 'grants', 'events'
   assigneeId: integer("assignee_id"),
@@ -43,12 +43,40 @@ export const projects = pgTable("projects", {
   completionDate: text("completion_date"), // ISO date string
   progressPercentage: integer("progress_percentage").notNull().default(0), // 0-100
   notes: text("notes"), // Additional project notes
+  requirements: text("requirements"), // Project requirements and specifications
+  deliverables: text("deliverables"), // Expected deliverables/outcomes
+  resources: text("resources"), // Resources needed or available
+  blockers: text("blockers"), // Current blockers or issues
   tags: text("tags"), // JSON array of tags
   estimatedHours: integer("estimated_hours"), // Estimated work hours
   actualHours: integer("actual_hours"), // Actual hours worked
   color: text("color").notNull().default("blue"), // for status indicator
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const projectTasks = pgTable("project_tasks", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  status: text("status").notNull().default("pending"), // 'pending', 'in_progress', 'completed'
+  priority: text("priority").notNull().default("medium"), // 'low', 'medium', 'high'
+  assigneeName: text("assignee_name"),
+  dueDate: text("due_date"),
+  completedAt: timestamp("completed_at"),
+  order: integer("order").notNull().default(0), // for task ordering
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const projectComments = pgTable("project_comments", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  authorName: text("author_name").notNull(),
+  content: text("content").notNull(),
+  commentType: text("comment_type").notNull().default("general"), // 'general', 'update', 'blocker', 'completion'
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const messages = pgTable("messages", {
@@ -196,6 +224,8 @@ export const insertHostSchema = createInsertSchema(hosts).omit({ id: true, creat
 export const insertHostContactSchema = createInsertSchema(hostContacts).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertRecipientSchema = createInsertSchema(recipients).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertProjectDocumentSchema = createInsertSchema(projectDocuments).omit({ id: true, uploadedAt: true });
+export const insertProjectTaskSchema = createInsertSchema(projectTasks).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertProjectCommentSchema = createInsertSchema(projectComments).omit({ id: true, createdAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -227,6 +257,10 @@ export type Recipient = typeof recipients.$inferSelect;
 export type InsertRecipient = z.infer<typeof insertRecipientSchema>;
 export type ProjectDocument = typeof projectDocuments.$inferSelect;
 export type InsertProjectDocument = z.infer<typeof insertProjectDocumentSchema>;
+export type ProjectTask = typeof projectTasks.$inferSelect;
+export type InsertProjectTask = z.infer<typeof insertProjectTaskSchema>;
+export type ProjectComment = typeof projectComments.$inferSelect;
+export type InsertProjectComment = z.infer<typeof insertProjectCommentSchema>;
 
 // Hosted Files table
 export const hostedFiles = pgTable("hosted_files", {
