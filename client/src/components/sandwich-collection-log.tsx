@@ -98,6 +98,16 @@ export default function SandwichCollectionLog() {
     queryKey: ["/api/hosts"]
   });
 
+  // Query for complete database totals including both individual and group collections
+  const { data: totalStats } = useQuery({
+    queryKey: ["/api/sandwich-collections/stats"],
+    queryFn: async () => {
+      const response = await fetch('/api/sandwich-collections/stats');
+      if (!response.ok) throw new Error('Failed to fetch stats');
+      return response.json();
+    }
+  });
+
   // Filter and sort collections
   const filteredCollections = collections
     .filter(collection => {
