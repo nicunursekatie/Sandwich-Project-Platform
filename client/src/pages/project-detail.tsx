@@ -214,12 +214,12 @@ export default function ProjectDetail() {
             Back to Projects
           </Button>
           <div className="flex items-center gap-2">
-            <div className={`w-3 h-3 rounded-full ${getStatusColor(project.status)}`}></div>
+            <div className={`w-3 h-3 rounded-full ${getStatusColor(project.status || "")}`}></div>
             <Badge variant="outline" className="capitalize">
-              {project.status.replace("_", " ")}
+              {project.status?.replace("_", " ") || "No Status"}
             </Badge>
-            <Badge className={`${getPriorityColor(project.priority)} text-white capitalize`}>
-              {project.priority}
+            <Badge className={`${getPriorityColor(project.priority || "")} text-white capitalize`}>
+              {project.priority || "No Priority"}
             </Badge>
           </div>
         </div>
