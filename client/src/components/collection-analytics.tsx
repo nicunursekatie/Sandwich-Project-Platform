@@ -163,6 +163,56 @@ export default function CollectionAnalytics() {
     });
   };
 
+  const handleSelectCollection = (id: number, checked: boolean) => {
+    const newSelected = new Set(selectedCollections);
+    if (checked) {
+      newSelected.add(id);
+    } else {
+      newSelected.delete(id);
+    }
+    setSelectedCollections(newSelected);
+  };
+
+  const handleSelectAll = (selectAll: boolean) => {
+    if (selectAll) {
+      setSelectedCollections(new Set(filteredCollections.map(c => c.id)));
+    } else {
+      setSelectedCollections(new Set());
+    }
+  };
+
+  const handleBatchEdit = () => {
+    if (selectedCollections.size === 0) {
+      toast({
+        title: "No collections selected",
+        description: "Please select collections to edit.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setShowBatchEdit(true);
+  };
+
+  const submitBatchEdit = () => {
+    const updates: Partial<SandwichCollection> = {};
+    if (batchEditData.hostName) updates.hostName = batchEditData.hostName;
+    if (batchEditData.collectionDate) updates.collectionDate = batchEditData.collectionDate;
+
+    if (Object.keys(updates).length === 0) {
+      toast({
+        title: "No changes to apply",
+        description: "Please specify at least one field to update.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    batchEditMutation.mutate({
+      ids: Array.from(selectedCollections),
+      updates
+    });
+  };
+
   const { data: collections = [], isLoading } = useQuery({
     queryKey: ["/api/sandwich-collections", { limit: 10000 }],
     queryFn: async () => {
@@ -577,13 +627,42 @@ export default function CollectionAnalytics() {
               <CardTitle>Filtered Collection Logs</CardTitle>
               <CardDescription>
                 {filteredCollections.length} collections matching current filters
+                {selectedCollections.size > 0 && (
+                  <span className="ml-2 text-blue-600">({selectedCollections.size} selected)</span>
+                )}
               </CardDescription>
+              {selectedCollections.size > 0 && (
+                <div className="flex space-x-2 mt-2">
+                  <Button onClick={handleBatchEdit} size="sm">
+                    Bulk Edit ({selectedCollections.size})
+                  </Button>
+                  <Button 
+                    onClick={() => setSelectedCollections(new Set())} 
+                    variant="outline" 
+                    size="sm"
+                  >
+                    Clear Selection
+                  </Button>
+                </div>
+              )}
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b">
+                      <th className="text-left p-2 w-8">
+                        <button
+                          onClick={() => handleSelectAll(!selectedCollections.size || selectedCollections.size < filteredCollections.length)}
+                          className="flex items-center"
+                        >
+                          {selectedCollections.size === filteredCollections.length ? (
+                            <CheckSquare className="w-4 h-4" />
+                          ) : (
+                            <Square className="w-4 h-4" />
+                          )}
+                        </button>
+                      </th>
                       <th className="text-left p-2">Date</th>
                       <th className="text-left p-2">Host</th>
                       <th className="text-right p-2">Individual</th>
@@ -593,31 +672,54 @@ export default function CollectionAnalytics() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredCollections.slice(0, 100).map((collection) => (
-                      <tr 
-                        key={collection.id} 
-                        className="border-b hover:bg-gray-50 cursor-pointer group"
-                        onClick={() => handleEditClick(collection)}
-                        title="Click to edit this collection"
-                      >
-                        <td className="p-2">{collection.collectionDate}</td>
-                        <td className="p-2">
-                          {collection.hostName === 'OG Sandwich Project' && (
-                            <Crown className="w-4 h-4 text-amber-500 inline mr-2" />
-                          )}
-                          {collection.hostName}
-                          <Edit className="w-4 h-4 text-gray-400 inline ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </td>
-                        <td className="p-2 text-right">{collection.individualSandwiches || 0}</td>
-                        <td className="p-2 text-right">{parseGroupCollections(collection.groupCollections)}</td>
-                        <td className="p-2 text-right font-medium">
-                          {Number(collection.individualSandwiches || 0) + parseGroupCollections(collection.groupCollections)}
-                        </td>
-                        <td className="p-2 text-xs text-gray-500">
-                          {new Date(collection.submittedAt).toLocaleDateString()}
-                        </td>
-                      </tr>
-                    ))}
+                    {filteredCollections.slice(0, 100).map((collection) => {
+                      const isSelected = selectedCollections.has(collection.id);
+                      return (
+                        <tr 
+                          key={collection.id} 
+                          className={`border-b hover:bg-gray-50 group ${isSelected ? 'bg-blue-50' : ''}`}
+                        >
+                          <td className="p-2" onClick={(e) => e.stopPropagation()}>
+                            <button
+                              onClick={() => handleSelectCollection(collection.id, !isSelected)}
+                              className="flex items-center"
+                            >
+                              {isSelected ? (
+                                <CheckSquare className="w-4 h-4 text-blue-600" />
+                              ) : (
+                                <Square className="w-4 h-4" />
+                              )}
+                            </button>
+                          </td>
+                          <td 
+                            className="p-2 cursor-pointer"
+                            onClick={() => handleEditClick(collection)}
+                            title="Click to edit this collection"
+                          >
+                            {collection.collectionDate}
+                          </td>
+                          <td 
+                            className="p-2 cursor-pointer"
+                            onClick={() => handleEditClick(collection)}
+                            title="Click to edit this collection"
+                          >
+                            {collection.hostName === 'OG Sandwich Project' && (
+                              <Crown className="w-4 h-4 text-amber-500 inline mr-2" />
+                            )}
+                            {collection.hostName}
+                            <Edit className="w-4 h-4 text-gray-400 inline ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </td>
+                          <td className="p-2 text-right">{collection.individualSandwiches || 0}</td>
+                          <td className="p-2 text-right">{parseGroupCollections(collection.groupCollections)}</td>
+                          <td className="p-2 text-right font-medium">
+                            {Number(collection.individualSandwiches || 0) + parseGroupCollections(collection.groupCollections)}
+                          </td>
+                          <td className="p-2 text-xs text-gray-500">
+                            {new Date(collection.submittedAt).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
                 {filteredCollections.length > 100 && (
@@ -987,6 +1089,46 @@ export default function CollectionAnalytics() {
               </Button>
               <Button onClick={handleSaveEdit} disabled={updateMutation.isPending}>
                 {updateMutation.isPending ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bulk Edit Dialog */}
+      <Dialog open={showBatchEdit} onOpenChange={setShowBatchEdit}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Bulk Edit Collections</DialogTitle>
+            <DialogDescription>
+              Editing {selectedCollections.size} selected collections. Leave fields empty to keep existing values.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="batch-date">Collection Date</Label>
+              <Input
+                id="batch-date"
+                type="date"
+                value={batchEditData.collectionDate}
+                onChange={(e) => setBatchEditData({ ...batchEditData, collectionDate: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="batch-host">Host Name</Label>
+              <Input
+                id="batch-host"
+                value={batchEditData.hostName}
+                onChange={(e) => setBatchEditData({ ...batchEditData, hostName: e.target.value })}
+                placeholder="Enter new host name"
+              />
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setShowBatchEdit(false)}>
+                Cancel
+              </Button>
+              <Button onClick={submitBatchEdit} disabled={batchEditMutation.isPending}>
+                {batchEditMutation.isPending ? "Updating..." : `Update ${selectedCollections.size} Collections`}
               </Button>
             </div>
           </div>
