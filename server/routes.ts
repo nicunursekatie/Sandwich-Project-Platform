@@ -277,7 +277,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Sandwich Collections Stats - Complete totals including individual + group collections
-  app.get("/api/sandwich-collections/stats", isAuthenticated, async (req, res) => {
+  app.get("/api/sandwich-collections/stats", async (req, res) => {
     try {
       const collections = await storage.getAllSandwichCollections();
       
