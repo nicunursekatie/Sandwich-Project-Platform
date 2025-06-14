@@ -815,6 +815,32 @@ export default function CollectionAnalytics() {
               </div>
             </CardContent>
           </Card>
+
+          {/* All Host Locations List */}
+          <Card>
+            <CardHeader>
+              <CardTitle>All Host Locations</CardTitle>
+              <CardDescription>Complete list of all hosts represented in the collection database</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                {Array.from(new Set(collections.map(c => c.hostName).filter(Boolean))).sort().map((hostName, index) => (
+                  <div 
+                    key={index} 
+                    className="flex items-center p-2 bg-gray-50 rounded border"
+                  >
+                    {hostName === 'OG Sandwich Project' && (
+                      <Crown className="w-4 h-4 text-amber-500 mr-2" />
+                    )}
+                    <span className="text-sm">{hostName}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 text-sm text-gray-600">
+                Total: {Array.from(new Set(collections.map(c => c.hostName).filter(Boolean))).length} unique host locations
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="patterns" className="space-y-4">
