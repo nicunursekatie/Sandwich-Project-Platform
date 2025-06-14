@@ -27,6 +27,7 @@ interface DuplicateAnalysis {
   duplicateGroups: number;
   totalDuplicateEntries: number;
   suspiciousPatterns: number;
+  ogDuplicates: number;
   duplicates: Array<{
     entries: SandwichCollection[];
     count: number;
@@ -34,6 +35,12 @@ interface DuplicateAnalysis {
     toDelete: SandwichCollection[];
   }>;
   suspiciousEntries: SandwichCollection[];
+  ogDuplicateEntries: Array<{
+    ogEntry?: SandwichCollection;
+    earlyEntry?: SandwichCollection;
+    duplicateOgEntry?: SandwichCollection;
+    reason: string;
+  }>;
 }
 
 export default function SandwichCollectionLog() {
@@ -459,7 +466,7 @@ export default function SandwichCollectionLog() {
   });
 
   const cleanDuplicatesMutation = useMutation({
-    mutationFn: async (mode: 'exact' | 'suspicious') => {
+    mutationFn: async (mode: 'exact' | 'suspicious' | 'og-duplicates') => {
       const response = await fetch("/api/sandwich-collections/clean-duplicates", {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },

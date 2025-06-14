@@ -449,7 +449,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Clean duplicates from sandwich collections (must be before :id route)
   app.delete("/api/sandwich-collections/clean-duplicates", async (req, res) => {
     try {
-      const { mode = 'exact' } = req.body; // 'exact' or 'suspicious'
+      const { mode = 'exact' } = req.body; // 'exact', 'suspicious', or 'og-duplicates'
       const collections = await storage.getAllSandwichCollections();
 
       let collectionsToDelete = [];
@@ -472,6 +472,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
           if (group.length > 1) {
             const sorted = group.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
             collectionsToDelete.push(...sorted.slice(1)); // Keep first (newest), delete rest
+          }
+        });
+      } else if (mode === 'og-duplicates') {
+        // Find duplicates between OG Sandwich Project and early collections with no location data
+        const ogCollections = collections.filter(c => c.hostName === 'OG Sandwich Project');
+        const earlyCollections = collections.filter(c => 
+          c.hostName !== 'OG Sandwich Project' && 
+          (c.hostName === '' || c.hostName === null || c.hostName.trim() === '' || 
+           c.hostName.toLowerCase().includes('unknown') || c.hostName.toLowerCase().includes('no location'))
+        );
+
+        // Create a map of OG entries by date and count
+        const ogMap = new Map();
+        ogCollections.forEach(og => {
+          const key = `${og.collectionDate}-${og.individualSandwiches}`;
+          if (!ogMap.has(key)) {
+            ogMap.set(key, []);
+          }
+          ogMap.get(key).push(og);
+        });
+
+        // Find matching early collections and mark older/duplicate entries for deletion
+        earlyCollections.forEach(early => {
+          const key = `${early.collectionDate}-${early.individualSandwiches}`;
+          if (ogMap.has(key)) {
+            const ogEntries = ogMap.get(key);
+            // If we have matching OG entries, mark the early collection for deletion
+            // as OG entries are the authoritative historical record
+            collectionsToDelete.push(early);
+          }
+        });
+
+        // Also check for duplicate OG entries with same date/count and keep only the newest
+        ogMap.forEach(ogGroup => {
+          if (ogGroup.length > 1) {
+            const sorted = ogGroup.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+            collectionsToDelete.push(...sorted.slice(1)); // Keep newest, delete duplicates
           }
         });
       } else if (mode === 'suspicious') {
@@ -548,6 +585,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Group by date, host, and sandwich counts to find exact duplicates
       const duplicateGroups = new Map();
       const suspiciousPatterns = [];
+      const ogDuplicates = [];
 
       collections.forEach(collection => {
         const key = `${collection.collectionDate}-${collection.hostName}-${collection.individualSandwiches}-${collection.groupCollections}`;
@@ -567,6 +605,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       });
 
+      // Find OG Sandwich Project duplicates with early collections
+      const ogCollections = collections.filter(c => c.hostName === 'OG Sandwich Project');
+      const earlyCollections = collections.filter(c => 
+        c.hostName !== 'OG Sandwich Project' && 
+        (c.hostName === '' || c.hostName === null || c.hostName.trim() === '' || 
+         c.hostName.toLowerCase().includes('unknown') || c.hostName.toLowerCase().includes('no location'))
+      );
+
+      const ogMap = new Map();
+      ogCollections.forEach(og => {
+        const key = `${og.collectionDate}-${og.individualSandwiches}`;
+        if (!ogMap.has(key)) {
+          ogMap.set(key, []);
+        }
+        ogMap.get(key).push(og);
+      });
+
+      earlyCollections.forEach(early => {
+        const key = `${early.collectionDate}-${early.individualSandwiches}`;
+        if (ogMap.has(key)) {
+          const ogEntries = ogMap.get(key);
+          ogDuplicates.push({
+            ogEntry: ogEntries[0],
+            earlyEntry: early,
+            reason: 'Same date and sandwich count as OG Project entry'
+          });
+        }
+      });
+
+      // Also find duplicate OG entries
+      ogMap.forEach(ogGroup => {
+        if (ogGroup.length > 1) {
+          const sorted = ogGroup.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+          sorted.slice(1).forEach(duplicate => {
+            ogDuplicates.push({
+              ogEntry: sorted[0],
+              duplicateOgEntry: duplicate,
+              reason: 'Duplicate OG Project entry'
+            });
+          });
+        }
+      });
+
       // Find actual duplicates (groups with more than 1 entry)
       const duplicates = Array.from(duplicateGroups.values())
         .filter(group => group.length > 1)
@@ -582,8 +663,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         duplicateGroups: duplicates.length,
         totalDuplicateEntries: duplicates.reduce((sum, group) => sum + group.toDelete.length, 0),
         suspiciousPatterns: suspiciousPatterns.length,
+        ogDuplicates: ogDuplicates.length,
         duplicates,
-        suspiciousEntries: suspiciousPatterns
+        suspiciousEntries: suspiciousPatterns,
+        ogDuplicateEntries: ogDuplicates
       });
     } catch (error) {
       logger.error("Failed to analyze duplicates", error);
