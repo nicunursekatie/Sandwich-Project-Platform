@@ -149,8 +149,22 @@ export default function CollectionAnalytics() {
     let dataCollections = filteredCollections;
 
     const totalCollections = filteredCollections.length;
-    const totalSandwiches = filteredCollections.reduce((sum, c) => 
-      sum + (c.individualSandwiches || 0) + getGroupCount(c.groupCollections), 0);
+    const totalSandwiches = filteredCollections.reduce((sum, c) => {
+      const individual = Number(c.individualSandwiches || 0);
+      let groups = 0;
+      
+      if (Array.isArray(c.groupCollections)) {
+        if (c.groupCollections.length > 0) {
+          groups = c.groupCollections.reduce((total: number, group: any) => 
+            total + (Number(group.sandwichCount) || 0), 0
+          );
+        }
+      } else {
+        groups = Number(c.groupCollections || 0);
+      }
+      
+      return sum + individual + groups;
+    }, 0);
     const uniqueHosts = new Set(filteredCollections.map(c => c.hostName)).size;
     
     // Date range
@@ -169,7 +183,20 @@ export default function CollectionAnalytics() {
       }
       const stats = hostStats.get(host);
       stats.count++;
-      stats.total += (c.individualSandwiches || 0) + getGroupCount(c.groupCollections);
+      
+      const individual = Number(c.individualSandwiches || 0);
+      let groups = 0;
+      if (Array.isArray(c.groupCollections)) {
+        if (c.groupCollections.length > 0) {
+          groups = c.groupCollections.reduce((total: number, group: any) => 
+            total + (Number(group.sandwichCount) || 0), 0
+          );
+        }
+      } else {
+        groups = Number(c.groupCollections || 0);
+      }
+      
+      stats.total += individual + groups;
     });
 
     const topHosts = Array.from(hostStats.entries())
@@ -205,7 +232,18 @@ export default function CollectionAnalytics() {
       }
       const data = weeklyData.get(dayName);
       data.collections++;
-      data.total += (c.individualSandwiches || 0) + getGroupCount(c.groupCollections);
+      const individual = Number(c.individualSandwiches || 0);
+      let groups = 0;
+      if (Array.isArray(c.groupCollections)) {
+        if (c.groupCollections.length > 0) {
+          groups = c.groupCollections.reduce((total: number, group: any) => 
+            total + (Number(group.sandwichCount) || 0), 0
+          );
+        }
+      } else {
+        groups = Number(c.groupCollections || 0);
+      }
+      data.total += individual + groups;
     });
 
     const weeklyPatterns = dayNames.map(day => {
@@ -225,7 +263,17 @@ export default function CollectionAnalytics() {
     }));
 
     // Quality metrics
-    const withGroups = filteredCollections.filter(c => getGroupCount(c.groupCollections) > 0).length;
+    const withGroups = filteredCollections.filter(c => {
+      if (Array.isArray(c.groupCollections)) {
+        if (c.groupCollections.length > 0) {
+          return c.groupCollections.reduce((total: number, group: any) => 
+            total + (Number(group.sandwichCount) || 0), 0
+          ) > 0;
+        }
+        return false;
+      }
+      return Number(c.groupCollections || 0) > 0;
+    }).length;
     const withoutGroups = totalCollections - withGroups;
     const missingData = filteredCollections.filter(c => 
       !c.hostName || c.hostName.trim() === "" || (c.individualSandwiches || 0) === 0
