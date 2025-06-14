@@ -117,19 +117,30 @@ export default function CollectionAnalytics() {
       if (hostFilter && !collection.hostName?.toLowerCase().includes(hostFilter.toLowerCase())) return false;
       
       // Sandwich count filters
-      const totalSandwiches = (collection.individualSandwiches || 0) + Number(collection.groupCollections || 0);
+      const totalSandwiches = (collection.individualSandwiches || 0) + getGroupCount(collection.groupCollections);
       if (sandwichFilter.min && totalSandwiches < Number(sandwichFilter.min)) return false;
       if (sandwichFilter.max && totalSandwiches > Number(sandwichFilter.max)) return false;
       
       // Collection type filters
-      if (collectionTypeFilter === "with-groups" && !collection.groupCollections) return false;
-      if (collectionTypeFilter === "individual-only" && collection.groupCollections) return false;
+      if (collectionTypeFilter === "with-groups" && getGroupCount(collection.groupCollections) === 0) return false;
+      if (collectionTypeFilter === "individual-only" && getGroupCount(collection.groupCollections) > 0) return false;
       if (collectionTypeFilter === "og-project" && collection.hostName !== "OG Sandwich Project") return false;
       if (collectionTypeFilter === "location-based" && collection.hostName === "OG Sandwich Project") return false;
       
       return true;
     });
   }, [collections, dateFilter, hostFilter, sandwichFilter, collectionTypeFilter]);
+
+  // Helper function to normalize group data
+  const getGroupCount = (groupCollections: any): number => {
+    if (Array.isArray(groupCollections)) {
+      if (groupCollections.length === 0) return 0;
+      return groupCollections.reduce((total: number, group: any) => 
+        total + (group.sandwichCount || 0), 0
+      );
+    }
+    return Number(groupCollections || 0);
+  };
 
   const analyticsData: AnalyticsData | null = useMemo(() => {
     if (!collections.length) return null;
@@ -138,7 +149,8 @@ export default function CollectionAnalytics() {
     let dataCollections = filteredCollections;
 
     const totalCollections = filteredCollections.length;
-    const totalSandwiches = filteredCollections.reduce((sum, c) => sum + (c.individualSandwiches || 0), 0);
+    const totalSandwiches = filteredCollections.reduce((sum, c) => 
+      sum + (c.individualSandwiches || 0) + getGroupCount(c.groupCollections), 0);
     const uniqueHosts = new Set(filteredCollections.map(c => c.hostName)).size;
     
     // Date range
@@ -157,7 +169,7 @@ export default function CollectionAnalytics() {
       }
       const stats = hostStats.get(host);
       stats.count++;
-      stats.total += (c.individualSandwiches || 0);
+      stats.total += (c.individualSandwiches || 0) + getGroupCount(c.groupCollections);
     });
 
     const topHosts = Array.from(hostStats.entries())
@@ -174,7 +186,7 @@ export default function CollectionAnalytics() {
       }
       const data = monthlyData.get(month);
       data.collections++;
-      data.sandwiches += (c.individualSandwiches || 0);
+      data.sandwiches += (c.individualSandwiches || 0) + getGroupCount(c.groupCollections);
     });
 
     const monthlyTrends = Array.from(monthlyData.entries())
@@ -193,7 +205,7 @@ export default function CollectionAnalytics() {
       }
       const data = weeklyData.get(dayName);
       data.collections++;
-      data.total += (c.individualSandwiches || 0);
+      data.total += (c.individualSandwiches || 0) + getGroupCount(c.groupCollections);
     });
 
     const weeklyPatterns = dayNames.map(day => {
@@ -213,7 +225,7 @@ export default function CollectionAnalytics() {
     }));
 
     // Quality metrics
-    const withGroups = filteredCollections.filter(c => (Number(c.groupCollections) || 0) > 0).length;
+    const withGroups = filteredCollections.filter(c => getGroupCount(c.groupCollections) > 0).length;
     const withoutGroups = totalCollections - withGroups;
     const missingData = filteredCollections.filter(c => 
       !c.hostName || c.hostName.trim() === "" || (c.individualSandwiches || 0) === 0
