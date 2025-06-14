@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -7,8 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
-import { TrendingUp, Calendar, Users, MapPin, AlertTriangle, BarChart3, PieChart as PieChartIcon, Crown, Clock } from "lucide-react";
+import { TrendingUp, Calendar, Users, MapPin, AlertTriangle, BarChart3, PieChart as PieChartIcon, Crown, Clock, Edit } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import type { SandwichCollection } from "@shared/schema";
 
 interface AnalyticsData {
@@ -43,6 +47,54 @@ export default function CollectionAnalytics() {
   const [selectedMetric, setSelectedMetric] = useState("sandwiches");
   const [sandwichFilter, setSandwichFilter] = useState({ min: "", max: "" });
   const [collectionTypeFilter, setCollectionTypeFilter] = useState("all");
+  const [editingCollection, setEditingCollection] = useState<SandwichCollection | null>(null);
+  const [editForm, setEditForm] = useState({
+    collectionDate: "",
+    hostName: "",
+    individualSandwiches: 0,
+    groupCollections: 0,
+  });
+
+  const { toast } = useToast();
+
+  // Mutation for updating collections
+  const updateMutation = useMutation({
+    mutationFn: async (data: { id: number; updates: Partial<SandwichCollection> }) => {
+      return await apiRequest(`/api/sandwich-collections/${data.id}`, "PATCH", data.updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      toast({ title: "Success", description: "Collection updated successfully" });
+      setEditingCollection(null);
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to update collection", variant: "destructive" });
+    },
+  });
+
+  const handleEditClick = (collection: SandwichCollection) => {
+    setEditingCollection(collection);
+    setEditForm({
+      collectionDate: collection.collectionDate,
+      hostName: collection.hostName,
+      individualSandwiches: collection.individualSandwiches || 0,
+      groupCollections: collection.groupCollections || 0,
+    });
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingCollection) return;
+    
+    updateMutation.mutate({
+      id: editingCollection.id,
+      updates: {
+        collectionDate: editForm.collectionDate,
+        hostName: editForm.hostName,
+        individualSandwiches: editForm.individualSandwiches,
+        groupCollections: editForm.groupCollections,
+      },
+    });
+  };
 
   const { data: collections = [], isLoading } = useQuery({
     queryKey: ["/api/sandwich-collections", { limit: 10000 }],
@@ -468,18 +520,24 @@ export default function CollectionAnalytics() {
                   </thead>
                   <tbody>
                     {filteredCollections.slice(0, 100).map((collection) => (
-                      <tr key={collection.id} className="border-b hover:bg-gray-50">
+                      <tr 
+                        key={collection.id} 
+                        className="border-b hover:bg-gray-50 cursor-pointer group"
+                        onClick={() => handleEditClick(collection)}
+                        title="Click to edit this collection"
+                      >
                         <td className="p-2">{collection.collectionDate}</td>
                         <td className="p-2">
                           {collection.hostName === 'OG Sandwich Project' && (
                             <Crown className="w-4 h-4 text-amber-500 inline mr-2" />
                           )}
                           {collection.hostName}
+                          <Edit className="w-4 h-4 text-gray-400 inline ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </td>
                         <td className="p-2 text-right">{collection.individualSandwiches || 0}</td>
                         <td className="p-2 text-right">{collection.groupCollections || 0}</td>
                         <td className="p-2 text-right font-medium">
-                          {(collection.individualSandwiches || 0) + Number(collection.groupCollections || 0)}
+                          {Number(collection.individualSandwiches || 0) + Number(collection.groupCollections || 0)}
                         </td>
                         <td className="p-2 text-xs text-gray-500">
                           {new Date(collection.submittedAt).toLocaleDateString()}
