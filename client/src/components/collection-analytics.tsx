@@ -145,8 +145,8 @@ export default function CollectionAnalytics() {
   const analyticsData: AnalyticsData | null = useMemo(() => {
     if (!collections.length) return null;
 
-    // Use filtered collections for analytics when filters are applied
-    let dataCollections = filteredCollections;
+    console.log("Collections data:", collections.slice(0, 3)); // Debug first 3 collections
+    console.log("Filtered collections length:", filteredCollections.length);
 
     const totalCollections = filteredCollections.length;
     const totalSandwiches = filteredCollections.reduce((sum, c) => {
@@ -163,8 +163,14 @@ export default function CollectionAnalytics() {
         groups = Number(c.groupCollections || 0);
       }
       
-      return sum + individual + groups;
+      const rowTotal = individual + groups;
+      console.log(`Collection ${c.id}: individual=${individual}, groups=${groups}, total=${rowTotal}`);
+      
+      return sum + rowTotal;
     }, 0);
+    
+    console.log("Final totalSandwiches:", totalSandwiches);
+    console.log("Final totalCollections:", totalCollections);
     const uniqueHosts = new Set(filteredCollections.map(c => c.hostName)).size;
     
     // Date range
