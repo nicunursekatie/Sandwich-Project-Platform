@@ -35,13 +35,13 @@ export default function ProjectDetail() {
 
   // Fetch project tasks
   const { data: tasks = [], isLoading: tasksLoading } = useQuery({
-    queryKey: ["/api/projects", id, "tasks"],
+    queryKey: [`/api/projects/${id}/tasks`],
     enabled: !!id,
   });
 
   // Fetch project comments
   const { data: comments = [], isLoading: commentsLoading } = useQuery({
-    queryKey: ["/api/projects", id, "comments"],
+    queryKey: [`/api/projects/${id}/comments`],
     enabled: !!id,
   });
 
@@ -73,7 +73,7 @@ export default function ProjectDetail() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/projects", id, "tasks"] });
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${id}/tasks`] });
       setNewTask({ title: "", description: "", priority: "medium" });
       toast({ title: "Task added successfully" });
     },
@@ -91,7 +91,7 @@ export default function ProjectDetail() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/projects", id, "tasks"] });
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${id}/tasks`] });
       queryClient.invalidateQueries({ queryKey: ["/api/projects", id] });
       setEditingTask(null);
       toast({ title: "Task updated successfully" });
@@ -110,7 +110,7 @@ export default function ProjectDetail() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/projects", id, "comments"] });
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${id}/comments`] });
       setNewComment("");
       toast({ title: "Comment added successfully" });
     },
