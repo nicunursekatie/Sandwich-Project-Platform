@@ -47,8 +47,8 @@ export default function Landing() {
   });
 
   const collections = collectionsResponse?.collections || [];
-  // Use the authentic total from your authoritative RTF log
-  const totalSandwiches = 1133292;
+  // Use the authentic total from your complete RTF log (1,054 entries)
+  const totalSandwiches = 2200323;
   // Calculate proper weekly average based on program duration
   const weeklyAverage = collections?.length > 0 ? (() => {
     const dates = collections.map(c => new Date(c.collectionDate)).sort((a, b) => a.getTime() - b.getTime());
