@@ -18,6 +18,7 @@ import {
   Play,
   ArrowRight,
   BarChart3,
+  TrendingUp,
   AlertCircle,
   LogOut,
   LayoutDashboard,
