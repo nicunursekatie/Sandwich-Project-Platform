@@ -1,4 +1,4 @@
-import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, Car, Building2, FileText, Phone } from "lucide-react";
+import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone } from "lucide-react";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
 import ChatHub from "@/components/chat-hub";
@@ -166,6 +166,10 @@ export default function Dashboard() {
         return <PhoneDirectory />;
       case "analytics":
         return <CollectionAnalytics />;
+      case "impact":
+        // Redirect to the Impact Dashboard page
+        window.location.href = "/impact";
+        return null;
       case "role-demo":
         return (
           <div className="p-6">

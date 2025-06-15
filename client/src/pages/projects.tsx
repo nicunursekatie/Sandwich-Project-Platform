@@ -238,6 +238,7 @@ export default function Projects() {
     { id: "drivers", label: "Drivers", icon: Car, path: "/drivers" },
     { id: "directory", label: "Phone Directory", icon: Phone, path: "/phone-directory", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
     { id: "analytics", label: "Data Analytics", icon: BarChart3, path: "/analytics" },
+    { id: "impact", label: "Impact Dashboard", icon: TrendingUp, path: "/impact" },
     { id: "role-demo", label: "Role Demo", icon: Users, path: "/role-demo" },
     { id: "development", label: "Development", icon: FolderOpen, path: "/development" },
   ];

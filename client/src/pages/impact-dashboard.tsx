@@ -419,11 +419,11 @@ export default function ImpactDashboard() {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Total Collections</span>
-                    <span className="font-bold text-xl">{impactMetrics.totalCollections}</span>
+                    <span className="font-bold text-xl">{impactMetrics.totalCollections.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Active Hosts</span>
-                    <span className="font-bold text-xl">{impactMetrics.uniqueHosts}</span>
+                    <span className="font-bold text-xl">{impactMetrics.uniqueHosts.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Avg per Collection</span>
@@ -485,7 +485,7 @@ export default function ImpactDashboard() {
                     </div>
                     <Progress value={(impactMetrics.estimatedVolunteerHours / 2000) * 100} className="h-3" />
                     <p className="text-xs text-gray-500 mt-1">
-                      {impactMetrics.estimatedVolunteerHours} / 2,000 hours ({Math.round((impactMetrics.estimatedVolunteerHours / 2000) * 100)}%)
+                      {impactMetrics.estimatedVolunteerHours.toLocaleString()} / 2,000 hours ({Math.round((impactMetrics.estimatedVolunteerHours / 2000) * 100)}%)
                     </p>
                   </div>
 
