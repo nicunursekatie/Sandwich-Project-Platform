@@ -230,7 +230,6 @@ export default function Projects() {
   const allSidebarItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/" },
     { id: "projects", label: "Projects", icon: ListTodo, path: "/projects" },
-    { id: "messages", label: "Messages", icon: MessageCircle, path: "/messages" },
     { id: "meetings", label: "Meetings", icon: ClipboardList, path: "/meetings" },
     { id: "toolkit", label: "Toolkit", icon: FileText, path: "/toolkit" },
     { id: "collections", label: "Collections", icon: Sandwich, path: "/collections" },
@@ -238,8 +237,7 @@ export default function Projects() {
     { id: "recipients", label: "Recipients", icon: Users, path: "/recipients" },
     { id: "drivers", label: "Drivers", icon: Car, path: "/drivers" },
     { id: "directory", label: "Phone Directory", icon: Phone, path: "/phone-directory", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
-    { id: "analytics", label: "Data Analytics", icon: BarChart3, path: "/analytics" },
-    { id: "impact", label: "Impact Dashboard", icon: TrendingUp, path: "/impact" },
+    { id: "analytics", label: "Analytics", icon: BarChart3, path: "/analytics" },
     { id: "role-demo", label: "Role Demo", icon: Users, path: "/role-demo" },
     { id: "development", label: "Development", icon: FolderOpen, path: "/development" },
   ];
@@ -299,11 +297,19 @@ export default function Projects() {
                 Organize and track all team projects with interactive task management
               </p>
             </div>
-            
-            <Button onClick={() => setLocation("/projects/new")} className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="w-4 h-4 mr-2" />
-              New Project
-            </Button>
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => window.location.href = "/"}
+                className="p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                title="Messages"
+              >
+                <MessageCircle className="w-5 h-5" />
+              </button>
+              <Button onClick={() => setLocation("/projects/new")} className="bg-blue-600 hover:bg-blue-700">
+                <Plus className="w-4 h-4 mr-2" />
+                New Project
+              </Button>
+            </div>
           </div>
 
           {/* Stats Overview */}
