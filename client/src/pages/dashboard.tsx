@@ -59,11 +59,11 @@ export default function Dashboard() {
         { id: "projects", label: "Projects", icon: ListTodo },
         { id: "meetings", label: "Meetings", icon: ClipboardList },
         { id: "analytics", label: "Analytics", icon: BarChart3 },
+        { id: "role-demo", label: "Role Demo", icon: Users },
       ]
     },
     { id: "toolkit", label: "Toolkit", icon: FileText, type: "item" },
     { id: "directory", label: "Phone Directory", icon: Phone, type: "item", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
-    { id: "role-demo", label: "Role Demo", icon: Users, type: "item" },
     { id: "development", label: "Development", icon: FolderOpen, type: "item" },
   ];
 
