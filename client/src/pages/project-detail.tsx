@@ -1,6 +1,6 @@
 import { useParams, useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,19 +28,26 @@ export default function ProjectDetail() {
   const [projectForm, setProjectForm] = useState<Partial<Project>>({});
 
   // Fetch project details
-  const { data: project, isLoading: projectLoading } = useQuery({
+  const { data: project, isLoading: projectLoading } = useQuery<Project>({
     queryKey: ["/api/projects", id],
     enabled: !!id,
   });
 
+  // Update project form when project data loads
+  useEffect(() => {
+    if (project) {
+      setProjectForm(project);
+    }
+  }, [project]);
+
   // Fetch project tasks
-  const { data: tasks = [], isLoading: tasksLoading } = useQuery({
+  const { data: tasks = [], isLoading: tasksLoading } = useQuery<ProjectTask[]>({
     queryKey: [`/api/projects/${id}/tasks`],
     enabled: !!id,
   });
 
   // Fetch project comments
-  const { data: comments = [], isLoading: commentsLoading } = useQuery({
+  const { data: comments = [], isLoading: commentsLoading } = useQuery<ProjectComment[]>({
     queryKey: [`/api/projects/${id}/comments`],
     enabled: !!id,
   });

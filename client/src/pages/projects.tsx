@@ -111,7 +111,7 @@ export default function Projects() {
   };
 
   const filterProjectsByStatus = (status: string) => {
-    return projects.filter((project: Project) => project.status === status);
+    return (projects as Project[]).filter((project: Project) => project.status === status);
   };
 
   const ProjectCard = ({ project }: { project: Project }) => (
@@ -289,204 +289,204 @@ export default function Projects() {
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
         <div className="p-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Project Management</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Organize and track all team projects with interactive task management
-          </p>
-        </div>
-        
-        <Button onClick={() => setLocation("/projects/new")} className="bg-blue-600 hover:bg-blue-700">
-          <Plus className="w-4 h-4 mr-2" />
-          New Project
-        </Button>
-      </div>
-
-      {/* Stats Overview */}
-      {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats.total || 0}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Projects</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.completed || 0}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Completed</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-orange-600">{stats.active || 0}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">In Progress</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-purple-600">{stats.available || 0}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Available</div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* Project Sections */}
-      <Tabs defaultValue="active" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="active" className="flex items-center gap-2">
-            <Play className="w-4 h-4" />
-            Active ({activeProjects.length})
-          </TabsTrigger>
-          <TabsTrigger value="available" className="flex items-center gap-2">
-            <Circle className="w-4 h-4" />
-            Available ({availableProjects.length})
-          </TabsTrigger>
-          <TabsTrigger value="waiting" className="flex items-center gap-2">
-            <Pause className="w-4 h-4" />
-            Waiting ({waitingProjects.length})
-          </TabsTrigger>
-          <TabsTrigger value="completed" className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4" />
-            Completed ({completedProjects.length})
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Active Projects */}
-        <TabsContent value="active">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Target className="w-5 h-5 text-blue-600" />
-              <h2 className="text-xl font-semibold">Active Projects</h2>
-              <Badge className="bg-blue-100 text-blue-800">
-                {activeProjects.length} projects
-              </Badge>
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Project Management</h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-2">
+                Organize and track all team projects with interactive task management
+              </p>
             </div>
             
-            {activeProjects.length === 0 ? (
-              <Card>
-                <CardContent className="p-8 text-center">
-                  <Play className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                    No Active Projects
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Start working on available projects or create new ones to see them here.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {activeProjects.map((project: Project) => (
-                  <ProjectCard key={project.id} project={project} />
-                ))}
-              </div>
-            )}
+            <Button onClick={() => setLocation("/projects/new")} className="bg-blue-600 hover:bg-blue-700">
+              <Plus className="w-4 h-4 mr-2" />
+              New Project
+            </Button>
           </div>
-        </TabsContent>
 
-        {/* Available Projects */}
-        <TabsContent value="available">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Circle className="w-5 h-5 text-purple-600" />
-              <h2 className="text-xl font-semibold">Available Projects</h2>
-              <Badge className="bg-purple-100 text-purple-800">
-                {availableProjects.length} projects
-              </Badge>
-            </div>
-            
-            {availableProjects.length === 0 ? (
+          {/* Stats Overview */}
+          {stats && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               <Card>
-                <CardContent className="p-8 text-center">
-                  <Circle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                    No Available Projects
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    All projects are either in progress, completed, or waiting for approval.
-                  </p>
+                <CardContent className="p-4 text-center">
+                  <div className="text-2xl font-bold text-blue-600">{(stats as any).total || 0}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Total Projects</div>
                 </CardContent>
               </Card>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {availableProjects.map((project: Project) => (
-                  <ProjectCard key={project.id} project={project} />
-                ))}
-              </div>
-            )}
-          </div>
-        </TabsContent>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <div className="text-2xl font-bold text-green-600">{(stats as any).completed || 0}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Completed</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <div className="text-2xl font-bold text-orange-600">{(stats as any).active || 0}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">In Progress</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <div className="text-2xl font-bold text-purple-600">{(stats as any).available || 0}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Available</div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
-        {/* Waiting Projects */}
-        <TabsContent value="waiting">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Pause className="w-5 h-5 text-gray-600" />
-              <h2 className="text-xl font-semibold">Waiting Projects</h2>
-              <Badge className="bg-gray-100 text-gray-800">
-                {waitingProjects.length} projects
-              </Badge>
-            </div>
-            
-            {waitingProjects.length === 0 ? (
-              <Card>
-                <CardContent className="p-8 text-center">
-                  <Pause className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                    No Waiting Projects
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Projects in discussion or planning phase will appear here.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {waitingProjects.map((project: Project) => (
-                  <ProjectCard key={project.id} project={project} />
-                ))}
-              </div>
-            )}
-          </div>
-        </TabsContent>
+          {/* Project Sections */}
+          <Tabs defaultValue="active" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="active" className="flex items-center gap-2">
+                <Play className="w-4 h-4" />
+                Active ({activeProjects.length})
+              </TabsTrigger>
+              <TabsTrigger value="available" className="flex items-center gap-2">
+                <Circle className="w-4 h-4" />
+                Available ({availableProjects.length})
+              </TabsTrigger>
+              <TabsTrigger value="waiting" className="flex items-center gap-2">
+                <Pause className="w-4 h-4" />
+                Waiting ({waitingProjects.length})
+              </TabsTrigger>
+              <TabsTrigger value="completed" className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4" />
+                Completed ({completedProjects.length})
+              </TabsTrigger>
+            </TabsList>
 
-        {/* Completed Projects */}
-        <TabsContent value="completed">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
-              <h2 className="text-xl font-semibold">Completed Projects</h2>
-              <Badge className="bg-green-100 text-green-800">
-                {completedProjects.length} projects
-              </Badge>
-            </div>
-            
-            {completedProjects.length === 0 ? (
-              <Card>
-                <CardContent className="p-8 text-center">
-                  <CheckCircle2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                    No Completed Projects
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Completed projects will be archived here for reference.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {completedProjects.map((project: Project) => (
-                  <ProjectCard key={project.id} project={project} />
-                ))}
+            {/* Active Projects */}
+            <TabsContent value="active">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Target className="w-5 h-5 text-blue-600" />
+                  <h2 className="text-xl font-semibold">Active Projects</h2>
+                  <Badge className="bg-blue-100 text-blue-800">
+                    {activeProjects.length} projects
+                  </Badge>
+                </div>
+                
+                {activeProjects.length === 0 ? (
+                  <Card>
+                    <CardContent className="p-8 text-center">
+                      <Play className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                        No Active Projects
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        Start working on available projects or create new ones to see them here.
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {activeProjects.map((project: Project) => (
+                      <ProjectCard key={project.id} project={project} />
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
+            </TabsContent>
+
+            {/* Available Projects */}
+            <TabsContent value="available">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Circle className="w-5 h-5 text-purple-600" />
+                  <h2 className="text-xl font-semibold">Available Projects</h2>
+                  <Badge className="bg-purple-100 text-purple-800">
+                    {availableProjects.length} projects
+                  </Badge>
+                </div>
+                
+                {availableProjects.length === 0 ? (
+                  <Card>
+                    <CardContent className="p-8 text-center">
+                      <Circle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                        No Available Projects
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        All projects are either in progress, completed, or waiting for approval.
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {availableProjects.map((project: Project) => (
+                      <ProjectCard key={project.id} project={project} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+
+            {/* Waiting Projects */}
+            <TabsContent value="waiting">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Pause className="w-5 h-5 text-gray-600" />
+                  <h2 className="text-xl font-semibold">Waiting Projects</h2>
+                  <Badge className="bg-gray-100 text-gray-800">
+                    {waitingProjects.length} projects
+                  </Badge>
+                </div>
+                
+                {waitingProjects.length === 0 ? (
+                  <Card>
+                    <CardContent className="p-8 text-center">
+                      <Pause className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                        No Waiting Projects
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        Projects in discussion or planning phase will appear here.
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {waitingProjects.map((project: Project) => (
+                      <ProjectCard key={project.id} project={project} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+
+            {/* Completed Projects */}
+            <TabsContent value="completed">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                  <h2 className="text-xl font-semibold">Completed Projects</h2>
+                  <Badge className="bg-green-100 text-green-800">
+                    {completedProjects.length} projects
+                  </Badge>
+                </div>
+                
+                {completedProjects.length === 0 ? (
+                  <Card>
+                    <CardContent className="p-8 text-center">
+                      <CheckCircle2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                        No Completed Projects
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        Completed projects will be archived here for reference.
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {completedProjects.map((project: Project) => (
+                      <ProjectCard key={project.id} project={project} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
