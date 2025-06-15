@@ -1,4 +1,5 @@
 import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
 import ChatHub from "@/components/chat-hub";
@@ -29,7 +30,6 @@ export default function Dashboard() {
   const allSidebarItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "projects", label: "Projects", icon: ListTodo },
-    { id: "messages", label: "Messages", icon: MessageCircle },
     { id: "meetings", label: "Meetings", icon: ClipboardList },
     { id: "toolkit", label: "Toolkit", icon: FileText },
     { id: "collections", label: "Collections", icon: Sandwich },
@@ -37,8 +37,7 @@ export default function Dashboard() {
     { id: "recipients", label: "Recipients", icon: Users },
     { id: "drivers", label: "Drivers", icon: Car },
     { id: "directory", label: "Phone Directory", icon: Phone, permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
-    { id: "analytics", label: "Data Analytics", icon: BarChart3 },
-    { id: "impact", label: "Impact Dashboard", icon: TrendingUp },
+    { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "role-demo", label: "Role Demo", icon: Users },
     { id: "development", label: "Development", icon: FolderOpen },
   ];
@@ -165,11 +164,30 @@ export default function Dashboard() {
       case "directory":
         return <PhoneDirectory />;
       case "analytics":
-        return <CollectionAnalytics />;
-      case "impact":
-        // Redirect to the Impact Dashboard page
-        window.location.href = "/impact";
-        return null;
+        return (
+          <div className="p-6">
+            <div className="mb-6">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Analytics Dashboard</h1>
+              <p className="text-gray-600 dark:text-gray-300">Data insights and impact visualization</p>
+            </div>
+            <Tabs defaultValue="data" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="data">Data Analytics</TabsTrigger>
+                <TabsTrigger value="impact">Impact Dashboard</TabsTrigger>
+              </TabsList>
+              <TabsContent value="data" className="mt-6">
+                <CollectionAnalytics />
+              </TabsContent>
+              <TabsContent value="impact" className="mt-6">
+                <iframe 
+                  src="/impact" 
+                  className="w-full h-screen border-0 rounded-lg bg-white"
+                  title="Impact Dashboard"
+                />
+              </TabsContent>
+            </Tabs>
+          </div>
+        );
       case "role-demo":
         return (
           <div className="p-6">
@@ -189,77 +207,77 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
-        {/* Sidebar Header */}
-        <div className="p-4 border-b border-slate-200">
-          <div className="flex items-center space-x-3">
-            <Sandwich className="text-amber-500 w-6 h-6" />
-            <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
-          </div>
+    <div className="bg-slate-50 min-h-screen flex flex-col">
+      {/* Top Header */}
+      <div className="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center">
+        <div className="flex items-center space-x-3">
+          <Sandwich className="text-amber-500 w-6 h-6" />
+          <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
         </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {sidebarItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <li key={item.id}>
-                  <button
-                    onClick={() => setActiveSection(item.id)}
-                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
-                      activeSection === item.id
-                        ? "bg-blue-50 text-blue-700 border border-blue-200"
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span>{item.label}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        {/* User Info */}
-        <div className="p-4 border-t border-slate-200">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-600">Welcome, {user?.firstName || 'Team'}</span>
-            <button 
-              onClick={() => {
-                window.location.href = '/api/logout';
-              }}
-              className="text-slate-400 hover:text-slate-600"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-          </div>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={() => setActiveSection("messages")}
+            className={`p-2 rounded-lg transition-colors ${
+              activeSection === "messages"
+                ? "bg-blue-50 text-blue-700 border border-blue-200"
+                : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            }`}
+            title="Messages"
+          >
+            <MessageCircle className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={() => {
+              queryClient.clear();
+              window.location.href = "/api/logout";
+            }}
+            className="flex items-center space-x-2 px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="text-sm">Logout</span>
+          </button>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Top Header */}
-        <header className="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-slate-900 capitalize">
-            {sidebarItems.find(item => item.id === activeSection)?.label}
-          </h2>
-          <button
-            onClick={() => window.location.href = '/api/logout'}
-            className="flex items-center space-x-2 px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Logout</span>
-          </button>
-        </header>
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+          {/* Navigation */}
+          <nav className="flex-1 p-4">
+            <ul className="space-y-2">
+              {sidebarItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => setActiveSection(item.id)}
+                      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                        activeSection === item.id
+                          ? "bg-blue-50 text-blue-700 border border-blue-200"
+                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span>{item.label}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-        {/* Content Area */}
-        <main className="flex-1 p-6">
+          {/* User Info */}
+          <div className="p-4 border-t border-slate-200">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-slate-600">Welcome, {(user as any)?.firstName || 'Team'}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1">
           {renderContent()}
-        </main>
+        </div>
       </div>
     </div>
   );
