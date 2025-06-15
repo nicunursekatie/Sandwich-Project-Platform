@@ -283,7 +283,20 @@ export default function ProjectDetail() {
                     onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
                     placeholder="Project description"
                   />
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <Input
+                      value={projectForm.assigneeName || ""}
+                      onChange={(e) => setProjectForm({ ...projectForm, assigneeName: e.target.value })}
+                      placeholder="Project Owner/Assignee"
+                    />
+                    <Input
+                      type="date"
+                      value={projectForm.dueDate || ""}
+                      onChange={(e) => setProjectForm({ ...projectForm, dueDate: e.target.value })}
+                      placeholder="Due Date"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
                     <Select value={projectForm.status} onValueChange={(value) => setProjectForm({ ...projectForm, status: value })}>
                       <SelectTrigger>
                         <SelectValue placeholder="Status" />
@@ -307,12 +320,6 @@ export default function ProjectDetail() {
                         <SelectItem value="urgent">Urgent</SelectItem>
                       </SelectContent>
                     </Select>
-                    
-                    <Input
-                      type="date"
-                      value={projectForm.dueDate || ""}
-                      onChange={(e) => setProjectForm({ ...projectForm, dueDate: e.target.value })}
-                    />
                   </div>
                 </div>
               ) : (
