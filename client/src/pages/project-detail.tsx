@@ -257,26 +257,7 @@ export default function ProjectDetail() {
               </Button>
             </>
           ) : (
-            <Button onClick={() => {
-              console.log("Edit button clicked, project data:", project);
-              setEditingProject(true);
-              if (project) {
-                setProjectForm({
-                  title: project.title || "",
-                  description: project.description || "",
-                  status: project.status || "",
-                  priority: project.priority || "",
-                  dueDate: project.dueDate || "",
-                  assigneeName: project.assigneeName || "",
-                  estimatedHours: project.estimatedHours || 0,
-                  actualHours: project.actualHours || 0,
-                  requirements: project.requirements || "",
-                  deliverables: project.deliverables || "",
-                  resources: project.resources || "",
-                  blockers: project.blockers || ""
-                });
-              }
-            }}>
+            <Button onClick={() => setEditingProject(true)}>
               <Edit3 className="w-4 h-4 mr-2" />
               Edit Project
             </Button>
