@@ -80,11 +80,11 @@ export default function Projects() {
         { id: "projects", label: "Projects", icon: ListTodo, href: "/projects" },
         { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings" },
         { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics" },
+        { id: "role-demo", label: "Role Demo", icon: Users, href: "/role-demo" },
       ]
     },
     { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", href: "/toolkit" },
     { id: "directory", label: "Phone Directory", icon: Phone, type: "item", href: "/directory", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
-    { id: "role-demo", label: "Role Demo", icon: Users, type: "item", href: "/role-demo" },
     { id: "development", label: "Development", icon: FolderOpen, type: "item", href: "/development" },
   ];
 
@@ -277,47 +277,117 @@ export default function Projects() {
 
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-white shadow-sm border-r border-gray-200 flex flex-col">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">TSP Dashboard</h2>
-          <p className="text-sm text-gray-600 mt-1">Sandwich Project Platform</p>
+    <div className="bg-slate-50 min-h-screen flex flex-col">
+      {/* Top Header */}
+      <div className="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center">
+        <div className="flex items-center space-x-3">
+          <Sandwich className="text-amber-500 w-6 h-6" />
+          <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
         </div>
-        
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {sidebarItems.map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => setLocation(item.path)}
-                  className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    item.id === "projects"
-                      ? "bg-blue-50 text-blue-700 border border-blue-200"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <item.icon className="w-5 h-5 mr-3" />
-                  {item.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className="p-4 border-t border-gray-200">
+        <div className="flex items-center space-x-4">
           <button
-            onClick={() => window.location.href = "/api/logout"}
-            className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-lg transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            title="Messages"
           >
-            <LogOut className="w-5 h-5 mr-3" />
-            Logout
+            <MessageCircle className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={() => window.location.href = "/api/logout"}
+            className="flex items-center space-x-2 px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="text-sm">Logout</span>
           </button>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+          <div className="p-4 border-b border-slate-200">
+            <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
+            <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
+          </div>
+        
+        <nav className="flex-1 p-4">
+          <ul className="space-y-2">
+            {filteredNavigation.map((item) => {
+              const Icon = item.icon;
+              
+              if (item.type === "section") {
+                const isExpanded = expandedSections.includes(item.id);
+                return (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => toggleSection(item.id)}
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <Icon className="w-5 h-5" />
+                        <span className="font-medium">{item.label}</span>
+                      </div>
+                      {isExpanded ? (
+                        <ChevronDown className="w-4 h-4" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4" />
+                      )}
+                    </button>
+                    {isExpanded && (
+                      <ul className="mt-2 ml-8 space-y-1">
+                        {item.items?.map((subItem) => {
+                          const SubIcon = subItem.icon;
+                          const isActive = subItem.id === "projects";
+                          return (
+                            <li key={subItem.id}>
+                              <button
+                                onClick={() => setLocation(subItem.href)}
+                                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                                  isActive
+                                    ? "bg-blue-50 text-blue-700 border border-blue-200"
+                                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                }`}
+                              >
+                                <SubIcon className="w-4 h-4" />
+                                <span className="text-sm">{subItem.label}</span>
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </li>
+                );
+              }
+              
+              const isActive = item.id === "projects";
+              return (
+                <li key={item.id}>
+                  <button
+                    onClick={() => setLocation(item.href || "/")}
+                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                      isActive
+                        ? "bg-blue-50 text-blue-700 border border-blue-200"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span>{item.label}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <div className="p-4 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-600">Welcome, {(user as any)?.firstName || 'Team'}</span>
+          </div>
+        </div>
+      </div>
+
+        {/* Main Content */}
+        <div className="flex-1 overflow-auto">
         <div className="p-6 max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
@@ -525,6 +595,7 @@ export default function Projects() {
               </div>
             </TabsContent>
           </Tabs>
+        </div>
         </div>
       </div>
     </div>
