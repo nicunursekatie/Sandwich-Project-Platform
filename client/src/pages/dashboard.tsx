@@ -38,6 +38,7 @@ export default function Dashboard() {
     { id: "drivers", label: "Drivers", icon: Car },
     { id: "directory", label: "Phone Directory", icon: Phone, permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
     { id: "analytics", label: "Data Analytics", icon: BarChart3 },
+    { id: "impact", label: "Impact Dashboard", icon: TrendingUp },
     { id: "role-demo", label: "Role Demo", icon: Users },
     { id: "development", label: "Development", icon: FolderOpen },
   ];
