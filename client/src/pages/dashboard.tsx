@@ -1,4 +1,4 @@
-import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone } from "lucide-react";
+import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone, ChevronDown, ChevronRight } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
@@ -24,25 +24,51 @@ import { queryClient } from "@/lib/queryClient";
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const { user } = useAuth();
 
-  // Filter sidebar items based on user permissions
-  const allSidebarItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "projects", label: "Projects", icon: ListTodo },
-    { id: "meetings", label: "Meetings", icon: ClipboardList },
-    { id: "toolkit", label: "Toolkit", icon: FileText },
-    { id: "collections", label: "Collections", icon: Sandwich },
-    { id: "hosts", label: "Hosts", icon: Building2 },
-    { id: "recipients", label: "Recipients", icon: Users },
-    { id: "drivers", label: "Drivers", icon: Car },
-    { id: "directory", label: "Phone Directory", icon: Phone, permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
-    { id: "analytics", label: "Analytics", icon: BarChart3 },
-    { id: "role-demo", label: "Role Demo", icon: Users },
-    { id: "development", label: "Development", icon: FolderOpen },
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections(prev => 
+      prev.includes(sectionId) 
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
+  };
+
+  // Navigation structure with expandable sections
+  const navigationStructure = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, type: "item" },
+    { id: "collections", label: "Collections Log", icon: Sandwich, type: "item" },
+    { 
+      id: "team", 
+      label: "Team", 
+      icon: Users, 
+      type: "section",
+      items: [
+        { id: "hosts", label: "Hosts", icon: Building2 },
+        { id: "recipients", label: "Recipients", icon: Users },
+        { id: "drivers", label: "Drivers", icon: Car },
+      ]
+    },
+    { 
+      id: "operations", 
+      label: "Operations", 
+      icon: FolderOpen, 
+      type: "section",
+      items: [
+        { id: "projects", label: "Projects", icon: ListTodo },
+        { id: "meetings", label: "Meetings", icon: ClipboardList },
+        { id: "analytics", label: "Analytics", icon: BarChart3 },
+      ]
+    },
+    { id: "toolkit", label: "Toolkit", icon: FileText, type: "item" },
+    { id: "directory", label: "Phone Directory", icon: Phone, type: "item", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
+    { id: "role-demo", label: "Role Demo", icon: Users, type: "item" },
+    { id: "development", label: "Development", icon: FolderOpen, type: "item" },
   ];
 
-  const sidebarItems = allSidebarItems.filter(item => 
+  // Filter navigation items based on user permissions
+  const filteredNavigation = navigationStructure.filter(item => 
     !item.permission || hasPermission(user, item.permission)
   );
 
@@ -245,8 +271,53 @@ export default function Dashboard() {
           {/* Navigation */}
           <nav className="flex-1 p-4">
             <ul className="space-y-2">
-              {sidebarItems.map((item) => {
+              {filteredNavigation.map((item) => {
                 const Icon = item.icon;
+                
+                if (item.type === "section") {
+                  const isExpanded = expandedSections.includes(item.id);
+                  return (
+                    <li key={item.id}>
+                      <button
+                        onClick={() => toggleSection(item.id)}
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <Icon className="w-5 h-5" />
+                          <span className="font-medium">{item.label}</span>
+                        </div>
+                        {isExpanded ? (
+                          <ChevronDown className="w-4 h-4" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4" />
+                        )}
+                      </button>
+                      {isExpanded && (
+                        <ul className="mt-2 ml-8 space-y-1">
+                          {item.items?.map((subItem) => {
+                            const SubIcon = subItem.icon;
+                            return (
+                              <li key={subItem.id}>
+                                <button
+                                  onClick={() => setActiveSection(subItem.id)}
+                                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                                    activeSection === subItem.id
+                                      ? "bg-blue-50 text-blue-700 border border-blue-200"
+                                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                  }`}
+                                >
+                                  <SubIcon className="w-4 h-4" />
+                                  <span className="text-sm">{subItem.label}</span>
+                                </button>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </li>
+                  );
+                }
+                
                 return (
                   <li key={item.id}>
                     <button

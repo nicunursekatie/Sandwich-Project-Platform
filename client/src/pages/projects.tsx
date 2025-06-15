@@ -31,7 +31,9 @@ import {
   Building2,
   FileText,
   Phone,
-  Sandwich
+  Sandwich,
+  ChevronDown,
+  ChevronRight
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -44,6 +46,52 @@ export default function Projects() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections(prev => 
+      prev.includes(sectionId) 
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
+  };
+
+  // Navigation structure with expandable sections
+  const navigationStructure = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, type: "item", href: "/" },
+    { id: "collections", label: "Collections Log", icon: Sandwich, type: "item", href: "/collections" },
+    { 
+      id: "team", 
+      label: "Team", 
+      icon: Users, 
+      type: "section",
+      items: [
+        { id: "hosts", label: "Hosts", icon: Building2, href: "/hosts" },
+        { id: "recipients", label: "Recipients", icon: Users, href: "/recipients" },
+        { id: "drivers", label: "Drivers", icon: Car, href: "/drivers" },
+      ]
+    },
+    { 
+      id: "operations", 
+      label: "Operations", 
+      icon: FolderOpen, 
+      type: "section",
+      items: [
+        { id: "projects", label: "Projects", icon: ListTodo, href: "/projects" },
+        { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings" },
+        { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics" },
+      ]
+    },
+    { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", href: "/toolkit" },
+    { id: "directory", label: "Phone Directory", icon: Phone, type: "item", href: "/directory", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
+    { id: "role-demo", label: "Role Demo", icon: Users, type: "item", href: "/role-demo" },
+    { id: "development", label: "Development", icon: FolderOpen, type: "item", href: "/development" },
+  ];
+
+  // Filter navigation items based on user permissions
+  const filteredNavigation = navigationStructure.filter(item => 
+    !item.permission || hasPermission(user, item.permission)
+  );
 
   // Fetch all projects
   const { data: projects = [], isLoading } = useQuery({
@@ -226,25 +274,7 @@ export default function Projects() {
   const activeProjects = filterProjectsByStatus("in_progress");
   const completedProjects = filterProjectsByStatus("completed");
 
-  // Sidebar navigation items
-  const allSidebarItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/" },
-    { id: "projects", label: "Projects", icon: ListTodo, path: "/projects" },
-    { id: "meetings", label: "Meetings", icon: ClipboardList, path: "/meetings" },
-    { id: "toolkit", label: "Toolkit", icon: FileText, path: "/toolkit" },
-    { id: "collections", label: "Collections", icon: Sandwich, path: "/collections" },
-    { id: "hosts", label: "Hosts", icon: Building2, path: "/hosts" },
-    { id: "recipients", label: "Recipients", icon: Users, path: "/recipients" },
-    { id: "drivers", label: "Drivers", icon: Car, path: "/drivers" },
-    { id: "directory", label: "Phone Directory", icon: Phone, path: "/phone-directory", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
-    { id: "analytics", label: "Analytics", icon: BarChart3, path: "/analytics" },
-    { id: "role-demo", label: "Role Demo", icon: Users, path: "/role-demo" },
-    { id: "development", label: "Development", icon: FolderOpen, path: "/development" },
-  ];
 
-  const sidebarItems = allSidebarItems.filter(item => 
-    !item.permission || hasPermission(user, item.permission)
-  );
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
