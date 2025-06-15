@@ -29,14 +29,27 @@ export default function ProjectDetail() {
 
   // Fetch project details
   const { data: project, isLoading: projectLoading } = useQuery<Project>({
-    queryKey: ["/api/projects", id],
+    queryKey: [`/api/projects/${id}`],
     enabled: !!id,
   });
 
   // Update project form when project data loads
   useEffect(() => {
     if (project) {
-      setProjectForm(project);
+      setProjectForm({
+        title: project.title || "",
+        description: project.description || "",
+        status: project.status || "",
+        priority: project.priority || "",
+        dueDate: project.dueDate || "",
+        assigneeName: project.assigneeName || "",
+        estimatedHours: project.estimatedHours || 0,
+        actualHours: project.actualHours || 0,
+        requirements: project.requirements || "",
+        deliverables: project.deliverables || "",
+        resources: project.resources || "",
+        blockers: project.blockers || ""
+      });
     }
   }, [project]);
 
@@ -61,7 +74,7 @@ export default function ProjectDetail() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/projects", id] });
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${id}`] });
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
       setEditingProject(false);
       toast({ title: "Project updated successfully" });
@@ -99,7 +112,7 @@ export default function ProjectDetail() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/projects/${id}/tasks`] });
-      queryClient.invalidateQueries({ queryKey: ["/api/projects", id] });
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${id}`] });
       setEditingTask(null);
       toast({ title: "Task updated successfully" });
     },
@@ -245,8 +258,24 @@ export default function ProjectDetail() {
             </>
           ) : (
             <Button onClick={() => {
+              console.log("Edit button clicked, project data:", project);
               setEditingProject(true);
-              setProjectForm(project);
+              if (project) {
+                setProjectForm({
+                  title: project.title || "",
+                  description: project.description || "",
+                  status: project.status || "",
+                  priority: project.priority || "",
+                  dueDate: project.dueDate || "",
+                  assigneeName: project.assigneeName || "",
+                  estimatedHours: project.estimatedHours || 0,
+                  actualHours: project.actualHours || 0,
+                  requirements: project.requirements || "",
+                  deliverables: project.deliverables || "",
+                  resources: project.resources || "",
+                  blockers: project.blockers || ""
+                });
+              }
             }}>
               <Edit3 className="w-4 h-4 mr-2" />
               Edit Project
