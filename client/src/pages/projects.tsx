@@ -414,10 +414,15 @@ export default function Projects() {
             </div>
           </div>
 
-          {/* Stats Overview */}
-          {stats && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <Card>
+          {/* Loading State */}
+          {isLoading ? (
+            <LoadingState text="Loading projects..." />
+          ) : (
+            <>
+              {/* Stats Overview */}
+              {stats && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                  <Card>
                 <CardContent className="p-4 text-center">
                   <div className="text-2xl font-bold text-blue-600">{(stats as any).total || 0}</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Total Projects</div>
@@ -597,6 +602,8 @@ export default function Projects() {
               </div>
             </TabsContent>
           </Tabs>
+            </>
+          )}
         </div>
         </div>
       </div>
