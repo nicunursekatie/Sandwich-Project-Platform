@@ -65,6 +65,7 @@ export interface IStorage {
   getAllSandwichCollections(): Promise<SandwichCollection[]>;
   getSandwichCollections(limit: number, offset: number): Promise<SandwichCollection[]>;
   getSandwichCollectionsCount(): Promise<number>;
+  getCollectionStats(): Promise<{ totalEntries: number; totalSandwiches: number; }>;
   createSandwichCollection(collection: InsertSandwichCollection): Promise<SandwichCollection>;
   updateSandwichCollection(id: number, updates: Partial<SandwichCollection>): Promise<SandwichCollection | undefined>;
   deleteSandwichCollection(id: number): Promise<boolean>;

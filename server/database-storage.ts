@@ -210,6 +210,18 @@ export class DatabaseStorage implements IStorage {
     return Number(result[0].count);
   }
 
+  async getCollectionStats(): Promise<{ totalEntries: number; totalSandwiches: number; }> {
+    const result = await db.select({ 
+      totalEntries: sql<number>`count(*)::int`,
+      totalSandwiches: sql<number>`coalesce(sum(individual_sandwiches), 0)::int`
+    }).from(sandwichCollections);
+    
+    return {
+      totalEntries: Number(result[0].totalEntries),
+      totalSandwiches: Number(result[0].totalSandwiches)
+    };
+  }
+
   async createSandwichCollection(insertCollection: InsertSandwichCollection): Promise<SandwichCollection> {
     const [collection] = await db.insert(sandwichCollections).values(insertCollection).returning();
     return collection;

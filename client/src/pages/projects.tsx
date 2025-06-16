@@ -108,11 +108,7 @@ export default function Projects() {
   // Update project status mutation
   const updateProjectMutation = useMutation({
     mutationFn: async ({ id, status }: { id: number; status: string }) => {
-      await apiRequest(`/api/projects/${id}`, {
-        method: "PATCH",
-        body: JSON.stringify({ status }),
-        headers: { 'Content-Type': 'application/json' }
-      });
+      await apiRequest(`/api/projects/${id}`, "PATCH", { status });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
