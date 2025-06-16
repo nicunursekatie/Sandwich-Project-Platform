@@ -19,6 +19,7 @@ import { CacheManager } from "./performance/cache-manager";
 import { ReportGenerator } from "./reporting/report-generator";
 import { EmailService } from "./notifications/email-service";
 import { VersionControl } from "./middleware/version-control";
+import { BackupManager } from "./operations/backup-manager";
 
 // Configure multer for file uploads
 const upload = multer({ 
@@ -2484,6 +2485,134 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('Webhook processing error:', error);
       res.status(500).json({ error: error.message });
     }
+  });
+
+  // Backup Management API Routes for Phase 5: Operations & Reliability
+  app.post('/api/backups/create', async (req, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const { reason } = req.body;
+      
+      const manifest = await BackupManager.createBackup('manual', userId, reason);
+      res.json({ success: true, manifest });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get('/api/backups', async (req, res) => {
+    try {
+      const backups = await BackupManager.listBackups();
+      res.json(backups);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get('/api/backups/:backupId', async (req, res) => {
+    try {
+      const { backupId } = req.params;
+      const backup = await BackupManager.getBackupInfo(backupId);
+      
+      if (!backup) {
+        return res.status(404).json({ error: 'Backup not found' });
+      }
+      
+      res.json(backup);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post('/api/backups/:backupId/validate', async (req, res) => {
+    try {
+      const { backupId } = req.params;
+      const validation = await BackupManager.validateBackup(backupId);
+      res.json(validation);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.delete('/api/backups/:backupId', async (req, res) => {
+    try {
+      const { backupId } = req.params;
+      const userId = req.user?.claims?.sub;
+      
+      const success = await BackupManager.deleteBackup(backupId, userId);
+      
+      if (success) {
+        res.json({ success: true, message: 'Backup deleted successfully' });
+      } else {
+        res.status(400).json({ error: 'Failed to delete backup' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get('/api/backups/stats/storage', async (req, res) => {
+    try {
+      const stats = await BackupManager.getStorageStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Operations Dashboard API for comprehensive system monitoring
+  app.get('/api/operations/system-health', async (req, res) => {
+    try {
+      const stats = await storage.getCollectionStats();
+      const hosts = await storage.getAllHosts();
+      const projects = await storage.getAllProjects();
+      const backupStats = await BackupManager.getStorageStats();
+      const cacheStats = CacheManager.getStats();
+      
+      const systemHealth = {
+        database: {
+          status: 'healthy',
+          totalRecords: stats.totalEntries,
+          totalSandwiches: stats.totalSandwiches,
+          lastActivity: new Date().toISOString()
+        },
+        hosts: {
+          total: hosts.length,
+          active: hosts.filter(h => h.status === 'active').length,
+          inactive: hosts.filter(h => h.status === 'inactive').length
+        },
+        projects: {
+          total: projects.length,
+          active: projects.filter(p => p.status === 'in_progress').length,
+          completed: projects.filter(p => p.status === 'completed').length
+        },
+        backups: {
+          total: backupStats.totalBackups,
+          totalSize: backupStats.diskUsage,
+          lastBackup: backupStats.newestBackup
+        },
+        cache: {
+          hitRate: cacheStats.hitRate,
+          size: cacheStats.size,
+          memory: `${Math.round(cacheStats.memoryUsage / 1024 / 1024)}MB`
+        },
+        uptime: process.uptime(),
+        memory: {
+          used: `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`,
+          total: `${Math.round(process.memoryUsage().heapTotal / 1024 / 1024)}MB`
+        }
+      };
+      
+      res.json(systemHealth);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Initialize backup system
+  BackupManager.initialize().then(() => {
+    BackupManager.scheduleAutoBackup();
+    console.log('Backup system initialized with automated daily backups');
   });
 
   const httpServer = createServer(app);
