@@ -29,6 +29,21 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Audit logging table for tracking all data changes
+export const auditLogs = pgTable("audit_logs", {
+  id: serial("id").primaryKey(),
+  action: varchar("action").notNull(), // CREATE, UPDATE, DELETE, LOGIN, LOGOUT
+  tableName: varchar("table_name").notNull(),
+  recordId: varchar("record_id").notNull(),
+  oldData: text("old_data"), // JSON string of old values
+  newData: text("new_data"), // JSON string of new values
+  userId: varchar("user_id"), // Who made the change
+  ipAddress: varchar("ip_address"),
+  userAgent: text("user_agent"),
+  sessionId: varchar("session_id"),
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
+});
+
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -314,3 +329,12 @@ export const insertContactSchema = createInsertSchema(contacts).omit({
 
 export type Contact = typeof contacts.$inferSelect;
 export type InsertContact = z.infer<typeof insertContactSchema>;
+
+// Audit log types
+export const insertAuditLogSchema = createInsertSchema(auditLogs).omit({
+  id: true,
+  timestamp: true
+});
+
+export type AuditLog = typeof auditLogs.$inferSelect;
+export type InsertAuditLog = z.infer<typeof insertAuditLogSchema>;
