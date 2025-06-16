@@ -13,7 +13,9 @@ import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
 import { insertProjectSchema, insertProjectTaskSchema, insertProjectCommentSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
 import dataManagementRoutes from "./routes/data-management";
+import { registerPerformanceRoutes } from "./routes/performance";
 import { SearchEngine } from "./search-engine";
+import { CacheManager } from "./performance/cache-manager";
 
 // Configure multer for file uploads
 const upload = multer({ 
