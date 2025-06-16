@@ -460,6 +460,15 @@ export class MemStorage implements IStorage {
     return this.sandwichCollections.size;
   }
 
+  async getCollectionStats(): Promise<{ totalEntries: number; totalSandwiches: number; }> {
+    const collections = Array.from(this.sandwichCollections.values());
+    const totalSandwiches = collections.reduce((sum, collection) => sum + (collection.individualSandwiches || 0), 0);
+    return {
+      totalEntries: collections.length,
+      totalSandwiches
+    };
+  }
+
   async createSandwichCollection(insertCollection: InsertSandwichCollection & {id?: number}): Promise<SandwichCollection> {
     const id = insertCollection.id || this.currentIds.sandwichCollection++;
     // Update currentIds if a higher ID is provided
