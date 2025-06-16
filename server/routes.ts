@@ -12,6 +12,8 @@ import { sendDriverAgreementNotification } from "./sendgrid";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
 import { insertProjectSchema, insertProjectTaskSchema, insertProjectCommentSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
+import dataManagementRoutes from "./routes/data-management";
+import { SearchEngine } from "./search-engine";
 
 // Configure multer for file uploads
 const upload = multer({ 
@@ -2043,6 +2045,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Static file serving for documents
   app.use('/documents', express.static('public/documents'));
+
+  // Add data management routes
+  app.use('/api/data', dataManagementRoutes);
+
+  // Global search endpoint
+  app.get('/api/search', async (req, res) => {
+    try {
+      const { q: query, type, limit = '50' } = req.query;
+      
+      if (!query || typeof query !== 'string') {
+        return res.status(400).json({ error: 'Query parameter is required' });
+      }
+
+      const searchLimit = Math.min(parseInt(limit as string) || 50, 200);
+
+      if (type && typeof type === 'string') {
+        // Type-specific search
+        let results: any[] = [];
+        switch (type) {
+          case 'collections':
+            results = await SearchEngine.searchCollections(query, {}, searchLimit);
+            break;
+          case 'hosts':
+            results = await SearchEngine.searchHosts(query, {}, searchLimit);
+            break;
+          case 'projects':
+            results = await SearchEngine.searchProjects(query, {}, searchLimit);
+            break;
+          case 'contacts':
+            results = await SearchEngine.searchContacts(query, searchLimit);
+            break;
+          default:
+            return res.status(400).json({ error: 'Invalid search type' });
+        }
+        res.json({ results, type });
+      } else {
+        // Global search
+        const result = await SearchEngine.globalSearch(query, {}, searchLimit);
+        res.json(result);
+      }
+    } catch (error) {
+      logger.error('Search failed:', error);
+      res.status(500).json({ error: 'Search failed' });
+    }
+  });
+
+  // Search suggestions endpoint
+  app.get('/api/search/suggestions', async (req, res) => {
+    try {
+      const { q: query, type } = req.query;
+      
+      if (!query || typeof query !== 'string') {
+        return res.status(400).json({ suggestions: [] });
+      }
+
+      const suggestions = await SearchEngine.getSearchSuggestions(
+        query,
+        type as 'collection' | 'host' | 'project' | 'contact' | undefined
+      );
+      
+      res.json({ suggestions });
+    } catch (error) {
+      logger.error('Search suggestions failed:', error);
+      res.status(500).json({ suggestions: [] });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;
