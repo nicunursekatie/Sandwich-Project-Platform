@@ -18,6 +18,7 @@ import { SearchEngine } from "./search-engine";
 import { CacheManager } from "./performance/cache-manager";
 import { ReportGenerator } from "./reporting/report-generator";
 import { EmailService } from "./notifications/email-service";
+import { VersionControl } from "./middleware/version-control";
 
 // Configure multer for file uploads
 const upload = multer({ 
@@ -2287,6 +2288,201 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Weekly summary failed:', error);
       res.status(500).json({ error: 'Failed to send weekly summary' });
+    }
+  });
+
+  // Version Control API Routes
+  app.get('/api/version-control/:entityType/:entityId/history', async (req, res) => {
+    try {
+      const { entityType, entityId } = req.params;
+      const history = await VersionControl.getVersionHistory(
+        entityType as any,
+        parseInt(entityId)
+      );
+      res.json(history);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get('/api/version-control/:entityType/:entityId/version/:version', async (req, res) => {
+    try {
+      const { entityType, entityId, version } = req.params;
+      const versionData = await VersionControl.getVersion(
+        entityType as any,
+        parseInt(entityId),
+        parseInt(version)
+      );
+      if (!versionData) {
+        return res.status(404).json({ error: 'Version not found' });
+      }
+      res.json(versionData);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post('/api/version-control/:entityType/:entityId/restore/:version', async (req, res) => {
+    try {
+      const { entityType, entityId, version } = req.params;
+      const userId = req.user?.claims?.sub;
+      
+      const success = await VersionControl.restoreVersion(
+        entityType as any,
+        parseInt(entityId),
+        parseInt(version),
+        userId
+      );
+      
+      if (success) {
+        res.json({ success: true, message: 'Version restored successfully' });
+      } else {
+        res.status(400).json({ error: 'Failed to restore version' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get('/api/version-control/:entityType/:entityId/compare/:version1/:version2', async (req, res) => {
+    try {
+      const { entityType, entityId, version1, version2 } = req.params;
+      const comparison = await VersionControl.compareVersions(
+        entityType as any,
+        parseInt(entityId),
+        parseInt(version1),
+        parseInt(version2)
+      );
+      res.json(comparison);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post('/api/version-control/changeset', async (req, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const result = await VersionControl.createChangeset({
+        ...req.body,
+        userId
+      });
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get('/api/version-control/stats', async (req, res) => {
+    try {
+      const { entityType, userId, startDate, endDate } = req.query;
+      const stats = await VersionControl.getChangeStats(
+        entityType as any,
+        userId as string,
+        startDate ? new Date(startDate as string) : undefined,
+        endDate ? new Date(endDate as string) : undefined
+      );
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get('/api/version-control/export', async (req, res) => {
+    try {
+      const { entityType, entityId } = req.query;
+      const history = await VersionControl.exportVersionHistory(
+        entityType as any,
+        entityId ? parseInt(entityId as string) : undefined
+      );
+      res.json(history);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Integration API Routes for external systems
+  app.get('/api/integration/summary', async (req, res) => {
+    try {
+      const stats = await storage.getCollectionStats();
+      const hosts = await storage.getAllHosts();
+      const projects = await storage.getAllProjects();
+      
+      const summary = {
+        totalSandwiches: stats.totalSandwiches,
+        totalHosts: hosts.length,
+        activeHosts: hosts.filter(h => h.status === 'active').length,
+        totalProjects: projects.length,
+        activeProjects: projects.filter(p => p.status === 'in_progress').length,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      res.json(summary);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get('/api/integration/collections/recent', async (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 10;
+      const collections = await storage.getAllSandwichCollections(limit);
+      
+      const recentCollections = collections.slice(0, limit).map(collection => ({
+        id: collection.id,
+        hostName: collection.hostName,
+        individualSandwiches: collection.individualSandwiches,
+        groupCollections: collection.groupCollections,
+        collectionDate: collection.collectionDate,
+        submittedAt: collection.submittedAt
+      }));
+      
+      res.json(recentCollections);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post('/api/integration/webhook', async (req, res) => {
+    try {
+      const { event, data } = req.body;
+      
+      // Log webhook event
+      await AuditLogger.log(
+        'webhook_received',
+        'system',
+        null,
+        { event, dataKeys: Object.keys(data || {}) }
+      );
+      
+      // Process different webhook events
+      switch (event) {
+        case 'collection_submitted':
+          // Handle external collection submission
+          if (data.hostName && data.sandwiches) {
+            await storage.createSandwichCollection({
+              hostName: data.hostName,
+              individualSandwiches: data.sandwiches,
+              groupCollections: data.groupCollections || '{}',
+              collectionDate: data.date || new Date().toISOString().split('T')[0]
+            });
+          }
+          break;
+        
+        case 'host_updated':
+          // Handle external host updates
+          if (data.hostId && data.updates) {
+            await storage.updateHost(data.hostId, data.updates);
+          }
+          break;
+        
+        default:
+          console.log(`Unknown webhook event: ${event}`);
+      }
+      
+      res.json({ success: true, processed: event });
+    } catch (error) {
+      console.error('Webhook processing error:', error);
+      res.status(500).json({ error: error.message });
     }
   });
 
