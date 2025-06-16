@@ -15,6 +15,7 @@ import Analytics from "@/pages/analytics";
 import Projects from "@/pages/projects";
 import ProjectDetail from "@/pages/project-detail";
 import ImpactDashboard from "@/pages/impact-dashboard";
+import DataManagement from "@/pages/data-management";
 import Landing from "@/pages/landing";
 import NotFound from "@/pages/not-found";
 
@@ -39,6 +40,7 @@ function Router() {
       <Route path="/role-demo" component={RoleDemo} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/impact" component={ImpactDashboard} />
+      <Route path="/data-management" component={DataManagement} />
       <Route path="/projects" component={Projects} />
       <Route path="/projects/:id" component={ProjectDetail} />
       <Route component={NotFound} />
