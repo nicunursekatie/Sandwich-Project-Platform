@@ -16,6 +16,8 @@ import dataManagementRoutes from "./routes/data-management";
 import { registerPerformanceRoutes } from "./routes/performance";
 import { SearchEngine } from "./search-engine";
 import { CacheManager } from "./performance/cache-manager";
+import { ReportGenerator } from "./reporting/report-generator";
+import { EmailService } from "./notifications/email-service";
 
 // Configure multer for file uploads
 const upload = multer({ 
