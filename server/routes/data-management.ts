@@ -2,13 +2,12 @@ import { Router } from "express";
 import { DataExporter } from "../data-export";
 import { BulkOperationsManager } from "../bulk-operations";
 import { AuditLogger } from "../audit-logger";
-import { isAuthenticated } from "../replitAuth";
 import { z } from "zod";
 
 const router = Router();
 
 // Export data endpoints
-router.get('/export/collections', isAuthenticated, async (req, res) => {
+router.get('/export/collections', async (req, res) => {
   try {
     const { format = 'csv', startDate, endDate } = req.query;
     
@@ -35,7 +34,7 @@ router.get('/export/collections', isAuthenticated, async (req, res) => {
   }
 });
 
-router.get('/export/hosts', isAuthenticated, async (req, res) => {
+router.get('/export/hosts', async (req, res) => {
   try {
     const { format = 'csv', includeInactive = 'false' } = req.query;
     
@@ -59,7 +58,7 @@ router.get('/export/hosts', isAuthenticated, async (req, res) => {
   }
 });
 
-router.get('/export/full-dataset', isAuthenticated, async (req, res) => {
+router.get('/export/full-dataset', async (req, res) => {
   try {
     const result = await DataExporter.exportFullDataset({ format: 'json' });
     
@@ -72,7 +71,7 @@ router.get('/export/full-dataset', isAuthenticated, async (req, res) => {
   }
 });
 
-router.get('/summary', isAuthenticated, async (req, res) => {
+router.get('/summary', async (req, res) => {
   try {
     const summary = await DataExporter.getDataSummary();
     res.json(summary);
@@ -83,7 +82,7 @@ router.get('/summary', isAuthenticated, async (req, res) => {
 });
 
 // Bulk operations endpoints
-router.post('/bulk/deduplicate-hosts', isAuthenticated, async (req: any, res) => {
+router.post('/bulk/deduplicate-hosts', async (req: any, res) => {
   try {
     const context = {
       userId: req.user?.claims?.sub,
@@ -100,7 +99,7 @@ router.post('/bulk/deduplicate-hosts', isAuthenticated, async (req: any, res) =>
   }
 });
 
-router.delete('/bulk/collections', isAuthenticated, async (req: any, res) => {
+router.delete('/bulk/collections', async (req: any, res) => {
   try {
     const schema = z.object({
       ids: z.array(z.number())
@@ -124,7 +123,7 @@ router.delete('/bulk/collections', isAuthenticated, async (req: any, res) => {
 });
 
 // Data integrity endpoints
-router.get('/integrity/check', isAuthenticated, async (req, res) => {
+router.get('/integrity/check', async (req, res) => {
   try {
     const result = await BulkOperationsManager.validateDataIntegrity();
     res.json(result);
@@ -135,7 +134,7 @@ router.get('/integrity/check', isAuthenticated, async (req, res) => {
 });
 
 // Audit log endpoints
-router.get('/audit/history', isAuthenticated, async (req, res) => {
+router.get('/audit/history', async (req, res) => {
   try {
     const { tableName, recordId, userId, limit = '100', offset = '0' } = req.query;
     
