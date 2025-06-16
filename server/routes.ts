@@ -86,6 +86,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Import and use the new modular routes
   const { apiRoutes } = await import("./routes/index");
   app.use(apiRoutes);
+  
+  // Register performance optimization routes
+  registerPerformanceRoutes(app);
   // Apply global middleware
   app.use(requestLogger);
   // Temporarily disable rate limiting to fix sandwich collections
