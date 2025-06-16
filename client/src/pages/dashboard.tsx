@@ -59,6 +59,7 @@ export default function Dashboard() {
         { id: "projects", label: "Projects", icon: ListTodo },
         { id: "meetings", label: "Meetings", icon: ClipboardList },
         { id: "analytics", label: "Analytics", icon: BarChart3 },
+        { id: "reports", label: "Reports", icon: FileText },
         { id: "role-demo", label: "Role Demo", icon: Users },
       ]
     },
@@ -82,6 +83,9 @@ export default function Dashboard() {
         return <ChatHub />;
       case "meetings":
         return <MeetingAgenda />;
+      case "reports":
+        window.location.href = "/reports";
+        return null;
       case "toolkit":
         return (
           <div className="space-y-6">

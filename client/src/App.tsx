@@ -17,6 +17,7 @@ import ProjectDetail from "@/pages/project-detail";
 import ImpactDashboard from "@/pages/impact-dashboard";
 import DataManagement from "@/pages/data-management";
 import PerformanceDashboard from "@/pages/performance-dashboard";
+import ReportingDashboard from "@/pages/reporting-dashboard";
 import Landing from "@/pages/landing";
 import NotFound from "@/pages/not-found";
 
@@ -43,6 +44,7 @@ function Router() {
       <Route path="/impact" component={ImpactDashboard} />
       <Route path="/data-management" component={DataManagement} />
       <Route path="/performance" component={PerformanceDashboard} />
+      <Route path="/reports" component={ReportingDashboard} />
       <Route path="/projects" component={Projects} />
       <Route path="/projects/:id" component={ProjectDetail} />
       <Route component={NotFound} />

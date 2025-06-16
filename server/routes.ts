@@ -2119,6 +2119,177 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Reporting and Analytics Routes
+  
+  // Generate report
+  app.post('/api/reports/generate', async (req, res) => {
+    try {
+      const reportData = await ReportGenerator.generateReport(req.body);
+      
+      // Store report for download (in production, this would use cloud storage)
+      const reportId = Date.now().toString();
+      reportData.id = reportId;
+      
+      // Cache the report for 24 hours
+      CacheManager.set(`report:${reportId}`, reportData, 24 * 60 * 60 * 1000);
+      
+      res.json(reportData);
+    } catch (error) {
+      console.error('Report generation failed:', error);
+      res.status(500).json({ error: 'Failed to generate report' });
+    }
+  });
+
+  // Download report
+  app.get('/api/reports/download/:id', async (req, res) => {
+    try {
+      const reportId = req.params.id;
+      const reportData = CacheManager.get(`report:${reportId}`);
+      
+      if (!reportData) {
+        return res.status(404).json({ error: 'Report not found or expired' });
+      }
+
+      const format = reportData.metadata.format || 'json';
+      
+      res.setHeader('Content-Disposition', `attachment; filename="report-${reportId}.${format}"`);
+      
+      if (format === 'csv') {
+        res.setHeader('Content-Type', 'text/csv');
+        // Convert to CSV format
+        if (Array.isArray(reportData.data)) {
+          const csvHeader = Object.keys(reportData.data[0] || {}).join(',');
+          const csvRows = reportData.data.map(row => 
+            Object.values(row).map(val => `"${val}"`).join(',')
+          );
+          res.send([csvHeader, ...csvRows].join('\n'));
+        } else {
+          res.send('No data available');
+        }
+      } else if (format === 'pdf') {
+        res.setHeader('Content-Type', 'application/pdf');
+        // In production, this would generate actual PDF
+        res.json({ message: 'PDF generation not implemented yet', data: reportData });
+      } else {
+        res.setHeader('Content-Type', 'application/json');
+        res.json(reportData);
+      }
+    } catch (error) {
+      console.error('Report download failed:', error);
+      res.status(500).json({ error: 'Failed to download report' });
+    }
+  });
+
+  // Schedule report
+  app.post('/api/reports/schedule', async (req, res) => {
+    try {
+      const { config, schedule } = req.body;
+      const scheduledReport = await ReportGenerator.scheduleReport(config, schedule);
+      
+      res.json(scheduledReport);
+    } catch (error) {
+      console.error('Report scheduling failed:', error);
+      res.status(500).json({ error: 'Failed to schedule report' });
+    }
+  });
+
+  // Get scheduled reports
+  app.get('/api/reports/scheduled', async (req, res) => {
+    try {
+      // In production, this would fetch from database
+      const scheduledReports = CacheManager.get('scheduled_reports') || [];
+      res.json(scheduledReports);
+    } catch (error) {
+      console.error('Failed to fetch scheduled reports:', error);
+      res.status(500).json({ error: 'Failed to fetch scheduled reports' });
+    }
+  });
+
+  // Get recent reports
+  app.get('/api/reports/recent', async (req, res) => {
+    try {
+      // In production, this would fetch from database
+      const recentReports = [];
+      res.json(recentReports);
+    } catch (error) {
+      console.error('Failed to fetch recent reports:', error);
+      res.status(500).json({ error: 'Failed to fetch recent reports' });
+    }
+  });
+
+  // Email notification routes
+  
+  // Send test email
+  app.post('/api/notifications/test', async (req, res) => {
+    try {
+      const { to, template, variables } = req.body;
+      
+      const success = await EmailService.sendEmail({
+        to,
+        template,
+        variables
+      });
+      
+      res.json({ success, message: success ? 'Email sent successfully' : 'Email sending failed' });
+    } catch (error) {
+      console.error('Test email failed:', error);
+      res.status(500).json({ error: 'Failed to send test email' });
+    }
+  });
+
+  // Get available email templates
+  app.get('/api/notifications/templates', async (req, res) => {
+    try {
+      const templates = EmailService.getAvailableTemplates();
+      res.json(templates);
+    } catch (error) {
+      console.error('Failed to fetch email templates:', error);
+      res.status(500).json({ error: 'Failed to fetch email templates' });
+    }
+  });
+
+  // Send milestone notification
+  app.post('/api/notifications/milestone', async (req, res) => {
+    try {
+      const { milestone, recipients } = req.body;
+      
+      const success = await EmailService.sendMilestoneNotification(milestone, recipients);
+      
+      res.json({ success, message: success ? 'Milestone notification sent' : 'Failed to send notification' });
+    } catch (error) {
+      console.error('Milestone notification failed:', error);
+      res.status(500).json({ error: 'Failed to send milestone notification' });
+    }
+  });
+
+  // Send project deadline reminder
+  app.post('/api/notifications/deadline-reminder', async (req, res) => {
+    try {
+      const { project, recipients } = req.body;
+      
+      const success = await EmailService.sendProjectDeadlineReminder(project, recipients);
+      
+      res.json({ success, message: success ? 'Deadline reminder sent' : 'Failed to send reminder' });
+    } catch (error) {
+      console.error('Deadline reminder failed:', error);
+      res.status(500).json({ error: 'Failed to send deadline reminder' });
+    }
+  });
+
+  // Send weekly summary
+  app.post('/api/notifications/weekly-summary', async (req, res) => {
+    try {
+      const { summaryData, recipients } = req.body;
+      
+      const success = await EmailService.sendWeeklySummary(summaryData, recipients);
+      
+      res.json({ success, message: success ? 'Weekly summary sent' : 'Failed to send summary' });
+    } catch (error) {
+      console.error('Weekly summary failed:', error);
+      res.status(500).json({ error: 'Failed to send weekly summary' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
