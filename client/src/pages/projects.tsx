@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { ErrorBoundary } from "@/components/error-boundary";
+import { LoadingState, CardSkeleton, LoadingButton } from "@/components/ui/loading";
 import { 
   Plus, 
   Calendar, 
