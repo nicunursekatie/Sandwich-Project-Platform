@@ -111,6 +111,7 @@ export default function Projects() {
       await apiRequest(`/api/projects/${id}`, {
         method: "PATCH",
         body: JSON.stringify({ status }),
+        headers: { 'Content-Type': 'application/json' }
       });
     },
     onSuccess: () => {
