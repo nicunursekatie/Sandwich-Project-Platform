@@ -4,7 +4,6 @@ import {
   hosts, 
   recipients, 
   projects, 
-  contacts,
   auditLogs,
   messages,
   meetingMinutes,
@@ -177,8 +176,8 @@ export class DataExporter {
         db.select({ count: sql`count(*)` }).from(hosts),
         db.select({ count: sql`count(*)` }).from(recipients),
         db.select({ count: sql`count(*)` }).from(projects),
-        db.select({ count: sql`count(*)` }).from(contacts),
-        db.select({ total: sql`sum(${sandwichCollections.sandwichCount})` }).from(sandwichCollections)
+        db.select({ count: sql`count(*)` }).from(hostContacts),
+        db.select({ total: sql`sum(${sandwichCollections.individualSandwiches})` }).from(sandwichCollections)
       ]);
 
       return {
