@@ -60,7 +60,7 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
   const statusCounts = getProjectStatusCounts();
   const totalSandwiches = reports.reduce((sum, report) => sum + report.sandwichCount, 0);
   const totalCollectedSandwiches = statsData?.completeTotalSandwiches || 0;
-  const upcomingProjects = projects.filter(p => p.status === "available" || p.status === "planning");
+  const activeProjects = projects.filter(p => p.status === "in_progress" || p.status === "available" || p.status === "planning");
   const recentMessages = messages.slice(0, 3);
   const recentMinutes = minutes.slice(0, 2);
 
@@ -85,10 +85,10 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
 
 
-      {/* Upcoming Projects */}
+      {/* Active Projects */}
       <div className="bg-white rounded-lg border border-slate-200">
         <div className="px-4 py-3 border-b border-slate-200 flex justify-between items-center">
-          <h2 className="text-base font-semibold text-slate-900">Upcoming Projects</h2>
+          <h2 className="text-base font-semibold text-slate-900">Active Projects</h2>
           <Button 
             variant="outline" 
             size="sm"
@@ -100,7 +100,7 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
         </div>
         <div className="p-4">
           <div className="space-y-2">
-            {upcomingProjects.map((project) => (
+            {activeProjects.map((project) => (
               <div 
                 key={project.id} 
                 className="p-2 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
@@ -112,14 +112,15 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
                     <p className="text-xs text-slate-600">{project.description}</p>
                   </div>
                   <span className="text-xs text-slate-500">
-                    {project.status === "available" ? "Available" : "Planning"}
+                    {project.status === "in_progress" ? "In Progress" : 
+                     project.status === "available" ? "Available" : "Planning"}
                   </span>
                 </div>
               </div>
             ))}
             
-            {upcomingProjects.length === 0 && (
-              <p className="text-slate-500 text-center py-3 text-sm">No upcoming projects</p>
+            {activeProjects.length === 0 && (
+              <p className="text-slate-500 text-center py-3 text-sm">No active projects</p>
             )}
           </div>
         </div>
