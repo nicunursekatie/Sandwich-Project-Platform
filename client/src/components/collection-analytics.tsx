@@ -251,12 +251,27 @@ export default function CollectionAnalytics() {
   const analyticsData: AnalyticsData | null = useMemo(() => {
     if (!collections.length) return null;
 
+    // Separate OG Project (historical bulk imports) from location-based collections
+    const ogCollections = filteredCollections.filter(c => c.hostName === "OG Sandwich Project");
+    const locationCollections = filteredCollections.filter(c => c.hostName !== "OG Sandwich Project");
+
     const totalCollections = filteredCollections.length;
     const totalSandwiches = filteredCollections.reduce((sum, c) => {
       const individual = Number(c.individualSandwiches || 0);
       const groups = parseGroupCollections(c.groupCollections);
       return sum + individual + groups;
     }, 0);
+    
+    // Calculate more meaningful averages
+    const locationSandwiches = locationCollections.reduce((sum, c) => {
+      const individual = Number(c.individualSandwiches || 0);
+      const groups = parseGroupCollections(c.groupCollections);
+      return sum + individual + groups;
+    }, 0);
+    
+    const avgPerCollection = totalCollections > 0 ? totalSandwiches / totalCollections : 0;
+    const avgPerLocationCollection = locationCollections.length > 0 ? locationSandwiches / locationCollections.length : 0;
+    
     const uniqueHosts = new Set(filteredCollections.map(c => c.hostName)).size;
     
     // Date range
@@ -348,8 +363,7 @@ export default function CollectionAnalytics() {
              hostName.match(/^group \d+$/) || hostName.startsWith('loc ');
     }).length;
 
-    // OG Sandwich Project analysis
-    const ogCollections = filteredCollections.filter(c => c.hostName === 'OG Sandwich Project');
+    // OG Sandwich Project analysis (using ogCollections defined above)
     const ogSandwiches = ogCollections.reduce((sum, c) => sum + (c.individualSandwiches || 0), 0);
     const ogDates = ogCollections.map(c => c.collectionDate).sort();
     const preLocationPeriod = ogDates.length > 0 ? `${ogDates[0]} to ${ogDates[ogDates.length - 1]}` : "No data";
