@@ -105,12 +105,12 @@ export class DatabaseStorage implements IStorage {
 
   async deleteProject(id: number): Promise<boolean> {
     const result = await db.delete(projects).where(eq(projects.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   // Project Tasks
   async getProjectTasks(projectId: number): Promise<ProjectTask[]> {
-    return await db.select().from(projectTasks).where(eq(projectTasks.projectId, projectId)).orderBy(projectTasks.orderNum);
+    return await db.select().from(projectTasks).where(eq(projectTasks.projectId, projectId)).orderBy(projectTasks.order);
   }
 
   async createProjectTask(insertTask: InsertProjectTask): Promise<ProjectTask> {
@@ -335,6 +335,26 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteHost(id: number): Promise<boolean> {
+    // First check if this host has any associated sandwich collections
+    const host = await db.select().from(hosts).where(eq(hosts.id, id)).limit(1);
+    if (host.length === 0) {
+      return false; // Host doesn't exist
+    }
+
+    const hostName = host[0].name;
+    const [collectionCount] = await db
+      .select({ count: sql`count(*)` })
+      .from(sandwichCollections)
+      .where(eq(sandwichCollections.hostName, hostName));
+
+    if (Number(collectionCount.count) > 0) {
+      throw new Error(`Cannot delete host "${hostName}" because it has ${collectionCount.count} associated collection records. Please update or remove these records first.`);
+    }
+
+    // Also delete any host contacts first
+    await db.delete(hostContacts).where(eq(hostContacts.hostId, id));
+    
+    // Now delete the host
     const result = await db.delete(hosts).where(eq(hosts.id, id));
     return (result.rowCount ?? 0) > 0;
   }

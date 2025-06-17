@@ -132,7 +132,9 @@ export default function HostsManagementConsolidated() {
       return await apiRequest('DELETE', `/api/hosts/${id}`);
     },
     onSuccess: () => {
+      // Invalidate both queries to ensure UI updates properly
       queryClient.invalidateQueries({ queryKey: ['/api/hosts-with-contacts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/hosts'] });
       toast({
         title: "Host deleted",
         description: "Host has been deleted successfully.",
