@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -16,7 +17,7 @@ import { z } from "zod";
 import { insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Phone, Mail, MapPin, Search, Download, User, Users, Star, Building2, Plus, Edit, Trash2, Upload, FileSpreadsheet, Crown } from "lucide-react";
+import { Phone, Mail, MapPin, Search, Download, User, Users, Star, Building2, Plus, Edit, Trash2, Upload, FileSpreadsheet, Crown, Settings, ChevronDown } from "lucide-react";
 
 interface Host {
   id: number;
@@ -783,58 +784,64 @@ export default function PhoneDirectory() {
                 className="pl-10"
               />
             </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setImportDialogOpen(true)}
-                className="flex items-center gap-2 bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
-              >
-                <Upload className="w-4 h-4" />
-                Import Excel
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const hostExportData = hosts.flatMap(host => 
-                    host.contacts.map(contact => ({
-                      location: host.name,
-                      contactName: contact.name,
-                      role: contact.role,
-                      phone: contact.phone,
-                      email: contact.email || '',
-                      isPrimary: contact.isPrimary ? 'Yes' : 'No',
-                      address: host.address || '',
-                      notes: contact.notes || ''
-                    }))
-                  );
-                  exportToCSV(hostExportData, 'hosts-directory.csv');
-                }}
-                className="flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Export Hosts
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => exportToCSV(recipients, 'recipients-directory.csv')}
-                className="flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Export Recipients
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => exportToCSV(contacts, 'contacts-directory.csv')}
-                className="flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Export Contacts
-              </Button>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <Settings className="w-4 h-4" />
+                  Manage Contacts
+                  <ChevronDown className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  onClick={() => setImportDialogOpen(true)}
+                  className="flex items-center gap-2 text-green-700"
+                >
+                  <Upload className="w-4 h-4" />
+                  Import Excel
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => {
+                    const hostExportData = hosts.flatMap(host => 
+                      host.contacts.map(contact => ({
+                        location: host.name,
+                        contactName: contact.name,
+                        role: contact.role,
+                        phone: contact.phone,
+                        email: contact.email || '',
+                        isPrimary: contact.isPrimary ? 'Yes' : 'No',
+                        address: host.address || '',
+                        notes: contact.notes || ''
+                      }))
+                    );
+                    exportToCSV(hostExportData, 'hosts-directory.csv');
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Export Hosts
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => exportToCSV(recipients, 'recipients-directory.csv')}
+                  className="flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Export Recipients
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => exportToCSV(contacts, 'contacts-directory.csv')}
+                  className="flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Export Contacts
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </CardContent>
       </Card>
