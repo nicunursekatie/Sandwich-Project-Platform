@@ -160,8 +160,13 @@ export default function PhoneDirectory() {
       ]);
       toast({ title: "Host location deleted successfully" });
     },
-    onError: () => {
-      toast({ title: "Failed to delete host location", variant: "destructive" });
+    onError: (error: any) => {
+      const errorMessage = error?.message || "Failed to delete host location";
+      toast({ 
+        title: "Cannot delete host location", 
+        description: errorMessage,
+        variant: "destructive" 
+      });
     },
   });
 

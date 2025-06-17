@@ -141,9 +141,10 @@ export default function HostsManagementConsolidated() {
       });
     },
     onError: (error: any) => {
+      const errorMessage = error?.message || "Failed to delete host";
       toast({
-        title: "Error",
-        description: `Failed to delete host: ${error.message}`,
+        title: "Cannot delete host",
+        description: errorMessage,
         variant: "destructive",
       });
     }
