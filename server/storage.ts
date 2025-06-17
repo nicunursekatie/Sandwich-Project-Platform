@@ -789,6 +789,14 @@ export class MemStorage implements IStorage {
   async deleteHostContact(id: number): Promise<boolean> {
     return this.hostContacts.delete(id);
   }
+
+  async getAllHostsWithContacts(): Promise<Array<Host & { contacts: HostContact[] }>> {
+    const allHosts = Array.from(this.hosts.values());
+    return allHosts.map(host => ({
+      ...host,
+      contacts: Array.from(this.hostContacts.values()).filter(contact => contact.hostId === host.id)
+    }));
+  }
 }
 
 import { GoogleSheetsStorage } from './google-sheets';

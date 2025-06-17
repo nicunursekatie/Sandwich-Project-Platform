@@ -115,32 +115,32 @@ export default function SandwichCollectionLog() {
         // Apply filters
         if (searchFilters.hostName) {
           const searchTerm = searchFilters.hostName.toLowerCase();
-          filteredCollections = filteredCollections.filter((c: any) => 
+          filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
             c.hostName?.toLowerCase().includes(searchTerm)
           );
         }
         
         if (searchFilters.collectionDateFrom) {
-          filteredCollections = filteredCollections.filter((c: any) => 
+          filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
             c.collectionDate >= searchFilters.collectionDateFrom
           );
         }
         
         if (searchFilters.collectionDateTo) {
-          filteredCollections = filteredCollections.filter((c: any) => 
+          filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
             c.collectionDate <= searchFilters.collectionDateTo
           );
         }
         
         if (searchFilters.createdAtFrom) {
-          filteredCollections = filteredCollections.filter((c: any) => 
-            c.createdAt >= searchFilters.createdAtFrom
+          filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
+            c.submittedAt >= searchFilters.createdAtFrom
           );
         }
         
         if (searchFilters.createdAtTo) {
-          filteredCollections = filteredCollections.filter((c: any) => 
-            c.createdAt <= searchFilters.createdAtTo
+          filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
+            c.submittedAt <= searchFilters.createdAtTo
           );
         }
         
