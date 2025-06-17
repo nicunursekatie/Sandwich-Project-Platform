@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Calendar, Clock, User, Plus, CheckCircle, XCircle, Upload, MessageSquare, FileText, File, Edit, Pause, Video, Link } from "lucide-react";
+import { Calendar, Clock, User, Plus, CheckCircle, XCircle, Upload, MessageSquare, FileText, File, Edit, Pause, Video, Link, Trash2, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -45,6 +45,8 @@ export default function MeetingAgenda() {
     description: ""
   });
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [editingItem, setEditingItem] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState({ title: "", description: "" });
 
   const { data: meetings = [], isLoading: meetingsLoading } = useQuery<Meeting[]>({
     queryKey: ['/api/meetings']
@@ -132,6 +134,44 @@ export default function MeetingAgenda() {
       toast({
         title: "Agenda uploaded",
         description: "The meeting agenda has been uploaded successfully.",
+      });
+    }
+  });
+
+  const editItemMutation = useMutation({
+    mutationFn: async ({ id, title, description }: { id: number; title: string; description: string }) => {
+      const response = await fetch(`/api/agenda-items/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description })
+      });
+      if (!response.ok) throw new Error('Failed to update agenda item');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/agenda-items'] });
+      setEditingItem(null);
+      setEditForm({ title: "", description: "" });
+      toast({
+        title: "Agenda item updated",
+        description: "The agenda item has been updated successfully.",
+      });
+    }
+  });
+
+  const deleteItemMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await fetch(`/api/agenda-items/${id}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) throw new Error('Failed to delete agenda item');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/agenda-items'] });
+      toast({
+        title: "Agenda item deleted",
+        description: "The agenda item has been deleted successfully.",
       });
     }
   });

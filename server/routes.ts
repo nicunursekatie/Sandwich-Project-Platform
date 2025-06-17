@@ -1116,6 +1116,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete("/api/agenda-items/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteAgendaItem(id);
+      
+      if (!success) {
+        res.status(404).json({ message: "Agenda item not found" });
+        return;
+      }
+
+      res.json({ message: "Agenda item deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete agenda item" });
+    }
+  });
+
   // Meetings
   app.get("/api/current-meeting", async (req, res) => {
     try {

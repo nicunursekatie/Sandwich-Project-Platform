@@ -85,6 +85,7 @@ export interface IStorage {
   createAgendaItem(item: InsertAgendaItem): Promise<AgendaItem>;
   updateAgendaItemStatus(id: number, status: string): Promise<AgendaItem | undefined>;
   updateAgendaItem(id: number, updates: Partial<AgendaItem>): Promise<AgendaItem | undefined>;
+  deleteAgendaItem(id: number): Promise<boolean>;
   
   // Meetings
   getCurrentMeeting(): Promise<Meeting | undefined>;
@@ -571,6 +572,10 @@ export class MemStorage implements IStorage {
     const updated: AgendaItem = { ...item, ...updates };
     this.agendaItems.set(id, updated);
     return updated;
+  }
+
+  async deleteAgendaItem(id: number): Promise<boolean> {
+    return this.agendaItems.delete(id);
   }
 
   // Meetings
