@@ -52,7 +52,7 @@ export default function CollectionAnalytics() {
     collectionDate: "",
     hostName: "",
     individualSandwiches: 0,
-    groupCollections: 0,
+    groupCollections: "0",
   });
   const [selectedCollections, setSelectedCollections] = useState<Set<number>>(new Set());
   const [showBatchEdit, setShowBatchEdit] = useState(false);
@@ -144,8 +144,8 @@ export default function CollectionAnalytics() {
     setEditForm({
       collectionDate: collection.collectionDate,
       hostName: collection.hostName,
-      individualSandwiches: Number(collection.individualSandwiches || 0),
-      groupCollections: Number(collection.groupCollections || 0),
+      individualSandwiches: collection.individualSandwiches || 0,
+      groupCollections: String(collection.groupCollections || "0"),
     });
   };
 
@@ -158,7 +158,7 @@ export default function CollectionAnalytics() {
         collectionDate: editForm.collectionDate,
         hostName: editForm.hostName,
         individualSandwiches: editForm.individualSandwiches,
-        groupCollections: editForm.groupCollections,
+        groupCollections: String(editForm.groupCollections),
       },
     });
   };
@@ -368,11 +368,9 @@ export default function CollectionAnalytics() {
     const ogDates = ogCollections.map(c => c.collectionDate).sort();
     const preLocationPeriod = ogDates.length > 0 ? `${ogDates[0]} to ${ogDates[ogDates.length - 1]}` : "No data";
     
-    const locationBasedCollections = filteredCollections.filter(c => 
-      c.hostName !== 'OG Sandwich Project' && c.hostName && c.hostName.trim() !== ""
-    );
-    const locationDates = locationBasedCollections.map(c => c.collectionDate).sort();
-    const locationBasedPeriod = locationDates.length > 0 ? `${locationDates[0]} to ${locationDates[locationDates.length - 1]}` : "No data";
+    // Location-based collections analysis
+    const locationBasedDates = locationCollections.map(c => c.collectionDate).sort();
+    const locationBasedPeriod = locationBasedDates.length > 0 ? `${locationBasedDates[0]} to ${locationBasedDates[locationBasedDates.length - 1]}` : "No data";
 
     return {
       totalCollections,
@@ -1120,7 +1118,7 @@ export default function CollectionAnalytics() {
                 id="edit-groups"
                 type="number"
                 value={editForm.groupCollections}
-                onChange={(e) => setEditForm(prev => ({ ...prev, groupCollections: Number(e.target.value) }))}
+                onChange={(e) => setEditForm(prev => ({ ...prev, groupCollections: e.target.value }))}
               />
             </div>
             <div className="flex justify-end space-x-2">
