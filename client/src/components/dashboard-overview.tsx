@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SandwichCollectionForm from "@/components/sandwich-collection-form";
-import type { Project, Message, MeetingMinutes, DriveLink, WeeklyReport, SandwichCollection } from "@shared/schema";
+import type { Project, Message, MeetingMinutes, DriveLink, WeeklyReport, SandwichCollection, Meeting } from "@shared/schema";
 
 interface DashboardOverviewProps {
   onSectionChange: (section: string) => void;
@@ -27,6 +27,10 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
   const { data: reports = [] } = useQuery<WeeklyReport[]>({
     queryKey: ["/api/weekly-reports"]
+  });
+
+  const { data: meetings = [] } = useQuery<Meeting[]>({
+    queryKey: ["/api/meetings"]
   });
 
   const { data: statsData } = useQuery({
@@ -63,6 +67,12 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
   const activeProjects = projects.filter(p => p.status === "in_progress" || p.status === "available" || p.status === "planning");
   const recentMessages = messages.slice(0, 3);
   const recentMinutes = minutes.slice(0, 2);
+  
+  // Filter upcoming meetings (not completed and future or current dates)
+  const upcomingMeetings = meetings
+    .filter(meeting => meeting.status !== "completed")
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .slice(0, 3);
 
   return (
     <div className="space-y-6">
@@ -121,6 +131,52 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
             
             {activeProjects.length === 0 && (
               <p className="text-slate-500 text-center py-3 text-sm">No active projects</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Upcoming Meetings */}
+      <div className="bg-white rounded-lg border border-slate-200">
+        <div className="px-4 py-3 border-b border-slate-200 flex justify-between items-center">
+          <h2 className="text-base font-semibold text-slate-900">Upcoming Meetings</h2>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => onSectionChange("meetings")}
+            className="text-xs px-2 py-1"
+          >
+            View All
+          </Button>
+        </div>
+        <div className="p-4">
+          <div className="space-y-2">
+            {upcomingMeetings.map((meeting) => (
+              <div 
+                key={meeting.id} 
+                className="p-2 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
+                onClick={() => onSectionChange("meetings")}
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-sm font-medium text-slate-900">{meeting.title}</h3>
+                    <p className="text-xs text-slate-600">
+                      {new Date(meeting.date).toLocaleDateString()} at {meeting.time}
+                    </p>
+                    {meeting.location && (
+                      <p className="text-xs text-slate-500 mt-1">📍 {meeting.location}</p>
+                    )}
+                  </div>
+                  <span className="text-xs text-slate-500 capitalize">
+                    {meeting.status === "planning" ? "Planning" : 
+                     meeting.status === "agenda_set" ? "Agenda Set" : meeting.status}
+                  </span>
+                </div>
+              </div>
+            ))}
+            
+            {upcomingMeetings.length === 0 && (
+              <p className="text-slate-500 text-center py-3 text-sm">No upcoming meetings</p>
             )}
           </div>
         </div>
