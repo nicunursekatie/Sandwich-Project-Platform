@@ -103,38 +103,44 @@ export default function Dashboard() {
                 {
                   title: "Food Safety Volunteers Guide",
                   description: "Essential food safety guidelines for all volunteers",
-                  path: "/20230525-TSP-Food Safety Volunteers_1749341916234.pdf",
+                  path: "/documents/20230525-TSP-Food Safety Volunteers.pdf",
                   category: "Safety"
                 },
                 {
                   title: "Deli Sandwich Making 101",
                   description: "Step-by-step guide for preparing deli sandwiches",
-                  path: "/20240622-TSP-Deli Sandwich Making 101_1749341916236.pdf",
+                  path: "/documents/20240622-TSP-Deli Sandwich Making 101.pdf",
                   category: "Training"
                 },
                 {
                   title: "PBJ Sandwich Making 101", 
                   description: "Instructions for peanut butter and jelly sandwich preparation",
-                  path: "/20250622-TSP-PBJ Sandwich Making 101_1749341916236.pdf",
+                  path: "/documents/20250622-TSP-PBJ Sandwich Making 101.pdf",
                   category: "Training"
                 },
                 {
                   title: "Deli Labels",
                   description: "Printable labels for deli sandwich packaging",
-                  path: "/Deli labels_1749341916236.pdf",
+                  path: "/documents/Deli labels.pdf",
                   category: "Resources"
                 },
                 {
                   title: "PBJ Labels",
                   description: "Printable labels for PBJ sandwich packaging", 
-                  path: "/Pbj labels_1749341916237.pdf",
+                  path: "/documents/Pbj labels.pdf",
                   category: "Resources"
                 },
                 {
                   title: "Sandwich Inventory List",
                   description: "Current inventory tracking spreadsheet for 3 oz portions",
-                  path: "/TSP Sandwich Inventory List for 3 ozs_1749341916237.xlsx",
+                  path: "/documents/TSP Sandwich Inventory List for 3 ozs.xlsx",
                   category: "Operations"
+                },
+                {
+                  title: "501c3 Determination Letter",
+                  description: "Official nonprofit status documentation",
+                  path: "/documents/501c3-determination-letter.pdf",
+                  category: "Legal"
                 }
               ].map((doc, index) => (
                 <div
