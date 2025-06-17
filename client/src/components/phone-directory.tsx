@@ -84,12 +84,12 @@ export default function PhoneDirectory() {
   const { toast } = useToast();
 
   // Optimized: Fetch hosts with contacts in single query
-  const { data: hosts = [], isLoading } = useQuery<HostWithContacts[]>({
+  const { data: hosts = [], isLoading, refetch: refetchHostsWithContacts } = useQuery<HostWithContacts[]>({
     queryKey: ["/api/hosts-with-contacts"],
   });
 
   // Keep separate hosts query for forms that need the basic host list
-  const { data: hostsData = [] } = useQuery<Host[]>({
+  const { data: hostsData = [], refetch: refetchHosts } = useQuery<Host[]>({
     queryKey: ["/api/hosts"],
   });
 
@@ -151,10 +151,13 @@ export default function PhoneDirectory() {
 
   const deleteHostMutation = useMutation({
     mutationFn: (id: number) => apiRequest("DELETE", `/api/hosts/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/host-contacts"] });
+    onSuccess: async () => {
+      // Force immediate refresh of both queries
+      await Promise.all([
+        refetchHostsWithContacts(),
+        refetchHosts(),
+        queryClient.invalidateQueries({ queryKey: ["/api/host-contacts"] })
+      ]);
       toast({ title: "Host location deleted successfully" });
     },
     onError: () => {
