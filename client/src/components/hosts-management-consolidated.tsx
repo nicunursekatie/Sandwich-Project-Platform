@@ -31,6 +31,40 @@ export default function HostsManagementConsolidated() {
   const [selectedHost, setSelectedHost] = useState<HostWithContacts | null>(null);
   const [isAddingContact, setIsAddingContact] = useState(false);
   const [editingContact, setEditingContact] = useState<HostContact | null>(null);
+  const [expandedContacts, setExpandedContacts] = useState<Set<number>>(new Set());
+
+  // Helper function to sort contacts by priority (leads first, then primary contacts)
+  const sortContactsByPriority = (contacts: HostContact[]) => {
+    return [...contacts].sort((a, b) => {
+      // First priority: leads
+      if (a.role === 'lead' && b.role !== 'lead') return -1;
+      if (b.role === 'lead' && a.role !== 'lead') return 1;
+      
+      // Second priority: primary contacts
+      if (a.isPrimary && !b.isPrimary) return -1;
+      if (b.isPrimary && !a.isPrimary) return 1;
+      
+      // Third priority: primary role contacts
+      if (a.role === 'primary' && b.role !== 'primary') return -1;
+      if (b.role === 'primary' && a.role !== 'primary') return 1;
+      
+      // Default: alphabetical by name
+      return a.name.localeCompare(b.name);
+    });
+  };
+
+  const toggleContactExpansion = (hostId: number) => {
+    setExpandedContacts(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(hostId)) {
+        newSet.delete(hostId);
+      } else {
+        newSet.add(hostId);
+      }
+      return newSet;
+    });
+  };
+
   const [newHost, setNewHost] = useState<InsertHost>({
     name: "",
     address: "",
@@ -364,32 +398,51 @@ export default function HostsManagementConsolidated() {
               {host.contacts && host.contacts.length > 0 && (
                 <div className="space-y-2">
                   <div className="text-xs font-medium text-slate-700">Contacts:</div>
-                  {host.contacts.slice(0, 2).map((contact) => (
-                    <div key={contact.id} className="space-y-1 border-l-2 border-blue-200 pl-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-slate-700">{contact.name}</span>
-                        {contact.isPrimary && <Star className="w-3 h-3 text-yellow-500 fill-current" />}
-                      </div>
-                      <div className="flex items-center">
-                        <RoleBadge role={contact.role} />
-                      </div>
-                      <div className="flex items-center text-xs text-slate-600">
-                        <Phone className="w-3 h-3 mr-1" />
-                        {contact.phone}
-                      </div>
-                      {contact.email && (
-                        <div className="flex items-center text-xs text-slate-600">
-                          <Mail className="w-3 h-3 mr-1" />
-                          {contact.email}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                  {host.contacts.length > 2 && (
-                    <div className="text-xs text-slate-500">
-                      +{host.contacts.length - 2} more contacts
-                    </div>
-                  )}
+                  {(() => {
+                    const sortedContacts = sortContactsByPriority(host.contacts);
+                    const isExpanded = expandedContacts.has(host.id);
+                    const contactsToShow = isExpanded ? sortedContacts : sortedContacts.slice(0, 2);
+                    
+                    return (
+                      <>
+                        {contactsToShow.map((contact) => (
+                          <div key={contact.id} className="space-y-1 border-l-2 border-blue-200 pl-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium text-slate-700">{contact.name}</span>
+                              <div className="flex items-center space-x-1">
+                                {contact.role === 'lead' && <Crown className="w-3 h-3 text-purple-600 fill-current" />}
+                                {contact.isPrimary && <Star className="w-3 h-3 text-yellow-500 fill-current" />}
+                              </div>
+                            </div>
+                            <div className="flex items-center">
+                              <RoleBadge role={contact.role} />
+                            </div>
+                            <div className="flex items-center text-xs text-slate-600">
+                              <Phone className="w-3 h-3 mr-1" />
+                              {contact.phone}
+                            </div>
+                            {contact.email && (
+                              <div className="flex items-center text-xs text-slate-600">
+                                <Mail className="w-3 h-3 mr-1" />
+                                {contact.email}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                        {sortedContacts.length > 2 && (
+                          <button
+                            onClick={() => toggleContactExpansion(host.id)}
+                            className="text-xs text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
+                          >
+                            {isExpanded 
+                              ? "Show less" 
+                              : `+${sortedContacts.length - 2} more contacts`
+                            }
+                          </button>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
               )}
               
@@ -619,12 +672,18 @@ export default function HostsManagementConsolidated() {
                 </div>
                 
                 <div className="space-y-3">
-                  {selectedHost.contacts.map((contact) => (
+                  {sortContactsByPriority(selectedHost.contacts).map((contact) => (
                     <Card key={contact.id} className="p-4">
                       <div className="flex items-start justify-between">
                         <div className="space-y-2 flex-1">
                           <div className="flex items-center space-x-2">
                             <h5 className="font-medium text-slate-900">{contact.name}</h5>
+                            {contact.role === 'lead' && (
+                              <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                                <Crown className="w-3 h-3 mr-1" />
+                                Lead
+                              </Badge>
+                            )}
                             {contact.isPrimary && (
                               <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
                                 <Star className="w-3 h-3 mr-1" />
