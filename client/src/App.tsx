@@ -1,11 +1,14 @@
 import { Switch, Route } from "wouter";
-import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
+
+import { queryClient } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
+
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ErrorBoundary } from "@/components/error-boundary";
 import { LoadingState } from "@/components/ui/loading";
-import { useAuth } from "@/hooks/useAuth";
+import { ErrorBoundary } from "@/components/error-boundary";
+
 import Dashboard from "@/pages/dashboard";
 import Meetings from "@/pages/meetings";
 import Development from "@/pages/development";
