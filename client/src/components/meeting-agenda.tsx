@@ -196,6 +196,32 @@ export default function MeetingAgenda() {
     }
   };
 
+  const handleEditItem = (item: AgendaItem) => {
+    setEditingItem(item.id);
+    setEditForm({ title: item.title, description: item.description });
+  };
+
+  const handleSaveEdit = () => {
+    if (editingItem && editForm.title.trim() && editForm.description.trim()) {
+      editItemMutation.mutate({
+        id: editingItem,
+        title: editForm.title,
+        description: editForm.description
+      });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingItem(null);
+    setEditForm({ title: "", description: "" });
+  };
+
+  const handleDeleteItem = (id: number) => {
+    if (confirm('Are you sure you want to delete this agenda item?')) {
+      deleteItemMutation.mutate(id);
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "approved":
@@ -387,41 +413,111 @@ export default function MeetingAgenda() {
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <CardTitle className="text-base">{item.title}</CardTitle>
-                        <div className="flex items-center gap-2 text-sm text-slate-600 mt-1">
-                          <User className="w-3 h-3" />
-                          <span>{item.submittedBy}</span>
-                          <span>•</span>
-                          <span>{new Date(item.submittedAt).toLocaleDateString()}</span>
-                        </div>
+                        {editingItem === item.id ? (
+                          <div className="space-y-2">
+                            <Input
+                              value={editForm.title}
+                              onChange={(e) => setEditForm(prev => ({ ...prev, title: e.target.value }))}
+                              placeholder="Item title"
+                              className="text-base font-semibold"
+                            />
+                          </div>
+                        ) : (
+                          <>
+                            <CardTitle className="text-base">{item.title}</CardTitle>
+                            <div className="flex items-center gap-2 text-sm text-slate-600 mt-1">
+                              <User className="w-3 h-3" />
+                              <span>{item.submittedBy}</span>
+                              <span>•</span>
+                              <span>{new Date(item.submittedAt).toLocaleDateString()}</span>
+                            </div>
+                          </>
+                        )}
                       </div>
                       <div className="flex items-center gap-2">
-                        {getStatusBadge(item.status)}
-                        {item.status === "pending" && (
+                        {editingItem === item.id ? (
                           <div className="flex gap-1">
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => updateItemStatusMutation.mutate({ id: item.id, status: "approved" })}
+                              onClick={handleSaveEdit}
+                              disabled={editItemMutation.isPending}
                               className="text-green-600 hover:text-green-700"
                             >
-                              <CheckCircle className="w-3 h-3" />
+                              <Save className="w-3 h-3" />
                             </Button>
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => updateItemStatusMutation.mutate({ id: item.id, status: "rejected" })}
-                              className="text-red-600 hover:text-red-700"
+                              onClick={handleCancelEdit}
+                              className="text-gray-600 hover:text-gray-700"
                             >
-                              <XCircle className="w-3 h-3" />
+                              <X className="w-3 h-3" />
                             </Button>
                           </div>
+                        ) : (
+                          <>
+                            {getStatusBadge(item.status)}
+                            <div className="flex gap-1">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleEditItem(item)}
+                                className="text-blue-600 hover:text-blue-700"
+                                title="Edit item"
+                              >
+                                <Edit className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleDeleteItem(item.id)}
+                                disabled={deleteItemMutation.isPending}
+                                className="text-red-600 hover:text-red-700"
+                                title="Delete item"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                              {item.status === "pending" && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => updateItemStatusMutation.mutate({ id: item.id, status: "approved" })}
+                                    className="text-green-600 hover:text-green-700"
+                                    title="Approve item"
+                                  >
+                                    <CheckCircle className="w-3 h-3" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => updateItemStatusMutation.mutate({ id: item.id, status: "rejected" })}
+                                    className="text-red-600 hover:text-red-700"
+                                    title="Reject item"
+                                  >
+                                    <XCircle className="w-3 h-3" />
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                          </>
                         )}
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent className="pt-0">
-                    <p className="text-sm text-slate-600">{item.description}</p>
+                    {editingItem === item.id ? (
+                      <Textarea
+                        value={editForm.description}
+                        onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
+                        placeholder="Item description"
+                        className="text-sm"
+                        rows={3}
+                      />
+                    ) : (
+                      <p className="text-sm text-slate-600">{item.description}</p>
+                    )}
                   </CardContent>
                 </Card>
               ))}
