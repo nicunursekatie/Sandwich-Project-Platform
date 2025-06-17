@@ -6,11 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import BulkDataManager from "@/components/bulk-data-manager";
-
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useState, useRef } from "react";
-import * as React from "react";
+import { useState, useRef, useMemo, useCallback } from "react";
 import type { SandwichCollection, Host } from "@shared/schema";
 
 
@@ -89,25 +87,36 @@ export default function SandwichCollectionLog() {
     { id: Math.random().toString(36), groupName: "", sandwichCount: 0 }
   ]);
 
-  // Determine if we need all data for sorting/filtering
-  const needsAllData = showFilters || Object.values(searchFilters).some(v => v) || 
-                      sortConfig.field !== "collectionDate" || sortConfig.direction !== "desc";
+  // Memoize expensive computations
+  const needsAllData = useMemo(() => 
+    showFilters || Object.values(searchFilters).some(v => v) || 
+    sortConfig.field !== "collectionDate" || sortConfig.direction !== "desc",
+    [showFilters, searchFilters, sortConfig]
+  );
+
+  const queryKey = useMemo(() => [
+    "/api/sandwich-collections", 
+    needsAllData ? "all" : currentPage, 
+    needsAllData ? "all" : itemsPerPage, 
+    searchFilters, 
+    sortConfig
+  ], [needsAllData, currentPage, itemsPerPage, searchFilters, sortConfig]);
 
   const { data: collectionsResponse, isLoading } = useQuery({
-    queryKey: ["/api/sandwich-collections", needsAllData ? "all" : currentPage, needsAllData ? "all" : itemsPerPage, searchFilters, sortConfig],
-    queryFn: async () => {
+    queryKey,
+    queryFn: useCallback(async () => {
       if (needsAllData) {
-        // Fetch all records for sorting/filtering
         const response = await fetch('/api/sandwich-collections?limit=10000');
         if (!response.ok) throw new Error('Failed to fetch collections');
         const data = await response.json();
         
-        // Apply client-side filtering
         let filteredCollections = data.collections || [];
         
+        // Apply filters
         if (searchFilters.hostName) {
+          const searchTerm = searchFilters.hostName.toLowerCase();
           filteredCollections = filteredCollections.filter((c: any) => 
-            c.hostName?.toLowerCase().includes(searchFilters.hostName.toLowerCase())
+            c.hostName?.toLowerCase().includes(searchTerm)
           );
         }
         
@@ -135,7 +144,7 @@ export default function SandwichCollectionLog() {
           );
         }
         
-        // Apply client-side sorting
+        // Apply sorting
         filteredCollections.sort((a: any, b: any) => {
           const aVal = a[sortConfig.field];
           const bVal = b[sortConfig.field];
@@ -148,10 +157,9 @@ export default function SandwichCollectionLog() {
           return sortConfig.direction === "asc" ? comparison : -comparison;
         });
         
-        // Apply pagination to the sorted/filtered results
+        // Apply pagination
         const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const paginatedResults = filteredCollections.slice(startIndex, endIndex);
+        const paginatedResults = filteredCollections.slice(startIndex, startIndex + itemsPerPage);
         
         return {
           collections: paginatedResults,
@@ -163,12 +171,11 @@ export default function SandwichCollectionLog() {
           }
         };
       } else {
-        // Use server-side pagination for default view
         const response = await fetch(`/api/sandwich-collections?page=${currentPage}&limit=${itemsPerPage}`);
         if (!response.ok) throw new Error('Failed to fetch collections');
         return response.json();
       }
-    }
+    }, [needsAllData, currentPage, itemsPerPage, searchFilters, sortConfig])
   });
 
   const collections = collectionsResponse?.collections || [];

@@ -124,6 +124,7 @@ export interface IStorage {
   getHostContacts(hostId: number): Promise<HostContact[]>;
   updateHostContact(id: number, updates: Partial<HostContact>): Promise<HostContact | undefined>;
   deleteHostContact(id: number): Promise<boolean>;
+  getAllHostsWithContacts(): Promise<Array<Host & { contacts: HostContact[] }>>;
 }
 
 export class MemStorage implements IStorage {
