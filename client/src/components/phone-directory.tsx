@@ -768,80 +768,78 @@ export default function PhoneDirectory() {
               Add Contact
             </Button>
           )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="default"
+                className="flex items-center gap-2"
+              >
+                <Settings className="w-4 h-4" />
+                Manage Contacts
+                <ChevronDown className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                onClick={() => setImportDialogOpen(true)}
+                className="flex items-center gap-2 text-green-700"
+              >
+                <Upload className="w-4 h-4" />
+                Import Excel
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  const hostExportData = hosts.flatMap(host => 
+                    host.contacts.map(contact => ({
+                      location: host.name,
+                      contactName: contact.name,
+                      role: contact.role,
+                      phone: contact.phone,
+                      email: contact.email || '',
+                      isPrimary: contact.isPrimary ? 'Yes' : 'No',
+                      address: host.address || '',
+                      notes: contact.notes || ''
+                    }))
+                  );
+                  exportToCSV(hostExportData, 'hosts-directory.csv');
+                }}
+                className="flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Export Hosts
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => exportToCSV(recipients, 'recipients-directory.csv')}
+                className="flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Export Recipients
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => exportToCSV(contacts, 'contacts-directory.csv')}
+                className="flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Export Contacts
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
-      {/* Search and Export Controls */}
+      {/* Search Controls */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-4 items-center">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Search by name, phone, or email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2"
-                >
-                  <Settings className="w-4 h-4" />
-                  Manage Contacts
-                  <ChevronDown className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  onClick={() => setImportDialogOpen(true)}
-                  className="flex items-center gap-2 text-green-700"
-                >
-                  <Upload className="w-4 h-4" />
-                  Import Excel
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    const hostExportData = hosts.flatMap(host => 
-                      host.contacts.map(contact => ({
-                        location: host.name,
-                        contactName: contact.name,
-                        role: contact.role,
-                        phone: contact.phone,
-                        email: contact.email || '',
-                        isPrimary: contact.isPrimary ? 'Yes' : 'No',
-                        address: host.address || '',
-                        notes: contact.notes || ''
-                      }))
-                    );
-                    exportToCSV(hostExportData, 'hosts-directory.csv');
-                  }}
-                  className="flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Export Hosts
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => exportToCSV(recipients, 'recipients-directory.csv')}
-                  className="flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Export Recipients
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => exportToCSV(contacts, 'contacts-directory.csv')}
-                  className="flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Export Contacts
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Search by name, phone, or email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
           </div>
         </CardContent>
       </Card>
