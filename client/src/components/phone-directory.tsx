@@ -152,6 +152,7 @@ export default function PhoneDirectory() {
   const deleteHostMutation = useMutation({
     mutationFn: (id: number) => apiRequest("DELETE", `/api/hosts/${id}`),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/host-contacts"] });
       toast({ title: "Host location deleted successfully" });
