@@ -17,9 +17,7 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
     queryKey: ["/api/messages"]
   });
 
-  const { data: minutes = [] } = useQuery<MeetingMinutes[]>({
-    queryKey: ["/api/meeting-minutes"]
-  });
+
 
   const { data: driveLinks = [] } = useQuery<DriveLink[]>({
     queryKey: ["/api/drive-links"]
@@ -66,7 +64,7 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
   const totalCollectedSandwiches = statsData?.completeTotalSandwiches || 0;
   const activeProjects = projects.filter(p => p.status === "in_progress" || p.status === "available" || p.status === "planning");
   const recentMessages = messages.slice(0, 3);
-  const recentMinutes = minutes.slice(0, 2);
+
   
   // Filter upcoming meetings (not completed and future or current dates)
   const upcomingMeetings = meetings
@@ -224,45 +222,7 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
         </div>
       </div>
 
-      {/* Recent Meeting Minutes */}
-      <div className="bg-white rounded-lg border border-slate-200">
-        <div className="px-4 py-3 border-b border-slate-200 flex justify-between items-center">
-          <h2 className="text-base font-semibold text-slate-900">Recent Meetings</h2>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => onSectionChange("meetings")}
-            className="text-xs px-2 py-1"
-          >
-            View All
-          </Button>
-        </div>
-        <div className="p-4">
-          <div className="space-y-2">
-            {recentMinutes.map((minute) => (
-              <div 
-                key={minute.id} 
-                className="p-2 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
-                onClick={() => onSectionChange("meetings")}
-              >
-                <div className="flex justify-between items-start mb-1">
-                  <span className="text-sm font-medium text-slate-900">{minute.title}</span>
-                  <span className="text-xs text-slate-500">{minute.date}</span>
-                </div>
-                <p className="text-xs text-slate-600">
-                  {minute.summary.length > 70 
-                    ? minute.summary.substring(0, 70) + "..." 
-                    : minute.summary}
-                </p>
-              </div>
-            ))}
-            
-            {recentMinutes.length === 0 && (
-              <p className="text-slate-500 text-center py-3 text-sm">No recent meetings</p>
-            )}
-          </div>
-        </div>
-      </div>
+
 
     </div>
   );
