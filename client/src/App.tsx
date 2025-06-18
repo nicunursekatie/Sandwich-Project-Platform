@@ -32,9 +32,15 @@ function Router() {
     return <LoadingState text="Authenticating..." size="lg" className="min-h-screen" />;
   }
 
-  // If not authenticated, always show Landing page
+  // If not authenticated, show public routes
   if (!isAuthenticated) {
-    return <Landing />;
+    return (
+      <Switch>
+        <Route path="/signup" component={SignupPage} />
+        <Route path="/" component={Landing} />
+        <Route component={Landing} />
+      </Switch>
+    );
   }
 
   return (
