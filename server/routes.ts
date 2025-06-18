@@ -65,6 +65,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { setupTempAuth, isAuthenticated, requirePermission } = await import("./temp-auth");
   setupTempAuth(app);
 
+  // Import and register signup routes
+  const { signupRoutes } = await import("./routes/signup");
+  app.use("/api", signupRoutes);
+
   // Add a simple login page for testing
   app.get('/api/login', (req, res) => {
     res.send(`

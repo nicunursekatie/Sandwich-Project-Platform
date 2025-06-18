@@ -24,6 +24,7 @@ export const users = pgTable("users", {
   profileImageUrl: varchar("profile_image_url"),
   role: varchar("role").notNull().default("volunteer"), // 'admin', 'coordinator', 'volunteer', 'viewer'
   permissions: jsonb("permissions").default('[]'), // Array of specific permissions
+  metadata: jsonb("metadata").default('{}'), // Additional user data (phone, address, availability, etc.)
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

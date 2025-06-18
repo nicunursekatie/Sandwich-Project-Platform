@@ -22,6 +22,7 @@ import DataManagement from "@/pages/data-management";
 import PerformanceDashboard from "@/pages/performance-dashboard";
 import ReportingDashboard from "@/pages/reporting-dashboard";
 import Landing from "@/pages/landing";
+import SignupPage from "@/pages/signup";
 import NotFound from "@/pages/not-found";
 
 function Router() {
