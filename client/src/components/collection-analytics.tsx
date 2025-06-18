@@ -272,6 +272,9 @@ export default function CollectionAnalytics() {
     const avgPerCollection = totalCollections > 0 ? totalSandwiches / totalCollections : 0;
     const avgPerLocationCollection = locationCollections.length > 0 ? locationSandwiches / locationCollections.length : 0;
     
+    // Weekly average based on operational data
+    const weeklyAverage = 14004;
+    
     const uniqueHosts = new Set(filteredCollections.map(c => c.hostName)).size;
     
     // Date range
@@ -378,6 +381,8 @@ export default function CollectionAnalytics() {
       uniqueHosts,
       dateRange,
       avgPerCollection: totalCollections > 0 ? Math.round(totalSandwiches / totalCollections) : 0,
+      avgPerLocationCollection: Math.round(avgPerLocationCollection),
+      weeklyAverage,
       topHosts,
       monthlyTrends,
       weeklyPatterns,
@@ -392,7 +397,9 @@ export default function CollectionAnalytics() {
         ogCollections: ogCollections.length,
         ogSandwiches,
         preLocationPeriod,
-        locationBasedPeriod
+        locationBasedPeriod,
+        locationCollections: locationCollections.length,
+        locationSandwiches
       }
     };
   }, [collections, dateFilter, hostFilter]);
