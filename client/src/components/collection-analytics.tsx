@@ -563,7 +563,7 @@ export default function CollectionAnalytics() {
       </Card>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center">
@@ -583,18 +583,6 @@ export default function CollectionAnalytics() {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total Sandwiches</p>
                 <p className="text-2xl font-bold">{analyticsData.totalSandwiches.toLocaleString()}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <MapPin className="w-8 h-8 text-purple-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Unique Hosts</p>
-                <p className="text-2xl font-bold">{analyticsData.uniqueHosts}</p>
               </div>
             </div>
           </CardContent>
