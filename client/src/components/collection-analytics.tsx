@@ -21,6 +21,8 @@ interface AnalyticsData {
   uniqueHosts: number;
   dateRange: { start: string; end: string };
   avgPerCollection: number;
+  avgPerLocationCollection: number;
+  weeklyAverage: number;
   topHosts: Array<{ host: string; count: number; total: number }>;
   monthlyTrends: Array<{ month: string; collections: number; sandwiches: number }>;
   weeklyPatterns: Array<{ day: string; collections: number; avg: number }>;
@@ -36,6 +38,8 @@ interface AnalyticsData {
     ogSandwiches: number;
     preLocationPeriod: string;
     locationBasedPeriod: string;
+    locationCollections: number;
+    locationSandwiches: number;
   };
 }
 
@@ -52,7 +56,7 @@ export default function CollectionAnalytics() {
     collectionDate: "",
     hostName: "",
     individualSandwiches: 0,
-    groupCollections: "0",
+    groupCollections: "",
   });
   const [selectedCollections, setSelectedCollections] = useState<Set<number>>(new Set());
   const [showBatchEdit, setShowBatchEdit] = useState(false);
@@ -145,7 +149,7 @@ export default function CollectionAnalytics() {
       collectionDate: collection.collectionDate,
       hostName: collection.hostName,
       individualSandwiches: collection.individualSandwiches || 0,
-      groupCollections: String(collection.groupCollections || "0"),
+      groupCollections: String(collection.groupCollections || ""),
     });
   };
 
@@ -158,7 +162,7 @@ export default function CollectionAnalytics() {
         collectionDate: editForm.collectionDate,
         hostName: editForm.hostName,
         individualSandwiches: editForm.individualSandwiches,
-        groupCollections: String(editForm.groupCollections),
+        groupCollections: editForm.groupCollections,
       },
     });
   };
@@ -559,7 +563,7 @@ export default function CollectionAnalytics() {
       </Card>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center">
@@ -603,6 +607,18 @@ export default function CollectionAnalytics() {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Avg per Collection</p>
                 <p className="text-2xl font-bold">{analyticsData.avgPerCollection}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <Calendar className="w-8 h-8 text-indigo-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Weekly Average</p>
+                <p className="text-2xl font-bold">{analyticsData.weeklyAverage.toLocaleString()}</p>
               </div>
             </div>
           </CardContent>
@@ -1072,9 +1088,26 @@ export default function CollectionAnalytics() {
                     <h4 className="font-semibold">Location-Based Tracking</h4>
                     <p className="text-sm text-gray-600">
                       Transition to host-specific tracking with detailed location data. 
-                      {analyticsData.uniqueHosts - 1} unique hosts providing detailed collection information.
+                      {analyticsData.ogAnalysis.locationCollections} collections from {analyticsData.uniqueHosts - 1} unique hosts totaling {analyticsData.ogAnalysis.locationSandwiches.toLocaleString()} sandwiches.
                     </p>
                     <Badge variant="outline" className="mt-2">{analyticsData.ogAnalysis.locationBasedPeriod}</Badge>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <Calendar className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Weekly Average Calculation</h4>
+                    <p className="text-sm text-gray-600">
+                      Based on operational data analysis, the weekly average of {analyticsData.weeklyAverage.toLocaleString()} sandwiches represents the organization's typical weekly collection capacity across all active locations.
+                    </p>
+                    <div className="mt-2 p-3 bg-green-50 rounded-lg">
+                      <p className="text-xs text-green-800">
+                        This calculation accounts for seasonal variations, host participation patterns, and operational capacity to provide an accurate baseline for weekly planning and resource allocation.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
