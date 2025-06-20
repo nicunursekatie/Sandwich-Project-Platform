@@ -3,23 +3,19 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, FileText, Plus, Edit, Trash2, Eye } from "lucide-react";
+import { Calendar, Clock, FileText, Upload, Eye, Download, Link } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { Meeting, MeetingMinutes } from "@shared/schema";
 
 export default function MeetingMinutes() {
   const [selectedMeetingId, setSelectedMeetingId] = useState<number | null>(null);
-  const [isCreatingMinutes, setIsCreatingMinutes] = useState(false);
+  const [isUploadingMinutes, setIsUploadingMinutes] = useState(false);
   const [viewingMinutes, setViewingMinutes] = useState<MeetingMinutes | null>(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    date: "",
-    summary: "",
-    color: "blue"
-  });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [googleDocsUrl, setGoogleDocsUrl] = useState("");
+  const [uploadType, setUploadType] = useState<"file" | "google_docs">("file");
   const { toast } = useToast();
 
   // Fetch all meetings
@@ -32,57 +28,84 @@ export default function MeetingMinutes() {
     queryKey: ["/api/meeting-minutes"],
   });
 
-  const createMutation = useMutation({
-    mutationFn: async (data: any) => {
-      const response = await fetch("/api/meeting-minutes", {
+  const uploadMutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      const response = await fetch("/api/meeting-minutes/upload", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: formData,
       });
-      if (!response.ok) throw new Error("Failed to create minutes");
+      if (!response.ok) throw new Error("Failed to upload minutes");
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/meeting-minutes"] });
-      setIsCreatingMinutes(false);
+      setIsUploadingMinutes(false);
       setSelectedMeetingId(null);
-      setFormData({
-        title: "",
-        date: "",
-        summary: "",
-        color: "blue"
-      });
-      toast({ title: "Meeting minutes created successfully" });
+      setSelectedFile(null);
+      setGoogleDocsUrl("");
+      toast({ title: "Meeting minutes uploaded successfully" });
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedMeetingId) {
-      const selectedMeeting = meetings.find((m: Meeting) => m.id === selectedMeetingId);
-      if (selectedMeeting) {
-        createMutation.mutate({
-          ...formData,
-          title: selectedMeeting.title,
-          date: selectedMeeting.date,
+    if (!selectedMeetingId) return;
+
+    const selectedMeeting = (meetings as Meeting[]).find((m: Meeting) => m.id === selectedMeetingId);
+    if (!selectedMeeting) return;
+
+    const formData = new FormData();
+    formData.append("meetingId", selectedMeetingId.toString());
+    formData.append("title", selectedMeeting.title);
+    formData.append("date", selectedMeeting.date);
+
+    if (uploadType === "file" && selectedFile) {
+      formData.append("file", selectedFile);
+      formData.append("summary", `Uploaded file: ${selectedFile.name}`);
+    } else if (uploadType === "google_docs" && googleDocsUrl) {
+      formData.append("googleDocsUrl", googleDocsUrl);
+      formData.append("summary", `Google Docs link: ${googleDocsUrl}`);
+    } else {
+      toast({ title: "Please select a file or provide a Google Docs URL", variant: "destructive" });
+      return;
+    }
+
+    uploadMutation.mutate(formData);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check file type
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      ];
+      
+      if (allowedTypes.includes(file.type)) {
+        setSelectedFile(file);
+      } else {
+        toast({ 
+          title: "Invalid file type", 
+          description: "Please upload a PDF, DOC, or DOCX file",
+          variant: "destructive" 
         });
+        e.target.value = '';
       }
     }
   };
 
-  const handleCreateMinutesForMeeting = (meeting: Meeting) => {
+  const handleUploadMinutesForMeeting = (meeting: Meeting) => {
     setSelectedMeetingId(meeting.id);
-    setFormData({
-      title: meeting.title,
-      date: meeting.date,
-      summary: "",
-      color: "blue"
-    });
-    setIsCreatingMinutes(true);
+    setIsUploadingMinutes(true);
+    setSelectedFile(null);
+    setGoogleDocsUrl("");
+    setUploadType("file");
   };
 
   const getMeetingMinutes = (meetingId: number) => {
-    const meeting = meetings.find((m: Meeting) => m.id === meetingId);
+    const meeting = (meetings as Meeting[]).find((m: Meeting) => m.id === meetingId);
     if (!meeting) return null;
     
     return (minutes as MeetingMinutes[]).find(m => 
@@ -135,21 +158,31 @@ export default function MeetingMinutes() {
                 {viewingMinutes.summary}
               </p>
             </div>
+            {viewingMinutes.summary.includes("Google Docs link:") && (
+              <div>
+                <Button variant="outline" asChild>
+                  <a href={viewingMinutes.summary.split("Google Docs link: ")[1]} target="_blank" rel="noopener noreferrer">
+                    <Link className="w-4 h-4 mr-2" />
+                    Open in Google Docs
+                  </a>
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
     );
   }
 
-  // Show create minutes form
-  if (isCreatingMinutes && selectedMeetingId) {
-    const selectedMeeting = meetings.find((m: Meeting) => m.id === selectedMeetingId);
+  // Show upload minutes form
+  if (isUploadingMinutes && selectedMeetingId) {
+    const selectedMeeting = (meetings as Meeting[]).find((m: Meeting) => m.id === selectedMeetingId);
     
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <Button variant="outline" onClick={() => {
-            setIsCreatingMinutes(false);
+            setIsUploadingMinutes(false);
             setSelectedMeetingId(null);
           }}>
             ← Back to Meetings
@@ -158,45 +191,82 @@ export default function MeetingMinutes() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Create Meeting Minutes</CardTitle>
+            <CardTitle>Upload Meeting Minutes</CardTitle>
             <CardDescription>
-              Create minutes for: {selectedMeeting?.title} - {selectedMeeting && formatMeetingDateTime(selectedMeeting)}
+              Upload minutes for: {selectedMeeting?.title} - {selectedMeeting && formatMeetingDateTime(selectedMeeting)}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Upload Type Selection */}
               <div>
-                <label className="block text-sm font-medium mb-2">Meeting Summary</label>
-                <Textarea
-                  value={formData.summary}
-                  onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
-                  placeholder="Enter detailed meeting summary, key discussions, decisions made, and action items..."
-                  rows={8}
-                  required
-                />
+                <label className="block text-sm font-medium mb-3">Upload Type</label>
+                <div className="flex gap-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      value="file"
+                      checked={uploadType === "file"}
+                      onChange={(e) => setUploadType(e.target.value as "file" | "google_docs")}
+                      className="mr-2"
+                    />
+                    Upload File
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      value="google_docs"
+                      checked={uploadType === "google_docs"}
+                      onChange={(e) => setUploadType(e.target.value as "file" | "google_docs")}
+                      className="mr-2"
+                    />
+                    Google Docs Link
+                  </label>
+                </div>
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-2">Color Tag</label>
-                <select
-                  value={formData.color}
-                  onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                  className="w-full p-2 border rounded-md"
-                >
-                  <option value="blue">Blue</option>
-                  <option value="green">Green</option>
-                  <option value="red">Red</option>
-                  <option value="yellow">Yellow</option>
-                  <option value="purple">Purple</option>
-                </select>
-              </div>
+
+              {uploadType === "file" ? (
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Select Document (.pdf, .doc, .docx)
+                  </label>
+                  <Input
+                    type="file"
+                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    onChange={handleFileChange}
+                    required
+                  />
+                  {selectedFile && (
+                    <p className="text-sm text-gray-600 mt-2">
+                      Selected: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Google Docs URL
+                  </label>
+                  <Input
+                    type="url"
+                    value={googleDocsUrl}
+                    onChange={(e) => setGoogleDocsUrl(e.target.value)}
+                    placeholder="https://docs.google.com/document/d/..."
+                    required
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Make sure the document is shared with appropriate permissions
+                  </p>
+                </div>
+              )}
               
               <div className="flex gap-2">
-                <Button type="submit" disabled={createMutation.isPending}>
-                  {createMutation.isPending ? "Creating..." : "Create Minutes"}
+                <Button type="submit" disabled={uploadMutation.isPending}>
+                  <Upload className="w-4 h-4 mr-2" />
+                  {uploadMutation.isPending ? "Uploading..." : "Upload Minutes"}
                 </Button>
                 <Button type="button" variant="outline" onClick={() => {
-                  setIsCreatingMinutes(false);
+                  setIsUploadingMinutes(false);
                   setSelectedMeetingId(null);
                 }}>
                   Cancel
@@ -216,7 +286,7 @@ export default function MeetingMinutes() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Meeting Minutes</h1>
-          <p className="text-gray-600 dark:text-gray-400">View and create minutes for scheduled meetings</p>
+          <p className="text-gray-600 dark:text-gray-400">Upload and view minutes for scheduled meetings</p>
         </div>
       </div>
 
@@ -270,10 +340,10 @@ export default function MeetingMinutes() {
                       <Button 
                         variant="outline" 
                         size="sm"
-                        onClick={() => handleCreateMinutesForMeeting(meeting)}
+                        onClick={() => handleUploadMinutesForMeeting(meeting)}
                       >
-                        <Plus className="w-4 h-4 mr-1" />
-                        Create Minutes
+                        <Upload className="w-4 h-4 mr-1" />
+                        Upload Minutes
                       </Button>
                     )}
                   </div>
