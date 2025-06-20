@@ -34,6 +34,28 @@ const upload = multer({
   }
 });
 
+// Configure multer for meeting minutes file uploads
+const meetingMinutesUpload = multer({
+  dest: 'uploads/meeting-minutes/',
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (req, file, cb) => {
+    const allowedMimeTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+    const allowedExtensions = ['.pdf', '.doc', '.docx'];
+    const hasValidMimeType = allowedMimeTypes.includes(file.mimetype);
+    const hasValidExtension = allowedExtensions.some(ext => file.originalname.toLowerCase().endsWith(ext));
+    
+    if (hasValidMimeType || hasValidExtension) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PDF, DOC, and DOCX files are allowed for meeting minutes'));
+    }
+  }
+});
+
 // Configure multer for import operations (memory storage)
 const importUpload = multer({
   storage: multer.memoryStorage(),
@@ -1137,6 +1159,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(minutes);
     } catch (error) {
       res.status(400).json({ message: "Invalid meeting minutes data" });
+    }
+  });
+
+  // Meeting minutes file upload endpoint
+  app.post("/api/meeting-minutes/upload", meetingMinutesUpload.single('file'), async (req, res) => {
+    try {
+      const { meetingId, title, date, summary, googleDocsUrl } = req.body;
+      
+      if (!meetingId || !title || !date) {
+        return res.status(400).json({ message: "Missing required fields: meetingId, title, date" });
+      }
+
+      let finalSummary = summary;
+      
+      // Handle file upload
+      if (req.file) {
+        logger.info("Meeting minutes file uploaded", { 
+          filename: req.file.filename,
+          originalname: req.file.originalname,
+          size: req.file.size,
+          meetingId: meetingId
+        });
+        
+        finalSummary = `Uploaded file: ${req.file.originalname}`;
+      }
+      
+      // Handle Google Docs URL
+      if (googleDocsUrl) {
+        finalSummary = `Google Docs link: ${googleDocsUrl}`;
+      }
+
+      if (!finalSummary) {
+        return res.status(400).json({ message: "Must provide either a file or Google Docs URL" });
+      }
+
+      // Create meeting minutes record
+      const minutesData = {
+        title,
+        date,
+        summary: finalSummary
+      };
+
+      const minutes = await storage.createMeetingMinutes(minutesData);
+      
+      logger.info("Meeting minutes created successfully", { 
+        minutesId: minutes.id,
+        meetingId: meetingId,
+        method: req.method,
+        url: req.url,
+        ip: req.ip
+      });
+
+      res.status(201).json({
+        success: true,
+        message: "Meeting minutes uploaded successfully",
+        minutes: minutes,
+        filename: req.file?.originalname
+      });
+
+    } catch (error: any) {
+      logger.error("Failed to upload meeting minutes", error);
+      res.status(500).json({ 
+        message: "Failed to upload meeting minutes",
+        error: error.message 
+      });
     }
   });
 
