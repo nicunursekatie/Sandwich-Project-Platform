@@ -226,26 +226,6 @@ export default function AnalyticsDashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-primary">
-                    <Star className="w-6 h-6" />
-                  </div>
-                </div>
-                <h3 className="font-semibold text-lg mb-2">Top Contributor</h3>
-                <div className="text-3xl font-bold text-primary mb-2">
-                  {analyticsData.topPerformer ? analyticsData.topPerformer.total.toLocaleString() : '0'}
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {analyticsData.topPerformer 
-                    ? `${analyticsData.topPerformer.name} leading with consistent excellence`
-                    : 'No data available'
-                  }
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-primary">
                     <Target className="w-6 h-6" />
                   </div>
                 </div>
