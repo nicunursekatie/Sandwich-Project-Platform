@@ -292,6 +292,11 @@ export class DatabaseStorage implements IStorage {
     return item || undefined;
   }
 
+  async deleteAgendaItem(id: number): Promise<boolean> {
+    const result = await db.delete(agendaItems).where(eq(agendaItems.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
   // Meetings
   async getCurrentMeeting(): Promise<Meeting | undefined> {
     const [meeting] = await db.select().from(meetings).where(eq(meetings.status, 'active')).limit(1);

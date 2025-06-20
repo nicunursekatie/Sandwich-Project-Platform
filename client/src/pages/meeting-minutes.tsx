@@ -4,8 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, FileText, Upload, Eye, Download, Link } from "lucide-react";
-import { queryClient } from "@/lib/queryClient";
+import { Calendar, Clock, FileText, Upload, Eye, Download, Link, Edit, Trash2 } from "lucide-react";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { Meeting, MeetingMinutes } from "@shared/schema";
 
@@ -44,6 +44,19 @@ export default function MeetingMinutes() {
       setSelectedFile(null);
       setGoogleDocsUrl("");
       toast({ title: "Meeting minutes uploaded successfully" });
+    },
+  });
+
+  const deleteMeetingMutation = useMutation({
+    mutationFn: async (meetingId: number) => {
+      const response = await fetch(`/api/meetings/${meetingId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete meeting");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/meetings"] });
+      toast({ title: "Meeting deleted successfully" });
     },
   });
 
@@ -102,6 +115,20 @@ export default function MeetingMinutes() {
     setSelectedFile(null);
     setGoogleDocsUrl("");
     setUploadType("file");
+  };
+
+  const handleEditMeeting = (meeting: Meeting) => {
+    // For now, show a toast that edit functionality would open a modal
+    toast({ 
+      title: "Edit Meeting", 
+      description: "Edit functionality will be available in the meeting calendar page" 
+    });
+  };
+
+  const handleDeleteMeeting = (meetingId: number) => {
+    if (confirm("Are you sure you want to delete this meeting? This action cannot be undone.")) {
+      deleteMeetingMutation.mutate(meetingId);
+    }
   };
 
   const getMeetingMinutes = (meetingId: number) => {
@@ -346,6 +373,21 @@ export default function MeetingMinutes() {
                         Upload Minutes
                       </Button>
                     )}
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleEditMeeting(meeting)}
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleDeleteMeeting(meeting.id)}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
               </CardHeader>
