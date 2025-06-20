@@ -39,6 +39,7 @@ export default function Dashboard() {
   const navigationStructure = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, type: "item" },
     { id: "collections", label: "Collections Log", icon: Sandwich, type: "item" },
+    { id: "messages", label: "Messages", icon: MessageCircle, type: "item" },
     { 
       id: "team", 
       label: "Team", 
@@ -48,6 +49,7 @@ export default function Dashboard() {
         { id: "hosts", label: "Hosts", icon: Building2 },
         { id: "recipients", label: "Recipients", icon: Users },
         { id: "drivers", label: "Drivers", icon: Car },
+        { id: "committee", label: "Committee", icon: MessageCircle },
       ]
     },
     { 
@@ -235,6 +237,21 @@ export default function Dashboard() {
           </div>
         );
 
+      case "committee":
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-xl">
+                <MessageCircle className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Committee Communications</h1>
+                <p className="text-gray-600 dark:text-gray-300">Internal committee discussions and collaboration</p>
+              </div>
+            </div>
+            <ChatHub />
+          </div>
+        );
       case "development":
         return <Development />;
       default:
