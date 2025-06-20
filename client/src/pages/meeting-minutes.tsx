@@ -71,6 +71,28 @@ export default function MeetingMinutes() {
     },
   });
 
+  const deleteMinutesMutation = useMutation({
+    mutationFn: async (minutesId: number) => {
+      const response = await fetch(`/api/meeting-minutes/${minutesId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete meeting minutes");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/meeting-minutes"] });
+      setViewingMinutes(null);
+      toast({ title: "Meeting minutes deleted successfully" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Error deleting meeting minutes", 
+        description: error.message,
+        variant: "destructive"
+      });
+    },
+  });
+
   const createMeetingMutation = useMutation({
     mutationFn: async (meetingData: InsertMeeting) => {
       const response = await fetch("/api/meetings", {
@@ -334,6 +356,14 @@ export default function MeetingMinutes() {
         <div className="flex items-center justify-between">
           <Button variant="outline" onClick={() => setViewingMinutes(null)}>
             ← Back to Meetings
+          </Button>
+          <Button 
+            variant="destructive" 
+            onClick={() => deleteMinutesMutation.mutate(viewingMinutes.id)}
+            disabled={deleteMinutesMutation.isPending}
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            {deleteMinutesMutation.isPending ? "Deleting..." : "Delete Minutes"}
           </Button>
         </div>
         
