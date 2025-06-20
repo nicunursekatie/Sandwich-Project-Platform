@@ -323,6 +323,10 @@ export default function MeetingMinutes() {
 
   // Show individual meeting minutes view
   if (viewingMinutes) {
+    const isGoogleDocsLink = viewingMinutes.summary.startsWith("Google Docs link:");
+    const isUploadedFile = viewingMinutes.summary.startsWith("Uploaded file:") || viewingMinutes.summary.startsWith("Document uploaded:");
+    const extractionFailed = viewingMinutes.summary.includes("content extraction failed");
+    
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -341,15 +345,14 @@ export default function MeetingMinutes() {
               Meeting Date: {new Date(viewingMinutes.date).toLocaleDateString()}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h4 className="font-semibold mb-2">Summary</h4>
-              <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
-                {viewingMinutes.summary}
-              </p>
-            </div>
-            {viewingMinutes.summary.includes("Google Docs link:") && (
-              <div>
+          <CardContent className="space-y-6">
+            {/* Document Type Indicator */}
+            {isGoogleDocsLink && (
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Link className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <span className="font-semibold text-blue-900 dark:text-blue-100">Google Docs Document</span>
+                </div>
                 <Button variant="outline" asChild>
                   <a href={viewingMinutes.summary.split("Google Docs link: ")[1]} target="_blank" rel="noopener noreferrer">
                     <Link className="w-4 h-4 mr-2" />
@@ -358,6 +361,52 @@ export default function MeetingMinutes() {
                 </Button>
               </div>
             )}
+            
+            {isUploadedFile && !extractionFailed && (
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-green-600 dark:text-green-400" />
+                  <span className="font-semibold text-green-900 dark:text-green-100">Document Content Extracted</span>
+                </div>
+                <p className="text-sm text-green-700 dark:text-green-300 mt-1">
+                  Content has been extracted and is displayed below
+                </p>
+              </div>
+            )}
+            
+            {isUploadedFile && extractionFailed && (
+              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                  <span className="font-semibold text-orange-900 dark:text-orange-100">Document Uploaded</span>
+                </div>
+                <p className="text-sm text-orange-700 dark:text-orange-300 mt-1">
+                  File was uploaded successfully but content could not be extracted for preview
+                </p>
+              </div>
+            )}
+
+            {/* Document Content */}
+            <div>
+              <h4 className="font-semibold text-lg mb-4 text-gray-900 dark:text-gray-100">Meeting Minutes Content</h4>
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
+                {isGoogleDocsLink ? (
+                  <p className="text-gray-600 dark:text-gray-400 italic text-center py-8">
+                    This document is hosted on Google Docs. Click "Open in Google Docs" above to view the full content.
+                  </p>
+                ) : extractionFailed ? (
+                  <p className="text-orange-600 dark:text-orange-400 text-center py-8">
+                    The document was uploaded successfully, but the content could not be extracted for preview.
+                  </p>
+                ) : (
+                  <div className="prose max-w-none dark:prose-invert">
+                    <div className="whitespace-pre-wrap text-gray-900 dark:text-gray-100 leading-relaxed">
+                      {viewingMinutes.summary}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

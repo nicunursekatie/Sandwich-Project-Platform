@@ -6,6 +6,7 @@ import session from "express-session";
 import multer from "multer";
 import { parse } from 'csv-parse/sync';
 import fs from 'fs/promises';
+import mammoth from 'mammoth';
 import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
@@ -1172,8 +1173,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       let finalSummary = summary;
+      let documentContent = "";
       
-      // Handle file upload
+      // Handle file upload and extract content
       if (req.file) {
         logger.info("Meeting minutes file uploaded", { 
           filename: req.file.filename,
@@ -1182,7 +1184,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
           meetingId: meetingId
         });
         
-        finalSummary = `Uploaded file: ${req.file.originalname}`;
+        try {
+          const fileBuffer = await fs.readFile(req.file.path);
+          
+          if (req.file.mimetype === 'application/pdf') {
+            // Extract text from PDF using dynamic import
+            try {
+              const pdfParse = (await import('pdf-parse')).default;
+              const pdfData = await pdfParse(fileBuffer);
+              documentContent = pdfData.text;
+            } catch (pdfError) {
+              logger.error("PDF parsing failed", pdfError);
+              documentContent = "";
+            }
+          } else if (req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
+                     req.file.originalname.toLowerCase().endsWith('.docx')) {
+            // Extract text from DOCX
+            const result = await mammoth.extractRawText({ buffer: fileBuffer });
+            documentContent = result.value;
+          } else if (req.file.mimetype === 'application/msword' || 
+                     req.file.originalname.toLowerCase().endsWith('.doc')) {
+            // For older DOC files, mammoth can still try to extract
+            const result = await mammoth.extractRawText({ buffer: fileBuffer });
+            documentContent = result.value;
+          }
+          
+          // Use extracted content as summary if available
+          if (documentContent.trim()) {
+            finalSummary = documentContent.trim();
+          } else {
+            finalSummary = `Document uploaded: ${req.file.originalname} (content extraction failed)`;
+          }
+          
+          // Clean up uploaded file
+          await fs.unlink(req.file.path);
+          
+        } catch (extractError) {
+          logger.error("Failed to extract document content", extractError);
+          finalSummary = `Document uploaded: ${req.file.originalname} (content extraction failed)`;
+          // Clean up uploaded file even if extraction failed
+          try {
+            await fs.unlink(req.file.path);
+          } catch (unlinkError) {
+            logger.error("Failed to clean up uploaded file", unlinkError);
+          }
+        }
       }
       
       // Handle Google Docs URL
@@ -1215,7 +1261,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: true,
         message: "Meeting minutes uploaded successfully",
         minutes: minutes,
-        filename: req.file?.originalname
+        filename: req.file?.originalname,
+        extractedContent: documentContent ? true : false
       });
 
     } catch (error: any) {
