@@ -519,45 +519,145 @@ export default function ProjectDetail() {
                           </button>
                           
                           <div className="flex-1">
-                            <h4 className={`font-medium ${task.status === "completed" ? "line-through text-gray-500" : ""}`}>
-                              {task.title}
-                            </h4>
-                            {task.description && (
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                {task.description}
-                              </p>
+                            {editingTask === task.id ? (
+                              <div className="space-y-3">
+                                <Input
+                                  value={editingTaskData[task.id]?.title || task.title}
+                                  onChange={(e) => setEditingTaskData({
+                                    ...editingTaskData,
+                                    [task.id]: { ...editingTaskData[task.id], title: e.target.value }
+                                  })}
+                                  placeholder="Task title"
+                                />
+                                <Textarea
+                                  value={editingTaskData[task.id]?.description || task.description || ""}
+                                  onChange={(e) => setEditingTaskData({
+                                    ...editingTaskData,
+                                    [task.id]: { ...editingTaskData[task.id], description: e.target.value }
+                                  })}
+                                  placeholder="Task description"
+                                  rows={2}
+                                />
+                                <Select
+                                  value={editingTaskData[task.id]?.priority || task.priority}
+                                  onValueChange={(value) => setEditingTaskData({
+                                    ...editingTaskData,
+                                    [task.id]: { ...editingTaskData[task.id], priority: value }
+                                  })}
+                                >
+                                  <SelectTrigger className="w-32">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="low">Low</SelectItem>
+                                    <SelectItem value="medium">Medium</SelectItem>
+                                    <SelectItem value="high">High</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <div className="flex gap-2">
+                                  <Button size="sm" onClick={() => handleTaskSave(task.id)}>
+                                    Save
+                                  </Button>
+                                  <Button size="sm" variant="outline" onClick={handleTaskCancel}>
+                                    Cancel
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <>
+                                <h4 className={`font-medium ${task.status === "completed" ? "line-through text-gray-500" : ""}`}>
+                                  {task.title}
+                                </h4>
+                                {task.description && (
+                                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                    {task.description}
+                                  </p>
+                                )}
+                                <div className="flex items-center gap-2 mt-2">
+                                  <Badge className={`${getPriorityColor(task.priority)} text-white text-xs`}>
+                                    {task.priority}
+                                  </Badge>
+                                  <Badge variant="outline" className="text-xs capitalize">
+                                    {task.status.replace("_", " ")}
+                                  </Badge>
+                                  {task.completedAt && (
+                                    <span className="text-xs text-gray-500">
+                                      Completed {new Date(task.completedAt).toLocaleDateString()}
+                                    </span>
+                                  )}
+                                </div>
+                                
+                                {/* File Attachments */}
+                                {task.attachments && (() => {
+                                  try {
+                                    const attachments = JSON.parse(task.attachments);
+                                    return attachments.length > 0 ? (
+                                      <div className="mt-2">
+                                        <p className="text-xs text-gray-500 mb-1">Attachments:</p>
+                                        <div className="flex flex-wrap gap-1">
+                                          {attachments.map((file: any, index: number) => (
+                                            <Badge key={index} variant="outline" className="text-xs">
+                                              📎 {file.originalname}
+                                            </Badge>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    ) : null;
+                                  } catch {
+                                    return null;
+                                  }
+                                })()}
+                              </>
                             )}
-                            <div className="flex items-center gap-2 mt-2">
-                              <Badge className={`${getPriorityColor(task.priority)} text-white text-xs`}>
-                                {task.priority}
-                              </Badge>
-                              <Badge variant="outline" className="text-xs capitalize">
-                                {task.status.replace("_", " ")}
-                              </Badge>
-                              {task.completedAt && (
-                                <span className="text-xs text-gray-500">
-                                  Completed {new Date(task.completedAt).toLocaleDateString()}
-                                </span>
-                              )}
-                            </div>
                           </div>
                         </div>
                         
-                        <div className="flex items-center gap-2">
-                          <Select
-                            value={task.status}
-                            onValueChange={(value) => handleTaskStatusChange(task.id, value)}
-                          >
-                            <SelectTrigger className="w-32">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="pending">Pending</SelectItem>
-                              <SelectItem value="in_progress">In Progress</SelectItem>
-                              <SelectItem value="completed">Completed</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                        {editingTask !== task.id && (
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="file"
+                              multiple
+                              accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.txt,.csv,.xlsx"
+                              onChange={(e) => e.target.files && handleFileUpload(task.id, e.target.files)}
+                              className="hidden"
+                              id={`file-upload-${task.id}`}
+                            />
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => document.getElementById(`file-upload-${task.id}`)?.click()}
+                            >
+                              📎
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleTaskEdit(task)}
+                            >
+                              ✏️
+                            </Button>
+                            <Select
+                              value={task.status}
+                              onValueChange={(value) => handleTaskStatusChange(task.id, value)}
+                            >
+                              <SelectTrigger className="w-32">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="in_progress">In Progress</SelectItem>
+                                <SelectItem value="completed">Completed</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => deleteTaskMutation.mutate(task.id)}
+                            >
+                              🗑️
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))
