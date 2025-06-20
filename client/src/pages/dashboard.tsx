@@ -84,7 +84,8 @@ export default function Dashboard() {
       case "messages":
         return <ChatHub />;
       case "meetings":
-        return <MeetingAgenda />;
+        window.location.href = "/meetings";
+        return null;
       case "reports":
         window.location.href = "/reports";
         return null;
