@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar, Clock, FileText, Upload, Eye, Download, Link, Edit, Trash2, Plus } from "lucide-react";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { DocumentViewer } from '@/components/DocumentViewer';
 import type { Meeting, MeetingMinutes, InsertMeeting } from "@shared/schema";
 
 export default function MeetingMinutes() {
@@ -432,24 +433,29 @@ export default function MeetingMinutes() {
 
             {/* Document Content */}
             <div>
-              <h4 className="font-semibold text-lg mb-4 text-gray-900 dark:text-gray-100">Meeting Minutes Content</h4>
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
-                {isGoogleDocsLink ? (
+              <h4 className="font-semibold text-lg mb-4 text-gray-900 dark:text-gray-100">Meeting Minutes Document</h4>
+              {isGoogleDocsLink ? (
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
                   <p className="text-gray-600 dark:text-gray-400 italic text-center py-8">
                     This document is hosted on Google Docs. Click "Open in Google Docs" above to view the full content.
                   </p>
-                ) : extractionFailed ? (
-                  <p className="text-orange-600 dark:text-orange-400 text-center py-8">
-                    The document was uploaded successfully, but the content could not be extracted for preview.
-                  </p>
-                ) : (
+                </div>
+              ) : viewingMinutes.fileName && viewingMinutes.filePath ? (
+                <DocumentViewer
+                  fileName={viewingMinutes.fileName}
+                  fileType={viewingMinutes.fileType || 'unknown'}
+                  filePath={viewingMinutes.filePath}
+                  mimeType={viewingMinutes.mimeType || undefined}
+                />
+              ) : (
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
                   <div className="prose max-w-none dark:prose-invert">
                     <div className="whitespace-pre-wrap text-gray-900 dark:text-gray-100 leading-relaxed">
                       {viewingMinutes.summary}
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
