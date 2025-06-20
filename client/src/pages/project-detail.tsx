@@ -25,6 +25,7 @@ export default function ProjectDetail() {
   const [newComment, setNewComment] = useState("");
   const [editingTaskData, setEditingTaskData] = useState<{ [taskId: number]: { title: string; description: string; priority: string } }>({});
   const [projectForm, setProjectForm] = useState<Partial<Project>>({});
+  const [projectFiles, setProjectFiles] = useState<any[]>([]);
 
   // Fetch project details
   const { data: project, isLoading: projectLoading } = useQuery<Project>({
@@ -167,6 +168,43 @@ export default function ProjectDetail() {
     }
   });
 
+  // Mutation to upload project files
+  const uploadProjectFilesMutation = useMutation({
+    mutationFn: async (files: FileList) => {
+      const formData = new FormData();
+      Array.from(files).forEach(file => {
+        formData.append('files', file);
+      });
+      
+      const response = await fetch(`/api/projects/${id}/files`, {
+        method: "POST",
+        body: formData
+      });
+      if (!response.ok) throw new Error('File upload failed');
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({ title: "Files uploaded successfully" });
+      // Refresh project files list
+      fetchProjectFiles();
+    },
+    onError: () => {
+      toast({ title: "Failed to upload files", variant: "destructive" });
+    }
+  });
+
+  const fetchProjectFiles = async () => {
+    try {
+      const response = await fetch(`/api/projects/${id}/files`);
+      if (response.ok) {
+        const files = await response.json();
+        setProjectFiles(files);
+      }
+    } catch (error) {
+      console.error('Failed to fetch project files:', error);
+    }
+  };
+
   const handleAddTask = () => {
     if (!newTask.title.trim()) return;
     addTaskMutation.mutate({
@@ -219,6 +257,30 @@ export default function ProjectDetail() {
   const handleTaskCancel = () => {
     setEditingTask(null);
   };
+
+  const handleProjectFilesUpload = (files: FileList) => {
+    uploadProjectFilesMutation.mutate(files);
+  };
+
+  // Initialize project form when project data is available
+  useEffect(() => {
+    if (project) {
+      setProjectForm({
+        title: project.title,
+        description: project.description,
+        category: project.category,
+        priority: project.priority,
+        status: project.status
+      });
+    }
+  }, [project]);
+
+  // Fetch project files on component mount
+  useEffect(() => {
+    if (id) {
+      fetchProjectFiles();
+    }
+  }, [id]);
 
   const handleFileUpload = async (taskId: number, files: FileList) => {
     if (!files || files.length === 0) return;
@@ -391,6 +453,14 @@ export default function ProjectDetail() {
                   placeholder="Project description"
                   rows={3}
                 />
+              </div>
+              <div className="flex gap-2 pt-4">
+                <Button onClick={handleProjectSave} disabled={updateProjectMutation.isPending}>
+                  {updateProjectMutation.isPending ? "Saving..." : "Save Changes"}
+                </Button>
+                <Button variant="outline" onClick={() => setEditingProject(false)}>
+                  Cancel
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -777,11 +847,87 @@ export default function ProjectDetail() {
           <TabsContent value="files">
             <Card>
               <CardHeader>
-                <CardTitle>Project Files</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="w-5 h-5" />
+                  Project Files
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-gray-500">
-                  File management coming soon...
+              <CardContent className="space-y-4">
+                {/* File Upload Area */}
+                <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-gray-400 dark:hover:border-gray-500 transition-colors">
+                  <input
+                    type="file"
+                    multiple
+                    className="hidden"
+                    id="project-file-upload"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files.length > 0) {
+                        handleProjectFilesUpload(e.target.files);
+                        e.target.value = '';
+                      }
+                    }}
+                  />
+                  <label htmlFor="project-file-upload" className="cursor-pointer">
+                    <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                      Click to upload files or drag and drop
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Supports documents, images, and other project files
+                    </p>
+                  </label>
+                </div>
+
+                {uploadProjectFilesMutation.isPending && (
+                  <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                    Uploading files...
+                  </div>
+                )}
+
+                {/* Files List */}
+                <div className="space-y-2">
+                  {projectFiles.length > 0 ? (
+                    projectFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <FileText className="w-5 h-5 text-gray-500" />
+                          <div>
+                            <p className="font-medium text-sm">{file.name || `File ${index + 1}`}</p>
+                            <p className="text-xs text-gray-500">
+                              {file.size ? `${(file.size / 1024).toFixed(1)} KB` : 'Unknown size'} • 
+                              {file.uploadedAt ? new Date(file.uploadedAt).toLocaleDateString() : 'Recently uploaded'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {file.url && (
+                            <Button variant="ghost" size="sm" asChild>
+                              <a href={file.url} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="w-4 h-4" />
+                              </a>
+                            </Button>
+                          )}
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => {
+                              // Add delete functionality here
+                              console.log('Delete file:', file);
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4 text-red-500" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <FileText className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                      <p className="text-sm">No files uploaded yet</p>
+                      <p className="text-xs text-gray-400">Upload files to share with your project team</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
