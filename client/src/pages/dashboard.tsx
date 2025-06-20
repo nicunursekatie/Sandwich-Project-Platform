@@ -16,6 +16,7 @@ import PhoneDirectory from "@/components/phone-directory";
 import BulkDataManager from "@/components/bulk-data-manager";
 import AnalyticsDashboard from "@/components/analytics-dashboard";
 import Development from "@/pages/development";
+import MeetingsLandingPage from "@/pages/meetings";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/authUtils";
@@ -84,8 +85,7 @@ export default function Dashboard() {
       case "messages":
         return <ChatHub />;
       case "meetings":
-        window.location.href = "/meetings";
-        return null;
+        return <MeetingsLandingPage />;
       case "reports":
         window.location.href = "/reports";
         return null;
