@@ -131,6 +131,10 @@ export const meetingMinutes = pgTable("meeting_minutes", {
   date: text("date").notNull(), // date string
   summary: text("summary").notNull(),
   color: text("color").notNull().default("blue"), // for border color
+  fileName: text("file_name"), // original uploaded file name
+  filePath: text("file_path"), // stored file path
+  fileType: text("file_type"), // 'pdf', 'docx', 'google_docs', 'text'
+  mimeType: text("mime_type"), // file mime type
 });
 
 export const driveLinks = pgTable("drive_links", {

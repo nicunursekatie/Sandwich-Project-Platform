@@ -6,6 +6,7 @@ import session from "express-session";
 import multer from "multer";
 import { parse } from 'csv-parse/sync';
 import fs from 'fs/promises';
+import path from 'path';
 import mammoth from 'mammoth';
 import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
@@ -13,6 +14,20 @@ import { sendDriverAgreementNotification } from "./sendgrid";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
 import { insertProjectSchema, insertProjectTaskSchema, insertProjectCommentSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
+
+// Extend Request interface to include file metadata
+declare global {
+  namespace Express {
+    interface Request {
+      fileMetadata?: {
+        fileName: string;
+        filePath: string;
+        fileType: string;
+        mimeType: string;
+      };
+    }
+  }
+}
 import dataManagementRoutes from "./routes/data-management";
 import { registerPerformanceRoutes } from "./routes/performance";
 import { SearchEngine } from "./search-engine";
@@ -1197,7 +1212,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let finalSummary = summary;
       let documentContent = "";
       
-      // Handle file upload and extract content
+      // Handle file upload and store file
       if (req.file) {
         logger.info("Meeting minutes file uploaded", { 
           filename: req.file.filename,
@@ -1207,38 +1222,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
         
         try {
-          const fileBuffer = await fs.readFile(req.file.path);
+          // Create permanent storage path
+          const uploadsDir = path.join(process.cwd(), 'uploads', 'meeting-minutes');
+          await fs.mkdir(uploadsDir, { recursive: true });
           
+          const permanentPath = path.join(uploadsDir, req.file.filename);
+          await fs.copyFile(req.file.path, permanentPath);
+          
+          // Determine file type
+          let fileType = 'unknown';
           if (req.file.mimetype === 'application/pdf') {
-            // PDF content extraction is not yet implemented
-            // For now, note that a PDF was uploaded
-            documentContent = `PDF document uploaded: ${req.file.originalname}. PDF content extraction will be available in a future update.`;
+            fileType = 'pdf';
+            finalSummary = `PDF document: ${req.file.originalname}`;
           } else if (req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
                      req.file.originalname.toLowerCase().endsWith('.docx')) {
-            // Extract text from DOCX
-            const result = await mammoth.extractRawText({ buffer: fileBuffer });
-            documentContent = result.value;
+            fileType = 'docx';
+            finalSummary = `DOCX document: ${req.file.originalname}`;
           } else if (req.file.mimetype === 'application/msword' || 
                      req.file.originalname.toLowerCase().endsWith('.doc')) {
-            // For older DOC files, mammoth can still try to extract
-            const result = await mammoth.extractRawText({ buffer: fileBuffer });
-            documentContent = result.value;
-          }
-          
-          // Use extracted content as summary if available
-          if (documentContent.trim()) {
-            finalSummary = documentContent.trim();
+            fileType = 'doc';
+            finalSummary = `DOC document: ${req.file.originalname}`;
           } else {
-            finalSummary = `Document uploaded: ${req.file.originalname} (content extraction failed)`;
+            finalSummary = `Document: ${req.file.originalname}`;
           }
           
-          // Clean up uploaded file
+          // Store file metadata for later retrieval
+          req.fileMetadata = {
+            fileName: req.file.originalname,
+            filePath: permanentPath,
+            fileType: fileType,
+            mimeType: req.file.mimetype
+          };
+          
+          // Clean up temporary file
           await fs.unlink(req.file.path);
           
-        } catch (extractError) {
-          logger.error("Failed to extract document content", extractError);
-          finalSummary = `Document uploaded: ${req.file.originalname} (content extraction failed)`;
-          // Clean up uploaded file even if extraction failed
+        } catch (fileError) {
+          logger.error("Failed to store document file", fileError);
+          finalSummary = `Document uploaded: ${req.file.originalname} (storage failed)`;
+          // Clean up uploaded file even if storage failed
           try {
             await fs.unlink(req.file.path);
           } catch (unlinkError) {
@@ -1260,7 +1282,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const minutesData = {
         title,
         date,
-        summary: finalSummary
+        summary: finalSummary,
+        fileName: req.fileMetadata?.fileName || null,
+        filePath: req.fileMetadata?.filePath || null,
+        fileType: req.fileMetadata?.fileType || (googleDocsUrl ? 'google_docs' : 'text'),
+        mimeType: req.fileMetadata?.mimeType || null
       };
 
       const minutes = await storage.createMeetingMinutes(minutesData);
@@ -1287,6 +1313,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Failed to upload meeting minutes",
         error: error.message 
       });
+    }
+  });
+
+  // File serving endpoint for meeting minutes documents
+  app.get("/api/files/:filename", async (req, res) => {
+    try {
+      const filename = req.params.filename;
+      const filePath = path.join(process.cwd(), 'uploads', 'meeting-minutes', filename);
+      
+      // Check if file exists
+      try {
+        await fs.access(filePath);
+      } catch {
+        return res.status(404).json({ message: "File not found" });
+      }
+      
+      // Get file info
+      const stats = await fs.stat(filePath);
+      const fileBuffer = await fs.readFile(filePath);
+      
+      // Determine content type based on file extension
+      const ext = path.extname(filename).toLowerCase();
+      let contentType = 'application/octet-stream';
+      
+      if (ext === '.pdf') {
+        contentType = 'application/pdf';
+      } else if (ext === '.docx') {
+        contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      } else if (ext === '.doc') {
+        contentType = 'application/msword';
+      }
+      
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Length', stats.size);
+      res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+      
+      res.send(fileBuffer);
+      
+    } catch (error) {
+      logger.error("Failed to serve file", error);
+      res.status(500).json({ message: "Failed to serve file" });
     }
   });
 
