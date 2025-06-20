@@ -10,7 +10,10 @@ import { LoadingState } from "@/components/ui/loading";
 import { ErrorBoundary } from "@/components/error-boundary";
 
 import Dashboard from "@/pages/dashboard";
-import Meetings from "@/pages/meetings";
+import MeetingsLandingPage from "@/pages/meetings";
+import MeetingMinutes from "@/pages/meeting-minutes";
+import MeetingAgenda from "@/pages/meeting-agenda";
+import MeetingCalendar from "@/pages/meeting-calendar";
 import Development from "@/pages/development";
 import PhoneDirectoryPage from "@/pages/phone-directory";
 import RoleDemo from "@/pages/role-demo";
@@ -46,7 +49,10 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Dashboard} />
-      <Route path="/meetings" component={Meetings} />
+      <Route path="/meetings" component={MeetingsLandingPage} />
+      <Route path="/meetings/minutes" component={MeetingMinutes} />
+      <Route path="/meetings/agenda" component={MeetingAgenda} />
+      <Route path="/meetings/calendar" component={MeetingCalendar} />
       <Route path="/development" component={Development} />
       <Route path="/phone-directory" component={PhoneDirectoryPage} />
       <Route path="/role-demo" component={RoleDemo} />
