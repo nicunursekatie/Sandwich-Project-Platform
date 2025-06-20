@@ -1,18 +1,12 @@
 import { useState, useMemo } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { queryClient } from "@/lib/queryClient";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
-import { TrendingUp, Calendar, Users, MapPin, AlertTriangle, BarChart3, PieChart as PieChartIcon, Crown, Clock, Edit, CheckSquare, Square } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { TrendingUp, Calendar, Award, MapPin, Target, BarChart3, Crown, Lightbulb, Star, ChevronUp } from "lucide-react";
 import type { SandwichCollection } from "@shared/schema";
 
 interface AnalyticsData {
@@ -20,52 +14,35 @@ interface AnalyticsData {
   totalSandwiches: number;
   uniqueHosts: number;
   dateRange: { start: string; end: string };
-  avgPerCollection: number;
-  avgPerLocationCollection: number;
   weeklyAverage: number;
-  topHosts: Array<{ host: string; count: number; total: number }>;
-  monthlyTrends: Array<{ month: string; collections: number; sandwiches: number }>;
-  weeklyPatterns: Array<{ day: string; collections: number; avg: number }>;
-  hostDistribution: Array<{ name: string; value: number; color: string }>;
-  qualityMetrics: {
-    withGroups: number;
-    withoutGroups: number;
-    missingData: number;
-    suspiciousEntries: number;
+  
+  // Achievement highlights
+  achievements: {
+    recordWeek: { date: string; count: number };
+    topPerformer: { host: string; total: number; weeks: number };
+    consistencyChampion: { host: string; avgWeekly: number };
+    growthStory: { improvement: number; period: string };
   };
-  ogAnalysis: {
-    ogCollections: number;
-    ogSandwiches: number;
-    preLocationPeriod: string;
-    locationBasedPeriod: string;
-    locationCollections: number;
-    locationSandwiches: number;
+  
+  // Strategic insights (diplomatically framed)
+  insights: {
+    seasonalOpportunities: Array<{ period: string; potential: number; context: string }>;
+    collaborationOpportunities: Array<{ area: string; suggestion: string; benefit: string }>;
+    momentumBuilders: Array<{ week: string; description: string; impact: string }>;
+  };
+  
+  // Positive trends and patterns
+  trends: {
+    monthlyGrowth: Array<{ month: string; collections: number; sandwiches: number; trend: 'up' | 'stable' | 'seasonal' }>;
+    weeklyPatterns: Array<{ week: number; avg: number; label: string }>;
+    networkStrength: { totalPartners: number; activeRegions: number; avgParticipation: number };
   };
 }
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC658', '#FF7C7C', '#8DD1E1', '#D084D0'];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
 
 export default function CollectionAnalytics() {
-  const [dateFilter, setDateFilter] = useState({ start: "", end: "" });
-  const [hostFilter, setHostFilter] = useState("");
-  const [selectedMetric, setSelectedMetric] = useState("sandwiches");
-  const [sandwichFilter, setSandwichFilter] = useState({ min: "", max: "" });
-  const [collectionTypeFilter, setCollectionTypeFilter] = useState("all");
-  const [editingCollection, setEditingCollection] = useState<SandwichCollection | null>(null);
-  const [editForm, setEditForm] = useState({
-    collectionDate: "",
-    hostName: "",
-    individualSandwiches: 0,
-    groupCollections: "",
-  });
-  const [selectedCollections, setSelectedCollections] = useState<Set<number>>(new Set());
-  const [showBatchEdit, setShowBatchEdit] = useState(false);
-  const [batchEditData, setBatchEditData] = useState({
-    hostName: "",
-    collectionDate: ""
-  });
-
-  const { toast } = useToast();
+  const [viewMode, setViewMode] = useState<'achievements' | 'insights' | 'trends'>('achievements');
 
   // Helper function to normalize group data from various formats
   const parseGroupCollections = (groupCollections: any): number => {
