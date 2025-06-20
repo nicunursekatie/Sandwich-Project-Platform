@@ -4,10 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, FileText, Upload, Eye, Download, Link, Edit, Trash2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar, Clock, FileText, Upload, Eye, Download, Link, Edit, Trash2, Plus } from "lucide-react";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import type { Meeting, MeetingMinutes } from "@shared/schema";
+import type { Meeting, MeetingMinutes, InsertMeeting } from "@shared/schema";
 
 export default function MeetingMinutes() {
   const [selectedMeetingId, setSelectedMeetingId] = useState<number | null>(null);
@@ -16,6 +18,15 @@ export default function MeetingMinutes() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [googleDocsUrl, setGoogleDocsUrl] = useState("");
   const [uploadType, setUploadType] = useState<"file" | "google_docs">("file");
+  const [isCreatingMeeting, setIsCreatingMeeting] = useState(false);
+  const [newMeetingData, setNewMeetingData] = useState({
+    title: "",
+    date: "",
+    time: "",
+    type: "core_team" as "core_team" | "board" | "committee" | "special",
+    location: "",
+    description: ""
+  });
   const { toast } = useToast();
 
   // Fetch all meetings
@@ -58,6 +69,38 @@ export default function MeetingMinutes() {
       queryClient.invalidateQueries({ queryKey: ["/api/meetings"] });
       toast({ title: "Meeting deleted successfully" });
     },
+  });
+
+  const createMeetingMutation = useMutation({
+    mutationFn: async (meetingData: InsertMeeting) => {
+      const response = await fetch("/api/meetings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(meetingData),
+      });
+      if (!response.ok) throw new Error("Failed to create meeting");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/meetings"] });
+      setIsCreatingMeeting(false);
+      setNewMeetingData({
+        title: "",
+        date: "",
+        time: "",
+        type: "core_team",
+        location: "",
+        description: ""
+      });
+      toast({ title: "Meeting created successfully" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Error creating meeting", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    }
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -129,6 +172,22 @@ export default function MeetingMinutes() {
     if (confirm("Are you sure you want to delete this meeting? This action cannot be undone.")) {
       deleteMeetingMutation.mutate(meetingId);
     }
+  };
+
+  const handleCreateMeeting = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const meetingData: InsertMeeting = {
+      title: newMeetingData.title,
+      date: newMeetingData.date,
+      time: newMeetingData.time || null,
+      type: newMeetingData.type,
+      location: newMeetingData.location || null,
+      description: newMeetingData.description || null,
+      status: "scheduled"
+    };
+
+    createMeetingMutation.mutate(meetingData);
   };
 
   const getMeetingMinutes = (meetingId: number) => {
@@ -315,6 +374,10 @@ export default function MeetingMinutes() {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Meeting Minutes</h1>
           <p className="text-gray-600 dark:text-gray-400">Upload and view minutes for scheduled meetings</p>
         </div>
+        <Button onClick={() => setIsCreatingMeeting(true)} className="flex items-center gap-2">
+          <Plus className="w-4 h-4" />
+          Create Meeting
+        </Button>
       </div>
 
       {/* Meetings List */}
