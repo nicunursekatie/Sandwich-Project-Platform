@@ -477,6 +477,20 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async updateMeeting(id: number, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateMeeting(id, updates),
+      () => this.fallbackStorage.updateMeeting(id, updates)
+    );
+  }
+
+  async deleteMeeting(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteMeeting(id),
+      () => this.fallbackStorage.deleteMeeting(id)
+    );
+  }
+
   async createDriverAgreement(agreement: any) {
     return this.executeWithFallback(
       () => this.primaryStorage.createDriverAgreement(agreement),

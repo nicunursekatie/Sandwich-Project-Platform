@@ -93,6 +93,8 @@ export interface IStorage {
   getMeetingsByType(type: string): Promise<Meeting[]>;
   createMeeting(meeting: InsertMeeting): Promise<Meeting>;
   updateMeetingAgenda(id: number, agenda: string): Promise<Meeting | undefined>;
+  updateMeeting(id: number, updates: Partial<Meeting>): Promise<Meeting | undefined>;
+  deleteMeeting(id: number): Promise<boolean>;
   
   // Driver Agreements (admin access only)
   createDriverAgreement(agreement: InsertDriverAgreement): Promise<DriverAgreement>;
@@ -619,6 +621,22 @@ export class MemStorage implements IStorage {
     };
     this.meetings.set(id, updated);
     return updated;
+  }
+
+  async updateMeeting(id: number, updates: Partial<Meeting>): Promise<Meeting | undefined> {
+    const meeting = this.meetings.get(id);
+    if (!meeting) return undefined;
+    
+    const updated: Meeting = { 
+      ...meeting, 
+      ...updates
+    };
+    this.meetings.set(id, updated);
+    return updated;
+  }
+
+  async deleteMeeting(id: number): Promise<boolean> {
+    return this.meetings.delete(id);
   }
 
   async createDriverAgreement(insertAgreement: InsertDriverAgreement): Promise<DriverAgreement> {

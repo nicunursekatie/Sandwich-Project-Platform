@@ -1263,6 +1263,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.patch("/api/meetings/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid meeting ID" });
+      }
+
+      const updates = req.body;
+      const updatedMeeting = await storage.updateMeeting(id, updates);
+      
+      if (!updatedMeeting) {
+        return res.status(404).json({ message: "Meeting not found" });
+      }
+
+      res.json(updatedMeeting);
+    } catch (error) {
+      logger.error("Failed to update meeting", error);
+      res.status(500).json({ message: "Failed to update meeting" });
+    }
+  });
+
+  app.delete("/api/meetings/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid meeting ID" });
+      }
+
+      const deleted = await storage.deleteMeeting(id);
+      
+      if (!deleted) {
+        return res.status(404).json({ message: "Meeting not found" });
+      }
+
+      res.status(204).send();
+    } catch (error) {
+      logger.error("Failed to delete meeting", error);
+      res.status(500).json({ message: "Failed to delete meeting" });
+    }
+  });
+
   app.post("/api/meetings/:id/upload-agenda", async (req, res) => {
     try {
       const id = parseInt(req.params.id);

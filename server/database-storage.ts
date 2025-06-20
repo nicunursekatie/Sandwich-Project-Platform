@@ -316,6 +316,16 @@ export class DatabaseStorage implements IStorage {
     return meeting || undefined;
   }
 
+  async updateMeeting(id: number, updates: Partial<Meeting>): Promise<Meeting | undefined> {
+    const [meeting] = await db.update(meetings).set(updates).where(eq(meetings.id, id)).returning();
+    return meeting || undefined;
+  }
+
+  async deleteMeeting(id: number): Promise<boolean> {
+    const result = await db.delete(meetings).where(eq(meetings.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
   // Driver Agreements
   async createDriverAgreement(insertAgreement: InsertDriverAgreement): Promise<DriverAgreement> {
     const [agreement] = await db.insert(driverAgreements).values(insertAgreement).returning();
