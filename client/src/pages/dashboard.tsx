@@ -14,7 +14,7 @@ import HostsManagement from "@/components/hosts-management-consolidated";
 import { DocumentsBrowser } from "@/components/documents-browser";
 import PhoneDirectory from "@/components/phone-directory";
 import BulkDataManager from "@/components/bulk-data-manager";
-import CollectionAnalytics from "@/components/collection-analytics";
+import AnalyticsDashboard from "@/components/analytics-dashboard";
 import Development from "@/pages/development";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
@@ -212,7 +212,7 @@ export default function Dashboard() {
                 <TabsTrigger value="impact">Impact Dashboard</TabsTrigger>
               </TabsList>
               <TabsContent value="data" className="mt-6">
-                <CollectionAnalytics />
+                <AnalyticsDashboard />
               </TabsContent>
               <TabsContent value="impact" className="mt-6">
                 <iframe 
