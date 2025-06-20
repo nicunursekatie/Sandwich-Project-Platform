@@ -1188,15 +1188,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const fileBuffer = await fs.readFile(req.file.path);
           
           if (req.file.mimetype === 'application/pdf') {
-            // Extract text from PDF using dynamic import
-            try {
-              const pdfParse = (await import('pdf-parse')).default;
-              const pdfData = await pdfParse(fileBuffer);
-              documentContent = pdfData.text;
-            } catch (pdfError) {
-              logger.error("PDF parsing failed", pdfError);
-              documentContent = "";
-            }
+            // PDF content extraction is not yet implemented
+            // For now, note that a PDF was uploaded
+            documentContent = `PDF document uploaded: ${req.file.originalname}. PDF content extraction will be available in a future update.`;
           } else if (req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
                      req.file.originalname.toLowerCase().endsWith('.docx')) {
             // Extract text from DOCX

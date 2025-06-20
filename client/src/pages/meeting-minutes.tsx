@@ -326,6 +326,8 @@ export default function MeetingMinutes() {
     const isGoogleDocsLink = viewingMinutes.summary.startsWith("Google Docs link:");
     const isUploadedFile = viewingMinutes.summary.startsWith("Uploaded file:") || viewingMinutes.summary.startsWith("Document uploaded:");
     const extractionFailed = viewingMinutes.summary.includes("content extraction failed");
+    const isPdfFile = viewingMinutes.summary && viewingMinutes.summary.includes("PDF content extraction will be available");
+    const hasExtractedContent = viewingMinutes.summary && viewingMinutes.summary.trim() && !isPdfFile && !extractionFailed;
     
     return (
       <div className="space-y-6">
@@ -362,7 +364,7 @@ export default function MeetingMinutes() {
               </div>
             )}
             
-            {isUploadedFile && !extractionFailed && (
+            {hasExtractedContent && (
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
                 <div className="flex items-center gap-2">
                   <FileText className="w-5 h-5 text-green-600 dark:text-green-400" />
@@ -374,7 +376,19 @@ export default function MeetingMinutes() {
               </div>
             )}
             
-            {isUploadedFile && extractionFailed && (
+            {isPdfFile && (
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <span className="font-semibold text-blue-900 dark:text-blue-100">PDF Document Uploaded</span>
+                </div>
+                <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                  PDF uploaded successfully. Text extraction for PDFs will be available in a future update.
+                </p>
+              </div>
+            )}
+            
+            {isUploadedFile && extractionFailed && !isPdfFile && (
               <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
                 <div className="flex items-center gap-2">
                   <FileText className="w-5 h-5 text-orange-600 dark:text-orange-400" />
