@@ -262,6 +262,11 @@ export class DatabaseStorage implements IStorage {
     return minutes;
   }
 
+  async deleteMeetingMinutes(id: number): Promise<boolean> {
+    const result = await db.delete(meetingMinutes).where(eq(meetingMinutes.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
   // Drive Links
   async getAllDriveLinks(): Promise<DriveLink[]> {
     return await db.select().from(driveLinks).orderBy(driveLinks.id);

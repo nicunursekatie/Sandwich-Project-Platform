@@ -399,6 +399,13 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async deleteMeetingMinutes(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteMeetingMinutes(id),
+      () => this.fallbackStorage.deleteMeetingMinutes(id)
+    );
+  }
+
   // Drive Links methods
   async getAllDriveLinks() {
     return this.executeWithFallback(

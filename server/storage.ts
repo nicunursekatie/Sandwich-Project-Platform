@@ -75,6 +75,7 @@ export interface IStorage {
   getAllMeetingMinutes(): Promise<MeetingMinutes[]>;
   getRecentMeetingMinutes(limit: number): Promise<MeetingMinutes[]>;
   createMeetingMinutes(minutes: InsertMeetingMinutes): Promise<MeetingMinutes>;
+  deleteMeetingMinutes(id: number): Promise<boolean>;
   
   // Drive Links
   getAllDriveLinks(): Promise<DriveLink[]>;
@@ -527,6 +528,10 @@ export class MemStorage implements IStorage {
     const minutes: MeetingMinutes = { ...insertMinutes, id };
     this.meetingMinutes.set(id, minutes);
     return minutes;
+  }
+
+  async deleteMeetingMinutes(id: number): Promise<boolean> {
+    return this.meetingMinutes.delete(id);
   }
 
   // Drive Link methods

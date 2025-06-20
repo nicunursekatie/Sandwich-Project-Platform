@@ -1163,6 +1163,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete("/api/meeting-minutes/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteMeetingMinutes(id);
+      
+      if (success) {
+        logger.info("Meeting minutes deleted", { 
+          minutesId: id,
+          method: req.method,
+          url: req.url,
+          ip: req.ip
+        });
+        res.json({ success: true, message: "Meeting minutes deleted successfully" });
+      } else {
+        res.status(404).json({ message: "Meeting minutes not found" });
+      }
+    } catch (error: any) {
+      logger.error("Failed to delete meeting minutes", error);
+      res.status(500).json({ message: "Failed to delete meeting minutes" });
+    }
+  });
+
   // Meeting minutes file upload endpoint
   app.post("/api/meeting-minutes/upload", meetingMinutesUpload.single('file'), async (req, res) => {
     try {
