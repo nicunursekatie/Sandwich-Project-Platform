@@ -367,25 +367,25 @@ export default function ProjectDetail() {
       <div className="lg:ml-16 transition-all duration-300">
         <div className="max-w-7xl mx-auto p-3 sm:p-6 space-y-6">
           {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <Button variant="outline" onClick={() => setLocation("/projects")} className="self-start">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Projects
-            </Button>
-            <div className="min-w-0 flex-1">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white break-words">
-                {editingProject ? (
-                  <Input
-                    value={projectForm.title}
-                    onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })}
-                    className="text-xl sm:text-2xl font-bold"
-                  />
-                ) : (
-                  project.title
-                )}
-              </h1>
-              <div className="flex flex-wrap items-center gap-2 mt-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <Button variant="outline" onClick={() => setLocation("/projects")} className="self-start">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Projects
+              </Button>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white break-words">
+                  {editingProject ? (
+                    <Input
+                      value={projectForm.title}
+                      onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })}
+                      className="text-xl sm:text-2xl font-bold"
+                    />
+                  ) : (
+                    project.title
+                  )}
+                </h1>
+                <div className="flex flex-wrap items-center gap-2 mt-2">
                 <Badge className={`${getStatusColor(project.status || "active")} text-white text-xs`}>
                   {project.status?.replace("_", " ") || "Active"}
                 </Badge>
