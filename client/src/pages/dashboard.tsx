@@ -86,7 +86,13 @@ export default function Dashboard() {
       case "messages":
         return <ChatHub />;
       case "meetings":
-        return <MeetingsLandingPage />;
+        return <MeetingsLandingPage onNavigate={setActiveSection} />;
+      case "minutes":
+        return <MeetingMinutesPage />;
+      case "agenda":
+        return <MeetingAgendaPage />;
+      case "calendar":
+        return <MeetingCalendarPage />;
       case "reports":
         window.location.href = "/reports";
         return null;

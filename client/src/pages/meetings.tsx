@@ -3,7 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Calendar, FileText, ClipboardList, Users } from "lucide-react";
 import { useLocation } from "wouter";
 
-export default function MeetingsLandingPage() {
+interface MeetingsLandingPageProps {
+  onNavigate?: (section: string) => void;
+}
+
+export default function MeetingsLandingPage({ onNavigate }: MeetingsLandingPageProps) {
   const [, setLocation] = useLocation();
 
   const meetingOptions = [
@@ -61,7 +65,13 @@ export default function MeetingsLandingPage() {
                   {option.description}
                 </p>
                 <Button 
-                  onClick={() => setLocation(option.route)}
+                  onClick={() => {
+                    if (onNavigate) {
+                      onNavigate(option.route.replace("/meetings/", ""));
+                    } else {
+                      setLocation(option.route);
+                    }
+                  }}
                   className="w-full"
                   variant="outline"
                 >
