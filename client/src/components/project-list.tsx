@@ -317,7 +317,7 @@ export default function ProjectList() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-semibold text-slate-900">{project.title}</h3>
+                        <h3 className="text-base font-semibold text-slate-900">{project.title}</h3>
                         <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
                           Available
                         </span>
@@ -993,7 +993,7 @@ export default function ProjectList() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-semibold text-slate-900">{project.title}</h3>
+                    <h3 className="text-base font-semibold text-slate-900">{project.title}</h3>
                     <span className={getStatusBadge(project.status)}>
                       {getStatusText(project.status)}
                     </span>
