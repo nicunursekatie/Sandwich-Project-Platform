@@ -119,7 +119,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateProjectTask(id: number, updates: Partial<ProjectTask>): Promise<ProjectTask | undefined> {
-    const [task] = await db.update(projectTasks).set(updates).where(eq(projectTasks.id, id)).returning();
+    // Handle timestamp fields properly
+    const processedUpdates = { ...updates };
+    if (processedUpdates.completedAt && typeof processedUpdates.completedAt === 'string') {
+      processedUpdates.completedAt = new Date(processedUpdates.completedAt);
+    }
+    if (processedUpdates.dueDate && typeof processedUpdates.dueDate === 'string') {
+      processedUpdates.dueDate = new Date(processedUpdates.dueDate);
+    }
+    // Always update the updatedAt timestamp
+    processedUpdates.updatedAt = new Date();
+    
+    const [task] = await db.update(projectTasks).set(processedUpdates).where(eq(projectTasks.id, id)).returning();
     return task || undefined;
   }
 

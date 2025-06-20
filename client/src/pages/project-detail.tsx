@@ -297,7 +297,7 @@ export default function ProjectDetail() {
   const progressPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-3 sm:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -500,12 +500,12 @@ export default function ProjectDetail() {
                     <div className="text-center py-8 text-gray-500">No tasks yet. Add one above!</div>
                   ) : (
                     tasks.map((task: ProjectTask) => (
-                      <div key={task.id} className="border rounded-lg p-4">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-start gap-3 flex-1">
+                      <div key={task.id} className="border rounded-lg p-3 sm:p-4 bg-white dark:bg-gray-800">
+                        <div className="flex flex-col sm:flex-row sm:items-start gap-3">
+                          <div className="flex items-start gap-3 flex-1 min-w-0">
                             <button
                               onClick={() => handleTaskStatusChange(task.id, task.status === "completed" ? "pending" : "completed")}
-                              className="mt-0.5"
+                              className="mt-0.5 flex-shrink-0"
                             >
                               {task.status === "completed" ? (
                                 <CheckCircle2 className="w-5 h-5 text-green-600" />
@@ -609,7 +609,7 @@ export default function ProjectDetail() {
                           </div>
                           
                           {editingTask !== task.id && (
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mt-2 sm:mt-0">
+                            <div className="flex flex-col gap-2 mt-3 sm:mt-0 sm:flex-row sm:items-center sm:ml-auto sm:flex-shrink-0">
                               <input
                                 type="file"
                                 multiple
@@ -618,11 +618,13 @@ export default function ProjectDetail() {
                                 className="hidden"
                                 id={`file-upload-${task.id}`}
                               />
-                              <div className="flex items-center gap-2 flex-wrap">
+                              <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
                                 <Button
                                   size="sm"
                                   variant="outline"
                                   onClick={() => document.getElementById(`file-upload-${task.id}`)?.click()}
+                                  className="p-2"
+                                  title="Attach file"
                                 >
                                   📎
                                 </Button>
@@ -630,6 +632,8 @@ export default function ProjectDetail() {
                                   size="sm"
                                   variant="outline"
                                   onClick={() => handleTaskEdit(task)}
+                                  className="p-2"
+                                  title="Edit task"
                                 >
                                   ✏️
                                 </Button>
@@ -637,7 +641,7 @@ export default function ProjectDetail() {
                                   value={task.status}
                                   onValueChange={(value) => handleTaskStatusChange(task.id, value)}
                                 >
-                                  <SelectTrigger className="w-28 sm:w-32">
+                                  <SelectTrigger className="w-24 sm:w-28 text-xs">
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -650,6 +654,8 @@ export default function ProjectDetail() {
                                   size="sm"
                                   variant="outline"
                                   onClick={() => deleteTaskMutation.mutate(task.id)}
+                                  className="p-2"
+                                  title="Delete task"
                                 >
                                   🗑️
                                 </Button>
