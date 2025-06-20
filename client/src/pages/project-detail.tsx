@@ -23,6 +23,7 @@ export default function ProjectDetail() {
   const [editingTask, setEditingTask] = useState<number | null>(null);
   const [newTask, setNewTask] = useState({ title: "", description: "", priority: "medium" });
   const [newComment, setNewComment] = useState("");
+  const [commentAuthor, setCommentAuthor] = useState("");
   const [editingTaskData, setEditingTaskData] = useState<{ [taskId: number]: { title: string; description: string; priority: string } }>({});
   const [projectForm, setProjectForm] = useState<Partial<Project>>({});
   const [projectFiles, setProjectFiles] = useState<any[]>([]);
@@ -144,14 +145,14 @@ export default function ProjectDetail() {
 
   // Mutation to add comment
   const addCommentMutation = useMutation({
-    mutationFn: async (comment: string) => {
+    mutationFn: async ({ comment, author }: { comment: string; author: string }) => {
       const response = await fetch(`/api/projects/${id}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           projectId: parseInt(id!),
           content: comment,
-          authorName: "Current User",
+          authorName: author,
           commentType: "general"
         })
       });
@@ -161,6 +162,7 @@ export default function ProjectDetail() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/projects/${id}/comments`] });
       setNewComment("");
+      setCommentAuthor("");
       toast({ title: "Comment added successfully" });
     },
     onError: () => {
@@ -215,8 +217,8 @@ export default function ProjectDetail() {
   };
 
   const handleAddComment = () => {
-    if (!newComment.trim()) return;
-    addCommentMutation.mutate(newComment);
+    if (!newComment.trim() || !commentAuthor.trim()) return;
+    addCommentMutation.mutate({ comment: newComment, author: commentAuthor });
   };
 
   const handleProjectSave = () => {
@@ -802,14 +804,28 @@ export default function ProjectDetail() {
               <CardContent className="space-y-4">
                 {/* Add Comment Form */}
                 <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Your Name</label>
+                      <Input
+                        placeholder="Enter your name..."
+                        value={commentAuthor}
+                        onChange={(e) => setCommentAuthor(e.target.value)}
+                      />
+                    </div>
+                  </div>
                   <Textarea
                     placeholder="Add a comment..."
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     className="mb-3"
+                    rows={3}
                   />
-                  <Button onClick={handleAddComment} disabled={addCommentMutation.isPending || !newComment.trim()}>
-                    Add Comment
+                  <Button 
+                    onClick={handleAddComment} 
+                    disabled={addCommentMutation.isPending || !newComment.trim() || !commentAuthor.trim()}
+                  >
+                    {addCommentMutation.isPending ? "Adding..." : "Add Comment"}
                   </Button>
                 </div>
                 
