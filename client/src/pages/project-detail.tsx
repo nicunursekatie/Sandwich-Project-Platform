@@ -25,6 +25,8 @@ export default function ProjectDetail() {
   const [editingTask, setEditingTask] = useState<number | null>(null);
   const [newTask, setNewTask] = useState({ title: "", description: "", priority: "medium" });
   const [newComment, setNewComment] = useState("");
+  const [taskFiles, setTaskFiles] = useState<{ [taskId: number]: FileList | null }>({});
+  const [editingTaskData, setEditingTaskData] = useState<{ [taskId: number]: { title: string; description: string; priority: string } }>({});
   const [projectForm, setProjectForm] = useState<Partial<Project>>({});
 
   // Fetch project details
@@ -193,6 +195,58 @@ export default function ProjectDetail() {
       updates.completedAt = new Date();
     }
     updateTaskMutation.mutate({ taskId, updates });
+  };
+
+  const handleTaskEdit = (task: ProjectTask) => {
+    setEditingTask(task.id);
+    setEditingTaskData({
+      ...editingTaskData,
+      [task.id]: {
+        title: task.title,
+        description: task.description || "",
+        priority: task.priority
+      }
+    });
+  };
+
+  const handleTaskSave = (taskId: number) => {
+    const taskData = editingTaskData[taskId];
+    if (taskData) {
+      updateTaskMutation.mutate({ 
+        taskId, 
+        updates: taskData 
+      });
+    }
+    setEditingTask(null);
+  };
+
+  const handleTaskCancel = () => {
+    setEditingTask(null);
+  };
+
+  const handleFileUpload = async (taskId: number, files: FileList) => {
+    if (!files || files.length === 0) return;
+
+    const formData = new FormData();
+    Array.from(files).forEach(file => {
+      formData.append('files', file);
+    });
+
+    try {
+      const response = await fetch(`/api/projects/${id}/tasks/${taskId}/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        queryClient.invalidateQueries({ queryKey: [`/api/projects/${id}/tasks`] });
+        toast({ title: "Files uploaded successfully" });
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      toast({ title: "Failed to upload files", variant: "destructive" });
+    }
   };
 
   const handleAddTask = () => {

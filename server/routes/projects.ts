@@ -1,8 +1,27 @@
 import { Router } from "express";
 import { z } from "zod";
+import multer from "multer";
+import path from "path";
 import { storage } from "../storage-wrapper";
 import { sanitizeMiddleware } from "../middleware/sanitizer";
 import { insertProjectSchema, insertProjectTaskSchema, insertProjectCommentSchema } from "@shared/schema";
+
+// Configure multer for file uploads
+const taskUpload = multer({
+  dest: 'uploads/tasks/',
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx|txt|csv|xlsx/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only images, PDFs, and documents are allowed'));
+    }
+  }
+});
 
 const router = Router();
 
@@ -128,6 +147,57 @@ router.delete("/projects/:projectId/tasks/:taskId", async (req, res) => {
   } catch (error) {
     console.error("Error deleting project task:", error);
     res.status(500).json({ error: "Failed to delete task" });
+  }
+});
+
+// Task file upload route
+router.post("/projects/:projectId/tasks/:taskId/upload", taskUpload.array('files', 5), async (req, res) => {
+  try {
+    const taskId = parseInt(req.params.taskId);
+    const files = req.files as Express.Multer.File[];
+    
+    if (!files || files.length === 0) {
+      return res.status(400).json({ error: "No files uploaded" });
+    }
+
+    // Get current task to append to existing attachments
+    const task = await storage.getProjectTasks(parseInt(req.params.projectId));
+    const currentTask = task.find(t => t.id === taskId);
+    
+    if (!currentTask) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    // Parse existing attachments
+    let existingAttachments = [];
+    if (currentTask.attachments) {
+      try {
+        existingAttachments = JSON.parse(currentTask.attachments);
+      } catch (e) {
+        existingAttachments = [];
+      }
+    }
+
+    // Add new file info
+    const newAttachments = files.map(file => ({
+      filename: file.filename,
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      size: file.size,
+      uploadedAt: new Date().toISOString()
+    }));
+
+    const allAttachments = [...existingAttachments, ...newAttachments];
+
+    // Update task with new attachments
+    const updatedTask = await storage.updateProjectTask(taskId, {
+      attachments: JSON.stringify(allAttachments)
+    });
+
+    res.json({ task: updatedTask, uploadedFiles: newAttachments });
+  } catch (error) {
+    console.error("Error uploading task files:", error);
+    res.status(500).json({ error: "Failed to upload files" });
   }
 });
 

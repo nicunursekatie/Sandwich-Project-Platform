@@ -81,6 +81,7 @@ export const projectTasks = pgTable("project_tasks", {
   assigneeName: text("assignee_name"),
   dueDate: text("due_date"),
   completedAt: timestamp("completed_at"),
+  attachments: text("attachments"), // JSON array of file paths
   order: integer("order").notNull().default(0), // for task ordering
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
