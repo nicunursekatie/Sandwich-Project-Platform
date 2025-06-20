@@ -80,7 +80,7 @@ export default function Landing() {
           </p>
           <div className="flex gap-4 justify-center">
             <Button onClick={handleLogin} size="lg" className="bg-blue-600 hover:bg-blue-700">
-              Join Our Team
+              Our Team
             </Button>
             <Button 
               variant="outline" 
