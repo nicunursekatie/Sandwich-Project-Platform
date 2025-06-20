@@ -90,7 +90,7 @@ export default function Landing() {
                 setShowToolkit(!showToolkit);
               }}
             >
-              {showToolkit ? 'Hide' : 'View'} Volunteer Toolkit
+              {showToolkit ? 'Hide' : 'View'} Group Toolkit
             </Button>
           </div>
         </div>
@@ -144,7 +144,7 @@ export default function Landing() {
           <Card className="bg-blue-50 dark:bg-blue-900 border-2 border-blue-500">
             <CardHeader className="text-center">
               <CardTitle className="text-3xl text-blue-600 dark:text-blue-300">
-                🛠️ Volunteer Toolkit
+                🛠️ Group Toolkit
               </CardTitle>
               <CardDescription className="text-lg">
                 Essential documents and training materials for The Sandwich Project volunteers
