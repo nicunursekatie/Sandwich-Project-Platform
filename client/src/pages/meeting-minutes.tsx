@@ -180,10 +180,10 @@ export default function MeetingMinutes() {
     const meetingData: InsertMeeting = {
       title: newMeetingData.title,
       date: newMeetingData.date,
-      time: newMeetingData.time || null,
+      time: newMeetingData.time || "TBD",
       type: newMeetingData.type,
-      location: newMeetingData.location || null,
-      description: newMeetingData.description || null,
+      location: newMeetingData.location || undefined,
+      description: newMeetingData.description || undefined,
       status: "scheduled"
     };
 
@@ -213,6 +213,110 @@ export default function MeetingMinutes() {
           <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
           <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
         </div>
+      </div>
+    );
+  }
+
+  // Show create meeting form
+  if (isCreatingMeeting) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Button variant="outline" onClick={() => setIsCreatingMeeting(false)}>
+            ← Back to Meetings
+          </Button>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Create New Meeting</CardTitle>
+            <CardDescription>Schedule a new meeting for your team</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleCreateMeeting} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium mb-2">Meeting Title *</label>
+                <Input
+                  type="text"
+                  value={newMeetingData.title}
+                  onChange={(e) => setNewMeetingData(prev => ({ ...prev, title: e.target.value }))}
+                  placeholder="Core Team Meeting - Q3 Planning"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Date *</label>
+                  <Input
+                    type="date"
+                    value={newMeetingData.date}
+                    onChange={(e) => setNewMeetingData(prev => ({ ...prev, date: e.target.value }))}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Time</label>
+                  <Input
+                    type="time"
+                    value={newMeetingData.time}
+                    onChange={(e) => setNewMeetingData(prev => ({ ...prev, time: e.target.value }))}
+                    placeholder="10:00 AM"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Meeting Type</label>
+                <Select 
+                  value={newMeetingData.type} 
+                  onValueChange={(value: "core_team" | "board" | "committee" | "special") => 
+                    setNewMeetingData(prev => ({ ...prev, type: value }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="core_team">Core Team</SelectItem>
+                    <SelectItem value="board">Board Meeting</SelectItem>
+                    <SelectItem value="committee">Committee</SelectItem>
+                    <SelectItem value="special">Special Meeting</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Location</label>
+                <Input
+                  type="text"
+                  value={newMeetingData.location}
+                  onChange={(e) => setNewMeetingData(prev => ({ ...prev, location: e.target.value }))}
+                  placeholder="Conference Room A or Virtual Meeting Link"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Description</label>
+                <Textarea
+                  value={newMeetingData.description}
+                  onChange={(e) => setNewMeetingData(prev => ({ ...prev, description: e.target.value }))}
+                  placeholder="Meeting agenda and topics to be discussed..."
+                  rows={4}
+                />
+              </div>
+              
+              <div className="flex gap-2">
+                <Button type="submit" disabled={createMeetingMutation.isPending}>
+                  {createMeetingMutation.isPending ? "Creating..." : "Create Meeting"}
+                </Button>
+                <Button type="button" variant="outline" onClick={() => setIsCreatingMeeting(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     );
   }
