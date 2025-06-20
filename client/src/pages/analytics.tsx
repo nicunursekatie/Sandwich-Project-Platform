@@ -1,9 +1,9 @@
-import StrategicAnalytics from "@/components/strategic-analytics";
+import AnalyticsDashboard from "@/components/analytics-dashboard";
 
 export default function AnalyticsPage() {
   return (
     <div className="container mx-auto p-6">
-      <StrategicAnalytics />
+      <AnalyticsDashboard />
     </div>
   );
 }
