@@ -581,6 +581,10 @@ export class MemStorage implements IStorage {
     return this.agendaItems.delete(id);
   }
 
+  async deleteAgendaItem(id: number): Promise<boolean> {
+    return this.agendaItems.delete(id);
+  }
+
   // Meetings
   async getCurrentMeeting(): Promise<Meeting | undefined> {
     const meetings = Array.from(this.meetings.values());

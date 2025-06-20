@@ -442,6 +442,13 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async deleteAgendaItem(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteAgendaItem(id),
+      () => this.fallbackStorage.deleteAgendaItem(id)
+    );
+  }
+
   async getCurrentMeeting() {
     return this.executeWithFallback(
       () => this.primaryStorage.getCurrentMeeting(),

@@ -104,7 +104,7 @@ export default function Dashboard() {
                 <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Training Toolkit</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Group Toolkit</h1>
                 <p className="text-gray-600 dark:text-gray-300">Essential training documents and resources</p>
               </div>
             </div>
