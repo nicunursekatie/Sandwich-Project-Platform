@@ -49,10 +49,10 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Dashboard} />
-      <Route path="/meetings" component={MeetingsLandingPage} />
       <Route path="/meetings/minutes" component={MeetingMinutes} />
       <Route path="/meetings/agenda" component={MeetingAgenda} />
       <Route path="/meetings/calendar" component={MeetingCalendar} />
+      <Route path="/meetings" component={MeetingsLandingPage} />
       <Route path="/development" component={Development} />
       <Route path="/phone-directory" component={PhoneDirectoryPage} />
       <Route path="/role-demo" component={RoleDemo} />
