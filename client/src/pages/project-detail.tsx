@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, CheckCircle2, Circle, MessageSquare, Users, Calendar, FileText, Upload, ExternalLink, Trash2 } from "lucide-react";
 import type { Project, ProjectTask, ProjectComment } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
+import { CollapsibleNav } from "@/components/collapsible-nav";
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -361,9 +362,11 @@ export default function ProjectDetail() {
   const progressPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-3 sm:p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <CollapsibleNav />
+      <div className="lg:ml-16 transition-all duration-300">
+        <div className="max-w-7xl mx-auto p-3 sm:p-6 space-y-6">
+          {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <Button variant="outline" onClick={() => setLocation("/projects")} className="self-start">
@@ -949,6 +952,7 @@ export default function ProjectDetail() {
             </Card>
           </TabsContent>
         </Tabs>
+        </div>
       </div>
     </div>
   );
