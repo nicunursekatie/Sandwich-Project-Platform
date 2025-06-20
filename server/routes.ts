@@ -52,6 +52,30 @@ const importUpload = multer({
   }
 });
 
+// Configure multer for project files (supports various file types)
+const projectFilesUpload = multer({
+  dest: 'uploads/projects/',
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit per file
+  fileFilter: (req, file, cb) => {
+    // Allow most common file types for project documentation
+    const allowedTypes = [
+      'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+      'application/pdf',
+      'text/plain', 'text/csv',
+      'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'application/zip', 'application/x-zip-compressed'
+    ];
+    
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('File type not supported'));
+    }
+  }
+});
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Add session middleware
   app.use(session({
@@ -244,6 +268,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       logger.error("Failed to delete project", error);
       res.status(500).json({ message: "Failed to delete project" });
+    }
+  });
+
+  // Project Files
+  app.post("/api/projects/:id/files", projectFilesUpload.array('files'), async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+
+      const files = req.files as Express.Multer.File[];
+      if (!files || files.length === 0) {
+        return res.status(400).json({ message: "No files uploaded" });
+      }
+
+      // Process uploaded files and return metadata
+      const fileMetadata = files.map(file => ({
+        name: file.originalname,
+        size: file.size,
+        mimetype: file.mimetype,
+        path: file.path,
+        uploadedAt: new Date().toISOString()
+      }));
+
+      res.status(201).json({ 
+        message: "Files uploaded successfully", 
+        files: fileMetadata 
+      });
+    } catch (error) {
+      logger.error("Failed to upload project files", error);
+      res.status(500).json({ message: "Failed to upload files" });
+    }
+  });
+
+  app.get("/api/projects/:id/files", async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+
+      // For now, return empty array as file storage is basic
+      // In a production app, you'd store file metadata in database
+      res.json([]);
+    } catch (error) {
+      logger.error("Failed to fetch project files", error);
+      res.status(500).json({ message: "Failed to fetch files" });
     }
   });
 

@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, CheckCircle2, Circle, MessageSquare, Users, Calendar, FileText } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Circle, MessageSquare, Users, Calendar, FileText, Upload, ExternalLink, Trash2 } from "lucide-react";
 import type { Project, ProjectTask, ProjectComment } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -868,7 +868,7 @@ export default function ProjectDetail() {
                     }}
                   />
                   <label htmlFor="project-file-upload" className="cursor-pointer">
-                    <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <FileText className="w-8 h-8 mx-auto mb-2 text-gray-400" />
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                       Click to upload files or drag and drop
                     </p>
@@ -904,7 +904,7 @@ export default function ProjectDetail() {
                           {file.url && (
                             <Button variant="ghost" size="sm" asChild>
                               <a href={file.url} target="_blank" rel="noopener noreferrer">
-                                <ExternalLink className="w-4 h-4" />
+                                <Calendar className="w-4 h-4" />
                               </a>
                             </Button>
                           )}
@@ -916,7 +916,7 @@ export default function ProjectDetail() {
                               console.log('Delete file:', file);
                             }}
                           >
-                            <Trash2 className="w-4 h-4 text-red-500" />
+                            <Circle className="w-4 h-4 text-red-500" />
                           </Button>
                         </div>
                       </div>
