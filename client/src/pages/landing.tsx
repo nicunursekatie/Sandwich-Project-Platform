@@ -151,6 +151,15 @@ export default function Landing() {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="mb-4 text-center">
+                <Button 
+                  onClick={handleLogin}
+                  variant="outline" 
+                  className="mb-4"
+                >
+                  ← Back to Dashboard
+                </Button>
+              </div>
               <DocumentsBrowser />
             </CardContent>
           </Card>
