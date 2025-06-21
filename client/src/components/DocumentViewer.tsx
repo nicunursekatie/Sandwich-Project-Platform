@@ -14,7 +14,15 @@ export function DocumentViewer({ fileName, fileType, filePath, mimeType, classNa
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fileUrl = filePath || `/api/meeting-minutes/file/${fileName}`;
+  // Extract filename from full path if needed
+  const getFileName = (path: string) => {
+    if (path.includes('/')) {
+      return path.split('/').pop() || path;
+    }
+    return path;
+  };
+
+  const fileUrl = filePath ? `/api/files/${getFileName(filePath)}` : `/api/files/${fileName}`;
 
   const handleLoad = () => {
     setIsLoading(false);
