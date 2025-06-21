@@ -675,7 +675,7 @@ export default function ProjectList() {
         )}
 
         <div className="space-y-4">
-          {projects.map((project) => (
+          {otherProjects.map((project) => (
             <div key={project.id} className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
