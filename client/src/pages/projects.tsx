@@ -278,31 +278,31 @@ export default function Projects() {
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col">
       {/* Top Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center">
-        <div className="flex items-center space-x-3">
-          <Sandwich className="text-amber-500 w-6 h-6" />
-          <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
+      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex justify-between items-center">
+        <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+          <Sandwich className="text-amber-500 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+          <h1 className="text-base sm:text-lg font-semibold text-slate-900 truncate">The Sandwich Project</h1>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <button
             className="p-2 rounded-lg transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900"
             title="Messages"
           >
-            <MessageCircle className="w-5 h-5" />
+            <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           <button 
             onClick={() => window.location.href = "/api/logout"}
-            className="flex items-center space-x-2 px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors"
+            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            <span className="text-sm">Logout</span>
+            <span className="text-xs sm:text-sm hidden sm:inline">Logout</span>
           </button>
         </div>
       </div>
 
       <div className="flex flex-1">
-        {/* Sidebar */}
-        <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+        {/* Sidebar - Hidden on mobile, shown on larger screens */}
+        <div className="hidden lg:flex w-64 bg-white border-r border-slate-200 flex-col">
           <div className="p-4 border-b border-slate-200">
             <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
             <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
@@ -387,16 +387,16 @@ export default function Projects() {
 
         {/* Main Content */}
         <div className="flex-1 overflow-auto">
-        <div className="p-6 max-w-7xl mx-auto">
+        <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Project Management</h1>
-              <p className="text-gray-600 dark:text-gray-400 mt-2">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Project Management</h1>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1 sm:mt-2">
                 Organize and track all team projects with interactive task management
               </p>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
               <button
                 onClick={() => window.location.href = "/"}
                 className="p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
@@ -447,23 +447,23 @@ export default function Projects() {
           )}
 
           {/* Project Sections */}
-          <Tabs defaultValue="active" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="active" className="flex items-center gap-2">
-                <Play className="w-4 h-4" />
-                Active ({activeProjects.length})
+          <Tabs defaultValue="active" className="space-y-4 sm:space-y-6">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 gap-1">
+              <TabsTrigger value="active" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+                <Play className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Active</span> ({activeProjects.length})
               </TabsTrigger>
-              <TabsTrigger value="available" className="flex items-center gap-2">
-                <Circle className="w-4 h-4" />
-                Available ({availableProjects.length})
+              <TabsTrigger value="available" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+                <Circle className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Available</span> ({availableProjects.length})
               </TabsTrigger>
-              <TabsTrigger value="waiting" className="flex items-center gap-2">
-                <Pause className="w-4 h-4" />
-                Waiting ({waitingProjects.length})
+              <TabsTrigger value="waiting" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+                <Pause className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Waiting</span> ({waitingProjects.length})
               </TabsTrigger>
-              <TabsTrigger value="completed" className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4" />
-                Completed ({completedProjects.length})
+              <TabsTrigger value="completed" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+                <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Completed</span> ({completedProjects.length})
               </TabsTrigger>
             </TabsList>
 
@@ -491,7 +491,7 @@ export default function Projects() {
                     </CardContent>
                   </Card>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {activeProjects.map((project: Project) => (
                       <ProjectCard key={project.id} project={project} />
                     ))}
@@ -524,7 +524,7 @@ export default function Projects() {
                     </CardContent>
                   </Card>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {availableProjects.map((project: Project) => (
                       <ProjectCard key={project.id} project={project} />
                     ))}
@@ -538,7 +538,7 @@ export default function Projects() {
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Pause className="w-5 h-5 text-gray-600" />
-                  <h2 className="text-xl font-semibold">Waiting Projects</h2>
+                  <h2 className="text-lg sm:text-xl font-semibold">Waiting Projects</h2>
                   <Badge className="bg-gray-100 text-gray-800">
                     {waitingProjects.length} projects
                   </Badge>
@@ -546,7 +546,7 @@ export default function Projects() {
                 
                 {waitingProjects.length === 0 ? (
                   <Card>
-                    <CardContent className="p-8 text-center">
+                    <CardContent className="p-6 sm:p-8 text-center">
                       <Pause className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                       <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                         No Waiting Projects

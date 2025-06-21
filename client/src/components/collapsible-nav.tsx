@@ -9,7 +9,7 @@ export function CollapsibleNav() {
   const [location, setLocation] = useLocation();
 
   const navigationItems = [
-    { name: "Dashboard", path: "/dashboard", icon: Home },
+    { name: "Dashboard", path: "/", icon: Home },
     { name: "Projects", path: "/projects", icon: FileText },
     { name: "Meetings", path: "/meetings", icon: Calendar },
     { name: "Analytics", path: "/analytics", icon: BarChart3 },
@@ -21,12 +21,12 @@ export function CollapsibleNav() {
   return (
     <>
       {/* Mobile Menu Button */}
-      <div className="fixed top-4 left-4 z-50 lg:hidden">
+      <div className="fixed top-3 left-3 z-50 md:hidden">
         <Button
           variant="outline"
           size="sm"
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-white dark:bg-gray-800 shadow-lg"
+          className="bg-white dark:bg-gray-800 shadow-lg border-gray-200 hover:bg-gray-50"
         >
           {isOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
         </Button>
