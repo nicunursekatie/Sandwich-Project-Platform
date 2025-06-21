@@ -21,6 +21,7 @@ export default function ProjectDetail() {
   const queryClient = useQueryClient();
   
   const [editingProject, setEditingProject] = useState(false);
+  const [editingDetails, setEditingDetails] = useState(false);
   const [editingTask, setEditingTask] = useState<number | null>(null);
   const [newTask, setNewTask] = useState({ title: "", description: "", priority: "medium" });
   const [newComment, setNewComment] = useState("");
@@ -224,6 +225,11 @@ export default function ProjectDetail() {
 
   const handleProjectSave = () => {
     updateProjectMutation.mutate(projectForm);
+  };
+
+  const handleDetailsSave = () => {
+    updateProjectMutation.mutate(projectForm);
+    setEditingDetails(false);
   };
 
   const handleTaskStatusChange = (taskId: number, status: string) => {
@@ -748,51 +754,102 @@ export default function ProjectDetail() {
           
           {/* Details Tab */}
           <TabsContent value="details">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Requirements</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {project.requirements || "No requirements specified"}
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>Deliverables</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {project.deliverables || "No deliverables specified"}
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>Resources</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {project.resources || "No resources specified"}
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>Blockers</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {project.blockers || "No blockers identified"}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Project Details</CardTitle>
+                <div className="flex items-center gap-2">
+                  {editingDetails ? (
+                    <>
+                      <Button onClick={handleDetailsSave} disabled={updateProjectMutation.isPending} size="sm">
+                        Save
+                      </Button>
+                      <Button variant="outline" onClick={() => setEditingDetails(false)} size="sm">
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <Button onClick={() => setEditingDetails(true)} size="sm">
+                      Edit Details
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                {editingDetails ? (
+                  <div className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Requirements</label>
+                      <Textarea
+                        value={projectForm.requirements || ""}
+                        onChange={(e) => setProjectForm({ ...projectForm, requirements: e.target.value })}
+                        placeholder="Describe the project requirements..."
+                        rows={4}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Deliverables</label>
+                      <Textarea
+                        value={projectForm.deliverables || ""}
+                        onChange={(e) => setProjectForm({ ...projectForm, deliverables: e.target.value })}
+                        placeholder="List the expected deliverables..."
+                        rows={4}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Resources</label>
+                      <Textarea
+                        value={projectForm.resources || ""}
+                        onChange={(e) => setProjectForm({ ...projectForm, resources: e.target.value })}
+                        placeholder="Specify required resources..."
+                        rows={4}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Blockers</label>
+                      <Textarea
+                        value={projectForm.blockers || ""}
+                        onChange={(e) => setProjectForm({ ...projectForm, blockers: e.target.value })}
+                        placeholder="Identify any current blockers..."
+                        rows={4}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="text-lg font-semibold mb-3">Requirements</h3>
+                      <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
+                        {project.requirements || "No requirements specified"}
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-lg font-semibold mb-3">Deliverables</h3>
+                      <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
+                        {project.deliverables || "No deliverables specified"}
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-lg font-semibold mb-3">Resources</h3>
+                      <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
+                        {project.resources || "No resources specified"}
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-lg font-semibold mb-3">Blockers</h3>
+                      <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
+                        {project.blockers || "No blockers identified"}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
           
           {/* Comments Tab */}
