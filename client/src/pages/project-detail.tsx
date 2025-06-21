@@ -1125,8 +1125,10 @@ export default function ProjectDetail() {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
+            </Tabs>
+          </div>
         </div>
+        </>
       </div>
     </div>
   );
