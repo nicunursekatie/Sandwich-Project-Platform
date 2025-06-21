@@ -777,90 +777,146 @@ export default function ProjectDetail() {
 
               {editingDetails ? (
                 <div className="space-y-8">
-                  <div className="bg-white border border-gray-200 rounded-lg p-8">
-                    <label className="block text-xl font-semibold mb-4 text-gray-900">Goals & Impact</label>
+                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 rounded-lg p-8 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <label className="block text-xl font-bold text-blue-900">Goals & Impact</label>
+                    </div>
                     <Textarea
                       value={projectForm.requirements || ""}
                       onChange={(e) => setProjectForm({ ...projectForm, requirements: e.target.value })}
                       placeholder="What are the goals of this project? Who will it help and what impact will it have?"
                       rows={5}
-                      className="text-base leading-relaxed"
+                      className="text-base leading-relaxed border-blue-200 focus:border-blue-500"
                     />
                   </div>
                   
-                  <div className="bg-white border border-gray-200 rounded-lg p-8">
-                    <label className="block text-xl font-semibold mb-4 text-gray-900">Volunteer Needs</label>
+                  <div className="bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-500 rounded-lg p-8 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                      </div>
+                      <label className="block text-xl font-bold text-green-900">Volunteer Needs</label>
+                    </div>
                     <Textarea
                       value={projectForm.deliverables || ""}
                       onChange={(e) => setProjectForm({ ...projectForm, deliverables: e.target.value })}
                       placeholder="What types of volunteers are needed? Skills, time commitment, special requirements..."
                       rows={5}
-                      className="text-base leading-relaxed"
+                      className="text-base leading-relaxed border-green-200 focus:border-green-500"
                     />
                   </div>
                   
-                  <div className="bg-white border border-gray-200 rounded-lg p-8">
-                    <label className="block text-xl font-semibold mb-4 text-gray-900">Resources & Materials</label>
+                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 border-l-4 border-purple-500 rounded-lg p-8 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                      </div>
+                      <label className="block text-xl font-bold text-purple-900">Resources & Materials</label>
+                    </div>
                     <Textarea
                       value={projectForm.resources || ""}
                       onChange={(e) => setProjectForm({ ...projectForm, resources: e.target.value })}
                       placeholder="What materials, supplies, or funding are needed for this project?"
                       rows={5}
-                      className="text-base leading-relaxed"
+                      className="text-base leading-relaxed border-purple-200 focus:border-purple-500"
                     />
                   </div>
                   
-                  <div className="bg-white border border-gray-200 rounded-lg p-8">
-                    <label className="block text-xl font-semibold mb-4 text-gray-900">Project Notes</label>
+                  <div className="bg-gradient-to-r from-orange-50 to-orange-100 border-l-4 border-orange-500 rounded-lg p-8 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <label className="block text-xl font-bold text-orange-900">Project Notes</label>
+                    </div>
                     <Textarea
                       value={projectForm.blockers || ""}
                       onChange={(e) => setProjectForm({ ...projectForm, blockers: e.target.value })}
                       placeholder="Additional notes, challenges, or important information about this project..."
                       rows={5}
-                      className="text-base leading-relaxed"
+                      className="text-base leading-relaxed border-orange-200 focus:border-orange-500"
                     />
                   </div>
                 </div>
               ) : (
                 <div className="space-y-8">
-                  <div className="bg-white border border-gray-200 rounded-lg p-8">
-                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Goals & Impact</h3>
-                    <div className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap min-h-[80px]">
+                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-blue-900">Goals & Impact</h3>
+                    </div>
+                    <div className="text-base text-blue-800 leading-relaxed whitespace-pre-wrap min-h-[80px]">
                       {project.requirements || (
-                        <span className="text-gray-400 italic">
+                        <span className="text-blue-500 italic">
                           Click "Edit Details" to add information about the project goals and expected impact.
                         </span>
                       )}
                     </div>
                   </div>
                   
-                  <div className="bg-white border border-gray-200 rounded-lg p-8">
-                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Volunteer Needs</h3>
-                    <div className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap min-h-[80px]">
+                  <div className="bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-500 rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-green-900">Volunteer Needs</h3>
+                    </div>
+                    <div className="text-base text-green-800 leading-relaxed whitespace-pre-wrap min-h-[80px]">
                       {project.deliverables || (
-                        <span className="text-gray-400 italic">
+                        <span className="text-green-500 italic">
                           Click "Edit Details" to specify what types of volunteers and skills are needed.
                         </span>
                       )}
                     </div>
                   </div>
                   
-                  <div className="bg-white border border-gray-200 rounded-lg p-8">
-                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Resources & Materials</h3>
-                    <div className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap min-h-[80px]">
+                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 border-l-4 border-purple-500 rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-purple-900">Resources & Materials</h3>
+                    </div>
+                    <div className="text-base text-purple-800 leading-relaxed whitespace-pre-wrap min-h-[80px]">
                       {project.resources || (
-                        <span className="text-gray-400 italic">
+                        <span className="text-purple-500 italic">
                           Click "Edit Details" to list required materials, supplies, or funding.
                         </span>
                       )}
                     </div>
                   </div>
                   
-                  <div className="bg-white border border-gray-200 rounded-lg p-8">
-                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Project Notes</h3>
-                    <div className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap min-h-[80px]">
+                  <div className="bg-gradient-to-r from-orange-50 to-orange-100 border-l-4 border-orange-500 rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-orange-900">Project Notes</h3>
+                    </div>
+                    <div className="text-base text-orange-800 leading-relaxed whitespace-pre-wrap min-h-[80px]">
                       {project.blockers || (
-                        <span className="text-gray-400 italic">
+                        <span className="text-orange-500 italic">
                           Click "Edit Details" to add additional notes or important information.
                         </span>
                       )}
