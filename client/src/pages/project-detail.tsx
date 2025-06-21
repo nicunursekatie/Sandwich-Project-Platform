@@ -754,102 +754,121 @@ export default function ProjectDetail() {
           
           {/* Details Tab */}
           <TabsContent value="details">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Project Details</CardTitle>
-                <div className="flex items-center gap-2">
+            <div className="space-y-8">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-900">Project Details</h2>
+                <div className="flex items-center gap-3">
                   {editingDetails ? (
                     <>
-                      <Button onClick={handleDetailsSave} disabled={updateProjectMutation.isPending} size="sm">
-                        Save
+                      <Button onClick={handleDetailsSave} disabled={updateProjectMutation.isPending} className="px-6 py-2">
+                        Save Changes
                       </Button>
-                      <Button variant="outline" onClick={() => setEditingDetails(false)} size="sm">
+                      <Button variant="outline" onClick={() => setEditingDetails(false)} className="px-6 py-2">
                         Cancel
                       </Button>
                     </>
                   ) : (
-                    <Button onClick={() => setEditingDetails(true)} size="sm">
+                    <Button onClick={() => setEditingDetails(true)} className="px-6 py-2">
                       Edit Details
                     </Button>
                   )}
                 </div>
-              </CardHeader>
-              <CardContent>
-                {editingDetails ? (
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Goals & Impact</label>
-                      <Textarea
-                        value={projectForm.requirements || ""}
-                        onChange={(e) => setProjectForm({ ...projectForm, requirements: e.target.value })}
-                        placeholder="What are the goals of this project? Who will it help and what impact will it have?"
-                        rows={4}
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Volunteer Needs</label>
-                      <Textarea
-                        value={projectForm.deliverables || ""}
-                        onChange={(e) => setProjectForm({ ...projectForm, deliverables: e.target.value })}
-                        placeholder="What types of volunteers are needed? Skills, time commitment, special requirements..."
-                        rows={4}
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Resources & Materials</label>
-                      <Textarea
-                        value={projectForm.resources || ""}
-                        onChange={(e) => setProjectForm({ ...projectForm, resources: e.target.value })}
-                        placeholder="What materials, supplies, or funding are needed for this project?"
-                        rows={4}
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Project Notes</label>
-                      <Textarea
-                        value={projectForm.blockers || ""}
-                        onChange={(e) => setProjectForm({ ...projectForm, blockers: e.target.value })}
-                        placeholder="Additional notes, challenges, or important information about this project..."
-                        rows={4}
-                      />
+              </div>
+
+              {editingDetails ? (
+                <div className="space-y-8">
+                  <div className="bg-white border border-gray-200 rounded-lg p-8">
+                    <label className="block text-xl font-semibold mb-4 text-gray-900">Goals & Impact</label>
+                    <Textarea
+                      value={projectForm.requirements || ""}
+                      onChange={(e) => setProjectForm({ ...projectForm, requirements: e.target.value })}
+                      placeholder="What are the goals of this project? Who will it help and what impact will it have?"
+                      rows={5}
+                      className="text-base leading-relaxed"
+                    />
+                  </div>
+                  
+                  <div className="bg-white border border-gray-200 rounded-lg p-8">
+                    <label className="block text-xl font-semibold mb-4 text-gray-900">Volunteer Needs</label>
+                    <Textarea
+                      value={projectForm.deliverables || ""}
+                      onChange={(e) => setProjectForm({ ...projectForm, deliverables: e.target.value })}
+                      placeholder="What types of volunteers are needed? Skills, time commitment, special requirements..."
+                      rows={5}
+                      className="text-base leading-relaxed"
+                    />
+                  </div>
+                  
+                  <div className="bg-white border border-gray-200 rounded-lg p-8">
+                    <label className="block text-xl font-semibold mb-4 text-gray-900">Resources & Materials</label>
+                    <Textarea
+                      value={projectForm.resources || ""}
+                      onChange={(e) => setProjectForm({ ...projectForm, resources: e.target.value })}
+                      placeholder="What materials, supplies, or funding are needed for this project?"
+                      rows={5}
+                      className="text-base leading-relaxed"
+                    />
+                  </div>
+                  
+                  <div className="bg-white border border-gray-200 rounded-lg p-8">
+                    <label className="block text-xl font-semibold mb-4 text-gray-900">Project Notes</label>
+                    <Textarea
+                      value={projectForm.blockers || ""}
+                      onChange={(e) => setProjectForm({ ...projectForm, blockers: e.target.value })}
+                      placeholder="Additional notes, challenges, or important information about this project..."
+                      rows={5}
+                      className="text-base leading-relaxed"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-8">
+                  <div className="bg-white border border-gray-200 rounded-lg p-8">
+                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Goals & Impact</h3>
+                    <div className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap min-h-[80px]">
+                      {project.requirements || (
+                        <span className="text-gray-400 italic">
+                          Click "Edit Details" to add information about the project goals and expected impact.
+                        </span>
+                      )}
                     </div>
                   </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Goals & Impact</h3>
-                      <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
-                        {project.requirements || "No goals or impact statement provided"}
-                      </p>
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Volunteer Needs</h3>
-                      <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
-                        {project.deliverables || "No volunteer requirements specified"}
-                      </p>
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Resources & Materials</h3>
-                      <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
-                        {project.resources || "No resources or materials specified"}
-                      </p>
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">Project Notes</h3>
-                      <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
-                        {project.blockers || "No additional notes provided"}
-                      </p>
+                  
+                  <div className="bg-white border border-gray-200 rounded-lg p-8">
+                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Volunteer Needs</h3>
+                    <div className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap min-h-[80px]">
+                      {project.deliverables || (
+                        <span className="text-gray-400 italic">
+                          Click "Edit Details" to specify what types of volunteers and skills are needed.
+                        </span>
+                      )}
                     </div>
                   </div>
-                )}
-              </CardContent>
-            </Card>
+                  
+                  <div className="bg-white border border-gray-200 rounded-lg p-8">
+                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Resources & Materials</h3>
+                    <div className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap min-h-[80px]">
+                      {project.resources || (
+                        <span className="text-gray-400 italic">
+                          Click "Edit Details" to list required materials, supplies, or funding.
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white border border-gray-200 rounded-lg p-8">
+                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Project Notes</h3>
+                    <div className="text-base text-gray-700 leading-relaxed whitespace-pre-wrap min-h-[80px]">
+                      {project.blockers || (
+                        <span className="text-gray-400 italic">
+                          Click "Edit Details" to add additional notes or important information.
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </TabsContent>
           
           {/* Comments Tab */}
