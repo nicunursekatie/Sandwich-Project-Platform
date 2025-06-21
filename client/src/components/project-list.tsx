@@ -689,7 +689,7 @@ export default function ProjectList() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-base font-semibold text-slate-900">{project.title}</h3>
+<h3 className="text-base font-semibold text-slate-900 cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleProjectClick(project.id)}>{project.title}</h3>
                     <span className={getStatusBadge(project.status)}>
                       {getStatusText(project.status)}
                     </span>
@@ -971,7 +971,7 @@ export default function ProjectList() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-base font-semibold text-slate-900">{project.title}</h3>
+<h3 className="text-base font-semibold text-slate-900 cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleProjectClick(project.id)}>{project.title}</h3>
                     <span className={getStatusBadge(project.status)}>
                       {getStatusText(project.status)}
                     </span>
