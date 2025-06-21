@@ -46,6 +46,27 @@
   .gap-6 { gap: 1.75rem; }
 }
 
+/* Force mobile navigation on small screens */
+@media (max-width: 1279px) {
+  .force-hide-sidebar {
+    display: none !important;
+  }
+  
+  .force-show-mobile-menu {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .force-hide-mobile-menu {
+    display: none !important;
+  }
+  
+  .force-show-sidebar {
+    display: flex !important;
+  }
+}
+
 :root {
   --background: 219 13% 97%; /* #F8FAFC */
   --foreground: 215 25% 27%; /* #334155 */

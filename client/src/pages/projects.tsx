@@ -52,18 +52,24 @@ export default function Projects() {
   const { user } = useAuth();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Close mobile menu on window resize to desktop
+  // Detect mobile and handle responsive behavior
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1280) { // xl breakpoint
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 1280;
+      setIsMobile(mobile);
+      if (!mobile && mobileMenuOpen) {
         setMobileMenuOpen(false);
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    // Check immediately
+    checkMobile();
+
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [mobileMenuOpen]);
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => 
@@ -298,13 +304,15 @@ export default function Projects() {
       <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-            title="Menu"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {isMobile && (
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+              title="Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          )}
           <Sandwich className="text-amber-500 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
           <h1 className="text-base sm:text-lg font-semibold text-slate-900 truncate">The Sandwich Project</h1>
         </div>
@@ -326,8 +334,8 @@ export default function Projects() {
       </div>
 
       {/* Mobile Menu Overlay */}
-      {mobileMenuOpen && (
-        <div className="xl:hidden fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setMobileMenuOpen(false)}>
+      {isMobile && mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setMobileMenuOpen(false)}>
           <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
             <div className="p-4 border-b border-slate-200">
               <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
@@ -420,8 +428,9 @@ export default function Projects() {
       )}
 
       <div className="flex flex-1">
-        {/* Desktop Sidebar - Completely hidden on mobile and tablets */}
-        <div className="hidden xl:flex w-64 bg-white border-r border-slate-200 flex-col">
+        {/* Desktop Sidebar - Only show on large screens */}
+        {!isMobile && (
+          <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
           <div className="p-4 border-b border-slate-200">
             <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
             <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
@@ -502,7 +511,8 @@ export default function Projects() {
             <span className="text-sm text-slate-600">Welcome, {(user as any)?.firstName || 'Team'}</span>
           </div>
         </div>
-      </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="flex-1 overflow-auto">
