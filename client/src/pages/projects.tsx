@@ -164,32 +164,32 @@ export default function Projects() {
 
   const ProjectCard = ({ project }: { project: Project }) => (
     <Card 
-      className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] border-l-4 ${getStatusColor(project.status)}`}
+      className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] border-l-4 ${getStatusColor(project.status)} overflow-hidden`}
       onClick={() => handleProjectClick(project.id)}
     >
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
+        <div className="flex items-start justify-between min-w-0">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
               {getStatusIcon(project.status)}
-              <CardTitle className="text-lg">{project.title}</CardTitle>
+              <CardTitle className="text-base sm:text-lg truncate">{project.title}</CardTitle>
             </div>
-            <CardDescription className="line-clamp-2">
+            <CardDescription className="line-clamp-2 text-sm">
               {project.description || "No description provided"}
             </CardDescription>
           </div>
-          <ArrowRight className="w-5 h-5 text-gray-400 mt-1 flex-shrink-0" />
+          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 mt-1 flex-shrink-0 ml-2" />
         </div>
       </CardHeader>
       
       <CardContent className="pt-0">
         <div className="space-y-3">
           {/* Priority and Category */}
-          <div className="flex items-center gap-2">
-            <Badge className={`text-xs ${getPriorityColor(project.priority)}`}>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge className={`text-xs ${getPriorityColor(project.priority)} shrink-0`}>
               {project.priority}
             </Badge>
-            <Badge variant="outline" className="text-xs capitalize">
+            <Badge variant="outline" className="text-xs capitalize shrink-0">
               {project.category}
             </Badge>
           </div>
@@ -206,25 +206,25 @@ export default function Projects() {
           )}
           
           {/* Metadata */}
-          <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 min-w-0">
               {project.assigneeName && (
-                <div className="flex items-center gap-1">
-                  <User className="w-3 h-3" />
-                  <span>{project.assigneeName}</span>
+                <div className="flex items-center gap-1 truncate">
+                  <User className="w-3 h-3 shrink-0" />
+                  <span className="truncate">{project.assigneeName}</span>
                 </div>
               )}
               {project.dueDate && (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 shrink-0">
                   <Calendar className="w-3 h-3" />
-                  <span>{new Date(project.dueDate).toLocaleDateString()}</span>
+                  <span className="text-xs">{new Date(project.dueDate).toLocaleDateString()}</span>
                 </div>
               )}
             </div>
             {project.estimatedHours && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 shrink-0">
                 <Clock className="w-3 h-3" />
-                <span>{project.estimatedHours}h</span>
+                <span className="text-xs">{project.estimatedHours}h</span>
               </div>
             )}
           </div>
@@ -240,12 +240,14 @@ export default function Projects() {
                                  project.status === "in_progress" ? "completed" : "available";
                 handleStatusChange(project.id, nextStatus);
               }}
-              className="text-xs"
+              className="text-xs px-2 py-1 h-auto flex-1 min-w-0"
             >
-              {project.status === "available" && "Start Project"}
-              {project.status === "in_progress" && "Mark Complete"}
-              {project.status === "completed" && "Reopen"}
-              {project.status === "waiting" && "Make Available"}
+              <span className="truncate">
+                {project.status === "available" && "Start Project"}
+                {project.status === "in_progress" && "Mark Complete"}
+                {project.status === "completed" && "Reopen"}
+                {project.status === "waiting" && "Make Available"}
+              </span>
             </Button>
           </div>
         </div>
@@ -387,7 +389,7 @@ export default function Projects() {
 
         {/* Main Content */}
         <div className="flex-1 overflow-auto">
-        <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full">
+        <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full min-w-0">
           {/* Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
             <div className="flex-1 min-w-0">
@@ -396,17 +398,22 @@ export default function Projects() {
                 Organize and track all team projects with interactive task management
               </p>
             </div>
-            <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
+            <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto shrink-0">
               <button
                 onClick={() => window.location.href = "/"}
-                className="p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                className="p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors shrink-0"
                 title="Messages"
               >
-                <MessageCircle className="w-5 h-5" />
+                <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
-              <Button onClick={() => setLocation("/projects/new")} className="bg-blue-600 hover:bg-blue-700">
-                <Plus className="w-4 h-4 mr-2" />
-                New Project
+              <Button 
+                onClick={() => setLocation("/projects/new")} 
+                className="bg-blue-600 hover:bg-blue-700 text-sm px-3 sm:px-4 py-2 shrink-0 min-w-0"
+                size="sm"
+              >
+                <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">New Project</span>
+                <span className="sm:hidden">Add</span>
               </Button>
             </div>
           </div>
@@ -418,33 +425,33 @@ export default function Projects() {
             <>
               {/* Stats Overview */}
               {stats && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                  <Card>
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-blue-600">{(stats as any).total || 0}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Total Projects</div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-green-600">{(stats as any).completed || 0}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Completed</div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-orange-600">{(stats as any).active || 0}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">In Progress</div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-purple-600">{(stats as any).available || 0}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Available</div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                  <Card className="min-w-0">
+                    <CardContent className="p-3 sm:p-4 text-center">
+                      <div className="text-lg sm:text-2xl font-bold text-blue-600">{(stats as any).total || 0}</div>
+                      <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">Total Projects</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="min-w-0">
+                    <CardContent className="p-3 sm:p-4 text-center">
+                      <div className="text-lg sm:text-2xl font-bold text-green-600">{(stats as any).completed || 0}</div>
+                      <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">Completed</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="min-w-0">
+                    <CardContent className="p-3 sm:p-4 text-center">
+                      <div className="text-lg sm:text-2xl font-bold text-orange-600">{(stats as any).active || 0}</div>
+                      <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">In Progress</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="min-w-0">
+                    <CardContent className="p-3 sm:p-4 text-center">
+                      <div className="text-lg sm:text-2xl font-bold text-purple-600">{(stats as any).available || 0}</div>
+                      <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">Available</div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
 
           {/* Project Sections */}
           <Tabs defaultValue="active" className="space-y-4 sm:space-y-6">
