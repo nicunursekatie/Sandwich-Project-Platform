@@ -1333,21 +1333,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const stats = await fs.stat(filePath);
       const fileBuffer = await fs.readFile(filePath);
       
-      // Determine content type based on file extension
-      const ext = path.extname(filename).toLowerCase();
+      // Check file signature to determine actual type (since filename may not have extension)
       let contentType = 'application/octet-stream';
+      let displayName = filename;
       
-      if (ext === '.pdf') {
+      // Check for PDF signature (%PDF)
+      if (fileBuffer.length > 4 && fileBuffer.toString('ascii', 0, 4) === '%PDF') {
         contentType = 'application/pdf';
-      } else if (ext === '.docx') {
-        contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-      } else if (ext === '.doc') {
-        contentType = 'application/msword';
+        // Add .pdf extension to display name if not present
+        if (!filename.toLowerCase().endsWith('.pdf')) {
+          displayName = filename + '.pdf';
+        }
+      } else {
+        // Fallback to extension-based detection
+        const ext = path.extname(filename).toLowerCase();
+        if (ext === '.pdf') {
+          contentType = 'application/pdf';
+        } else if (ext === '.docx') {
+          contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        } else if (ext === '.doc') {
+          contentType = 'application/msword';
+        }
       }
       
+      // Set headers for inline display
       res.setHeader('Content-Type', contentType);
       res.setHeader('Content-Length', stats.size);
-      res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+      res.setHeader('Content-Disposition', `inline; filename="${displayName}"`);
+      res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+      res.setHeader('X-Content-Type-Options', 'nosniff');
       
       res.send(fileBuffer);
       
