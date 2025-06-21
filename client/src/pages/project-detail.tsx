@@ -778,41 +778,41 @@ export default function ProjectDetail() {
                 {editingDetails ? (
                   <div className="space-y-6">
                     <div>
-                      <label className="block text-sm font-medium mb-2">Requirements</label>
+                      <label className="block text-sm font-medium mb-2">Goals & Impact</label>
                       <Textarea
                         value={projectForm.requirements || ""}
                         onChange={(e) => setProjectForm({ ...projectForm, requirements: e.target.value })}
-                        placeholder="Describe the project requirements..."
+                        placeholder="What are the goals of this project? Who will it help and what impact will it have?"
                         rows={4}
                       />
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium mb-2">Deliverables</label>
+                      <label className="block text-sm font-medium mb-2">Volunteer Needs</label>
                       <Textarea
                         value={projectForm.deliverables || ""}
                         onChange={(e) => setProjectForm({ ...projectForm, deliverables: e.target.value })}
-                        placeholder="List the expected deliverables..."
+                        placeholder="What types of volunteers are needed? Skills, time commitment, special requirements..."
                         rows={4}
                       />
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium mb-2">Resources</label>
+                      <label className="block text-sm font-medium mb-2">Resources & Materials</label>
                       <Textarea
                         value={projectForm.resources || ""}
                         onChange={(e) => setProjectForm({ ...projectForm, resources: e.target.value })}
-                        placeholder="Specify required resources..."
+                        placeholder="What materials, supplies, or funding are needed for this project?"
                         rows={4}
                       />
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium mb-2">Blockers</label>
+                      <label className="block text-sm font-medium mb-2">Project Notes</label>
                       <Textarea
                         value={projectForm.blockers || ""}
                         onChange={(e) => setProjectForm({ ...projectForm, blockers: e.target.value })}
-                        placeholder="Identify any current blockers..."
+                        placeholder="Additional notes, challenges, or important information about this project..."
                         rows={4}
                       />
                     </div>
@@ -820,30 +820,30 @@ export default function ProjectDetail() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <h3 className="text-lg font-semibold mb-3">Requirements</h3>
+                      <h3 className="text-lg font-semibold mb-3">Goals & Impact</h3>
                       <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
-                        {project.requirements || "No requirements specified"}
+                        {project.requirements || "No goals or impact statement provided"}
                       </p>
                     </div>
                     
                     <div>
-                      <h3 className="text-lg font-semibold mb-3">Deliverables</h3>
+                      <h3 className="text-lg font-semibold mb-3">Volunteer Needs</h3>
                       <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
-                        {project.deliverables || "No deliverables specified"}
+                        {project.deliverables || "No volunteer requirements specified"}
                       </p>
                     </div>
                     
                     <div>
-                      <h3 className="text-lg font-semibold mb-3">Resources</h3>
+                      <h3 className="text-lg font-semibold mb-3">Resources & Materials</h3>
                       <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
-                        {project.resources || "No resources specified"}
+                        {project.resources || "No resources or materials specified"}
                       </p>
                     </div>
                     
                     <div>
-                      <h3 className="text-lg font-semibold mb-3">Blockers</h3>
+                      <h3 className="text-lg font-semibold mb-3">Project Notes</h3>
                       <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
-                        {project.blockers || "No blockers identified"}
+                        {project.blockers || "No additional notes provided"}
                       </p>
                     </div>
                   </div>
