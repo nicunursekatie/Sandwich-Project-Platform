@@ -19,10 +19,14 @@ import {
   TrendingUp,
   AlertCircle,
   Menu,
-  MessageCircle
+  MessageCircle,
+  Home,
+  FileText,
+  Settings,
+  Phone,
+  Users
 } from "lucide-react";
 import type { Project } from "@shared/schema";
-import { CollapsibleNav } from "@/components/collapsible-nav";
 import logoPath from "@assets/CMYK_PRINT_TSP-01_1749585167435.png";
 
 export default function ProjectsPage() {
@@ -183,8 +187,44 @@ export default function ProjectsPage() {
               <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
               <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
             </div>
-            <div className="h-full overflow-y-auto">
-              <CollapsibleNav />
+            <div className="h-full overflow-y-auto p-4">
+              <nav className="space-y-2">
+                <button
+                  onClick={() => { setLocation("/"); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
+                >
+                  <Home className="w-4 h-4 mr-3" />
+                  Dashboard
+                </button>
+                <button
+                  onClick={() => { setLocation("/projects"); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg"
+                >
+                  <FileText className="w-4 h-4 mr-3" />
+                  Projects
+                </button>
+                <button
+                  onClick={() => { setLocation("/meetings"); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
+                >
+                  <Calendar className="w-4 h-4 mr-3" />
+                  Meetings
+                </button>
+                <button
+                  onClick={() => { setLocation("/analytics"); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
+                >
+                  <BarChart3 className="w-4 h-4 mr-3" />
+                  Analytics
+                </button>
+                <button
+                  onClick={() => { setLocation("/phone-directory"); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
+                >
+                  <Phone className="w-4 h-4 mr-3" />
+                  Phone Directory
+                </button>
+              </nav>
             </div>
           </div>
         </div>
@@ -198,7 +238,45 @@ export default function ProjectsPage() {
               <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
               <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
             </div>
-            <CollapsibleNav />
+            <div className="flex-1 p-4">
+              <nav className="space-y-2">
+                <button
+                  onClick={() => setLocation("/")}
+                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
+                >
+                  <Home className="w-4 h-4 mr-3" />
+                  Dashboard
+                </button>
+                <button
+                  onClick={() => setLocation("/projects")}
+                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg"
+                >
+                  <FileText className="w-4 h-4 mr-3" />
+                  Projects
+                </button>
+                <button
+                  onClick={() => setLocation("/meetings")}
+                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
+                >
+                  <Calendar className="w-4 h-4 mr-3" />
+                  Meetings
+                </button>
+                <button
+                  onClick={() => setLocation("/analytics")}
+                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
+                >
+                  <BarChart3 className="w-4 h-4 mr-3" />
+                  Analytics
+                </button>
+                <button
+                  onClick={() => setLocation("/phone-directory")}
+                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
+                >
+                  <Phone className="w-4 h-4 mr-3" />
+                  Phone Directory
+                </button>
+              </nav>
+            </div>
             <div className="p-4 border-t border-gray-200">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-600">Welcome, {(user as any)?.firstName || 'Team'}</span>
