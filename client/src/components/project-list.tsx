@@ -674,79 +674,32 @@ export default function ProjectList() {
           </div>
         )}
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           {projects.map((project) => (
-            <div 
-              key={project.id} 
-              className="bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors relative cursor-pointer"
-              onClick={() => setLocation(`/projects/${project.id}`)}
-            >
-              {/* Action buttons in top right corner */}
-              <div className="absolute top-2 right-2 flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    startEditingProject(project);
-                  }}
-                  className="h-6 w-6 p-0 text-slate-500 hover:text-slate-700 hover:bg-slate-200"
-                >
-                  <Edit className="w-3 h-3" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteProject(project.id, project.title);
-                  }}
-                  className="h-6 w-6 p-0 text-slate-500 hover:text-red-700 hover:bg-red-50"
-                >
-                  <Trash2 className="w-3 h-3" />
-                </Button>
-              </div>
-
-              <div className="flex items-center justify-between p-3 pr-16">
-                <div className="flex items-center space-x-3">
-                  <span className={`w-3 h-3 rounded-full ${getStatusColor(project.status)}`}></span>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-base font-semibold text-slate-900">{project.title}</h3>
-                      {project.priority && (
-                        <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${
-                          project.priority === 'urgent' ? 'bg-red-100 text-red-700' :
-                          project.priority === 'high' ? 'bg-orange-100 text-orange-700' :
-                          project.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                          'bg-gray-100 text-gray-700'
-                        }`}>
-                          {project.priority}
-                        </span>
-                      )}
-                      {project.category && project.category !== 'general' && (
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700 font-medium">
-                          {project.category}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-slate-600 mb-1">{project.description}</p>
-                    <div className="flex items-center gap-4 text-xs text-slate-500">
-                      {project.dueDate && (
-                        <span>Due: {new Date(project.dueDate).toLocaleDateString()}</span>
-                      )}
-                      {project.progressPercentage > 0 && (
-                        <span>{project.progressPercentage}% complete</span>
-                      )}
-                      {project.estimatedHours && (
-                        <span>Est: {project.estimatedHours}h</span>
-                      )}
-                    </div>
+            <div key={project.id} className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h3 className="text-base font-semibold text-slate-900">{project.title}</h3>
+                    <span className={getStatusBadge(project.status)}>
+                      {getStatusText(project.status)}
+                    </span>
+                  </div>
+                  {project.description && (
+                    <p className="text-slate-600 mb-3 text-sm leading-relaxed">{project.description}</p>
+                  )}
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+                    <span className="bg-slate-100 px-2 py-1 rounded">{project.category}</span>
+                    <span className="bg-slate-100 px-2 py-1 rounded">{project.priority} priority</span>
+                    {project.dueDate && (
+                      <span>Due: {new Date(project.dueDate).toLocaleDateString()}</span>
+                    )}
+                    {project.estimatedHours && (
+                      <span>Est: {project.estimatedHours}h</span>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <span className={getStatusBadge(project.status)}>
-                    {getStatusText(project.status)}
-                  </span>
+                <div className="flex items-center gap-2 ml-4">
                   {project.status === "available" ? (
                     claimingProjectId === project.id ? (
                       <div className="text-sm text-slate-500">Claiming...</div>
@@ -763,6 +716,22 @@ export default function ProjectList() {
                   ) : project.assigneeName ? (
                     <span className="text-sm text-slate-500">Assigned to {project.assigneeName}</span>
                   ) : null}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => startEditingProject(project)}
+                    className="text-slate-500 hover:text-slate-700"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDeleteProject(project.id, project.title)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
                 </div>
               </div>
               
