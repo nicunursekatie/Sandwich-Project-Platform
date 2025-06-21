@@ -557,7 +557,7 @@ export default function Projects() {
                     </CardContent>
                   </Card>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {waitingProjects.map((project: Project) => (
                       <ProjectCard key={project.id} project={project} />
                     ))}
@@ -571,7 +571,7 @@ export default function Projects() {
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  <h2 className="text-xl font-semibold">Completed Projects</h2>
+                  <h2 className="text-lg sm:text-xl font-semibold">Completed Projects</h2>
                   <Badge className="bg-green-100 text-green-800">
                     {completedProjects.length} projects
                   </Badge>
@@ -579,18 +579,18 @@ export default function Projects() {
                 
                 {completedProjects.length === 0 ? (
                   <Card>
-                    <CardContent className="p-8 text-center">
+                    <CardContent className="p-6 sm:p-8 text-center">
                       <CheckCircle2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                      <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-2">
                         No Completed Projects
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-400">
+                      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
                         Completed projects will be archived here for reference.
                       </p>
                     </CardContent>
                   </Card>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {completedProjects.map((project: Project) => (
                       <ProjectCard key={project.id} project={project} />
                     ))}
