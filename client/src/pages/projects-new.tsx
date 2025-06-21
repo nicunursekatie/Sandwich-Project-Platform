@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -7,13 +7,17 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { ErrorBoundary } from "@/components/error-boundary";
-import { LoadingState } from "@/components/ui/loading";
+import { LoadingState, CardSkeleton, LoadingButton } from "@/components/ui/loading";
 import { 
   Plus, 
   Calendar, 
   User, 
   Clock, 
   Target, 
+  CheckCircle2, 
+  Circle, 
+  Pause,
+  Play,
   ArrowRight,
   BarChart3,
   TrendingUp,
@@ -44,15 +48,15 @@ export default function ProjectsPage() {
     queryKey: ['/api/auth/user'],
   });
 
-  const { data: projects = [], isLoading } = useQuery({
+  const { data: projects, isLoading } = useQuery({
     queryKey: ["/api/projects"],
   });
 
-  const filteredProjects = projects.filter((project: Project) => project.status !== "completed");
+  const filteredProjects = projects?.filter((project: Project) => project.status !== "completed") || [];
   const activeProjects = filteredProjects.filter((project: Project) => project.status === "active");
   const availableProjects = filteredProjects.filter((project: Project) => project.status === "available");
   const waitingProjects = filteredProjects.filter((project: Project) => project.status === "waiting");
-  const completedProjects = projects.filter((project: Project) => project.status === "completed");
+  const completedProjects = projects?.filter((project: Project) => project.status === "completed") || [];
 
   const getProjectIcon = (project: Project) => {
     const iconMap: Record<string, any> = {
@@ -72,6 +76,16 @@ export default function ProjectsPage() {
       case 'high': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
       case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
       case 'low': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+      case 'available': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+      case 'waiting': return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300';
+      case 'completed': return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
     }
   };
