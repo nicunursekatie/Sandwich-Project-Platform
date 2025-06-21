@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,7 +35,9 @@ import {
   Phone,
   Sandwich,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  Menu,
+  X
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -49,6 +51,19 @@ export default function Projects() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile menu on window resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) { // lg breakpoint
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => 
@@ -282,6 +297,14 @@ export default function Projects() {
       {/* Top Header */}
       <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+            title="Menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
           <Sandwich className="text-amber-500 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
           <h1 className="text-base sm:text-lg font-semibold text-slate-900 truncate">The Sandwich Project</h1>
         </div>
@@ -302,8 +325,102 @@ export default function Projects() {
         </div>
       </div>
 
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setMobileMenuOpen(false)}>
+          <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="p-4 border-b border-slate-200">
+              <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
+              <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
+            </div>
+            
+            <nav className="flex-1 p-4 overflow-y-auto">
+              <ul className="space-y-2">
+                {filteredNavigation.map((item) => {
+                  const Icon = item.icon;
+                  
+                  if (item.type === "section") {
+                    const isExpanded = expandedSections.includes(item.id);
+                    return (
+                      <li key={item.id}>
+                        <button
+                          onClick={() => toggleSection(item.id)}
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <Icon className="w-5 h-5" />
+                            <span className="font-medium">{item.label}</span>
+                          </div>
+                          {isExpanded ? (
+                            <ChevronDown className="w-4 h-4" />
+                          ) : (
+                            <ChevronRight className="w-4 h-4" />
+                          )}
+                        </button>
+                        {isExpanded && (
+                          <ul className="mt-2 ml-8 space-y-1">
+                            {item.items?.map((subItem) => {
+                              const SubIcon = subItem.icon;
+                              const isActive = subItem.id === "projects";
+                              return (
+                                <li key={subItem.id}>
+                                  <button
+                                    onClick={() => {
+                                      setLocation(subItem.href);
+                                      setMobileMenuOpen(false);
+                                    }}
+                                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                                      isActive
+                                        ? "bg-blue-50 text-blue-700 border border-blue-200"
+                                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                    }`}
+                                  >
+                                    <SubIcon className="w-4 h-4" />
+                                    <span className="text-sm">{subItem.label}</span>
+                                  </button>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
+                      </li>
+                    );
+                  }
+                  
+                  const isActive = item.id === "projects";
+                  return (
+                    <li key={item.id}>
+                      <button
+                        onClick={() => {
+                          setLocation(item.href || "/");
+                          setMobileMenuOpen(false);
+                        }}
+                        className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                          isActive
+                            ? "bg-blue-50 text-blue-700 border border-blue-200"
+                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span>{item.label}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+            
+            <div className="p-4 border-t border-gray-200">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">Welcome, {(user as any)?.firstName || 'Team'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-1">
-        {/* Sidebar - Hidden on mobile, shown on larger screens */}
+        {/* Desktop Sidebar - Hidden on mobile, shown on larger screens */}
         <div className="hidden lg:flex w-64 bg-white border-r border-slate-200 flex-col">
           <div className="p-4 border-b border-slate-200">
             <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
