@@ -48,6 +48,10 @@ export default function ProjectDetail() {
     author: ""
   });
 
+  // Task editing states
+  const [editingTask, setEditingTask] = useState<number | null>(null);
+  const [editingTaskData, setEditingTaskData] = useState<{ [key: number]: any }>({});
+
   // Fetch project data
   const { data: project, isLoading: projectLoading, error } = useQuery({
     queryKey: [`/api/projects/${id}`],
@@ -105,6 +109,37 @@ export default function ProjectDetail() {
     }
   });
 
+  // Update task mutation
+  const updateTaskMutation = useMutation({
+    mutationFn: async ({ taskId, updates }: { taskId: number; updates: any }) => {
+      const response = await apiRequest("PATCH", `/api/projects/${id}/tasks/${taskId}`, updates);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${id}/tasks`] });
+      setEditingTask(null);
+      toast({ title: "Task updated successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to update task", variant: "destructive" });
+    }
+  });
+
+  // Delete task mutation
+  const deleteTaskMutation = useMutation({
+    mutationFn: async (taskId: number) => {
+      const response = await apiRequest("DELETE", `/api/projects/${id}/tasks/${taskId}`);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${id}/tasks`] });
+      toast({ title: "Task deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete task", variant: "destructive" });
+    }
+  });
+
   // Add comment mutation
   const addCommentMutation = useMutation({
     mutationFn: async (commentData: any) => {
@@ -146,6 +181,52 @@ export default function ProjectDetail() {
   const handleCommentAdd = () => {
     if (!newComment.content.trim() || !newComment.author.trim()) return;
     addCommentMutation.mutate(newComment);
+  };
+
+  // Handle task status change
+  const handleTaskStatusChange = (taskId: number, status: string) => {
+    const updates: any = { status };
+    if (status === "completed") {
+      updates.completedAt = new Date();
+    }
+    updateTaskMutation.mutate({ taskId, updates });
+  };
+
+  // Handle task edit
+  const handleTaskEdit = (task: any) => {
+    setEditingTask(task.id);
+    setEditingTaskData({
+      ...editingTaskData,
+      [task.id]: {
+        title: task.title,
+        description: task.description || "",
+        priority: task.priority
+      }
+    });
+  };
+
+  // Handle task save
+  const handleTaskSave = (taskId: number) => {
+    const taskData = editingTaskData[taskId];
+    if (taskData) {
+      updateTaskMutation.mutate({ 
+        taskId, 
+        updates: taskData 
+      });
+    }
+  };
+
+  // Handle task cancel
+  const handleTaskCancel = () => {
+    setEditingTask(null);
+    setEditingTaskData({});
+  };
+
+  // Handle task delete
+  const handleTaskDelete = (taskId: number) => {
+    if (confirm("Are you sure you want to delete this task?")) {
+      deleteTaskMutation.mutate(taskId);
+    }
   };
 
   // Initialize form when project loads
@@ -646,24 +727,112 @@ export default function ProjectDetail() {
                         </div>
                       ) : (
                         tasks.map((task: ProjectTask) => (
-                          <div key={task.id} className="flex items-start sm:items-center gap-3 p-3 sm:p-4 border rounded-lg bg-white hover:bg-gray-50 transition-colors">
-                            <div className="flex-shrink-0 mt-0.5 sm:mt-0">
-                              {task.status === "completed" ? (
-                                <CheckCircle2 className="w-5 h-5 text-green-500" />
-                              ) : (
-                                <Circle className="w-5 h-5 text-gray-400" />
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium text-sm sm:text-base break-words">{task.title}</div>
-                              {task.description && (
-                                <div className="text-xs sm:text-sm text-gray-500 mt-1 break-words">{task.description}</div>
-                              )}
-                            </div>
-                            <div className="flex-shrink-0">
-                              <Badge className={`${getPriorityColor(task.priority)} text-white text-xs`}>
-                                {task.priority}
-                              </Badge>
+                          <div key={task.id} className="border rounded-lg bg-white hover:bg-gray-50 transition-colors">
+                            <div className="flex items-start gap-3 p-3 sm:p-4">
+                              <div className="flex-shrink-0 mt-0.5 sm:mt-0">
+                                <button
+                                  onClick={() => handleTaskStatusChange(task.id, task.status === "completed" ? "in_progress" : "completed")}
+                                  className="transition-colors hover:scale-110"
+                                  disabled={updateTaskMutation.isPending}
+                                >
+                                  {task.status === "completed" ? (
+                                    <CheckCircle2 className="w-5 h-5 text-green-500" />
+                                  ) : (
+                                    <Circle className="w-5 h-5 text-gray-400" />
+                                  )}
+                                </button>
+                              </div>
+                              
+                              <div className="flex-1 min-w-0">
+                                {editingTask === task.id ? (
+                                  <div className="space-y-3">
+                                    <Input
+                                      value={editingTaskData[task.id]?.title || ""}
+                                      onChange={(e) => setEditingTaskData({
+                                        ...editingTaskData,
+                                        [task.id]: { ...editingTaskData[task.id], title: e.target.value }
+                                      })}
+                                      placeholder="Task title"
+                                      className="w-full"
+                                    />
+                                    <Input
+                                      value={editingTaskData[task.id]?.description || ""}
+                                      onChange={(e) => setEditingTaskData({
+                                        ...editingTaskData,
+                                        [task.id]: { ...editingTaskData[task.id], description: e.target.value }
+                                      })}
+                                      placeholder="Task description"
+                                      className="w-full"
+                                    />
+                                    <Select
+                                      value={editingTaskData[task.id]?.priority || task.priority}
+                                      onValueChange={(value: "low" | "medium" | "high") => setEditingTaskData({
+                                        ...editingTaskData,
+                                        [task.id]: { ...editingTaskData[task.id], priority: value }
+                                      })}
+                                    >
+                                      <SelectTrigger className="w-32">
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="low">Low</SelectItem>
+                                        <SelectItem value="medium">Medium</SelectItem>
+                                        <SelectItem value="high">High</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                    <div className="flex gap-2">
+                                      <Button 
+                                        size="sm" 
+                                        onClick={() => handleTaskSave(task.id)}
+                                        disabled={updateTaskMutation.isPending}
+                                      >
+                                        {updateTaskMutation.isPending ? "Saving..." : "Save"}
+                                      </Button>
+                                      <Button 
+                                        size="sm" 
+                                        variant="outline" 
+                                        onClick={handleTaskCancel}
+                                      >
+                                        Cancel
+                                      </Button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <div className="font-medium text-sm sm:text-base break-words">{task.title}</div>
+                                    {task.description && (
+                                      <div className="text-xs sm:text-sm text-gray-500 mt-1 break-words">{task.description}</div>
+                                    )}
+                                  </>
+                                )}
+                              </div>
+                              
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                <Badge className={`${getPriorityColor(task.priority)} text-white text-xs`}>
+                                  {task.priority}
+                                </Badge>
+                                {editingTask !== task.id && (
+                                  <div className="flex gap-1">
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleTaskEdit(task)}
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <Edit className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleTaskDelete(task.id)}
+                                      className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
+                                      disabled={deleteTaskMutation.isPending}
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           </div>
                         ))
