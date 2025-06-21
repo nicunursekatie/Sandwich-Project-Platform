@@ -232,62 +232,63 @@ export default function ProjectDetail() {
       <div className="lg:ml-16 transition-all duration-300">
         {/* Hero Header */}
         <div className="bg-white shadow-lg border-b">
-          <div className="max-w-7xl mx-auto px-6 py-12">
-            <div className="flex items-center gap-6 mb-8">
-              <Button variant="outline" onClick={() => setLocation("/projects")} className="flex items-center gap-2 px-4 py-2">
-                <ArrowLeft className="w-5 h-5" />
-                Back to Projects
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+              <Button variant="outline" onClick={() => setLocation("/projects")} className="flex items-center gap-2 px-3 py-2 text-sm sm:text-base">
+                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="hidden sm:inline">Back to Projects</span>
+                <span className="sm:hidden">Back</span>
               </Button>
-              <div className="h-8 w-px bg-gray-300"></div>
-              <span className="text-gray-600 font-medium text-lg">Project Details</span>
+              <div className="hidden sm:block h-8 w-px bg-gray-300"></div>
+              <span className="text-gray-600 font-medium text-base sm:text-lg">Project Details</span>
             </div>
             
-            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+            <div className="flex flex-col gap-6 sm:gap-8">
               <div className="flex-1">
                 {editingProject ? (
                   <Input
                     value={projectForm.title}
                     onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })}
-                    className="text-5xl font-bold border-none p-0 h-auto bg-transparent focus:ring-0 mb-6"
+                    className="text-2xl sm:text-3xl lg:text-5xl font-bold border-none p-0 h-auto bg-transparent focus:ring-0 mb-4 sm:mb-6"
                   />
                 ) : (
-                  <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">{project.title}</h1>
+                  <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight break-words">{project.title}</h1>
                 )}
                 
-                <div className="flex flex-wrap items-center gap-4 mb-6">
-                  <Badge className={`${getStatusColor(project.status || "active")} text-white px-4 py-2 text-base font-medium`}>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
+                  <Badge className={`${getStatusColor(project.status || "active")} text-white px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-medium`}>
                     {project.status?.replace("_", " ") || "Active"}
                   </Badge>
-                  <Badge className={`${getPriorityColor(project.priority || "medium")} text-white px-4 py-2 text-base font-medium`}>
+                  <Badge className={`${getPriorityColor(project.priority || "medium")} text-white px-2 sm:px-4 py-1 sm:py-2 text-sm sm:text-base font-medium`}>
                     {project.priority || "Medium"} Priority
                   </Badge>
-                  <div className="flex items-center gap-3 bg-gray-100 px-4 py-2 rounded-lg">
-                    <CheckCircle2 className="w-5 h-5 text-gray-600" />
-                    <span className="text-base font-medium text-gray-700">
+                  <div className="flex items-center gap-2 sm:gap-3 bg-gray-100 px-2 sm:px-4 py-1 sm:py-2 rounded-lg">
+                    <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+                    <span className="text-sm sm:text-base font-medium text-gray-700">
                       {completedTasks}/{totalTasks} Tasks ({progressPercentage}%)
                     </span>
                   </div>
                 </div>
                 
                 {!editingProject && project.description && (
-                  <p className="text-xl text-gray-600 leading-relaxed max-w-4xl">
+                  <p className="text-base sm:text-xl text-gray-600 leading-relaxed">
                     {project.description}
                   </p>
                 )}
               </div>
               
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                 {editingProject ? (
                   <>
-                    <Button onClick={handleProjectSave} disabled={updateProjectMutation.isPending} size="lg" className="px-8 py-3 text-base">
+                    <Button onClick={handleProjectSave} disabled={updateProjectMutation.isPending} className="px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-base">
                       {updateProjectMutation.isPending ? "Saving..." : "Save Changes"}
                     </Button>
-                    <Button variant="outline" onClick={() => setEditingProject(false)} size="lg" className="px-8 py-3 text-base">
+                    <Button variant="outline" onClick={() => setEditingProject(false)} className="px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-base">
                       Cancel
                     </Button>
                   </>
                 ) : (
-                  <Button onClick={() => setEditingProject(true)} size="lg" className="px-8 py-3 text-base">
+                  <Button onClick={() => setEditingProject(true)} className="px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-base">
                     Edit Project
                   </Button>
                 )}
@@ -297,39 +298,39 @@ export default function ProjectDetail() {
         </div>
 
         {/* Main Content Area */}
-        <div className="max-w-7xl mx-auto px-6 py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
           {/* Edit Project Form */}
           {editingProject && (
-            <div className="bg-white rounded-2xl shadow-sm border p-10 mb-10">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Edit Project Information</h2>
-              <div className="space-y-8">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border p-4 sm:p-6 lg:p-10 mb-6 sm:mb-10">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">Edit Project Information</h2>
+              <div className="space-y-6 sm:space-y-8">
                 <div>
-                  <label className="block text-xl font-semibold mb-4">Description</label>
+                  <label className="block text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Description</label>
                   <Textarea
                     value={projectForm.description || ""}
                     onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
                     placeholder="Describe what this project is about and its purpose..."
-                    rows={5}
-                    className="text-lg leading-relaxed"
+                    rows={4}
+                    className="text-base sm:text-lg leading-relaxed"
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                   <div>
-                    <label className="block text-xl font-semibold mb-4">Category</label>
+                    <label className="block text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Category</label>
                     <Input
                       value={projectForm.category}
                       onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })}
                       placeholder="e.g. Community Outreach, Fundraising"
-                      className="text-lg py-3"
+                      className="text-base sm:text-lg py-2 sm:py-3"
                     />
                   </div>
                   <div>
-                    <label className="block text-xl font-semibold mb-4">Priority</label>
+                    <label className="block text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Priority</label>
                     <Select
                       value={projectForm.priority}
                       onValueChange={(value) => setProjectForm({ ...projectForm, priority: value })}
                     >
-                      <SelectTrigger className="text-lg py-3">
+                      <SelectTrigger className="text-base sm:text-lg py-2 sm:py-3">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -346,44 +347,44 @@ export default function ProjectDetail() {
 
           {/* Quick Stats Cards */}
           {!editingProject && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-              <div className="bg-white rounded-2xl shadow-sm border p-8 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center">
-                    <Calendar className="w-8 h-8 text-blue-600" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-10">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border p-4 sm:p-6 lg:p-8 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-blue-100 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <Calendar className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-blue-600" />
                   </div>
-                  <div>
-                    <p className="text-base font-medium text-gray-500 mb-1">Created</p>
-                    <p className="text-xl font-bold text-gray-900">
-                      {new Date(project.createdAt || "").toLocaleDateString()}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm sm:text-base font-medium text-gray-500 mb-1">Created</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+                      {new Date().toLocaleDateString()}
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-white rounded-2xl shadow-sm border p-8 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center">
-                    <FolderOpen className="w-8 h-8 text-green-600" />
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border p-4 sm:p-6 lg:p-8 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-green-100 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <FolderOpen className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-green-600" />
                   </div>
-                  <div>
-                    <p className="text-base font-medium text-gray-500 mb-1">Category</p>
-                    <p className="text-xl font-bold text-gray-900">
-                      {project.category || "Uncategorized"}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm sm:text-base font-medium text-gray-500 mb-1">Category</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+                      {"Uncategorized"}
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-white rounded-2xl shadow-sm border p-8 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center">
-                    <Clock className="w-8 h-8 text-purple-600" />
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border p-4 sm:p-6 lg:p-8 hover:shadow-md transition-shadow sm:col-span-2 lg:col-span-1">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-purple-100 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-purple-600" />
                   </div>
-                  <div>
-                    <p className="text-base font-medium text-gray-500 mb-1">Last Updated</p>
-                    <p className="text-xl font-bold text-gray-900">
-                      {new Date(project.updatedAt || "").toLocaleDateString()}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm sm:text-base font-medium text-gray-500 mb-1">Last Updated</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+                      {new Date().toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -392,36 +393,36 @@ export default function ProjectDetail() {
           )}
 
           {/* Navigation Tabs */}
-          <div className="bg-white rounded-2xl shadow-sm border p-2 mb-8">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border p-1 sm:p-2 mb-6 sm:mb-8">
             <Tabs defaultValue="tasks" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-transparent gap-2">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-transparent gap-1 sm:gap-2">
                 <TabsTrigger 
                   value="details" 
-                  className="flex items-center gap-3 px-6 py-4 text-base font-medium rounded-xl data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:shadow-sm transition-all"
+                  className="flex items-center gap-1 sm:gap-2 lg:gap-3 px-2 sm:px-4 lg:px-6 py-2 sm:py-3 lg:py-4 text-xs sm:text-sm lg:text-base font-medium rounded-lg sm:rounded-xl data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:shadow-sm transition-all"
                 >
-                  <FileText className="w-5 h-5" />
-                  Details
+                  <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">Details</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="tasks" 
-                  className="flex items-center gap-3 px-6 py-4 text-base font-medium rounded-xl data-[state=active]:bg-green-50 data-[state=active]:text-green-700 data-[state=active]:shadow-sm transition-all"
+                  className="flex items-center gap-1 sm:gap-2 lg:gap-3 px-2 sm:px-4 lg:px-6 py-2 sm:py-3 lg:py-4 text-xs sm:text-sm lg:text-base font-medium rounded-lg sm:rounded-xl data-[state=active]:bg-green-50 data-[state=active]:text-green-700 data-[state=active]:shadow-sm transition-all"
                 >
-                  <CheckCircle2 className="w-5 h-5" />
-                  Tasks
+                  <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">Tasks</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="comments" 
-                  className="flex items-center gap-3 px-6 py-4 text-base font-medium rounded-xl data-[state=active]:bg-purple-50 data-[state=active]:text-purple-700 data-[state=active]:shadow-sm transition-all"
+                  className="flex items-center gap-1 sm:gap-2 lg:gap-3 px-2 sm:px-4 lg:px-6 py-2 sm:py-3 lg:py-4 text-xs sm:text-sm lg:text-base font-medium rounded-lg sm:rounded-xl data-[state=active]:bg-purple-50 data-[state=active]:text-purple-700 data-[state=active]:shadow-sm transition-all"
                 >
-                  <MessageSquare className="w-5 h-5" />
-                  Comments
+                  <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">Comments</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="files" 
-                  className="flex items-center gap-3 px-6 py-4 text-base font-medium rounded-xl data-[state=active]:bg-orange-50 data-[state=active]:text-orange-700 data-[state=active]:shadow-sm transition-all"
+                  className="flex items-center gap-1 sm:gap-2 lg:gap-3 px-2 sm:px-4 lg:px-6 py-2 sm:py-3 lg:py-4 text-xs sm:text-sm lg:text-base font-medium rounded-lg sm:rounded-xl data-[state=active]:bg-orange-50 data-[state=active]:text-orange-700 data-[state=active]:shadow-sm transition-all"
                 >
-                  <Upload className="w-5 h-5" />
-                  Files
+                  <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">Files</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -593,25 +594,26 @@ export default function ProjectDetail() {
               </TabsContent>
 
               {/* Tasks Tab */}
-              <TabsContent value="tasks">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <CheckCircle2 className="w-5 h-5" />
+              <TabsContent value="tasks" className="mt-4 sm:mt-6">
+                <Card className="border-0 shadow-none">
+                  <CardHeader className="px-0 pb-4 sm:pb-6">
+                    <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                      <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
                       Project Tasks
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="px-0 space-y-4 sm:space-y-6">
                     {/* Add Task Form */}
-                    <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
-                      <h3 className="text-lg font-semibold mb-4">Add New Task</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                    <div className="border rounded-lg p-3 sm:p-4 bg-gray-50 dark:bg-gray-800">
+                      <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Add New Task</h3>
+                      <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-1 lg:grid-cols-3 sm:gap-3 mb-3 sm:mb-4">
                         <div>
                           <label className="block text-sm font-medium mb-1">Task Title</label>
                           <Input
                             value={newTask.title}
                             onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
                             placeholder="Enter task title"
+                            className="w-full"
                           />
                         </div>
                         <div>
@@ -620,6 +622,7 @@ export default function ProjectDetail() {
                             value={newTask.description}
                             onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
                             placeholder="Task description"
+                            className="w-full"
                           />
                         </div>
                         <div>
@@ -628,7 +631,7 @@ export default function ProjectDetail() {
                             value={newTask.priority}
                             onValueChange={(value: "low" | "medium" | "high") => setNewTask({ ...newTask, priority: value })}
                           >
-                            <SelectTrigger>
+                            <SelectTrigger className="w-full">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -639,7 +642,7 @@ export default function ProjectDetail() {
                           </Select>
                         </div>
                       </div>
-                      <Button onClick={handleTaskAdd} disabled={addTaskMutation.isPending}>
+                      <Button onClick={handleTaskAdd} disabled={addTaskMutation.isPending} className="w-full sm:w-auto">
                         {addTaskMutation.isPending ? "Adding..." : "Add Task"}
                       </Button>
                     </div>
@@ -647,26 +650,32 @@ export default function ProjectDetail() {
                     {/* Task List */}
                     <div className="space-y-3">
                       {tasks.length === 0 ? (
-                        <p className="text-center py-8 text-gray-500">No tasks yet. Add one above!</p>
+                        <div className="text-center py-8 sm:py-12">
+                          <CheckCircle2 className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+                          <p className="text-gray-500 text-base sm:text-lg">No tasks yet</p>
+                          <p className="text-gray-400 text-sm sm:text-base">Add your first task above to get started!</p>
+                        </div>
                       ) : (
                         tasks.map((task: ProjectTask) => (
-                          <div key={task.id} className="flex items-center gap-3 p-3 border rounded-lg">
-                            <div className="flex-shrink-0">
+                          <div key={task.id} className="flex items-start sm:items-center gap-3 p-3 sm:p-4 border rounded-lg bg-white hover:bg-gray-50 transition-colors">
+                            <div className="flex-shrink-0 mt-0.5 sm:mt-0">
                               {task.status === "completed" ? (
                                 <CheckCircle2 className="w-5 h-5 text-green-500" />
                               ) : (
                                 <Circle className="w-5 h-5 text-gray-400" />
                               )}
                             </div>
-                            <div className="flex-1">
-                              <div className="font-medium">{task.title}</div>
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium text-sm sm:text-base break-words">{task.title}</div>
                               {task.description && (
-                                <div className="text-sm text-gray-500">{task.description}</div>
+                                <div className="text-xs sm:text-sm text-gray-500 mt-1 break-words">{task.description}</div>
                               )}
                             </div>
-                            <Badge className={`${getPriorityColor(task.priority)} text-white`}>
-                              {task.priority}
-                            </Badge>
+                            <div className="flex-shrink-0">
+                              <Badge className={`${getPriorityColor(task.priority)} text-white text-xs`}>
+                                {task.priority}
+                              </Badge>
+                            </div>
                           </div>
                         ))
                       )}
@@ -676,55 +685,62 @@ export default function ProjectDetail() {
               </TabsContent>
 
               {/* Comments Tab */}
-              <TabsContent value="comments">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5" />
+              <TabsContent value="comments" className="mt-4 sm:mt-6">
+                <Card className="border-0 shadow-none">
+                  <CardHeader className="px-0 pb-4 sm:pb-6">
+                    <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                      <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
                       Project Comments
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="px-0 space-y-4 sm:space-y-6">
                     {/* Add Comment Form */}
-                    <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                    <div className="border rounded-lg p-3 sm:p-4 bg-gray-50 dark:bg-gray-800">
+                      <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Add Comment</h3>
+                      <div className="space-y-3">
                         <div>
                           <label className="block text-sm font-medium mb-1">Your Name</label>
                           <Input
                             value={newComment.author}
                             onChange={(e) => setNewComment({ ...newComment, author: e.target.value })}
                             placeholder="Enter your name"
+                            className="w-full"
                           />
                         </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-1">Comment</label>
+                          <Textarea
+                            value={newComment.content}
+                            onChange={(e) => setNewComment({ ...newComment, content: e.target.value })}
+                            placeholder="Add your comment..."
+                            rows={3}
+                            className="w-full resize-none"
+                          />
+                        </div>
+                        <Button onClick={handleCommentAdd} disabled={addCommentMutation.isPending} className="w-full sm:w-auto">
+                          {addCommentMutation.isPending ? "Adding..." : "Add Comment"}
+                        </Button>
                       </div>
-                      <div className="mb-3">
-                        <label className="block text-sm font-medium mb-1">Comment</label>
-                        <Textarea
-                          value={newComment.content}
-                          onChange={(e) => setNewComment({ ...newComment, content: e.target.value })}
-                          placeholder="Add your comment..."
-                          rows={3}
-                        />
-                      </div>
-                      <Button onClick={handleCommentAdd} disabled={addCommentMutation.isPending}>
-                        {addCommentMutation.isPending ? "Adding..." : "Add Comment"}
-                      </Button>
                     </div>
 
                     {/* Comments List */}
                     <div className="space-y-3">
                       {comments.length === 0 ? (
-                        <p className="text-center py-8 text-gray-500">No comments yet. Be the first to comment!</p>
+                        <div className="text-center py-8 sm:py-12">
+                          <MessageSquare className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+                          <p className="text-gray-500 text-base sm:text-lg">No comments yet</p>
+                          <p className="text-gray-400 text-sm sm:text-base">Be the first to share your thoughts!</p>
+                        </div>
                       ) : (
                         comments.map((comment: ProjectComment) => (
-                          <div key={comment.id} className="border rounded-lg p-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <div className="font-medium">{comment.author}</div>
-                              <div className="text-sm text-gray-500">
+                          <div key={comment.id} className="border rounded-lg p-3 sm:p-4 bg-white">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2 sm:mb-3">
+                              <div className="font-medium text-sm sm:text-base">{comment.authorName || "Anonymous"}</div>
+                              <div className="text-xs sm:text-sm text-gray-500">
                                 {new Date(comment.createdAt).toLocaleDateString()}
                               </div>
                             </div>
-                            <div className="text-gray-700 whitespace-pre-wrap">{comment.content}</div>
+                            <div className="text-gray-700 text-sm sm:text-base whitespace-pre-wrap break-words">{comment.content}</div>
                           </div>
                         ))
                       )}
@@ -734,27 +750,23 @@ export default function ProjectDetail() {
               </TabsContent>
 
               {/* Files Tab */}
-              <TabsContent value="files">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Upload className="w-5 h-5" />
+              <TabsContent value="files" className="mt-4 sm:mt-6">
+                <Card className="border-0 shadow-none">
+                  <CardHeader className="px-0 pb-4 sm:pb-6">
+                    <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                      <Upload className="w-5 h-5 sm:w-6 sm:h-6" />
                       Project Files
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-8">
-                      {projectFiles.length === 0 ? (
-                        <div className="space-y-2">
-                          <Upload className="w-12 h-12 text-gray-400 mx-auto" />
-                          <p className="text-sm">No files uploaded yet</p>
-                          <p className="text-xs text-gray-400">Upload files to share with your project team</p>
+                  <CardContent className="px-0">
+                    <div className="text-center py-8 sm:py-12">
+                      <div className="space-y-3 sm:space-y-4">
+                        <Upload className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto" />
+                        <div>
+                          <p className="text-gray-500 text-base sm:text-lg">No files uploaded yet</p>
+                          <p className="text-gray-400 text-sm sm:text-base mt-1">Upload files to share with your project team</p>
                         </div>
-                      ) : (
-                        <div className="space-y-2">
-                          <p className="text-sm">Files will be displayed here</p>
-                        </div>
-                      )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
