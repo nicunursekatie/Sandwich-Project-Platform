@@ -75,10 +75,7 @@ export default function ProjectDetail() {
   // Update mutations
   const updateProjectMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await apiRequest(`/api/projects/${id}`, {
-        method: "PATCH",
-        body: JSON.stringify(data)
-      });
+      const response = await apiRequest("PATCH", `/api/projects/${id}`, data);
       return response;
     },
     onSuccess: () => {
@@ -95,10 +92,7 @@ export default function ProjectDetail() {
   // Add task mutation
   const addTaskMutation = useMutation({
     mutationFn: async (taskData: any) => {
-      const response = await apiRequest(`/api/projects/${id}/tasks`, {
-        method: "POST",
-        body: JSON.stringify({ ...taskData, projectId: parseInt(id!) })
-      });
+      const response = await apiRequest("POST", `/api/projects/${id}/tasks`, { ...taskData, projectId: parseInt(id!) });
       return response;
     },
     onSuccess: () => {
@@ -114,10 +108,7 @@ export default function ProjectDetail() {
   // Add comment mutation
   const addCommentMutation = useMutation({
     mutationFn: async (commentData: any) => {
-      const response = await apiRequest(`/api/projects/${id}/comments`, {
-        method: "POST",
-        body: JSON.stringify({ ...commentData, projectId: parseInt(id!) })
-      });
+      const response = await apiRequest("POST", `/api/projects/${id}/comments`, { ...commentData, projectId: parseInt(id!) });
       return response;
     },
     onSuccess: () => {
