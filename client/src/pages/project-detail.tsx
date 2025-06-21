@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, CheckCircle2, Circle, MessageSquare, Users, Calendar, FileText, Upload, ExternalLink, Trash2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Circle, MessageSquare, Users, Calendar, FileText, Upload, ExternalLink, Trash2, FolderOpen, Clock, Plus, Edit, Download, Eye } from "lucide-react";
 import type { Project, ProjectTask, ProjectComment } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { CollapsibleNav } from "@/components/collapsible-nav";
@@ -368,161 +368,203 @@ export default function ProjectDetail() {
   const progressPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <CollapsibleNav />
       <div className="lg:ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto p-3 sm:p-6 space-y-6">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-              <Button variant="outline" onClick={() => setLocation("/projects")} className="self-start">
-                <ArrowLeft className="w-4 h-4 mr-2" />
+        {/* Hero Header */}
+        <div className="bg-white shadow-lg border-b">
+          <div className="max-w-7xl mx-auto px-6 py-12">
+            <div className="flex items-center gap-6 mb-8">
+              <Button variant="outline" onClick={() => setLocation("/projects")} className="flex items-center gap-2 px-4 py-2">
+                <ArrowLeft className="w-5 h-5" />
                 Back to Projects
               </Button>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white break-words">
-                  {editingProject ? (
-                    <Input
-                      value={projectForm.title}
-                      onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })}
-                      className="text-xl sm:text-2xl font-bold"
-                    />
-                  ) : (
-                    project.title
-                  )}
-                </h1>
-                <div className="flex flex-wrap items-center gap-2 mt-2">
-                <Badge className={`${getStatusColor(project.status || "active")} text-white text-xs`}>
-                  {project.status?.replace("_", " ") || "Active"}
-                </Badge>
-                <Badge className={`${getPriorityColor(project.priority || "medium")} text-white text-xs`}>
-                  {project.priority || "Medium"} Priority
-                </Badge>
-                <Badge variant="outline" className="text-xs">
-                  {completedTasks}/{totalTasks} Tasks ({progressPercentage}%)
-                </Badge>
+              <div className="h-8 w-px bg-gray-300"></div>
+              <span className="text-gray-600 font-medium text-lg">Project Details</span>
+            </div>
+            
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+              <div className="flex-1">
+                {editingProject ? (
+                  <Input
+                    value={projectForm.title}
+                    onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })}
+                    className="text-5xl font-bold border-none p-0 h-auto bg-transparent focus:ring-0 mb-6"
+                  />
+                ) : (
+                  <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">{project.title}</h1>
+                )}
+                
+                <div className="flex flex-wrap items-center gap-4 mb-6">
+                  <Badge className={`${getStatusColor(project.status || "active")} text-white px-4 py-2 text-base font-medium`}>
+                    {project.status?.replace("_", " ") || "Active"}
+                  </Badge>
+                  <Badge className={`${getPriorityColor(project.priority || "medium")} text-white px-4 py-2 text-base font-medium`}>
+                    {project.priority || "Medium"} Priority
+                  </Badge>
+                  <div className="flex items-center gap-3 bg-gray-100 px-4 py-2 rounded-lg">
+                    <CheckCircle2 className="w-5 h-5 text-gray-600" />
+                    <span className="text-base font-medium text-gray-700">
+                      {completedTasks}/{totalTasks} Tasks ({progressPercentage}%)
+                    </span>
+                  </div>
+                </div>
+                
+                {!editingProject && project.description && (
+                  <p className="text-xl text-gray-600 leading-relaxed max-w-4xl">
+                    {project.description}
+                  </p>
+                )}
+              </div>
+              
+              <div className="flex items-center gap-4">
+                {editingProject ? (
+                  <>
+                    <Button onClick={handleProjectSave} disabled={updateProjectMutation.isPending} size="lg" className="px-8 py-3 text-base">
+                      {updateProjectMutation.isPending ? "Saving..." : "Save Changes"}
+                    </Button>
+                    <Button variant="outline" onClick={() => setEditingProject(false)} size="lg" className="px-8 py-3 text-base">
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <Button onClick={() => setEditingProject(true)} size="lg" className="px-8 py-3 text-base">
+                    Edit Project
+                  </Button>
+                )}
               </div>
             </div>
-          </div>
-          
-          <div className="flex items-center gap-2 self-start sm:self-auto">
-            {editingProject ? (
-              <>
-                <Button onClick={handleProjectSave} disabled={updateProjectMutation.isPending} size="sm">
-                  Save
-                </Button>
-                <Button variant="outline" onClick={() => setEditingProject(false)} size="sm">
-                  Cancel
-                </Button>
-              </>
-            ) : (
-              <Button onClick={() => setEditingProject(true)} size="sm">
-                Edit Project
-              </Button>
-            )}
           </div>
         </div>
 
-        {/* Project Overview */}
-        <div className="bg-white rounded-lg border border-gray-200 p-8 space-y-6">
-          {editingProject ? (
-            <div className="space-y-6">
-              <div>
-                <label className="block text-lg font-semibold mb-3">Description</label>
-                <Textarea
-                  value={projectForm.description || ""}
-                  onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
-                  placeholder="Describe what this project is about..."
-                  rows={4}
-                  className="text-base"
-                />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Main Content Area */}
+        <div className="max-w-7xl mx-auto px-6 py-10">
+          {/* Edit Project Form */}
+          {editingProject && (
+            <div className="bg-white rounded-2xl shadow-sm border p-10 mb-10">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Edit Project Information</h2>
+              <div className="space-y-8">
                 <div>
-                  <label className="block text-lg font-semibold mb-3">Category</label>
-                  <Input
-                    value={projectForm.category}
-                    onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })}
-                    placeholder="e.g. Community Outreach, Fundraising"
-                    className="text-base"
+                  <label className="block text-xl font-semibold mb-4">Description</label>
+                  <Textarea
+                    value={projectForm.description || ""}
+                    onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
+                    placeholder="Describe what this project is about and its purpose..."
+                    rows={5}
+                    className="text-lg leading-relaxed"
                   />
                 </div>
-                <div>
-                  <label className="block text-lg font-semibold mb-3">Priority</label>
-                  <Select
-                    value={projectForm.priority}
-                    onValueChange={(value) => setProjectForm({ ...projectForm, priority: value })}
-                  >
-                    <SelectTrigger className="text-base">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="low">Low Priority</SelectItem>
-                      <SelectItem value="medium">Medium Priority</SelectItem>
-                      <SelectItem value="high">High Priority</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="flex gap-3 pt-4">
-                <Button onClick={handleProjectSave} disabled={updateProjectMutation.isPending} className="px-6">
-                  {updateProjectMutation.isPending ? "Saving..." : "Save Changes"}
-                </Button>
-                <Button variant="outline" onClick={() => setEditingProject(false)} className="px-6">
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Description</h3>
-                <p className="text-gray-700 text-base leading-relaxed">
-                  {project.description || "No description provided"}
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Category</h4>
-                  <p className="text-lg text-gray-900">{project.category || "Uncategorized"}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Created</h4>
-                  <p className="text-lg text-gray-900">{new Date(project.createdAt || "").toLocaleDateString()}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Last Updated</h4>
-                  <p className="text-lg text-gray-900">{new Date(project.updatedAt || "").toLocaleDateString()}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <label className="block text-xl font-semibold mb-4">Category</label>
+                    <Input
+                      value={projectForm.category}
+                      onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })}
+                      placeholder="e.g. Community Outreach, Fundraising"
+                      className="text-lg py-3"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xl font-semibold mb-4">Priority</label>
+                    <Select
+                      value={projectForm.priority}
+                      onValueChange={(value) => setProjectForm({ ...projectForm, priority: value })}
+                    >
+                      <SelectTrigger className="text-lg py-3">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low Priority</SelectItem>
+                        <SelectItem value="medium">Medium Priority</SelectItem>
+                        <SelectItem value="high">High Priority</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
             </div>
           )}
-        </div>
 
-        {/* Tabs */}
-        <Tabs defaultValue="tasks" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
-            <TabsTrigger value="tasks" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-              <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Tasks</span>
-              <span className="sm:hidden">Tasks</span>
-            </TabsTrigger>
-            <TabsTrigger value="details" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-              <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Details</span>
-              <span className="sm:hidden">Info</span>
-            </TabsTrigger>
-            <TabsTrigger value="comments" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-              <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Comments</span>
-              <span className="sm:hidden">Chat</span>
-            </TabsTrigger>
-            <TabsTrigger value="files" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-              <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Files</span>
-              <span className="sm:hidden">Files</span>
-            </TabsTrigger>
-          </TabsList>
+          {/* Quick Stats Cards */}
+          {!editingProject && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+              <div className="bg-white rounded-2xl shadow-sm border p-8 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center">
+                    <Calendar className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-base font-medium text-gray-500 mb-1">Created</p>
+                    <p className="text-xl font-bold text-gray-900">
+                      {new Date(project.createdAt || "").toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-2xl shadow-sm border p-8 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center">
+                    <FolderOpen className="w-8 h-8 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-base font-medium text-gray-500 mb-1">Category</p>
+                    <p className="text-xl font-bold text-gray-900">
+                      {project.category || "Uncategorized"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-2xl shadow-sm border p-8 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center">
+                    <Clock className="w-8 h-8 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-base font-medium text-gray-500 mb-1">Last Updated</p>
+                    <p className="text-xl font-bold text-gray-900">
+                      {new Date(project.updatedAt || "").toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Navigation Tabs */}
+          <div className="bg-white rounded-2xl shadow-sm border p-2 mb-8">
+            <Tabs defaultValue="details" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-transparent gap-2">
+                <TabsTrigger 
+                  value="details" 
+                  className="flex items-center gap-3 px-6 py-4 text-base font-medium rounded-xl data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:shadow-sm transition-all"
+                >
+                  <FileText className="w-5 h-5" />
+                  Details
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="tasks" 
+                  className="flex items-center gap-3 px-6 py-4 text-base font-medium rounded-xl data-[state=active]:bg-green-50 data-[state=active]:text-green-700 data-[state=active]:shadow-sm transition-all"
+                >
+                  <CheckCircle2 className="w-5 h-5" />
+                  Tasks
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="comments" 
+                  className="flex items-center gap-3 px-6 py-4 text-base font-medium rounded-xl data-[state=active]:bg-purple-50 data-[state=active]:text-purple-700 data-[state=active]:shadow-sm transition-all"
+                >
+                  <MessageSquare className="w-5 h-5" />
+                  Comments
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="files" 
+                  className="flex items-center gap-3 px-6 py-4 text-base font-medium rounded-xl data-[state=active]:bg-orange-50 data-[state=active]:text-orange-700 data-[state=active]:shadow-sm transition-all"
+                >
+                  <Upload className="w-5 h-5" />
+                  Files
+                </TabsTrigger>
+              </TabsList>
 
           {/* Tasks Tab */}
           <TabsContent value="tasks">
