@@ -56,7 +56,7 @@ export default function Projects() {
   // Close mobile menu on window resize to desktop
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) { // lg breakpoint
+      if (window.innerWidth >= 1280) { // xl breakpoint
         setMobileMenuOpen(false);
       }
     };
@@ -300,7 +300,7 @@ export default function Projects() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+            className="xl:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
             title="Menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -327,7 +327,7 @@ export default function Projects() {
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setMobileMenuOpen(false)}>
+        <div className="xl:hidden fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setMobileMenuOpen(false)}>
           <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
             <div className="p-4 border-b border-slate-200">
               <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
@@ -420,8 +420,8 @@ export default function Projects() {
       )}
 
       <div className="flex flex-1">
-        {/* Desktop Sidebar - Hidden on mobile, shown on larger screens */}
-        <div className="hidden lg:flex w-64 bg-white border-r border-slate-200 flex-col">
+        {/* Desktop Sidebar - Completely hidden on mobile and tablets */}
+        <div className="hidden xl:flex w-64 bg-white border-r border-slate-200 flex-col">
           <div className="p-4 border-b border-slate-200">
             <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
             <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
