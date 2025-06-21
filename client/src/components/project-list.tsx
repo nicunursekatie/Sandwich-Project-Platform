@@ -712,7 +712,7 @@ export default function ProjectList() {
                   <span className={`w-3 h-3 rounded-full ${getStatusColor(project.status)}`}></span>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-medium text-slate-900">{project.title}</h3>
+                      <h3 className="text-base font-semibold text-slate-900">{project.title}</h3>
                       {project.priority && (
                         <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${
                           project.priority === 'urgent' ? 'bg-red-100 text-red-700' :
