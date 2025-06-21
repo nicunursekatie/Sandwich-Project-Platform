@@ -393,7 +393,7 @@ export default function ProjectDetail() {
 
           {/* Navigation Tabs */}
           <div className="bg-white rounded-2xl shadow-sm border p-2 mb-8">
-            <Tabs defaultValue="details" className="w-full">
+            <Tabs defaultValue="tasks" className="w-full">
               <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-transparent gap-2">
                 <TabsTrigger 
                   value="details" 
