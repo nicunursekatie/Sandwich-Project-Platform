@@ -48,11 +48,17 @@ export default function ProjectsPage() {
     queryKey: ["/api/projects"],
   });
 
+  // Debug logging
+  console.log('Projects data:', projects);
+
   const filteredProjects = projects.filter((project: Project) => project.status !== "completed");
-  const activeProjects = filteredProjects.filter((project: Project) => project.status === "active");
-  const availableProjects = filteredProjects.filter((project: Project) => project.status === "available");
-  const waitingProjects = filteredProjects.filter((project: Project) => project.status === "waiting");
+  const activeProjects = filteredProjects.filter((project: Project) => project.status === "in_progress" || project.status === "active");
+  const availableProjects = filteredProjects.filter((project: Project) => project.status === "available" || project.status === "pending");
+  const waitingProjects = filteredProjects.filter((project: Project) => project.status === "waiting" || project.status === "on_hold");
   const completedProjects = projects.filter((project: Project) => project.status === "completed");
+
+  console.log('Active projects:', activeProjects);
+  console.log('Available projects:', availableProjects);
 
   const getProjectIcon = (project: Project) => {
     const iconMap: Record<string, any> = {
