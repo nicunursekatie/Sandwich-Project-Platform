@@ -27,6 +27,7 @@ import logoPath from "@assets/CMYK_PRINT_TSP-01_1749585167435.png";
 
 export default function ProjectsPage() {
   const [, setLocation] = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -149,12 +150,65 @@ export default function ProjectsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-      {/* Use CollapsibleNav Component */}
-      <CollapsibleNav />
+      {/* Mobile Header */}
+      <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          {isMobile && (
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="p-1 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          )}
+          <img src={logoPath} alt="The Sandwich Project" className="h-8 w-8" />
+          <span className="text-lg font-semibold text-slate-900">The Sandwich Project</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setLocation("/")}
+            className="p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+            title="Messages"
+          >
+            <MessageCircle className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
 
-      {/* Main Content with proper spacing for navigation */}
-      <div className="lg:pl-16 transition-all duration-300">
-        <div className="pt-16 lg:pt-0">
+      {/* Mobile Menu Overlay */}
+      {isMobile && mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setMobileMenuOpen(false)}>
+          <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="p-4 border-b border-slate-200">
+              <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
+              <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
+            </div>
+            <div className="h-full overflow-y-auto">
+              <CollapsibleNav />
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-1">
+        {/* Desktop Sidebar - Only show on large screens */}
+        {!isMobile && (
+          <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+            <div className="p-4 border-b border-slate-200">
+              <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
+              <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
+            </div>
+            <CollapsibleNav />
+            <div className="p-4 border-t border-gray-200">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">Welcome, {(user as any)?.firstName || 'Team'}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Main Content */}
+        <div className="flex-1 overflow-auto">
           <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full min-w-0">
             {/* Header */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
