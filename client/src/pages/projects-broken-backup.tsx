@@ -48,18 +48,17 @@ export default function ProjectsPage() {
     queryKey: ["/api/projects"],
   });
 
-  const activeProjects = (projects as Project[]).filter((project: Project) => 
-    project.status === "in_progress" || project.status === "active"
-  );
-  const availableProjects = (projects as Project[]).filter((project: Project) => 
-    project.status === "available" || project.status === "pending"
-  );
-  const waitingProjects = (projects as Project[]).filter((project: Project) => 
-    project.status === "waiting" || project.status === "on_hold"
-  );
-  const completedProjects = (projects as Project[]).filter((project: Project) => 
-    project.status === "completed"
-  );
+  // Debug logging
+  console.log('Projects data:', projects);
+
+  const filteredProjects = projects.filter((project: Project) => project.status !== "completed");
+  const activeProjects = filteredProjects.filter((project: Project) => project.status === "in_progress" || project.status === "active");
+  const availableProjects = filteredProjects.filter((project: Project) => project.status === "available" || project.status === "pending");
+  const waitingProjects = filteredProjects.filter((project: Project) => project.status === "waiting" || project.status === "on_hold");
+  const completedProjects = projects.filter((project: Project) => project.status === "completed");
+
+  console.log('Active projects:', activeProjects);
+  console.log('Available projects:', availableProjects);
 
   const getProjectIcon = (project: Project) => {
     const iconMap: Record<string, any> = {
@@ -122,13 +121,13 @@ export default function ProjectsPage() {
           <div className="space-y-3">
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-500 dark:text-gray-400">Progress</span>
-              <span className="font-medium text-gray-900 dark:text-white">{project.progressPercentage || 0}%</span>
+              <span className="font-medium text-gray-900 dark:text-white">0%</span>
             </div>
-            <Progress value={project.progressPercentage || 0} className="h-2" />
+            <Progress value={0} className="h-2" />
             <div className="flex items-center justify-between">
               <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                 <User className="w-4 h-4 mr-1" />
-                <span>{project.assigneeName || 'Unassigned'}</span>
+                <span>Marcy Louza</span>
               </div>
               <Button
                 onClick={(e) => {
@@ -139,7 +138,7 @@ export default function ProjectsPage() {
                 size="sm"
                 className="text-blue-600 border-blue-200 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-800 dark:hover:bg-blue-900/20"
               >
-                View Details
+                Mark Complete
               </Button>
             </div>
           </div>
@@ -219,6 +218,13 @@ export default function ProjectsPage() {
                 </p>
               </div>
               <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto shrink-0">
+                <button
+                  onClick={() => window.location.href = "/"}
+                  className="p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors shrink-0"
+                  title="Messages"
+                >
+                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
                 <Button 
                   onClick={() => setLocation("/projects/new")} 
                   className="bg-blue-600 hover:bg-blue-700 text-sm px-3 sm:px-4 py-2 shrink-0 min-w-0"
