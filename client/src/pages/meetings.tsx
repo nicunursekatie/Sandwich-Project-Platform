@@ -1,7 +1,11 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, ClipboardList, Users } from "lucide-react";
+import { Calendar, FileText, ClipboardList, Users, Menu, MessageCircle } from "lucide-react";
 import { useLocation } from "wouter";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { CollapsibleNav } from "@/components/collapsible-nav";
+import logoPath from "@assets/CMYK_PRINT_TSP-01_1749585167435.png";
 
 interface MeetingsLandingPageProps {
   onNavigate?: (section: string) => void;
@@ -9,6 +13,22 @@ interface MeetingsLandingPageProps {
 
 export default function MeetingsLandingPage({ onNavigate }: MeetingsLandingPageProps) {
   const [, setLocation] = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 1280);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
+
+  const { data: user } = useQuery({
+    queryKey: ['/api/auth/user'],
+  });
 
   const meetingOptions = [
     {
@@ -35,91 +55,154 @@ export default function MeetingsLandingPage({ onNavigate }: MeetingsLandingPageP
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-          Meetings Hub
-        </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Manage all aspects of your team meetings from agenda planning to minutes documentation
-        </p>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+      {/* Mobile Header */}
+      <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          {isMobile && (
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="p-1 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          )}
+          <img src={logoPath} alt="The Sandwich Project" className="h-8 w-8" />
+          <span className="text-lg font-semibold text-slate-900">The Sandwich Project</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setLocation("/")}
+            className="p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+            title="Messages"
+          >
+            <MessageCircle className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
-      {/* Meeting Options Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {meetingOptions.map((option) => {
-          const IconComponent = option.icon;
-          return (
-            <Card key={option.route} className="hover:shadow-lg transition-shadow cursor-pointer group">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <div className={`p-3 rounded-lg bg-gray-50 dark:bg-gray-800 group-hover:bg-gray-100 dark:group-hover:bg-gray-700 transition-colors`}>
-                    <IconComponent className={`w-6 h-6 ${option.color}`} />
-                  </div>
-                  <span className="text-lg">{option.title}</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  {option.description}
-                </p>
-                <Button 
-                  onClick={() => {
-                    if (onNavigate) {
-                      onNavigate(option.route.replace("/meetings/", ""));
-                    } else {
-                      setLocation(option.route);
-                    }
-                  }}
-                  className="w-full"
-                  variant="outline"
-                >
-                  Go to {option.title}
-                </Button>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      {/* Mobile Menu Overlay */}
+      {isMobile && mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setMobileMenuOpen(false)}>
+          <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="p-4 border-b border-slate-200">
+              <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
+              <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
+            </div>
+            <div className="h-full overflow-y-auto">
+              <CollapsibleNav />
+            </div>
+          </div>
+        </div>
+      )}
 
-      {/* Quick Stats */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5" />
-            Meeting Overview
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
-                4
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Upcoming Meetings
-              </div>
+      <div className="flex flex-1">
+        {/* Desktop Sidebar - Only show on large screens */}
+        {!isMobile && (
+          <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+            <div className="p-4 border-b border-slate-200">
+              <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
+              <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">
-                12
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Agenda Items
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">
-                8
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Meeting Minutes
+            <CollapsibleNav />
+            <div className="p-4 border-t border-gray-200">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">Welcome, {(user as any)?.firstName || 'Team'}</span>
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        )}
+
+        {/* Main Content */}
+        <div className="flex-1 overflow-auto">
+          <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full min-w-0">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Meetings Hub
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Manage all aspects of your team meetings from agenda planning to minutes documentation
+              </p>
+            </div>
+
+            {/* Meeting Options Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {meetingOptions.map((option) => {
+                const IconComponent = option.icon;
+                return (
+                  <Card key={option.route} className="hover:shadow-lg transition-shadow cursor-pointer group">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-3">
+                        <div className={`p-3 rounded-lg bg-gray-50 dark:bg-gray-800 group-hover:bg-gray-100 dark:group-hover:bg-gray-700 transition-colors`}>
+                          <IconComponent className={`w-6 h-6 ${option.color}`} />
+                        </div>
+                        <span className="text-lg">{option.title}</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        {option.description}
+                      </p>
+                      <Button 
+                        onClick={() => {
+                          if (onNavigate) {
+                            onNavigate(option.route.replace("/meetings/", ""));
+                          } else {
+                            setLocation(option.route);
+                          }
+                        }}
+                        className="w-full"
+                        variant="outline"
+                      >
+                        Go to {option.title}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+
+            {/* Quick Stats */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Meeting Overview
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
+                      4
+                    </div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      Upcoming Meetings
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">
+                      12
+                    </div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      Agenda Items
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">
+                      8
+                    </div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      Meeting Minutes
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
