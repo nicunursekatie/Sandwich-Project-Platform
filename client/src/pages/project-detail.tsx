@@ -424,80 +424,80 @@ export default function ProjectDetail() {
         </div>
 
         {/* Project Overview */}
-        {editingProject ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Edit Project Details</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-8 space-y-6">
+          {editingProject ? (
+            <div className="space-y-6">
+              <div>
+                <label className="block text-lg font-semibold mb-3">Description</label>
+                <Textarea
+                  value={projectForm.description || ""}
+                  onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
+                  placeholder="Describe what this project is about..."
+                  rows={4}
+                  className="text-base"
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Category</label>
+                  <label className="block text-lg font-semibold mb-3">Category</label>
                   <Input
                     value={projectForm.category}
                     onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })}
-                    placeholder="Project category"
+                    placeholder="e.g. Community Outreach, Fundraising"
+                    className="text-base"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Priority</label>
+                  <label className="block text-lg font-semibold mb-3">Priority</label>
                   <Select
                     value={projectForm.priority}
                     onValueChange={(value) => setProjectForm({ ...projectForm, priority: value })}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="text-base">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="low">Low</SelectItem>
-                      <SelectItem value="medium">Medium</SelectItem>
-                      <SelectItem value="high">High</SelectItem>
+                      <SelectItem value="low">Low Priority</SelectItem>
+                      <SelectItem value="medium">Medium Priority</SelectItem>
+                      <SelectItem value="high">High Priority</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Description</label>
-                <Textarea
-                  value={projectForm.description || ""}
-                  onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
-                  placeholder="Project description"
-                  rows={3}
-                />
-              </div>
-              <div className="flex gap-2 pt-4">
-                <Button onClick={handleProjectSave} disabled={updateProjectMutation.isPending}>
+              <div className="flex gap-3 pt-4">
+                <Button onClick={handleProjectSave} disabled={updateProjectMutation.isPending} className="px-6">
                   {updateProjectMutation.isPending ? "Saving..." : "Save Changes"}
                 </Button>
-                <Button variant="outline" onClick={() => setEditingProject(false)}>
+                <Button variant="outline" onClick={() => setEditingProject(false)} className="px-6">
                   Cancel
                 </Button>
               </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card>
-            <CardContent className="p-6">
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                {project.description || "No description provided"}
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Description</h3>
+                <p className="text-gray-700 text-base leading-relaxed">
+                  {project.description || "No description provided"}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
-                  <span className="text-sm font-medium text-gray-500">Category</span>
-                  <p className="text-base sm:text-lg break-words">{project.category || "Uncategorized"}</p>
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Category</h4>
+                  <p className="text-lg text-gray-900">{project.category || "Uncategorized"}</p>
                 </div>
                 <div>
-                  <span className="text-sm font-medium text-gray-500">Created</span>
-                  <p className="text-base sm:text-lg">{new Date(project.createdAt || "").toLocaleDateString()}</p>
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Created</h4>
+                  <p className="text-lg text-gray-900">{new Date(project.createdAt || "").toLocaleDateString()}</p>
                 </div>
                 <div>
-                  <span className="text-sm font-medium text-gray-500">Last Updated</span>
-                  <p className="text-base sm:text-lg">{new Date(project.updatedAt || "").toLocaleDateString()}</p>
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Last Updated</h4>
+                  <p className="text-lg text-gray-900">{new Date(project.updatedAt || "").toLocaleDateString()}</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+          )}
+        </div>
 
         {/* Tabs */}
         <Tabs defaultValue="tasks" className="space-y-6">
