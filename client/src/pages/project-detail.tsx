@@ -9,10 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, CheckCircle2, Circle, MessageSquare, Users, Calendar, FileText, Upload, ExternalLink, Trash2, FolderOpen, Clock, Plus, Edit, Download, Eye } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Circle, MessageSquare, Users, Calendar, FileText, Upload, ExternalLink, Trash2, FolderOpen, Clock, Plus, Edit, Download, Eye, Home, BarChart3, Settings, Phone, Menu, MessageCircle } from "lucide-react";
 import type { Project, ProjectTask, ProjectComment } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
-import { CollapsibleNav } from "@/components/collapsible-nav";
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -228,8 +227,7 @@ export default function ProjectDetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <CollapsibleNav />
-      <div className="lg:ml-16 transition-all duration-300">
+      <div className="lg:pl-16 transition-all duration-300">
         {/* Hero Header */}
         <div className="bg-white shadow-lg border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
