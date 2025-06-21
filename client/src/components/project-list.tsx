@@ -958,7 +958,7 @@ export default function ProjectList() {
         {/* Projects List */}
         <div className="space-y-4">
           {otherProjects.map((project) => (
-            <div key={project.id} className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+            <div key={project.id} className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
@@ -981,7 +981,7 @@ export default function ProjectList() {
                     )}
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2 ml-4">
                   {project.status === "available" ? (
                     claimingProjectId === project.id ? (
                       <div className="text-sm text-slate-500">Claiming...</div>
