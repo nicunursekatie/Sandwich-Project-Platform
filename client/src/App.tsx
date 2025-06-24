@@ -60,6 +60,7 @@ function Router() {
       <Route path="/impact" component={ImpactDashboard} />
       <Route path="/data-management" component={DataManagement} />
       <Route path="/performance" component={PerformanceDashboard} />
+      <Route path="/reporting-dashboard" component={ReportingDashboard} />
       <Route path="/reports" component={ReportingDashboard} />
       <Route path="/projects" component={Projects} />
       <Route path="/projects/:id" component={ProjectDetail} />

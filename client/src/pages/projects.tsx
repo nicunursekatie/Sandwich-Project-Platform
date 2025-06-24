@@ -244,6 +244,15 @@ export default function ProjectsPage() {
                             return (
                               <li key={subItem.id}>
                                 <button
+                                  onClick={() => {
+                                    if (subItem.id === "meetings") {
+                                      setLocation("/meetings");
+                                    } else if (subItem.id === "analytics") {
+                                      setLocation("/analytics");
+                                    } else if (subItem.id === "reports") {
+                                      setLocation("/reporting-dashboard");
+                                    }
+                                  }}
                                   className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
                                     isSubActive
                                       ? "bg-blue-50 text-blue-700 border border-blue-200"
