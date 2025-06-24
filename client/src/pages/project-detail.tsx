@@ -325,6 +325,7 @@ export default function ProjectDetailPage() {
       description: project.description,
       category: project.category,
       priority: project.priority,
+      status: project.status,
       assigneeName: project.assigneeName || '',
       startDate: project.startDate || '',
       dueDate: project.dueDate || '',
@@ -763,7 +764,7 @@ export default function ProjectDetailPage() {
                   <Dialog open={isEditProjectModalOpen} onOpenChange={setIsEditProjectModalOpen}>
                     <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
                       <DialogHeader>
-                        <DialogTitle>Edit Project</DialogTitle>
+                        <DialogTitle>Edit Project Details</DialogTitle>
                       </DialogHeader>
                       <form onSubmit={handleUpdateProject} className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
@@ -795,7 +796,7 @@ export default function ProjectDetailPage() {
                             placeholder="Project description"
                           />
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-3 gap-4">
                           <div>
                             <Label htmlFor="editProjectPriority">Priority</Label>
                             <Select 
@@ -809,6 +810,23 @@ export default function ProjectDetailPage() {
                                 <SelectItem value="low">Low</SelectItem>
                                 <SelectItem value="medium">Medium</SelectItem>
                                 <SelectItem value="high">High</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label htmlFor="editProjectStatus">Status</Label>
+                            <Select 
+                              value={editingProject?.status || 'pending'} 
+                              onValueChange={(value) => setEditingProject(editingProject ? { ...editingProject, status: value } : null)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select status" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="in_progress">In Progress</SelectItem>
+                                <SelectItem value="completed">Completed</SelectItem>
+                                <SelectItem value="on_hold">On Hold</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -892,7 +910,7 @@ export default function ProjectDetailPage() {
                             Cancel
                           </Button>
                           <Button type="submit" disabled={updateProjectMutation.isPending}>
-                            {updateProjectMutation.isPending ? 'Updating...' : 'Update Project'}
+                            {updateProjectMutation.isPending ? 'Updating...' : 'Update Details'}
                           </Button>
                         </div>
                       </form>
@@ -986,7 +1004,7 @@ export default function ProjectDetailPage() {
                     onClick={handleEditProject}
                   >
                     <Edit2 className="w-4 h-4" />
-                    Edit Project
+                    Edit Details
                   </Button>
                 </div>
                 
