@@ -1,110 +1,164 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Menu, X, Home, Users, Calendar, FileText, BarChart3, Settings, Phone } from "lucide-react";
+import { 
+  Sandwich, 
+  LayoutDashboard, 
+  ListTodo, 
+  MessageCircle, 
+  ClipboardList, 
+  FolderOpen, 
+  BarChart3, 
+  Users, 
+  Car, 
+  Building2, 
+  FileText, 
+  Phone, 
+  ChevronDown, 
+  ChevronRight 
+} from "lucide-react";
 import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 
 export function CollapsibleNav() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const [expandedSections, setExpandedSections] = useState<string[]>(["operations"]);
   const [location, setLocation] = useLocation();
+  const { user } = useAuth();
 
-  const navigationItems = [
-    { name: "Dashboard", path: "/", icon: Home },
-    { name: "Projects", path: "/projects", icon: FileText },
-    { name: "Meetings", path: "/meetings", icon: Calendar },
-    { name: "Analytics", path: "/analytics", icon: BarChart3 },
-    { name: "Phone Directory", path: "/phone-directory", icon: Phone },
-    { name: "Team", path: "/team", icon: Users },
-    { name: "Data Management", path: "/data-management", icon: Settings },
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections(prev => 
+      prev.includes(sectionId) 
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
+  };
+
+  // Navigation structure with expandable sections
+  const navigationStructure = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, type: "item", href: "/" },
+    { id: "collections", label: "Collections Log", icon: Sandwich, type: "item", href: "/collections" },
+    { id: "messages", label: "Messages", icon: MessageCircle, type: "item", href: "/messages" },
+    { 
+      id: "team", 
+      label: "Team", 
+      icon: Users, 
+      type: "section",
+      items: [
+        { id: "hosts", label: "Hosts", icon: Building2, href: "/hosts" },
+        { id: "recipients", label: "Recipients", icon: Users, href: "/recipients" },
+        { id: "drivers", label: "Drivers", icon: Car, href: "/drivers" },
+        { id: "committee", label: "Committee", icon: MessageCircle, href: "/committee" },
+      ]
+    },
+    { 
+      id: "operations", 
+      label: "Operations", 
+      icon: FolderOpen, 
+      type: "section",
+      items: [
+        { id: "projects", label: "Projects", icon: ListTodo, href: "/projects" },
+        { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings" },
+        { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics" },
+        { id: "reports", label: "Reports", icon: FileText, href: "/reporting-dashboard" },
+        { id: "role-demo", label: "Role Demo", icon: Users, href: "/role-demo" },
+      ]
+    },
+    { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", href: "/toolkit" },
+    { id: "directory", label: "Phone Directory", icon: Phone, type: "item", href: "/directory", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
+    { id: "development", label: "Development", icon: FolderOpen, type: "item", href: "/development" },
   ];
 
+  // Filter navigation items based on user permissions
+  const filteredNavigation = navigationStructure.filter(item => 
+    !item.permission || hasPermission(user, item.permission)
+  );
+
   return (
-    <>
-      {/* Mobile Menu Button */}
-      <div className="fixed top-3 left-3 z-50 md:hidden">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setIsOpen(!isOpen)}
-          className="bg-white dark:bg-gray-800 shadow-lg border-gray-200 hover:bg-gray-50"
-        >
-          {isOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-        </Button>
-      </div>
-
-      {/* Desktop Collapsible Sidebar */}
-      <div className="hidden lg:block fixed left-0 top-0 h-full z-40">
-        <div className={`h-full bg-white dark:bg-gray-800 border-r shadow-lg transition-all duration-300 ${isOpen ? 'w-64' : 'w-16'}`}>
-          <div className="p-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsOpen(!isOpen)}
-              className="mb-4"
-            >
-              {isOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-            </Button>
-
-            <nav className="space-y-2">
-              {navigationItems.map((item) => {
-                const IconComponent = item.icon;
-                const isActive = location === item.path || location.startsWith(item.path + '/');
-                
-                return (
-                  <Button
-                    key={item.path}
-                    variant={isActive ? "default" : "ghost"}
-                    className={`w-full justify-start ${!isOpen && 'px-2'}`}
-                    onClick={() => setLocation(item.path)}
+    <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+      {/* Navigation */}
+      <nav className="flex-1 p-4">
+        <ul className="space-y-2">
+          {filteredNavigation.map((item) => {
+            const Icon = item.icon;
+            
+            if (item.type === "section") {
+              const isExpanded = expandedSections.includes(item.id);
+              return (
+                <li key={item.id}>
+                  <button
+                    onClick={() => toggleSection(item.id)}
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-100 hover:text-slate-900"
                   >
-                    <IconComponent className="w-4 h-4" />
-                    {isOpen && <span className="ml-2">{item.name}</span>}
-                  </Button>
-                );
-              })}
-            </nav>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Overlay Menu */}
-      {isOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setIsOpen(false)} />
-          <div className="fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg">
-            <div className="p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">Navigation</h2>
-                <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)}>
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-
-              <nav className="space-y-2">
-                {navigationItems.map((item) => {
-                  const IconComponent = item.icon;
-                  const isActive = location === item.path || location.startsWith(item.path + '/');
-                  
-                  return (
-                    <Button
-                      key={item.path}
-                      variant={isActive ? "default" : "ghost"}
-                      className="w-full justify-start"
-                      onClick={() => {
-                        setLocation(item.path);
-                        setIsOpen(false);
-                      }}
-                    >
-                      <IconComponent className="w-4 h-4 mr-2" />
-                      {item.name}
-                    </Button>
-                  );
-                })}
-              </nav>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+                    <div className="flex items-center space-x-3">
+                      <Icon className="w-5 h-5" />
+                      <span className="font-medium">{item.label}</span>
+                    </div>
+                    {isExpanded ? (
+                      <ChevronDown className="w-4 h-4" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4" />
+                    )}
+                  </button>
+                  {isExpanded && (
+                    <ul className="mt-2 ml-8 space-y-1">
+                      {item.items?.map((subItem) => {
+                        const SubIcon = subItem.icon;
+                        const isSubActive = activeSection === subItem.id;
+                        return (
+                          <li key={subItem.id}>
+                            <button
+                              onClick={() => {
+                                if (subItem.href) {
+                                  setLocation(subItem.href);
+                                } else {
+                                  setActiveSection(subItem.id);
+                                }
+                              }}
+                              className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                                isSubActive
+                                  ? "bg-blue-50 text-blue-700"
+                                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                              }`}
+                            >
+                              <SubIcon className="w-4 h-4" />
+                              <span>{subItem.label}</span>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </li>
+              );
+            } else {
+              const isActive = activeSection === item.id;
+              return (
+                <li key={item.id}>
+                  <button
+                    onClick={() => {
+                      if (item.href) {
+                        setLocation(item.href);
+                      } else {
+                        setActiveSection(item.id);
+                      }
+                    }}
+                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                      isActive
+                        ? "bg-blue-50 text-blue-700"
+                        : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span className="font-medium">{item.label}</span>
+                  </button>
+                </li>
+              );
+            }
+          })}
+        </ul>
+      </nav>
+    </div>
   );
 }
