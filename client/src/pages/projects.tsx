@@ -1,69 +1,96 @@
-import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
-import { ErrorBoundary } from "@/components/error-boundary";
-import { LoadingState } from "@/components/ui/loading";
-import { 
-  Plus, 
-  Calendar, 
-  User, 
-  Clock, 
-  Target, 
-  ArrowRight,
-  BarChart3,
-  TrendingUp,
-  AlertCircle,
-  Menu,
-  MessageCircle,
-  Home,
-  FileText,
-  Settings,
-  Phone,
-  Users
-} from "lucide-react";
-import type { Project } from "@shared/schema";
-import logoPath from "@assets/CMYK_PRINT_TSP-01_1749585167435.png";
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import { Plus, Users, Clock, CheckCircle, AlertCircle, FolderOpen, Edit2, Trash2 } from 'lucide-react';
+import { apiRequest } from '@/lib/queryClient';
+
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  status: 'active' | 'available' | 'waiting' | 'completed';
+  priority: 'low' | 'medium' | 'high';
+  assignedTo?: string;
+  dueDate?: string;
+  progress: number;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function ProjectsPage() {
-  const [, setLocation] = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 1280);
-    };
-    
-    checkIsMobile();
-    window.addEventListener('resize', checkIsMobile);
-    return () => window.removeEventListener('resize', checkIsMobile);
-  }, []);
-
-  const { data: user } = useQuery({
-    queryKey: ['/api/auth/user'],
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [newProject, setNewProject] = useState({
+    title: '',
+    description: '',
+    priority: 'medium' as 'low' | 'medium' | 'high',
+    assignedTo: '',
+    dueDate: ''
   });
 
   const { data: projects = [], isLoading } = useQuery({
-    queryKey: ["/api/projects"],
+    queryKey: ['/api/projects'],
   });
 
-  const activeProjects = (projects as Project[]).filter((project: Project) => 
-    project.status === "in_progress" || project.status === "active"
-  );
-  const availableProjects = (projects as Project[]).filter((project: Project) => 
-    project.status === "available" || project.status === "pending"
-  );
-  const waitingProjects = (projects as Project[]).filter((project: Project) => 
-    project.status === "waiting" || project.status === "on_hold"
-  );
-  const completedProjects = (projects as Project[]).filter((project: Project) => 
-    project.status === "completed"
-  );
+  const createMutation = useMutation({
+    mutationFn: (project: any) => apiRequest('/api/projects', {
+      method: 'POST',
+      body: JSON.stringify({
+        ...project,
+        status: 'available',
+        progress: 0
+      })
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      setIsAddModalOpen(false);
+      setNewProject({
+        title: '',
+        description: '',
+        priority: 'medium',
+        assignedTo: '',
+        dueDate: ''
+      });
+      toast({
+        title: "Success",
+        description: "Project created successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to create project",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    createMutation.mutate(newProject);
+  };
+
+  const handleEdit = (project: Project) => {
+    setEditingProject(project);
+  };
+
+  // Separate projects by status
+  const activeProjects = projects.filter((project: Project) => project.status === 'active');
+  const availableProjects = projects.filter((project: Project) => project.status === 'available');
+  const waitingProjects = projects.filter((project: Project) => project.status === 'waiting');
+  const completedProjects = projects.filter((project: Project) => project.status === 'completed');
 
   const getProjectIcon = (project: Project) => {
     const iconMap: Record<string, any> = {
