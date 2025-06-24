@@ -90,7 +90,7 @@ export default function Dashboard() {
       case "dashboard":
         return <DashboardOverview onSectionChange={setActiveSection} />;
       case "projects":
-        return <Projects isEmbedded={true} />;
+        return <ProjectsClean />;
       case "messages":
         return <ChatHub />;
       case "meetings":
