@@ -1,11 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, ClipboardList, Users, Menu, MessageCircle, LogOut } from "lucide-react";
+import { Calendar, FileText, ClipboardList, Users } from "lucide-react";
 import { useLocation } from "wouter";
-import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { CollapsibleNav } from "@/components/collapsible-nav";
-import logoPath from "@assets/CMYK_PRINT_TSP-01_1749585167435.png";
 
 interface MeetingsLandingPageProps {
   onNavigate?: (section: string) => void;
@@ -13,22 +9,6 @@ interface MeetingsLandingPageProps {
 
 export default function MeetingsLandingPage({ onNavigate }: MeetingsLandingPageProps) {
   const [, setLocation] = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 1280);
-    };
-    
-    checkIsMobile();
-    window.addEventListener('resize', checkIsMobile);
-    return () => window.removeEventListener('resize', checkIsMobile);
-  }, []);
-
-  const { data: user } = useQuery({
-    queryKey: ['/api/auth/user'],
-  });
 
   const meetingOptions = [
     {
@@ -68,81 +48,75 @@ export default function MeetingsLandingPage({ onNavigate }: MeetingsLandingPageP
 
       {/* Meeting Options Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {meetingOptions.map((option) => {
-                const IconComponent = option.icon;
-                return (
-                  <Card key={option.route} className="hover:shadow-lg transition-shadow cursor-pointer group">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-3">
-                        <div className={`p-3 rounded-lg bg-gray-50 dark:bg-gray-800 group-hover:bg-gray-100 dark:group-hover:bg-gray-700 transition-colors`}>
-                          <IconComponent className={`w-6 h-6 ${option.color}`} />
-                        </div>
-                        <span className="text-lg">{option.title}</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        {option.description}
-                      </p>
-                      <Button 
-                        onClick={() => {
-                          if (onNavigate) {
-                            onNavigate(option.route.replace("/meetings/", ""));
-                          } else {
-                            setLocation(option.route);
-                          }
-                        }}
-                        className="w-full"
-                        variant="outline"
-                      >
-                        Go to {option.title}
-                      </Button>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-
-            {/* Quick Stats */}
-            <Card>
+        {meetingOptions.map((option) => {
+          const IconComponent = option.icon;
+          return (
+            <Card key={option.route} className="hover:shadow-lg transition-shadow cursor-pointer group">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  Meeting Overview
+                <CardTitle className="flex items-center gap-3">
+                  <IconComponent className={`w-6 h-6 ${option.color}`} />
+                  <span className="text-lg">{option.title}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
-                      4
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Upcoming Meetings
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">
-                      12
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Agenda Items
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">
-                      8
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Meeting Minutes
-                    </div>
-                  </div>
-                </div>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  {option.description}
+                </p>
+                <Button 
+                  onClick={() => {
+                    if (onNavigate) {
+                      onNavigate(option.route.replace("/meetings/", ""));
+                    } else {
+                      setLocation(option.route);
+                    }
+                  }}
+                  className="w-full"
+                >
+                  Access {option.title}
+                </Button>
               </CardContent>
             </Card>
-          </div>
-        </div>
+          );
+        })}
       </div>
+
+      {/* Quick Stats */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="w-5 h-5" />
+            Meeting Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
+                4
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Upcoming Meetings
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">
+                12
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Agenda Items
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">
+                8
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Meeting Minutes
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
