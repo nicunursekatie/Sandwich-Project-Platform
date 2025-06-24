@@ -786,6 +786,10 @@ export default function ProjectDetailPage() {
               <div className="max-w-4xl">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold">Project Details</h2>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <Edit2 className="w-4 h-4" />
+                    Edit Project
+                  </Button>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-6">
