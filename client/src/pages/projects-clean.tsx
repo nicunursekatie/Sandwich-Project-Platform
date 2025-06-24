@@ -89,7 +89,12 @@ export default function ProjectsClean() {
   };
 
   const handleProjectClick = (projectId: number) => {
-    setLocation(`/projects/${projectId}`);
+    // Use dashboard navigation instead of routing
+    if ((window as any).dashboardSetActiveSection) {
+      (window as any).dashboardSetActiveSection(`project-${projectId}`);
+    } else {
+      setLocation(`/projects/${projectId}`);
+    }
   };
 
   const handleStatusChange = (projectId: number, newStatus: string) => {

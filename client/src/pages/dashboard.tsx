@@ -20,13 +20,14 @@ import MeetingAgendaPage from "@/pages/meeting-agenda";
 import MeetingCalendarPage from "@/pages/meeting-calendar";
 import RoleDemo from "@/pages/role-demo";
 import ProjectsClean from "@/pages/projects-clean";
-import ProjectDetail from "@/pages/project-detail";
+import ProjectDetailClean from "@/pages/project-detail-clean";
 import Analytics from "@/pages/analytics";
 import ImpactDashboard from "@/pages/impact-dashboard";
 import DataManagement from "@/pages/data-management";
 import PerformanceDashboard from "@/pages/performance-dashboard";
 import ReportingDashboard from "@/pages/reporting-dashboard";
 import { useState } from "react";
+import * as React from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/authUtils";
 import { PERMISSIONS } from "@/lib/authUtils";
@@ -36,6 +37,14 @@ export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const { user } = useAuth();
+
+  // Make setActiveSection available globally for embedded components
+  React.useEffect(() => {
+    (window as any).dashboardSetActiveSection = setActiveSection;
+    return () => {
+      delete (window as any).dashboardSetActiveSection;
+    };
+  }, []);
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => 
@@ -86,6 +95,10 @@ export default function Dashboard() {
   );
 
   const renderContent = () => {
+    // Extract project ID from activeSection if it's a project detail page
+    const projectIdMatch = activeSection.match(/^project-(\d+)$/);
+    const projectId = projectIdMatch ? parseInt(projectIdMatch[1]) : null;
+
     switch (activeSection) {
       case "dashboard":
         return <DashboardOverview onSectionChange={setActiveSection} />;

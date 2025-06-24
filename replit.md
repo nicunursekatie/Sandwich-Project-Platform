@@ -137,6 +137,7 @@ Preferred communication style: Simple, everyday language.
 - June 24, 2025: Fixed navigation consistency across all pages: standardized layout structure with top header, sidebar navigation, and main content area for uniform user experience
 - June 24, 2025: Added consistent navigation to role demo page to match platform's unified design system
 - June 24, 2025: Unified all page routing through dashboard component to ensure consistent navigation across entire application
+- June 24, 2025: Completed navigation unification: all pages now use single dashboard shell with consistent top header, sidebar navigation, and content area; project details embedded within dashboard navigation
 
 ## Changelog
 
