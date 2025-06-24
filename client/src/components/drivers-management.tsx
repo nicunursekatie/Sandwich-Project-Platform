@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck, AlertTriangle, Download, Truck, Clock } from "lucide-react";
+import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck, AlertTriangle, Download, Truck, Clock, Filter, X } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface Driver {
@@ -39,6 +39,13 @@ export default function DriversManagement() {
   const [isAgreementModalOpen, setIsAgreementModalOpen] = useState(false);
   const [isSubmissionModalOpen, setIsSubmissionModalOpen] = useState(false);
   const [editingDriver, setEditingDriver] = useState<Driver | null>(null);
+  
+  // Filter states
+  const [filters, setFilters] = useState({
+    vanDriversOnly: false,
+    missingAgreementsOnly: false,
+    selectedZone: 'all'
+  });
   
   const [newDriver, setNewDriver] = useState({
     name: "",
@@ -233,9 +240,49 @@ export default function DriversManagement() {
     });
   };
 
-  // Separate and sort drivers
-  const activeDrivers = drivers.filter(driver => driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
-  const inactiveDrivers = drivers.filter(driver => !driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
+  // Apply filters
+  const applyFilters = (driverList: Driver[]) => {
+    return driverList.filter(driver => {
+      // Van drivers filter
+      if (filters.vanDriversOnly && !driver.vanApproved) {
+        return false;
+      }
+      
+      // Missing agreements filter
+      if (filters.missingAgreementsOnly && hasSignedAgreement(driver.notes)) {
+        return false;
+      }
+      
+      // Zone filter
+      if (filters.selectedZone !== 'all' && driver.zone !== filters.selectedZone) {
+        return false;
+      }
+      
+      return true;
+    });
+  };
+
+  // Get unique zones for filter dropdown
+  const availableZones = [...new Set(drivers.map(driver => driver.zone).filter(Boolean))].sort();
+
+  // Separate and sort drivers, then apply filters
+  const allActiveDrivers = drivers.filter(driver => driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
+  const allInactiveDrivers = drivers.filter(driver => !driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
+  
+  const activeDrivers = applyFilters(allActiveDrivers);
+  const inactiveDrivers = applyFilters(allInactiveDrivers);
+
+  // Clear all filters
+  const clearFilters = () => {
+    setFilters({
+      vanDriversOnly: false,
+      missingAgreementsOnly: false,
+      selectedZone: 'all'
+    });
+  };
+
+  // Check if any filters are active
+  const hasActiveFilters = filters.vanDriversOnly || filters.missingAgreementsOnly || filters.selectedZone !== 'all';
 
 
 
@@ -479,6 +526,80 @@ export default function DriversManagement() {
             </Dialog>
           </div>
         </div>
+      </div>
+
+      {/* Filters */}
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 mb-6">
+        <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-slate-600" />
+            <span className="text-sm font-medium text-slate-700">Filters:</span>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="van-drivers"
+              checked={filters.vanDriversOnly}
+              onChange={(e) => setFilters(prev => ({ ...prev, vanDriversOnly: e.target.checked }))}
+              className="rounded border-slate-300"
+            />
+            <label htmlFor="van-drivers" className="text-sm text-slate-600 cursor-pointer">
+              Van Drivers Only
+            </label>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="missing-agreements"
+              checked={filters.missingAgreementsOnly}
+              onChange={(e) => setFilters(prev => ({ ...prev, missingAgreementsOnly: e.target.checked }))}
+              className="rounded border-slate-300"
+            />
+            <label htmlFor="missing-agreements" className="text-sm text-slate-600 cursor-pointer">
+              Missing Agreements Only
+            </label>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <label htmlFor="zone-filter" className="text-sm text-slate-600">Zone:</label>
+            <Select value={filters.selectedZone} onValueChange={(value) => setFilters(prev => ({ ...prev, selectedZone: value }))}>
+              <SelectTrigger className="w-40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Zones</SelectItem>
+                {availableZones.map(zone => (
+                  <SelectItem key={zone} value={zone}>
+                    {zone}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {hasActiveFilters && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearFilters}
+              className="flex items-center gap-1 text-slate-600"
+            >
+              <X className="w-3 h-3" />
+              Clear Filters
+            </Button>
+          )}
+        </div>
+        
+        {hasActiveFilters && (
+          <div className="mt-3 text-sm text-slate-500">
+            Showing {activeDrivers.length} active and {inactiveDrivers.length} inactive drivers
+            {filters.vanDriversOnly && ' (van drivers only)'}
+            {filters.missingAgreementsOnly && ' (missing agreements only)'}
+            {filters.selectedZone !== 'all' && ` (${filters.selectedZone} zone)`}
+          </div>
+        )}
       </div>
 
       {/* Drivers Tabs */}
