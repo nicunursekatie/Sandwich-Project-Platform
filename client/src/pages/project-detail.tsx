@@ -79,6 +79,8 @@ export default function ProjectDetailPage() {
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<any>(null);
   const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
+  const [isEditProjectModalOpen, setIsEditProjectModalOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<any>(null);
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
@@ -291,6 +293,58 @@ export default function ProjectDetailPage() {
       });
     } catch (error) {
       console.error('Failed to toggle task completion:', error);
+    }
+  };
+
+  const updateProjectMutation = useMutation({
+    mutationFn: (updates: any) => {
+      return apiRequest('PATCH', `/api/projects/${projectId}`, updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${projectId}`] });
+      setIsEditProjectModalOpen(false);
+      setEditingProject(null);
+      toast({
+        title: "Success",
+        description: "Project updated successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update project",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const handleEditProject = () => {
+    setEditingProject({
+      title: project.title,
+      description: project.description,
+      category: project.category,
+      priority: project.priority,
+      assigneeName: project.assigneeName || '',
+      startDate: project.startDate || '',
+      dueDate: project.dueDate || '',
+      requirements: project.requirements || '',
+      deliverables: project.deliverables || '',
+      resources: project.resources || '',
+      blockers: project.blockers || '',
+      notes: project.notes || ''
+    });
+    setIsEditProjectModalOpen(true);
+  };
+
+  const handleUpdateProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProject) return;
+    
+    try {
+      await updateProjectMutation.mutateAsync(editingProject);
+    } catch (error) {
+      console.error('Failed to update project:', error);
     }
   };
 
@@ -704,6 +758,146 @@ export default function ProjectDetailPage() {
                       </form>
                     </DialogContent>
                   </Dialog>
+
+                  {/* Edit Project Modal */}
+                  <Dialog open={isEditProjectModalOpen} onOpenChange={setIsEditProjectModalOpen}>
+                    <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Edit Project</DialogTitle>
+                      </DialogHeader>
+                      <form onSubmit={handleUpdateProject} className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="editProjectTitle">Title</Label>
+                            <Input
+                              id="editProjectTitle"
+                              value={editingProject?.title || ''}
+                              onChange={(e) => setEditingProject(editingProject ? { ...editingProject, title: e.target.value } : null)}
+                              placeholder="Project title"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="editProjectCategory">Category</Label>
+                            <Input
+                              id="editProjectCategory"
+                              value={editingProject?.category || ''}
+                              onChange={(e) => setEditingProject(editingProject ? { ...editingProject, category: e.target.value } : null)}
+                              placeholder="Project category"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <Label htmlFor="editProjectDescription">Description</Label>
+                          <Textarea
+                            id="editProjectDescription"
+                            value={editingProject?.description || ''}
+                            onChange={(e) => setEditingProject(editingProject ? { ...editingProject, description: e.target.value } : null)}
+                            placeholder="Project description"
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="editProjectPriority">Priority</Label>
+                            <Select 
+                              value={editingProject?.priority || 'medium'} 
+                              onValueChange={(value) => setEditingProject(editingProject ? { ...editingProject, priority: value } : null)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select priority" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="low">Low</SelectItem>
+                                <SelectItem value="medium">Medium</SelectItem>
+                                <SelectItem value="high">High</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label htmlFor="editProjectAssignee">Assigned To</Label>
+                            <Input
+                              id="editProjectAssignee"
+                              value={editingProject?.assigneeName || ''}
+                              onChange={(e) => setEditingProject(editingProject ? { ...editingProject, assigneeName: e.target.value } : null)}
+                              placeholder="Assignee name"
+                            />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="editProjectStartDate">Start Date</Label>
+                            <Input
+                              id="editProjectStartDate"
+                              type="date"
+                              value={editingProject?.startDate || ''}
+                              onChange={(e) => setEditingProject(editingProject ? { ...editingProject, startDate: e.target.value } : null)}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="editProjectDueDate">Due Date</Label>
+                            <Input
+                              id="editProjectDueDate"
+                              type="date"
+                              value={editingProject?.dueDate || ''}
+                              onChange={(e) => setEditingProject(editingProject ? { ...editingProject, dueDate: e.target.value } : null)}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <Label htmlFor="editProjectRequirements">Requirements</Label>
+                          <Textarea
+                            id="editProjectRequirements"
+                            value={editingProject?.requirements || ''}
+                            onChange={(e) => setEditingProject(editingProject ? { ...editingProject, requirements: e.target.value } : null)}
+                            placeholder="Project requirements"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="editProjectDeliverables">Deliverables</Label>
+                          <Textarea
+                            id="editProjectDeliverables"
+                            value={editingProject?.deliverables || ''}
+                            onChange={(e) => setEditingProject(editingProject ? { ...editingProject, deliverables: e.target.value } : null)}
+                            placeholder="Project deliverables"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="editProjectResources">Resources</Label>
+                          <Textarea
+                            id="editProjectResources"
+                            value={editingProject?.resources || ''}
+                            onChange={(e) => setEditingProject(editingProject ? { ...editingProject, resources: e.target.value } : null)}
+                            placeholder="Required resources"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="editProjectBlockers">Current Blockers</Label>
+                          <Textarea
+                            id="editProjectBlockers"
+                            value={editingProject?.blockers || ''}
+                            onChange={(e) => setEditingProject(editingProject ? { ...editingProject, blockers: e.target.value } : null)}
+                            placeholder="Current blockers or issues"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="editProjectNotes">Notes</Label>
+                          <Textarea
+                            id="editProjectNotes"
+                            value={editingProject?.notes || ''}
+                            onChange={(e) => setEditingProject(editingProject ? { ...editingProject, notes: e.target.value } : null)}
+                            placeholder="Additional notes"
+                          />
+                        </div>
+                        <div className="flex justify-end gap-2">
+                          <Button type="button" variant="outline" onClick={() => setIsEditProjectModalOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button type="submit" disabled={updateProjectMutation.isPending}>
+                            {updateProjectMutation.isPending ? 'Updating...' : 'Update Project'}
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </div>
 
               {/* Tasks List */}
@@ -786,7 +980,11 @@ export default function ProjectDetailPage() {
               <div className="max-w-4xl">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold">Project Details</h2>
-                  <Button variant="outline" className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    className="flex items-center gap-2"
+                    onClick={handleEditProject}
+                  >
                     <Edit2 className="w-4 h-4" />
                     Edit Project
                   </Button>
