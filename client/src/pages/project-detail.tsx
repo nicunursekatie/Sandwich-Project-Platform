@@ -604,6 +604,77 @@ export default function ProjectDetailPage() {
                       </form>
                     </DialogContent>
                   </Dialog>
+
+                  {/* Edit Task Modal */}
+                  <Dialog open={isEditTaskModalOpen} onOpenChange={setIsEditTaskModalOpen}>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Edit Task</DialogTitle>
+                      </DialogHeader>
+                      <form onSubmit={handleUpdateTask} className="space-y-4">
+                        <div>
+                          <Label htmlFor="editTitle">Title</Label>
+                          <Input
+                            id="editTitle"
+                            value={editingTask?.title || ''}
+                            onChange={(e) => setEditingTask(editingTask ? { ...editingTask, title: e.target.value } : null)}
+                            placeholder="Enter task title"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="editDescription">Description</Label>
+                          <Textarea
+                            id="editDescription"
+                            value={editingTask?.description || ''}
+                            onChange={(e) => setEditingTask(editingTask ? { ...editingTask, description: e.target.value } : null)}
+                            placeholder="Enter task description"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="editPriority">Priority</Label>
+                          <Select 
+                            value={editingTask?.priority || 'medium'} 
+                            onValueChange={(value) => setEditingTask(editingTask ? { ...editingTask, priority: value } : null)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select priority" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="low">Low</SelectItem>
+                              <SelectItem value="medium">Medium</SelectItem>
+                              <SelectItem value="high">High</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="editAssigneeName">Assigned To</Label>
+                          <Input
+                            id="editAssigneeName"
+                            value={editingTask?.assigneeName || ''}
+                            onChange={(e) => setEditingTask(editingTask ? { ...editingTask, assigneeName: e.target.value } : null)}
+                            placeholder="Enter assignee name"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="editDueDate">Due Date</Label>
+                          <Input
+                            id="editDueDate"
+                            type="date"
+                            value={editingTask?.dueDate || ''}
+                            onChange={(e) => setEditingTask(editingTask ? { ...editingTask, dueDate: e.target.value } : null)}
+                          />
+                        </div>
+                        <div className="flex justify-end gap-2">
+                          <Button type="button" variant="outline" onClick={() => setIsEditTaskModalOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button type="submit" disabled={updateTaskMutation.isPending}>
+                            {updateTaskMutation.isPending ? 'Updating...' : 'Update Task'}
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </div>
 
               {/* Tasks List */}
