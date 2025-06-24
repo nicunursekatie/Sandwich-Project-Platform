@@ -15,6 +15,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 import { queryClient } from "@/lib/queryClient";
+import { useLocation } from "wouter";
 
 
 interface Project {
@@ -36,6 +37,7 @@ export default function ProjectsPage() {
   const queryClient = useQueryClient();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const { user } = useAuth();
+  const [location, setLocation] = useLocation();
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -91,6 +93,10 @@ export default function ProjectsPage() {
 
   const handleEdit = (project: Project) => {
     setEditingProject(project);
+  };
+
+  const handleViewProject = (projectId: number) => {
+    setLocation(`/projects/${projectId}`);
   };
 
   const toggleSection = (sectionId: string) => {
@@ -387,7 +393,11 @@ export default function ProjectsPage() {
         <TabsContent value="active" className="mt-6">
           <div className="grid gap-4">
             {activeProjects.map((project: any) => (
-              <Card key={project.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <Card 
+                key={project.id} 
+                className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => handleViewProject(project.id)}
+              >
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-semibold text-gray-900">{project.title}</h3>
@@ -402,13 +412,19 @@ export default function ProjectsPage() {
                         {project.status === 'in_progress' ? 'active' : project.status}
                       </Badge>
                       <button
-                        onClick={() => handleEdit(project)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(project);
+                        }}
                         className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
                         title="Edit project"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
                         className="p-1 text-gray-500 hover:text-red-600 transition-colors"
                         title="Delete project"
                       >
