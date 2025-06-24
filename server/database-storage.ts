@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts,
+  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -12,6 +12,7 @@ import {
   type AgendaItem, type InsertAgendaItem,
   type Meeting, type InsertMeeting,
   type DriverAgreement, type InsertDriverAgreement,
+  type Driver, type InsertDriver,
   type Host, type InsertHost,
   type HostContact, type InsertHostContact,
   type Recipient, type InsertRecipient,
@@ -340,6 +341,31 @@ export class DatabaseStorage implements IStorage {
   async createDriverAgreement(insertAgreement: InsertDriverAgreement): Promise<DriverAgreement> {
     const [agreement] = await db.insert(driverAgreements).values(insertAgreement).returning();
     return agreement;
+  }
+
+  // Drivers
+  async getAllDrivers(): Promise<Driver[]> {
+    return await db.select().from(drivers).orderBy(drivers.name);
+  }
+
+  async getDriver(id: number): Promise<Driver | undefined> {
+    const [driver] = await db.select().from(drivers).where(eq(drivers.id, id));
+    return driver || undefined;
+  }
+
+  async createDriver(insertDriver: InsertDriver): Promise<Driver> {
+    const [driver] = await db.insert(drivers).values(insertDriver).returning();
+    return driver;
+  }
+
+  async updateDriver(id: number, updates: Partial<Driver>): Promise<Driver | undefined> {
+    const [driver] = await db.update(drivers).set(updates).where(eq(drivers.id, id)).returning();
+    return driver || undefined;
+  }
+
+  async deleteDriver(id: number): Promise<boolean> {
+    const result = await db.delete(drivers).where(eq(drivers.id, id));
+    return (result.rowCount ?? 0) > 0;
   }
 
   // Hosts

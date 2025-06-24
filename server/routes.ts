@@ -13,7 +13,7 @@ import { sendDriverAgreementNotification } from "./sendgrid";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
-import { insertProjectSchema, insertProjectTaskSchema, insertProjectCommentSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
+import { insertProjectSchema, insertProjectTaskSchema, insertProjectCommentSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertDriverSchema, insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
 
 // Extend Request interface to include file metadata
 declare global {
@@ -1557,6 +1557,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       logger.error("Failed to upload agenda", error);
       res.status(500).json({ message: "Failed to upload agenda" });
+    }
+  });
+
+  // Drivers API endpoints
+  app.get("/api/drivers", async (req, res) => {
+    try {
+      const drivers = await storage.getAllDrivers();
+      res.json(drivers);
+    } catch (error) {
+      logger.error("Failed to get drivers", error);
+      res.status(500).json({ message: "Failed to get drivers" });
+    }
+  });
+
+  app.get("/api/drivers/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const driver = await storage.getDriver(id);
+      if (!driver) {
+        return res.status(404).json({ message: "Driver not found" });
+      }
+      res.json(driver);
+    } catch (error) {
+      logger.error("Failed to get driver", error);
+      res.status(500).json({ message: "Failed to get driver" });
+    }
+  });
+
+  app.post("/api/drivers", sanitizeMiddleware, async (req, res) => {
+    try {
+      const result = insertDriverSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ message: "Invalid driver data" });
+      }
+      const driver = await storage.createDriver(result.data);
+      res.status(201).json(driver);
+    } catch (error) {
+      logger.error("Failed to create driver", error);
+      res.status(500).json({ message: "Failed to create driver" });
+    }
+  });
+
+  app.put("/api/drivers/:id", sanitizeMiddleware, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const driver = await storage.updateDriver(id, updates);
+      if (!driver) {
+        return res.status(404).json({ message: "Driver not found" });
+      }
+      res.json(driver);
+    } catch (error) {
+      logger.error("Failed to update driver", error);
+      res.status(500).json({ message: "Failed to update driver" });
+    }
+  });
+
+  app.delete("/api/drivers/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteDriver(id);
+      if (!success) {
+        return res.status(404).json({ message: "Driver not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      logger.error("Failed to delete driver", error);
+      res.status(500).json({ message: "Failed to delete driver" });
     }
   });
 
