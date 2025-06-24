@@ -110,7 +110,7 @@ export function CollapsibleNav() {
                           <li key={subItem.id}>
                             <button
                               onClick={() => {
-                                console.log(`Clicking ${subItem.label} with href: ${subItem.href}`);
+
                                 if (subItem.href) {
                                   setLocation(subItem.href);
                                 } else {

@@ -3,9 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Truck, Home, Heart, Eye, UserCheck, MessageCircle, Edit, Trash2, Phone, FileText, BarChart3, LogOut } from "lucide-react";
+import { Shield, Users, Truck, Home, Heart, Eye, UserCheck, MessageCircle, Edit, Trash2, Phone, FileText, BarChart3 } from "lucide-react";
 import { USER_ROLES, PERMISSIONS, hasPermission, getDefaultPermissionsForRole } from "@/lib/authUtils";
-import { CollapsibleNav } from "@/components/collapsible-nav";
 
 // Sample user objects for each role
 const sampleUsers = {
@@ -267,28 +266,7 @@ export default function RoleDemo() {
   const [selectedRole, setSelectedRole] = useState<string>(USER_ROLES.ADMIN);
 
   return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
-      {/* Top Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <img src="/api/placeholder/32/32" alt="Logo" className="w-8 h-8" />
-            <span className="text-xl font-semibold text-slate-900">The Sandwich Project</span>
-          </div>
-          <Button variant="ghost" size="sm">
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <CollapsibleNav />
-
-        {/* Main Content */}
-        <div className="flex-1 p-6">
-          <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto p-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Role Access Demonstration</h1>
           <p className="text-gray-600">View how different user roles experience the application with varying permissions and access levels.</p>
@@ -368,9 +346,6 @@ export default function RoleDemo() {
             </div>
           </CardContent>
         </Card>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
