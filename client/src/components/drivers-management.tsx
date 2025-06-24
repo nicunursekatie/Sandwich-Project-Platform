@@ -530,14 +530,6 @@ export default function DriversManagement() {
                           </Badge>
                         )}
                         
-                        {/* Availability Notes */}
-                        {driver.availabilityNotes && (
-                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {driver.availabilityNotes.length > 20 ? `${driver.availabilityNotes.substring(0, 20)}...` : driver.availabilityNotes}
-                          </Badge>
-                        )}
-                        
                         {/* Zone */}
                         {driver.zone && (
                           <Badge variant="outline" className="flex items-center gap-1">
@@ -573,6 +565,22 @@ export default function DriversManagement() {
                       </div>
                     )}
                   </div>
+                  {driver.availabilityNotes && (
+                    <div className="mt-3 pt-3 border-t border-slate-200">
+                      <div className="flex items-start gap-2 text-sm text-slate-600">
+                        <Clock className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <span><strong>Availability:</strong> {driver.availabilityNotes}</span>
+                      </div>
+                    </div>
+                  )}
+                  {driver.homeAddress && (
+                    <div className="mt-2">
+                      <div className="flex items-start gap-2 text-sm text-slate-600">
+                        <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <span><strong>Address:</strong> {driver.homeAddress}</span>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -652,6 +660,22 @@ export default function DriversManagement() {
                       </div>
                     )}
                   </div>
+                  {driver.availabilityNotes && (
+                    <div className="mt-3 pt-3 border-t border-slate-200">
+                      <div className="flex items-start gap-2 text-sm text-slate-600">
+                        <Clock className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <span><strong>Availability:</strong> {driver.availabilityNotes}</span>
+                      </div>
+                    </div>
+                  )}
+                  {driver.homeAddress && (
+                    <div className="mt-2">
+                      <div className="flex items-start gap-2 text-sm text-slate-600">
+                        <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <span><strong>Address:</strong> {driver.homeAddress}</span>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}
