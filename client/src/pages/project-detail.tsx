@@ -21,7 +21,7 @@ import {
 import { apiRequest } from '@/lib/queryClient';
 import { useAuth } from "@/hooks/useAuth";
 import { queryClient } from "@/lib/queryClient";
-import { useRoute, useLocation } from "wouter";
+import { useLocation, useParams } from "wouter";
 
 interface Task {
   id: number;
@@ -66,9 +66,9 @@ export default function ProjectDetailPage() {
   const queryClient = useQueryClient();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const { user } = useAuth();
-  const [match, params] = useRoute("/projects/:id");
   const [location, setLocation] = useLocation();
-  const projectId = params?.id;
+  const params = useParams();
+  const projectId = params.id;
 
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
@@ -128,19 +128,26 @@ export default function ProjectDetailPage() {
     setExpandedSections(['operations']);
   }, []);
 
+  // Debug log
+  console.log('ProjectDetail - projectId:', projectId, 'enabled:', !!projectId);
+
   // Fetch project details
-  const { data: project, isLoading: projectLoading } = useQuery({
+  const { data: project, isLoading: projectLoading, error: projectError } = useQuery({
     queryKey: ['/api/projects', projectId],
     queryFn: () => apiRequest(`/api/projects/${projectId}`),
     enabled: !!projectId
   });
 
   // Fetch project tasks - using the real API endpoint that already exists
-  const { data: tasks = [], isLoading: tasksLoading } = useQuery({
+  const { data: tasks = [], isLoading: tasksLoading, error: tasksError } = useQuery({
     queryKey: ['/api/projects', projectId, 'tasks'],
     queryFn: () => apiRequest(`/api/projects/${projectId}/tasks`),
     enabled: !!projectId
   });
+
+  // Debug logs
+  console.log('ProjectDetail - project:', project, 'projectError:', projectError);
+  console.log('ProjectDetail - tasks:', tasks, 'tasksError:', tasksError);
 
   const createTaskMutation = useMutation({
     mutationFn: (task: any) => {
@@ -206,11 +213,17 @@ export default function ProjectDetailPage() {
     );
   }
 
-  if (!project) {
+  if (!project && !projectLoading) {
     return (
       <div className="bg-slate-50 min-h-screen flex flex-col">
         <div className="flex items-center justify-center flex-1">
-          <div className="text-center">Project not found</div>
+          <div className="text-center">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Project not found</h2>
+            <p className="text-gray-600 mb-4">The project you're looking for doesn't exist or has been removed.</p>
+            <Button onClick={() => setLocation("/projects")}>
+              Back to Projects
+            </Button>
+          </div>
         </div>
       </div>
     );
