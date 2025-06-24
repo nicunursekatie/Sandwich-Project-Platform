@@ -21,7 +21,7 @@ import {
 import { apiRequest } from '@/lib/queryClient';
 import { useAuth } from "@/hooks/useAuth";
 import { queryClient } from "@/lib/queryClient";
-import { useLocation, useParams } from "wouter";
+import { useLocation, useRoute } from "wouter";
 
 interface Task {
   id: number;
@@ -67,8 +67,14 @@ export default function ProjectDetailPage() {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const { user } = useAuth();
   const [location, setLocation] = useLocation();
-  const params = useParams();
-  const projectId = params.id;
+  const [match, params] = useRoute("/projects/:id");
+  const projectId = params?.id;
+  
+  // Debug the URL and params
+  console.log('Current location:', location);
+  console.log('useRoute match:', match);
+  console.log('useRoute params:', params);
+  console.log('Extracted projectId:', projectId);
 
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
@@ -145,9 +151,15 @@ export default function ProjectDetailPage() {
     enabled: !!projectId
   });
 
-  // Debug logs
-  console.log('ProjectDetail - project:', project, 'projectError:', projectError);
-  console.log('ProjectDetail - tasks:', tasks, 'tasksError:', tasksError);
+  // Log API responses for debugging
+  console.log('API Debug:', {
+    project,
+    projectError,
+    tasks,
+    tasksError,
+    projectLoading,
+    tasksLoading
+  });
 
   const createTaskMutation = useMutation({
     mutationFn: (task: any) => {
@@ -203,11 +215,13 @@ export default function ProjectDetailPage() {
     }
   };
 
-  if (projectLoading) {
+  if (projectLoading || !projectId) {
     return (
       <div className="bg-slate-50 min-h-screen flex flex-col">
         <div className="flex items-center justify-center flex-1">
-          <div className="text-center">Loading project...</div>
+          <div className="text-center">
+            {!projectId ? `No project ID found in URL: ${location}` : 'Loading project...'}
+          </div>
         </div>
       </div>
     );
