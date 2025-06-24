@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,9 +10,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Users, Clock, CheckCircle, AlertCircle, FolderOpen, Edit2, Trash2, Sandwich, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, BarChart3, Building2, FileText, Phone, Car } from 'lucide-react';
+import { Plus, Users, Clock, CheckCircle, AlertCircle, FolderOpen, Edit2, Trash2, Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, BarChart3, TrendingUp, Building2, FileText, Phone, Car, ChevronDown, ChevronRight } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
-import { Link, useLocation } from "wouter";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
+import { queryClient } from "@/lib/queryClient";
 
 
 interface Project {
@@ -31,7 +33,8 @@ interface Project {
 export default function ProjectsPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [location] = useLocation();
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const { user } = useAuth();
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -89,20 +92,53 @@ export default function ProjectsPage() {
     setEditingProject(project);
   };
 
-  // Sidebar navigation items
-  const sidebarItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/" },
-    { id: "projects", label: "Projects", icon: ListTodo, path: "/projects" },
-    { id: "messages", label: "Messages", icon: MessageCircle, path: "/" },
-    { id: "meetings", label: "Meetings", icon: ClipboardList, path: "/meetings" },
-    { id: "toolkit", label: "Toolkit", icon: FileText, path: "/" },
-    { id: "collections", label: "Collections", icon: BarChart3, path: "/" },
-    { id: "hosts", label: "Hosts", icon: Building2, path: "/" },
-    { id: "recipients", label: "Recipients", icon: Users, path: "/" },
-    { id: "directory", label: "Phone Directory", icon: Phone, path: "/phone-directory" },
-    { id: "drivers", label: "Drivers", icon: Car, path: "/" },
-    { id: "development", label: "Development", icon: FileText, path: "/development" },
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections(prev => 
+      prev.includes(sectionId) 
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
+  };
+
+  // Navigation structure with expandable sections (matching dashboard)
+  const navigationStructure = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, type: "item" },
+    { id: "collections", label: "Collections Log", icon: Sandwich, type: "item" },
+    { id: "messages", label: "Messages", icon: MessageCircle, type: "item" },
+    { 
+      id: "team", 
+      label: "Team", 
+      icon: Users, 
+      type: "section",
+      items: [
+        { id: "hosts", label: "Hosts", icon: Building2 },
+        { id: "recipients", label: "Recipients", icon: Users },
+        { id: "directory", label: "Phone Directory", icon: Phone },
+        { id: "drivers", label: "Drivers", icon: Car },
+        { id: "committee", label: "Committee", icon: Users }
+      ]
+    },
+    {
+      id: "operations",
+      label: "Operations",
+      icon: FolderOpen,
+      type: "section", 
+      items: [
+        { id: "projects", label: "Projects", icon: ListTodo },
+        { id: "meetings", label: "Meetings", icon: ClipboardList },
+        { id: "analytics", label: "Analytics", icon: BarChart3 },
+        { id: "reports", label: "Reports", icon: TrendingUp },
+        { id: "role-demo", label: "Role Demo", icon: Users }
+      ]
+    },
+    { id: "toolkit", label: "Toolkit", icon: FileText, type: "item" },
+    { id: "development", label: "Development", icon: FileText, type: "item" }
   ];
+
+  // Expand Operations section by default so Projects is visible
+  useEffect(() => {
+    setExpandedSections(['operations']);
+  }, []);
 
   // Separate projects by status
   const activeProjects = projects.filter((project: Project) => project.status === 'active');
@@ -119,45 +155,109 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
-        {/* Sidebar Header */}
-        <div className="p-4 border-b border-slate-200">
-          <div className="flex items-center space-x-3">
-            <Sandwich className="text-amber-500 w-6 h-6" />
-            <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
-          </div>
+    <div className="bg-slate-50 min-h-screen flex flex-col">
+      {/* Top Header */}
+      <div className="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center">
+        <div className="flex items-center space-x-3">
+          <Sandwich className="text-amber-500 w-6 h-6" />
+          <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
         </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {sidebarItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location === item.path;
-              return (
-                <li key={item.id}>
-                  <Link 
-                    href={item.path}
-                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
-                      isActive
-                        ? "bg-blue-50 text-blue-700 border border-blue-200"
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="text-sm font-medium">{item.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+        <div className="flex items-center space-x-4">
+          <button
+            className="p-2 rounded-lg transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            title="Messages"
+          >
+            <MessageCircle className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={() => {
+              queryClient.clear();
+              window.location.href = "/api/logout";
+            }}
+            className="flex items-center space-x-2 px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="text-sm">Logout</span>
+          </button>
+        </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-8">
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+
+          {/* Navigation */}
+          <nav className="flex-1 p-4">
+            <ul className="space-y-2">
+              {navigationStructure.map((item) => {
+                const Icon = item.icon;
+                
+                if (item.type === "section") {
+                  const isExpanded = expandedSections.includes(item.id);
+                  return (
+                    <li key={item.id}>
+                      <button
+                        onClick={() => toggleSection(item.id)}
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <Icon className="w-5 h-5" />
+                          <span className="font-medium">{item.label}</span>
+                        </div>
+                        {isExpanded ? (
+                          <ChevronDown className="w-4 h-4" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4" />
+                        )}
+                      </button>
+                      {isExpanded && (
+                        <ul className="mt-2 ml-8 space-y-1">
+                          {item.items?.map((subItem) => {
+                            const SubIcon = subItem.icon;
+                            const isSubActive = subItem.id === "projects";
+                            return (
+                              <li key={subItem.id}>
+                                <button
+                                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                                    isSubActive
+                                      ? "bg-blue-50 text-blue-700 border border-blue-200"
+                                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                  }`}
+                                >
+                                  <SubIcon className="w-4 h-4" />
+                                  <span className="text-sm">{subItem.label}</span>
+                                </button>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </li>
+                  );
+                } else {
+                  const isActive = item.id === "projects";
+                  return (
+                    <li key={item.id}>
+                      <button
+                        className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                          isActive
+                            ? "bg-blue-50 text-blue-700 border border-blue-200"
+                            : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span className="font-medium">{item.label}</span>
+                      </button>
+                    </li>
+                  );
+                }
+              })}
+            </ul>
+          </nav>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 p-8">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Project Management</h1>
@@ -316,6 +416,7 @@ export default function ProjectsPage() {
           </div>
         </TabsContent>
       </Tabs>
+        </div>
       </div>
     </div>
   );
