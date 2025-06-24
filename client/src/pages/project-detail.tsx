@@ -249,10 +249,6 @@ export default function ProjectDetailPage() {
            task.hasOwnProperty('title');
   }) : [];
 
-  const todoTasks = actualTasks.filter((task: any) => task.status === 'pending' || task.status === 'todo');
-  const inProgressTasks = actualTasks.filter((task: any) => task.status === 'in_progress' || task.status === 'active');
-  const completedTasks = actualTasks.filter((task: any) => task.status === 'completed' || task.status === 'done');
-
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col">
       {/* Top Header */}
