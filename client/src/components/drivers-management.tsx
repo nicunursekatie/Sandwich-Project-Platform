@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin } from "lucide-react";
+import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface Driver {
@@ -16,10 +16,12 @@ interface Driver {
   name: string;
   phone: string;
   email: string;
-  vehicleType: string;
-  licenseNumber: string;
-  availability: "available" | "busy" | "off-duty";
+  address?: string;
   zone: string;
+  isActive: boolean;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export default function DriversManagement() {
@@ -171,17 +173,12 @@ export default function DriversManagement() {
     submitVolunteerMutation.mutate(volunteerForm);
   };
 
-  const getAvailabilityBadge = (availability: string) => {
-    switch (availability) {
-      case "available":
-        return <Badge variant="default" className="bg-green-100 text-green-800">Available</Badge>;
-      case "busy":
-        return <Badge variant="destructive">Busy</Badge>;
-      case "off-duty":
-        return <Badge variant="secondary">Off Duty</Badge>;
-      default:
-        return <Badge variant="secondary">{availability}</Badge>;
-    }
+  const hasSignedAgreement = (notes: string) => {
+    if (!notes) return false;
+    const agreementText = notes.toLowerCase();
+    return agreementText.includes('agreement: yes') || 
+           agreementText.includes('agreement: signed') || 
+           agreementText.includes('agreement: true');
   };
 
   if (isLoading) {
@@ -431,6 +428,28 @@ export default function DriversManagement() {
                 <div className="flex-1">
                   <CardTitle className="text-lg">{driver.name}</CardTitle>
                   <div className="flex items-center gap-2 mt-1">
+                    {/* Active Status */}
+                    {driver.isActive ? (
+                      <Badge variant="default" className="bg-green-100 text-green-800 flex items-center gap-1">
+                        <CheckCircle className="w-3 h-3" />
+                        Active
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 flex items-center gap-1">
+                        <XCircle className="w-3 h-3" />
+                        Inactive
+                      </Badge>
+                    )}
+                    
+                    {/* Agreement Status */}
+                    {hasSignedAgreement(driver.notes) && (
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
+                        <FileCheck className="w-3 h-3" />
+                        Agreement
+                      </Badge>
+                    )}
+                    
+                    {/* Zone */}
                     {driver.zone && (
                       <Badge variant="outline" className="flex items-center gap-1">
                         <MapPin className="w-3 h-3" />
