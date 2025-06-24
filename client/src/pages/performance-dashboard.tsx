@@ -15,10 +15,12 @@ import {
   Clock, 
   Server,
   HardDrive,
-  Gauge
+  Gauge,
+  LogOut
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { CollapsibleNav } from "@/components/collapsible-nav";
 
 interface PerformanceMetrics {
   database: {
@@ -145,29 +147,68 @@ export default function PerformanceDashboard() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="flex items-center gap-2 mb-6">
-          <Activity className="h-6 w-6" />
-          <h1 className="text-3xl font-bold">Performance Dashboard</h1>
+      <div className="bg-slate-50 min-h-screen flex flex-col">
+        {/* Top Header */}
+        <div className="bg-white border-b border-slate-200 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <img src="/api/placeholder/32/32" alt="Logo" className="w-8 h-8" />
+              <span className="text-xl font-semibold text-slate-900">The Sandwich Project</span>
+            </div>
+            <Button variant="ghost" size="sm">
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => (
-            <Card key={i}>
-              <CardContent className="p-6">
-                <div className="animate-pulse space-y-2">
-                  <div className="h-4 bg-muted rounded w-3/4"></div>
-                  <div className="h-8 bg-muted rounded w-1/2"></div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+
+        <div className="flex flex-1">
+          <CollapsibleNav />
+          <div className="flex-1 p-6">
+            <div className="flex items-center gap-2 mb-6">
+              <Activity className="h-6 w-6" />
+              <h1 className="text-3xl font-bold">Performance Dashboard</h1>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {[1, 2, 3, 4].map((i) => (
+                <Card key={i}>
+                  <CardContent className="p-6">
+                    <div className="animate-pulse space-y-2">
+                      <div className="h-4 bg-muted rounded w-3/4"></div>
+                      <div className="h-8 bg-muted rounded w-1/2"></div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="bg-slate-50 min-h-screen flex flex-col">
+      {/* Top Header */}
+      <div className="bg-white border-b border-slate-200 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <img src="/api/placeholder/32/32" alt="Logo" className="w-8 h-8" />
+            <span className="text-xl font-semibold text-slate-900">The Sandwich Project</span>
+          </div>
+          <Button variant="ghost" size="sm">
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <CollapsibleNav />
+
+        {/* Main Content */}
+        <div className="flex-1 p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Activity className="h-6 w-6" />
@@ -547,6 +588,8 @@ export default function PerformanceDashboard() {
           </div>
         </TabsContent>
       </Tabs>
+        </div>
+      </div>
     </div>
   );
 }

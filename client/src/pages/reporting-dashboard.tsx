@@ -9,10 +9,11 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Calendar, FileText, Mail, Download, Settings, BarChart3, LineChart, PieChart } from "lucide-react";
+import { Calendar, FileText, Mail, Download, Settings, BarChart3, LineChart, PieChart, LogOut } from "lucide-react";
 import { format, subDays, subWeeks, subMonths } from "date-fns";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { CollapsibleNav } from "@/components/collapsible-nav";
 
 interface ReportConfig {
   type: 'collections' | 'hosts' | 'impact' | 'comprehensive';
@@ -189,25 +190,45 @@ export default function ReportingDashboard() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Reporting Dashboard</h1>
-          <p className="text-gray-600 dark:text-gray-300 mt-2">
-            Generate comprehensive reports and schedule automated deliveries
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <FileText className="w-4 h-4 mr-2" />
-            Templates
-          </Button>
-          <Button variant="outline" size="sm">
-            <Settings className="w-4 h-4 mr-2" />
-            Settings
+    <div className="bg-slate-50 min-h-screen flex flex-col">
+      {/* Top Header */}
+      <div className="bg-white border-b border-slate-200 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <img src="/api/placeholder/32/32" alt="Logo" className="w-8 h-8" />
+            <span className="text-xl font-semibold text-slate-900">The Sandwich Project</span>
+          </div>
+          <Button variant="ghost" size="sm">
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
           </Button>
         </div>
       </div>
+
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <CollapsibleNav />
+
+        {/* Main Content */}
+        <div className="flex-1 p-6">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Reporting Dashboard</h1>
+              <p className="text-gray-600 mt-2">
+                Generate comprehensive reports and schedule automated deliveries
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm">
+                <FileText className="w-4 h-4 mr-2" />
+                Templates
+              </Button>
+              <Button variant="outline" size="sm">
+                <Settings className="w-4 h-4 mr-2" />
+                Settings
+              </Button>
+            </div>
+          </div>
 
       <Tabs defaultValue="generate" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">
@@ -639,6 +660,8 @@ export default function ReportingDashboard() {
           </Card>
         </TabsContent>
       </Tabs>
+        </div>
+      </div>
     </div>
   );
 }
