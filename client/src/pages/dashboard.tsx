@@ -18,6 +18,14 @@ import MeetingsLandingPage from "@/pages/meetings";
 import MeetingMinutesPage from "@/pages/meeting-minutes";
 import MeetingAgendaPage from "@/pages/meeting-agenda";
 import MeetingCalendarPage from "@/pages/meeting-calendar";
+import RoleDemo from "@/pages/role-demo";
+import Projects from "@/pages/projects";
+import ProjectDetail from "@/pages/project-detail";
+import Analytics from "@/pages/analytics";
+import ImpactDashboard from "@/pages/impact-dashboard";
+import DataManagement from "@/pages/data-management";
+import PerformanceDashboard from "@/pages/performance-dashboard";
+import ReportingDashboard from "@/pages/reporting-dashboard";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/authUtils";
@@ -236,15 +244,7 @@ export default function Dashboard() {
           </div>
         );
       case "role-demo":
-        return (
-          <div className="p-6">
-            <iframe 
-              src="/role-demo" 
-              className="w-full h-screen border-0 rounded-lg"
-              title="Role Demo"
-            />
-          </div>
-        );
+        return <RoleDemo />;
 
       case "committee":
         return (
