@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck, AlertTriangle } from "lucide-react";
+import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck, AlertTriangle, Download } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface Driver {
@@ -182,6 +182,45 @@ export default function DriversManagement() {
            agreementText.includes('agreement: true');
   };
 
+  // Export function
+  const handleExport = () => {
+    if (!drivers || drivers.length === 0) return;
+    
+    const headers = ['Name', 'Phone', 'Email', 'Zone', 'Active', 'Agreement', 'Notes'];
+    const csvContent = [
+      headers.join(','),
+      ...drivers.map(driver => {
+        const hasAgreement = hasSignedAgreement(driver.notes);
+        return [
+          `"${driver.name}"`,
+          `"${driver.phone || ''}"`,
+          `"${driver.email || ''}"`,
+          `"${driver.zone || ''}"`,
+          driver.isActive ? 'Yes' : 'No',
+          hasAgreement ? 'Yes' : 'No',
+          `"${driver.notes || ''}"`
+        ].join(',');
+      })
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `drivers_export_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    
+    toast({
+      title: "Export Complete",
+      description: `Exported ${drivers.length} drivers to CSV file`,
+    });
+  };
+
   // Separate and sort drivers
   const activeDrivers = drivers.filter(driver => driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
   const inactiveDrivers = drivers.filter(driver => !driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
@@ -202,6 +241,10 @@ export default function DriversManagement() {
             Drivers Management
           </h1>
           <div className="flex gap-2">
+            <Button variant="outline" onClick={handleExport} disabled={!drivers || drivers.length === 0}>
+              <Download className="w-4 h-4 mr-2" />
+              Export CSV
+            </Button>
             <Dialog open={isAgreementModalOpen} onOpenChange={setIsAgreementModalOpen}>
               <DialogTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2">
@@ -458,7 +501,7 @@ export default function DriversManagement() {
                         {hasSignedAgreement(driver.notes) ? (
                           <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
                             <FileCheck className="w-3 h-3" />
-                            Agreement
+                            Signed Agreement
                           </Badge>
                         ) : (
                           <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 flex items-center gap-1">
@@ -527,7 +570,7 @@ export default function DriversManagement() {
                         {hasSignedAgreement(driver.notes) && (
                           <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
                             <FileCheck className="w-3 h-3" />
-                            Agreement
+                            Signed Agreement
                           </Badge>
                         )}
                         
