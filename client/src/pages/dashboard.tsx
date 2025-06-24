@@ -275,6 +275,10 @@ export default function Dashboard() {
       case "development":
         return <Development />;
       default:
+        // Handle project detail pages
+        if (projectId) {
+          return <ProjectDetailClean projectId={projectId} onBack={() => setActiveSection("projects")} />;
+        }
         return <DashboardOverview onSectionChange={setActiveSection} />;
     }
   };
