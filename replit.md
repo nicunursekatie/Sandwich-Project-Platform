@@ -119,6 +119,8 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+- June 24, 2025: Fixed Reports section 404 error: replaced redirect with direct ReportingDashboard component rendering, reports now load properly within dashboard navigation
+- June 24, 2025: Resolved Projects navigation conflict: created clean content-only version that renders properly when embedded in dashboard without duplicate navigation structures
 - June 24, 2025: Fixed project detail page routing and API issues: resolved parameter extraction from URL, updated query client usage to work with default queryFn, project details now load correctly
 - June 24, 2025: Implemented clickable project cards with proper navigation to detail pages showing project information, tasks, and management interface
 - June 24, 2025: Fixed projects page navigation to match dashboard exactly: added top header with logout, left sidebar with expandable sections, "Projects" under Operations section
