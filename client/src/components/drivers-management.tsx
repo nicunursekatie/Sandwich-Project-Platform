@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck, AlertTriangle, Download, Truck, Clock, UserCheck, UserX, UserPlus, Users } from "lucide-react";
+import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck, AlertTriangle, Download, Truck, Clock } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface Driver {
@@ -27,7 +27,6 @@ interface Driver {
   emailAgreementSent: boolean;
   voicemailLeft: boolean;
   inactiveReason?: string;
-  driverStatus: string; // "active", "inactive", "pending", "on_hold"
   createdAt: string;
   updatedAt: string;
 }
@@ -234,19 +233,9 @@ export default function DriversManagement() {
     });
   };
 
-  // Quick activation function
-  const quickActivate = (driverId: number) => {
-    updateDriverMutation.mutate({
-      id: driverId,
-      updates: { driverStatus: 'active', isActive: true }
-    });
-  };
-
-  // Separate and sort drivers by status
-  const activeDrivers = drivers.filter(driver => driver.driverStatus === 'active').sort((a, b) => a.name.localeCompare(b.name));
-  const pendingDrivers = drivers.filter(driver => driver.driverStatus === 'pending').sort((a, b) => a.name.localeCompare(b.name));
-  const onHoldDrivers = drivers.filter(driver => driver.driverStatus === 'on_hold').sort((a, b) => a.name.localeCompare(b.name));
-  const inactiveDrivers = drivers.filter(driver => driver.driverStatus === 'inactive').sort((a, b) => a.name.localeCompare(b.name));
+  // Separate and sort drivers
+  const activeDrivers = drivers.filter(driver => driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
+  const inactiveDrivers = drivers.filter(driver => !driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
 
 
 
@@ -494,22 +483,14 @@ export default function DriversManagement() {
 
       {/* Drivers Tabs */}
       <Tabs defaultValue="active" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="active" className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4" />
-            Active ({activeDrivers.length})
-          </TabsTrigger>
-          <TabsTrigger value="pending" className="flex items-center gap-2">
-            <UserPlus className="w-4 h-4" />
-            Pending ({pendingDrivers.length})
-          </TabsTrigger>
-          <TabsTrigger value="on_hold" className="flex items-center gap-2">
-            <Users className="w-4 h-4" />
-            On Hold ({onHoldDrivers.length})
+            Active Drivers ({activeDrivers.length})
           </TabsTrigger>
           <TabsTrigger value="inactive" className="flex items-center gap-2">
             <XCircle className="w-4 h-4" />
-            Inactive ({inactiveDrivers.length})
+            Inactive Drivers ({inactiveDrivers.length})
           </TabsTrigger>
         </TabsList>
         
@@ -550,185 +531,6 @@ export default function DriversManagement() {
                         )}
                         
                         {/* Zone */}
-                        {driver.zone && (
-                          <Badge variant="outline" className="flex items-center gap-1">
-                            <MapPin className="w-3 h-3" />
-                            {driver.zone}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEdit(driver)}
-                      className="flex items-center gap-1"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                      Edit
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-600">
-                    {driver.phone && (
-                      <div className="flex items-center gap-2">
-                        <Phone className="w-4 h-4" />
-                        {driver.phone}
-                      </div>
-                    )}
-                    {driver.email && (
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        {driver.email}
-                      </div>
-                    )}
-                  </div>
-                  {driver.availabilityNotes && (
-                    <div className="mt-3 pt-3 border-t border-slate-200">
-                      <div className="flex items-start gap-2 text-sm text-slate-600">
-                        <Clock className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                        <span><strong>Availability:</strong> {driver.availabilityNotes}</span>
-                      </div>
-                    </div>
-                  )}
-                  {driver.homeAddress && (
-                    <div className="mt-2">
-                      <div className="flex items-start gap-2 text-sm text-slate-600">
-                        <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                        <span><strong>Address:</strong> {driver.homeAddress}</span>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="pending" className="mt-6">
-          <div className="grid gap-4">
-            {pendingDrivers.map((driver) => (
-              <Card key={driver.id} className="border border-amber-200 bg-amber-50">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{driver.name}</CardTitle>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="secondary" className="bg-amber-100 text-amber-800 flex items-center gap-1">
-                          <UserPlus className="w-3 h-3" />
-                          Pending Activation
-                        </Badge>
-                        
-                        {driver.vanApproved && (
-                          <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 flex items-center gap-1">
-                            <Truck className="w-3 h-3" />
-                            Van Driver
-                          </Badge>
-                        )}
-                        
-                        {hasSignedAgreement(driver.notes) && (
-                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
-                            <FileCheck className="w-3 h-3" />
-                            Signed Agreement
-                          </Badge>
-                        )}
-                        
-                        {driver.zone && (
-                          <Badge variant="outline" className="flex items-center gap-1">
-                            <MapPin className="w-3 h-3" />
-                            {driver.zone}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="default"
-                        size="sm"
-                        onClick={() => quickActivate(driver.id)}
-                        className="flex items-center gap-1 bg-green-600 hover:bg-green-700"
-                      >
-                        <UserCheck className="w-4 h-4" />
-                        Activate
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEdit(driver)}
-                        className="flex items-center gap-1"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                        Edit
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-600">
-                    {driver.phone && (
-                      <div className="flex items-center gap-2">
-                        <Phone className="w-4 h-4" />
-                        {driver.phone}
-                      </div>
-                    )}
-                    {driver.email && (
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        {driver.email}
-                      </div>
-                    )}
-                  </div>
-                  {driver.availabilityNotes && (
-                    <div className="mt-3 pt-3 border-t border-slate-200">
-                      <div className="flex items-start gap-2 text-sm text-slate-600">
-                        <Clock className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                        <span><strong>Availability:</strong> {driver.availabilityNotes}</span>
-                      </div>
-                    </div>
-                  )}
-                  {driver.homeAddress && (
-                    <div className="mt-2">
-                      <div className="flex items-start gap-2 text-sm text-slate-600">
-                        <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                        <span><strong>Address:</strong> {driver.homeAddress}</span>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="on_hold" className="mt-6">
-          <div className="grid gap-4">
-            {onHoldDrivers.map((driver) => (
-              <Card key={driver.id} className="border border-blue-200 bg-blue-50">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{driver.name}</CardTitle>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="secondary" className="bg-blue-100 text-blue-800 flex items-center gap-1">
-                          <Users className="w-3 h-3" />
-                          On Hold
-                        </Badge>
-                        
-                        {driver.vanApproved && (
-                          <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 flex items-center gap-1">
-                            <Truck className="w-3 h-3" />
-                            Van Driver
-                          </Badge>
-                        )}
-                        
-                        {hasSignedAgreement(driver.notes) && (
-                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
-                            <FileCheck className="w-3 h-3" />
-                            Signed Agreement
-                          </Badge>
-                        )}
-                        
                         {driver.zone && (
                           <Badge variant="outline" className="flex items-center gap-1">
                             <MapPin className="w-3 h-3" />

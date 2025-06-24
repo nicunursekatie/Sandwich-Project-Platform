@@ -187,7 +187,6 @@ export const drivers = pgTable("drivers", {
   emailAgreementSent: boolean("email_agreement_sent").notNull().default(false),
   voicemailLeft: boolean("voicemail_left").notNull().default(false),
   inactiveReason: text("inactive_reason"),
-  driverStatus: text("driver_status").notNull().default("active"), // "active", "inactive", "pending", "on_hold"
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
