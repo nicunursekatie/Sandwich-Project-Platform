@@ -21,11 +21,12 @@ interface Project {
   id: number;
   title: string;
   description: string;
-  status: 'active' | 'available' | 'waiting' | 'completed';
+  status: string; // Database uses: in_progress, pending, not_started, completed
   priority: 'low' | 'medium' | 'high';
-  assignedTo?: string;
+  assigneeId?: number;
+  assigneeName?: string;
   dueDate?: string;
-  progress: number;
+  progressPercentage: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -55,8 +56,8 @@ export default function ProjectsPage() {
       method: 'POST',
       body: JSON.stringify({
         ...project,
-        status: 'available',
-        progress: 0
+        status: 'not_started',
+        progressPercentage: 0
       })
     }),
     onSuccess: () => {
@@ -66,7 +67,7 @@ export default function ProjectsPage() {
         title: '',
         description: '',
         priority: 'medium',
-        assignedTo: '',
+        assigneeName: '',
         dueDate: ''
       });
       toast({
@@ -140,11 +141,22 @@ export default function ProjectsPage() {
     setExpandedSections(['operations']);
   }, []);
 
-  // Separate projects by status
-  const activeProjects = projects.filter((project: Project) => project.status === 'active');
-  const availableProjects = projects.filter((project: Project) => project.status === 'available');
-  const waitingProjects = projects.filter((project: Project) => project.status === 'waiting');
-  const completedProjects = projects.filter((project: Project) => project.status === 'completed');
+  // Map database status to display categories
+  const mapStatus = (status: string) => {
+    switch (status) {
+      case 'in_progress': return 'active';
+      case 'pending': return 'waiting';
+      case 'not_started': return 'available';
+      case 'completed': return 'completed';
+      default: return 'available';
+    }
+  };
+
+  // Separate projects by mapped status
+  const activeProjects = projects.filter((project: any) => mapStatus(project.status) === 'active');
+  const availableProjects = projects.filter((project: any) => mapStatus(project.status) === 'available');
+  const waitingProjects = projects.filter((project: any) => mapStatus(project.status) === 'waiting');
+  const completedProjects = projects.filter((project: any) => mapStatus(project.status) === 'completed');
 
   if (isLoading) {
     return (
@@ -453,10 +465,10 @@ function ProjectCard({ project, onEdit }: { project: Project; onEdit: (project: 
               <Badge className={getPriorityColor(project.priority)}>
                 {project.priority} priority
               </Badge>
-              {project.assignedTo && (
+              {project.assigneeName && (
                 <Badge variant="outline" className="flex items-center gap-1">
                   <Users className="w-3 h-3" />
-                  {project.assignedTo}
+                  {project.assigneeName}
                 </Badge>
               )}
             </div>
