@@ -228,10 +228,11 @@ export default function ProjectDetailPage() {
     );
   }
 
-  // Separate tasks by status
-  const todoTasks = tasks.filter((task: any) => task.status === 'todo');
-  const inProgressTasks = tasks.filter((task: any) => task.status === 'in_progress');
-  const completedTasks = tasks.filter((task: any) => task.status === 'completed');
+  // Separate tasks by status - filter out the project itself if it's in the tasks array
+  const actualTasks = tasks.filter((task: any) => task.id !== project?.id);
+  const todoTasks = actualTasks.filter((task: any) => task.status === 'todo');
+  const inProgressTasks = actualTasks.filter((task: any) => task.status === 'in_progress');
+  const completedTasks = actualTasks.filter((task: any) => task.status === 'completed');
 
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col">
@@ -409,10 +410,16 @@ export default function ProjectDetailPage() {
                   )}
                 </div>
               </div>
-              <Button className="flex items-center gap-2">
-                <Edit2 className="w-4 h-4" />
-                Edit Project
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Edit2 className="w-4 h-4" />
+                  Edit Project
+                </Button>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Target className="w-4 h-4" />
+                  Update Progress
+                </Button>
+              </div>
             </div>
 
             {/* Progress Bar */}
@@ -513,19 +520,15 @@ export default function ProjectDetailPage() {
               </div>
 
               {/* Tasks List */}
-              {tasks.length === 0 ? (
+              {actualTasks.length === 0 ? (
                 <div className="text-center py-12">
                   <ListTodo className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No tasks yet</h3>
                   <p className="text-gray-600 mb-4">Get started by creating your first task for this project.</p>
-                  <Dialog open={isAddTaskModalOpen} onOpenChange={setIsAddTaskModalOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="flex items-center gap-2">
-                        <Plus className="w-4 h-4" />
-                        Create First Task
-                      </Button>
-                    </DialogTrigger>
-                  </Dialog>
+                  <Button className="flex items-center gap-2" onClick={() => setIsAddTaskModalOpen(true)}>
+                    <Plus className="w-4 h-4" />
+                    Create First Task
+                  </Button>
                 </div>
               ) : (
                 <div className="grid grid-cols-3 gap-6">
@@ -620,63 +623,105 @@ export default function ProjectDetailPage() {
             </TabsContent>
 
             <TabsContent value="details" className="mt-6">
-              <div className="grid grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Project Information</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label className="font-medium">Category</Label>
-                      <p className="text-gray-600">{project.category || 'Not specified'}</p>
-                    </div>
-                    <div>
-                      <Label className="font-medium">Start Date</Label>
-                      <p className="text-gray-600">
-                        {project.startDate ? new Date(project.startDate).toLocaleDateString() : 'Not set'}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="font-medium">Due Date</Label>
-                      <p className="text-gray-600">
-                        {project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'Not set'}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="font-medium">Estimated Hours</Label>
-                      <p className="text-gray-600">{project.estimatedHours || 'Not specified'}</p>
-                    </div>
-                    <div>
-                      <Label className="font-medium">Actual Hours</Label>
-                      <p className="text-gray-600">{project.actualHours || 'Not logged'}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+              <div className="max-w-4xl">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold">Project Details</h2>
+                  <Button className="flex items-center gap-2">
+                    <Edit2 className="w-4 h-4" />
+                    Edit Details
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Project Information</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <Label className="font-medium text-gray-700">Category</Label>
+                        <p className="text-gray-900 mt-1">{project.category || 'Not specified'}</p>
+                      </div>
+                      <div>
+                        <Label className="font-medium text-gray-700">Priority</Label>
+                        <p className="text-gray-900 mt-1 capitalize">{project.priority}</p>
+                      </div>
+                      <div>
+                        <Label className="font-medium text-gray-700">Status</Label>
+                        <p className="text-gray-900 mt-1 capitalize">{project.status === 'in_progress' ? 'Active' : project.status}</p>
+                      </div>
+                      <div>
+                        <Label className="font-medium text-gray-700">Assigned To</Label>
+                        <p className="text-gray-900 mt-1">{project.assigneeName || 'Unassigned'}</p>
+                      </div>
+                      <div>
+                        <Label className="font-medium text-gray-700">Start Date</Label>
+                        <p className="text-gray-900 mt-1">
+                          {project.startDate ? new Date(project.startDate).toLocaleDateString() : 'Not set'}
+                        </p>
+                      </div>
+                      <div>
+                        <Label className="font-medium text-gray-700">Due Date</Label>
+                        <p className="text-gray-900 mt-1">
+                          {project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'Not set'}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
 
-                <Card>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Time Tracking</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <Label className="font-medium text-gray-700">Estimated Hours</Label>
+                        <p className="text-gray-900 mt-1">{project.estimatedHours || 'Not specified'}</p>
+                      </div>
+                      <div>
+                        <Label className="font-medium text-gray-700">Actual Hours</Label>
+                        <p className="text-gray-900 mt-1">{project.actualHours || 'Not logged'}</p>
+                      </div>
+                      <div>
+                        <Label className="font-medium text-gray-700">Created</Label>
+                        <p className="text-gray-900 mt-1">{new Date(project.createdAt).toLocaleDateString()}</p>
+                      </div>
+                      <div>
+                        <Label className="font-medium text-gray-700">Last Updated</Label>
+                        <p className="text-gray-900 mt-1">{new Date(project.updatedAt).toLocaleDateString()}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <Card className="mt-6">
                   <CardHeader>
-                    <CardTitle>Additional Details</CardTitle>
+                    <CardTitle>Project Description</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <Label className="font-medium">Requirements</Label>
-                      <p className="text-gray-600">{project.requirements || 'No requirements specified'}</p>
+                      <Label className="font-medium text-gray-700">Description</Label>
+                      <p className="text-gray-900 mt-1">{project.description || 'No description provided'}</p>
                     </div>
                     <div>
-                      <Label className="font-medium">Deliverables</Label>
-                      <p className="text-gray-600">{project.deliverables || 'No deliverables specified'}</p>
+                      <Label className="font-medium text-gray-700">Requirements</Label>
+                      <p className="text-gray-900 mt-1">{project.requirements || 'No requirements specified'}</p>
                     </div>
                     <div>
-                      <Label className="font-medium">Resources</Label>
-                      <p className="text-gray-600">{project.resources || 'No resources specified'}</p>
+                      <Label className="font-medium text-gray-700">Deliverables</Label>
+                      <p className="text-gray-900 mt-1">{project.deliverables || 'No deliverables specified'}</p>
                     </div>
                     <div>
-                      <Label className="font-medium">Blockers</Label>
-                      <p className="text-gray-600">{project.blockers || 'No blockers identified'}</p>
+                      <Label className="font-medium text-gray-700">Resources</Label>
+                      <p className="text-gray-900 mt-1">{project.resources || 'No resources specified'}</p>
                     </div>
                     <div>
-                      <Label className="font-medium">Notes</Label>
-                      <p className="text-gray-600">{project.notes || 'No additional notes'}</p>
+                      <Label className="font-medium text-gray-700">Current Blockers</Label>
+                      <p className="text-gray-900 mt-1">{project.blockers || 'No blockers identified'}</p>
+                    </div>
+                    <div>
+                      <Label className="font-medium text-gray-700">Notes</Label>
+                      <p className="text-gray-900 mt-1">{project.notes || 'No additional notes'}</p>
                     </div>
                   </CardContent>
                 </Card>
