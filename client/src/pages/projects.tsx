@@ -10,9 +10,10 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Users, Clock, CheckCircle, AlertCircle, FolderOpen, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Users, Clock, CheckCircle, AlertCircle, FolderOpen, Edit2, Trash2, Sandwich, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, BarChart3, Building2, FileText, Phone, Car } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
-import { CollapsibleNav } from '@/components/collapsible-nav';
+import { Link, useLocation } from "wouter";
+
 
 interface Project {
   id: number;
@@ -30,6 +31,7 @@ interface Project {
 export default function ProjectsPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [location] = useLocation();
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -87,6 +89,21 @@ export default function ProjectsPage() {
     setEditingProject(project);
   };
 
+  // Sidebar navigation items
+  const sidebarItems = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/" },
+    { id: "projects", label: "Projects", icon: ListTodo, path: "/projects" },
+    { id: "messages", label: "Messages", icon: MessageCircle, path: "/" },
+    { id: "meetings", label: "Meetings", icon: ClipboardList, path: "/meetings" },
+    { id: "toolkit", label: "Toolkit", icon: FileText, path: "/" },
+    { id: "collections", label: "Collections", icon: BarChart3, path: "/" },
+    { id: "hosts", label: "Hosts", icon: Building2, path: "/" },
+    { id: "recipients", label: "Recipients", icon: Users, path: "/" },
+    { id: "directory", label: "Phone Directory", icon: Phone, path: "/phone-directory" },
+    { id: "drivers", label: "Drivers", icon: Car, path: "/" },
+    { id: "development", label: "Development", icon: FileText, path: "/development" },
+  ];
+
   // Separate projects by status
   const activeProjects = projects.filter((project: Project) => project.status === 'active');
   const availableProjects = projects.filter((project: Project) => project.status === 'available');
@@ -102,16 +119,50 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <CollapsibleNav />
-      <div className="flex-1 flex flex-col overflow-hidden ml-16 lg:ml-64">
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
-          <div className="container mx-auto px-4 py-8">
-            <div className="flex justify-between items-center mb-8">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Project Management</h1>
-                <p className="text-gray-600">Organize and track all team projects with interactive task management</p>
-              </div>
+    <div className="bg-slate-50 min-h-screen flex">
+      {/* Sidebar */}
+      <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+        {/* Sidebar Header */}
+        <div className="p-4 border-b border-slate-200">
+          <div className="flex items-center space-x-3">
+            <Sandwich className="text-amber-500 w-6 h-6" />
+            <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 p-4">
+          <ul className="space-y-2">
+            {sidebarItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location === item.path;
+              return (
+                <li key={item.id}>
+                  <Link 
+                    href={item.path}
+                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                      isActive
+                        ? "bg-blue-50 text-blue-700 border border-blue-200"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="text-sm font-medium">{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 p-8">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Project Management</h1>
+            <p className="text-gray-600">Organize and track all team projects with interactive task management</p>
+          </div>
               <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
           <DialogTrigger asChild>
             <Button className="flex items-center gap-2">
@@ -189,11 +240,11 @@ export default function ProjectsPage() {
               </div>
             </form>
           </DialogContent>
-              </Dialog>
-            </div>
+        </Dialog>
+      </div>
 
-            {/* Projects in tab-based layout matching other pages */}
-            <Tabs defaultValue="active" className="w-full">
+      {/* Projects in tab-based layout matching other pages */}
+      <Tabs defaultValue="active" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="active" className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4" />
@@ -264,9 +315,7 @@ export default function ProjectsPage() {
             )}
           </div>
         </TabsContent>
-            </Tabs>
-          </div>
-        </main>
+      </Tabs>
       </div>
     </div>
   );
