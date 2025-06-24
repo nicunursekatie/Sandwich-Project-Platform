@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, ClipboardList, Users, Menu, MessageCircle } from "lucide-react";
+import { Calendar, FileText, ClipboardList, Users, Menu, MessageCircle, LogOut } from "lucide-react";
 import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -55,67 +55,28 @@ export default function MeetingsLandingPage({ onNavigate }: MeetingsLandingPageP
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-      {/* Mobile Header */}
-      <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          {isMobile && (
-            <button
-              onClick={() => setMobileMenuOpen(true)}
-              className="p-1 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-          )}
-          <img src={logoPath} alt="The Sandwich Project" className="h-8 w-8" />
-          <span className="text-lg font-semibold text-slate-900">The Sandwich Project</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => setLocation("/")}
-            className="p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-            title="Messages"
-          >
-            <MessageCircle className="w-4 h-4" />
-          </button>
+    <div className="bg-slate-50 min-h-screen flex flex-col">
+      {/* Top Header */}
+      <div className="bg-white border-b border-slate-200 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <img src="/api/placeholder/32/32" alt="Logo" className="w-8 h-8" />
+            <span className="text-xl font-semibold text-slate-900">The Sandwich Project</span>
+          </div>
+          <Button variant="ghost" size="sm">
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
-      {isMobile && mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setMobileMenuOpen(false)}>
-          <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <div className="p-4 border-b border-slate-200">
-              <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
-              <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
-            </div>
-            <div className="h-full overflow-y-auto">
-              <CollapsibleNav />
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="flex flex-1">
-        {/* Desktop Sidebar - Only show on large screens */}
-        {!isMobile && (
-          <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
-            <div className="p-4 border-b border-slate-200">
-              <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
-              <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
-            </div>
-            <CollapsibleNav />
-            <div className="p-4 border-t border-gray-200">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Welcome, {(user as any)?.firstName || 'Team'}</span>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Sidebar */}
+        <CollapsibleNav />
 
         {/* Main Content */}
-        <div className="flex-1 overflow-auto">
-          <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full min-w-0">
+        <div className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
