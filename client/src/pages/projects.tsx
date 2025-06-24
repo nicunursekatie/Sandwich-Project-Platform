@@ -92,324 +92,259 @@ export default function ProjectsPage() {
   const waitingProjects = projects.filter((project: Project) => project.status === 'waiting');
   const completedProjects = projects.filter((project: Project) => project.status === 'completed');
 
-  const getProjectIcon = (project: Project) => {
-    const iconMap: Record<string, any> = {
-      'general': Target,
-      'technology': Calendar,
-      'media': User,
-      'design': Clock,
-      'outreach': BarChart3,
-      'administration': TrendingUp,
-      'default': AlertCircle
-    };
-    return iconMap[project.category || 'default'] || iconMap.default;
-  };
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">Loading projects...</div>
+      </div>
+    );
+  }
 
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Project Management</h1>
+          <p className="text-gray-600">Organize and track all team projects with interactive task management</p>
+        </div>
+        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+          <DialogTrigger asChild>
+            <Button className="flex items-center gap-2">
+              <Plus className="w-4 h-4" />
+              New Project
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New Project</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <Label htmlFor="title">Title</Label>
+                <Input
+                  id="title"
+                  value={newProject.title}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, title: e.target.value }))}
+                  placeholder="Enter project title"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={newProject.description}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, description: e.target.value }))}
+                  placeholder="Enter project description"
+                  rows={3}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="priority">Priority</Label>
+                  <Select value={newProject.priority} onValueChange={(value: 'low' | 'medium' | 'high') => 
+                    setNewProject(prev => ({ ...prev, priority: value }))
+                  }>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="assignedTo">Assigned To</Label>
+                  <Input
+                    id="assignedTo"
+                    value={newProject.assignedTo || ''}
+                    onChange={(e) => setNewProject(prev => ({ ...prev, assignedTo: e.target.value }))}
+                    placeholder="Enter assignee name"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="dueDate">Due Date</Label>
+                <Input
+                  id="dueDate"
+                  type="date"
+                  value={newProject.dueDate || ''}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, dueDate: e.target.value }))}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={() => setIsAddModalOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={createMutation.isPending}>
+                  {createMutation.isPending ? 'Creating...' : 'Create Project'}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Projects in tab-based layout matching other pages */}
+      <Tabs defaultValue="active" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="active" className="flex items-center gap-2">
+            <CheckCircle className="w-4 h-4" />
+            Active ({activeProjects.length})
+          </TabsTrigger>
+          <TabsTrigger value="available" className="flex items-center gap-2">
+            <FolderOpen className="w-4 h-4" />
+            Available ({availableProjects.length})
+          </TabsTrigger>
+          <TabsTrigger value="waiting" className="flex items-center gap-2">
+            <Clock className="w-4 h-4" />
+            Waiting ({waitingProjects.length})
+          </TabsTrigger>
+          <TabsTrigger value="completed" className="flex items-center gap-2">
+            <CheckCircle className="w-4 h-4" />
+            Completed ({completedProjects.length})
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="active" className="mt-6">
+          <div className="grid gap-4">
+            {activeProjects.map((project: Project) => (
+              <ProjectCard key={project.id} project={project} onEdit={handleEdit} />
+            ))}
+            {activeProjects.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                No active projects. Create a new project to get started.
+              </div>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="available" className="mt-6">
+          <div className="grid gap-4">
+            {availableProjects.map((project: Project) => (
+              <ProjectCard key={project.id} project={project} onEdit={handleEdit} />
+            ))}
+            {availableProjects.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                No available projects.
+              </div>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="waiting" className="mt-6">
+          <div className="grid gap-4">
+            {waitingProjects.map((project: Project) => (
+              <ProjectCard key={project.id} project={project} onEdit={handleEdit} />
+            ))}
+            {waitingProjects.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                No waiting projects.
+              </div>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="completed" className="mt-6">
+          <div className="grid gap-4">
+            {completedProjects.map((project: Project) => (
+              <ProjectCard key={project.id} project={project} onEdit={handleEdit} />
+            ))}
+            {completedProjects.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                No completed projects.
+              </div>
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+function ProjectCard({ project, onEdit }: { project: Project; onEdit: (project: Project) => void }) {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
-      case 'low': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+      case 'high': return 'bg-red-100 text-red-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'low': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const renderProjectCard = (project: Project) => {
-    const IconComponent = getProjectIcon(project);
-    
-    return (
-      <Card 
-        key={project.id} 
-        className="cursor-pointer hover:shadow-lg transition-all duration-200 border-l-4 border-l-blue-500 bg-white dark:bg-gray-800"
-        onClick={() => setLocation(`/projects/${project.id}`)}
-      >
-        <CardHeader className="pb-3">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-                <IconComponent className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white truncate">
-                  {project.title}
-                </CardTitle>
-                <div className="flex items-center gap-2 mt-1">
-                  <Badge variant="outline" className={getPriorityColor(project.priority || 'medium')}>
-                    {project.priority || 'medium'}
-                  </Badge>
-                  <Badge variant="outline" className={project.category === 'technology' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'}>
-                    {project.category || 'General'}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-            <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <CardDescription className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-            {project.description || "No description provided"}
-          </CardDescription>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-500 dark:text-gray-400">Progress</span>
-              <span className="font-medium text-gray-900 dark:text-white">{project.progressPercentage || 0}%</span>
-            </div>
-            <Progress value={project.progressPercentage || 0} className="h-2" />
-            <div className="flex items-center justify-between">
-              <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                <User className="w-4 h-4 mr-1" />
-                <span>{project.assigneeName || 'Unassigned'}</span>
-              </div>
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setLocation(`/projects/${project.id}`);
-                }}
-                variant="outline"
-                size="sm"
-                className="text-blue-600 border-blue-200 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-800 dark:hover:bg-blue-900/20"
-              >
-                View Details
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'active': return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+      case 'waiting': return <Badge className="bg-yellow-100 text-yellow-800">Waiting</Badge>;
+      case 'completed': return <Badge className="bg-gray-100 text-gray-800">Completed</Badge>;
+      case 'available': return <Badge className="bg-blue-100 text-blue-800">Available</Badge>;
+      default: return <Badge variant="outline">{status}</Badge>;
+    }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-      {/* Mobile Header */}
-      <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          {isMobile && (
-            <button
-              onClick={() => setMobileMenuOpen(true)}
-              className="p-1 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+    <Card className="border border-slate-200 shadow-sm">
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <CardTitle className="text-lg">{project.title}</CardTitle>
+            <div className="flex items-center gap-2 mt-1">
+              {getStatusBadge(project.status)}
+              <Badge className={getPriorityColor(project.priority)}>
+                {project.priority} priority
+              </Badge>
+              {project.assignedTo && (
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Users className="w-3 h-3" />
+                  {project.assignedTo}
+                </Badge>
+              )}
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => onEdit(project)}
+              className="flex items-center gap-1"
             >
-              <Menu className="w-5 h-5" />
-            </button>
-          )}
-          <img src={logoPath} alt="The Sandwich Project" className="h-8 w-8" />
-          <span className="text-lg font-semibold text-slate-900">The Sandwich Project</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => setLocation("/")}
-            className="p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-            title="Messages"
-          >
-            <MessageCircle className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu Overlay */}
-      {isMobile && mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setMobileMenuOpen(false)}>
-          <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <div className="p-4 border-b border-slate-200">
-              <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
-              <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
-            </div>
-            <div className="h-full overflow-y-auto p-4">
-              <nav className="space-y-2">
-                <button
-                  onClick={() => { setLocation("/"); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
-                >
-                  <Home className="w-4 h-4 mr-3" />
-                  Dashboard
-                </button>
-                <button
-                  onClick={() => { setLocation("/projects"); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg"
-                >
-                  <FileText className="w-4 h-4 mr-3" />
-                  Projects
-                </button>
-                <button
-                  onClick={() => { setLocation("/meetings"); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
-                >
-                  <Calendar className="w-4 h-4 mr-3" />
-                  Meetings
-                </button>
-                <button
-                  onClick={() => { setLocation("/analytics"); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
-                >
-                  <BarChart3 className="w-4 h-4 mr-3" />
-                  Analytics
-                </button>
-                <button
-                  onClick={() => { setLocation("/phone-directory"); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
-                >
-                  <Phone className="w-4 h-4 mr-3" />
-                  Phone Directory
-                </button>
-              </nav>
-            </div>
+              <Edit2 className="w-4 h-4" />
+              Edit
+            </Button>
+            <Button variant="outline" size="sm" className="flex items-center gap-1 text-red-600 hover:text-red-700">
+              <Trash2 className="w-4 h-4" />
+              Delete
+            </Button>
           </div>
         </div>
-      )}
-
-      <div className="flex flex-1">
-        {/* Desktop Sidebar - Only show on large screens */}
-        {!isMobile && (
-          <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
-            <div className="p-4 border-b border-slate-200">
-              <h2 className="text-xl font-bold text-slate-900">Navigation</h2>
-              <p className="text-sm text-slate-600 mt-1">Sandwich Project Platform</p>
-            </div>
-            <div className="flex-1 p-4">
-              <nav className="space-y-2">
-                <button
-                  onClick={() => setLocation("/")}
-                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
-                >
-                  <Home className="w-4 h-4 mr-3" />
-                  Dashboard
-                </button>
-                <button
-                  onClick={() => setLocation("/projects")}
-                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg"
-                >
-                  <FileText className="w-4 h-4 mr-3" />
-                  Projects
-                </button>
-                <button
-                  onClick={() => setLocation("/meetings")}
-                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
-                >
-                  <Calendar className="w-4 h-4 mr-3" />
-                  Meetings
-                </button>
-                <button
-                  onClick={() => setLocation("/analytics")}
-                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
-                >
-                  <BarChart3 className="w-4 h-4 mr-3" />
-                  Analytics
-                </button>
-                <button
-                  onClick={() => setLocation("/phone-directory")}
-                  className="w-full flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-100"
-                >
-                  <Phone className="w-4 h-4 mr-3" />
-                  Phone Directory
-                </button>
-              </nav>
-            </div>
-            <div className="p-4 border-t border-gray-200">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Welcome, {(user as any)?.firstName || 'Team'}</span>
-              </div>
-            </div>
-          </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        {project.description && (
+          <p className="text-sm text-slate-600 mb-4">{project.description}</p>
         )}
-
-        {/* Main Content */}
-        <div className="flex-1 overflow-auto">
-          <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full min-w-0">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
-              <div className="flex-1 min-w-0">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Project Management</h1>
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1 sm:mt-2">
-                  Organize and track all team projects with interactive task management
-                </p>
-              </div>
-              <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto shrink-0">
-                <Button 
-                  onClick={() => setLocation("/projects/new")} 
-                  className="bg-blue-600 hover:bg-blue-700 text-sm px-3 sm:px-4 py-2 shrink-0 min-w-0"
-                  size="sm"
-                >
-                  <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                  <span className="hidden sm:inline">New Project</span>
-                  <span className="sm:hidden">Add</span>
-                </Button>
-              </div>
+        <div className="space-y-3">
+          <div>
+            <div className="flex justify-between text-sm text-slate-600 mb-1">
+              <span>Progress</span>
+              <span>{project.progress}%</span>
             </div>
-
-            {/* Loading State */}
-            {isLoading ? (
-              <LoadingState text="Loading projects..." />
-            ) : (
-              <ErrorBoundary>
-                <Tabs defaultValue="active" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4 mb-6">
-                    <TabsTrigger value="active" className="text-xs sm:text-sm">
-                      Active ({activeProjects.length})
-                    </TabsTrigger>
-                    <TabsTrigger value="available" className="text-xs sm:text-sm">
-                      Available ({availableProjects.length})
-                    </TabsTrigger>
-                    <TabsTrigger value="waiting" className="text-xs sm:text-sm">
-                      Waiting ({waitingProjects.length})
-                    </TabsTrigger>
-                    <TabsTrigger value="completed" className="text-xs sm:text-sm">
-                      Completed ({completedProjects.length})
-                    </TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="active" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                      {activeProjects.length > 0 ? (
-                        activeProjects.map(renderProjectCard)
-                      ) : (
-                        <div className="col-span-full text-center py-8 text-gray-500">
-                          No active projects. Create a new project to get started.
-                        </div>
-                      )}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="available" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                      {availableProjects.length > 0 ? (
-                        availableProjects.map(renderProjectCard)
-                      ) : (
-                        <div className="col-span-full text-center py-8 text-gray-500">
-                          No available projects.
-                        </div>
-                      )}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="waiting" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                      {waitingProjects.length > 0 ? (
-                        waitingProjects.map(renderProjectCard)
-                      ) : (
-                        <div className="col-span-full text-center py-8 text-gray-500">
-                          No waiting projects.
-                        </div>
-                      )}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="completed" className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                      {completedProjects.length > 0 ? (
-                        completedProjects.map(renderProjectCard)
-                      ) : (
-                        <div className="col-span-full text-center py-8 text-gray-500">
-                          No completed projects.
-                        </div>
-                      )}
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </ErrorBoundary>
-            )}
+            <div className="w-full bg-slate-200 rounded-full h-2">
+              <div 
+                className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                style={{ width: `${project.progress}%` }}
+              ></div>
+            </div>
           </div>
+          {project.dueDate && (
+            <div className="flex items-center gap-2 text-sm text-slate-600">
+              <Clock className="w-4 h-4" />
+              <span>Due: {new Date(project.dueDate).toLocaleDateString()}</span>
+            </div>
+          )}
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
