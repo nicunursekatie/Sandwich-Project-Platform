@@ -260,7 +260,7 @@ export default function SandwichCollectionForm() {
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label>Group Collections (Optional)</Label>
+            <Label>Group Collections</Label>
             <Button type="button" variant="outline" size="sm" onClick={addGroupRow}>
               <Plus className="w-4 h-4 mr-1" />
               Add Group
