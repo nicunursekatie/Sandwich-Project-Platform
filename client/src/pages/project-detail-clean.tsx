@@ -46,19 +46,18 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
   const project = projects.find(p => p.id === projectId);
 
   // Fetch tasks for this project
-  const { data: tasks = [], isLoading: tasksLoading } = useQuery<Task[]>({
-    queryKey: ["/api/tasks", projectId],
+  const { data: projectTasks = [], isLoading: tasksLoading } = useQuery<Task[]>({
+    queryKey: ["/api/projects", projectId, "tasks"],
+    queryFn: () => fetch(`/api/projects/${projectId}/tasks`).then(res => res.json()),
   });
-
-  const projectTasks = tasks.filter(task => task.projectId === projectId);
 
   // Create task mutation
   const createTaskMutation = useMutation({
     mutationFn: async (taskData: any) => {
-      return await apiRequest('POST', '/api/tasks', { ...taskData, projectId });
+      return await apiRequest('POST', `/api/projects/${projectId}/tasks`, taskData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "tasks"] });
       setNewTask({ title: "", description: "", status: "pending", priority: "medium", assigneeName: "", dueDate: "" });
       setIsAddingTask(false);
       toast({ title: "Task created successfully" });
@@ -71,10 +70,10 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
   // Update task mutation
   const updateTaskMutation = useMutation({
     mutationFn: async ({ id, updates }: { id: number; updates: Partial<Task> }) => {
-      return await apiRequest('PATCH', `/api/tasks/${id}`, updates);
+      return await apiRequest('PATCH', `/api/projects/${projectId}/tasks/${id}`, updates);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "tasks"] });
       setEditingTask(null);
       toast({ title: "Task updated successfully" });
     },
@@ -86,10 +85,10 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
   // Delete task mutation
   const deleteTaskMutation = useMutation({
     mutationFn: async (id: number) => {
-      return await apiRequest('DELETE', `/api/tasks/${id}`);
+      return await apiRequest('DELETE', `/api/projects/${projectId}/tasks/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "tasks"] });
       toast({ title: "Task deleted successfully" });
     },
     onError: () => {
