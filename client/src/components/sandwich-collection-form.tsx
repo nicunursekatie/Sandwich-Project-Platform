@@ -267,6 +267,10 @@ export default function SandwichCollectionForm() {
             </Button>
           </div>
           
+          <p className="text-sm text-gray-600 mb-3">
+            Please document any Group collections at your location with the Group name and their respective sandwich total each week.
+          </p>
+          
           <div className="space-y-3">
             {groupCollections.map((group) => (
               <div key={group.id} className="flex gap-3 items-center">
