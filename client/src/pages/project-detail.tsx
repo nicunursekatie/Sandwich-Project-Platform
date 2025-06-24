@@ -220,6 +220,24 @@ export default function ProjectDetailPage() {
     }
   });
 
+  const toggleTaskCompletionMutation = useMutation({
+    mutationFn: ({ taskId, completed }: { taskId: number; completed: boolean }) => {
+      return apiRequest('PATCH', `/api/projects/${projectId}/tasks/${taskId}`, {
+        status: completed ? 'completed' : 'pending'
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${projectId}/tasks`] });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update task status",
+        variant: "destructive"
+      });
+    }
+  });
+
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -262,6 +280,17 @@ export default function ProjectDetailPage() {
       } catch (error) {
         console.error('Failed to delete task:', error);
       }
+    }
+  };
+
+  const handleToggleTaskCompletion = async (taskId: number, isCompleted: boolean) => {
+    try {
+      await toggleTaskCompletionMutation.mutateAsync({
+        taskId,
+        completed: !isCompleted
+      });
+    } catch (error) {
+      console.error('Failed to toggle task completion:', error);
     }
   };
 
@@ -690,9 +719,18 @@ export default function ProjectDetailPage() {
                     <Card key={task.id} className="border border-gray-200">
                       <CardContent className="p-4">
                         <div className="flex justify-between items-start">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h4 className="font-medium text-gray-900">{task.title}</h4>
+                          <div className="flex items-start gap-3 flex-1">
+                            <input
+                              type="checkbox"
+                              checked={task.status === 'completed'}
+                              onChange={() => handleToggleTaskCompletion(task.id, task.status === 'completed')}
+                              className="mt-1 w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                            />
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <h4 className={`font-medium ${task.status === 'completed' ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
+                                  {task.title}
+                                </h4>
                               <Badge className={getPriorityColor(task.priority)}>
                                 {task.priority}
                               </Badge>
@@ -704,15 +742,18 @@ export default function ProjectDetailPage() {
                                 {task.status === 'in_progress' || task.status === 'active' ? 'In Progress' : 
                                  task.status === 'completed' || task.status === 'done' ? 'Completed' : 'Pending'}
                               </Badge>
-                            </div>
-                            {task.description && (
-                              <p className="text-sm text-gray-600 mb-2">{task.description}</p>
-                            )}
-                            <div className="flex items-center gap-4 text-xs text-gray-500">
-                              <span>Assigned: {task.assigneeName || task.assignedTo || 'Unassigned'}</span>
-                              {task.dueDate && task.dueDate !== '' && (
-                                <span>Due: {new Date(task.dueDate).toLocaleDateString()}</span>
+                              </div>
+                              {task.description && (
+                                <p className={`text-sm mb-2 ${task.status === 'completed' ? 'text-gray-400 line-through' : 'text-gray-600'}`}>
+                                  {task.description}
+                                </p>
                               )}
+                              <div className="flex items-center gap-4 text-xs text-gray-500">
+                                <span>Assigned: {task.assigneeName || task.assignedTo || 'Unassigned'}</span>
+                                {task.dueDate && task.dueDate !== '' && (
+                                  <span>Due: {new Date(task.dueDate).toLocaleDateString()}</span>
+                                )}
+                              </div>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
