@@ -181,6 +181,12 @@ export const drivers = pgTable("drivers", {
   licenseNumber: text("license_number"),
   availability: text("availability").default("available"), // "available", "busy", "off-duty"
   zone: text("zone"),
+  vanApproved: boolean("van_approved").notNull().default(false),
+  homeAddress: text("home_address"),
+  availabilityNotes: text("availability_notes"),
+  emailAgreementSent: boolean("email_agreement_sent").notNull().default(false),
+  voicemailLeft: boolean("voicemail_left").notNull().default(false),
+  inactiveReason: text("inactive_reason"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

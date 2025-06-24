@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck, AlertTriangle, Download } from "lucide-react";
+import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck, AlertTriangle, Download, Truck, Clock } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 interface Driver {
@@ -21,6 +21,12 @@ interface Driver {
   zone: string;
   isActive: boolean;
   notes: string;
+  vanApproved: boolean;
+  homeAddress?: string;
+  availabilityNotes?: string;
+  emailAgreementSent: boolean;
+  voicemailLeft: boolean;
+  inactiveReason?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -186,7 +192,7 @@ export default function DriversManagement() {
   const handleExport = () => {
     if (!drivers || drivers.length === 0) return;
     
-    const headers = ['Name', 'Phone', 'Email', 'Zone', 'Active', 'Agreement', 'Notes'];
+    const headers = ['Name', 'Phone', 'Email', 'Zone', 'Active', 'Agreement', 'Van Approved', 'Home Address', 'Availability', 'Email Sent', 'Voicemail Left', 'Inactive Reason', 'Notes'];
     const csvContent = [
       headers.join(','),
       ...drivers.map(driver => {
@@ -198,6 +204,12 @@ export default function DriversManagement() {
           `"${driver.zone || ''}"`,
           driver.isActive ? 'Yes' : 'No',
           hasAgreement ? 'Yes' : 'No',
+          driver.vanApproved ? 'Yes' : 'No',
+          `"${driver.homeAddress || ''}"`,
+          `"${driver.availabilityNotes || ''}"`,
+          driver.emailAgreementSent ? 'Yes' : 'No',
+          driver.voicemailLeft ? 'Yes' : 'No',
+          `"${driver.inactiveReason || ''}"`,
           `"${driver.notes || ''}"`
         ].join(',');
       })
@@ -497,6 +509,14 @@ export default function DriversManagement() {
                           Active
                         </Badge>
                         
+                        {/* Van Approval */}
+                        {driver.vanApproved && (
+                          <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 flex items-center gap-1">
+                            <Truck className="w-3 h-3" />
+                            Van Driver
+                          </Badge>
+                        )}
+                        
                         {/* Agreement Status */}
                         {hasSignedAgreement(driver.notes) ? (
                           <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
@@ -507,6 +527,14 @@ export default function DriversManagement() {
                           <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 flex items-center gap-1">
                             <AlertTriangle className="w-3 h-3" />
                             Missing Agreement
+                          </Badge>
+                        )}
+                        
+                        {/* Availability Notes */}
+                        {driver.availabilityNotes && (
+                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {driver.availabilityNotes.length > 20 ? `${driver.availabilityNotes.substring(0, 20)}...` : driver.availabilityNotes}
                           </Badge>
                         )}
                         
@@ -566,11 +594,26 @@ export default function DriversManagement() {
                           Inactive
                         </Badge>
                         
+                        {/* Van Approval (for inactive drivers) */}
+                        {driver.vanApproved && (
+                          <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 flex items-center gap-1">
+                            <Truck className="w-3 h-3" />
+                            Van Driver
+                          </Badge>
+                        )}
+                        
                         {/* Agreement Status (for inactive drivers) */}
                         {hasSignedAgreement(driver.notes) && (
                           <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
                             <FileCheck className="w-3 h-3" />
                             Signed Agreement
+                          </Badge>
+                        )}
+                        
+                        {/* Inactive Reason */}
+                        {driver.inactiveReason && (
+                          <Badge variant="outline" className="bg-gray-50 text-gray-600 border-gray-200 flex items-center gap-1">
+                            {driver.inactiveReason}
                           </Badge>
                         )}
                         
