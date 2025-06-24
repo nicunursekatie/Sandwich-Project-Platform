@@ -102,7 +102,7 @@ export default function Dashboard() {
       case "calendar":
         return <MeetingCalendarPage />;
       case "reports":
-        return <ReportingDashboard />;
+        return <ReportingDashboard isEmbedded={true} />;
       case "toolkit":
         return (
           <div className="space-y-6">
