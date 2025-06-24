@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Users, Clock, CheckCircle, AlertCircle, FolderOpen, Edit2, Trash2 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
+import { CollapsibleNav } from '@/components/collapsible-nav';
 
 interface Project {
   id: number;
@@ -101,13 +102,17 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Project Management</h1>
-          <p className="text-gray-600">Organize and track all team projects with interactive task management</p>
-        </div>
-        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+    <div className="flex h-screen bg-gray-50">
+      <CollapsibleNav />
+      <div className="flex-1 flex flex-col overflow-hidden ml-16 lg:ml-64">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Project Management</h1>
+                <p className="text-gray-600">Organize and track all team projects with interactive task management</p>
+              </div>
+              <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
           <DialogTrigger asChild>
             <Button className="flex items-center gap-2">
               <Plus className="w-4 h-4" />
@@ -184,11 +189,11 @@ export default function ProjectsPage() {
               </div>
             </form>
           </DialogContent>
-        </Dialog>
-      </div>
+              </Dialog>
+            </div>
 
-      {/* Projects in tab-based layout matching other pages */}
-      <Tabs defaultValue="active" className="w-full">
+            {/* Projects in tab-based layout matching other pages */}
+            <Tabs defaultValue="active" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="active" className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4" />
@@ -259,7 +264,10 @@ export default function ProjectsPage() {
             )}
           </div>
         </TabsContent>
-      </Tabs>
+            </Tabs>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
