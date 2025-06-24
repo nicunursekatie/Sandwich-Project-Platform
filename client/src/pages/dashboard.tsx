@@ -90,8 +90,7 @@ export default function Dashboard() {
       case "dashboard":
         return <DashboardOverview onSectionChange={setActiveSection} />;
       case "projects":
-        window.location.href = "/projects";
-        return null;
+        return <Projects />;
       case "messages":
         return <ChatHub />;
       case "meetings":
