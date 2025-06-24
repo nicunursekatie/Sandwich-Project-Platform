@@ -345,59 +345,25 @@ export default function ProjectsPage() {
 
       {/* Projects in tab-based layout matching other pages */}
       <Tabs defaultValue="active" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="active" className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4" />
-            Active ({activeProjects.length})
-          </TabsTrigger>
-          <TabsTrigger value="available" className="flex items-center gap-2">
-            <FolderOpen className="w-4 h-4" />
-            Available ({availableProjects.length})
-          </TabsTrigger>
-          <TabsTrigger value="waiting" className="flex items-center gap-2">
-            <Clock className="w-4 h-4" />
-            Waiting ({waitingProjects.length})
+            Active Projects ({activeProjects.length + availableProjects.length + waitingProjects.length})
           </TabsTrigger>
           <TabsTrigger value="completed" className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4" />
-            Completed ({completedProjects.length})
+            <AlertCircle className="w-4 h-4" />
+            Completed Projects ({completedProjects.length})
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="active" className="mt-6">
           <div className="grid gap-4">
-            {activeProjects.map((project: Project) => (
+            {[...activeProjects, ...availableProjects, ...waitingProjects].map((project: Project) => (
               <ProjectCard key={project.id} project={project} onEdit={handleEdit} />
             ))}
-            {activeProjects.length === 0 && (
+            {[...activeProjects, ...availableProjects, ...waitingProjects].length === 0 && (
               <div className="text-center py-8 text-gray-500">
                 No active projects. Create a new project to get started.
-              </div>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="available" className="mt-6">
-          <div className="grid gap-4">
-            {availableProjects.map((project: Project) => (
-              <ProjectCard key={project.id} project={project} onEdit={handleEdit} />
-            ))}
-            {availableProjects.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                No available projects.
-              </div>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="waiting" className="mt-6">
-          <div className="grid gap-4">
-            {waitingProjects.map((project: Project) => (
-              <ProjectCard key={project.id} project={project} onEdit={handleEdit} />
-            ))}
-            {waitingProjects.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                No waiting projects.
               </div>
             )}
           </div>
