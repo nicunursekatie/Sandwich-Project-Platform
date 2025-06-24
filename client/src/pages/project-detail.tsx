@@ -322,20 +322,22 @@ export default function ProjectDetailPage() {
   const handleEditProject = () => {
     console.log('Edit Details button clicked!');
     console.log('Project data:', project);
+    const projectData = Array.isArray(project) ? project[0] : project;
+    console.log('Project object:', projectData);
     setEditingProject({
-      title: project.title,
-      description: project.description,
-      category: project.category,
-      priority: project.priority,
-      status: project.status,
-      assigneeName: project.assigneeName || '',
-      startDate: project.startDate || '',
-      dueDate: project.dueDate || '',
-      requirements: project.requirements || '',
-      deliverables: project.deliverables || '',
-      resources: project.resources || '',
-      blockers: project.blockers || '',
-      notes: project.notes || ''
+      title: projectData?.title,
+      description: projectData?.description,
+      category: projectData?.category,
+      priority: projectData?.priority,
+      status: projectData?.status,
+      assigneeName: projectData?.assigneeName || '',
+      startDate: projectData?.startDate || '',
+      dueDate: projectData?.dueDate || '',
+      requirements: projectData?.requirements || '',
+      deliverables: projectData?.deliverables || '',
+      resources: projectData?.resources || '',
+      blockers: projectData?.blockers || '',
+      notes: projectData?.notes || ''
     });
     console.log('Setting modal open to true');
     setIsEditProjectModalOpen(true);
@@ -401,8 +403,12 @@ export default function ProjectDetailPage() {
   // Ensure we have valid task data
   const actualTasks = Array.isArray(tasks) ? tasks : [];
   
+  // Get project object from array if needed
+  const projectData = Array.isArray(project) ? project[0] : project;
+  
   console.log('=== PROJECT DEBUG ===');
-  console.log('Project:', project);
+  console.log('Project raw:', project);
+  console.log('Project data:', projectData);
   console.log('isEditProjectModalOpen:', isEditProjectModalOpen);
   console.log('editingProject:', editingProject);
 
@@ -1178,30 +1184,30 @@ export default function ProjectDetailPage() {
                     <CardContent className="space-y-4">
                       <div>
                         <Label className="font-medium text-gray-700">Category</Label>
-                        <p className="text-gray-900 mt-1">{project.category || 'Not specified'}</p>
+                        <p className="text-gray-900 mt-1">{projectData?.category || 'Not specified'}</p>
                       </div>
                       <div>
                         <Label className="font-medium text-gray-700">Priority</Label>
-                        <p className="text-gray-900 mt-1 capitalize">{project.priority}</p>
+                        <p className="text-gray-900 mt-1 capitalize">{projectData?.priority}</p>
                       </div>
                       <div>
                         <Label className="font-medium text-gray-700">Status</Label>
-                        <p className="text-gray-900 mt-1 capitalize">{project.status === 'in_progress' ? 'Active' : project.status}</p>
+                        <p className="text-gray-900 mt-1 capitalize">{projectData?.status === 'in_progress' ? 'Active' : projectData?.status}</p>
                       </div>
                       <div>
                         <Label className="font-medium text-gray-700">Assigned To</Label>
-                        <p className="text-gray-900 mt-1">{project.assigneeName || 'Unassigned'}</p>
+                        <p className="text-gray-900 mt-1">{projectData?.assigneeName || 'Unassigned'}</p>
                       </div>
                       <div>
                         <Label className="font-medium text-gray-700">Start Date</Label>
                         <p className="text-gray-900 mt-1">
-                          {project.startDate ? new Date(project.startDate).toLocaleDateString() : 'Not set'}
+                          {projectData?.startDate ? new Date(projectData.startDate).toLocaleDateString() : 'Not set'}
                         </p>
                       </div>
                       <div>
                         <Label className="font-medium text-gray-700">Due Date</Label>
                         <p className="text-gray-900 mt-1">
-                          {project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'Not set'}
+                          {projectData?.dueDate ? new Date(projectData.dueDate).toLocaleDateString() : 'Not set'}
                         </p>
                       </div>
                     </CardContent>
