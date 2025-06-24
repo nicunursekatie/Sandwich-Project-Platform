@@ -77,7 +77,8 @@ export default function ProjectDetailPage() {
   console.log('Extracted projectId:', projectId);
 
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [editingTask, setEditingTask] = useState<any>(null);
+  const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
@@ -160,7 +161,7 @@ export default function ProjectDetailPage() {
         title: '',
         description: '',
         priority: 'medium',
-        assignedTo: '',
+        assigneeName: '',
         dueDate: ''
       });
       toast({
@@ -177,22 +178,90 @@ export default function ProjectDetailPage() {
     }
   });
 
+  const updateTaskMutation = useMutation({
+    mutationFn: ({ taskId, updates }: { taskId: number; updates: any }) => {
+      return apiRequest('PATCH', `/api/projects/${projectId}/tasks/${taskId}`, updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${projectId}/tasks`] });
+      setIsEditTaskModalOpen(false);
+      setEditingTask(null);
+      toast({
+        title: "Success",
+        description: "Task updated successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update task",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const deleteTaskMutation = useMutation({
+    mutationFn: (taskId: number) => {
+      return apiRequest('DELETE', `/api/projects/${projectId}/tasks/${taskId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${projectId}/tasks`] });
+      toast({
+        title: "Success",
+        description: "Task deleted successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete task",
+        variant: "destructive"
+      });
+    }
+  });
+
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await createTaskMutation.mutateAsync(newTask);
-      setNewTask({ title: '', description: '', priority: 'medium', assigneeName: '', dueDate: '' });
-      setIsAddTaskModalOpen(false);
-      toast({
-        title: "Task created",
-        description: "The task has been added to the project.",
+    } catch (error) {
+      console.error('Failed to create task:', error);
+    }
+  };
+
+  const handleEditTask = (task: any) => {
+    setEditingTask({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      priority: task.priority,
+      assigneeName: task.assigneeName || '',
+      dueDate: task.dueDate || ''
+    });
+    setIsEditTaskModalOpen(true);
+  };
+
+  const handleUpdateTask = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingTask) return;
+    
+    try {
+      await updateTaskMutation.mutateAsync({
+        taskId: editingTask.id,
+        updates: editingTask
       });
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to create task. Please try again.",
-        variant: "destructive",
-      });
+      console.error('Failed to update task:', error);
+    }
+  };
+
+  const handleDeleteTask = async (taskId: number) => {
+    if (confirm('Are you sure you want to delete this task?')) {
+      try {
+        await deleteTaskMutation.mutateAsync(taskId);
+      } catch (error) {
+        console.error('Failed to delete task:', error);
+      }
     }
   };
 
@@ -242,22 +311,14 @@ export default function ProjectDetailPage() {
     );
   }
 
-  // Debug logging
-  console.log('Raw tasks data:', tasks);
-  console.log('Tasks is array?', Array.isArray(tasks));
-  console.log('Tasks length:', tasks?.length);
-
-  // Filter tasks - tasks have projectId, projects don't
-  const actualTasks = Array.isArray(tasks) ? tasks.filter((task: any) => {
-    const isValid = task && typeof task === 'object' && 
-           task.hasOwnProperty('projectId') && 
-           task.hasOwnProperty('title');
-    console.log(`Task ${task?.id} validation:`, { isValid, task });
-    return isValid;
-  }) : [];
-
-  console.log('Filtered actualTasks:', actualTasks);
-  console.log('ActualTasks length:', actualTasks.length);
+  // Ensure we have valid task data
+  const actualTasks = Array.isArray(tasks) ? tasks : [];
+  
+  console.log('=== TASK DEBUG ===');
+  console.log('Raw tasks:', tasks);
+  console.log('Actual tasks:', actualTasks);
+  console.log('Tasks loading:', tasksLoading);
+  console.log('Tasks error:', tasksError);
 
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col">
@@ -584,10 +645,19 @@ export default function ProjectDetailPage() {
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="sm">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleEditTask(task)}
+                            >
                               <Edit2 className="w-4 h-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="text-red-600 hover:text-red-700"
+                              onClick={() => handleDeleteTask(task.id)}
+                            >
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
