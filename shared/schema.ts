@@ -169,6 +169,22 @@ export const meetings = pgTable("meetings", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const drivers = pgTable("drivers", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  phone: text("phone"),
+  email: text("email"),
+  address: text("address"),
+  notes: text("notes"),
+  isActive: boolean("is_active").notNull().default(true),
+  vehicleType: text("vehicle_type"),
+  licenseNumber: text("license_number"),
+  availability: text("availability").default("available"), // "available", "busy", "off-duty"
+  zone: text("zone"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const driverAgreements = pgTable("driver_agreements", {
   id: serial("id").primaryKey(),
   submittedBy: text("submitted_by").notNull(),
@@ -344,3 +360,13 @@ export const insertAuditLogSchema = createInsertSchema(auditLogs).omit({
 
 export type AuditLog = typeof auditLogs.$inferSelect;
 export type InsertAuditLog = z.infer<typeof insertAuditLogSchema>;
+
+// Driver types
+export const insertDriverSchema = createInsertSchema(drivers).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export type Driver = typeof drivers.$inferSelect;
+export type InsertDriver = z.infer<typeof insertDriverSchema>;

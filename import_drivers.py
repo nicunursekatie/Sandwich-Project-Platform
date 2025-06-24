@@ -24,7 +24,7 @@ def clean_phone_number(phone):
     
     # Remove common formatting characters
     import re
-    clean_phone = re.sub(r'[^\d+()-\s]', '', phone_str)
+    clean_phone = re.sub(r'[^\d+().\s-]', '', phone_str)
     clean_phone = re.sub(r'\s+', ' ', clean_phone).strip()
     
     return clean_phone if clean_phone else None
