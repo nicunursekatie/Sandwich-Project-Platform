@@ -177,9 +177,23 @@ export default function ProjectDetailPage() {
     }
   });
 
-  const handleSubmitTask = (e: React.FormEvent) => {
+  const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
-    createTaskMutation.mutate(newTask);
+    try {
+      await createTaskMutation.mutateAsync(newTask);
+      setNewTask({ title: '', description: '', priority: 'medium', assignedTo: '', dueDate: '' });
+      setIsAddTaskModalOpen(false);
+      toast({
+        title: "Task created",
+        description: "The task has been added to the project.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create task. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -442,184 +456,136 @@ export default function ProjectDetailPage() {
             </TabsList>
 
             <TabsContent value="tasks" className="mt-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold">Tasks</h2>
-                <Dialog open={isAddTaskModalOpen} onOpenChange={setIsAddTaskModalOpen}>
-                  <DialogTrigger asChild>
-                    <Button className="flex items-center gap-2">
-                      <Plus className="w-4 h-4" />
-                      Add Task
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Add New Task</DialogTitle>
-                    </DialogHeader>
-                    <form onSubmit={handleSubmitTask} className="space-y-4">
-                      <div>
-                        <Label htmlFor="title">Task Title</Label>
-                        <Input
-                          id="title"
-                          value={newTask.title}
-                          onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                          placeholder="Enter task title"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="description">Description</Label>
-                        <Textarea
-                          id="description"
-                          value={newTask.description}
-                          onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-                          placeholder="Enter task description"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="priority">Priority</Label>
-                        <Select value={newTask.priority} onValueChange={(value: any) => setNewTask({ ...newTask, priority: value })}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select priority" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="low">Low</SelectItem>
-                            <SelectItem value="medium">Medium</SelectItem>
-                            <SelectItem value="high">High</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="assignedTo">Assigned To</Label>
-                        <Input
-                          id="assignedTo"
-                          value={newTask.assignedTo}
-                          onChange={(e) => setNewTask({ ...newTask, assignedTo: e.target.value })}
-                          placeholder="Enter assignee name"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="dueDate">Due Date</Label>
-                        <Input
-                          id="dueDate"
-                          type="date"
-                          value={newTask.dueDate}
-                          onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                        />
-                      </div>
-                      <div className="flex justify-end gap-2">
-                        <Button type="button" variant="outline" onClick={() => setIsAddTaskModalOpen(false)}>
-                          Cancel
-                        </Button>
-                        <Button type="submit" disabled={createTaskMutation.isPending}>
-                          {createTaskMutation.isPending ? 'Creating...' : 'Create Task'}
-                        </Button>
-                      </div>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </div>
+              <div className="max-w-4xl">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold">Tasks</h2>
+                  <Dialog open={isAddTaskModalOpen} onOpenChange={setIsAddTaskModalOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="flex items-center gap-2">
+                        <Plus className="w-4 h-4" />
+                        Add Task
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add New Task</DialogTitle>
+                      </DialogHeader>
+                      <form onSubmit={handleCreateTask} className="space-y-4">
+                        <div>
+                          <Label htmlFor="title">Task Title</Label>
+                          <Input
+                            id="title"
+                            value={newTask.title}
+                            onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                            placeholder="Enter task title"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="description">Description</Label>
+                          <Textarea
+                            id="description"
+                            value={newTask.description}
+                            onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                            placeholder="Enter task description"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="priority">Priority</Label>
+                          <Select value={newTask.priority} onValueChange={(value: any) => setNewTask({ ...newTask, priority: value })}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select priority" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="low">Low</SelectItem>
+                              <SelectItem value="medium">Medium</SelectItem>
+                              <SelectItem value="high">High</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="assignedTo">Assigned To</Label>
+                          <Input
+                            id="assignedTo"
+                            value={newTask.assignedTo}
+                            onChange={(e) => setNewTask({ ...newTask, assignedTo: e.target.value })}
+                            placeholder="Enter assignee name"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="dueDate">Due Date</Label>
+                          <Input
+                            id="dueDate"
+                            type="date"
+                            value={newTask.dueDate}
+                            onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                          />
+                        </div>
+                        <div className="flex justify-end gap-2">
+                          <Button type="button" variant="outline" onClick={() => setIsAddTaskModalOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button type="submit" disabled={createTaskMutation.isPending}>
+                            {createTaskMutation.isPending ? 'Creating...' : 'Create Task'}
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+                </div>
 
               {/* Tasks List */}
               {actualTasks.length === 0 ? (
-                <div className="text-center py-12">
+                <div className="text-center py-8">
                   <ListTodo className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No tasks yet</h3>
-                  <p className="text-gray-600 mb-4">Get started by creating your first task for this project.</p>
-                  <Button className="flex items-center gap-2" onClick={() => setIsAddTaskModalOpen(true)}>
-                    <Plus className="w-4 h-4" />
-                    Create First Task
-                  </Button>
+                  <p className="text-gray-600">Create your first task using the Add Task button above.</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-3 gap-6">
-                  {/* To Do */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      To Do ({todoTasks.length})
-                    </h3>
-                    <div className="space-y-3">
-                      {todoTasks.map((task: any) => (
-                        <Card key={task.id} className="border border-gray-200 shadow-sm">
-                          <CardContent className="p-4">
-                            <div className="flex justify-between items-start mb-2">
+                <div className="space-y-3">
+                  {actualTasks.map((task: any) => (
+                    <Card key={task.id} className="border border-gray-200">
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
                               <h4 className="font-medium text-gray-900">{task.title}</h4>
                               <Badge className={getPriorityColor(task.priority)}>
                                 {task.priority}
                               </Badge>
-                            </div>
-                            <p className="text-sm text-gray-600 mb-3">{task.description}</p>
-                            <div className="flex justify-between items-center text-xs text-gray-500">
-                              <span>{task.assignedTo || 'Unassigned'}</span>
-                              {task.dueDate && (
-                                <span>{new Date(task.dueDate).toLocaleDateString()}</span>
-                              )}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* In Progress */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4" />
-                      In Progress ({inProgressTasks.length})
-                    </h3>
-                    <div className="space-y-3">
-                      {inProgressTasks.map((task: any) => (
-                        <Card key={task.id} className="border border-blue-200 shadow-sm">
-                          <CardContent className="p-4">
-                            <div className="flex justify-between items-start mb-2">
-                              <h4 className="font-medium text-gray-900">{task.title}</h4>
-                              <Badge className={getPriorityColor(task.priority)}>
-                                {task.priority}
+                              <Badge variant="outline" className={
+                                task.status === 'completed' ? 'border-green-500 text-green-700' :
+                                task.status === 'in_progress' ? 'border-blue-500 text-blue-700' :
+                                'border-gray-500 text-gray-700'
+                              }>
+                                {task.status === 'in_progress' ? 'In Progress' : task.status === 'completed' ? 'Completed' : 'To Do'}
                               </Badge>
                             </div>
-                            <p className="text-sm text-gray-600 mb-3">{task.description}</p>
-                            <div className="flex justify-between items-center text-xs text-gray-500">
-                              <span>{task.assignedTo || 'Unassigned'}</span>
+                            {task.description && (
+                              <p className="text-sm text-gray-600 mb-2">{task.description}</p>
+                            )}
+                            <div className="flex items-center gap-4 text-xs text-gray-500">
+                              <span>Assigned: {task.assignedTo || 'Unassigned'}</span>
                               {task.dueDate && (
-                                <span>{new Date(task.dueDate).toLocaleDateString()}</span>
+                                <span>Due: {new Date(task.dueDate).toLocaleDateString()}</span>
                               )}
                             </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Completed */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4" />
-                      Completed ({completedTasks.length})
-                    </h3>
-                    <div className="space-y-3">
-                      {completedTasks.map((task: any) => (
-                        <Card key={task.id} className="border border-green-200 shadow-sm">
-                          <CardContent className="p-4">
-                            <div className="flex justify-between items-start mb-2">
-                              <h4 className="font-medium text-gray-900">{task.title}</h4>
-                              <Badge className={getPriorityColor(task.priority)}>
-                                {task.priority}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-gray-600 mb-3">{task.description}</p>
-                            <div className="flex justify-between items-center text-xs text-gray-500">
-                              <span>{task.assignedTo || 'Unassigned'}</span>
-                              {task.dueDate && (
-                                <span>{new Date(task.dueDate).toLocaleDateString()}</span>
-                              )}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button variant="ghost" size="sm">
+                              <Edit2 className="w-4 h-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
               )}
+              </div>
             </TabsContent>
 
             <TabsContent value="details" className="mt-6">
