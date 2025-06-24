@@ -19,7 +19,7 @@ import MeetingMinutesPage from "@/pages/meeting-minutes";
 import MeetingAgendaPage from "@/pages/meeting-agenda";
 import MeetingCalendarPage from "@/pages/meeting-calendar";
 import RoleDemo from "@/pages/role-demo";
-import Projects from "@/pages/projects";
+import ProjectsClean from "@/pages/projects-clean";
 import ProjectDetail from "@/pages/project-detail";
 import Analytics from "@/pages/analytics";
 import ImpactDashboard from "@/pages/impact-dashboard";

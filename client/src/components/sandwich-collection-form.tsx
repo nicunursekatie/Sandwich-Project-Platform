@@ -4,7 +4,13 @@ import { Plus, Trash2, Sandwich } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import type { Host } from "@shared/schema";
@@ -17,29 +23,29 @@ interface GroupCollection {
 
 export default function SandwichCollectionForm() {
   const { toast } = useToast();
-  
+
   // Default to today's date
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split("T")[0];
   const [collectionDate, setCollectionDate] = useState(today);
   const [hostName, setHostName] = useState("");
   const [isCustomHost, setIsCustomHost] = useState(false);
   const [individualSandwiches, setIndividualSandwiches] = useState("");
   const [groupCollections, setGroupCollections] = useState<GroupCollection[]>([
-    { id: "1", groupName: "", sandwichCount: 0 }
+    { id: "1", groupName: "", sandwichCount: 0 },
   ]);
 
   // Fetch active hosts from the database
   const { data: hosts = [] } = useQuery<Host[]>({
-    queryKey: ['/api/hosts'],
+    queryKey: ["/api/hosts"],
     queryFn: async () => {
-      const response = await fetch('/api/hosts');
-      if (!response.ok) throw new Error('Failed to fetch hosts');
+      const response = await fetch("/api/hosts");
+      if (!response.ok) throw new Error("Failed to fetch hosts");
       return response.json();
-    }
+    },
   });
 
   // Include all hosts (active and inactive) for collection assignment
-  const hostOptions = [...hosts.map(host => host.name), "Groups", "Other"];
+  const hostOptions = [...hosts.map((host) => host.name), "Groups", "Other"];
 
   // Mutation for creating new hosts
   const createHostMutation = useMutation({
@@ -50,15 +56,15 @@ export default function SandwichCollectionForm() {
       email: string;
       status: string;
     }) => {
-      const response = await apiRequest('POST', '/api/hosts', hostData);
+      const response = await apiRequest("POST", "/api/hosts", hostData);
       return response.json();
     },
     onSuccess: () => {
       // Refresh all host-related queries to update dropdown and management sections
-      queryClient.invalidateQueries({ queryKey: ['/api/hosts'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/hosts-with-contacts'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/recipients'] });
-    }
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts-with-contacts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
+    },
   });
 
   const submitCollectionMutation = useMutation({
@@ -68,12 +74,18 @@ export default function SandwichCollectionForm() {
       individualSandwiches: number;
       groupCollections: string;
     }) => {
-      const response = await apiRequest('POST', '/api/sandwich-collections', data);
+      const response = await apiRequest(
+        "POST",
+        "/api/sandwich-collections",
+        data,
+      );
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/sandwich-collections'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/hosts'] });
+      queryClient.invalidateQueries({
+        queryKey: ["/api/sandwich-collections"],
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
       // Reset form
       setHostName("");
       setIsCustomHost(false);
@@ -90,74 +102,90 @@ export default function SandwichCollectionForm() {
         description: "Failed to submit collection. Please try again.",
         variant: "destructive",
       });
-    }
+    },
   });
 
   const addGroupRow = () => {
     const newId = Math.random().toString(36).substr(2, 9);
-    setGroupCollections([...groupCollections, { id: newId, groupName: "", sandwichCount: 0 }]);
+    setGroupCollections([
+      ...groupCollections,
+      { id: newId, groupName: "", sandwichCount: 0 },
+    ]);
   };
 
   const removeGroupRow = (id: string) => {
     if (groupCollections.length > 1) {
-      setGroupCollections(groupCollections.filter(group => group.id !== id));
+      setGroupCollections(groupCollections.filter((group) => group.id !== id));
     }
   };
 
-  const updateGroupCollection = (id: string, field: keyof GroupCollection, value: string | number) => {
-    setGroupCollections(groupCollections.map(group => 
-      group.id === id ? { ...group, [field]: value } : group
-    ));
+  const updateGroupCollection = (
+    id: string,
+    field: keyof GroupCollection,
+    value: string | number,
+  ) => {
+    setGroupCollections(
+      groupCollections.map((group) =>
+        group.id === id ? { ...group, [field]: value } : group,
+      ),
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!collectionDate || !hostName || !individualSandwiches) {
       toast({
         title: "Missing information",
-        description: "Please fill in the collection date, host name, and individual sandwiches.",
+        description:
+          "Please fill in the collection date, host name, and individual sandwiches.",
         variant: "destructive",
       });
       return;
     }
 
     // Check if host exists and create if needed (skip for "Groups")
-    if (hostName !== "Groups" && (isCustomHost || !hosts.some(h => h.name === hostName))) {
+    if (
+      hostName !== "Groups" &&
+      (isCustomHost || !hosts.some((h) => h.name === hostName))
+    ) {
       try {
         await createHostMutation.mutateAsync({
           name: hostName.trim(),
-          address: '',
-          phone: '',
-          email: '',
-          status: 'active'
+          address: "",
+          phone: "",
+          email: "",
+          status: "active",
         });
-        
+
         toast({
           title: "New host location created",
           description: `"${hostName.trim()}" has been added to host locations.`,
         });
       } catch (error) {
         // Host might already exist, continue with collection creation
-        console.log('Host creation skipped (may already exist):', error);
+        console.log("Host creation skipped (may already exist):", error);
       }
     }
 
-    const validGroupCollections = groupCollections.filter(g => g.groupName.trim() && g.sandwichCount > 0);
-    const groupCollectionsString = validGroupCollections.length > 0 
-      ? JSON.stringify(validGroupCollections.map(g => ({ 
-          name: g.groupName.trim(), 
-          count: g.sandwichCount 
-        })))
-      : '[]';
-
-
+    const validGroupCollections = groupCollections.filter(
+      (g) => g.groupName.trim() && g.sandwichCount > 0,
+    );
+    const groupCollectionsString =
+      validGroupCollections.length > 0
+        ? JSON.stringify(
+            validGroupCollections.map((g) => ({
+              name: g.groupName.trim(),
+              count: g.sandwichCount,
+            })),
+          )
+        : "[]";
 
     submitCollectionMutation.mutate({
       collectionDate,
       hostName: hostName.trim(),
       individualSandwiches: parseInt(individualSandwiches),
-      groupCollections: groupCollectionsString
+      groupCollections: groupCollectionsString,
     });
   };
 
@@ -168,7 +196,9 @@ export default function SandwichCollectionForm() {
           <Sandwich className="text-amber-500 mr-2 w-5 h-5" />
           Submit Collection
         </h2>
-        <p className="text-sm text-slate-500 mt-1">Log a new sandwich collection for tracking</p>
+        <p className="text-sm text-slate-500 mt-1">
+          Log a new sandwich collection for tracking
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
@@ -208,23 +238,29 @@ export default function SandwichCollectionForm() {
               </div>
             ) : (
               <div className="flex gap-2">
-                <Select value={hostName} onValueChange={(value) => {
-                  if (value === "Other") {
-                    setIsCustomHost(true);
-                    setHostName("");
-                  } else {
-                    setHostName(value);
-                    setIsCustomHost(false);
-                  }
-                }}>
+                <Select
+                  value={hostName}
+                  onValueChange={(value) => {
+                    if (value === "Other") {
+                      setIsCustomHost(true);
+                      setHostName("");
+                    } else {
+                      setHostName(value);
+                      setIsCustomHost(false);
+                    }
+                  }}
+                >
                   <SelectTrigger className="flex-1">
                     <SelectValue placeholder="Select host" />
                   </SelectTrigger>
                   <SelectContent>
                     {hostOptions.map((host) => (
                       <SelectItem key={host} value={host}>
-                        {host === "Groups" ? "Groups (no location)" : 
-                         host === "Other" ? "Other (create new location)" : host}
+                        {host === "Groups"
+                          ? "Groups (no location)"
+                          : host === "Other"
+                            ? "Other (create new location)"
+                            : host}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -261,19 +297,26 @@ export default function SandwichCollectionForm() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label>Group Collections</Label>
-            <Button type="button" variant="outline" size="sm" onClick={addGroupRow}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addGroupRow}
+            >
               <Plus className="w-4 h-4 mr-1" />
               Add Group
             </Button>
           </div>
-          
+
           <div className="space-y-3">
             {groupCollections.map((group) => (
               <div key={group.id} className="flex gap-3 items-center">
                 <Input
                   placeholder="Group name"
                   value={group.groupName}
-                  onChange={(e) => updateGroupCollection(group.id, "groupName", e.target.value)}
+                  onChange={(e) =>
+                    updateGroupCollection(group.id, "groupName", e.target.value)
+                  }
                   className="flex-1"
                 />
                 <Input
@@ -281,7 +324,13 @@ export default function SandwichCollectionForm() {
                   min="0"
                   placeholder="Count"
                   value={group.sandwichCount || ""}
-                  onChange={(e) => updateGroupCollection(group.id, "sandwichCount", parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    updateGroupCollection(
+                      group.id,
+                      "sandwichCount",
+                      parseInt(e.target.value) || 0,
+                    )
+                  }
                   className="w-24"
                 />
                 {groupCollections.length > 1 && (
@@ -298,19 +347,22 @@ export default function SandwichCollectionForm() {
               </div>
             ))}
           </div>
-          
+
           <p className="text-sm text-gray-600 mt-3">
-            Please document any Group collections at your location with the Group name and their respective sandwich total each week.
+            Please record any group collections at your location for the week
+            with the group name and their respective sandwich total.
           </p>
         </div>
 
         <div className="flex justify-end">
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={submitCollectionMutation.isPending}
             className="bg-blue-600 hover:bg-blue-700"
           >
-            {submitCollectionMutation.isPending ? "Submitting..." : "Submit Collection"}
+            {submitCollectionMutation.isPending
+              ? "Submitting..."
+              : "Submit Collection"}
           </Button>
         </div>
       </form>
