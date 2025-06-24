@@ -242,12 +242,22 @@ export default function ProjectDetailPage() {
     );
   }
 
+  // Debug logging
+  console.log('Raw tasks data:', tasks);
+  console.log('Tasks is array?', Array.isArray(tasks));
+  console.log('Tasks length:', tasks?.length);
+
   // Filter tasks - tasks have projectId, projects don't
   const actualTasks = Array.isArray(tasks) ? tasks.filter((task: any) => {
-    return task && typeof task === 'object' && 
+    const isValid = task && typeof task === 'object' && 
            task.hasOwnProperty('projectId') && 
            task.hasOwnProperty('title');
+    console.log(`Task ${task?.id} validation:`, { isValid, task });
+    return isValid;
   }) : [];
+
+  console.log('Filtered actualTasks:', actualTasks);
+  console.log('ActualTasks length:', actualTasks.length);
 
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col">
