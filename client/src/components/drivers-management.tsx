@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck, AlertTriangle } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
@@ -425,154 +426,152 @@ export default function DriversManagement() {
         </div>
       </div>
 
-      {/* Active Drivers Section */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
-            <CheckCircle className="w-5 h-5 text-green-600" />
+      {/* Drivers Tabs */}
+      <Tabs defaultValue="active" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="active" className="flex items-center gap-2">
+            <CheckCircle className="w-4 h-4" />
             Active Drivers ({activeDrivers.length})
-          </h2>
-        </div>
-        
-        <div className="grid gap-4">
-          {activeDrivers.map((driver) => (
-            <Card key={driver.id} className="border border-slate-200">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg">{driver.name}</CardTitle>
-                    <div className="flex items-center gap-2 mt-1">
-                      {/* Active Status */}
-                      <Badge variant="default" className="bg-green-100 text-green-800 flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3" />
-                        Active
-                      </Badge>
-                      
-                      {/* Agreement Status */}
-                      {hasSignedAgreement(driver.notes) ? (
-                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
-                          <FileCheck className="w-3 h-3" />
-                          Agreement
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 flex items-center gap-1">
-                          <AlertTriangle className="w-3 h-3" />
-                          Missing Agreement
-                        </Badge>
-                      )}
-                      
-                      {/* Zone */}
-                      {driver.zone && (
-                        <Badge variant="outline" className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
-                          {driver.zone}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEdit(driver)}
-                    className="flex items-center gap-1"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                    Edit
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-600">
-                  {driver.phone && (
-                    <div className="flex items-center gap-2">
-                      <Phone className="w-4 h-4" />
-                      {driver.phone}
-                    </div>
-                  )}
-                  {driver.email && (
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4" />
-                      {driver.email}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Inactive Drivers Section */}
-      <div className="space-y-4 mt-8">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-slate-500 flex items-center gap-2">
-            <XCircle className="w-5 h-5 text-gray-500" />
+          </TabsTrigger>
+          <TabsTrigger value="inactive" className="flex items-center gap-2">
+            <XCircle className="w-4 h-4" />
             Inactive Drivers ({inactiveDrivers.length})
-          </h2>
-        </div>
+          </TabsTrigger>
+        </TabsList>
         
-        <div className="grid gap-4">
-          {inactiveDrivers.map((driver) => (
-            <Card key={driver.id} className="border border-slate-200 opacity-75">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg text-slate-600">{driver.name}</CardTitle>
-                    <div className="flex items-center gap-2 mt-1">
-                      {/* Inactive Status */}
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 flex items-center gap-1">
-                        <XCircle className="w-3 h-3" />
-                        Inactive
-                      </Badge>
-                      
-                      {/* Agreement Status (for inactive drivers) */}
-                      {hasSignedAgreement(driver.notes) && (
-                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
-                          <FileCheck className="w-3 h-3" />
-                          Agreement
+        <TabsContent value="active" className="mt-6">
+          <div className="grid gap-4">
+            {activeDrivers.map((driver) => (
+              <Card key={driver.id} className="border border-slate-200">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <CardTitle className="text-lg">{driver.name}</CardTitle>
+                      <div className="flex items-center gap-2 mt-1">
+                        {/* Active Status */}
+                        <Badge variant="default" className="bg-green-100 text-green-800 flex items-center gap-1">
+                          <CheckCircle className="w-3 h-3" />
+                          Active
                         </Badge>
-                      )}
-                      
-                      {/* Zone */}
-                      {driver.zone && (
-                        <Badge variant="outline" className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
-                          {driver.zone}
-                        </Badge>
-                      )}
+                        
+                        {/* Agreement Status */}
+                        {hasSignedAgreement(driver.notes) ? (
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
+                            <FileCheck className="w-3 h-3" />
+                            Agreement
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 flex items-center gap-1">
+                            <AlertTriangle className="w-3 h-3" />
+                            Missing Agreement
+                          </Badge>
+                        )}
+                        
+                        {/* Zone */}
+                        {driver.zone && (
+                          <Badge variant="outline" className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            {driver.zone}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(driver)}
+                      className="flex items-center gap-1"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                      Edit
+                    </Button>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEdit(driver)}
-                    className="flex items-center gap-1"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                    Edit
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-600">
-                  {driver.phone && (
-                    <div className="flex items-center gap-2">
-                      <Phone className="w-4 h-4" />
-                      {driver.phone}
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-600">
+                    {driver.phone && (
+                      <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4" />
+                        {driver.phone}
+                      </div>
+                    )}
+                    {driver.email && (
+                      <div className="flex items-center gap-2">
+                        <Mail className="w-4 h-4" />
+                        {driver.email}
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="inactive" className="mt-6">
+          <div className="grid gap-4">
+            {inactiveDrivers.map((driver) => (
+              <Card key={driver.id} className="border border-slate-200">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <CardTitle className="text-lg">{driver.name}</CardTitle>
+                      <div className="flex items-center gap-2 mt-1">
+                        {/* Inactive Status */}
+                        <Badge variant="secondary" className="bg-gray-100 text-gray-600 flex items-center gap-1">
+                          <XCircle className="w-3 h-3" />
+                          Inactive
+                        </Badge>
+                        
+                        {/* Agreement Status (for inactive drivers) */}
+                        {hasSignedAgreement(driver.notes) && (
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
+                            <FileCheck className="w-3 h-3" />
+                            Agreement
+                          </Badge>
+                        )}
+                        
+                        {/* Zone */}
+                        {driver.zone && (
+                          <Badge variant="outline" className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            {driver.zone}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                  )}
-                  {driver.email && (
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4" />
-                      {driver.email}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(driver)}
+                      className="flex items-center gap-1"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                      Edit
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-600">
+                    {driver.phone && (
+                      <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4" />
+                        {driver.phone}
+                      </div>
+                    )}
+                    {driver.email && (
+                      <div className="flex items-center gap-2">
+                        <Mail className="w-4 h-4" />
+                        {driver.email}
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* Edit Driver Modal */}
       {editingDriver && (

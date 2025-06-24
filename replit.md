@@ -119,9 +119,10 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
-- June 24, 2025: Successfully imported 80 drivers from Excel spreadsheet into PostgreSQL database
+- June 24, 2025: Successfully imported 164 drivers total (80 from Excel + 84 from CSV) into PostgreSQL database
 - June 24, 2025: Created comprehensive driver management system with full CRUD API endpoints
-- June 24, 2025: Fixed UI issues in driver cards (removed vehicle type and availability badges)
+- June 24, 2025: Implemented tab-based interface separating active (33) and inactive (131) drivers
+- June 24, 2025: Added visual indicators for active drivers missing agreements (4 drivers need follow-up)
 - June 24, 2025: Driver database includes contact info, zones, van driving capabilities, and agreement status
 
 ## Changelog
