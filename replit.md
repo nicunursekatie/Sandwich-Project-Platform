@@ -125,6 +125,9 @@ Preferred communication style: Simple, everyday language.
 - June 24, 2025: Identified and resolved data accuracy issue where initial import incorrectly showed 33 active drivers instead of the correct 75 based on Excel analysis
 - June 24, 2025: Enhanced driver interface with visual indicators for agreements and active status, with highlighting for drivers missing paperwork
 - June 24, 2025: Added CSV export functionality for driver data and updated agreement indicator text to "Signed Agreement"
+- June 24, 2025: Enhanced database schema with van approval, home addresses, availability notes, and communication tracking fields
+- June 24, 2025: Imported operational data from Excel including 7 van-approved drivers, 5 home addresses, and availability constraints
+- June 24, 2025: Added visual indicators for van drivers (purple badges) and availability notes (green badges) in driver interface
 
 ## Changelog
 
