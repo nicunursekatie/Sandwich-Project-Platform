@@ -242,8 +242,21 @@ export default function ProjectDetailPage() {
     );
   }
 
-  // Separate tasks by status - filter out the project itself if it's in the tasks array
-  const actualTasks = tasks.filter((task: any) => task.id !== project?.id);
+  // Debug: Log what we're getting from the API
+  console.log('Raw tasks from API:', tasks);
+  console.log('Project data:', project);
+
+  // Ensure we only work with actual tasks, not project data
+  const actualTasks = Array.isArray(tasks) ? tasks.filter((task: any) => {
+    // Filter out any data that looks like a project rather than a task
+    return task && typeof task === 'object' && 
+           task.hasOwnProperty('title') && 
+           task.id !== project?.id &&
+           !task.hasOwnProperty('progressPercentage'); // Projects have this, tasks don't
+  }) : [];
+
+  console.log('Filtered actual tasks:', actualTasks);
+
   const todoTasks = actualTasks.filter((task: any) => task.status === 'todo');
   const inProgressTasks = actualTasks.filter((task: any) => task.status === 'in_progress');
   const completedTasks = actualTasks.filter((task: any) => task.status === 'completed');
