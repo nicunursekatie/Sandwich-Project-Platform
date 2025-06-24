@@ -1,0 +1,468 @@
+[vite] connecting... client:495:9
+[vite] connected. client:618:15
+Feature Policy: Skipping unsupported feature name “clipboard-write”. inject.bundle.js:1:37648
+Feature Policy: Skipping unsupported feature name “clipboard-write”. inject.bundle.js:1:38665
+Feature Policy: Skipping unsupported feature name “clipboard-write”. inject.bundle.js:1:37648
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 2 l
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 2 l
+Partitioned cookie or storage access was provided to “https://dealfinder.retailmenot.com/experience/app” because it is loaded in the third-party context and dynamic state partitioning is enabled. client.c0c24040.js:2:1358165
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array []
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. Component Stack: 
+    DescriptionWarning https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=4781bfed:332
+    DialogContentImpl https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=4781bfed:236
+    DialogContentModal https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=4781bfed:159
+    Presence https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-E4UC4BFD.js?v=4781bfed:24
+    DialogContent https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=4781bfed:150
+    SlotClone https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=4781bfed:79
+    Slot2 https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=4781bfed:56
+    Node https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=4781bfed:42
+    Portal https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-C7SZJ2M3.js?v=4781bfed:260
+    Presence https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-E4UC4BFD.js?v=4781bfed:24
+    Provider https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=4781bfed:38
+    DialogPortal https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=4781bfed:112
+    _c3 https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/dialog.tsx:52
+    Provider https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=4781bfed:38
+    Dialog https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=4781bfed:59
+    div unknown:0
+    div unknown:0
+    div unknown:0
+    Node https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=4781bfed:42
+    Presence https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-E4UC4BFD.js?v=4781bfed:24
+    TabsContent https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=4781bfed:174
+    _c5 https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/tabs.tsx:72
+    div unknown:0
+    Node https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=4781bfed:42
+    Provider https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=4781bfed:38
+    Tabs https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=4781bfed:60
+    div unknown:0
+    div unknown:0
+    div unknown:0
+    ProjectDetailPage https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/project-detail.tsx:61
+    Route https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=4781bfed:323
+    Switch https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=4781bfed:379
+    Router https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/App.tsx?v=jz5WsX0HuCmxBrCa4_bic:46
+    Provider https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=4781bfed:38
+    TooltipProvider https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=4781bfed:67
+    QueryClientProvider https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=4781bfed:2804
+    ErrorBoundary https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/error-boundary.tsx:10
+    App unknown:0
+<anonymous code>:1:145535
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+The resource at “https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly. app
+The resource at “https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly. app
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Current location: /projects/4 project-detail.tsx:68:11
+useRoute match: true project-detail.tsx:69:11
+useRoute params: 
+Object { 0: "4", id: "4" }
+project-detail.tsx:70:11
+Extracted projectId: 4 project-detail.tsx:71:11
+ProjectDetail - projectId: 4 enabled: true project-detail.tsx:122:11
+Raw tasks from API: 
+Array [ {…} ]
+project-detail.tsx:246:11
+Project data: 
+Array [ {…} ]
+project-detail.tsx:247:11
+Filtered actual tasks: 
+Array []
+project-detail.tsx:251:11
+Unknown descriptor ‘900’ in @font-face rule.  Skipped to next declaration. client.fa958d48.css:22:38
+Error in parsing value for ‘-webkit-text-size-adjust’.  Declaration dropped. client.fa958d48.css:76:29
+Unknown property ‘-moz-column-gap’.  Declaration dropped. client.fa958d48.css:1438:19
+Error in parsing value for ‘text-wrap’.  Declaration dropped. client.fa958d48.css:1501:14

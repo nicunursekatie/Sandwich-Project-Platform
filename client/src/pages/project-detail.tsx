@@ -181,7 +181,7 @@ export default function ProjectDetailPage() {
     e.preventDefault();
     try {
       await createTaskMutation.mutateAsync(newTask);
-      setNewTask({ title: '', description: '', priority: 'medium', assignedTo: '', dueDate: '' });
+      setNewTask({ title: '', description: '', priority: 'medium', assigneeName: '', dueDate: '' });
       setIsAddTaskModalOpen(false);
       toast({
         title: "Task created",
@@ -242,24 +242,16 @@ export default function ProjectDetailPage() {
     );
   }
 
-  // Debug: Log what we're getting from the API
-  console.log('Raw tasks from API:', tasks);
-  console.log('Project data:', project);
-
-  // Ensure we only work with actual tasks, not project data
+  // Filter tasks - tasks have projectId, projects don't
   const actualTasks = Array.isArray(tasks) ? tasks.filter((task: any) => {
-    // Filter out any data that looks like a project rather than a task
     return task && typeof task === 'object' && 
-           task.hasOwnProperty('title') && 
-           task.id !== project?.id &&
-           !task.hasOwnProperty('progressPercentage'); // Projects have this, tasks don't
+           task.hasOwnProperty('projectId') && 
+           task.hasOwnProperty('title');
   }) : [];
 
-  console.log('Filtered actual tasks:', actualTasks);
-
-  const todoTasks = actualTasks.filter((task: any) => task.status === 'todo');
-  const inProgressTasks = actualTasks.filter((task: any) => task.status === 'in_progress');
-  const completedTasks = actualTasks.filter((task: any) => task.status === 'completed');
+  const todoTasks = actualTasks.filter((task: any) => task.status === 'pending' || task.status === 'todo');
+  const inProgressTasks = actualTasks.filter((task: any) => task.status === 'in_progress' || task.status === 'active');
+  const completedTasks = actualTasks.filter((task: any) => task.status === 'completed' || task.status === 'done');
 
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col">
@@ -517,11 +509,11 @@ export default function ProjectDetailPage() {
                           </Select>
                         </div>
                         <div>
-                          <Label htmlFor="assignedTo">Assigned To</Label>
+                          <Label htmlFor="assigneeName">Assigned To</Label>
                           <Input
-                            id="assignedTo"
-                            value={newTask.assignedTo}
-                            onChange={(e) => setNewTask({ ...newTask, assignedTo: e.target.value })}
+                            id="assigneeName"
+                            value={newTask.assigneeName}
+                            onChange={(e) => setNewTask({ ...newTask, assigneeName: e.target.value })}
                             placeholder="Enter assignee name"
                           />
                         </div>
@@ -567,19 +559,20 @@ export default function ProjectDetailPage() {
                                 {task.priority}
                               </Badge>
                               <Badge variant="outline" className={
-                                task.status === 'completed' ? 'border-green-500 text-green-700' :
-                                task.status === 'in_progress' ? 'border-blue-500 text-blue-700' :
+                                task.status === 'completed' || task.status === 'done' ? 'border-green-500 text-green-700' :
+                                task.status === 'in_progress' || task.status === 'active' ? 'border-blue-500 text-blue-700' :
                                 'border-gray-500 text-gray-700'
                               }>
-                                {task.status === 'in_progress' ? 'In Progress' : task.status === 'completed' ? 'Completed' : 'To Do'}
+                                {task.status === 'in_progress' || task.status === 'active' ? 'In Progress' : 
+                                 task.status === 'completed' || task.status === 'done' ? 'Completed' : 'Pending'}
                               </Badge>
                             </div>
                             {task.description && (
                               <p className="text-sm text-gray-600 mb-2">{task.description}</p>
                             )}
                             <div className="flex items-center gap-4 text-xs text-gray-500">
-                              <span>Assigned: {task.assignedTo || 'Unassigned'}</span>
-                              {task.dueDate && (
+                              <span>Assigned: {task.assigneeName || task.assignedTo || 'Unassigned'}</span>
+                              {task.dueDate && task.dueDate !== '' && (
                                 <span>Due: {new Date(task.dueDate).toLocaleDateString()}</span>
                               )}
                             </div>
