@@ -102,8 +102,7 @@ export default function Dashboard() {
       case "calendar":
         return <MeetingCalendarPage />;
       case "reports":
-        window.location.href = "/reports";
-        return null;
+        return <ReportingDashboard />;
       case "toolkit":
         return (
           <div className="space-y-6">
