@@ -21,7 +21,7 @@ import {
 import { apiRequest } from '@/lib/queryClient';
 import { useAuth } from "@/hooks/useAuth";
 import { queryClient } from "@/lib/queryClient";
-import { useRoute } from "wouter";
+import { useRoute, useLocation } from "wouter";
 
 interface Task {
   id: number;
@@ -67,6 +67,7 @@ export default function ProjectDetailPage() {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const { user } = useAuth();
   const [match, params] = useRoute("/projects/:id");
+  const [location, setLocation] = useLocation();
   const projectId = params?.id;
 
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
@@ -134,54 +135,19 @@ export default function ProjectDetailPage() {
     enabled: !!projectId
   });
 
-  // Fetch project tasks (mock for now - you can implement the API later)
+  // Fetch project tasks - using the real API endpoint that already exists
   const { data: tasks = [], isLoading: tasksLoading } = useQuery({
     queryKey: ['/api/projects', projectId, 'tasks'],
-    queryFn: () => {
-      // Mock tasks data - replace with actual API call
-      return Promise.resolve([
-        {
-          id: 1,
-          title: "Set up project structure",
-          description: "Initialize the basic project framework and dependencies",
-          status: "completed",
-          priority: "high",
-          assignedTo: "Marcy Louza",
-          dueDate: "2025-06-20",
-          createdAt: "2025-06-01T00:00:00Z",
-          updatedAt: "2025-06-20T00:00:00Z"
-        },
-        {
-          id: 2,
-          title: "Design user interface mockups",
-          description: "Create wireframes and design mockups for the main user interface",
-          status: "in_progress",
-          priority: "medium",
-          assignedTo: "Marcy Louza",
-          dueDate: "2025-06-30",
-          createdAt: "2025-06-10T00:00:00Z",
-          updatedAt: "2025-06-24T00:00:00Z"
-        },
-        {
-          id: 3,
-          title: "Implement backend API",
-          description: "Develop the REST API endpoints for data management",
-          status: "todo",
-          priority: "high",
-          assignedTo: "",
-          dueDate: "2025-07-15",
-          createdAt: "2025-06-15T00:00:00Z",
-          updatedAt: "2025-06-15T00:00:00Z"
-        }
-      ]);
-    },
+    queryFn: () => apiRequest(`/api/projects/${projectId}/tasks`),
     enabled: !!projectId
   });
 
   const createTaskMutation = useMutation({
     mutationFn: (task: any) => {
-      // Mock task creation - replace with actual API call
-      return Promise.resolve({ ...task, id: Date.now() });
+      return apiRequest(`/api/projects/${projectId}/tasks`, {
+        method: 'POST',
+        body: JSON.stringify(task)
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId, 'tasks'] });
@@ -319,8 +285,26 @@ export default function ProjectDetailPage() {
                               <li key={subItem.id}>
                                 <button
                                   onClick={() => {
-                                    if (subItem.id === "projects") {
-                                      window.location.href = "/projects";
+                                    if (subItem.id === "dashboard") {
+                                      setLocation("/");
+                                    } else if (subItem.id === "hosts") {
+                                      setLocation("/");
+                                    } else if (subItem.id === "recipients") {
+                                      setLocation("/");
+                                    } else if (subItem.id === "directory") {
+                                      setLocation("/phone-directory");
+                                    } else if (subItem.id === "drivers") {
+                                      setLocation("/");
+                                    } else if (subItem.id === "projects") {
+                                      setLocation("/projects");
+                                    } else if (subItem.id === "meetings") {
+                                      setLocation("/meetings");
+                                    } else if (subItem.id === "analytics") {
+                                      setLocation("/analytics");
+                                    } else if (subItem.id === "reports") {
+                                      setLocation("/reporting-dashboard");
+                                    } else if (subItem.id === "role-demo") {
+                                      setLocation("/role-demo");
                                     }
                                   }}
                                   className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
@@ -343,6 +327,19 @@ export default function ProjectDetailPage() {
                   return (
                     <li key={item.id}>
                       <button
+                        onClick={() => {
+                          if (item.id === "dashboard") {
+                            setLocation("/");
+                          } else if (item.id === "collections") {
+                            setLocation("/");
+                          } else if (item.id === "messages") {
+                            setLocation("/");
+                          } else if (item.id === "toolkit") {
+                            setLocation("/");
+                          } else if (item.id === "development") {
+                            setLocation("/development");
+                          }
+                        }}
                         className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-100 hover:text-slate-900"
                       >
                         <Icon className="w-5 h-5" />
@@ -364,7 +361,7 @@ export default function ProjectDetailPage() {
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={() => window.history.back()}
+                onClick={() => setLocation("/projects")}
                 className="flex items-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
@@ -503,95 +500,111 @@ export default function ProjectDetailPage() {
                 </Dialog>
               </div>
 
-              {/* Task Columns */}
-              <div className="grid grid-cols-3 gap-6">
-                {/* To Do */}
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    To Do ({todoTasks.length})
-                  </h3>
-                  <div className="space-y-3">
-                    {todoTasks.map((task: any) => (
-                      <Card key={task.id} className="border border-gray-200 shadow-sm">
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <h4 className="font-medium text-gray-900">{task.title}</h4>
-                            <Badge className={getPriorityColor(task.priority)}>
-                              {task.priority}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-3">{task.description}</p>
-                          <div className="flex justify-between items-center text-xs text-gray-500">
-                            <span>{task.assignedTo || 'Unassigned'}</span>
-                            {task.dueDate && (
-                              <span>{new Date(task.dueDate).toLocaleDateString()}</span>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+              {/* Tasks List */}
+              {tasks.length === 0 ? (
+                <div className="text-center py-12">
+                  <ListTodo className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No tasks yet</h3>
+                  <p className="text-gray-600 mb-4">Get started by creating your first task for this project.</p>
+                  <Dialog open={isAddTaskModalOpen} onOpenChange={setIsAddTaskModalOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="flex items-center gap-2">
+                        <Plus className="w-4 h-4" />
+                        Create First Task
+                      </Button>
+                    </DialogTrigger>
+                  </Dialog>
                 </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-6">
+                  {/* To Do */}
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      To Do ({todoTasks.length})
+                    </h3>
+                    <div className="space-y-3">
+                      {todoTasks.map((task: any) => (
+                        <Card key={task.id} className="border border-gray-200 shadow-sm">
+                          <CardContent className="p-4">
+                            <div className="flex justify-between items-start mb-2">
+                              <h4 className="font-medium text-gray-900">{task.title}</h4>
+                              <Badge className={getPriorityColor(task.priority)}>
+                                {task.priority}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-gray-600 mb-3">{task.description}</p>
+                            <div className="flex justify-between items-center text-xs text-gray-500">
+                              <span>{task.assignedTo || 'Unassigned'}</span>
+                              {task.dueDate && (
+                                <span>{new Date(task.dueDate).toLocaleDateString()}</span>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
 
-                {/* In Progress */}
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4" />
-                    In Progress ({inProgressTasks.length})
-                  </h3>
-                  <div className="space-y-3">
-                    {inProgressTasks.map((task: any) => (
-                      <Card key={task.id} className="border border-blue-200 shadow-sm">
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <h4 className="font-medium text-gray-900">{task.title}</h4>
-                            <Badge className={getPriorityColor(task.priority)}>
-                              {task.priority}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-3">{task.description}</p>
-                          <div className="flex justify-between items-center text-xs text-gray-500">
-                            <span>{task.assignedTo || 'Unassigned'}</span>
-                            {task.dueDate && (
-                              <span>{new Date(task.dueDate).toLocaleDateString()}</span>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                  {/* In Progress */}
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4" />
+                      In Progress ({inProgressTasks.length})
+                    </h3>
+                    <div className="space-y-3">
+                      {inProgressTasks.map((task: any) => (
+                        <Card key={task.id} className="border border-blue-200 shadow-sm">
+                          <CardContent className="p-4">
+                            <div className="flex justify-between items-start mb-2">
+                              <h4 className="font-medium text-gray-900">{task.title}</h4>
+                              <Badge className={getPriorityColor(task.priority)}>
+                                {task.priority}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-gray-600 mb-3">{task.description}</p>
+                            <div className="flex justify-between items-center text-xs text-gray-500">
+                              <span>{task.assignedTo || 'Unassigned'}</span>
+                              {task.dueDate && (
+                                <span>{new Date(task.dueDate).toLocaleDateString()}</span>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* Completed */}
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4" />
-                    Completed ({completedTasks.length})
-                  </h3>
-                  <div className="space-y-3">
-                    {completedTasks.map((task: any) => (
-                      <Card key={task.id} className="border border-green-200 shadow-sm">
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <h4 className="font-medium text-gray-900">{task.title}</h4>
-                            <Badge className={getPriorityColor(task.priority)}>
-                              {task.priority}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-3">{task.description}</p>
-                          <div className="flex justify-between items-center text-xs text-gray-500">
-                            <span>{task.assignedTo || 'Unassigned'}</span>
-                            {task.dueDate && (
-                              <span>{new Date(task.dueDate).toLocaleDateString()}</span>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                  {/* Completed */}
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4" />
+                      Completed ({completedTasks.length})
+                    </h3>
+                    <div className="space-y-3">
+                      {completedTasks.map((task: any) => (
+                        <Card key={task.id} className="border border-green-200 shadow-sm">
+                          <CardContent className="p-4">
+                            <div className="flex justify-between items-start mb-2">
+                              <h4 className="font-medium text-gray-900">{task.title}</h4>
+                              <Badge className={getPriorityColor(task.priority)}>
+                                {task.priority}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-gray-600 mb-3">{task.description}</p>
+                            <div className="flex justify-between items-center text-xs text-gray-500">
+                              <span>{task.assignedTo || 'Unassigned'}</span>
+                              {task.dueDate && (
+                                <span>{new Date(task.dueDate).toLocaleDateString()}</span>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </TabsContent>
 
             <TabsContent value="details" className="mt-6">
@@ -659,25 +672,23 @@ export default function ProjectDetailPage() {
             </TabsContent>
 
             <TabsContent value="files" className="mt-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Project Files</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">File management coming soon...</p>
-                </CardContent>
-              </Card>
+              <div className="text-center py-12">
+                <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No files uploaded</h3>
+                <p className="text-gray-600 mb-4">Upload project files, documents, and resources here.</p>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Plus className="w-4 h-4" />
+                  Upload Files
+                </Button>
+              </div>
             </TabsContent>
 
             <TabsContent value="activity" className="mt-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Project Activity</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">Activity feed coming soon...</p>
-                </CardContent>
-              </Card>
+              <div className="text-center py-12">
+                <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No activity yet</h3>
+                <p className="text-gray-600">Project activity and updates will appear here as the team works.</p>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
