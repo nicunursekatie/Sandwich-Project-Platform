@@ -431,7 +431,6 @@ export default function DriversManagement() {
                 <div className="flex-1">
                   <CardTitle className="text-lg">{driver.name}</CardTitle>
                   <div className="flex items-center gap-2 mt-1">
-                    {getAvailabilityBadge(driver.availability)}
                     {driver.zone && (
                       <Badge variant="outline" className="flex items-center gap-1">
                         <MapPin className="w-3 h-3" />
