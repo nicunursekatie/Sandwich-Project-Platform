@@ -15,7 +15,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
-import type { Project, Task } from "@shared/schema";
+import type { Project, ProjectTask } from "@shared/schema";
 
 interface ProjectDetailCleanProps {
   projectId: number;
@@ -46,7 +46,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
   const project = projects.find(p => p.id === projectId);
 
   // Fetch tasks for this project
-  const { data: projectTasks = [], isLoading: tasksLoading } = useQuery<Task[]>({
+  const { data: projectTasks = [], isLoading: tasksLoading } = useQuery<ProjectTask[]>({
     queryKey: ["/api/projects", projectId, "tasks"],
     queryFn: () => fetch(`/api/projects/${projectId}/tasks`).then(res => res.json()),
   });
@@ -69,7 +69,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
 
   // Update task mutation
   const updateTaskMutation = useMutation({
-    mutationFn: async ({ id, updates }: { id: number; updates: Partial<Task> }) => {
+    mutationFn: async ({ id, updates }: { id: number; updates: Partial<ProjectTask> }) => {
       return await apiRequest('PATCH', `/api/projects/${projectId}/tasks/${id}`, updates);
     },
     onSuccess: () => {
