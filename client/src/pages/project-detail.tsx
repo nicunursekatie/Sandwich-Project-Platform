@@ -145,7 +145,7 @@ export default function ProjectDetailPage() {
 
   // Fetch project tasks 
   const { data: tasks = [], isLoading: tasksLoading, error: tasksError } = useQuery({
-    queryKey: ['/api/projects', projectId, 'tasks'],
+    queryKey: [`/api/projects/${projectId}/tasks`],
     enabled: !!projectId
   });
 
@@ -154,7 +154,7 @@ export default function ProjectDetailPage() {
       return apiRequest('POST', `/api/projects/${projectId}/tasks`, task);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId, 'tasks'] });
+      queryClient.invalidateQueries({ queryKey: [`/api/projects/${projectId}/tasks`] });
       setIsAddTaskModalOpen(false);
       setNewTask({
         title: '',
