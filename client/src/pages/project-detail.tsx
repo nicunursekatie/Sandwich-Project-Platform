@@ -140,33 +140,18 @@ export default function ProjectDetailPage() {
   // Fetch project details
   const { data: project, isLoading: projectLoading, error: projectError } = useQuery({
     queryKey: ['/api/projects', projectId],
-    queryFn: () => apiRequest(`/api/projects/${projectId}`),
     enabled: !!projectId
   });
 
-  // Fetch project tasks - using the real API endpoint that already exists
+  // Fetch project tasks 
   const { data: tasks = [], isLoading: tasksLoading, error: tasksError } = useQuery({
     queryKey: ['/api/projects', projectId, 'tasks'],
-    queryFn: () => apiRequest(`/api/projects/${projectId}/tasks`),
     enabled: !!projectId
-  });
-
-  // Log API responses for debugging
-  console.log('API Debug:', {
-    project,
-    projectError,
-    tasks,
-    tasksError,
-    projectLoading,
-    tasksLoading
   });
 
   const createTaskMutation = useMutation({
     mutationFn: (task: any) => {
-      return apiRequest(`/api/projects/${projectId}/tasks`, {
-        method: 'POST',
-        body: JSON.stringify(task)
-      });
+      return apiRequest('POST', `/api/projects/${projectId}/tasks`, task);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId, 'tasks'] });
