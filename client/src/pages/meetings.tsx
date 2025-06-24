@@ -58,16 +58,16 @@ export default function MeetingsLandingPage({ onNavigate }: MeetingsLandingPageP
     <div className="max-w-7xl mx-auto">
       {/* Header */}
       <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                Meetings Hub
-              </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                Manage all aspects of your team meetings from agenda planning to minutes documentation
-              </p>
-            </div>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          Meetings Hub
+        </h1>
+        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          Manage all aspects of your team meetings from agenda planning to minutes documentation
+        </p>
+      </div>
 
-            {/* Meeting Options Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      {/* Meeting Options Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {meetingOptions.map((option) => {
                 const IconComponent = option.icon;
                 return (
