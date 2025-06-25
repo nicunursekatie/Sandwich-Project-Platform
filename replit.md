@@ -158,6 +158,7 @@ Preferred communication style: Simple, everyday language.
 - June 25, 2025: Applied consistent preview and download format to toolkit page: added preview functionality, eye icons, and open-in-new-tab buttons matching development page design
 - June 25, 2025: Fact-checked platform against official website (thesandwichproject.org): updated mission statement to reflect 501(c)(3) status and Georgia focus, maintained accurate 47+ mile radius coverage as manually calculated from host locations
 - June 25, 2025: Fixed impact dashboard 404 error by properly routing ImpactDashboard component in analytics tab, updated statistics with verified weekly breakdown data (2023: 438,876, 2024: 449,643, 2025: 193,674 YTD)
+- June 25, 2025: Removed Host Performance tab from impact dashboard to prevent competitive atmosphere between hosts, maintaining collaborative community spirit
 
 ## Changelog
 
