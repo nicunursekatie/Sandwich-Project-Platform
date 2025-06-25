@@ -1,6 +1,7 @@
 import React, { useState, useRef, useMemo, useCallback } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X, ArrowUp, ArrowDown, Download, Plus, Database } from "lucide-react";
+import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -889,7 +890,7 @@ export default function SandwichCollectionLog() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold text-slate-900 flex items-center">
-              <Sandwich className="text-amber-500 mr-2 w-5 h-5" />
+              <img src={sandwichLogo} alt="Sandwich Logo" className="mr-2 w-5 h-5" />
               Collections
             </h2>
             <p className="text-sm text-slate-500 mt-1">Manage collection data and bulk operations</p>

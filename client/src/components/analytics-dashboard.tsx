@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import { Award, TrendingUp, Target, Lightbulb, Star, Crown, Calendar, ChevronUp } from "lucide-react";
+import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import type { SandwichCollection } from "@shared/schema";
 
 export default function AnalyticsDashboard() {

@@ -20,6 +20,7 @@ import {
   BarChart3,
   AlertCircle
 } from "lucide-react";
+import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -185,7 +186,7 @@ export default function ProjectsClean() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-slate-900 flex items-center">
-            <Target className="w-6 h-6 mr-2" />
+            <img src={sandwichLogo} alt="Sandwich Logo" className="w-6 h-6 mr-2" />
             Project Management
           </h2>
           <p className="text-slate-600 mt-1">Organize and track all team projects</p>
