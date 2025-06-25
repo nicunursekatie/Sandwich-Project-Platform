@@ -176,8 +176,9 @@ export function DevelopmentDocuments() {
 
       {previewDocument && (
         <DocumentPreview
-          document={previewDocument}
-          isOpen={!!previewDocument}
+          documentPath={previewDocument.path}
+          documentName={previewDocument.name}
+          documentType={previewDocument.type}
           onClose={() => setPreviewDocument(null)}
         />
       )}

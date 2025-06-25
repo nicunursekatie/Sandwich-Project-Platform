@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 interface DocumentPreviewProps {
   documentPath: string;
   documentName: string;
-  documentType?: string;
+  documentType: string;
   onClose: () => void;
 }
 
-export function DocumentPreview({ documentPath, documentName, documentType = 'pdf', onClose }: DocumentPreviewProps) {
+export function DocumentPreview({ documentPath, documentName, documentType, onClose }: DocumentPreviewProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleDownload = () => {
