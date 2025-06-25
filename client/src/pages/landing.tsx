@@ -74,9 +74,9 @@ export default function Landing() {
             />
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            A community-driven initiative connecting volunteers, hosts, and recipients 
-            to fight hunger one sandwich at a time. Building food security through 
-            organized collection events and volunteer coordination.
+            A 501(c)(3) nonprofit organization serving Georgia communities by collecting and distributing 
+            sandwiches to fight food insecurity. Connecting volunteers, hosts, and nonprofit partners 
+            to make a lasting impact one sandwich at a time.
           </p>
           <div className="flex gap-4 justify-center">
             <Button onClick={handleLogin} size="lg" className="bg-blue-600 hover:bg-blue-700">
