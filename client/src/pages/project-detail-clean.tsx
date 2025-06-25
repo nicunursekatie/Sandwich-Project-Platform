@@ -29,10 +29,18 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
 
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [isEditingProject, setIsEditingProject] = useState(false);
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
     status: "pending",
+    priority: "medium",
+    assigneeName: "",
+    dueDate: ""
+  });
+  const [editProject, setEditProject] = useState({
+    title: "",
+    description: "",
     priority: "medium",
     assigneeName: "",
     dueDate: ""
@@ -96,6 +104,22 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     },
   });
 
+  // Update project mutation
+  const updateProjectMutation = useMutation({
+    mutationFn: async (data: any) => {
+      return await apiRequest('PUT', `/api/projects/${projectId}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      setIsEditingProject(false);
+      toast({ title: "Project updated successfully", description: "The project has been updated." });
+    },
+    onError: () => {
+      toast({ title: "Failed to update project", description: "Please try again later.", variant: "destructive" });
+    },
+  });
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "urgent": return "bg-red-500 text-white";
@@ -143,6 +167,34 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     if (confirm("Are you sure you want to delete this task?")) {
       deleteTaskMutation.mutate(id);
     }
+  };
+
+  const handleEditProject = () => {
+    setEditProject({
+      title: project?.title || "",
+      description: project?.description || "",
+      priority: project?.priority || "medium",
+      assigneeName: project?.assigneeName || "",
+      dueDate: project?.dueDate || ""
+    });
+    setIsEditingProject(true);
+  };
+
+  const handleUpdateProject = () => {
+    if (!editProject.title.trim()) return;
+    
+    const projectData = {
+      title: editProject.title,
+      description: editProject.description,
+      priority: editProject.priority,
+      assigneeName: editProject.assigneeName || null,
+      dueDate: editProject.dueDate || null,
+      status: project?.status || 'available',
+      category: project?.category || 'general',
+      progressPercentage: project?.progressPercentage || 0
+    };
+
+    updateProjectMutation.mutate(projectData);
   };
 
   if (projectLoading) {
@@ -194,6 +246,12 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
             {getStatusIcon(project.status)}
             <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
           </Badge>
+          {canEdit && (
+            <Button variant="outline" size="sm" onClick={handleEditProject}>
+              <Edit className="w-4 h-4 mr-2" />
+              Edit Project
+            </Button>
+          )}
         </div>
       </div>
 
