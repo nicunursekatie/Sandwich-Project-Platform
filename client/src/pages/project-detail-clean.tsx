@@ -170,12 +170,23 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
   };
 
   const handleEditProject = () => {
+    // Format date for input field (YYYY-MM-DD)
+    const formatDateForInput = (dateString: string | null) => {
+      if (!dateString) return "";
+      try {
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0];
+      } catch {
+        return "";
+      }
+    };
+
     setEditProject({
       title: project?.title || "",
       description: project?.description || "",
       priority: project?.priority || "medium",
       assigneeName: project?.assigneeName || "",
-      dueDate: project?.dueDate || ""
+      dueDate: formatDateForInput(project?.dueDate)
     });
     setIsEditingProject(true);
   };
@@ -276,7 +287,9 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
           <CardContent>
             <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-2 text-slate-400" />
-              <span className="text-slate-900">{new Date(project.dueDate).toLocaleDateString()}</span>
+              <span className="text-slate-900">
+                {project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No due date set'}
+              </span>
             </div>
           </CardContent>
         </Card>
