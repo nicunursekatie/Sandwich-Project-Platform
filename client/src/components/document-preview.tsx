@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 interface DocumentPreviewProps {
   documentPath: string;
   documentName: string;
-  documentType: string;
+  documentType?: string;
   onClose: () => void;
 }
 
-export function DocumentPreview({ documentPath, documentName, documentType, onClose }: DocumentPreviewProps) {
+export function DocumentPreview({ documentPath, documentName, documentType = 'pdf', onClose }: DocumentPreviewProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleDownload = () => {
@@ -26,7 +26,7 @@ export function DocumentPreview({ documentPath, documentName, documentType, onCl
   };
 
   const renderPreview = () => {
-    switch (documentType) {
+    switch (documentType?.toLowerCase()) {
       case 'pdf':
         return (
           <iframe
@@ -64,29 +64,53 @@ export function DocumentPreview({ documentPath, documentName, documentType, onCl
           </div>
         );
       case 'xlsx':
-        // For Excel files, also use Office Online viewer
-        const excelViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(window.location.origin + documentPath)}`;
+        // For Excel files, show a download option since viewing requires conversion
         return (
-          <iframe
-            src={excelViewerUrl}
-            className="w-full h-full border-0"
-            onLoad={() => setIsLoading(false)}
-            title={documentName}
-          />
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+            <div className="mb-4">
+              <FileText className="w-16 h-16 text-green-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">{documentName}</h3>
+              <p className="text-gray-600 mb-6">
+                Excel files require download to view. Click the download button to save the file to your device.
+              </p>
+            </div>
+            <div className="flex gap-4">
+              <Button onClick={handleDownload} className="flex items-center gap-2">
+                <Download className="w-4 h-4" />
+                Download Document
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleOpenInNewTab}
+                className="flex items-center gap-2"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Open in New Tab
+              </Button>
+            </div>
+          </div>
         );
       default:
         return (
-          <div className="flex flex-col items-center justify-center h-full bg-gray-50 dark:bg-gray-800">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Preview not available for this file type
-            </p>
-            <div className="flex gap-2">
-              <Button onClick={handleDownload} variant="outline">
-                <Download className="w-4 h-4 mr-2" />
-                Download
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+            <div className="mb-4">
+              <FileText className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">{documentName}</h3>
+              <p className="text-gray-600 mb-6">
+                Preview not available for this file type. Download or open in a new tab to view.
+              </p>
+            </div>
+            <div className="flex gap-4">
+              <Button onClick={handleDownload} className="flex items-center gap-2">
+                <Download className="w-4 h-4" />
+                Download Document
               </Button>
-              <Button onClick={handleOpenInNewTab} variant="outline">
-                <ExternalLink className="w-4 h-4 mr-2" />
+              <Button 
+                variant="outline" 
+                onClick={handleOpenInNewTab}
+                className="flex items-center gap-2"
+              >
+                <ExternalLink className="w-4 h-4" />
                 Open in New Tab
               </Button>
             </div>
@@ -105,7 +129,7 @@ export function DocumentPreview({ documentPath, documentName, documentType, onCl
               {documentName}
             </h2>
             <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 rounded-full">
-              {documentType.toUpperCase()}
+              {documentType?.toUpperCase() || 'FILE'}
             </span>
           </div>
           <div className="flex items-center space-x-2">
