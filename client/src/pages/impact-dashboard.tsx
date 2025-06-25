@@ -59,7 +59,7 @@ export default function ImpactDashboard() {
     }> = {};
     
     collections.forEach((collection: any) => {
-      const collectionDate = collection.collection_date || collection.collectionDate;
+      const collectionDate = collection.collectionDate;
       if (collectionDate) {
         const date = new Date(collectionDate);
         const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
@@ -73,16 +73,16 @@ export default function ImpactDashboard() {
           };
         }
         
-        // Use correct database field names
-        const individualCount = collection.individual_sandwiches || 0;
+        // Use correct API field names (camelCase)
+        const individualCount = collection.individualSandwiches || 0;
         let groupCount = 0;
         
-        // Handle group_collections properly
-        if (collection.group_collections && collection.group_collections !== '[]') {
+        // Handle groupCollections properly
+        if (collection.groupCollections && collection.groupCollections !== '' && collection.groupCollections !== '[]') {
           try {
-            const groupData = typeof collection.group_collections === 'string' 
-              ? JSON.parse(collection.group_collections) 
-              : collection.group_collections;
+            const groupData = typeof collection.groupCollections === 'string' 
+              ? JSON.parse(collection.groupCollections) 
+              : collection.groupCollections;
             if (Array.isArray(groupData)) {
               groupCount = groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
             }
@@ -93,7 +93,7 @@ export default function ImpactDashboard() {
         
         monthlyData[monthKey].sandwiches += individualCount + groupCount;
         monthlyData[monthKey].collections += 1;
-        const hostName = collection.host_name || collection.hostName;
+        const hostName = collection.hostName;
         if (hostName) {
           monthlyData[monthKey].hosts.add(hostName);
         }
@@ -133,7 +133,7 @@ export default function ImpactDashboard() {
     }> = {};
     
     collections.forEach((collection: any) => {
-      const hostName = collection.host_name || collection.hostName || 'Unknown';
+      const hostName = collection.hostName || 'Unknown';
       
       if (!hostData[hostName]) {
         hostData[hostName] = {
@@ -144,16 +144,16 @@ export default function ImpactDashboard() {
         };
       }
       
-      // Use correct database field names
-      const individualCount = collection.individual_sandwiches || 0;
+      // Use correct API field names (camelCase)
+      const individualCount = collection.individualSandwiches || 0;
       let groupCount = 0;
       
-      // Handle group_collections properly
-      if (collection.group_collections && collection.group_collections !== '[]') {
+      // Handle groupCollections properly
+      if (collection.groupCollections && collection.groupCollections !== '' && collection.groupCollections !== '[]') {
         try {
-          const groupData = typeof collection.group_collections === 'string' 
-            ? JSON.parse(collection.group_collections) 
-            : collection.group_collections;
+          const groupData = typeof collection.groupCollections === 'string' 
+            ? JSON.parse(collection.groupCollections) 
+            : collection.groupCollections;
           if (Array.isArray(groupData)) {
             groupCount = groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
           }
@@ -180,39 +180,53 @@ export default function ImpactDashboard() {
     
     // Calculate year-specific totals from actual collections data
     const yearTotals = { 2023: 0, 2024: 0, 2025: 0 };
+    let calculatedTotal = 0;
     
     if (Array.isArray(collections)) {
       collections.forEach((collection: any) => {
-        const collectionDate = collection.collection_date || collection.collectionDate;
+        // Check all possible field names for date
+        const collectionDate = collection.collectionDate || collection.collection_date || collection.date;
         if (collectionDate) {
           const year = new Date(collectionDate).getFullYear();
-          if (yearTotals[year as keyof typeof yearTotals] !== undefined) {
-            // Use correct database field names
-            const individualCount = collection.individual_sandwiches || 0;
-            let groupCount = 0;
-            
-            // Handle group_collections which can be JSON string or array
-            if (collection.group_collections && collection.group_collections !== '[]') {
-              try {
-                const groupData = typeof collection.group_collections === 'string' 
-                  ? JSON.parse(collection.group_collections) 
-                  : collection.group_collections;
-                if (Array.isArray(groupData)) {
-                  groupCount = groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
-                }
-              } catch (e) {
-                groupCount = 0;
+          
+          // Check all possible field names for individual sandwiches
+          const individualCount = collection.individualSandwiches || 
+                                collection.individual_sandwiches || 
+                                collection.sandwichCount || 0;
+          
+          let groupCount = 0;
+          
+          // Handle group_collections which can be JSON string or array
+          const groupData = collection.groupCollections || collection.group_collections;
+          if (groupData && groupData !== '[]' && groupData !== '') {
+            try {
+              const parsed = typeof groupData === 'string' ? JSON.parse(groupData) : groupData;
+              if (Array.isArray(parsed)) {
+                groupCount = parsed.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
+              }
+            } catch (e) {
+              // If parsing fails, try to extract number directly
+              if (typeof groupData === 'number') {
+                groupCount = groupData;
               }
             }
-            
-            yearTotals[year as keyof typeof yearTotals] += individualCount + groupCount;
+          }
+          
+          const totalForThisCollection = individualCount + groupCount;
+          calculatedTotal += totalForThisCollection;
+          
+          if (yearTotals[year as keyof typeof yearTotals] !== undefined) {
+            yearTotals[year as keyof typeof yearTotals] += totalForThisCollection;
           }
         }
       });
     }
     
+    // Use calculated total if it's greater than stats total (in case stats is wrong)
+    const finalTotal = Math.max(totalSandwiches, calculatedTotal);
+    
     return {
-      totalSandwiches,
+      totalSandwiches: finalTotal,
       year2023Total: yearTotals[2023],
       year2024Total: yearTotals[2024],
       year2025YTD: yearTotals[2025],
