@@ -458,12 +458,12 @@ export default function ImpactDashboard() {
 
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">Volunteer Hours Goal</span>
-                      <span className="font-bold">2,000</span>
+                      <span className="text-gray-600">2024 Collections</span>
+                      <span className="font-bold">{impactMetrics.year2024Total?.toLocaleString()}</span>
                     </div>
-                    <Progress value={(impactMetrics.estimatedVolunteerHours / 2000) * 100} className="h-3" />
+                    <Progress value={Math.min((impactMetrics.year2024Total / 500000) * 100, 100)} className="h-3" />
                     <p className="text-xs text-gray-500 mt-1">
-                      {impactMetrics.estimatedVolunteerHours.toLocaleString()} / 2,000 hours ({Math.round((impactMetrics.estimatedVolunteerHours / 2000) * 100)}%)
+                      Collections recorded for 2024
                     </p>
                   </div>
 
