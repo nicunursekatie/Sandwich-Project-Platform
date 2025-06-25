@@ -164,8 +164,8 @@ export default function MeetingAgenda() {
                 <div className="flex items-center gap-3">
                   <CheckCircle2 className="w-8 h-8 text-green-500" />
                   <div>
-                    <p className="text-2xl font-bold">{completedItems}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Completed</p>
+                    <p className="text-2xl font-bold">{approvedItems}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Approved</p>
                   </div>
                 </div>
               </CardContent>
@@ -173,10 +173,10 @@ export default function MeetingAgenda() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <Clock className="w-8 h-8 text-purple-500" />
+                  <Clock className="w-8 h-8 text-yellow-500" />
                   <div>
-                    <p className="text-2xl font-bold">{totalDuration}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Total Minutes</p>
+                    <p className="text-2xl font-bold">{pendingItems}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Pending Review</p>
                   </div>
                 </div>
               </CardContent>
@@ -210,38 +210,14 @@ export default function MeetingAgenda() {
                       rows={3}
                     />
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Priority</label>
-                      <Select value={formData.priority} onValueChange={(value: any) => setFormData({ ...formData, priority: value })}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="low">Low</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Assigned To</label>
-                      <Input
-                        value={formData.assignedTo}
-                        onChange={(e) => setFormData({ ...formData, assignedTo: e.target.value })}
-                        placeholder="Person responsible"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Duration (minutes)</label>
-                      <Input
-                        type="number"
-                        value={formData.estimatedDuration}
-                        onChange={(e) => setFormData({ ...formData, estimatedDuration: parseInt(e.target.value) || 15 })}
-                        min="5"
-                        max="120"
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Submitted By</label>
+                    <Input
+                      value={formData.submittedBy}
+                      onChange={(e) => setFormData({ ...formData, submittedBy: e.target.value })}
+                      placeholder="Your name"
+                      required
+                    />
                   </div>
                   <div className="flex gap-2">
                     <Button type="submit" disabled={createMutation.isPending}>
@@ -259,51 +235,89 @@ export default function MeetingAgenda() {
           {/* Agenda Items */}
           <div className="space-y-4">
             {agendaItems.map((item: AgendaItem, index: number) => (
-              <Card key={item.id} className={item.status === "completed" ? "opacity-75" : ""}>
-                <CardContent className="p-4">
+              <Card key={item.id} className={item.status === "approved" ? "border-green-200 bg-green-50 dark:bg-green-900/10" : 
+                                            item.status === "rejected" ? "border-red-200 bg-red-50 dark:bg-red-900/10" :
+                                            item.status === "postponed" ? "border-orange-200 bg-orange-50 dark:bg-orange-900/10" : ""}>
+                <CardContent className="p-6">
                   <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-3 flex-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => toggleStatus(item)}
-                        className="mt-1"
-                      >
-                        {item.status === "completed" ? (
-                          <CheckCircle2 className="w-5 h-5 text-green-500" />
-                        ) : (
-                          <Circle className="w-5 h-5 text-gray-400" />
-                        )}
-                      </Button>
+                    <div className="flex items-start gap-4 flex-1">
+                      <div className="flex-shrink-0">
+                        {getStatusIcon(item.status)}
+                      </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-sm font-medium text-gray-500">#{index + 1}</span>
-                          <div className={`w-3 h-3 rounded-full ${getPriorityColor(item.priority)}`}></div>
                           <Badge className={getStatusColor(item.status)}>
-                            {item.status.replace("_", " ")}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {item.estimatedDuration} min
+                            {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
                           </Badge>
                         </div>
-                        <h3 className={`font-semibold ${item.status === "completed" ? "line-through text-gray-500" : ""}`}>
+                        <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-2">
                           {item.title}
                         </h3>
                         {item.description && (
-                          <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm">{item.description}</p>
+                          <p className="text-gray-600 dark:text-gray-400 mb-3">{item.description}</p>
                         )}
-                        {item.assignedTo && (
-                          <p className="text-sm text-blue-600 dark:text-blue-400 mt-2">
-                            Assigned to: {item.assignedTo}
-                          </p>
-                        )}
+                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                          <span>Submitted by: {item.submittedBy}</span>
+                          <span>•</span>
+                          <span>{new Date(item.submittedAt).toLocaleDateString()}</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                    
+                    {/* Action Buttons */}
+                    <div className="flex flex-col gap-2 ml-4">
+                      {item.status === "pending" && (
+                        <div className="flex gap-2">
+                          <Button 
+                            size="sm" 
+                            className="bg-green-600 hover:bg-green-700 text-white"
+                            onClick={() => handleStatusChange(item, "approved")}
+                            disabled={updateStatusMutation.isPending}
+                          >
+                            Approve
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="border-red-300 text-red-600 hover:bg-red-50"
+                            onClick={() => handleStatusChange(item, "rejected")}
+                            disabled={updateStatusMutation.isPending}
+                          >
+                            Reject
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="border-orange-300 text-orange-600 hover:bg-orange-50"
+                            onClick={() => handleStatusChange(item, "postponed")}
+                            disabled={updateStatusMutation.isPending}
+                          >
+                            Delay
+                          </Button>
+                        </div>
+                      )}
+                      
+                      {item.status !== "pending" && (
+                        <div className="flex gap-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleStatusChange(item, "pending")}
+                            disabled={updateStatusMutation.isPending}
+                          >
+                            Reset to Pending
+                          </Button>
+                        </div>
+                      )}
+                      
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-red-600 hover:text-red-700"
+                        onClick={() => deleteMutation.mutate(item.id)}
+                        disabled={deleteMutation.isPending}
+                      >
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
