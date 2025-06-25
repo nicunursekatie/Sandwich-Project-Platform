@@ -139,6 +139,7 @@ Preferred communication style: Simple, everyday language.
 - June 24, 2025: Unified all page routing through dashboard component to ensure consistent navigation across entire application
 - June 24, 2025: Completed navigation unification: all pages now use single dashboard shell with consistent top header, sidebar navigation, and content area; project details embedded within dashboard navigation
 - June 25, 2025: Updated logout functionality to redirect back to landing page instead of API logout, enabling return to public homepage with toolkit access
+- June 25, 2025: Cleaned up codebase by removing 94 temporary screenshots, test files, and documentation files to optimize project structure
 
 ## Changelog
 
