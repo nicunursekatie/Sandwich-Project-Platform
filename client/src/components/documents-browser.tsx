@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Download, FileText, FileSpreadsheet, File } from "lucide-react";
+import { DocumentPreview } from "./document-preview";
 
 interface DocumentFile {
   name: string;
@@ -174,14 +175,24 @@ export function DocumentsBrowser() {
               )}
             </CardHeader>
             <CardContent className="pt-0">
-              <Button 
-                onClick={() => handleDownload(doc.path, doc.name)}
-                className="w-full"
-                size="sm"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Download {doc.type.toUpperCase()}
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={() => setPreviewDocument(doc)}
+                  className="flex-1"
+                  variant="outline"
+                  size="sm"
+                >
+                  Preview
+                </Button>
+                <Button 
+                  onClick={() => handleDownload(doc.path, doc.name)}
+                  className="flex-1"
+                  size="sm"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}
@@ -195,6 +206,14 @@ export function DocumentsBrowser() {
             Try selecting a different category
           </p>
         </div>
+      )}
+
+      {previewDocument && (
+        <DocumentPreview
+          document={previewDocument}
+          isOpen={!!previewDocument}
+          onClose={() => setPreviewDocument(null)}
+        />
       )}
     </div>
   );
