@@ -216,7 +216,19 @@ export default function CommitteeChat() {
       </div>
 
       {/* Message Input */}
-      <div className="border-t p-4">
+      <div className="border-t p-4 space-y-3">
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium text-gray-600">Your name:</span>
+          <Input
+            value={userName}
+            onChange={(e) => {
+              setUserName(e.target.value);
+              localStorage.setItem('chatUserName', e.target.value);
+            }}
+            placeholder="Enter your name"
+            className="w-48"
+          />
+        </div>
         <div className="flex space-x-2">
           <Input
             value={newMessage}

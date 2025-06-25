@@ -40,8 +40,8 @@ export default function ChatHub() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Team Communication</h1>
-          <p className="text-slate-600">Stay connected with your team and committees</p>
+          <h1 className="text-2xl font-main-heading text-primary">Team Communication</h1>
+          <p className="font-body text-muted-foreground">Stay connected with your team and committees</p>
         </div>
       </div>
 

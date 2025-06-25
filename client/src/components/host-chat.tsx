@@ -218,7 +218,19 @@ export default function HostChat() {
       </div>
 
       {/* Message Input */}
-      <div className="p-4 border-t bg-white dark:bg-gray-900">
+      <div className="p-4 border-t bg-white dark:bg-gray-900 space-y-3">
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium text-gray-600">Your name:</span>
+          <Input
+            value={userName}
+            onChange={(e) => {
+              setUserName(e.target.value);
+              localStorage.setItem('chatUserName', e.target.value);
+            }}
+            placeholder="Enter your name"
+            className="w-48"
+          />
+        </div>
         <div className="flex space-x-2">
           <Input
             value={newMessage}
