@@ -294,15 +294,9 @@ export default function Dashboard() {
       {/* Top Header */}
       <div className="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-3">
-          <img 
-            src="/tsp-logo.png" 
-            alt="The Sandwich Project Logo" 
-            className="w-6 h-6 object-contain"
-            onError={(e) => {
-              console.error('Logo failed to load:', e);
-              (e.target as HTMLImageElement).style.display = 'none';
-            }}
-          />
+          <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center text-white text-xs font-bold">
+            TSP
+          </div>
           <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
         </div>
         <div className="flex items-center space-x-4">
