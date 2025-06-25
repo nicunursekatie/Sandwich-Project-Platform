@@ -674,7 +674,7 @@ export default function ProjectList() {
                 <Button
                   type="submit"
                   disabled={createProjectMutation.isPending || !newProject.title.trim()}
-                  className="bg-teal-600 hover:bg-teal-700 text-white"
+                  className="btn-tsp-primary text-white"
                 >
                   {createProjectMutation.isPending ? "Creating..." : "Create Project"}
                 </Button>
@@ -959,7 +959,7 @@ export default function ProjectList() {
                   <Button
                     type="submit"
                     disabled={updateProjectMutation.isPending || !editingProject.title?.trim()}
-                    className="bg-teal-600 hover:bg-teal-700 text-white"
+                    className="btn-tsp-primary text-white"
                   >
                     {updateProjectMutation.isPending ? "Updating..." : "Update Project"}
                   </Button>

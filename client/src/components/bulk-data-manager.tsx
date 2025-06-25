@@ -216,7 +216,7 @@ export default function BulkDataManager({
                       onClick={() => handleHostClick(stat.hostName)}
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-3 h-3 rounded-full bg-teal-500"></div>
+                        <div className="w-3 h-3 rounded-full" style={{backgroundColor: 'var(--tsp-teal)'}}></div>
                         <span className="font-medium">{stat.hostName}</span>
                         {stat.mapped && <Badge variant="outline" className="text-green-600">Mapped</Badge>}
                       </div>

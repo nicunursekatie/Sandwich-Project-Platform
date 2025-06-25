@@ -113,7 +113,7 @@ export default function HostChat() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <Avatar className="w-10 h-10">
-                      <AvatarFallback className="bg-teal-500 text-white">
+                      <AvatarFallback className="text-white" style={{backgroundColor: 'var(--tsp-teal)'}}>
                         {host.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                       </AvatarFallback>
                     </Avatar>
@@ -156,7 +156,7 @@ export default function HostChat() {
             <ChevronLeft className="w-4 h-4" />
           </Button>
           <Avatar className="w-8 h-8">
-            <AvatarFallback className="bg-teal-500 text-white text-sm">
+            <AvatarFallback className="text-white text-sm" style={{backgroundColor: 'var(--tsp-teal)'}}>
               {selectedHost.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
             </AvatarFallback>
           </Avatar>

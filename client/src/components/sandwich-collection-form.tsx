@@ -359,7 +359,7 @@ export default function SandwichCollectionForm() {
           <Button
             type="submit"
             disabled={submitCollectionMutation.isPending}
-            className="bg-teal-600 hover:bg-teal-700"
+            className="btn-tsp-primary"
           >
             {submitCollectionMutation.isPending
               ? "Submitting..."

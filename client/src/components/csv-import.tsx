@@ -135,7 +135,7 @@ export default function CSVImport() {
                   <Button
                     onClick={handleImport}
                     disabled={importMutation.isPending}
-                    className="bg-teal-600 hover:bg-teal-700"
+                    className="btn-tsp-primary"
                   >
                     {importMutation.isPending ? "Importing..." : "Import Data"}
                   </Button>

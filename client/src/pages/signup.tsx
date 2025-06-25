@@ -157,7 +157,7 @@ export default function SignupPage() {
                 <div
                   key={step}
                   className={`w-3 h-3 rounded-full ${
-                    step <= currentStep ? 'bg-teal-600' : 'bg-gray-300'
+                    step <= currentStep ? 'bg-[#236383]' : 'bg-gray-300'
                   }`}
                 />
               ))}

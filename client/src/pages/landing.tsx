@@ -79,7 +79,7 @@ export default function Landing() {
             to make a lasting impact one sandwich at a time.
           </p>
           <div className="flex gap-4 justify-center">
-            <Button onClick={handleLogin} size="lg" className="bg-teal-600 hover:bg-teal-700">
+            <Button onClick={handleLogin} size="lg" className="btn-tsp-primary">
               Our Team
             </Button>
             <Button 
@@ -249,7 +249,7 @@ export default function Landing() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
-            <Button onClick={handleLogin} size="lg" className="w-full bg-teal-600 hover:bg-teal-700">
+            <Button onClick={handleLogin} size="lg" className="w-full btn-tsp-primary">
               Access Platform
             </Button>
           </CardContent>
