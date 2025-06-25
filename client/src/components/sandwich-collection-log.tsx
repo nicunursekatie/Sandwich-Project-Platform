@@ -940,7 +940,7 @@ export default function SandwichCollectionLog() {
                   <DialogTitle>Add New Collection</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleNewCollectionSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="collectionDate">Collection Date *</Label>
                       <Input
@@ -1034,17 +1034,19 @@ export default function SandwichCollectionLog() {
                     </Button>
                   </div>
 
-                  <div className="flex justify-end space-x-2 pt-4">
+                  <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 pt-4">
                     <Button
                       type="button"
                       variant="outline"
                       onClick={() => setShowAddForm(false)}
+                      className="w-full sm:w-auto"
                     >
                       Cancel
                     </Button>
                     <Button
                       type="submit"
                       disabled={createMutation.isPending}
+                      className="w-full sm:w-auto"
                     >
                       {createMutation.isPending ? "Adding..." : "Add Collection"}
                     </Button>
@@ -1438,7 +1440,7 @@ export default function SandwichCollectionLog() {
               </div>
             )}
 
-            <div className="text-sm text-slate-600">
+            <div className="text-sm text-slate-600 text-center sm:text-left">
               Page {currentPage} of {totalPages}
             </div>
           </div>
@@ -1500,8 +1502,8 @@ export default function SandwichCollectionLog() {
                 </div>
               )}
 
-              <div className="flex justify-end space-x-2 pt-4 border-t">
-                <Button variant="outline" onClick={() => setShowDuplicateAnalysis(false)}>
+              <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 pt-4 border-t">
+                <Button variant="outline" onClick={() => setShowDuplicateAnalysis(false)} className="w-full sm:w-auto">
                   Cancel
                 </Button>
                 {duplicateAnalysis.suspiciousPatterns > 0 && (
@@ -1509,7 +1511,7 @@ export default function SandwichCollectionLog() {
                     variant="outline"
                     onClick={() => cleanDuplicatesMutation.mutate('suspicious')}
                     disabled={cleanDuplicatesMutation.isPending}
-                    className="text-amber-600 hover:text-amber-700"
+                    className="text-amber-600 hover:text-amber-700 w-full sm:w-auto"
                   >
                     Clean Suspicious ({duplicateAnalysis.suspiciousPatterns})
                   </Button>
@@ -1518,7 +1520,7 @@ export default function SandwichCollectionLog() {
                   <Button 
                     onClick={() => cleanDuplicatesMutation.mutate('exact')}
                     disabled={cleanDuplicatesMutation.isPending}
-                    className="bg-red-600 hover:bg-red-700"
+                    className="bg-red-600 hover:bg-red-700 w-full sm:w-auto"
                   >
                     {cleanDuplicatesMutation.isPending ? "Cleaning..." : `Clean Duplicates (${duplicateAnalysis.totalDuplicateEntries})`}
                   </Button>
