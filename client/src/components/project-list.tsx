@@ -419,7 +419,7 @@ export default function ProjectList() {
             <Button
               onClick={() => setShowAddForm(!showAddForm)}
               size="sm"
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-teal-600 hover:bg-teal-700 text-white"
             >
               <Plus className="w-4 h-4 mr-1" />
               Add Project
@@ -674,7 +674,7 @@ export default function ProjectList() {
                 <Button
                   type="submit"
                   disabled={createProjectMutation.isPending || !newProject.title.trim()}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  className="bg-teal-600 hover:bg-teal-700 text-white"
                 >
                   {createProjectMutation.isPending ? "Creating..." : "Create Project"}
                 </Button>
@@ -959,7 +959,7 @@ export default function ProjectList() {
                   <Button
                     type="submit"
                     disabled={updateProjectMutation.isPending || !editingProject.title?.trim()}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    className="bg-teal-600 hover:bg-teal-700 text-white"
                   >
                     {updateProjectMutation.isPending ? "Updating..." : "Update Project"}
                   </Button>

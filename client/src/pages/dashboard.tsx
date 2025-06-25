@@ -265,8 +265,8 @@ export default function Dashboard() {
         return (
           <div className="space-y-6">
             <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-xl">
-                <MessageCircle className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              <div className="flex items-center justify-center w-12 h-12 bg-teal-100 dark:bg-teal-900/20 rounded-xl">
+                <MessageCircle className="w-6 h-6 text-teal-600 dark:text-teal-400" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Committee Communications</h1>
