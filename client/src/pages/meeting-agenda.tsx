@@ -12,14 +12,12 @@ import { useToast } from "@/hooks/use-toast";
 
 interface AgendaItem {
   id: number;
+  meetingId: number;
+  submittedBy: string;
   title: string;
   description: string;
-  priority: "low" | "medium" | "high";
-  status: "pending" | "in_progress" | "completed";
-  assignedTo?: string;
-  estimatedDuration: number;
-  meetingId?: number;
-  createdAt: string;
+  status: "pending" | "approved" | "rejected" | "postponed";
+  submittedAt: string;
 }
 
 export default function MeetingAgenda() {
@@ -28,9 +26,7 @@ export default function MeetingAgenda() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    priority: "medium" as const,
-    assignedTo: "",
-    estimatedDuration: 15
+    submittedBy: "Admin User"
   });
   const { toast } = useToast();
 
@@ -43,7 +39,10 @@ export default function MeetingAgenda() {
       const response = await fetch("/api/agenda-items", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          meetingId: 1
+        }),
       });
       if (!response.ok) throw new Error("Failed to create agenda item");
       return response.json();
@@ -51,20 +50,14 @@ export default function MeetingAgenda() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/agenda-items"] });
       setIsCreating(false);
-      setFormData({
-        title: "",
-        description: "",
-        priority: "medium",
-        assignedTo: "",
-        estimatedDuration: 15
-      });
+      setFormData({ title: "", description: "", submittedBy: "Admin User" });
       toast({ title: "Agenda item created successfully" });
     },
   });
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: number; status: string }) => {
-      const response = await fetch(`/api/agenda-items/${id}/status`, {
+      const response = await fetch(`/api/agenda-items/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
@@ -78,31 +71,45 @@ export default function MeetingAgenda() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await fetch(`/api/agenda-items/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete agenda item");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/agenda-items"] });
+      toast({ title: "Agenda item deleted successfully" });
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createMutation.mutate(formData);
   };
 
-  const toggleStatus = (item: AgendaItem) => {
-    const newStatus = item.status === "completed" ? "pending" : "completed";
+  const handleStatusChange = (item: AgendaItem, newStatus: string) => {
     updateStatusMutation.mutate({ id: item.id, status: newStatus });
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high": return "bg-red-500";
-      case "medium": return "bg-yellow-500";
-      case "low": return "bg-green-500";
-      default: return "bg-gray-500";
-    }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "completed": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "in_progress": return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-      case "pending": return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200";
+      case "approved": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "rejected": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      case "postponed": return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200";
+      case "pending": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
       default: return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200";
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "approved": return <CheckCircle2 className="w-4 h-4 text-green-600" />;
+      case "rejected": return <Circle className="w-4 h-4 text-red-600" />;
+      case "postponed": return <Clock className="w-4 h-4 text-orange-600" />;
+      case "pending": return <Circle className="w-4 h-4 text-yellow-600" />;
+      default: return <Circle className="w-4 h-4 text-gray-600" />;
     }
   };
 
@@ -117,8 +124,8 @@ export default function MeetingAgenda() {
     );
   }
 
-  const totalDuration = agendaItems.reduce((sum: number, item: AgendaItem) => sum + item.estimatedDuration, 0);
-  const completedItems = agendaItems.filter((item: AgendaItem) => item.status === "completed").length;
+  const approvedItems = agendaItems.filter((item: AgendaItem) => item.status === "approved").length;
+  const pendingItems = agendaItems.filter((item: AgendaItem) => item.status === "pending").length;
 
   return (
     <div className="space-y-6">
