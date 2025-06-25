@@ -294,6 +294,18 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm('Are you sure you want to delete this project?')) {
+                            deleteMutation.mutate(project.id);
+                          }
+                        }}
+                        className="p-1 text-gray-500 hover:text-red-600 transition-colors ml-1"
+                        title="Delete project"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                   <p className="text-gray-600 text-sm mb-3">{project.description || 'No description provided'}</p>
