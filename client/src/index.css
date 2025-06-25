@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&family=Lobster&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -68,49 +70,58 @@
 }
 
 :root {
-  --background: 219 13% 97%; /* #F8FAFC */
-  --foreground: 215 25% 27%; /* #334155 */
-  --muted: 210 11% 96%; /* #F1F5F9 */
-  --muted-foreground: 215 14% 54%; /* #64748B */
+  --background: 0 0% 100%; /* #FFFFFF */
+  --foreground: 24 5% 38%; /* #605251 - Dark Gray */
+  --muted: 0 0% 82%; /* #D1D3D4 - Light Gray */
+  --muted-foreground: 24 5% 38%; /* #605251 */
   --popover: 0 0% 100%; /* #FFFFFF */
-  --popover-foreground: 215 25% 27%; /* #334155 */
+  --popover-foreground: 24 5% 38%; /* #605251 */
   --card: 0 0% 100%; /* #FFFFFF */
-  --card-foreground: 215 25% 27%; /* #334155 */
-  --border: 214 13% 88%; /* #E2E8F0 */
-  --input: 214 13% 88%; /* #E2E8F0 */
-  --primary: 217 91% 60%; /* #3B82F6 */
+  --card-foreground: 24 5% 38%; /* #605251 */
+  --border: 0 0% 90%; /* Light border */
+  --input: 0 0% 96%; /* Light input background */
+  
+  /* Brand Primary Colors */
+  --primary: 197 100% 37%; /* #007EBC - Teal */
   --primary-foreground: 0 0% 100%; /* #FFFFFF */
-  --secondary: 210 11% 96%; /* #F1F5F9 */
-  --secondary-foreground: 215 25% 27%; /* #334155 */
-  --accent: 210 11% 96%; /* #F1F5F9 */
-  --accent-foreground: 215 25% 27%; /* #334155 */
+  --secondary: 27 92% 62%; /* #FBAD3F - Orange */
+  --secondary-foreground: 24 5% 38%; /* #605251 */
+  --accent: 342 63% 38%; /* #A31C41 - Burgundy */
+  --accent-foreground: 0 0% 100%; /* #FFFFFF */
+  
   --destructive: 0 84% 60%; /* #EF4444 */
   --destructive-foreground: 0 0% 100%; /* #FFFFFF */
-  --ring: 215 25% 27%; /* #334155 */
+  --ring: 197 100% 37%; /* #007EBC */
   --radius: 0.5rem;
+  
+  /* Brand Supporting Colors */
+  --brand-teal-light: 197 45% 56%; /* #47B3CB */
+  --brand-burgundy-alt: 342 100% 28%; /* Alternative burgundy */
 }
 
 .dark {
-  --background: 224 71% 4%; /* #0F172A */
-  --foreground: 213 31% 91%; /* #E2E8F0 */
-  --muted: 223 47% 11%; /* #1E293B */
-  --muted-foreground: 215 20% 65%; /* #94A3B8 */
-  --popover: 224 71% 4%; /* #0F172A */
-  --popover-foreground: 213 31% 91%; /* #E2E8F0 */
-  --card: 224 71% 4%; /* #0F172A */
-  --card-foreground: 213 31% 91%; /* #E2E8F0 */
-  --border: 223 47% 11%; /* #1E293B */
-  --input: 223 47% 11%; /* #1E293B */
-  --primary: 217 91% 60%; /* #3B82F6 */
-  --primary-foreground: 0 0% 100%; /* #FFFFFF */
-  --secondary: 223 47% 11%; /* #1E293B */
-  --secondary-foreground: 213 31% 91%; /* #E2E8F0 */
-  --accent: 223 47% 11%; /* #1E293B */
-  --accent-foreground: 213 31% 91%; /* #E2E8F0 */
-  --destructive: 0 63% 31%; /* #B91C1C */
-  --destructive-foreground: 213 31% 91%; /* #E2E8F0 */
-  --ring: 216 34% 17%; /* #1E293B */
-  --radius: 0.5rem;
+  --background: 24 5% 10%; /* Dark background */
+  --foreground: 0 0% 95%; /* Light text */
+  --muted: 24 5% 20%; /* Dark muted */
+  --muted-foreground: 0 0% 70%; /* Light muted text */
+  --popover: 24 5% 15%; /* Dark popover */
+  --popover-foreground: 0 0% 95%; /* Light popover text */
+  --card: 24 5% 15%; /* Dark card */
+  --card-foreground: 0 0% 95%; /* Light card text */
+  --border: 24 5% 25%; /* Dark border */
+  --input: 24 5% 20%; /* Dark input */
+  
+  /* Brand colors remain consistent in dark mode */
+  --primary: 197 100% 50%; /* Brighter teal for dark mode */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 27 92% 70%; /* Brighter orange for dark mode */
+  --secondary-foreground: 24 5% 10%;
+  --accent: 342 63% 50%; /* Brighter burgundy for dark mode */
+  --accent-foreground: 0 0% 100%;
+  
+  --destructive: 0 70% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --ring: 197 100% 50%;
 }
 
 @layer base {
@@ -120,7 +131,34 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Roboto', system-ui, sans-serif;
+  }
+  
+  /* Typography Classes */
+  .font-main-heading { 
+    font-family: 'Roboto', sans-serif; 
+    font-weight: 900; 
+    text-transform: uppercase; 
+  }
+
+  .font-sub-heading { 
+    font-family: 'Roboto', sans-serif; 
+    font-weight: 500; 
+  }
+
+  .font-body { 
+    font-family: 'Roboto', sans-serif; 
+    font-weight: 400; 
+  }
+
+  .font-body-light { 
+    font-family: 'Roboto', sans-serif; 
+    font-weight: 300; 
+  }
+
+  .font-highlight { 
+    font-family: 'Lobster', cursive; 
+    font-weight: 400; 
   }
 
   /* Custom button styles to match design */

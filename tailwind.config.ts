@@ -5,6 +5,12 @@ export default {
   content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        'main-heading': ['Roboto', 'sans-serif'],
+        'sub-heading': ['Roboto', 'sans-serif'],
+        'body': ['Roboto', 'sans-serif'],
+        'highlight': ['Lobster', 'cursive'],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -50,6 +56,14 @@ export default {
           "3": "hsl(var(--chart-3))",
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
+        },
+        brand: {
+          'teal': 'hsl(197 100% 37%)', /* #007EBC */
+          'orange': 'hsl(27 92% 62%)', /* #FBAD3F */
+          'burgundy': 'hsl(342 63% 38%)', /* #A31C41 */
+          'dark-gray': 'hsl(24 5% 38%)', /* #605251 */
+          'light-blue': 'hsl(197 45% 56%)', /* #47B3CB */
+          'light-gray': 'hsl(0 0% 82%)', /* #D1D3D4 */
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
