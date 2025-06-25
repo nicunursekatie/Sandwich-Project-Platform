@@ -374,8 +374,19 @@ export default function MeetingMinutes() {
               <FileText className="w-5 h-5" />
               {viewingMinutes.title}
             </CardTitle>
-            <CardDescription>
-              Meeting Date: {new Date(viewingMinutes.date).toLocaleDateString()}
+            <CardDescription className="flex items-center justify-between">
+              <span>Meeting Date: {new Date(viewingMinutes.date).toLocaleDateString()}</span>
+              {viewingMinutes.fileName && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleDownloadFile(viewingMinutes.fileName!)}
+                  className="ml-4"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download File
+                </Button>
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
