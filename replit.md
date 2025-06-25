@@ -146,6 +146,8 @@ Preferred communication style: Simple, everyday language.
 - June 25, 2025: Fixed project date handling issues: resolved null date display showing "12/31/1969" and ensured edit dialog properly pre-populates date fields in correct format
 - June 25, 2025: Implemented dynamic project progress calculation: progress now automatically updates based on task completion ratios, displays real-time percentage and task counts, updates database when tasks are marked complete
 - June 25, 2025: Restored meeting agenda approval workflow: fixed duplicate navigation layout, added proper approve/reject/delay buttons with status management, corrected API integration for agenda item status updates
+- June 25, 2025: Fixed meeting calendar page layout to display cleanly within dashboard without duplicate navigation components
+- June 25, 2025: Replaced icons next to "The Sandwich Project" header and "Submit Collection" with actual sandwich logo from attached assets
 
 ## Changelog
 

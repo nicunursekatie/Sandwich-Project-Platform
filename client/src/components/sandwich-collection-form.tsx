@@ -193,7 +193,7 @@ export default function SandwichCollectionForm() {
     <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
       <div className="px-6 py-4 border-b border-slate-200">
         <h2 className="text-lg font-semibold text-slate-900 flex items-center">
-          <Sandwich className="text-amber-500 mr-2 w-5 h-5" />
+          <img src="/attached_assets/LOGOS/sandwich logo.png" alt="Sandwich Logo" className="mr-2 w-5 h-5" />
           Submit Collection
         </h2>
         <p className="text-sm text-slate-500 mt-1">
