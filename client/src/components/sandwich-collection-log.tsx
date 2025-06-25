@@ -1054,15 +1054,6 @@ export default function SandwichCollectionLog() {
             <Button
               variant="outline"
               size="sm"
-              onClick={exportToCSV}
-              className="flex items-center space-x-1"
-            >
-              <Download className="w-4 h-4" />
-              <span>Export CSV</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center space-x-1"
             >
@@ -1091,43 +1082,6 @@ export default function SandwichCollectionLog() {
                 </Button>
               </>
             )}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".csv"
-              onChange={handleFileUpload}
-              className="hidden"
-            />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => analyzeDuplicatesMutation.mutate()}
-              disabled={analyzeDuplicatesMutation.isPending}
-              className="flex items-center"
-            >
-              <Scan className="w-4 h-4 mr-2" />
-              {analyzeDuplicatesMutation.isPending ? "Analyzing..." : "Check Duplicates"}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => cleanDuplicatesMutation.mutate('og-duplicates')}
-              disabled={cleanDuplicatesMutation.isPending}
-              className="flex items-center bg-amber-50 border-amber-300 text-amber-800 hover:bg-amber-100"
-            >
-              <span className="mr-2">👑</span>
-              {cleanDuplicatesMutation.isPending ? "Cleaning..." : "Clean OG Duplicates"}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={importMutation.isPending}
-              className="flex items-center"
-            >
-              <Upload className="w-4 h-4 mr-2" />
-              {importMutation.isPending ? "Importing..." : "Import CSV"}
-            </Button>
           </div>
         </div>
       </div>

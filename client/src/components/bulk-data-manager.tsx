@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Database, FileText, MapPin, BarChart3, RefreshCw, ArrowLeft } from "lucide-react";
+import { Database, FileText, MapPin, BarChart3, RefreshCw, ArrowLeft, Upload, Download, Scan } from "lucide-react";
 
 interface MappingStats {
   hostName: string;
@@ -222,12 +222,93 @@ export default function BulkDataManager() {
         <TabsContent value="actions" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Bulk Operations</CardTitle>
+              <CardTitle>Data Operations</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Manage your collection data with bulk operations
+                Import, export, and manage your collection data
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="font-medium">Import Data</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Upload CSV files to add collection records
+                      </p>
+                    </div>
+                  </div>
+                  <Button 
+                    onClick={() => document.getElementById('csv-import')?.click()}
+                    className="w-full flex items-center space-x-2"
+                    variant="outline"
+                  >
+                    <Upload className="w-4 h-4" />
+                    <span>Import CSV</span>
+                  </Button>
+                  <input
+                    id="csv-import"
+                    type="file"
+                    accept=".csv"
+                    className="hidden"
+                  />
+                </div>
+
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="font-medium">Export Data</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Download all collection records as CSV
+                      </p>
+                    </div>
+                  </div>
+                  <Button 
+                    className="w-full flex items-center space-x-2"
+                    variant="outline"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Export CSV</span>
+                  </Button>
+                </div>
+
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="font-medium">Check Duplicates</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Analyze and identify duplicate entries
+                      </p>
+                    </div>
+                  </div>
+                  <Button 
+                    className="w-full flex items-center space-x-2"
+                    variant="outline"
+                  >
+                    <Scan className="w-4 h-4" />
+                    <span>Check Duplicates</span>
+                  </Button>
+                </div>
+
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="font-medium">Clean OG Duplicates</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Remove original sandwich project duplicates
+                      </p>
+                    </div>
+                  </div>
+                  <Button 
+                    className="w-full flex items-center space-x-2 bg-amber-50 border-amber-300 text-amber-800 hover:bg-amber-100"
+                    variant="outline"
+                  >
+                    <span className="mr-2">👑</span>
+                    <span>Clean OG Duplicates</span>
+                  </Button>
+                </div>
+              </div>
+
               <div className="border rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <div>
