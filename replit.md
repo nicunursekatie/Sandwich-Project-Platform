@@ -162,6 +162,7 @@ Preferred communication style: Simple, everyday language.
 - June 25, 2025: Resolved impact dashboard field mapping issues: corrected API data queries to properly extract collections array, fixed camelCase field name handling (collectionDate, hostName, individualSandwiches), dashboard now displays accurate 1.85M total sandwiches from verified collections database
 - June 25, 2025: Fixed impact dashboard year calculations using verified weekly breakdown data: 2023 (438,876), 2024 peak year (449,643), 2025 YTD (193,674) - replaced dynamic calculation with authenticated data from verified sources
 - June 25, 2025: Updated all blue buttons throughout platform to use correct TSP brand colors (HEX #236383): implemented custom CSS variables for brand colors, created .btn-tsp-primary class, updated all buttons, avatar fallbacks, status indicators to use authentic brand teal instead of generic Tailwind colors
+- June 25, 2025: Fixed phone directory search functionality: added missing filtering logic for hosts, recipients, and contacts with comprehensive search across names, phone numbers, emails, organizations, roles, and addresses
 
 ## Changelog
 

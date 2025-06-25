@@ -247,15 +247,7 @@ export default function PhoneDirectory() {
     },
   });
 
-  // Filter functions
-  const filteredHosts = hosts.filter(host =>
-    host.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (host.contacts && host.contacts.some(contact => 
-      contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (contact.phone && contact.phone.includes(searchTerm)) ||
-      (contact.email && contact.email.toLowerCase().includes(searchTerm.toLowerCase()))
-    ))
-  );
+
 
 
   const filteredRecipients = recipients.filter(recipient =>
@@ -371,6 +363,54 @@ export default function PhoneDirectory() {
         variant: "destructive",
       });
     },
+  });
+
+  // Filtering logic
+  const filteredHosts = hosts.filter((host) => {
+    if (!searchTerm) return true;
+    const searchLower = searchTerm.toLowerCase();
+    
+    // Search in host name, address, and notes
+    const hostMatch = host.name.toLowerCase().includes(searchLower) ||
+                     (host.address && host.address.toLowerCase().includes(searchLower)) ||
+                     (host.notes && host.notes.toLowerCase().includes(searchLower));
+    
+    // Search in contact information
+    const contactMatch = host.contacts.some(contact => 
+      contact.name.toLowerCase().includes(searchLower) ||
+      contact.phone.includes(searchTerm) ||
+      (contact.email && contact.email.toLowerCase().includes(searchLower)) ||
+      contact.role.toLowerCase().includes(searchLower) ||
+      (contact.notes && contact.notes.toLowerCase().includes(searchLower))
+    );
+    
+    return hostMatch || contactMatch;
+  });
+
+  const filteredRecipients = recipients.filter((recipient) => {
+    if (!searchTerm) return true;
+    const searchLower = searchTerm.toLowerCase();
+    
+    return recipient.name.toLowerCase().includes(searchLower) ||
+           (recipient.contactName && recipient.contactName.toLowerCase().includes(searchLower)) ||
+           recipient.phone.includes(searchTerm) ||
+           (recipient.email && recipient.email.toLowerCase().includes(searchLower)) ||
+           (recipient.address && recipient.address.toLowerCase().includes(searchLower)) ||
+           (recipient.preferences && recipient.preferences.toLowerCase().includes(searchLower));
+  });
+
+  const filteredContacts = contacts.filter((contact) => {
+    if (!searchTerm) return true;
+    const searchLower = searchTerm.toLowerCase();
+    
+    return contact.name.toLowerCase().includes(searchLower) ||
+           (contact.organization && contact.organization.toLowerCase().includes(searchLower)) ||
+           (contact.role && contact.role.toLowerCase().includes(searchLower)) ||
+           contact.phone.includes(searchTerm) ||
+           (contact.email && contact.email.toLowerCase().includes(searchLower)) ||
+           (contact.address && contact.address.toLowerCase().includes(searchLower)) ||
+           (contact.notes && contact.notes.toLowerCase().includes(searchLower)) ||
+           contact.category.toLowerCase().includes(searchLower);
   });
 
   // Export functions
@@ -1941,3 +1981,5 @@ const FileImportDialog = ({ open, onOpenChange, onImport, isLoading }: {
     </Dialog>
   );
 };
+
+export default PhoneDirectory;
