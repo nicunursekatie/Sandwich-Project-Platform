@@ -171,6 +171,12 @@ export default function Dashboard() {
                   description: "Official nonprofit status documentation",
                   path: "/documents/501c3-determination-letter.pdf",
                   category: "Legal"
+                },
+                {
+                  title: "Document 85",
+                  description: "Operational document for The Sandwich Project",
+                  path: "/documents/Doc85(1).docx",
+                  category: "Operations"
                 }
               ].map((doc, index) => (
                 <div
