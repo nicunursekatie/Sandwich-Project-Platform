@@ -23,7 +23,19 @@ interface ImportProgress {
   unmappedRecords: number;
 }
 
-export default function BulkDataManager() {
+interface BulkDataManagerProps {
+  onImportCSV?: () => void;
+  onExportCSV?: () => void;
+  onCheckDuplicates?: () => void;
+  onCleanOGDuplicates?: () => void;
+}
+
+export default function BulkDataManager({ 
+  onImportCSV, 
+  onExportCSV, 
+  onCheckDuplicates, 
+  onCleanOGDuplicates 
+}: BulkDataManagerProps = {}) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("overview");
@@ -239,19 +251,13 @@ export default function BulkDataManager() {
                     </div>
                   </div>
                   <Button 
-                    onClick={() => document.getElementById('csv-import')?.click()}
+                    onClick={onImportCSV}
                     className="w-full flex items-center space-x-2"
                     variant="outline"
                   >
                     <Upload className="w-4 h-4" />
                     <span>Import CSV</span>
                   </Button>
-                  <input
-                    id="csv-import"
-                    type="file"
-                    accept=".csv"
-                    className="hidden"
-                  />
                 </div>
 
                 <div className="border rounded-lg p-4">
@@ -264,6 +270,7 @@ export default function BulkDataManager() {
                     </div>
                   </div>
                   <Button 
+                    onClick={onExportCSV}
                     className="w-full flex items-center space-x-2"
                     variant="outline"
                   >
@@ -282,6 +289,7 @@ export default function BulkDataManager() {
                     </div>
                   </div>
                   <Button 
+                    onClick={onCheckDuplicates}
                     className="w-full flex items-center space-x-2"
                     variant="outline"
                   >
@@ -300,6 +308,7 @@ export default function BulkDataManager() {
                     </div>
                   </div>
                   <Button 
+                    onClick={onCleanOGDuplicates}
                     className="w-full flex items-center space-x-2 bg-amber-50 border-amber-300 text-amber-800 hover:bg-amber-100"
                     variant="outline"
                   >
