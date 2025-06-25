@@ -138,6 +138,7 @@ Preferred communication style: Simple, everyday language.
 - June 24, 2025: Added consistent navigation to role demo page to match platform's unified design system
 - June 24, 2025: Unified all page routing through dashboard component to ensure consistent navigation across entire application
 - June 24, 2025: Completed navigation unification: all pages now use single dashboard shell with consistent top header, sidebar navigation, and content area; project details embedded within dashboard navigation
+- June 25, 2025: Updated logout functionality to redirect back to landing page instead of API logout, enabling return to public homepage with toolkit access
 
 ## Changelog
 
