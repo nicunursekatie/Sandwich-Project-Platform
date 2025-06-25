@@ -72,11 +72,30 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
       apiRequest(`/api/projects/${id}`, { method: 'PUT', body: data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      refetch(); // Force immediate refetch
       setEditingProject(null);
+      setIsAddModalOpen(false);
+      setNewProject({ title: '', description: '', priority: 'medium', assignedTo: '', dueDate: '' });
       toast({ description: 'Project updated successfully!' });
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error('Project update error:', error);
       toast({ description: 'Failed to update project', variant: 'destructive' });
+    }
+  });
+
+  // Delete project mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => 
+      apiRequest(`/api/projects/${id}`, { method: 'DELETE' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      refetch(); // Force immediate refetch
+      toast({ description: 'Project deleted successfully!' });
+    },
+    onError: (error: any) => {
+      console.error('Project delete error:', error);
+      toast({ description: 'Failed to delete project', variant: 'destructive' });
     }
   });
 
@@ -108,8 +127,8 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
     setEditingProject(project);
     setNewProject({
       title: project.title,
-      description: project.description,
-      priority: project.priority,
+      description: project.description || '',
+      priority: project.priority as 'low' | 'medium' | 'high',
       assignedTo: project.assigneeName || '',
       dueDate: project.dueDate || ''
     });
