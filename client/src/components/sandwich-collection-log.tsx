@@ -889,7 +889,7 @@ export default function SandwichCollectionLog() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold text-slate-900 flex items-center">
-              <img src="/tsp-logo-transparent.png" alt="TSP" className="mr-2 w-5 h-5 object-contain" />
+              <Sandwich className="text-amber-500 mr-2 w-5 h-5" />
               Collections
             </h2>
             <p className="text-sm text-slate-500 mt-1">Manage collection data and bulk operations</p>
