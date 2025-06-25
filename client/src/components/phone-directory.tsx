@@ -250,25 +250,25 @@ export default function PhoneDirectory() {
   // Filter functions
   const filteredHosts = hosts.filter(host =>
     host.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    host.contacts.some(contact => 
+    (host.contacts && host.contacts.some(contact => 
       contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.phone.includes(searchTerm) ||
+      (contact.phone && contact.phone.includes(searchTerm)) ||
       (contact.email && contact.email.toLowerCase().includes(searchTerm.toLowerCase()))
-    )
+    ))
   );
 
 
   const filteredRecipients = recipients.filter(recipient =>
     recipient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (recipient.contactName && recipient.contactName.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    recipient.phone.includes(searchTerm) ||
+    (recipient.phone && recipient.phone.includes(searchTerm)) ||
     (recipient.email && recipient.email.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const filteredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (contact.organization && contact.organization.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    contact.phone.includes(searchTerm) ||
+    (contact.phone && contact.phone.includes(searchTerm)) ||
     (contact.email && contact.email.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
