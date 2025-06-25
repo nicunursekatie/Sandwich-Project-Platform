@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Plus, Trash2, Sandwich } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -193,7 +193,11 @@ export default function SandwichCollectionForm() {
     <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
       <div className="px-6 py-4 border-b border-slate-200">
         <h2 className="text-lg font-semibold text-slate-900 flex items-center">
-          <Sandwich className="text-amber-500 mr-2 w-5 h-5" />
+          <img 
+            src="/tsp-logo.png" 
+            alt="The Sandwich Project Logo" 
+            className="mr-2 w-5 h-5 object-contain"
+          />
           Submit Collection
         </h2>
         <p className="text-sm text-slate-500 mt-1">

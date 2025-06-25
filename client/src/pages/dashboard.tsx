@@ -298,6 +298,10 @@ export default function Dashboard() {
             src="/tsp-logo.png" 
             alt="The Sandwich Project Logo" 
             className="w-6 h-6 object-contain"
+            onError={(e) => {
+              console.error('Logo failed to load:', e);
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
           />
           <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
         </div>
