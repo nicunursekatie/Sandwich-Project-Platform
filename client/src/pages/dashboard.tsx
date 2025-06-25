@@ -1,4 +1,5 @@
 import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone, ChevronDown, ChevronRight } from "lucide-react";
+import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
@@ -294,7 +295,7 @@ export default function Dashboard() {
       {/* Top Header */}
       <div className="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-3">
-          <img src="/attached_assets/LOGOS/sandwich logo.png" alt="Sandwich Logo" className="w-6 h-6" />
+          <img src={sandwichLogo} alt="Sandwich Logo" className="w-6 h-6" />
           <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
         </div>
         <div className="flex items-center space-x-4">
