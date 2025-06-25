@@ -79,13 +79,25 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const projectData = {
+      title: newProject.title,
+      description: newProject.description,
+      priority: newProject.priority,
+      assigneeName: newProject.assignedTo || null,
+      dueDate: newProject.dueDate || null,
+      status: 'available',
+      category: 'general',
+      progressPercentage: 0
+    };
+
     if (editingProject) {
       await updateMutation.mutateAsync({
         id: editingProject.id,
-        ...newProject
+        ...projectData
       });
     } else {
-      await createMutation.mutateAsync(newProject);
+      await createMutation.mutateAsync(projectData);
     }
   };
 
