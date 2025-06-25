@@ -38,7 +38,9 @@ export function CollapsibleNav() {
   // Navigation structure with expandable sections
   const navigationStructure = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, type: "item", href: "/" },
-    { id: "collections", label: "Collections Log", icon: Sandwich, type: "item", href: "/collections" },
+    { id: "collections", label: "Collections Log", icon: () => (
+      <img src="/tsp-logo-transparent.png" alt="TSP" className="w-5 h-5 object-contain" />
+    ), type: "item", href: "/collections" },
     { id: "messages", label: "Messages", icon: MessageCircle, type: "item", href: "/messages" },
     { 
       id: "team", 
