@@ -44,8 +44,9 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
   });
 
   // Fetch projects
-  const { data: projects = [], isLoading } = useQuery({
+  const { data: projects = [], isLoading, refetch } = useQuery({
     queryKey: ['/api/projects'],
+    staleTime: 0, // Always refetch to avoid stale data issues
   });
 
   // Create project mutation
@@ -54,11 +55,13 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
       apiRequest('/api/projects', { method: 'POST', body: projectData }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      refetch(); // Force immediate refetch
       setIsAddModalOpen(false);
       setNewProject({ title: '', description: '', priority: 'medium', assignedTo: '', dueDate: '' });
       toast({ description: 'Project created successfully!' });
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error('Project creation error:', error);
       toast({ description: 'Failed to create project', variant: 'destructive' });
     }
   });
