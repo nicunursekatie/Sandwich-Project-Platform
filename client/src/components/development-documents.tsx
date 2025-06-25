@@ -27,6 +27,13 @@ const developmentDocuments: DevelopmentDocument[] = [
     type: "pdf",
     category: "Legal",
     description: "IRS Tax Exempt determination letter containing EIN"
+  },
+  {
+    name: "501c3 Determination Letter",
+    path: "/documents/501c3-determination-letter.pdf",
+    type: "pdf",
+    category: "Legal",
+    description: "Official IRS determination letter confirming tax-exempt status"
   }
 ];
 
