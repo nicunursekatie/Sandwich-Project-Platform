@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Calendar, User, Clock, Target, CheckCircle2, Circle, Pause, Play, Plus, Trash2, Edit } from "lucide-react";
+import { ArrowLeft, Calendar, User, Clock, Target, CheckCircle2, Circle, Pause, Play, Plus, Trash2, Edit, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -167,6 +168,14 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     if (confirm("Are you sure you want to delete this task?")) {
       deleteTaskMutation.mutate(id);
     }
+  };
+
+  const handleToggleTaskCompletion = (task: ProjectTask) => {
+    const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+    updateTaskMutation.mutate({
+      id: task.id,
+      updates: { ...task, status: newStatus }
+    });
   };
 
   const handleEditProject = () => {
@@ -433,9 +442,20 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                 <Card key={task.id}>
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <h4 className="font-medium text-slate-900">{task.title}</h4>
+                      <div className="flex items-start space-x-3 flex-1">
+                        <div className="flex items-center pt-1">
+                          <Checkbox
+                            checked={task.status === 'completed'}
+                            onCheckedChange={() => handleToggleTaskCompletion(task)}
+                            disabled={!canEdit}
+                            className="w-5 h-5"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <h4 className={`font-medium ${task.status === 'completed' ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
+                              {task.title}
+                            </h4>
                           <Badge className={getPriorityColor(task.priority)}>
                             {task.priority}
                           </Badge>
@@ -443,23 +463,26 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                             {getStatusIcon(task.status)}
                             <span className="ml-1 capitalize">{task.status.replace('_', ' ')}</span>
                           </Badge>
-                        </div>
-                        {task.description && (
-                          <p className="text-sm text-slate-600 mb-2">{task.description}</p>
-                        )}
-                        <div className="flex items-center space-x-4 text-sm text-slate-500">
-                          {task.assigneeName && (
-                            <div className="flex items-center">
-                              <User className="w-3 h-3 mr-1" />
-                              {task.assigneeName}
-                            </div>
+                          </div>
+                          {task.description && (
+                            <p className={`text-sm mb-2 ${task.status === 'completed' ? 'text-slate-400 line-through' : 'text-slate-600'}`}>
+                              {task.description}
+                            </p>
                           )}
-                          {task.dueDate && (
-                            <div className="flex items-center">
-                              <Calendar className="w-3 h-3 mr-1" />
-                              {new Date(task.dueDate).toLocaleDateString()}
-                            </div>
-                          )}
+                          <div className="flex items-center space-x-4 text-sm text-slate-500">
+                            {task.assigneeName && (
+                              <div className="flex items-center">
+                                <User className="w-3 h-3 mr-1" />
+                                {task.assigneeName}
+                              </div>
+                            )}
+                            {task.dueDate && (
+                              <div className="flex items-center">
+                                <Calendar className="w-3 h-3 mr-1" />
+                                {new Date(task.dueDate).toLocaleDateString()}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <div className="flex space-x-1 ml-4">
