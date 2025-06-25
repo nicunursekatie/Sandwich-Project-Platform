@@ -183,6 +183,35 @@ export default function MeetingMinutes() {
     setUploadType("file");
   };
 
+  const handleDownloadFile = async (fileName: string) => {
+    try {
+      const response = await fetch(`/api/files/${fileName}`);
+      if (!response.ok) {
+        throw new Error('File not found');
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      toast({ title: "File downloaded successfully" });
+    } catch (error) {
+      console.error('Download error:', error);
+      toast({ 
+        title: "Download failed", 
+        description: "Could not download the file. It may have been moved or deleted.",
+        variant: "destructive" 
+      });
+    }
+  };
+
   const handleEditMeeting = (meeting: Meeting) => {
     // For now, show a toast that edit functionality would open a modal
     toast({ 
@@ -451,13 +480,25 @@ export default function MeetingMinutes() {
                     This document is hosted on Google Docs. Click "Open in Google Docs" above to view the full content.
                   </p>
                 </div>
-              ) : viewingMinutes.fileName && viewingMinutes.filePath ? (
-                <DocumentViewer
-                  fileName={viewingMinutes.fileName}
-                  fileType={viewingMinutes.fileType || 'unknown'}
-                  filePath={viewingMinutes.filePath}
-                  mimeType={viewingMinutes.mimeType || undefined}
-                />
+              ) : viewingMinutes.fileName ? (
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
+                  <div className="text-center py-8">
+                    <FileText className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+                      Document: {viewingMinutes.fileName}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      Click the download button above to view the full document.
+                    </p>
+                    <Button 
+                      onClick={() => handleDownloadFile(viewingMinutes.fileName!)}
+                      className="inline-flex items-center"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Document
+                    </Button>
+                  </div>
+                </div>
               ) : (
                 <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
                   <div className="prose max-w-none dark:prose-invert">
