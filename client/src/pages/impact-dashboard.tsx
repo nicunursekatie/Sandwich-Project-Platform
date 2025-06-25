@@ -350,69 +350,7 @@ export default function ImpactDashboard() {
             </div>
           </TabsContent>
 
-          {/* Host Performance Tab */}
-          <TabsContent value="hosts">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Award className="w-5 h-5 mr-2" />
-                    Top Performing Hosts
-                  </CardTitle>
-                  <CardDescription>Hosts ranked by total sandwich contributions</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={hostPerformance} layout="horizontal">
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis type="number" tick={{ fontSize: 12 }} />
-                      <YAxis 
-                        dataKey="name" 
-                        type="category" 
-                        tick={{ fontSize: 10 }}
-                        width={80}
-                      />
-                      <Tooltip 
-                        formatter={(value, name) => [value, 'Total Sandwiches']}
-                        labelFormatter={(label) => `Host: ${label}`}
-                      />
-                      <Bar dataKey="totalSandwiches" fill="#8884d8" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Host Performance Metrics</CardTitle>
-                  <CardDescription>Detailed breakdown of top hosts</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {hostPerformance.slice(0, 5).map((host: any, index) => (
-                      <div key={host.name} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div className="flex items-center space-x-3">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
-                            index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-orange-600' : 'bg-blue-500'
-                          }`}>
-                            {index + 1}
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">{host.name}</p>
-                            <p className="text-sm text-gray-600">{host.totalCollections} collections</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold text-lg text-gray-900">{host.totalSandwiches}</p>
-                          <p className="text-sm text-gray-600">sandwiches</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
 
           {/* Distribution Tab */}
           <TabsContent value="distribution">
