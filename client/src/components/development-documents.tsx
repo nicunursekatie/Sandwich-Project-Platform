@@ -28,6 +28,13 @@ const developmentDocuments: DevelopmentDocument[] = [
     category: "Legal",
     description: "IRS Tax Exempt determination letter containing EIN"
   },
+  {
+    name: "The Sandwich Project Bylaws 2024",
+    path: "/documents/THE SANDWICH PROJECT BYLAWS 2024.docx",
+    type: "docx",
+    category: "Legal",
+    description: "Official bylaws document outlining organizational structure, governance, and operational procedures"
+  },
 
 ];
 
