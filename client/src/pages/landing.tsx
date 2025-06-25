@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { DocumentsBrowser } from "@/components/documents-browser";
 import tspLogo from "@assets/CMYK_PRINT_TSP-01_1749585167435.png";
-import tspTransparent from "@assets/TSP_transparent_1749585167445.png";
+import tspTransparent from "@assets/LOGOS/Copy of TSP_transparent.png";
 
 export default function Landing() {
   const [showToolkit, setShowToolkit] = useState(false);

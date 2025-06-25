@@ -68,7 +68,7 @@ interface GeneralContact {
   updatedAt: Date;
 }
 
-export default function PhoneDirectory() {
+function PhoneDirectory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("hosts");
   const [isAddingHost, setIsAddingHost] = useState(false);
@@ -250,19 +250,7 @@ export default function PhoneDirectory() {
 
 
 
-  const filteredRecipients = recipients.filter(recipient =>
-    recipient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (recipient.contactName && recipient.contactName.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (recipient.phone && recipient.phone.includes(searchTerm)) ||
-    (recipient.email && recipient.email.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
 
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (contact.organization && contact.organization.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (contact.phone && contact.phone.includes(searchTerm)) ||
-    (contact.email && contact.email.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
 
   // Contact mutations
   const createContactMutation = useMutation({
