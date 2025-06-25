@@ -1687,7 +1687,10 @@ export default function SandwichCollectionLog() {
           <DialogHeader>
             <DialogTitle>Data Management Center</DialogTitle>
           </DialogHeader>
-          <BulkDataManager />
+          <BulkDataManager 
+            onExportCSV={exportToCSV}
+            onImportCSV={() => fileInputRef.current?.click()}
+          />
         </DialogContent>
       </Dialog>
     </div>
