@@ -21,9 +21,12 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tool
 
 export default function ImpactDashboard() {
   // Fetch sandwich collections data
-  const { data: collections = [] } = useQuery({
+  const { data: collectionsData } = useQuery({
     queryKey: ["/api/sandwich-collections"],
+    queryFn: () => apiRequest('/api/sandwich-collections?limit=1000')
   });
+  
+  const collections = collectionsData?.collections || [];
 
   // Fetch collection stats
   const { data: stats } = useQuery({
@@ -173,52 +176,47 @@ export default function ImpactDashboard() {
   };
 
   const calculateImpactMetrics = () => {
-    // Use actual collections log data with correct field names
-    const totalSandwiches = (stats as any)?.totalSandwiches || 0;
+    // Use the stats API for total sandwiches since it's calculated server-side
+    const totalSandwiches = (stats as any)?.completeTotalSandwiches || 0;
     const totalCollections = collections?.length || 0;
     const uniqueHosts = Array.isArray(hosts) ? hosts.length : 0;
     
     // Calculate year-specific totals from actual collections data
     const yearTotals = { 2023: 0, 2024: 0, 2025: 0 };
-    let calculatedTotal = 0;
     
-    if (Array.isArray(collections)) {
+    if (Array.isArray(collections) && collections.length > 0) {
       collections.forEach((collection: any) => {
-        // Use correct API field names
         const collectionDate = collection.collectionDate;
         if (collectionDate) {
           const year = new Date(collectionDate).getFullYear();
-          
-          const individualCount = collection.individualSandwiches || 0;
-          let groupCount = 0;
-          
-          // Handle groupCollections which can be JSON string or array
-          if (collection.groupCollections && collection.groupCollections !== '' && collection.groupCollections !== '[]') {
-            try {
-              const parsed = typeof collection.groupCollections === 'string' ? JSON.parse(collection.groupCollections) : collection.groupCollections;
-              if (Array.isArray(parsed)) {
-                groupCount = parsed.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
-              }
-            } catch (e) {
-              groupCount = 0;
-            }
-          }
-          
-          const totalForThisCollection = individualCount + groupCount;
-          calculatedTotal += totalForThisCollection;
-          
           if (yearTotals[year as keyof typeof yearTotals] !== undefined) {
-            yearTotals[year as keyof typeof yearTotals] += totalForThisCollection;
+            const individualCount = collection.individualSandwiches || 0;
+            let groupCount = 0;
+            
+            // Handle groupCollections which can be JSON string or array
+            if (collection.groupCollections && collection.groupCollections !== '' && collection.groupCollections !== '[]') {
+              try {
+                const groupData = typeof collection.groupCollections === 'string' 
+                  ? JSON.parse(collection.groupCollections) 
+                  : collection.groupCollections;
+                if (Array.isArray(groupData)) {
+                  groupCount = groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
+                }
+              } catch (e) {
+                groupCount = 0;
+              }
+            }
+            
+            yearTotals[year as keyof typeof yearTotals] += individualCount + groupCount;
           }
         }
       });
     }
     
-    // Use calculated total if it's greater than stats total (in case stats is wrong)
-    const finalTotal = Math.max(totalSandwiches, calculatedTotal);
+
     
     return {
-      totalSandwiches: finalTotal,
+      totalSandwiches,
       year2023Total: yearTotals[2023],
       year2024Total: yearTotals[2024],
       year2025YTD: yearTotals[2025],
