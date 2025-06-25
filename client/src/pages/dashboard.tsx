@@ -173,10 +173,10 @@ export default function Dashboard() {
                   category: "Legal"
                 },
                 {
-                  title: "Document 85",
-                  description: "Operational document for The Sandwich Project",
+                  title: "Summer Food Safety Guidelines",
+                  description: "Important summer food safety guidelines for home hosts",
                   path: "/documents/Doc85(1).docx",
-                  category: "Operations"
+                  category: "Safety"
                 }
               ].map((doc, index) => (
                 <div

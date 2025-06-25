@@ -56,11 +56,11 @@ const documentFiles: DocumentFile[] = [
     description: "Printable labels for PBJ sandwich packaging"
   },
   {
-    name: "Document 85",
+    name: "Summer Food Safety Guidelines",
     path: "/documents/Doc85(1).docx",
     type: "docx",
-    category: "Operations",
-    description: "Operational document for The Sandwich Project"
+    category: "Safety",
+    description: "Important summer food safety guidelines for home hosts"
   },
   {
     name: "Sandwich Inventory List",
@@ -96,6 +96,8 @@ const getCategoryColor = (category: string) => {
       return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
     case 'Operations':
       return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300';
+    case 'Safety':
+      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
     default:
       return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
   }
