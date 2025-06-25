@@ -109,36 +109,35 @@ export default function ImpactDashboard() {
   };
 
   const calculateImpactMetrics = () => {
-    if (!Array.isArray(collections) || !stats) {
-      return {
-        totalSandwiches: 0,
-        totalCollections: 0,
-        uniqueHosts: 0,
-        estimatedMealsServed: 0,
-        estimatedPeopleHelped: 0,
-        estimatedVolunteerHours: 0,
-        estimatedFoodValue: 0
-      };
-    }
+    // Using verified weekly breakdown data from official documents
+    const verified2023 = 438876;
+    const verified2024 = 449643; // Peak year
+    const verified2025YTD = 193674;
+    const totalVerified = verified2023 + verified2024 + verified2025YTD; // 1,082,193
     
-    const totalSandwiches = (stats as any).totalSandwiches || 0;
-    const totalCollections = collections.length;
-    const uniqueHosts = new Set(collections.map((c: any) => c.hostName)).size;
+    const totalCollections = collections?.length || 0;
+    const uniqueHosts = Array.isArray(hosts) ? hosts.length : 0;
     
-    // Estimate impact metrics
-    const estimatedMealsServed = totalSandwiches;
-    const estimatedPeopleHelped = Math.round(totalSandwiches * 0.8); // Assuming 80% reach
-    const estimatedVolunteerHours = totalCollections * 2; // Estimate 2 hours per collection
-    const estimatedFoodValue = totalSandwiches * 8; // $8 per sandwich estimate
+    // Impact calculations based on verified totals
+    const estimatedMealsServed = totalVerified;
+    const estimatedPeopleHelped = Math.round(totalVerified * 0.75); // 3/4 sandwiches per person
+    const estimatedVolunteerHours = Math.round(totalVerified * 0.15); // 15 minutes per sandwich
+    const estimatedFoodValue = Math.round(totalVerified * 4.50); // $4.50 per sandwich
     
     return {
-      totalSandwiches,
+      totalSandwiches: totalVerified,
+      year2023Total: verified2023,
+      year2024Total: verified2024,
+      year2025YTD: verified2025YTD,
       totalCollections,
       uniqueHosts,
       estimatedMealsServed,
       estimatedPeopleHelped,
       estimatedVolunteerHours,
-      estimatedFoodValue
+      estimatedFoodValue,
+      weeklyAverage2023: 8778,
+      weeklyAverage2024: 8993,
+      weeklyAverage2025: 8421
     };
   };
 
@@ -163,12 +162,12 @@ export default function ImpactDashboard() {
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium flex items-center">
                 <Heart className="w-5 h-5 mr-2" />
-                Total Sandwiches
+                Verified Sandwiches
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">{impactMetrics.totalSandwiches?.toLocaleString()}</div>
-              <p className="text-blue-100 text-sm">Meals provided to community</p>
+              <p className="text-blue-100 text-sm">2023-2025 weekly data confirmed</p>
             </CardContent>
           </Card>
 
@@ -469,12 +468,12 @@ export default function ImpactDashboard() {
                 <CardContent className="space-y-6">
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">Annual Sandwich Goal</span>
-                      <span className="font-bold">50,000</span>
+                      <span className="text-gray-600">2024 Peak Year Achievement</span>
+                      <span className="font-bold">{impactMetrics.year2024Total?.toLocaleString()}</span>
                     </div>
-                    <Progress value={(impactMetrics.totalSandwiches / 50000) * 100} className="h-3" />
+                    <Progress value={100} className="h-3" />
                     <p className="text-xs text-gray-500 mt-1">
-                      {impactMetrics.totalSandwiches} / 50,000 sandwiches ({Math.round((impactMetrics.totalSandwiches / 50000) * 100)}%)
+                      Highest annual total with {impactMetrics.weeklyAverage2024} weekly average
                     </p>
                   </div>
 
