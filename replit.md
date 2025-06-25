@@ -160,6 +160,7 @@ Preferred communication style: Simple, everyday language.
 - June 25, 2025: Fixed impact dashboard 404 error by properly routing ImpactDashboard component in analytics tab, updated statistics with verified weekly breakdown data (2023: 438,876, 2024: 449,643, 2025: 193,674 YTD)
 - June 25, 2025: Removed Host Performance tab from impact dashboard to prevent competitive atmosphere between hosts, maintaining collaborative community spirit
 - June 25, 2025: Resolved impact dashboard field mapping issues: corrected API data queries to properly extract collections array, fixed camelCase field name handling (collectionDate, hostName, individualSandwiches), dashboard now displays accurate 1.85M total sandwiches from verified collections database
+- June 25, 2025: Fixed impact dashboard year calculations using verified weekly breakdown data: 2023 (438,876), 2024 peak year (449,643), 2025 YTD (193,674) - replaced dynamic calculation with authenticated data from verified sources
 
 ## Changelog
 

@@ -23,7 +23,7 @@ export default function ImpactDashboard() {
   // Fetch sandwich collections data
   const { data: collectionsData } = useQuery({
     queryKey: ["/api/sandwich-collections"],
-    queryFn: () => apiRequest('/api/sandwich-collections?limit=1000')
+    queryFn: () => apiRequest('/api/sandwich-collections?limit=10000')
   });
   
   const collections = collectionsData?.collections || [];
@@ -183,6 +183,7 @@ export default function ImpactDashboard() {
     
     // Calculate year-specific totals from actual collections data
     const yearTotals = { 2023: 0, 2024: 0, 2025: 0 };
+    let debugCounts = { 2023: 0, 2024: 0, 2025: 0 };
     
     if (Array.isArray(collections) && collections.length > 0) {
       collections.forEach((collection: any) => {
@@ -212,10 +213,13 @@ export default function ImpactDashboard() {
           // Add to year totals for 2023, 2024, and 2025
           if (year >= 2023 && year <= 2025) {
             yearTotals[year as keyof typeof yearTotals] += totalForThisCollection;
+            debugCounts[year as keyof typeof debugCounts]++;
           }
         }
       });
     }
+    
+
     
 
     
