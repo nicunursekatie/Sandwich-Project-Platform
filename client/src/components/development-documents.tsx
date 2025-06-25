@@ -30,8 +30,8 @@ const developmentDocuments: DevelopmentDocument[] = [
   },
   {
     name: "The Sandwich Project Bylaws 2024",
-    path: "/attached_assets/THE SANDWICH PROJECT BYLAWS 2024_1750869880657.docx",
-    type: "docx",
+    path: "/attached_assets/The Sandwich Project Bylaws 2024(1)_1750871081277.pdf",
+    type: "pdf",
     category: "Legal",
     description: "Official bylaws document outlining organizational structure, governance, and operational procedures"
   },
