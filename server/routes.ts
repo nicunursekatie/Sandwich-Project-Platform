@@ -2585,8 +2585,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const reportId = Date.now().toString();
       reportData.id = reportId;
       
-      // Cache the report for 24 hours
-      CacheManager.set(`report:${reportId}`, reportData, 24 * 60 * 60 * 1000);
+      // Cache the report for 24 hours using the reports cache
+      const reportsCache = CacheManager.getCache('reports', { maxSize: 100, ttl: 24 * 60 * 60 * 1000 });
+      reportsCache.set(`report:${reportId}`, reportData);
       
       res.json(reportData);
     } catch (error) {
@@ -2599,7 +2600,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/reports/download/:id', async (req, res) => {
     try {
       const reportId = req.params.id;
-      const reportData = CacheManager.get(`report:${reportId}`);
+      const reportsCache = CacheManager.getCache('reports', { maxSize: 100, ttl: 24 * 60 * 60 * 1000 });
+      const reportData = reportsCache.get(`report:${reportId}`);
       
       if (!reportData) {
         return res.status(404).json({ error: 'Report not found or expired' });
@@ -2652,7 +2654,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/reports/scheduled', async (req, res) => {
     try {
       // In production, this would fetch from database
-      const scheduledReports = CacheManager.get('scheduled_reports') || [];
+      const reportsCache = CacheManager.getCache('reports', { maxSize: 100, ttl: 24 * 60 * 60 * 1000 });
+      const scheduledReports = reportsCache.get('scheduled_reports') || [];
       res.json(scheduledReports);
     } catch (error) {
       console.error('Failed to fetch scheduled reports:', error);
