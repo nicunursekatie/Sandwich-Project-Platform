@@ -7,7 +7,7 @@ import { Download, FileText, FileSpreadsheet, File } from "lucide-react";
 interface DocumentFile {
   name: string;
   path: string;
-  type: 'pdf' | 'xlsx' | 'txt' | 'other';
+  type: 'pdf' | 'xlsx' | 'docx' | 'txt' | 'other';
   category: string;
   description?: string;
 }
@@ -54,6 +54,13 @@ const documentFiles: DocumentFile[] = [
     type: "pdf",
     category: "Resources",
     description: "Printable labels for PBJ sandwich packaging"
+  },
+  {
+    name: "Document 85",
+    path: "/documents/Doc85(1).docx",
+    type: "docx",
+    category: "Operations",
+    description: "Operational document for The Sandwich Project"
   },
   {
     name: "Sandwich Inventory List",
