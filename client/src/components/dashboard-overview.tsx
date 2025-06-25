@@ -73,14 +73,14 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
     .slice(0, 3);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-body">
       {/* Total Collections Card */}
-      <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-md p-4 text-white">
+      <div className="bg-gradient-to-r from-primary to-brand-teal rounded-lg shadow-md p-4 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-medium">Total Collections</h3>
-            <p className="text-xl font-bold">{totalCollectedSandwiches.toLocaleString()}</p>
-            <p className="text-xs text-green-100">sandwiches collected</p>
+            <h3 className="text-sm font-sub-heading">Total Collections</h3>
+            <p className="text-xl font-main-heading">{totalCollectedSandwiches.toLocaleString()}</p>
+            <p className="text-xs font-body text-white/80">sandwiches collected</p>
           </div>
           <div className="bg-white bg-opacity-20 p-2 rounded-full">
             <TrendingUp className="w-5 h-5" />
@@ -94,9 +94,9 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
 
       {/* Active Projects */}
-      <div className="bg-white rounded-lg border border-slate-200">
-        <div className="px-4 py-3 border-b border-slate-200 flex justify-between items-center">
-          <h2 className="text-base font-semibold text-slate-900">Active Projects</h2>
+      <div className="bg-card rounded-lg border border-border">
+        <div className="px-4 py-3 border-b border-border flex justify-between items-center">
+          <h2 className="text-base font-sub-heading text-primary">Active Projects</h2>
           <Button 
             variant="outline" 
             size="sm"

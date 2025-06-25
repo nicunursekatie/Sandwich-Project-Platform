@@ -141,8 +141,8 @@ export default function AnalyticsDashboard() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold mb-2">Strategic Impact Dashboard</h2>
-        <p className="text-lg text-muted-foreground">
+        <h2 className="text-3xl font-main-heading text-primary mb-2">Strategic Impact Dashboard</h2>
+        <p className="text-lg font-body text-muted-foreground">
           Celebrating achievements and identifying growth opportunities
         </p>
       </div>
