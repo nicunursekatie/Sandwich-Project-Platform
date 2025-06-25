@@ -332,6 +332,11 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
                         style={{ width: `${project.progressPercentage || 0}%` }}
                       ></div>
                     </div>
+                    {project.progressPercentage > 0 && (
+                      <div className="text-xs text-gray-500 mt-1">
+                        Based on completed tasks
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>

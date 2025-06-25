@@ -144,6 +144,7 @@ Preferred communication style: Simple, everyday language.
 - June 25, 2025: Fixed critical project management bugs: resolved field mapping issue (assignedTo -> assigneeName), added proper data transformation, improved cache invalidation, and fixed project persistence after refresh
 - June 25, 2025: Added complete project edit and delete functionality with proper form pre-population, confirmation dialogs, and cache invalidation
 - June 25, 2025: Fixed project date handling issues: resolved null date display showing "12/31/1969" and ensured edit dialog properly pre-populates date fields in correct format
+- June 25, 2025: Implemented dynamic project progress calculation: progress now automatically updates based on task completion ratios, displays real-time percentage and task counts, updates database when tasks are marked complete
 
 ## Changelog
 

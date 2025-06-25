@@ -81,10 +81,26 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     mutationFn: async ({ id, updates }: { id: number; updates: Partial<ProjectTask> }) => {
       return await apiRequest('PATCH', `/api/projects/${projectId}/tasks/${id}`, updates);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
       setEditingTask(null);
       toast({ title: "Task updated successfully" });
+      
+      // Update project progress after task status change
+      const updatedTasks = await queryClient.fetchQuery({ 
+        queryKey: ["/api/projects", projectId, "tasks"] 
+      }) as ProjectTask[];
+      
+      if (updatedTasks) {
+        const completedTasks = updatedTasks.filter(task => task.status === 'completed').length;
+        const newProgress = updatedTasks.length > 0 ? Math.round((completedTasks / updatedTasks.length) * 100) : 0;
+        
+        // Update project progress in database
+        updateProjectMutation.mutate({
+          progressPercentage: newProgress
+        });
+      }
     },
     onError: () => {
       toast({ title: "Failed to update task", variant: "destructive" });
@@ -177,6 +193,15 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       updates: { status: newStatus }
     });
   };
+
+  // Calculate project progress based on completed tasks
+  const calculateProgress = () => {
+    if (!projectTasks || projectTasks.length === 0) return 0;
+    const completedTasks = projectTasks.filter(task => task.status === 'completed').length;
+    return Math.round((completedTasks / projectTasks.length) * 100);
+  };
+
+  const currentProgress = calculateProgress();
 
   const handleEditProject = () => {
     // Format date for input field (YYYY-MM-DD)
@@ -311,9 +336,12 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-600">Completion</span>
-                <span className="font-medium text-slate-900">{project.progress || 0}%</span>
+                <span className="font-medium text-slate-900">{currentProgress}%</span>
               </div>
-              <Progress value={project.progress || 0} className="h-2" />
+              <Progress value={currentProgress} className="h-2" />
+              <div className="text-xs text-slate-500">
+                {projectTasks.filter(task => task.status === 'completed').length} of {projectTasks.length} tasks completed
+              </div>
             </div>
           </CardContent>
         </Card>
