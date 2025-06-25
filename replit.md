@@ -140,6 +140,7 @@ Preferred communication style: Simple, everyday language.
 - June 24, 2025: Completed navigation unification: all pages now use single dashboard shell with consistent top header, sidebar navigation, and content area; project details embedded within dashboard navigation
 - June 25, 2025: Updated logout functionality to redirect back to landing page instead of API logout, enabling return to public homepage with toolkit access
 - June 25, 2025: Cleaned up codebase by removing 94 temporary screenshots, test files, and documentation files to optimize project structure
+- June 25, 2025: Corrected landing page radius claim from "70+ miles" to accurate "47+ miles" based on calculated geographic coverage of host locations
 
 ## Changelog
 
