@@ -4,8 +4,7 @@ import { Heart, Users, Calendar, MessageSquare, TrendingUp, MapPin } from "lucid
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { DocumentsBrowser } from "@/components/documents-browser";
-import tspLogo from "@assets/CMYK_PRINT_TSP-01_1749585167435.png";
-import tspTransparent from "@assets/TSP_transparent_1749585167445.png";
+import tspLogo from "@assets/IMG_1646_1750868050959.png";
 
 export default function Landing() {
   const [showToolkit, setShowToolkit] = useState(false);
@@ -101,8 +100,8 @@ export default function Landing() {
             <Card className="text-center bg-white/80 backdrop-blur dark:bg-gray-800/80">
               <CardHeader>
               <img 
-                src={tspTransparent} 
-                alt="TSP Logo" 
+                src={tspLogo} 
+                alt="The Sandwich Project Logo" 
                 className="h-12 w-12 mx-auto mb-4 object-contain"
               />
               <CardTitle className="text-2xl font-bold">{totalSandwiches.toLocaleString()}</CardTitle>
