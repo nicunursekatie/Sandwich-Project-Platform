@@ -419,7 +419,7 @@ export default function ProjectList() {
             <Button
               onClick={() => setShowAddForm(!showAddForm)}
               size="sm"
-              className="bg-teal-600 hover:bg-teal-700 text-white"
+              className="btn-tsp-primary text-white"
             >
               <Plus className="w-4 h-4 mr-1" />
               Add Project
