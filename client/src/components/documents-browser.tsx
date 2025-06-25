@@ -113,6 +113,7 @@ const getCategoryColor = (category: string) => {
 
 export function DocumentsBrowser() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [previewDocument, setPreviewDocument] = useState<DocumentFile | null>(null);
 
   const categories = ['All', ...Array.from(new Set(documentFiles.map(doc => doc.category)))];
   
