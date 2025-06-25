@@ -79,7 +79,7 @@ export default function Landing() {
             to make a lasting impact one sandwich at a time.
           </p>
           <div className="flex gap-4 justify-center">
-            <Button onClick={handleLogin} size="lg" className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={handleLogin} size="lg" className="bg-teal-600 hover:bg-teal-700">
               Our Team
             </Button>
             <Button 
