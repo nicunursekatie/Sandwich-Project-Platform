@@ -253,11 +253,7 @@ export default function Dashboard() {
                 <AnalyticsDashboard />
               </TabsContent>
               <TabsContent value="impact" className="mt-6">
-                <iframe 
-                  src="/impact" 
-                  className="w-full h-screen border-0 rounded-lg bg-white"
-                  title="Impact Dashboard"
-                />
+                <ImpactDashboard />
               </TabsContent>
             </Tabs>
           </div>

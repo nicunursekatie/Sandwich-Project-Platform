@@ -178,15 +178,15 @@ export default function Landing() {
           <CardContent>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">1.85M+</div>
-                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Sandwiches Served</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">total impact since inception</div>
-                <div className="text-xs text-gray-500 dark:text-gray-500 mt-1 italic">Source: Database collection records</div>
+                <div className="text-2xl font-bold text-blue-600">1.08M+</div>
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Verified Sandwiches</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">2023-2025 weekly data confirmed</div>
+                <div className="text-xs text-gray-500 dark:text-gray-500 mt-1 italic">Source: Official weekly breakdown records</div>
               </div>
               <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">382K</div>
+                <div className="text-2xl font-bold text-purple-600">449K</div>
                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Peak Year Output</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">highest annual total achieved (2022)</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">2024 verified weekly totals</div>
               </div>
               <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
                 <div className="text-2xl font-bold text-red-600">47+</div>
