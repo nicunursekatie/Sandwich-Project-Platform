@@ -79,7 +79,10 @@ export function DevelopmentDocuments() {
     const link = document.createElement('a');
     link.href = path;
     link.download = name;
+    link.target = '_blank';
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   };
 
   const handlePreview = (doc: DevelopmentDocument) => {
