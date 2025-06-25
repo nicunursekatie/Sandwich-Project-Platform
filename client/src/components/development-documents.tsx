@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, FileText, FileSpreadsheet, File } from "lucide-react";
+import { Download, FileText, Eye, ExternalLink } from "lucide-react";
 import { DocumentPreview } from "./document-preview";
 
-interface DocumentFile {
+interface DevelopmentDocument {
   name: string;
   path: string;
   type: 'pdf' | 'xlsx' | 'docx' | 'txt' | 'other';
@@ -13,56 +13,20 @@ interface DocumentFile {
   description?: string;
 }
 
-const documentFiles: DocumentFile[] = [
+const developmentDocuments: DevelopmentDocument[] = [
   {
-    name: "Summer Food Safety Guidelines",
-    path: "/documents/Doc85(1).docx",
-    type: "docx",
-    category: "Safety",
-    description: "Important summer food safety guidelines for home hosts"
-  },
-  {
-    name: "Food Safety Volunteers Guide",
-    path: "/documents/20230525-TSP-Food Safety Volunteers.pdf",
+    name: "Articles of Incorporation",
+    path: "/documents/Articles of Incorporation.pdf",
     type: "pdf",
-    category: "Training",
-    description: "Essential food safety guidelines for all volunteers"
+    category: "Legal",
+    description: "Official Articles of Incorporation for The Sandwich Project"
   },
   {
-    name: "Deli Sandwich Making 101",
-    path: "/documents/20240622-TSP-Deli Sandwich Making 101.pdf", 
+    name: "IRS Tax Exempt Letter",
+    path: "/documents/IRS Tax Exempt Letter.pdf",
     type: "pdf",
-    category: "Training",
-    description: "Step-by-step guide for preparing deli sandwiches"
-  },
-  {
-    name: "PBJ Sandwich Making 101",
-    path: "/documents/20250622-TSP-PBJ Sandwich Making 101.pdf",
-    type: "pdf", 
-    category: "Training",
-    description: "Instructions for peanut butter and jelly sandwich preparation"
-  },
-
-  {
-    name: "Deli Labels",
-    path: "/documents/Deli labels.pdf",
-    type: "pdf",
-    category: "Resources",
-    description: "Printable labels for deli sandwich packaging"
-  },
-  {
-    name: "PBJ Labels", 
-    path: "/documents/Pbj labels.pdf",
-    type: "pdf",
-    category: "Resources",
-    description: "Printable labels for PBJ sandwich packaging"
-  },
-  {
-    name: "Sandwich Inventory List",
-    path: "/documents/TSP Sandwich Inventory List for 3 ozs.xlsx",
-    type: "xlsx",
-    category: "Operations",
-    description: "Inventory tracking spreadsheet for 3oz sandwich portions"
+    category: "Legal",
+    description: "IRS Tax Exempt determination letter containing EIN"
   }
 ];
 
@@ -71,78 +35,71 @@ const getFileIcon = (type: string) => {
     case 'pdf':
       return <FileText className="h-5 w-5 text-red-500" />;
     case 'xlsx':
-      return <FileSpreadsheet className="h-5 w-5 text-green-500" />;
+      return <FileText className="h-5 w-5 text-green-500" />;
     case 'docx':
       return <FileText className="h-5 w-5 text-blue-500" />;
     case 'txt':
-      return <File className="h-5 w-5 text-gray-500" />;
+      return <FileText className="h-5 w-5 text-gray-500" />;
     default:
-      return <File className="h-5 w-5 text-gray-500" />;
+      return <FileText className="h-5 w-5 text-gray-500" />;
   }
 };
 
 const getCategoryColor = (category: string) => {
   switch (category) {
-    case 'Training':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
     case 'Legal':
       return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
-    case 'Resources':
+    case 'Governance':
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+    case 'Financial':
       return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-    case 'Operations':
-      return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300';
-    case 'Safety':
-      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
     default:
       return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
   }
 };
 
-export function DocumentsBrowser() {
+export function DevelopmentDocuments() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [previewDocument, setPreviewDocument] = useState<DocumentFile | null>(null);
+  const [previewDocument, setPreviewDocument] = useState<DevelopmentDocument | null>(null);
 
-  const categories = ['All', ...Array.from(new Set(documentFiles.map(doc => doc.category)))];
+  const categories = ['All', ...Array.from(new Set(developmentDocuments.map(doc => doc.category)))];
   
   const filteredDocs = selectedCategory === 'All' 
-    ? documentFiles 
-    : documentFiles.filter(doc => doc.category === selectedCategory);
+    ? developmentDocuments 
+    : developmentDocuments.filter(doc => doc.category === selectedCategory);
 
   const handleDownload = (path: string, name: string) => {
-    // Create a temporary link and trigger download
     const link = document.createElement('a');
     link.href = path;
     link.download = name;
-    link.target = '_blank';
-    document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+  };
+
+  const handlePreview = (doc: DevelopmentDocument) => {
+    setPreviewDocument(doc);
+  };
+
+  const handleOpenInNewTab = (path: string) => {
+    window.open(path, '_blank');
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Document Library</h2>
-          <p className="text-muted-foreground">
-            Training materials, forms, and resources for The Sandwich Project
-          </p>
-        </div>
-        
-        <div className="flex flex-wrap gap-2">
-          {categories.map((category) => (
-            <Button
-              key={category}
-              variant={selectedCategory === category ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </Button>
-          ))}
-        </div>
+      {/* Category Filter */}
+      <div className="flex flex-wrap gap-2">
+        {categories.map((category) => (
+          <Button
+            key={category}
+            variant={selectedCategory === category ? "default" : "outline"}
+            size="sm"
+            onClick={() => setSelectedCategory(category)}
+          >
+            {category}
+          </Button>
+        ))}
       </div>
 
+      {/* Document Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredDocs.map((doc, index) => (
           <Card key={index} className="hover:shadow-md transition-shadow">
@@ -165,11 +122,12 @@ export function DocumentsBrowser() {
             <CardContent className="pt-0">
               <div className="flex gap-2">
                 <Button 
-                  onClick={() => setPreviewDocument(doc)}
+                  onClick={() => handlePreview(doc)}
                   className="flex-1"
                   variant="outline"
                   size="sm"
                 >
+                  <Eye className="h-4 w-4 mr-2" />
                   Preview
                 </Button>
                 <Button 
@@ -181,6 +139,15 @@ export function DocumentsBrowser() {
                   Download
                 </Button>
               </div>
+              <Button 
+                onClick={() => handleOpenInNewTab(doc.path)}
+                className="w-full mt-2"
+                variant="ghost"
+                size="sm"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Open in New Tab
+              </Button>
             </CardContent>
           </Card>
         ))}

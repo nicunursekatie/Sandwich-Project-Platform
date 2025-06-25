@@ -1,5 +1,5 @@
 import { Building2 } from "lucide-react";
-import { DocumentsBrowser } from "@/components/documents-browser";
+import { DevelopmentDocuments } from "@/components/development-documents";
 
 export default function Development() {
   return (
@@ -17,7 +17,7 @@ export default function Development() {
         </div>
 
         <div className="max-w-6xl">
-          <DocumentsBrowser />
+          <DevelopmentDocuments />
         </div>
       </div>
     </div>
