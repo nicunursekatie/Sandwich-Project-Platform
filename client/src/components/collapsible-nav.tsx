@@ -89,7 +89,7 @@ export function CollapsibleNav() {
                 <li key={item.id}>
                   <button
                     onClick={() => toggleSection(item.id)}
-                    className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors text-foreground hover:bg-muted hover:text-primary"
                   >
                     <div className="flex items-center space-x-3">
                       <Icon className="w-5 h-5" />
