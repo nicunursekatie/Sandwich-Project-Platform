@@ -126,8 +126,8 @@ export default function Dashboard() {
                 <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Group Toolkit</h1>
-                <p className="text-gray-600 dark:text-gray-300">Essential training documents and resources</p>
+                <h1 className="text-2xl font-main-heading text-primary dark:text-secondary">Group Toolkit</h1>
+                <p className="font-body text-muted-foreground">Essential training documents and resources</p>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -241,8 +241,8 @@ export default function Dashboard() {
         return (
           <div className="p-6">
             <div className="mb-6">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Analytics Dashboard</h1>
-              <p className="text-gray-600 dark:text-gray-300">Data insights and impact visualization</p>
+              <h1 className="text-2xl font-main-heading text-primary dark:text-secondary">Analytics Dashboard</h1>
+              <p className="font-body text-muted-foreground">Data insights and impact visualization</p>
             </div>
             <Tabs defaultValue="data" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
