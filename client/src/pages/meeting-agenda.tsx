@@ -9,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar, Clock, ListTodo, Plus, Edit, Trash2, CheckCircle2, Circle } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { CollapsibleNav } from "@/components/collapsible-nav";
 
 interface AgendaItem {
   id: number;
@@ -109,15 +108,10 @@ export default function MeetingAgenda() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <CollapsibleNav />
-        <div className="lg:ml-16 transition-all duration-300">
-          <div className="max-w-7xl mx-auto p-6">
-            <div className="animate-pulse space-y-4">
-              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
-              <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
-            </div>
-          </div>
+      <div className="space-y-6">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+          <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
         </div>
       </div>
     );
@@ -127,21 +121,23 @@ export default function MeetingAgenda() {
   const completedItems = agendaItems.filter((item: AgendaItem) => item.status === "completed").length;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <CollapsibleNav />
-      <div className="lg:ml-16 transition-all duration-300">
-        <div className="max-w-7xl mx-auto p-6 space-y-6">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Meeting Agenda</h1>
-              <p className="text-gray-600 dark:text-gray-400">Plan and organize meeting topics and discussions</p>
-            </div>
-            <Button onClick={() => setIsCreating(true)} className="self-start">
-              <Plus className="w-4 h-4 mr-2" />
-              New Agenda Item
-            </Button>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-xl">
+            <ListTodo className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Meeting Agenda</h1>
+            <p className="text-gray-600 dark:text-gray-400">Plan and organize meeting topics and discussions</p>
+          </div>
+        </div>
+        <Button onClick={() => setIsCreating(true)} className="self-start">
+          <Plus className="w-4 h-4 mr-2" />
+          New Agenda Item
+        </Button>
+      </div>
 
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -323,8 +319,6 @@ export default function MeetingAgenda() {
               </CardContent>
             </Card>
           )}
-        </div>
-      </div>
     </div>
   );
 }
