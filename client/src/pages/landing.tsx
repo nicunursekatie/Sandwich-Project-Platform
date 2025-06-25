@@ -189,9 +189,9 @@ export default function Landing() {
                 <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">highest annual total achieved (2022)</div>
               </div>
               <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
-                <div className="text-2xl font-bold text-red-600">Statewide</div>
-                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Georgia Coverage</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">serving communities across Georgia</div>
+                <div className="text-2xl font-bold text-red-600">47+</div>
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Mile Radius</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">verified geographic coverage</div>
               </div>
             </div>
             <div className="mt-6 text-center">
