@@ -59,7 +59,7 @@ export default function ImpactDashboard() {
     }> = {};
     
     collections.forEach((collection: any) => {
-      const collectionDate = collection.collectionDate || collection.collection_date;
+      const collectionDate = collection.collection_date || collection.collectionDate;
       if (collectionDate) {
         const date = new Date(collectionDate);
         const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
@@ -73,16 +73,27 @@ export default function ImpactDashboard() {
           };
         }
         
-        // Handle both database field names
-        const sandwichCount = collection.individualSandwiches || collection.individual_sandwiches || 0;
-        const groupCount = collection.groupCollections ? 
-          (typeof collection.groupCollections === 'string' ? 
-            parseInt(collection.groupCollections) || 0 : 
-            collection.groupCollections) : 0;
+        // Use correct database field names
+        const individualCount = collection.individual_sandwiches || 0;
+        let groupCount = 0;
         
-        monthlyData[monthKey].sandwiches += sandwichCount + groupCount;
+        // Handle group_collections properly
+        if (collection.group_collections && collection.group_collections !== '[]') {
+          try {
+            const groupData = typeof collection.group_collections === 'string' 
+              ? JSON.parse(collection.group_collections) 
+              : collection.group_collections;
+            if (Array.isArray(groupData)) {
+              groupCount = groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
+            }
+          } catch (e) {
+            groupCount = 0;
+          }
+        }
+        
+        monthlyData[monthKey].sandwiches += individualCount + groupCount;
         monthlyData[monthKey].collections += 1;
-        const hostName = collection.hostName || collection.host_name;
+        const hostName = collection.host_name || collection.hostName;
         if (hostName) {
           monthlyData[monthKey].hosts.add(hostName);
         }
@@ -122,7 +133,7 @@ export default function ImpactDashboard() {
     }> = {};
     
     collections.forEach((collection: any) => {
-      const hostName = collection.hostName || collection.host_name || 'Unknown';
+      const hostName = collection.host_name || collection.hostName || 'Unknown';
       
       if (!hostData[hostName]) {
         hostData[hostName] = {
@@ -133,14 +144,25 @@ export default function ImpactDashboard() {
         };
       }
       
-      // Handle both database field names
-      const sandwichCount = collection.individualSandwiches || collection.individual_sandwiches || 0;
-      const groupCount = collection.groupCollections ? 
-        (typeof collection.groupCollections === 'string' ? 
-          parseInt(collection.groupCollections) || 0 : 
-          collection.groupCollections) : 0;
+      // Use correct database field names
+      const individualCount = collection.individual_sandwiches || 0;
+      let groupCount = 0;
       
-      hostData[hostName].totalSandwiches += sandwichCount + groupCount;
+      // Handle group_collections properly
+      if (collection.group_collections && collection.group_collections !== '[]') {
+        try {
+          const groupData = typeof collection.group_collections === 'string' 
+            ? JSON.parse(collection.group_collections) 
+            : collection.group_collections;
+          if (Array.isArray(groupData)) {
+            groupCount = groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
+          }
+        } catch (e) {
+          groupCount = 0;
+        }
+      }
+      
+      hostData[hostName].totalSandwiches += individualCount + groupCount;
       hostData[hostName].totalCollections += 1;
     });
 
@@ -151,7 +173,7 @@ export default function ImpactDashboard() {
   };
 
   const calculateImpactMetrics = () => {
-    // Use actual collections log data
+    // Use actual collections log data with correct field names
     const totalSandwiches = (stats as any)?.totalSandwiches || 0;
     const totalCollections = collections?.length || 0;
     const uniqueHosts = Array.isArray(hosts) ? hosts.length : 0;
@@ -161,16 +183,29 @@ export default function ImpactDashboard() {
     
     if (Array.isArray(collections)) {
       collections.forEach((collection: any) => {
-        const collectionDate = collection.collectionDate || collection.collection_date;
+        const collectionDate = collection.collection_date || collection.collectionDate;
         if (collectionDate) {
           const year = new Date(collectionDate).getFullYear();
           if (yearTotals[year as keyof typeof yearTotals] !== undefined) {
-            const sandwichCount = (collection.individualSandwiches || collection.individual_sandwiches || 0) +
-              (collection.groupCollections ? 
-                (typeof collection.groupCollections === 'string' ? 
-                  parseInt(collection.groupCollections) || 0 : 
-                  collection.groupCollections) : 0);
-            yearTotals[year as keyof typeof yearTotals] += sandwichCount;
+            // Use correct database field names
+            const individualCount = collection.individual_sandwiches || 0;
+            let groupCount = 0;
+            
+            // Handle group_collections which can be JSON string or array
+            if (collection.group_collections && collection.group_collections !== '[]') {
+              try {
+                const groupData = typeof collection.group_collections === 'string' 
+                  ? JSON.parse(collection.group_collections) 
+                  : collection.group_collections;
+                if (Array.isArray(groupData)) {
+                  groupCount = groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
+                }
+              } catch (e) {
+                groupCount = 0;
+              }
+            }
+            
+            yearTotals[year as keyof typeof yearTotals] += individualCount + groupCount;
           }
         }
       });
