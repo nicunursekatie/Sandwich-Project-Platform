@@ -603,6 +603,83 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Project Edit Dialog */}
+      <Dialog open={isEditingProject} onOpenChange={setIsEditingProject}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Project</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-project-title">Title</Label>
+              <Input
+                id="edit-project-title"
+                value={editProject.title}
+                onChange={(e) => setEditProject({ ...editProject, title: e.target.value })}
+                placeholder="Enter project title"
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-project-description">Description</Label>
+              <Textarea
+                id="edit-project-description"
+                value={editProject.description}
+                onChange={(e) => setEditProject({ ...editProject, description: e.target.value })}
+                placeholder="Enter project description"
+                rows={3}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="edit-project-priority">Priority</Label>
+                <Select value={editProject.priority} onValueChange={(value) => setEditProject({ ...editProject, priority: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-project-assignee">Assigned To</Label>
+                <Input
+                  id="edit-project-assignee"
+                  value={editProject.assigneeName}
+                  onChange={(e) => setEditProject({ ...editProject, assigneeName: e.target.value })}
+                  placeholder="Enter assignee name"
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="edit-project-due">Due Date</Label>
+              <Input
+                id="edit-project-due"
+                type="date"
+                value={editProject.dueDate}
+                onChange={(e) => setEditProject({ ...editProject, dueDate: e.target.value })}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsEditingProject(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleUpdateProject}
+                disabled={updateProjectMutation.isPending}
+              >
+                {updateProjectMutation.isPending ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
