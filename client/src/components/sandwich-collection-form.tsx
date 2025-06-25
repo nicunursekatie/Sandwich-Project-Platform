@@ -193,9 +193,11 @@ export default function SandwichCollectionForm() {
     <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
       <div className="px-6 py-4 border-b border-slate-200">
         <h2 className="text-lg font-semibold text-slate-900 flex items-center">
-          <div className="mr-2 w-5 h-5 bg-orange-500 rounded flex items-center justify-center text-white text-xs font-bold">
-            TSP
-          </div>
+          <img 
+            src="/tsp-logo.png" 
+            alt="The Sandwich Project Logo" 
+            className="mr-2 w-5 h-5 object-contain"
+          />
           Submit Collection
         </h2>
         <p className="text-sm text-slate-500 mt-1">

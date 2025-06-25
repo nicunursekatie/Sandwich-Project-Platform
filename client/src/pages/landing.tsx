@@ -99,9 +99,11 @@ export default function Landing() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <Card className="text-center bg-white/80 backdrop-blur dark:bg-gray-800/80">
               <CardHeader>
-              <div className="h-12 w-12 mx-auto mb-4 bg-orange-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
-                TSP
-              </div>
+              <img 
+                src="/tsp-logo.png" 
+                alt="The Sandwich Project Logo" 
+                className="h-12 w-12 mx-auto mb-4 object-contain"
+              />
               <CardTitle className="text-2xl font-bold">{totalSandwiches.toLocaleString()}</CardTitle>
               <CardDescription className="font-semibold">Sandwiches Delivered</CardDescription>
             </CardHeader>

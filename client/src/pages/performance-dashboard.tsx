@@ -152,9 +152,7 @@ export default function PerformanceDashboard() {
         <div className="bg-white border-b border-slate-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-orange-500 rounded flex items-center justify-center text-white text-sm font-bold">
-                TSP
-              </div>
+              <img src="/tsp-logo.png" alt="The Sandwich Project Logo" className="w-8 h-8 object-contain" />
               <span className="text-xl font-semibold text-slate-900">The Sandwich Project</span>
             </div>
             <Button variant="ghost" size="sm">
@@ -195,9 +193,7 @@ export default function PerformanceDashboard() {
       <div className="bg-white border-b border-slate-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-orange-500 rounded flex items-center justify-center text-white text-sm font-bold">
-              TSP
-            </div>
+            <img src="/tsp-logo.png" alt="The Sandwich Project Logo" className="w-8 h-8 object-contain" />
             <span className="text-xl font-semibold text-slate-900">The Sandwich Project</span>
           </div>
           <Button variant="ghost" size="sm">
