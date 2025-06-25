@@ -151,35 +151,38 @@ export default function ImpactDashboard() {
   };
 
   const calculateImpactMetrics = () => {
-    // Using verified weekly breakdown data from official documents
-    const verified2023 = 438876;
-    const verified2024 = 449643; // Peak year
-    const verified2025YTD = 193674;
-    const totalVerified = verified2023 + verified2024 + verified2025YTD; // 1,082,193
-    
+    // Use actual collections log data
+    const totalSandwiches = (stats as any)?.totalSandwiches || 0;
     const totalCollections = collections?.length || 0;
     const uniqueHosts = Array.isArray(hosts) ? hosts.length : 0;
     
-    // Impact calculations based on verified totals
-    const estimatedMealsServed = totalVerified;
-    const estimatedPeopleHelped = Math.round(totalVerified * 0.75); // 3/4 sandwiches per person
-    const estimatedVolunteerHours = Math.round(totalVerified * 0.15); // 15 minutes per sandwich
-    const estimatedFoodValue = Math.round(totalVerified * 4.50); // $4.50 per sandwich
+    // Calculate year-specific totals from actual collections data
+    const yearTotals = { 2023: 0, 2024: 0, 2025: 0 };
+    
+    if (Array.isArray(collections)) {
+      collections.forEach((collection: any) => {
+        const collectionDate = collection.collectionDate || collection.collection_date;
+        if (collectionDate) {
+          const year = new Date(collectionDate).getFullYear();
+          if (yearTotals[year as keyof typeof yearTotals] !== undefined) {
+            const sandwichCount = (collection.individualSandwiches || collection.individual_sandwiches || 0) +
+              (collection.groupCollections ? 
+                (typeof collection.groupCollections === 'string' ? 
+                  parseInt(collection.groupCollections) || 0 : 
+                  collection.groupCollections) : 0);
+            yearTotals[year as keyof typeof yearTotals] += sandwichCount;
+          }
+        }
+      });
+    }
     
     return {
-      totalSandwiches: totalVerified,
-      year2023Total: verified2023,
-      year2024Total: verified2024,
-      year2025YTD: verified2025YTD,
+      totalSandwiches,
+      year2023Total: yearTotals[2023],
+      year2024Total: yearTotals[2024],
+      year2025YTD: yearTotals[2025],
       totalCollections,
-      uniqueHosts,
-      estimatedMealsServed,
-      estimatedPeopleHelped,
-      estimatedVolunteerHours,
-      estimatedFoodValue,
-      weeklyAverage2023: 8778,
-      weeklyAverage2024: 8993,
-      weeklyAverage2025: 8421
+      uniqueHosts
     };
   };
 
@@ -209,7 +212,7 @@ export default function ImpactDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">{impactMetrics.totalSandwiches?.toLocaleString()}</div>
-              <p className="text-blue-100 text-sm">2023-2025 weekly data confirmed</p>
+              <p className="text-blue-100 text-sm">From collections log database</p>
             </CardContent>
           </Card>
 
@@ -217,38 +220,38 @@ export default function ImpactDashboard() {
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium flex items-center">
                 <Users className="w-5 h-5 mr-2" />
-                People Helped
+                Active Hosts
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{impactMetrics.estimatedPeopleHelped?.toLocaleString()}</div>
-              <p className="text-green-100 text-sm">Estimated individuals served</p>
+              <div className="text-3xl font-bold">{impactMetrics.uniqueHosts}</div>
+              <p className="text-green-100 text-sm">Collection locations</p>
             </CardContent>
           </Card>
 
           <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium flex items-center">
-                <Clock className="w-5 h-5 mr-2" />
-                Volunteer Hours
+                <Calendar className="w-5 h-5 mr-2" />
+                2024 Peak Year
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{impactMetrics.estimatedVolunteerHours?.toLocaleString()}</div>
-              <p className="text-purple-100 text-sm">Community volunteer time</p>
+              <div className="text-3xl font-bold">{impactMetrics.year2024Total?.toLocaleString()}</div>
+              <p className="text-purple-100 text-sm">2024 collections total</p>
             </CardContent>
           </Card>
 
           <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium flex items-center">
-                <DollarSign className="w-5 h-5 mr-2" />
-                Food Value
+                <TrendingUp className="w-5 h-5 mr-2" />
+                2025 Progress
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">${impactMetrics.estimatedFoodValue?.toLocaleString()}</div>
-              <p className="text-orange-100 text-sm">Estimated value provided</p>
+              <div className="text-3xl font-bold">{impactMetrics.year2025YTD?.toLocaleString()}</div>
+              <p className="text-orange-100 text-sm">Year-to-date total</p>
             </CardContent>
           </Card>
         </div>
@@ -444,12 +447,12 @@ export default function ImpactDashboard() {
                 <CardContent className="space-y-6">
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">2024 Peak Year Achievement</span>
-                      <span className="font-bold">{impactMetrics.year2024Total?.toLocaleString()}</span>
+                      <span className="text-gray-600">Database Collections</span>
+                      <span className="font-bold">{impactMetrics.totalCollections?.toLocaleString()}</span>
                     </div>
-                    <Progress value={100} className="h-3" />
+                    <Progress value={Math.min((impactMetrics.totalCollections / 2000) * 100, 100)} className="h-3" />
                     <p className="text-xs text-gray-500 mt-1">
-                      Highest annual total with {impactMetrics.weeklyAverage2024} weekly average
+                      Total collection entries recorded
                     </p>
                   </div>
 
@@ -487,9 +490,9 @@ export default function ImpactDashboard() {
                     <div className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg">
                       <Heart className="w-5 h-5 text-green-600 mt-1" />
                       <div>
-                        <p className="font-medium text-green-900">Meals Provided</p>
+                        <p className="font-medium text-green-900">Sandwiches Provided</p>
                         <p className="text-sm text-green-700">
-                          Over {impactMetrics.estimatedMealsServed?.toLocaleString()} meals delivered to community members in need
+                          {impactMetrics.totalSandwiches?.toLocaleString()} sandwiches delivered to community members in need
                         </p>
                       </div>
                     </div>
@@ -505,21 +508,21 @@ export default function ImpactDashboard() {
                     </div>
 
                     <div className="flex items-start space-x-3 p-3 bg-purple-50 rounded-lg">
-                      <Clock className="w-5 h-5 text-purple-600 mt-1" />
+                      <Calendar className="w-5 h-5 text-purple-600 mt-1" />
                       <div>
-                        <p className="font-medium text-purple-900">Volunteer Dedication</p>
+                        <p className="font-medium text-purple-900">Collection Records</p>
                         <p className="text-sm text-purple-700">
-                          {impactMetrics.estimatedVolunteerHours?.toLocaleString()} hours of community service contributed
+                          {impactMetrics.totalCollections?.toLocaleString()} collection events documented
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg">
-                      <DollarSign className="w-5 h-5 text-orange-600 mt-1" />
+                      <TrendingUp className="w-5 h-5 text-orange-600 mt-1" />
                       <div>
-                        <p className="font-medium text-orange-900">Economic Impact</p>
+                        <p className="font-medium text-orange-900">2025 Progress</p>
                         <p className="text-sm text-orange-700">
-                          ${impactMetrics.estimatedFoodValue?.toLocaleString()} worth of food assistance provided to the community
+                          {impactMetrics.year2025YTD?.toLocaleString()} sandwiches collected year-to-date
                         </p>
                       </div>
                     </div>
