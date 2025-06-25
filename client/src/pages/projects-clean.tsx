@@ -183,37 +183,41 @@ export default function ProjectsClean() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 flex items-center">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center">
             <img src={sandwichLogo} alt="Sandwich Logo" className="w-6 h-6 mr-2" />
             Project Management
           </h2>
-          <p className="text-slate-600 mt-1">Organize and track all team projects</p>
+          <p className="text-slate-600 mt-1 text-sm sm:text-base">Organize and track all team projects</p>
         </div>
-        <Button onClick={() => setLocation("/projects/new")} disabled={!canEdit}>
+        <Button onClick={() => setLocation("/projects/new")} disabled={!canEdit} className="w-full sm:w-auto">
           <Plus className="w-4 h-4 mr-2" />
           New Project
         </Button>
       </div>
 
       <Tabs defaultValue="active" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="active" className="flex items-center gap-2">
-            <Play className="w-4 h-4" />
-            Active ({activeProjects.length})
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
+          <TabsTrigger value="active" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <Play className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Active</span>
+            <span className="sm:hidden">Act</span> ({activeProjects.length})
           </TabsTrigger>
-          <TabsTrigger value="available" className="flex items-center gap-2">
-            <Circle className="w-4 h-4" />
-            Available ({availableProjects.length})
+          <TabsTrigger value="available" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <Circle className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Available</span>
+            <span className="sm:hidden">Avail</span> ({availableProjects.length})
           </TabsTrigger>
-          <TabsTrigger value="waiting" className="flex items-center gap-2">
-            <Pause className="w-4 h-4" />
-            Waiting ({waitingProjects.length})
+          <TabsTrigger value="waiting" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <Pause className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Waiting</span>
+            <span className="sm:hidden">Wait</span> ({waitingProjects.length})
           </TabsTrigger>
-          <TabsTrigger value="completed" className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4" />
-            Completed ({completedProjects.length})
+          <TabsTrigger value="completed" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Completed</span>
+            <span className="sm:hidden">Done</span> ({completedProjects.length})
           </TabsTrigger>
         </TabsList>
         

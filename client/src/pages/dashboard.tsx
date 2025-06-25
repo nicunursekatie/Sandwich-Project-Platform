@@ -1,4 +1,4 @@
-import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone, ChevronDown, ChevronRight } from "lucide-react";
+import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone, ChevronDown, ChevronRight, Menu, X } from "lucide-react";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectList from "@/components/project-list";
@@ -37,6 +37,7 @@ import { queryClient } from "@/lib/queryClient";
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
 
   // Make setActiveSection available globally for embedded components
@@ -293,12 +294,20 @@ export default function Dashboard() {
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col">
       {/* Top Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center">
+      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-3">
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
           <img src={sandwichLogo} alt="Sandwich Logo" className="w-6 h-6" />
-          <h1 className="text-lg font-semibold text-slate-900">The Sandwich Project</h1>
+          <h1 className="text-lg font-semibold text-slate-900 hidden sm:block">The Sandwich Project</h1>
+          <h1 className="text-sm font-semibold text-slate-900 sm:hidden">TSP</h1>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <button
             onClick={() => setActiveSection("messages")}
             className={`p-2 rounded-lg transition-colors ${
@@ -315,19 +324,29 @@ export default function Dashboard() {
               queryClient.clear();
               window.location.href = "/";
             }}
-            className="flex items-center space-x-2 px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors"
+            className="flex items-center space-x-2 px-2 sm:px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            <span className="text-sm">Logout</span>
+            <span className="text-sm hidden sm:block">Logout</span>
           </button>
         </div>
       </div>
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 relative">
+        {/* Mobile overlay */}
+        {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+        
         {/* Sidebar */}
-        <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+        <div className={`${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        } md:translate-x-0 fixed md:relative z-50 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out h-full`}>
           {/* Navigation */}
-          <nav className="flex-1 p-4">
+          <nav className="flex-1 p-4 overflow-y-auto">
             <ul className="space-y-2">
               {filteredNavigation.map((item) => {
                 const Icon = item.icon;

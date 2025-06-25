@@ -887,7 +887,7 @@ export default function SandwichCollectionLog() {
   return (
     <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
       <div className="px-6 py-4 border-b border-slate-200">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold text-slate-900 flex items-center">
               <img src={sandwichLogo} alt="Sandwich Logo" className="mr-2 w-5 h-5" />
@@ -899,7 +899,7 @@ export default function SandwichCollectionLog() {
             onClick={() => setShowDataManagement(true)}
             variant="outline"
             size="sm"
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 w-full sm:w-auto"
           >
             <Database className="w-4 h-4" />
             <span>Data Management</span>
@@ -908,28 +908,28 @@ export default function SandwichCollectionLog() {
       </div>
       
       <div className="px-6 py-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
             <p className="text-sm text-slate-500">{totalItems} total entries</p>
             {totalStats && (
-              <div className="flex items-center space-x-4 text-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4 text-sm">
                 <span className="text-slate-600">
                   <span className="font-medium text-amber-600">{totalStats.completeTotalSandwiches.toLocaleString()}</span> total sandwiches
                 </span>
-                <span className="text-slate-400">|</span>
+                <span className="text-slate-400 hidden sm:inline">|</span>
                 <span className="text-slate-500">
                   {totalStats.individualSandwiches.toLocaleString()} individual + {totalStats.groupSandwiches.toLocaleString()} group
                 </span>
               </div>
             )}
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
               <DialogTrigger asChild>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex items-center space-x-1"
+                  className="flex items-center space-x-1 w-full sm:w-auto"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Collection</span>
@@ -1056,7 +1056,7 @@ export default function SandwichCollectionLog() {
               variant="outline"
               size="sm"
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center space-x-1"
+              className="flex items-center space-x-1 w-full sm:w-auto"
             >
               <Filter className="w-4 h-4" />
               <span>Filter</span>
@@ -1156,43 +1156,45 @@ export default function SandwichCollectionLog() {
               />
             </div>
           </div>
-          <div className="flex items-center justify-between mt-4">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-4 gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
               <div className="text-sm text-slate-600">
                 Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} entries
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
                 <Label className="text-sm font-medium text-slate-700">Sort by:</Label>
-                <Select
-                  value={sortConfig.field}
-                  onValueChange={(value) => handleSortChange(value as keyof SandwichCollection)}
-                >
-                  <SelectTrigger className="w-40">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="collectionDate">Collection Date</SelectItem>
-                    <SelectItem value="hostName">Host Name</SelectItem>
-                    <SelectItem value="individualSandwiches">Sandwich Count</SelectItem>
-                    <SelectItem value="submittedAt">Created Date</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSortDirectionChange}
-                  className="flex items-center space-x-1"
-                >
-                  {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                  <span>{sortConfig.direction === 'asc' ? 'Asc' : 'Desc'}</span>
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Select
+                    value={sortConfig.field}
+                    onValueChange={(value) => handleSortChange(value as keyof SandwichCollection)}
+                  >
+                    <SelectTrigger className="w-full sm:w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="collectionDate">Collection Date</SelectItem>
+                      <SelectItem value="hostName">Host Name</SelectItem>
+                      <SelectItem value="individualSandwiches">Sandwich Count</SelectItem>
+                      <SelectItem value="submittedAt">Created Date</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSortDirectionChange}
+                    className="flex items-center space-x-1"
+                  >
+                    {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                    <span className="hidden sm:inline">{sortConfig.direction === 'asc' ? 'Asc' : 'Desc'}</span>
+                  </Button>
+                </div>
               </div>
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={handleClearFilters}
-              className="flex items-center space-x-1"
+              className="flex items-center space-x-1 w-full sm:w-auto"
             >
               <X className="w-4 h-4" />
               <span>Clear Filters</span>
