@@ -955,12 +955,12 @@ export default function PhoneDirectory() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Hosts</p>
-                <p className="text-2xl font-bold">{hosts.length}</p>
+                <p className="text-2xl font-bold">{filteredHosts.length}</p>
               </div>
               <Users className="w-8 h-8 text-blue-500" />
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              {hosts.filter(h => h.contacts.length > 0).length} with contacts
+              {filteredHosts.filter(h => h.contacts.length > 0).length} with contacts
             </p>
           </CardContent>
         </Card>
