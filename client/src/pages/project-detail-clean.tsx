@@ -174,7 +174,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     const newStatus = task.status === 'completed' ? 'pending' : 'completed';
     updateTaskMutation.mutate({
       id: task.id,
-      updates: { ...task, status: newStatus }
+      updates: { status: newStatus }
     });
   };
 
