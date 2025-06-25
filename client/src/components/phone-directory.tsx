@@ -970,12 +970,12 @@ export default function PhoneDirectory() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Recipients</p>
-                <p className="text-2xl font-bold">{recipients.length}</p>
+                <p className="text-2xl font-bold">{filteredRecipients.length}</p>
               </div>
               <User className="w-8 h-8 text-green-500" />
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              {recipients.filter(r => r.status === 'active').length} active, {recipients.filter(r => r.phone).length} with phone numbers
+              {filteredRecipients.filter(r => r.status === 'active').length} active, {filteredRecipients.filter(r => r.phone).length} with phone numbers
             </p>
           </CardContent>
         </Card>
