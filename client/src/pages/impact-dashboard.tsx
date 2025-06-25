@@ -184,31 +184,23 @@ export default function ImpactDashboard() {
     
     if (Array.isArray(collections)) {
       collections.forEach((collection: any) => {
-        // Check all possible field names for date
-        const collectionDate = collection.collectionDate || collection.collection_date || collection.date;
+        // Use correct API field names
+        const collectionDate = collection.collectionDate;
         if (collectionDate) {
           const year = new Date(collectionDate).getFullYear();
           
-          // Check all possible field names for individual sandwiches
-          const individualCount = collection.individualSandwiches || 
-                                collection.individual_sandwiches || 
-                                collection.sandwichCount || 0;
-          
+          const individualCount = collection.individualSandwiches || 0;
           let groupCount = 0;
           
-          // Handle group_collections which can be JSON string or array
-          const groupData = collection.groupCollections || collection.group_collections;
-          if (groupData && groupData !== '[]' && groupData !== '') {
+          // Handle groupCollections which can be JSON string or array
+          if (collection.groupCollections && collection.groupCollections !== '' && collection.groupCollections !== '[]') {
             try {
-              const parsed = typeof groupData === 'string' ? JSON.parse(groupData) : groupData;
+              const parsed = typeof collection.groupCollections === 'string' ? JSON.parse(collection.groupCollections) : collection.groupCollections;
               if (Array.isArray(parsed)) {
                 groupCount = parsed.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
               }
             } catch (e) {
-              // If parsing fails, try to extract number directly
-              if (typeof groupData === 'number') {
-                groupCount = groupData;
-              }
+              groupCount = 0;
             }
           }
           
