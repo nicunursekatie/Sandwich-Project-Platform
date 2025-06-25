@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, FileText, FileSpreadsheet, File } from "lucide-react";
+import { Download, FileText, FileSpreadsheet, File, Eye, ExternalLink } from "lucide-react";
 import { DocumentPreview } from "./document-preview";
 
 interface DocumentFile {
@@ -16,50 +16,49 @@ interface DocumentFile {
 const documentFiles: DocumentFile[] = [
   {
     name: "Summer Food Safety Guidelines",
-    path: "/documents/Doc85(1).docx",
+    path: "/attached_assets/Doc85(1).docx",
     type: "docx",
     category: "Safety",
     description: "Important summer food safety guidelines for home hosts"
   },
   {
     name: "Food Safety Volunteers Guide",
-    path: "/documents/20230525-TSP-Food Safety Volunteers.pdf",
+    path: "/attached_assets/20230525-TSP-Food Safety Volunteers_1749341916234.pdf",
     type: "pdf",
     category: "Training",
     description: "Essential food safety guidelines for all volunteers"
   },
   {
     name: "Deli Sandwich Making 101",
-    path: "/documents/20240622-TSP-Deli Sandwich Making 101.pdf", 
+    path: "/attached_assets/20240622-TSP-Deli Sandwich Making 101_1749341916236.pdf", 
     type: "pdf",
     category: "Training",
     description: "Step-by-step guide for preparing deli sandwiches"
   },
   {
     name: "PBJ Sandwich Making 101",
-    path: "/documents/20250622-TSP-PBJ Sandwich Making 101.pdf",
+    path: "/attached_assets/20250622-TSP-PBJ Sandwich Making 101_1749341916236.pdf",
     type: "pdf", 
     category: "Training",
     description: "Instructions for peanut butter and jelly sandwich preparation"
   },
-
   {
     name: "Deli Labels",
-    path: "/documents/Deli labels.pdf",
+    path: "/attached_assets/Deli labels_1749341916236.pdf",
     type: "pdf",
     category: "Resources",
     description: "Printable labels for deli sandwich packaging"
   },
   {
     name: "PBJ Labels", 
-    path: "/documents/Pbj labels.pdf",
+    path: "/attached_assets/Pbj labels_1749341916237.pdf",
     type: "pdf",
     category: "Resources",
     description: "Printable labels for PBJ sandwich packaging"
   },
   {
     name: "Sandwich Inventory List",
-    path: "/documents/TSP Sandwich Inventory List for 3 ozs.xlsx",
+    path: "/attached_assets/TSP Sandwich Inventory List for 3 ozs_1749341916237.xlsx",
     type: "xlsx",
     category: "Operations",
     description: "Inventory tracking spreadsheet for 3oz sandwich portions"
@@ -109,7 +108,6 @@ export function DocumentsBrowser() {
     : documentFiles.filter(doc => doc.category === selectedCategory);
 
   const handleDownload = (path: string, name: string) => {
-    // Create a temporary link and trigger download
     const link = document.createElement('a');
     link.href = path;
     link.download = name;
@@ -117,6 +115,14 @@ export function DocumentsBrowser() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handlePreview = (doc: DocumentFile) => {
+    setPreviewDocument(doc);
+  };
+
+  const handleOpenInNewTab = (path: string) => {
+    window.open(path, '_blank');
   };
 
   return (
@@ -163,13 +169,14 @@ export function DocumentsBrowser() {
               )}
             </CardHeader>
             <CardContent className="pt-0">
-              <div className="flex gap-2">
+              <div className="flex gap-2 mb-2">
                 <Button 
-                  onClick={() => setPreviewDocument(doc)}
+                  onClick={() => handlePreview(doc)}
                   className="flex-1"
                   variant="outline"
                   size="sm"
                 >
+                  <Eye className="h-4 w-4 mr-2" />
                   Preview
                 </Button>
                 <Button 
@@ -181,6 +188,15 @@ export function DocumentsBrowser() {
                   Download
                 </Button>
               </div>
+              <Button 
+                onClick={() => handleOpenInNewTab(doc.path)}
+                className="w-full"
+                variant="ghost"
+                size="sm"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Open in New Tab
+              </Button>
             </CardContent>
           </Card>
         ))}
@@ -198,8 +214,9 @@ export function DocumentsBrowser() {
 
       {previewDocument && (
         <DocumentPreview
-          document={previewDocument}
-          isOpen={!!previewDocument}
+          documentPath={previewDocument.path}
+          documentName={previewDocument.name}
+          documentType={previewDocument.type}
           onClose={() => setPreviewDocument(null)}
         />
       )}

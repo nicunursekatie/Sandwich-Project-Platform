@@ -155,6 +155,7 @@ Preferred communication style: Simple, everyday language.
 - June 25, 2025: Added name assignment capability to chat messages: users can now enter display names in visible input fields across all chat components, with localStorage persistence until user logins are implemented
 - June 25, 2025: Fixed document preview functionality on development tab: corrected file paths to point to actual attached_assets location, improved preview handling for PDF, DOCX, and XLSX files, added proper static file serving for attached_assets directory
 - June 25, 2025: Updated The Sandwich Project Bylaws 2024 document to use the new PDF version for better preview compatibility and accessibility
+- June 25, 2025: Applied consistent preview and download format to toolkit page: added preview functionality, eye icons, and open-in-new-tab buttons matching development page design
 
 ## Changelog
 
