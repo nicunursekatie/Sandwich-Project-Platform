@@ -42,11 +42,18 @@ const documentFiles: DocumentFile[] = [
     description: "Instructions for peanut butter and jelly sandwich preparation"
   },
   {
-    name: "501c3 Determination Letter",
-    path: "/documents/501c3-determination-letter.pdf",
+    name: "Articles of Incorporation",
+    path: "/documents/Articles of Incorporation.pdf",
     type: "pdf",
     category: "Legal",
-    description: "Official non-profit tax-exempt status documentation"
+    description: "Official Articles of Incorporation for The Sandwich Project"
+  },
+  {
+    name: "IRS Tax Exempt Letter",
+    path: "/documents/IRS Tax Exempt Letter.pdf",
+    type: "pdf",
+    category: "Legal",
+    description: "IRS Tax Exempt determination letter containing EIN"
   },
   {
     name: "Deli Labels",
