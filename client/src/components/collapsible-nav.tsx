@@ -37,7 +37,9 @@ export function CollapsibleNav() {
 
   // Navigation structure with expandable sections
   const navigationStructure = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, type: "item", href: "/" },
+    { id: "dashboard", label: "Dashboard", icon: () => (
+      <img src="/tsp-logo-transparent.png" alt="TSP" className="w-5 h-5 object-contain" />
+    ), type: "item", href: "/" },
     { id: "collections", label: "Collections Log", icon: () => (
       <img src="/tsp-logo-transparent.png" alt="TSP" className="w-5 h-5 object-contain" />
     ), type: "item", href: "/collections" },
@@ -60,8 +62,12 @@ export function CollapsibleNav() {
       icon: FolderOpen, 
       type: "section",
       items: [
-        { id: "projects", label: "Projects", icon: ListTodo, href: "/projects" },
-        { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings" },
+        { id: "projects", label: "Projects", icon: () => (
+          <img src="/tsp-logo-transparent.png" alt="TSP" className="w-5 h-5 object-contain" />
+        ), href: "/projects" },
+        { id: "meetings", label: "Meetings", icon: () => (
+          <img src="/tsp-logo-transparent.png" alt="TSP" className="w-5 h-5 object-contain" />
+        ), href: "/meetings" },
         { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics" },
         { id: "reports", label: "Reports", icon: FileText, href: "/reporting-dashboard" },
         { id: "role-demo", label: "Role Demo", icon: Users, href: "/role-demo" },

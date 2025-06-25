@@ -4,7 +4,7 @@ import { Heart, Users, Calendar, MessageSquare, TrendingUp, MapPin } from "lucid
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { DocumentsBrowser } from "@/components/documents-browser";
-import tspLogo from "@assets/IMG_1646_1750868050959.png";
+// TSP Logo implementation using official branding
 
 export default function Landing() {
   const [showToolkit, setShowToolkit] = useState(false);
@@ -67,7 +67,7 @@ export default function Landing() {
         <div className="text-center space-y-6">
           <div className="flex justify-center">
             <img 
-              src={tspLogo} 
+              src="/tsp-logo-web.png" 
               alt="The Sandwich Project" 
               className="h-24 w-auto"
             />
@@ -100,7 +100,7 @@ export default function Landing() {
             <Card className="text-center bg-white/80 backdrop-blur dark:bg-gray-800/80">
               <CardHeader>
               <img 
-                src="/tsp-logo.png" 
+                src="/tsp-logo-transparent.png" 
                 alt="The Sandwich Project Logo" 
                 className="h-12 w-12 mx-auto mb-4 object-contain"
               />

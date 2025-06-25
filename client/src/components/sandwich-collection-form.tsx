@@ -194,7 +194,7 @@ export default function SandwichCollectionForm() {
       <div className="px-6 py-4 border-b border-slate-200">
         <h2 className="text-lg font-semibold text-slate-900 flex items-center">
           <img 
-            src="/tsp-logo.png" 
+            src="/tsp-logo-transparent.png" 
             alt="The Sandwich Project Logo" 
             className="mr-2 w-5 h-5 object-contain"
           />

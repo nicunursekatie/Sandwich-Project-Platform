@@ -295,7 +295,7 @@ export default function Dashboard() {
       <div className="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-3">
           <img 
-            src="/tsp-logo.png" 
+            src="/tsp-logo-transparent.png" 
             alt="The Sandwich Project Logo" 
             className="w-6 h-6 object-contain"
           />
