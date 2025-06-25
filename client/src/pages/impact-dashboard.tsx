@@ -188,26 +188,30 @@ export default function ImpactDashboard() {
       collections.forEach((collection: any) => {
         const collectionDate = collection.collectionDate;
         if (collectionDate) {
-          const year = new Date(collectionDate).getFullYear();
-          if (yearTotals[year as keyof typeof yearTotals] !== undefined) {
-            const individualCount = collection.individualSandwiches || 0;
-            let groupCount = 0;
-            
-            // Handle groupCollections which can be JSON string or array
-            if (collection.groupCollections && collection.groupCollections !== '' && collection.groupCollections !== '[]') {
-              try {
-                const groupData = typeof collection.groupCollections === 'string' 
-                  ? JSON.parse(collection.groupCollections) 
-                  : collection.groupCollections;
-                if (Array.isArray(groupData)) {
-                  groupCount = groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
-                }
-              } catch (e) {
-                groupCount = 0;
+          // Extract year from date string (YYYY-MM-DD format)
+          const year = parseInt(collectionDate.split('-')[0]);
+          const individualCount = collection.individualSandwiches || 0;
+          let groupCount = 0;
+          
+          // Handle groupCollections which can be JSON string or array
+          if (collection.groupCollections && collection.groupCollections !== '' && collection.groupCollections !== '[]') {
+            try {
+              const groupData = typeof collection.groupCollections === 'string' 
+                ? JSON.parse(collection.groupCollections) 
+                : collection.groupCollections;
+              if (Array.isArray(groupData)) {
+                groupCount = groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0);
               }
+            } catch (e) {
+              groupCount = 0;
             }
-            
-            yearTotals[year as keyof typeof yearTotals] += individualCount + groupCount;
+          }
+          
+          const totalForThisCollection = individualCount + groupCount;
+          
+          // Add to year totals for 2023, 2024, and 2025
+          if (year >= 2023 && year <= 2025) {
+            yearTotals[year as keyof typeof yearTotals] += totalForThisCollection;
           }
         }
       });
