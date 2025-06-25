@@ -14,6 +14,13 @@ interface DocumentFile {
 
 const documentFiles: DocumentFile[] = [
   {
+    name: "Summer Food Safety Guidelines",
+    path: "/documents/Doc85(1).docx",
+    type: "docx",
+    category: "Safety",
+    description: "Important summer food safety guidelines for home hosts"
+  },
+  {
     name: "Food Safety Volunteers Guide",
     path: "/documents/20230525-TSP-Food Safety Volunteers.pdf",
     type: "pdf",
@@ -54,13 +61,6 @@ const documentFiles: DocumentFile[] = [
     type: "pdf",
     category: "Resources",
     description: "Printable labels for PBJ sandwich packaging"
-  },
-  {
-    name: "Summer Food Safety Guidelines",
-    path: "/documents/Doc85(1).docx",
-    type: "docx",
-    category: "Safety",
-    description: "Important summer food safety guidelines for home hosts"
   },
   {
     name: "Sandwich Inventory List",

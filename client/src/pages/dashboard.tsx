@@ -131,6 +131,12 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
                 {
+                  title: "Summer Food Safety Guidelines",
+                  description: "Important summer food safety guidelines for home hosts",
+                  path: "/documents/Doc85(1).docx",
+                  category: "Safety"
+                },
+                {
                   title: "Food Safety Volunteers Guide",
                   description: "Essential food safety guidelines for all volunteers",
                   path: "/documents/20230525-TSP-Food Safety Volunteers.pdf",
@@ -171,12 +177,6 @@ export default function Dashboard() {
                   description: "Official nonprofit status documentation",
                   path: "/documents/501c3-determination-letter.pdf",
                   category: "Legal"
-                },
-                {
-                  title: "Summer Food Safety Guidelines",
-                  description: "Important summer food safety guidelines for home hosts",
-                  path: "/documents/Doc85(1).docx",
-                  category: "Safety"
                 }
               ].map((doc, index) => (
                 <div
