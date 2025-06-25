@@ -249,7 +249,7 @@ export default function Landing() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
-            <Button onClick={handleLogin} size="lg" className="w-full">
+            <Button onClick={handleLogin} size="lg" className="w-full bg-teal-600 hover:bg-teal-700">
               Access Platform
             </Button>
           </CardContent>
