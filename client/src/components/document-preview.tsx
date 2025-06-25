@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Download, ExternalLink } from 'lucide-react';
+import { X, Download, ExternalLink, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface DocumentPreviewProps {
@@ -37,15 +37,31 @@ export function DocumentPreview({ documentPath, documentName, documentType, onCl
           />
         );
       case 'docx':
-        // For DOCX files, we'll use Office Online viewer
-        const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(window.location.origin + documentPath)}`;
+        // For DOCX files, show a download option since viewing requires conversion
         return (
-          <iframe
-            src={officeViewerUrl}
-            className="w-full h-full border-0"
-            onLoad={() => setIsLoading(false)}
-            title={documentName}
-          />
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+            <div className="mb-4">
+              <FileText className="w-16 h-16 text-blue-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">{documentName}</h3>
+              <p className="text-gray-600 mb-6">
+                Word documents require download to view. Click the download button to save the file to your device.
+              </p>
+            </div>
+            <div className="flex gap-4">
+              <Button onClick={handleDownload} className="flex items-center gap-2">
+                <Download className="w-4 h-4" />
+                Download Document
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleOpenInNewTab}
+                className="flex items-center gap-2"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Open in New Tab
+              </Button>
+            </div>
+          </div>
         );
       case 'xlsx':
         // For Excel files, also use Office Online viewer

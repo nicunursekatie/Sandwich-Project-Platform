@@ -16,21 +16,21 @@ interface DevelopmentDocument {
 const developmentDocuments: DevelopmentDocument[] = [
   {
     name: "Articles of Incorporation",
-    path: "/documents/Articles of Incorporation.pdf",
+    path: "/attached_assets/Articles of Incorporation_1750817584990.pdf",
     type: "pdf",
     category: "Legal",
     description: "Official Articles of Incorporation for The Sandwich Project"
   },
   {
     name: "IRS Tax Exempt Letter",
-    path: "/documents/IRS Tax Exempt Letter.pdf",
+    path: "/attached_assets/IRS Tax Exempt Letter (Contains EIN)_1750817584990.pdf",
     type: "pdf",
     category: "Legal",
     description: "IRS Tax Exempt determination letter containing EIN"
   },
   {
     name: "The Sandwich Project Bylaws 2024",
-    path: "/documents/THE SANDWICH PROJECT BYLAWS 2024.docx",
+    path: "/attached_assets/THE SANDWICH PROJECT BYLAWS 2024_1750869880657.docx",
     type: "docx",
     category: "Legal",
     description: "Official bylaws document outlining organizational structure, governance, and operational procedures"
