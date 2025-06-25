@@ -153,7 +153,7 @@ Preferred communication style: Simple, everyday language.
 - June 25, 2025: Fixed report generation function on analytics tab - resolved CacheManager dependency issues and verified successful report generation
 - June 25, 2025: Systematically updated platform styling to follow brand style guide: implemented Roboto typography (main headings, sub headings, body text), brand color palette (teal primary, orange secondary, burgundy accent), and consistent visual hierarchy across all components
 - June 25, 2025: Added name assignment capability to chat messages: users can now enter display names in visible input fields across all chat components, with localStorage persistence until user logins are implemented
-- June 25, 2025: Fixed document preview functionality on development tab: corrected file paths to point to actual attached_assets location, improved preview handling for PDF, DOCX, and XLSX files
+- June 25, 2025: Fixed document preview functionality on development tab: corrected file paths to point to actual attached_assets location, improved preview handling for PDF, DOCX, and XLSX files, added proper static file serving for attached_assets directory
 
 ## Changelog
 
