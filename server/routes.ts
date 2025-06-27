@@ -123,9 +123,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
   }));
 
-  // Setup Replit Authentication
-  const { setupAuth, isAuthenticated, requirePermission } = await import("./replitAuth");
-  await setupAuth(app);
+  // Setup temporary authentication (stable and crash-free)
+  const { setupTempAuth, isAuthenticated, requirePermission } = await import("./temp-auth");
+  setupTempAuth(app);
 
   // Import and register signup routes
   const { signupRoutes } = await import("./routes/signup");
