@@ -902,16 +902,18 @@ export default function SandwichCollectionLog() {
             </h2>
             <p className="text-sm text-slate-500 mt-1">Manage collection data and bulk operations</p>
           </div>
-          <Button
-            onClick={() => setShowDataManagement(true)}
-            variant="outline"
-            size="sm"
-            className="flex items-center space-x-2 w-full sm:w-auto btn-outline-tsp"
-            style={{borderColor: 'var(--tsp-teal)', color: 'var(--tsp-teal)'}}
-          >
-            <Database className="w-4 h-4" />
-            <span>Data Management</span>
-          </Button>
+          {canEditData && (
+            <Button
+              onClick={() => setShowDataManagement(true)}
+              variant="outline"
+              size="sm"
+              className="flex items-center space-x-2 w-full sm:w-auto btn-outline-tsp"
+              style={{borderColor: 'var(--tsp-teal)', color: 'var(--tsp-teal)'}}
+            >
+              <Database className="w-4 h-4" />
+              <span>Data Management</span>
+            </Button>
+          )}
         </div>
       </div>
       
@@ -932,17 +934,18 @@ export default function SandwichCollectionLog() {
             )}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center space-x-1 w-full sm:w-auto"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Add Collection</span>
-                </Button>
-              </DialogTrigger>
+            {canEditData && (
+              <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-1 w-full sm:w-auto"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add Collection</span>
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
                   <DialogTitle>Add New Collection</DialogTitle>
@@ -1061,7 +1064,8 @@ export default function SandwichCollectionLog() {
                   </div>
                 </form>
               </DialogContent>
-            </Dialog>
+              </Dialog>
+            )}
             <Button
               variant="outline"
               size="sm"
