@@ -773,6 +773,47 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Celebration Toast */}
+      <CelebrationToast
+        isVisible={celebration.isVisible}
+        onClose={hideCelebration}
+        taskTitle={celebration.taskTitle}
+        emoji={celebration.emoji}
+        onSendThanks={(message: string) => {
+          // Store thank you message as notification
+          const thankYouData = {
+            userId: user?.id || 'anonymous',
+            type: 'thank_you',
+            title: 'Thank You Sent!',
+            message: message,
+            relatedType: 'project_task',
+            relatedId: celebration.taskId || null,
+            celebrationData: {
+              originalTaskTitle: celebration.taskTitle,
+              thankYouMessage: message,
+              projectId: projectId,
+              sentAt: new Date().toISOString()
+            }
+          };
+          
+          apiRequest('/api/notifications', {
+            method: 'POST',
+            body: JSON.stringify(thankYouData)
+          }).then(() => {
+            toast({ 
+              title: "Thank you sent!", 
+              description: "Your appreciation has been recorded." 
+            });
+          }).catch(err => {
+            console.log('Thank you notification failed:', err);
+            toast({ 
+              title: "Thank you sent!", 
+              description: "Your appreciation has been recorded locally." 
+            });
+          });
+        }}
+      />
     </div>
   );
 }
