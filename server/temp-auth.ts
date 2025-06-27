@@ -406,7 +406,20 @@ export const requirePermission = (permission: string): RequestHandler => {
       return res.status(401).json({ message: "Unauthorized" });
     }
     
-    if (user.role === "admin" || (user.permissions && user.permissions.includes(permission))) {
+    // Check role-based permissions
+    if (user.role === "admin") {
+      return next();
+    }
+    
+    if (user.role === "coordinator" && !["manage_users", "system_admin"].includes(permission)) {
+      return next();
+    }
+    
+    if (user.role === "volunteer" && ["read_collections", "general_chat", "volunteer_chat"].includes(permission)) {
+      return next();
+    }
+    
+    if (user.role === "viewer" && ["read_collections", "read_reports"].includes(permission)) {
       return next();
     }
     
