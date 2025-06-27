@@ -94,6 +94,7 @@ export default function SandwichCollectionForm() {
       setIsCustomHost(false);
       setIndividualSandwiches("");
       setGroupCollections([{ id: "1", groupName: "", sandwichCount: 0 }]);
+      setGroupOnlyMode(false);
       toast({
         title: "Collection submitted",
         description: "Sandwich collection has been logged successfully.",
@@ -335,18 +336,20 @@ export default function SandwichCollectionForm() {
           )}
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="individualSandwiches">Individual Sandwiches</Label>
-          <Input
-            id="individualSandwiches"
-            type="number"
-            min="0"
-            value={individualSandwiches}
-            onChange={(e) => setIndividualSandwiches(e.target.value)}
-            placeholder="Number of individual sandwiches"
-            required
-          />
-        </div>
+        {!groupOnlyMode && (
+          <div className="space-y-2">
+            <Label htmlFor="individualSandwiches">Individual Sandwiches</Label>
+            <Input
+              id="individualSandwiches"
+              type="number"
+              min="0"
+              value={individualSandwiches}
+              onChange={(e) => setIndividualSandwiches(e.target.value)}
+              placeholder="Number of individual sandwiches"
+              required
+            />
+          </div>
+        )}
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
