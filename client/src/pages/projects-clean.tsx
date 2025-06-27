@@ -348,6 +348,136 @@ export default function ProjectsClean() {
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Create Project Dialog */}
+      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Create New Project</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleCreateProject} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="md:col-span-2">
+                <Label htmlFor="title">Project Title *</Label>
+                <Input
+                  id="title"
+                  value={newProject.title || ''}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, title: e.target.value }))}
+                  required
+                  placeholder="Enter project title"
+                />
+              </div>
+              
+              <div className="md:col-span-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={newProject.description || ''}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, description: e.target.value }))}
+                  rows={3}
+                  placeholder="Describe the project goals and requirements"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="status">Status</Label>
+                <Select value={newProject.status} onValueChange={(value) => setNewProject(prev => ({ ...prev, status: value }))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="available">Available</SelectItem>
+                    <SelectItem value="in_progress">In Progress</SelectItem>
+                    <SelectItem value="waiting">Waiting</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="priority">Priority</Label>
+                <Select value={newProject.priority} onValueChange={(value) => setNewProject(prev => ({ ...prev, priority: value }))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="category">Category</Label>
+                <Select value={newProject.category} onValueChange={(value) => setNewProject(prev => ({ ...prev, category: value }))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="general">General</SelectItem>
+                    <SelectItem value="operations">Operations</SelectItem>
+                    <SelectItem value="outreach">Outreach</SelectItem>
+                    <SelectItem value="technology">Technology</SelectItem>
+                    <SelectItem value="fundraising">Fundraising</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="assigneeName">Assignee</Label>
+                <Input
+                  id="assigneeName"
+                  value={newProject.assigneeName || ''}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, assigneeName: e.target.value }))}
+                  placeholder="Person responsible for this project"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="startDate">Start Date</Label>
+                <Input
+                  id="startDate"
+                  type="date"
+                  value={newProject.startDate || ''}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, startDate: e.target.value }))}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="dueDate">Due Date</Label>
+                <Input
+                  id="dueDate"
+                  type="date"
+                  value={newProject.dueDate || ''}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, dueDate: e.target.value }))}
+                />
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-2 pt-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => {
+                  setShowCreateDialog(false);
+                  resetForm();
+                }}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                disabled={createProjectMutation.isPending || !newProject.title?.trim()}
+                className="btn-tsp-primary text-white"
+              >
+                {createProjectMutation.isPending ? "Creating..." : "Create Project"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
