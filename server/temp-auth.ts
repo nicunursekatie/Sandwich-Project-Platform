@@ -426,3 +426,34 @@ export const requirePermission = (permission: string): RequestHandler => {
     res.status(403).json({ message: "Forbidden" });
   };
 };
+
+// Initialize temporary auth system with default admin user
+export async function initializeTempAuth() {
+  console.log("Temporary authentication system initialized");
+  
+  // Create default admin user if it doesn't exist
+  try {
+    const adminEmail = "admin@sandwich.project";
+    const existingAdmin = await storage.getUserByEmail(adminEmail);
+    
+    if (!existingAdmin) {
+      const adminId = "admin_" + Date.now();
+      await storage.createUser({
+        id: adminId,
+        email: adminEmail,
+        firstName: "Admin",
+        lastName: "User",
+        role: "admin",
+        permissions: [],
+        isActive: true,
+        profileImageUrl: null,
+        metadata: { password: "admin123" } // Default password for convenience
+      });
+      console.log("✅ Default admin user created: admin@sandwich.project / admin123");
+    } else {
+      console.log("✅ Default admin user already exists: admin@sandwich.project");
+    }
+  } catch (error) {
+    console.log("❌ Could not create default admin user (using fallback):", error.message);
+  }
+}
