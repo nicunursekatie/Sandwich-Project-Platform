@@ -443,6 +443,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Notifications & Celebrations
+  app.get("/api/notifications/:userId", async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const notifications = await storage.getUserNotifications(userId);
+      res.json(notifications);
+    } catch (error) {
+      logger.error("Failed to fetch notifications", error);
+      res.status(500).json({ message: "Failed to fetch notifications" });
+    }
+  });
+
+  app.post("/api/notifications", async (req, res) => {
+    try {
+      const notificationData = req.body;
+      const notification = await storage.createNotification(notificationData);
+      res.status(201).json(notification);
+    } catch (error) {
+      logger.error("Failed to create notification", error);
+      res.status(500).json({ message: "Failed to create notification" });
+    }
+  });
+
+  app.patch("/api/notifications/:id/read", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.markNotificationRead(id);
+      if (!success) {
+        return res.status(404).json({ message: "Notification not found" });
+      }
+      res.json({ success: true });
+    } catch (error) {
+      logger.error("Failed to mark notification as read", error);
+      res.status(500).json({ message: "Failed to mark notification as read" });
+    }
+  });
+
+  app.delete("/api/notifications/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteNotification(id);
+      if (!success) {
+        return res.status(404).json({ message: "Notification not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      logger.error("Failed to delete notification", error);
+      res.status(500).json({ message: "Failed to delete notification" });
+    }
+  });
+
+  app.post("/api/celebrations", async (req, res) => {
+    try {
+      const { userId, taskId, message } = req.body;
+      const celebration = await storage.createCelebration(userId, taskId, message);
+      res.status(201).json(celebration);
+    } catch (error) {
+      logger.error("Failed to create celebration", error);
+      res.status(500).json({ message: "Failed to create celebration" });
+    }
+  });
+
   // Weekly Reports
   app.get("/api/weekly-reports", async (req, res) => {
     try {

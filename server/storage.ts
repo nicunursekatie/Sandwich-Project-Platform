@@ -194,6 +194,7 @@ export class MemStorage implements IStorage {
     this.hostContacts = new Map();
     this.recipients = new Map();
     this.contacts = new Map();
+    this.notifications = new Map();
     this.currentIds = {
       user: 1,
       project: 1,
@@ -211,6 +212,7 @@ export class MemStorage implements IStorage {
       hostContact: 1,
       recipient: 1,
       contact: 1,
+      notification: 1,
     };
     
     // No sample data - start with clean storage
@@ -863,6 +865,57 @@ export class MemStorage implements IStorage {
       contacts: Array.from(this.hostContacts.values()).filter(contact => contact.hostId === host.id)
     }));
   }
+
+  // Notifications & Celebrations
+  async getUserNotifications(userId: string): Promise<Notification[]> {
+    return Array.from(this.notifications.values()).filter(n => n.userId === userId);
+  }
+
+  async createNotification(notification: InsertNotification): Promise<Notification> {
+    const id = this.currentIds.notification++;
+    const newNotification: Notification = {
+      id,
+      ...notification,
+      createdAt: new Date(),
+    };
+    this.notifications.set(id, newNotification);
+    return newNotification;
+  }
+
+  async markNotificationRead(id: number): Promise<boolean> {
+    const notification = this.notifications.get(id);
+    if (notification) {
+      notification.isRead = true;
+      this.notifications.set(id, notification);
+      return true;
+    }
+    return false;
+  }
+
+  async deleteNotification(id: number): Promise<boolean> {
+    return this.notifications.delete(id);
+  }
+
+  async createCelebration(userId: string, taskId: number, message: string): Promise<Notification> {
+    const celebrationEmojis = ["🎉", "🌟", "🎊", "🥳", "🏆", "✨", "👏", "💪"];
+    const randomEmoji = celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)];
+    
+    return this.createNotification({
+      userId,
+      type: "celebration",
+      title: `${randomEmoji} Task Completed!`,
+      message: `Thanks for completing your task! ${message}`,
+      isRead: false,
+      relatedType: "task",
+      relatedId: taskId,
+      celebrationData: {
+        emoji: randomEmoji,
+        achievementType: "task_completion",
+        taskId,
+        completedAt: new Date().toISOString()
+      }
+    });
+  }
 }
 
 import { GoogleSheetsStorage } from './google-sheets';
@@ -1105,6 +1158,51 @@ export class DatabaseStorage implements IStorage {
   async deleteRecipient(id: number): Promise<boolean> {
     const result = await db.delete(recipients).where(eq(recipients.id, id));
     return result.rowCount > 0;
+  }
+
+  // Notifications & Celebrations
+  async getUserNotifications(userId: string): Promise<Notification[]> {
+    return await db.select().from(notifications)
+      .where(eq(notifications.userId, userId))
+      .orderBy(desc(notifications.createdAt));
+  }
+
+  async createNotification(notification: InsertNotification): Promise<Notification> {
+    const [newNotification] = await db.insert(notifications).values(notification).returning();
+    return newNotification;
+  }
+
+  async markNotificationRead(id: number): Promise<boolean> {
+    const result = await db.update(notifications)
+      .set({ isRead: true })
+      .where(eq(notifications.id, id));
+    return result.rowCount > 0;
+  }
+
+  async deleteNotification(id: number): Promise<boolean> {
+    const result = await db.delete(notifications).where(eq(notifications.id, id));
+    return result.rowCount > 0;
+  }
+
+  async createCelebration(userId: string, taskId: number, message: string): Promise<Notification> {
+    const celebrationEmojis = ["🎉", "🌟", "🎊", "🥳", "🏆", "✨", "👏", "💪"];
+    const randomEmoji = celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)];
+    
+    return this.createNotification({
+      userId,
+      type: "celebration",
+      title: `${randomEmoji} Task Completed!`,
+      message: `Thanks for completing your task! ${message}`,
+      isRead: false,
+      relatedType: "task",
+      relatedId: taskId,
+      celebrationData: {
+        emoji: randomEmoji,
+        achievementType: "task_completion",
+        taskId,
+        completedAt: new Date().toISOString()
+      }
+    });
   }
 }
 
