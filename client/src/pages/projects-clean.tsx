@@ -6,6 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Plus, 
   Calendar, 
@@ -25,13 +30,25 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
-import type { Project } from "@shared/schema";
+import type { Project, InsertProject } from "@shared/schema";
 
 export default function ProjectsClean() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { user } = useAuth();
   const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [newProject, setNewProject] = useState<Partial<InsertProject>>({
+    title: '',
+    description: '',
+    status: 'available',
+    priority: 'medium',
+    category: 'general',
+    assigneeName: '',
+    dueDate: '',
+    startDate: '',
+    estimatedHours: 0
+  });
 
   // Fetch all projects
   const { data: projects = [], isLoading } = useQuery<Project[]>({
@@ -54,6 +71,39 @@ export default function ProjectsClean() {
       toast({ 
         title: "Error", 
         description: "Failed to update project status.",
+        variant: "destructive" 
+      });
+    },
+  });
+
+  // Create project mutation
+  const createProjectMutation = useMutation({
+    mutationFn: async (projectData: Partial<InsertProject>) => {
+      return await apiRequest('POST', '/api/projects', projectData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      setShowCreateDialog(false);
+      setNewProject({
+        title: '',
+        description: '',
+        status: 'available',
+        priority: 'medium',
+        category: 'general',
+        assigneeName: '',
+        dueDate: '',
+        startDate: '',
+        estimatedHours: 0
+      });
+      toast({ 
+        title: "Project created", 
+        description: "New project has been created successfully." 
+      });
+    },
+    onError: () => {
+      toast({ 
+        title: "Error", 
+        description: "Failed to create project.",
         variant: "destructive" 
       });
     },
@@ -102,6 +152,27 @@ export default function ProjectsClean() {
     if (canEdit) {
       updateProjectMutation.mutate({ id: projectId, status: newStatus });
     }
+  };
+
+  const handleCreateProject = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newProject.title?.trim()) {
+      createProjectMutation.mutate(newProject);
+    }
+  };
+
+  const resetForm = () => {
+    setNewProject({
+      title: '',
+      description: '',
+      status: 'available',
+      priority: 'medium',
+      category: 'general',
+      assigneeName: '',
+      dueDate: '',
+      startDate: '',
+      estimatedHours: 0
+    });
   };
 
   const filterProjectsByStatus = (status: string) => {
@@ -191,7 +262,7 @@ export default function ProjectsClean() {
           </h2>
           <p className="text-slate-600 mt-1 text-sm sm:text-base">Organize and track all team projects</p>
         </div>
-        <Button onClick={() => setLocation("/projects/new")} disabled={!canEdit} className="w-full sm:w-auto">
+        <Button onClick={() => setShowCreateDialog(true)} disabled={!canEdit} className="w-full sm:w-auto">
           <Plus className="w-4 h-4 mr-2" />
           New Project
         </Button>
