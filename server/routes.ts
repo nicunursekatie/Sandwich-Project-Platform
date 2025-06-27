@@ -37,6 +37,54 @@ import { EmailService } from "./notifications/email-service";
 import { VersionControl } from "./middleware/version-control";
 import { BackupManager } from "./operations/backup-manager";
 
+// Permission middleware to check user roles and permissions
+const requirePermission = (permission: string) => {
+  return async (req: any, res: any, next: any) => {
+    try {
+      // Get user from session (assuming temp auth sets user in session)
+      const user = req.session?.user || req.user;
+      
+      if (!user) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      // Check if user has the required permission
+      const hasPermission = checkUserPermission(user, permission);
+      
+      if (!hasPermission) {
+        return res.status(403).json({ message: "Insufficient permissions" });
+      }
+      
+      next();
+    } catch (error) {
+      res.status(500).json({ message: "Permission check failed" });
+    }
+  };
+};
+
+// Helper function to check permissions
+const checkUserPermission = (user: any, permission: string): boolean => {
+  // Admin has all permissions
+  if (user.role === 'admin') return true;
+  
+  // Coordinator has most permissions including data editing
+  if (user.role === 'coordinator') {
+    return !['manage_users', 'system_admin'].includes(permission);
+  }
+  
+  // Volunteer has very limited permissions - only read access
+  if (user.role === 'volunteer') {
+    return ['read_collections', 'general_chat', 'volunteer_chat'].includes(permission);
+  }
+  
+  // Viewer has read-only access
+  if (user.role === 'viewer') {
+    return ['read_collections', 'read_reports'].includes(permission);
+  }
+  
+  return false;
+};
+
 // Configure multer for file uploads
 const upload = multer({ 
   dest: 'uploads/',
@@ -477,7 +525,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/sandwich-collections", async (req, res) => {
+  app.post("/api/sandwich-collections", requirePermission("edit_data"), async (req, res) => {
     try {
       const collectionData = insertSandwichCollectionSchema.parse(req.body);
       const collection = await storage.createSandwichCollection(collectionData);
@@ -493,7 +541,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/sandwich-collections/:id", async (req, res) => {
+  app.put("/api/sandwich-collections/:id", requirePermission("edit_data"), async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
@@ -890,7 +938,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Batch edit sandwich collections
-  app.patch("/api/sandwich-collections/batch-edit", async (req, res) => {
+  app.patch("/api/sandwich-collections/batch-edit", requirePermission("edit_data"), async (req, res) => {
     try {
       const { ids, updates } = req.body;
       
