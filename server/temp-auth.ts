@@ -254,7 +254,7 @@ export function setupTempAuth(app: Express) {
   // User registration endpoint
   app.post("/api/auth/register", async (req: any, res) => {
     try {
-      const { email, password, firstName, lastName } = req.body;
+      const { email, password, firstName, lastName, role } = req.body;
 
       if (!email || !password || !firstName || !lastName) {
         return res.status(400).json({ 
@@ -279,8 +279,8 @@ export function setupTempAuth(app: Express) {
         email,
         firstName,
         lastName,
-        role: "volunteer", // Default role
-        permissions: ["general_chat"],
+        role: role || "volunteer", // Use provided role or default to volunteer
+        permissions: [],
         isActive: true,
         profileImageUrl: null,
         metadata: { password } // Store password in metadata for now

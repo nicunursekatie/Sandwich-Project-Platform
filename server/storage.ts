@@ -290,9 +290,10 @@ export class MemStorage implements IStorage {
     const user: User = { 
       ...insertUser, 
       id: id.toString(),
-      role: 'volunteer',
-      permissions: {},
-      isActive: true,
+      role: insertUser.role || 'volunteer', // Use provided role or default
+      permissions: insertUser.permissions || {},
+      metadata: insertUser.metadata || {},
+      isActive: insertUser.isActive !== false, // Default to true unless explicitly false
       createdAt: new Date(),
       updatedAt: new Date()
     };
