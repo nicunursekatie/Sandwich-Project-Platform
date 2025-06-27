@@ -38,7 +38,7 @@ export function getSession() {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       maxAge: sessionTtl,
     },
   });
@@ -107,10 +107,39 @@ export async function setupAuth(app: Express) {
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
   app.get("/api/login", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
-      prompt: "login consent",
-      scope: ["openid", "email", "profile", "offline_access"],
-    })(req, res, next);
+    try {
+      const strategyName = `replitauth:${req.hostname}`;
+      
+      // Check if strategy exists before attempting to authenticate
+      if (!passport._strategy(strategyName)) {
+        console.error(`Strategy ${strategyName} not found. Available strategies:`, Object.keys(passport._strategies || {}));
+        return res.status(500).send(`
+          <html>
+            <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
+              <h2>Authentication Error</h2>
+              <p>Authentication system is not properly configured. Please contact an administrator.</p>
+              <a href="/" style="color: #236383;">Return to home page</a>
+            </body>
+          </html>
+        `);
+      }
+      
+      passport.authenticate(strategyName, {
+        prompt: "login consent",
+        scope: ["openid", "email", "profile", "offline_access"],
+      })(req, res, next);
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).send(`
+        <html>
+          <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
+            <h2>Login Failed</h2>
+            <p>An error occurred during login. Please try again later.</p>
+            <a href="/" style="color: #236383;">Return to home page</a>
+          </body>
+        </html>
+      `);
+    }
   });
 
   app.get("/api/callback", (req, res, next) => {

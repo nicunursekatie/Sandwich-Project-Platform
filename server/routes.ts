@@ -123,43 +123,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
   }));
 
-  // Setup temporary authentication for now while debugging Replit Auth
-  const { setupTempAuth, isAuthenticated, requirePermission } = await import("./temp-auth");
-  setupTempAuth(app);
-  
-  // Add a working login page
-  app.get('/api/login', (req, res) => {
-    res.send(`
-      <html>
-        <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
-          <h2>Login to The Sandwich Project</h2>
-          <p>Click the button below to log in as an administrator and access the platform.</p>
-          <button onclick="login()" style="background: #236383; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; width: 100%;">
-            Login as Admin
-          </button>
-          <script>
-            function login() {
-              fetch('/api/temp-login', { 
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                  'Content-Type': 'application/json'
-                }
-              })
-                .then(res => res.json())
-                .then(() => {
-                  window.location.href = '/';
-                })
-                .catch(err => {
-                  console.error('Login error:', err);
-                  alert('Login failed');
-                });
-            }
-          </script>
-        </body>
-      </html>
-    `);
-  });
+  // Setup Replit Authentication
+  const { setupAuth, isAuthenticated, requirePermission } = await import("./replitAuth");
+  await setupAuth(app);
 
   // Import and register signup routes
   const { signupRoutes } = await import("./routes/signup");
