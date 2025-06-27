@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts,
+  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts, notifications,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -15,7 +15,8 @@ import {
   type Host, type InsertHost,
   type HostContact, type InsertHostContact,
   type Recipient, type InsertRecipient,
-  type Contact, type InsertContact
+  type Contact, type InsertContact,
+  type Notification, type InsertNotification
 } from "@shared/schema";
 
 export interface IStorage {
@@ -129,6 +130,13 @@ export interface IStorage {
   updateHostContact(id: number, updates: Partial<HostContact>): Promise<HostContact | undefined>;
   deleteHostContact(id: number): Promise<boolean>;
   getAllHostsWithContacts(): Promise<Array<Host & { contacts: HostContact[] }>>;
+  
+  // Notifications & Celebrations
+  getUserNotifications(userId: string): Promise<Notification[]>;
+  createNotification(notification: InsertNotification): Promise<Notification>;
+  markNotificationRead(id: number): Promise<boolean>;
+  deleteNotification(id: number): Promise<boolean>;
+  createCelebration(userId: string, taskId: number, message: string): Promise<Notification>;
 }
 
 export class MemStorage implements IStorage {
@@ -148,6 +156,7 @@ export class MemStorage implements IStorage {
   private hostContacts: Map<number, HostContact>;
   private recipients: Map<number, Recipient>;
   private contacts: Map<number, Contact>;
+  private notifications: Map<number, Notification>;
   private currentIds: {
     user: number;
     project: number;
@@ -165,6 +174,7 @@ export class MemStorage implements IStorage {
     hostContact: number;
     recipient: number;
     contact: number;
+    notification: number;
   };
 
   constructor() {

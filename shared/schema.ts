@@ -376,3 +376,25 @@ export const insertDriverSchema = createInsertSchema(drivers).omit({
 
 export type Driver = typeof drivers.$inferSelect;
 export type InsertDriver = z.infer<typeof insertDriverSchema>;
+
+// Notifications table for celebrations and system notifications
+export const notifications = pgTable("notifications", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(), // Who receives the notification
+  type: varchar("type").notNull(), // 'celebration', 'reminder', 'achievement', etc.
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  isRead: boolean("is_read").notNull().default(false),
+  relatedType: varchar("related_type"), // 'task', 'project', 'collection', etc.
+  relatedId: integer("related_id"), // ID of related record
+  celebrationData: jsonb("celebration_data"), // Extra data for celebrations (emojis, achievements, etc.)
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertNotificationSchema = createInsertSchema(notifications).omit({
+  id: true,
+  createdAt: true
+});
+
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = z.infer<typeof insertNotificationSchema>;
