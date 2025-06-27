@@ -4,6 +4,7 @@ import { Plus, Trash2, Sandwich } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -34,6 +35,7 @@ export default function SandwichCollectionForm() {
   const [groupCollections, setGroupCollections] = useState<GroupCollection[]>([
     { id: "1", groupName: "", sandwichCount: 0 },
   ]);
+  const [groupOnlyMode, setGroupOnlyMode] = useState(false);
 
   // Fetch active hosts from the database
   const { data: hosts = [] } = useQuery<Host[]>({
@@ -135,14 +137,40 @@ export default function SandwichCollectionForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!collectionDate || !hostName || !individualSandwiches) {
-      toast({
-        title: "Missing information",
-        description:
-          "Please fill in the collection date, host name, and individual sandwiches.",
-        variant: "destructive",
-      });
-      return;
+    // In group-only mode, we only require collection date and group collections
+    if (groupOnlyMode) {
+      if (!collectionDate) {
+        toast({
+          title: "Missing information",
+          description: "Please fill in the collection date.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const validGroupCollections = groupCollections.filter(
+        (g) => g.groupName.trim() && g.sandwichCount > 0,
+      );
+      
+      if (validGroupCollections.length === 0) {
+        toast({
+          title: "Missing group collections",
+          description: "Please add at least one group collection with a name and count.",
+          variant: "destructive",
+        });
+        return;
+      }
+    } else {
+      // Regular mode requires host name and individual sandwiches
+      if (!collectionDate || !hostName || !individualSandwiches) {
+        toast({
+          title: "Missing information",
+          description:
+            "Please fill in the collection date, host name, and individual sandwiches.",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     // Check if host exists and create if needed (skip for "Groups")
@@ -184,8 +212,8 @@ export default function SandwichCollectionForm() {
 
     submitCollectionMutation.mutate({
       collectionDate,
-      hostName: hostName.trim(),
-      individualSandwiches: parseInt(individualSandwiches),
+      hostName: groupOnlyMode ? "Groups - Unassigned" : hostName.trim(),
+      individualSandwiches: groupOnlyMode ? 0 : parseInt(individualSandwiches),
       groupCollections: groupCollectionsString,
     });
   };
@@ -203,6 +231,29 @@ export default function SandwichCollectionForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        {/* Group-only mode toggle */}
+        <div className="flex items-center space-x-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <Checkbox
+            id="groupOnlyMode"
+            checked={groupOnlyMode}
+            onCheckedChange={(checked) => {
+              setGroupOnlyMode(checked as boolean);
+              // Reset form when switching modes
+              if (checked) {
+                setHostName("");
+                setIndividualSandwiches("");
+                setIsCustomHost(false);
+              }
+            }}
+          />
+          <Label htmlFor="groupOnlyMode" className="text-sm font-medium text-blue-900">
+            Group Collections Only Mode
+          </Label>
+          <span className="text-xs text-blue-700 ml-2">
+            (For logging group collections without specifying a host)
+          </span>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="collectionDate">Collection Date</Label>
@@ -215,8 +266,9 @@ export default function SandwichCollectionForm() {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="hostName">Host Name</Label>
+          {!groupOnlyMode && (
+            <div className="space-y-2">
+              <Label htmlFor="hostName">Host Name</Label>
             {isCustomHost ? (
               <div className="flex gap-2">
                 <Input
@@ -279,7 +331,8 @@ export default function SandwichCollectionForm() {
                 )}
               </div>
             )}
-          </div>
+            </div>
+          )}
         </div>
 
         <div className="space-y-2">
