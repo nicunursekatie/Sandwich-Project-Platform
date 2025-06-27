@@ -318,7 +318,7 @@ export default function Dashboard() {
           <button 
             onClick={() => {
               queryClient.clear();
-              window.location.href = "/";
+              window.location.href = "/api/logout";
             }}
             className="flex items-center space-x-2 px-2 sm:px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors"
           >
