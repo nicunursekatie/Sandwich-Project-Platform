@@ -27,6 +27,7 @@ import ImpactDashboard from "@/pages/impact-dashboard";
 import DataManagement from "@/pages/data-management";
 import PerformanceDashboard from "@/pages/performance-dashboard";
 import ReportingDashboard from "@/pages/reporting-dashboard";
+import UserManagement from "@/components/user-management";
 import { useState } from "react";
 import * as React from "react";
 import { useAuth } from "@/hooks/useAuth";
@@ -88,6 +89,16 @@ export default function Dashboard() {
     },
     { id: "toolkit", label: "Toolkit", icon: FileText, type: "item" },
     { id: "directory", label: "Phone Directory", icon: Phone, type: "item", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
+    { 
+      id: "administration", 
+      label: "Administration", 
+      icon: Users, 
+      type: "section",
+      permission: PERMISSIONS.MANAGE_USERS,
+      items: [
+        { id: "user-management", label: "User Management", icon: Users },
+      ]
+    },
     { id: "development", label: "Development", icon: FolderOpen, type: "item" },
   ];
 
@@ -276,6 +287,8 @@ export default function Dashboard() {
             <ChatHub />
           </div>
         );
+      case "user-management":
+        return <UserManagement />;
       case "development":
         return <Development />;
       default:
