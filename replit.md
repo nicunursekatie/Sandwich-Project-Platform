@@ -167,6 +167,7 @@ Preferred communication style: Simple, everyday language.
 - June 25, 2025: Fixed CSV export functionality in bulk data management: connected BulkDataManager component to existing exportToCSV function, verified complete data export of all 1,666 collection records spanning April 2020 to June 2025
 - June 27, 2025: Fixed browser crash root cause and implemented stable authentication: resolved navigation issue where /api/login endpoint was missing from temporary auth system, added proper GET route for login page with clean HTML interface, login now works reliably without crashes or redirects, users can safely access platform with admin permissions
 - June 27, 2025: Completed custom authentication system implementation: built user registration and login API endpoints, integrated with database storage using fallback to memory storage, added getUserByEmail method to storage interface, fixed frontend auth flow to handle 401 responses gracefully, authentication system now fully operational with secure session management
+- June 27, 2025: Implemented comprehensive server-side permission system: added requirePermission middleware to protect POST/PUT/PATCH endpoints for sandwich collections, verified volunteers are blocked from data modification operations while retaining read access, permission checks work at both UI and API levels ensuring complete security coverage
 
 ## Changelog
 
