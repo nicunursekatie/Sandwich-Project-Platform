@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import BulkDataManager from "@/components/bulk-data-manager";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 import type { SandwichCollection, Host } from "@shared/schema";
 
 
@@ -44,7 +46,12 @@ interface DuplicateAnalysis {
 
 export default function SandwichCollectionLog() {
   const { toast } = useToast();
+  const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Check user permissions for editing data
+  const canEditData = hasPermission(user, PERMISSIONS.EDIT_DATA);
+  const canDeleteData = hasPermission(user, PERMISSIONS.DELETE_DATA);
   const [editingCollection, setEditingCollection] = useState<SandwichCollection | null>(null);
   const [showDuplicateAnalysis, setShowDuplicateAnalysis] = useState(false);
   const [duplicateAnalysis, setDuplicateAnalysis] = useState<DuplicateAnalysis | null>(null);
@@ -1284,22 +1291,26 @@ export default function SandwichCollectionLog() {
                       <div className={`text-lg font-semibold ${isInactiveHost ? 'text-gray-700' : 'text-slate-900'}`}>{totalSandwiches}</div>
                       <div className={`text-xs ${isInactiveHost ? 'text-gray-500' : 'text-slate-500'}`}>total sandwiches</div>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEdit(collection)}
-                      className="h-8 w-8 p-0"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDelete(collection.id)}
-                      className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    {canEditData && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(collection)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                    )}
+                    {canDeleteData && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDelete(collection.id)}
+                        className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
                   </div>
                 </div>
 
