@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import { CelebrationToast, useCelebration } from "@/components/celebration-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -27,9 +28,10 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
   const { toast } = useToast();
   const { user } = useAuth();
   const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
+  const { celebration, triggerCelebration, hideCelebration } = useCelebration();
 
   const [isAddingTask, setIsAddingTask] = useState(false);
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [editingTask, setEditingTask] = useState<ProjectTask | null>(null);
   const [isEditingProject, setIsEditingProject] = useState(false);
   const [newTask, setNewTask] = useState({
     title: "",
@@ -188,6 +190,33 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
 
   const handleToggleTaskCompletion = (task: ProjectTask) => {
     const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+    
+    // If we're marking the task as completed, trigger celebration
+    if (newStatus === 'completed') {
+      triggerCelebration(task.title, task.id);
+      
+      // Create notification for task completion
+      const notificationData = {
+        userId: user?.id || 'anonymous',
+        type: 'task_completion',
+        title: 'Task Completed!',
+        message: `You completed: ${task.title}`,
+        relatedType: 'project_task',
+        relatedId: task.id,
+        celebrationData: {
+          taskTitle: task.title,
+          projectId: projectId,
+          completedAt: new Date().toISOString()
+        }
+      };
+      
+      // Send notification to backend
+      apiRequest('/api/notifications', {
+        method: 'POST',
+        body: JSON.stringify(notificationData)
+      }).catch(err => console.log('Notification storage failed:', err));
+    }
+    
     updateTaskMutation.mutate({
       id: task.id,
       updates: { status: newStatus }
