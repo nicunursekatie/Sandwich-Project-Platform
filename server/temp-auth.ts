@@ -36,7 +36,7 @@ declare global {
 
 // Temporary simple authentication for testing
 export function setupTempAuth(app: Express) {
-  // GET route for login page
+  // GET route for login page with registration capability
   app.get("/api/login", (req, res) => {
     const loginHtml = `
     <!DOCTYPE html>
@@ -60,9 +60,25 @@ export function setupTempAuth(app: Express) {
           padding: 2rem; 
           border-radius: 8px; 
           box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-          text-align: center; 
           max-width: 400px; 
           width: 100%; 
+        }
+        .form-group {
+          margin-bottom: 1rem;
+          text-align: left;
+        }
+        .form-group label {
+          display: block;
+          margin-bottom: 0.5rem;
+          color: #333;
+          font-weight: bold;
+        }
+        .form-group input {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 14px;
         }
         .btn { 
           background-color: #236383; 
@@ -72,39 +88,162 @@ export function setupTempAuth(app: Express) {
           border-radius: 6px; 
           cursor: pointer; 
           font-size: 16px; 
-          margin: 10px 0; 
+          margin: 10px 0;
+          width: 100%;
         }
         .btn:hover { background-color: #1a4d61; }
-        h1 { color: #236383; margin-bottom: 1rem; }
-        p { color: #666; margin-bottom: 1.5rem; }
+        .btn-secondary {
+          background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+          background-color: #545b62;
+        }
+        h1 { color: #236383; margin-bottom: 1rem; text-align: center; }
+        p { color: #666; margin-bottom: 1.5rem; text-align: center; }
+        .tab-buttons {
+          display: flex;
+          margin-bottom: 1rem;
+        }
+        .tab-btn {
+          flex: 1;
+          padding: 10px;
+          border: none;
+          background: #f8f9fa;
+          cursor: pointer;
+          border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+          background: white;
+          border-bottom-color: #236383;
+          color: #236383;
+        }
+        .tab-content {
+          display: none;
+        }
+        .tab-content.active {
+          display: block;
+        }
+        .error {
+          color: #dc3545;
+          font-size: 14px;
+          margin-top: 0.5rem;
+        }
       </style>
     </head>
     <body>
       <div class="login-card">
         <h1>The Sandwich Project</h1>
-        <p>Welcome to the platform! Click below to access as admin.</p>
-        <button class="btn" onclick="login()">Login as Admin</button>
+        
+        <div class="tab-buttons">
+          <button class="tab-btn active" onclick="showTab('login')">Login</button>
+          <button class="tab-btn" onclick="showTab('register')">Register</button>
+        </div>
+
+        <div id="login-tab" class="tab-content active">
+          <p>Sign in to access the platform</p>
+          <form id="login-form">
+            <div class="form-group">
+              <label for="login-email">Email:</label>
+              <input type="email" id="login-email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password:</label>
+              <input type="password" id="login-password" name="password" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+          </form>
+          <div id="login-error" class="error"></div>
+        </div>
+
+        <div id="register-tab" class="tab-content">
+          <p>Create your account</p>
+          <form id="register-form">
+            <div class="form-group">
+              <label for="reg-email">Email:</label>
+              <input type="email" id="reg-email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="reg-password">Password:</label>
+              <input type="password" id="reg-password" name="password" required>
+            </div>
+            <div class="form-group">
+              <label for="reg-first-name">First Name:</label>
+              <input type="text" id="reg-first-name" name="firstName" required>
+            </div>
+            <div class="form-group">
+              <label for="reg-last-name">Last Name:</label>
+              <input type="text" id="reg-last-name" name="lastName" required>
+            </div>
+            <button type="submit" class="btn">Register</button>
+          </form>
+          <div id="register-error" class="error"></div>
+        </div>
       </div>
+
       <script>
-        function login() {
-          fetch('/api/temp-login', { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({})
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
+        function showTab(tabName) {
+          // Hide all tabs
+          document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+          });
+          document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+          });
+          
+          // Show selected tab
+          document.getElementById(tabName + '-tab').classList.add('active');
+          event.target.classList.add('active');
+        }
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData);
+          
+          try {
+            const response = await fetch('/api/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
               window.location.href = '/';
             } else {
-              alert('Login failed');
+              document.getElementById('login-error').textContent = result.message || 'Login failed';
             }
-          })
-          .catch(error => {
-            console.error('Login error:', error);
-            alert('Login failed');
-          });
-        }
+          } catch (error) {
+            document.getElementById('login-error').textContent = 'Login failed: ' + error.message;
+          }
+        });
+
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData);
+          
+          try {
+            const response = await fetch('/api/auth/register', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              alert('Registration successful! You can now log in.');
+              showTab('login');
+              document.getElementById('login-email').value = data.email;
+            } else {
+              document.getElementById('register-error').textContent = result.message || 'Registration failed';
+            }
+          } catch (error) {
+            document.getElementById('register-error').textContent = 'Registration failed: ' + error.message;
+          }
+        });
       </script>
     </body>
     </html>
@@ -112,7 +251,102 @@ export function setupTempAuth(app: Express) {
     res.send(loginHtml);
   });
 
-  // Simple login endpoint that creates a test admin user
+  // User registration endpoint
+  app.post("/api/auth/register", async (req: any, res) => {
+    try {
+      const { email, password, firstName, lastName } = req.body;
+
+      if (!email || !password || !firstName || !lastName) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "All fields are required" 
+        });
+      }
+
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "User with this email already exists" 
+        });
+      }
+
+      // Create new user with unique ID
+      const userId = "user_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+      const newUser = await storage.createUser({
+        id: userId,
+        email,
+        firstName,
+        lastName,
+        role: "volunteer", // Default role
+        permissions: ["general_chat"],
+        isActive: true,
+        profileImageUrl: null,
+        metadata: { password } // Store password in metadata for now
+      });
+
+      res.json({ success: true, message: "Registration successful" });
+    } catch (error) {
+      console.error("Registration error:", error);
+      res.status(500).json({ success: false, message: "Registration failed" });
+    }
+  });
+
+  // User login endpoint
+  app.post("/api/auth/login", async (req: any, res) => {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Email and password are required" 
+        });
+      }
+
+      // Find user by email
+      const user = await storage.getUserByEmail(email);
+      if (!user || !user.isActive) {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Invalid email or password" 
+        });
+      }
+
+      // Check password (stored in metadata for now)
+      const storedPassword = user.metadata?.password;
+      if (storedPassword !== password) {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Invalid email or password" 
+        });
+      }
+
+      // Create session user object
+      const sessionUser = {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profileImageUrl: user.profileImageUrl,
+        role: user.role,
+        permissions: user.permissions,
+        isActive: user.isActive
+      };
+
+      // Store user in session
+      req.session.user = sessionUser;
+      req.user = sessionUser;
+
+      res.json({ success: true, user: sessionUser });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ success: false, message: "Login failed" });
+    }
+  });
+
+  // Legacy temp login endpoint (for backwards compatibility)
   app.post("/api/temp-login", async (req: any, res) => {
     try {
       // Create or get a test admin user

@@ -19,8 +19,9 @@ import {
 } from "@shared/schema";
 
 export interface IStorage {
-  // Users (required for Replit Auth)
+  // Users (required for authentication)
   getUser(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   getAllUsers(): Promise<User[]>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
@@ -205,7 +206,7 @@ export class MemStorage implements IStorage {
     // No sample data - start with clean storage
   }
 
-  // User methods (required for Replit Auth)
+  // User methods (required for authentication)
   async getUser(id: string): Promise<User | undefined> {
     for (const user of this.users.values()) {
       if (user.id === id) {
@@ -213,6 +214,33 @@ export class MemStorage implements IStorage {
       }
     }
     return undefined;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    for (const user of this.users.values()) {
+      if (user.email === email) {
+        return user;
+      }
+    }
+    return undefined;
+  }
+
+  async createUser(userData: InsertUser): Promise<User> {
+    const newUser: User = {
+      id: userData.id,
+      email: userData.email || null,
+      firstName: userData.firstName || null,
+      lastName: userData.lastName || null,
+      profileImageUrl: userData.profileImageUrl || null,
+      role: userData.role || 'volunteer',
+      permissions: userData.permissions || {},
+      metadata: userData.metadata || {},
+      isActive: userData.isActive ?? true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.users.set(Number(userData.id), newUser);
+    return newUser;
   }
 
   async upsertUser(userData: UpsertUser): Promise<User> {
