@@ -72,6 +72,7 @@ export function CollapsibleNav() {
 
   // Filter navigation items based on user permissions
   const filteredNavigation = navigationStructure.filter(item => {
+    // Check item-level permissions
     if (item.permission && !hasPermission(user, item.permission)) {
       return false;
     }
@@ -84,6 +85,7 @@ export function CollapsibleNav() {
       return visibleSubItems.length > 0;
     }
     
+    // Show all other items by default
     return true;
   });
 
