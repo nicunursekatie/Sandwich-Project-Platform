@@ -70,39 +70,28 @@ export function CollapsibleNav() {
     { id: "development", label: "Development", icon: FolderOpen, type: "item", href: "/development" },
   ];
 
-  // Debug user state
-  console.log('User state in navigation:', { user, isAuthenticated: !!user });
-
   // Filter navigation items based on user permissions
   const filteredNavigation = navigationStructure.filter(item => {
     // Check item-level permissions
     if (item.permission && !hasPermission(user, item.permission)) {
-      console.log(`Filtering out item ${item.id} - no permission ${item.permission}`);
       return false;
     }
     
     // For sections, show them if they have at least one visible sub-item
     if (item.type === "section" && item.items) {
+      // For Operations section specifically, always show if user is authenticated
+      if (item.id === "operations" && user) {
+        return true;
+      }
+      
+      // For other sections, check if any sub-items are visible
       const visibleSubItems = item.items.filter(subItem => {
         // If no permission required, show the item
         if (!subItem.permission) return true;
         
         // Check if user has the required permission
-        const hasPermissionResult = hasPermission(user, subItem.permission);
-        console.log(`Sub-item ${subItem.label}: permission ${subItem.permission} = ${hasPermissionResult}`);
-        return hasPermissionResult;
+        return hasPermission(user, subItem.permission);
       });
-      
-      console.log(`Section ${item.id}: ${visibleSubItems.length} visible items`, {
-        total: item.items.length,
-        visible: visibleSubItems.map(item => item.label)
-      });
-      
-      // Always show Operations section for logged-in users (but filter sub-items)
-      if (item.id === "operations") {
-        console.log('Operations section check:', { hasUser: !!user, userId: user?.id });
-        return !!user; // Show if user is authenticated
-      }
       
       return visibleSubItems.length > 0;
     }

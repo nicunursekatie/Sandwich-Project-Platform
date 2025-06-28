@@ -1,0 +1,1729 @@
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 2 l
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 2 l
+Partitioned cookie or storage access was provided to “https://dealfinder.retailmenot.com/experience/app” because it is loaded in the third-party context and dynamic state partitioning is enabled. client.7810f206.js:2:1556750
+
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      _app-d6497657ceb4346c.js:38:5277
+[LaunchDarkly] LaunchDarkly client initialized _app-d6497657ceb4346c.js:38:5277
+Partitioned cookie or storage access was provided to “https://js.stripe.com/v3/controller-with-preconnect-3f56af80c8083f35673b1752f599c94c.html#__shared_params__[version]=acacia&apiKey=pk_live_515YpNsJAmnYVOvfnsBqRdATWS6SzbNAslOz1z2tujdKuvRMDAwWMeFXp6dJL1YKRrQjB0WAp0UDGwlFYL7hxw7Fc00QkfxBFsL&apiVersion=2025-01-27.acacia&stripeJsId=dbdfc600-37a5-455e-a939-df3784685209&stripeObjId=sobj-3167afe2-f2e3-4b91-ac78-a9f2a02474e5&firstStripeInstanceCreatedLatency=3&controllerCount=1&isCheckout=false&stripeJsLoadTime=1751083134447&manualBrowserDeprecationRollout=false&mids[guid]=NA&mids[muid]=34096df2-7bc6-4aba-a97e-4a914417484d6c3709&mids[sid]=NA&referrer=https%3A%2F%2Freplit.com%2F%40katielong2316%2FSandwichSync&controllerId=__privateStripeController0861” because it is loaded in the third-party context and dynamic state partitioning is enabled. controller-with-preconnect-5fa05caa9a253f01ab9035a5962157c7.js:1:26907
+Content-Security-Policy warnings 4
+Ignoring unsupported entryTypes: longtask. recaptcha__en.js:538:180
+Partitioned cookie or storage access was provided to “https://www.google.com/recaptcha/enterprise/anchor?ar=1&k=6LdqhwwoAAAAAFPdw8jCuvY3PaHQItGj3RzOS4fW&co=aHR0cHM6Ly9yZXBsaXQuY29tOjQ0Mw..&hl=en&v=h7qt2xUGz2zqKEhSc8DD8baZ&size=invisible&cb=azn30gj21kh0” because it is loaded in the third-party context and dynamic state partitioning is enabled. recaptcha__en.js:245:377
+Cookie warnings 2
+Partitioned cookie or storage access was provided to “https://www.googletagmanager.com/static/service_worker/56n0/sw_iframe.html?origin=https%3A%2F%2Freplit.com” because it is loaded in the third-party context and dynamic state partitioning is enabled. sw_iframe.html:15:769
+Warning: getPdfFilenameFromUrl: ignore "data:"-URL for performance reasons. pdf.mjs:327:13
+PDF 1c37061c69f842e288eb9a5cf2c171e2 [1.6 Adobe PDF library 16.00 / Adobe Illustrator 25.4 (Macintosh)] (PDF.js: 5.3.42 [250cc7d29]) viewer.mjs:14300:13
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+Partitioned cookie or storage access was provided to “https://m.stripe.network/inner.html#url=https%3A%2F%2Freplit.com%2F%40katielong2316%2FSandwichSync&title=SandwichSync%20-%20Replit&referrer=&muid=34096df2-7bc6-4aba-a97e-4a914417484d6c3709&sid=NA&version=6&preview=false&__shared_params__[version]=acacia” because it is loaded in the third-party context and dynamic state partitioning is enabled. out-4.5.44.js:1:39660
+Cookie warnings 3
+The resource at “https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly. app
+The resource at “https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly. app
+stallwart: failed ping 1 2 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 9 stallwart.build.js:1:886
+Cookie warnings 13
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 3 stallwart.build.js:1:886
+stallwart: failed ping 1 2 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 2 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 3 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 1 3 stallwart.build.js:1:886
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html:151:20
+Partitioned cookie or storage access was provided to “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar7f%3A” because it is loaded in the third-party context and dynamic state partitioning is enabled.
+Cookie warnings 7
+stallwart: failed ping 1 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 1 4 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+The script from “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+The script from “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/injected.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content. eruda.js:2:105892
+[vite] connecting... eruda.js:2:135516
+Partitioned cookie or storage access was provided to “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/” because it is loaded in the third-party context and dynamic state partitioning is enabled. eruda.js:2:397271
+[vite] connected. eruda.js:2:135516
+Expected color but found ‘text’.  Error in parsing value for ‘color’.  Declaration dropped. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:1:6237
+Error in parsing value for ‘-webkit-text-size-adjust’.  Declaration dropped. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:147:29
+GET
+https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2
+[HTTP/3 200  0ms]
+
+GET
+https://fonts.gstatic.com/s/roboto/v18/KFOlCnqEu92Fr1MmEU9fBBc4AMP6lQ.woff2
+
+Unknown property ‘-moz-box-shadow’.  Declaration dropped. styles__ltr.css:1:49169
+Expected ‘none’, URL, or filter function but found ‘progid’.  Error in parsing value for ‘filter’.  Declaration dropped. styles__ltr.css:1:51017
+Unknown property ‘-moz-border-radius’.  Declaration dropped. styles__ltr.css:1:64317
+Error in parsing value for ‘box-shadow’.  Declaration dropped. styles__ltr.css:1:64350
+Unknown descriptor ‘900’ in @font-face rule.  Skipped to next declaration. client.c32b4de4.css:22:38
+Error in parsing value for ‘-webkit-text-size-adjust’.  Declaration dropped. client.c32b4de4.css:76:29
+Unknown property ‘-moz-column-gap’.  Declaration dropped. client.c32b4de4.css:1602:19
+Error in parsing value for ‘text-wrap’.  Declaration dropped. client.c32b4de4.css:1665:14
+Error in parsing value for ‘font-size’.  Declaration dropped. SandwichSync:4:56
+Error in parsing value for ‘font-size’.  Declaration dropped. SandwichSync:121:56
+Unknown descriptor ‘font-feature-settings: '"ss15"';’ in @font-face rule.  Skipped to next declaration. ~:81:30
+Unknown property ‘text-size-adjust’.  Declaration dropped. viewer.css:612:20
+GET
+https://replit.com/public/fonts/ibm-plex-sans-v8-latin-regular.woff2
+[HTTP/3 200  0ms]
+
+GET
+https://replit.com/public/fonts/ibm-plex-sans-v8-latin-500.woff2
+[HTTP/3 200  0ms]
+
+GET
+https://replit.com/public/fonts/ibm-plex-sans-v8-latin-600.woff2
+
+GET
+https://replit.com/public/fonts/hack-regular.woff2?sha=3114f1256
+[HTTP/3 200  0ms]
+
+GET
+https://replit.com/public/fonts/hack-bold.woff2?sha=3114f1256
+[HTTP/3 200  0ms]
+
+Error in parsing value for ‘text-decoration’.  Declaration dropped. d6a706b9558d5d65.css:1:8270
+Error in parsing value for ‘text-decoration’.  Declaration dropped. d6a706b9558d5d65.css:1:8392
+Error in parsing value for ‘text-decoration’.  Declaration dropped. d6a706b9558d5d65.css:1:8518
+Error in parsing value for ‘text-decoration’.  Declaration dropped. d6a706b9558d5d65.css:1:8644
+Error in parsing value for ‘-webkit-text-size-adjust’.  Declaration dropped. f28c7eb0678a8ed9.css:1:3005
+Error in parsing value for ‘-moz-text-size-adjust’.  Declaration dropped. f28c7eb0678a8ed9.css:1:3032
+Unknown property ‘text-size-adjust’.  Declaration dropped. f28c7eb0678a8ed9.css:1:3080
+Error in parsing value for ‘text-wrap’.  Declaration dropped. f28c7eb0678a8ed9.css:1:18017
+Unknown property ‘-moz-text-decoration-color’.  Declaration dropped. f28c7eb0678a8ed9.css:1:23362
+Error in parsing value for ‘text-wrap’.  Declaration dropped. f28c7eb0678a8ed9.css:1:25658
+Error in parsing value for ‘transition-duration’.  Declaration dropped. f28c7eb0678a8ed9.css:1:47947
+Error in parsing value for ‘scrollbar-width’.  Declaration dropped. 06a94a555e2ea639.css:1:4498
+Error in parsing value for ‘-webkit-box-align’.  Declaration dropped. ~:1:212
+Source map error: Error: request failed with status 404
+Stack in the worker:networkRequest@resource://devtools/client/shared/source-map-loader/utils/network-request.js:43:9
+
+Resource URL: https://cdn.replit.com/_next/static/css/f28c7eb0678a8ed9.css
+Source Map URL: f28c7eb0678a8ed9.css.map
+Source map error: Error: request failed with status 404
+Stack in the worker:networkRequest@resource://devtools/client/shared/source-map-loader/utils/network-request.js:43:9
+
+Resource URL: https://cdn.replit.com/_next/static/css/d6a706b9558d5d65.css
+Source Map URL: d6a706b9558d5d65.css.map
+Source map error: Error: request failed with status 404
+Stack in the worker:networkRequest@resource://devtools/client/shared/source-map-loader/utils/network-request.js:43:9
+
+Resource URL: https://cdn.replit.com/_next/static/css/06a94a555e2ea639.css
+Source Map URL: 06a94a555e2ea639.css.map
+GET
+data:image/png;base64,iVBORw0KGgBX2EQZQBOnoDD2UcBhW1sSiNmRQ8RLXQFNGEeygBY2c9ObVv9U1t63RNBc6wgU2VvBPuEb0HRObDgBXlGjaztkBWm8aGJkATRZZa3RzU6xhDAwBuFJvGDokk0hlRv6FSghlBGdtzcqF6RQBVwudRzWvBcGFXHkxMO6F5Dx0B0GGK82EPKTobIlQ1OwBag4xQGEuQbhhZExTpOMDBdWcMLJAH6z05bpVM3n1yIHoBny71Em5nBb3FFaA1IB1nQYk269fH5kcxBuVnl2DwBHU8DmmdyZWV0Kp9/B/utvhXIgX65veQBbxxyTBBhPIp43wBuV2HH3NWZDvKaRUBcaWcBYwCccgG1CS5ayvpLA+VaS2AoJEGZWOY/OJHry+PRBih8RohtGaoLIEyGBdlheMvRrX9ddH3tfKX9eyhoEy/2dl3sqLyixil0zXIrepVxUhxsq0CN8YypdBCrZLgz43ZCkKTB8Pqf4WkFkNSU3fTWFahPQLh42Bv853YXR2dHIBo7Vtbh5kR3Jm/t/o8WUBb4M/nElvLlCkb4TpsrVtByaN2YWM35OlwBOjsdc8PAB01o/BdE5l9unUdAooYXA74zIBawZfP8ccRU+Gb5hvUABVU0zkLigyABoG7f6XMOZHcTVVMBdAFk3zQB1G/Ea9NwaXQnBZnF2RxZlSI96RQBI89vGAM3C9I9p4U+RXPsBdJjXfmUB/Nt6pN2ZX3cUin0lWs98YnyzBaWA3ZOr3R7hqBfatk020qBfBoRLHL6KHIBakhwo3XdbxkBUh6HRnEkfhv+fV1Zrn87g80uFFbUIA9Qtsxx+4pcPURUGvI/BHxZG75dkfdfKKVTm1OlkAQZD1Hb7EeEgylwBdHIenSyS95xEYe5pbgQBYZV2E255ZTuaZHo
+
+GET
+https://www.gstatic.com/recaptcha/api2/logo_48.png
+[HTTP/1.1 200 OK 0ms]
+
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+XHRPOST
+https://sp.replit.com/v1/t
+[HTTP/2 200  81ms]
+
+GET
+https://www.google-analytics.com/collect?v=1&_v=j101&aip=1&a=243318552&t=event&ni=0&_s=16&dl=https://replit.com/@katielong2316/SandwichSync&dp=/@katielong2316/SandwichSync&ul=en-us&de=UTF-8&dt=replEnvironmentDesktop&sd=30-bit&sr=1728x1117&vp=1728x905&je=0&ec=All&ea=Agent Used&ev=0&_u=SCCAgEAjQAAAAGgCIAD~&jid=&gjid=&cid=749842659.1748223438&tid=UA-25629695-1&_gid=1182395137.1751059070&z=367916072
+[HTTP/2 200  7ms]
+
+XHRPOST
+https://sp.replit.com/v1/t
+[HTTP/2 200  78ms]
+
+GET
+https://www.google-analytics.com/collect?v=1&_v=j101&aip=1&a=243318552&t=event&ni=0&_s=17&dl=https://replit.com/@katielong2316/SandwichSync&dp=/@katielong2316/SandwichSync&ul=en-us&de=UTF-8&dt=replEnvironmentDesktop&sd=30-bit&sr=1728x1117&vp=1728x905&je=0&ec=All&ea=Agent Used&ev=0&_u=SCCAgEAjQAAAAGgCIAD~&jid=&gjid=&cid=749842659.1748223438&tid=UA-25629695-1&_gid=1182395137.1751059070&z=713686782
+[HTTP/2 200  8ms]
+
+GET
+https://www.gravatar.com/avatar/61909735277742496ce1a6ff771e0f24?d=blank&s=256
+[HTTP/1.1 200 OK 0ms]
+
+XHRPOST
+https://sp.replit.com/v1/t
+[HTTP/2 200  79ms]
+
+GET
+https://www.google-analytics.com/collect?v=1&_v=j101&aip=1&a=243318552&t=event&ni=0&_s=18&dl=https://replit.com/@katielong2316/SandwichSync&dp=/@katielong2316/SandwichSync&ul=en-us&de=UTF-8&dt=replEnvironmentDesktop&sd=30-bit&sr=1728x1117&vp=1728x905&je=0&ec=All&ea=Agent Used&ev=0&_u=SCCAgEAjQAAAAGgCIAD~&jid=&gjid=&cid=749842659.1748223438&tid=UA-25629695-1&_gid=1182395137.1751059070&z=1713451175
+[HTTP/2 200  9ms]
+
+GET
+https://replit.com/public/icons/favicon-prompt-agent-working-192.png
+[HTTP/2 200  0ms]
+
+GET
+https://replit.com/public/icons/favicon-prompt-agent-working-192.png
+[HTTP/2 200  0ms]
+
+stallwart: failed ping 1 2 stallwart.build.js:1:886
+XHRPOST
+https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820
+[HTTP/2 202  50ms]
+
+XHROPTIONS
+https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820
+[HTTP/2 204  21ms]
+
+XHRPOST
+https://sp.replit.com/v1/m
+[HTTP/2 200  79ms]
+
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+[vite] server connection lost. Polling for restart... eruda.js:2:135516
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/
+[HTTP/1.1 502 Bad Gateway 86ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/
+[HTTP/1.1 502 Bad Gateway 74ms]
+
+GET
+https://fonts.googleapis.com/css?family=IBM+Plex+Sans
+[HTTP/2 200 OK 0ms]
+
+GET
+https://fonts.gstatic.com/s/ibmplexsans/v22/zYXGKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1swZSAXcomDVmadSD6llDB6g-tIOm6_De.woff
+
+GET
+https://replit.com/public/js/beacon.js
+[HTTP/2 200  0ms]
+
+GET
+https://replit.com/public/fonts/replit-icons.woff
+[HTTP/3 200  0ms]
+
+GET
+https://replit.com/public/fonts/hack-italic.woff2?sha=3114f1256
+[HTTP/3 200  0ms]
+
+GET
+https://replit.com/public/fonts/hack-bolditalic.woff2?sha=3114f1256
+[HTTP/3 200  0ms]
+
+XHRPOST
+https://sp.replit.com/v1/t
+[HTTP/2 200  79ms]
+
+GET
+https://www.google-analytics.com/collect?v=1&_v=j101&aip=1&a=243318552&t=event&ni=0&_s=19&dl=https://replit.com/@katielong2316/SandwichSync&dp=/@katielong2316/SandwichSync&ul=en-us&de=UTF-8&dt=replEnvironmentDesktop&sd=30-bit&sr=1728x1117&vp=1728x905&je=0&ec=All&ea=Workspace Port Opened&ev=0&_u=SCCAgEAjQAAAAGgCIAD~&jid=&gjid=&cid=749842659.1748223438&tid=UA-25629695-1&_gid=1182395137.1751059070&z=831695439
+[HTTP/2 200  7ms]
+
+Feature Policy: Skipping unsupported feature name “accelerometer”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “autoplay”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “battery”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “encrypted-media”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “gyroscope”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “layout-animations”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “magnetometer”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “midi”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “navigation-override”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “oversized-images”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “payment”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “sync-xhr”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “unsized-media”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “usb”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “clipboard-read”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “clipboard-write”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “pointer-lock”. framework-a3b7fc88133236da.js:1:44626
+Feature Policy: Skipping unsupported feature name “accelerometer”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “autoplay”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “battery”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “encrypted-media”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “gyroscope”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “layout-animations”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “magnetometer”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “midi”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “navigation-override”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “oversized-images”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “payment”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “sync-xhr”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “unsized-media”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “usb”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “clipboard-read”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “clipboard-write”. framework-a3b7fc88133236da.js:1:130991
+Feature Policy: Skipping unsupported feature name “pointer-lock”. framework-a3b7fc88133236da.js:1:130991
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/workspace_iframe.html?initialPath=/&id=:rpq:
+[HTTP/1.1 200 OK 71ms]
+
+XHRPOST
+https://replit.com/graphql
+[HTTP/2 200  111ms]
+
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html:151:20
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/
+[HTTP/1.1 200 OK 333ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/injected.js
+[HTTP/1.1 200 OK 71ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@vite/client
+[HTTP/1.1 200 OK 471ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js
+[HTTP/1.1 200 OK 415ms]
+
+The script from “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+The script from “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/injected.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/main.tsx?v=ERXiO-Q3MU4cRUKDOvkPH
+[HTTP/1.1 200 OK 166ms]
+
+GET
+https://replit.com/public/js/replit-dev-banner.js
+[HTTP/2 200  0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-dom_client.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/App.tsx?v=ERXiO-Q3MU4cRUKDOvkPH
+[HTTP/1.1 200 OK 125ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/index.css?v=ERXiO-Q3MU4cRUKDOvkPH
+[HTTP/1.1 200 OK 2126ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-QCHXOAYK.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WOOG5QLI.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@react-refresh
+[HTTP/1.1 304 Not Modified 795ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/lib/queryClient.ts
+[HTTP/1.1 304 Not Modified 845ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/hooks/useAuth.ts
+[HTTP/1.1 304 Not Modified 859ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/toaster.tsx
+[HTTP/1.1 304 Not Modified 2041ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/tooltip.tsx
+[HTTP/1.1 304 Not Modified 3029ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/loading.tsx
+[HTTP/1.1 304 Not Modified 3025ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/error-boundary.tsx
+[HTTP/1.1 304 Not Modified 3026ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/dashboard.tsx
+[HTTP/1.1 304 Not Modified 3084ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/landing.tsx
+[HTTP/1.1 304 Not Modified 3082ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/signup.tsx
+[HTTP/1.1 304 Not Modified 3083ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/not-found.tsx
+[HTTP/1.1 304 Not Modified 3265ms]
+
+Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content. eruda.js:2:105892
+Error in parsing value for ‘width’.  Declaration dropped. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:1:8
+Partitioned cookie or storage access was provided to “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/” because it is loaded in the third-party context and dynamic state partitioning is enabled. eruda.js:2:397271
+Partitioned cookie or storage access was provided to “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arpq%3A” because it is loaded in the third-party context and dynamic state partitioning is enabled.
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-KBTYAULA.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/vite/dist/client/env.mjs
+[HTTP/1.1 304 Not Modified 3225ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/hooks/use-toast.ts
+[HTTP/1.1 304 Not Modified 1263ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/toast.tsx
+[HTTP/1.1 304 Not Modified 1400ms]
+
+stallwart: failed ping 1 stallwart.build.js:1:886
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/lucide-react.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/lib/utils.ts
+[HTTP/1.1 304 Not Modified 512ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/button.tsx
+[HTTP/1.1 304 Not Modified 670ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/card.tsx
+[HTTP/1.1 304 Not Modified 510ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-ZJGUFWDC.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-G2DSZ377.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TR2GJLES.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-VNROJUSP.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RKDPARZB.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-LUE5KDWX.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-7LBPFXVW.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-THUXUCPX.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-Q6YJROYD.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-hook-form.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@hookform_resolvers_zod.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/zod.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/input.tsx
+[HTTP/1.1 304 Not Modified 445ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/label.tsx
+[HTTP/1.1 304 Not Modified 616ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/form.tsx
+[HTTP/1.1 304 Not Modified 602ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/select.tsx
+[HTTP/1.1 304 Not Modified 615ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/checkbox.tsx
+[HTTP/1.1 304 Not Modified 613ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/documents-browser.tsx
+[HTTP/1.1 304 Not Modified 638ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/CMYK_PRINT_TSP-01_1749585167435.png?import
+[HTTP/1.1 304 Not Modified 688ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/LOGOS/Copy of TSP_transparent.png?import
+[HTTP/1.1 304 Not Modified 689ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/LOGOS/sandwich logo.png?import
+[HTTP/1.1 304 Not Modified 696ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/tabs.tsx
+[HTTP/1.1 304 Not Modified 696ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/chat-hub.tsx
+[HTTP/1.1 304 Not Modified 701ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/dashboard-overview.tsx
+[HTTP/1.1 304 Not Modified 712ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/sandwich-collection-log.tsx
+[HTTP/1.1 304 Not Modified 758ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/recipients-management.tsx
+[HTTP/1.1 304 Not Modified 760ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/drivers-management.tsx
+[HTTP/1.1 304 Not Modified 767ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/hosts-management-consolidated.tsx
+[HTTP/1.1 304 Not Modified 767ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/phone-directory.tsx
+[HTTP/1.1 304 Not Modified 774ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/analytics-dashboard.tsx
+[HTTP/1.1 304 Not Modified 783ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/development.tsx
+[HTTP/1.1 304 Not Modified 825ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meetings.tsx
+[HTTP/1.1 304 Not Modified 826ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meeting-minutes.tsx
+[HTTP/1.1 304 Not Modified 831ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meeting-agenda.tsx
+[HTTP/1.1 304 Not Modified 833ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meeting-calendar.tsx
+[HTTP/1.1 304 Not Modified 842ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/role-demo.tsx
+[HTTP/1.1 304 Not Modified 847ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/projects-clean.tsx
+[HTTP/1.1 304 Not Modified 892ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/project-detail-clean.tsx
+[HTTP/1.1 304 Not Modified 898ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/impact-dashboard.tsx
+[HTTP/1.1 304 Not Modified 900ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/reporting-dashboard.tsx
+[HTTP/1.1 304 Not Modified 900ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/user-management.tsx
+[HTTP/1.1 304 Not Modified 914ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/user-profile.tsx
+[HTTP/1.1 304 Not Modified 917ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/lib/authUtils.ts
+[HTTP/1.1 304 Not Modified 964ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-4BFJKWC4.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WGQNECLP.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+[vite] connecting... eruda.js:2:135516
+GET
+wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=LzQxzoSXswM3
+[HTTP/1.1 101 Switching Protocols 957ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-toast.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/class-variance-authority.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TPYHSINA.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-U7P2NEEE.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/clsx.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/tailwind-merge.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-slot.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-label.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-select.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-43G6IMPT.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-4RO2SXZU.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-PPNHGFME.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/badge.tsx
+[HTTP/1.1 304 Not Modified 351ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/document-preview.tsx
+[HTTP/1.1 304 Not Modified 351ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-6H75DGJY.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/committee-chat.tsx
+[HTTP/1.1 304 Not Modified 365ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/host-chat.tsx
+[HTTP/1.1 304 Not Modified 364ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/committee-message-log.tsx
+[HTTP/1.1 304 Not Modified 364ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/sandwich-collection-form.tsx
+[HTTP/1.1 304 Not Modified 359ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/dialog.tsx
+[HTTP/1.1 304 Not Modified 378ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/bulk-data-manager.tsx
+[HTTP/1.1 304 Not Modified 309ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/textarea.tsx
+[HTTP/1.1 304 Not Modified 370ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/switch.tsx
+[HTTP/1.1 304 Not Modified 370ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/dropdown-menu.tsx
+[HTTP/1.1 304 Not Modified 414ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/shared/schema.ts
+[HTTP/1.1 304 Not Modified 366ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/recharts.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/development-documents.tsx
+[HTTP/1.1 304 Not Modified 377ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/progress.tsx
+[HTTP/1.1 304 Not Modified 310ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/celebration-toast.tsx
+[HTTP/1.1 304 Not Modified 80ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/alert.tsx
+[HTTP/1.1 304 Not Modified 315ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/date-fns.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/collapsible-nav.tsx
+[HTTP/1.1 200 OK 375ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/table.tsx
+[HTTP/1.1 304 Not Modified 71ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/separator.tsx
+[HTTP/1.1 304 Not Modified 70ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/framer-motion.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-separator.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/avatar.tsx
+[HTTP/1.1 304 Not Modified 70ms]
+
+[vite] connected. eruda.js:2:135516
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-switch.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-avatar.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/drizzle-orm_pg-core.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/drizzle-zod.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-S4QZGJXL.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-progress.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user
+[HTTP/1.1 401 Unauthorized 73ms]
+
+Cookie warnings 6
+GET
+https://replit.com/public/js/beacon.js
+[HTTP/2 200  0ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/sandwich-collections/stats
+[HTTP/1.1 304 Not Modified 223ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/sandwich-collections?limit=1000
+[HTTP/1.1 304 Not Modified 507ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/LOGOS/Copy of TSP_transparent.png
+[HTTP/1.1 304 Not Modified 74ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/CMYK_PRINT_TSP-01_1749585167435.png
+[HTTP/1.1 304 Not Modified 74ms]
+
+stallwart: failed ping 1 stallwart.build.js:1:886
+XHRPOST
+https://sp.replit.com/v1/m
+[HTTP/2 200  80ms]
+
+XHRPOST
+https://replit.com/graphql
+[HTTP/2 200  135ms]
+
+XHRPOST
+https://sp.replit.com/v1/t
+[HTTP/2 200  80ms]
+
+XHRPOST
+https://stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j101&tid=UA-25629695-1&cid=749842659.1748223438&jid=736857179&gjid=615609554&_gid=1182395137.1751059070&_u=SCCAgEAjQAAAAGgCIAD~&z=241781474
+[HTTP/3 200  58ms]
+
+GET
+https://www.google-analytics.com/collect?v=1&_v=j101&aip=1&a=243318552&t=event&ni=0&_s=20&dl=https://replit.com/@katielong2316/SandwichSync&dp=/@katielong2316/SandwichSync&ul=en-us&de=UTF-8&dt=replEnvironmentDesktop&sd=30-bit&sr=1728x1117&vp=1728x905&je=0&ec=All&ea=Agent Used&ev=0&_u=SCCAgEAjQAAAAGgCIAD~&jid=736857179&gjid=615609554&cid=749842659.1748223438&tid=UA-25629695-1&_gid=1182395137.1751059070&z=1873675199
+[HTTP/2 200  12ms]
+
+GET
+https://replit.com/cdn-cgi/image/width=3840,quality=80,format=auto/https://storage.googleapis.com/screenshot-production-us-central1/bb1d30f8-d852-4bae-abcd-b7c4521e3d85/7bae2124-4bb5-4c8a-bde4-77dccee9615c.jpg
+[HTTP/2 200  320ms]
+
+XHRPOST
+https://sp.replit.com/v1/t
+[HTTP/2 200  79ms]
+
+GET
+https://www.google-analytics.com/collect?v=1&_v=j101&aip=1&a=243318552&t=event&ni=0&_s=21&dl=https://replit.com/@katielong2316/SandwichSync&dp=/@katielong2316/SandwichSync&ul=en-us&de=UTF-8&dt=replEnvironmentDesktop&sd=30-bit&sr=1728x1117&vp=1728x905&je=0&ec=All&ea=Agent Used&ev=0&_u=SCCAgEAjQAAAAGgCIAD~&jid=&gjid=&cid=749842659.1748223438&tid=UA-25629695-1&_gid=1182395137.1751059070&z=511271510
+[HTTP/2 200  8ms]
+
+GET
+https://replit.com/public/icons/favicon-prompt-agent-waiting-192.png
+[HTTP/2 200  0ms]
+
+GET
+https://replit.com/public/icons/favicon-prompt-agent-waiting-192.png
+[HTTP/2 200  0ms]
+
+stallwart: failed ping 1 4 stallwart.build.js:1:886
+XHRPOST
+https://sp.replit.com/v1/m
+[HTTP/2 200  78ms]
+
+stallwart: failed ping 1 3 stallwart.build.js:1:886
+XHRPOST
+https://replit.com/graphql
+[HTTP/2 200  147ms]
+
+stallwart: failed ping 1 3 stallwart.build.js:1:886
+XHRPOST
+https://replit.com/graphql
+[HTTP/3 200  98ms]
+
+XHRPOST
+https://replit.com/graphql
+[HTTP/3 200  71ms]
+
+stallwart: failed ping 1 2 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 3 stallwart.build.js:1:886
+stallwart: failed ping 1 2 stallwart.build.js:1:886
+XHRPOST
+https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820
+[HTTP/2 202  48ms]
+
+XHROPTIONS
+https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820
+[HTTP/2 204  23ms]
+
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+POST
+https://r.stripe.com/b
+[HTTP/2 200  943ms]
+
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 3 stallwart.build.js:1:886
+POST
+https://r.stripe.com/b
+[HTTP/2 200  102ms]
+
+stallwart: failed ping 4 stallwart.build.js:1:886
+The connection to wss://production-ai-chat.replit.com/river?auth_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQzMDI1MTM3LCJ1c2VyVGltZUNyZWF0ZWQiOiIyMDI1LTA1LTIzVDAyOjEzOjE1LjEzMVoiLCJyZXBsSWQiOiJiYjFkMzBmOC1kODUyLTRiYWUtYWJjZC1iN2M0NTIxZTNkODUiLCJtZW1iZXJzaGlwIjoiY29yZSIsImlzc3VlciI6Imh0dHBzOi8vcmVwbGl0LXdlYi1wcm9kLnAucmVwbGl0LmNvbSIsInJvbGVzIjpbImludGVudF9wZXJzb25hbCJdLCJjYW5Xcml0ZSI6dHJ1ZSwiaGFzUmVwbGl0QWlQcm8iOnRydWUsImZsYWdnaW5nQ29udGV4dCI6IntcImtleVwiOlwidXNlcjo0MzAyNTEzN1wiLFwia2luZFwiOlwib3duZXJcIixcInJvbGVzXCI6W1wiaW50ZW50X3BlcnNvbmFsXCJdLFwiaXNfdGVhbVwiOmZhbHNlLFwiaGFzX2FnZW50X2JpbGxpbmdfdjJcIjpmYWxzZSxcIm1lbWJlcnNoaXBcIjpcImNvcmVcIn0iLCJpYXQiOjE3NTEwODMxMzQsImV4cCI6MTc1MTA4NjczNH0.jIElBB8FRZfP5_7Rq-sNEeLGqThnF-halhMnaPQEuO1x_RnWIjlpRbfjOcIs2BNHlL_zU4LraHpk2HJkLwt_XqLBpRRIexEZkMD8-0p8-agnAZDtSNBGmM-62gp7Onmk7YxkmcNUQRx2boFjj-iHlBqVWjyZxx8Ea6-xw3rIBCSf0EMcx7ICw0RIUmqae5XZCIoeNPHbvChxOJgdI2ZWV5N9sR_H2ExrirQxS8UndLuvWQNcgIVAO4TeA15EjCS94nAP8I_thZOUH5DIm-U1chBut31j1_qdFt8QQVQQqKV4Z9UB9OYy_4l9QiAWUNvziJQDTGSc1a9NpINdhfegxQ was interrupted while the page was loading. 9303-d85414b02c0dcf5f.js:1:23492
+The connection to wss://eval.spock.platform.replit.com/wsv2/v2.public.Q2dZSTc5RDl3Z1lTQmdpTzdmM0NCaUlGYzNCdlkyc3dBRHJTQVFva1ltSXhaRE13WmpndFpEZzFNaTAwWW1GbExXRmlZMlF0WWpkak5EVXlNV1V6WkRnMUVnTnVhWGdhRjNKbGNHeHBkQzF5WlhCc0xXWnBiR1Z6TFhOd2IyTnJJZ3hUWVc1a2QybGphRk41Ym1NcURXdGhkR2xsYkc5dVp6SXpNVFpDVVFvWWNtVndiR2wwTFhKbGNHd3RZbXh2WTJ0ekxYTndiMk5yRWhaeVpYQnNhWFF0Y21Wd2JDMXRaWFJoTFhOd2IyTnJHaDF5WlhCc2FYUXRiV0Z5WjJGeWFXNWxMV0pzYjJOcmN5MXpjRzlqYTBvSENQR0Z3aFFRQVZBQVdnOXBiblJsYm5SZmNHVnljMjl1WVd4NEFGSWpDQUVRZ0lDQWdDQVpBQUFBQUFBQUVFQWhBQUFBQUFBQUVFQW9nSUNBZ01nQk1BSmdBMm9VQ1BHRndoUVNEV3RoZEdsbGJHOXVaekl6TVRhQ0FRSXFBSm9CQ2dvSU1DNHdMakUwTmphZ0FRR3lBYjhFQ2hKSFQwOUhURVZmVUZKSlZrRlVSVjlMUlZrU3FBUm9kSFJ3Y3pvdkwzTjBiM0poWjJVdVoyOXZaMnhsWVhCcGN5NWpiMjB2Y21Wd2JHbDBMV0ZqWTI5MWJuUXRjMlZqY21WMGN5ODBNekF5TlRFek55OWhNemhrT1RZd05DMWxOVEV5TFRRNVltRXRPREU1WkMxalkySTNZamRsTW1aak4yVS9SMjl2WjJ4bFFXTmpaWE56U1dROWNtVndiR2wwTFhkbFlpVTBNSEpsY0d4cGRDMTNaV0l1YVdGdExtZHpaWEoyYVdObFlXTmpiM1Z1ZEM1amIyMG1SWGh3YVhKbGN6MHhOelV4TURnMk56TTBKbE5wWjI1aGRIVnlaVDFCWlRCa1ZYVmtaMjFRUnpkNVN6UXhURXh0VFc5YVZXNVJiVmQ2SlRKQ1EzcGxkMU5xZUZwdk4ybHlUWGR3U2pOTlNVcE9SbHBSTlU4M05uSkhZVEZHYXpONFZua3hlbkl4VTB0cFZ6UkZORVZrYVdaMldXMXZiRTF2Y1hwQ2VteG9VemRXZUV0aE1IRlpkRkkxYnpneWMyOTNSVzEzVjJGa2MxbDFXVXAwYXlVeVFrTlNkelZHVlhsTWJqZGhhVEJOY21OSlRrbDJZMEpYTkRGV1dHeE9WVEZUTVRVbE1rWlhkakZXVDJGb2NXaDZUalpwWVhwalNFaEhTRGhZTkZsUFoySlVWWGgzYkVock1GaDBXbGQ2TjBnNWVtazVValJXVkRoV1IzZGhlRVJwUjJSNk5pVXlRakJhWWtRMlNUWlBTVE5DVWtvMlkzb3hNM0ZyUW1kT2IxVjRhWFpGVnpFMVNEVm1Rek5ZU2pObWNUZHdjamRGVjJSeU1EVlBXRkJIVUZoWWRTVXlRa3hpTVc4ek0xaFpVMUZCYVdjM2NXTjVVRTlUYUVKRk9HUnVSVTAyVEZoV2ExY2xNa0l3UVVORFVFTlBjemc0YUdkdFpGbGhZakJ0YmxFbE0wUWxNMFN5QWNNRUNoeEhUMDlIVEVWZlUwVlNWa2xEUlY5QlEwTlBWVTVVWDBWTlFVbE1FcUlFYUhSMGNITTZMeTl6ZEc5eVlXZGxMbWR2YjJkc1pXRndhWE11WTI5dEwzSmxjR3hwZEMxaFkyTnZkVzUwTFhObFkzSmxkSE12TkRNd01qVXhNemN2TXpCbE5qQXlNV010T1RnelpTMDBZVEJqTFRobE1XRXROMlE1WmpZMk9EWXpZemRpUDBkdmIyZHNaVUZqWTJWemMwbGtQWEpsY0d4cGRDMTNaV0lsTkRCeVpYQnNhWFF0ZDJWaUxtbGhiUzVuYzJWeWRtbGpaV0ZqWTI5MWJuUXVZMjl0SmtWNGNHbHlaWE05TVRjMU1UQTROamN6TkNaVGFXZHVZWFIxY21VOVRXWXpSWGd6Y2xabllVWTNSMEpwZGxwdlNXNTBRa1Y2VTJWNVQySndNMFJXZDBKaU0wMHdUbXhvYmtoellVdzRVVEYzUlZVNVUzcFlSRTVCUlVsME1YSkdVQ1V5UWxGcWREZEpVR0o1YlRocGNXRk5lV05XTUNVeVFsbHRPR3RuSlRKQ1dqSkZZV3Q2Y1VwalIxVTNNSEp0VVdvMmVFWjBSbU5vVXpkd2RrVkhNMjlHYVhaMGNFaDNjV1Z4UTJKTVNEVjRVMWhyYUdkR1MweHBaa0l6VjJSdlZGSXlOR0o0V2pCRFExaHdWMUJ6U2xkNU1tbEZjSEJXZGtVeE1qQk5NalpqYlRSaWVETlpTbmR6V0RCR2FHbzJPVFZhWlhWcmRITXdUVEZKY214RVNFaFFNWG95WW5SUWEyRnVjR0l4VkdkQ2FsWmxjbnBRVFRaWU5YWnRaMFo2WjI5bFNYWlRNSEprTUZZeGRYaEdUMGRPTUZFeVJEbEVZalZQYmtKc1IyTlVjR2RpWm5NMk5qRkdkVnBJVHpoWlVESjRSVmR3YzJvMU5WRjViRzlrTkZBMVlsWjBXa3hsWW5sUFVtWjVZVGhGZUdwUlMydzVNMDFSSlRORUpUTkVzZ0hLQkFvVlIwOVBSMHhGWDFOSVJVVlVVMTlCVUVsZlMwVlpFckFFYUhSMGNITTZMeTl6ZEc5eVlXZGxMbWR2YjJkc1pXRndhWE11WTI5dEwzSmxjR3hwZEMxaFkyTnZkVzUwTFhObFkzSmxkSE12TkRNd01qVXhNemN2TUdJek56Wm1PRFF0TldOaU15MDBNbUkzTFdFMk56UXRNRGd5WmpOaVl6bG1OV1UzUDBkdmIyZHNaVUZqWTJWemMwbGtQWEpsY0d4cGRDMTNaV0lsTkRCeVpYQnNhWFF0ZDJWaUxtbGhiUzVuYzJWeWRtbGpaV0ZqWTI5MWJuUXVZMjl0SmtWNGNHbHlaWE05TVRjMU1UQTROamN6TkNaVGFXZHVZWFIxY21VOVNubGtiWEU0Vm5SSFExVjBVVXBxZHpCNkpUSkNja3h5UVhOVldWbFBia1F4U205dlpISm1RWE5UYW13eFFsVkdhVUppUmt4b1VWWkxWMGMwZVROVlVGSlNjalJvV2s1ek0zWXdPR3BoYjBOaFUxQlJXaVV5UWpOa2VYY3pVRlowTlRWNVpFUlVjbXRQSlRKQ1ptTmFjWGc1ZVhsaVprNVlaakIyUVdrM2FHcFpOMkpDV1VKWWVteDBPVTV3WWxsV00yWnFKVEpHU1V4WFVuZHlWVlpNU2pSWmRrTjZWV1ZTY25OVGJtcDBXbW93Vm1OWGNtd3lWMU5EYjNwS05ISjZjWEZuVURsMU0xSktlblJtUjFscmJIUTVWSEJ3TVRCT1NHOU1PVVpqVkdOUVpuTTNjM05YVkhJMmFYUWxNa1kzSlRKR2VFUkdWRmhOWlhOVVEzZE9WazlvTm1Gbk1FazRSakEyUTBoWFZVMHlSbkI2ZUc5bmRYZFVjekpxTUVZbE1rWTRKVEpDWnpKUmVHaDNNVEJaT0V4d1VtNTNhSEZ4WVZCT01pVXlRbFZ5Wm5aTVEzTllha2RVVkRKdU9HaFZUeVV5Um1WaGFGbEZkRzFwY0RoSmMybHBaME5EUmpoeVpGRWxNMFFsTTBTeUFjZ0VDaFZIVDA5SFRFVmZVMUJTUlVGRVUwaEZSVlJmU1VRU3JnUm9kSFJ3Y3pvdkwzTjBiM0poWjJVdVoyOXZaMnhsWVhCcGN5NWpiMjB2Y21Wd2JHbDBMV0ZqWTI5MWJuUXRjMlZqY21WMGN5ODBNekF5TlRFek55ODFaV1kxWW1aallTMWhaVFU1TFRSbFl6QXRZalEzTlMxa05UbGpOMlExTW1SaU1tVS9SMjl2WjJ4bFFXTmpaWE56U1dROWNtVndiR2wwTFhkbFlpVTBNSEpsY0d4cGRDMTNaV0l1YVdGdExtZHpaWEoyYVdObFlXTmpiM1Z1ZEM1amIyMG1SWGh3YVhKbGN6MHhOelV4TURnMk56TTBKbE5wWjI1aGRIVnlaVDFSV1RaNVIyTmpOMDR3ZG01NU1FOUdRMGRHYzFJMWR5VXlSa3cyVDJOSlMwRjNaSEp2WldWeVdVVTNZVlJEZG5ScVowbFBhM1pGWjFJMUpUSkdOamxxTm5sNU1qUnNKVEpDSlRKR09YTlJORVZZY2twSmNWTTFVVTV0T0c5MGJVNXZNV041Y25JNWNFSk5OM1J2YlhKRE1GWldjRVpGWTFKeWJEQnhUMVJWVmxOaVR6bDBZMkV3TkV0QlJtVllXa3RVWVZOSVJuTm9PVGhHZFZwc01tNUVkVkEwZHlVeVJsVkxOMXBtYlhwTldVVnZVR1YzU1hsVmQwWjNkVFZwVTA1VllrOVNTbGQzUVRoRFFrODBjblJXWlhWWmFsWmtWRnBuY2sxWVduZFBUVGhJYWs1aFZFZ3ljSGM0YWtweU1HdEZiMGxsYW5sUmJtcENTelpESlRKR2VtY3pSelJYYzFvNGEycExUa2xoUnpWM1dVOVdPVFF6Ylc1NWVsVnpRblZyUW1oRkpUSkdkVkU1VEZoVFNFMURiV2RwU0hreGFFWnlKVEpDUTFJNVpVOTVjMmh0Y1RsaVUwNUZNMk41U2paT2Fub3hTU1V5UmtwVGNuRTBTbU53VVd4SGN6bFJOMEVsTTBRbE0wU3lBY2tFQ2hCVFJVNUVSMUpKUkY5QlVFbGZTMFZaRXJRRWFIUjBjSE02THk5emRHOXlZV2RsTG1kdmIyZHNaV0Z3YVhNdVkyOXRMM0psY0d4cGRDMWhZMk52ZFc1MExYTmxZM0psZEhNdk5ETXdNalV4TXpjdk5HTTFZMkl5TlRFdE56UTJOaTAwTURJekxUazBZamd0WXpjeU4ySmlaR1l5T0RGalAwZHZiMmRzWlVGalkyVnpjMGxrUFhKbGNHeHBkQzEzWldJbE5EQnlaWEJzYVhRdGQyVmlMbWxoYlM1bmMyVnlkbWxqWldGalkyOTFiblF1WTI5dEprVjRjR2x5WlhNOU1UYzFNVEE0Tmpjek5DWlRhV2R1WVhSMWNtVTlSVnBsZERSSFNERXpURGxYZFc5NlVDVXlRbXhrVGtOaVVqWldaV2gyVlc1bVdXaHRaRXhQU25ka1dsWXpVVzlpYmtGU2QwVlFUMk5ITlhOSE9ITXdSbmxJVEhGb1MwdHpRV2hsT1c1SGJsbE9jRkZsUkhoVFRIVlBVVmRKZFc4ME5IcFdZMlJVZWlVeVJtSTRTVnBYYzNFbE1rWXpUU1V5UmtoSlJXczRVbVpJZVcxR01YWnhabFIyZFNVeVJuSnhTbFY0U2tkYVl6TjVOa05VVkRoTVNqbE1RV1paUXlVeVJrMVFaR295ZWtwMUpUSkNkblk0VFdaWUpUSkNlbWt4VUZCdFNGWlVRbnBqU2xGcWNtNTJhV1ZoTTJGdk5qWm5NVFl4VEhScldIQktUMFI0VlVOM1YyUmphemgzVkRkTE9YUnFUVXBJWkRGQlZrZGlKVEpDTTI1S1JWTkZhemhGZW1FNFJubDNka1p4WkhBNFZHNWlWbEZyZEhrd1MxZHRRVXdsTWtKa2IzbEZXbmMwYUdGRVdERkJjMDUzVlVGRVZYQmtZbmhVVUZKVlFUSnVkMEZpUTNSQkpUSkdVREJaUTFSb1luSnBkR3BzWkNVeVJqUlJWbmc1Y1dSS1dHbHhlWFZqYzA1bkpUTkVKVE5F3mERSmVJgBG-EK_YnDFRfyteG1zjUYZasFTBHqNTRph9ZRTTDvyj_3wgAADZ1nMnqdXSVY0fFC83-SBaTVYtAw.Q2dad2NtOWtPak1pQ25KbGNHeHBkQzVqYjIwPQ was interrupted while the page was loading. 5701-eb69c6674eab43f9.js:1:176529
+The connection to wss://replit.com/graphql_subscriptions was interrupted while the page was loading. _app-d6497657ceb4346c.js:25:193978
+GET
+wss://production-ai-chat.replit.com/river?auth_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQzMDI1MTM3LCJ1c2VyVGltZUNyZWF0ZWQiOiIyMDI1LTA1LTIzVDAyOjEzOjE1LjEzMVoiLCJyZXBsSWQiOiJiYjFkMzBmOC1kODUyLTRiYWUtYWJjZC1iN2M0NTIxZTNkODUiLCJtZW1iZXJzaGlwIjoiY29yZSIsImlzc3VlciI6Imh0dHBzOi8vcmVwbGl0LXdlYi1wcm9kLnAucmVwbGl0LmNvbSIsInJvbGVzIjpbImludGVudF9wZXJzb25hbCJdLCJjYW5Xcml0ZSI6dHJ1ZSwiaGFzUmVwbGl0QWlQcm8iOnRydWUsImZsYWdnaW5nQ29udGV4dCI6IntcImtleVwiOlwidXNlcjo0MzAyNTEzN1wiLFwia2luZFwiOlwib3duZXJcIixcInJvbGVzXCI6W1wiaW50ZW50X3BlcnNvbmFsXCJdLFwiaXNfdGVhbVwiOmZhbHNlLFwiaGFzX2FnZW50X2JpbGxpbmdfdjJcIjpmYWxzZSxcIm1lbWJlcnNoaXBcIjpcImNvcmVcIn0iLCJpYXQiOjE3NTEwODMxMzQsImV4cCI6MTc1MTA4NjczNH0.jIElBB8FRZfP5_7Rq-sNEeLGqThnF-halhMnaPQEuO1x_RnWIjlpRbfjOcIs2BNHlL_zU4LraHpk2HJkLwt_XqLBpRRIexEZkMD8-0p8-agnAZDtSNBGmM-62gp7Onmk7YxkmcNUQRx2boFjj-iHlBqVWjyZxx8Ea6-xw3rIBCSf0EMcx7ICw0RIUmqae5XZCIoeNPHbvChxOJgdI2ZWV5N9sR_H2ExrirQxS8UndLuvWQNcgIVAO4TeA15EjCS94nAP8I_thZOUH5DIm-U1chBut31j1_qdFt8QQVQQqKV4Z9UB9OYy_4l9QiAWUNvziJQDTGSc1a9NpINdhfegxQ
+[HTTP/1.1 101 Switching Protocols 243ms]
+
+XHRPOST
+https://replit.com/data/repls/bb1d30f8-d852-4bae-abcd-b7c4521e3d85/get_connection_metadata
+[HTTP/3 200  265ms]
+
+GET
+wss://eval.spock.platform.replit.com/wsv2/v2.public.Q2dZSTNkVDl3Z1lTQmdqODhQM0NCaUlGYzNCdlkyc3dBRHJTQVFva1ltSXhaRE13WmpndFpEZzFNaTAwWW1GbExXRmlZMlF0WWpkak5EVXlNV1V6WkRnMUVnTnVhWGdhRjNKbGNHeHBkQzF5WlhCc0xXWnBiR1Z6TFhOd2IyTnJJZ3hUWVc1a2QybGphRk41Ym1NcURXdGhkR2xsYkc5dVp6SXpNVFpDVVFvWWNtVndiR2wwTFhKbGNHd3RZbXh2WTJ0ekxYTndiMk5yRWhaeVpYQnNhWFF0Y21Wd2JDMXRaWFJoTFhOd2IyTnJHaDF5WlhCc2FYUXRiV0Z5WjJGeWFXNWxMV0pzYjJOcmN5MXpjRzlqYTBvSENQR0Z3aFFRQVZBQVdnOXBiblJsYm5SZmNHVnljMjl1WVd4NEFGSWpDQUVRZ0lDQWdDQVpBQUFBQUFBQUVFQWhBQUFBQUFBQUVFQW9nSUNBZ01nQk1BSmdBMm9VQ1BHRndoUVNEV3RoZEdsbGJHOXVaekl6TVRhQ0FRSXFBSm9CQ2dvSU1DNHdMakUwTmphZ0FRR3lBZGNFQ2hKSFQwOUhURVZmVUZKSlZrRlVSVjlMUlZrU3dBUm9kSFJ3Y3pvdkwzTjBiM0poWjJVdVoyOXZaMnhsWVhCcGN5NWpiMjB2Y21Wd2JHbDBMV0ZqWTI5MWJuUXRjMlZqY21WMGN5ODBNekF5TlRFek55OWhNemhrT1RZd05DMWxOVEV5TFRRNVltRXRPREU1WkMxalkySTNZamRsTW1aak4yVS9SMjl2WjJ4bFFXTmpaWE56U1dROWNtVndiR2wwTFhkbFlpVTBNSEpsY0d4cGRDMTNaV0l1YVdGdExtZHpaWEoyYVdObFlXTmpiM1Z1ZEM1amIyMG1SWGh3YVhKbGN6MHhOelV4TURnM01qSTRKbE5wWjI1aGRIVnlaVDFzVEhweU5HMUpiRGhJWjNsYVJUTWxNa0p5Vm5STlZtRldhSEJEY25BeGMyRnBiV0ZvVm5Kb2JuUm5ZVzg0VG1SMEpUSkNRWGt5SlRKQ1dHOWtlamd3TW5NbE1rSmtOM1JFT1hGMldGaFhKVEpDVDFSRGF5VXlRbHAyWlhrMVNtNWFRbk52VVRKcGJFVTNkRmN6UzFSUmFVUkVSakYzVG1wVGNteHdUR0phWkZveE5GbEROVWxEVVRWT1kwaGFhRk5UUkc5UVRDVXlSbnBZUjB0WFRDVXlSa2xLU25Zd1Z6SnNhQ1V5Um5wU05GQkVUMFY2VjNrMU4wSjVibGR4U2t3M2NHZzRjbTFEZEhjeVJ6VWxNa1pUT0VGRE9DVXlRa1YzUzB0MFFYSlNiMlZHWWsxRVNXWXdjU1V5UWlVeVFuUnJUMGRZTlhVNWVYVjBjRlY2VjJWblRqTnNVWElsTWtaaVltSnBVRGRCZGxFbE1rWkVlVU5vY0dkTFRGTkpZekpJZEhGRFdrWlhXbm95VGtnbE1rWnpXbGt6UkhsVGJWRk1WbWhoYW5WQ2RYbE5OVFY0TVZsbVVVZFJRemRYTTJabFdqSllWamhCZFdaVFdYQkhURVJXYVZWS1pHOUpkbUpoWkZJM2JWZ2xNa0pNSlRKQ1NHWmtSbmNsTTBRbE0wU3lBYzhFQ2h4SFQwOUhURVZmVTBWU1ZrbERSVjlCUTBOUFZVNVVYMFZOUVVsTUVxNEVhSFIwY0hNNkx5OXpkRzl5WVdkbExtZHZiMmRzWldGd2FYTXVZMjl0TDNKbGNHeHBkQzFoWTJOdmRXNTBMWE5sWTNKbGRITXZORE13TWpVeE16Y3ZNekJsTmpBeU1XTXRPVGd6WlMwMFlUQmpMVGhsTVdFdE4yUTVaalkyT0RZell6ZGlQMGR2YjJkc1pVRmpZMlZ6YzBsa1BYSmxjR3hwZEMxM1pXSWxOREJ5WlhCc2FYUXRkMlZpTG1saGJTNW5jMlZ5ZG1salpXRmpZMjkxYm5RdVkyOXRKa1Y0Y0dseVpYTTlNVGMxTVRBNE56SXlPQ1pUYVdkdVlYUjFjbVU5YVdZelJFTlVRMU5VT0ZaNFZVczBkbEJQWkcxVGFXdE9VV2xNWTNsU1NubDRZVXd3VmtwdVIxQlZTa0p1Um1zMWNXUkRTV0Z6TTBaRlR6RkpNVFZCZEhreWNIUmpZbkZ1YW5adVMwMDFjRWR1YjNKQ01pVXlRazFLTW1kMFVuZEpWRGR0TlhKdGNsRm9aVUpsZUZCQlprcHhaa2RMWms5WFF6UTBiamRLUm1oeGVUbGpWRUp3V1UxRmNVRXdTelZ6UkZBbE1rWWxNa1l5TjNSTFZYRkdkRkpXV0VWTmVtNDFlV0ZTWkdacVVITkNSRTVGV0haUWFtOTVOV0UzUjFCSFR6RjBjM05FY2tJbE1rWTNUSE5GZUVKVFVqWXhka3NsTWtabWMzRTBZek5XZFZvMlZGQXdiMWd5UWs1MVJHeE9OM0JCYVdSYWJWbDBZU1V5UW5kdVdqSkJUV2RyTldKcmNtdzBSRmQ1YXpGd1pHRlBTa3hRY0ZkNVUwZ2xNa0owT1ZkQ2RsaDBOR2g0UjBob1IxTlRaM05XVm1ob1NEZ2xNa0kzVkdSTmRrUnBaVEIzYlhOMk9IWTVKVEpDTUVwNlEwMTBhbEJ1Vm1OTWRGWjJVVVZpUmxadlZVRktWazVuSlRORUpUTkVzZ0hBQkFvVlIwOVBSMHhGWDFOSVJVVlVVMTlCVUVsZlMwVlpFcVlFYUhSMGNITTZMeTl6ZEc5eVlXZGxMbWR2YjJkc1pXRndhWE11WTI5dEwzSmxjR3hwZEMxaFkyTnZkVzUwTFhObFkzSmxkSE12TkRNd01qVXhNemN2TUdJek56Wm1PRFF0TldOaU15MDBNbUkzTFdFMk56UXRNRGd5WmpOaVl6bG1OV1UzUDBkdmIyZHNaVUZqWTJWemMwbGtQWEpsY0d4cGRDMTNaV0lsTkRCeVpYQnNhWFF0ZDJWaUxtbGhiUzVuYzJWeWRtbGpaV0ZqWTI5MWJuUXVZMjl0SmtWNGNHbHlaWE05TVRjMU1UQTROekl5T0NaVGFXZHVZWFIxY21VOVl6VTBia3RISlRKR09ITTJXbVpUVWt4MFFqWTRUM1ZFT0dVeGVHNU1WbE5EYVZKclR6WjNabVZuTWt4WGFVVjVOVE5oYVRJMk9GSmphRGR0TTJNMFNEbFJlRE00WTJWQlVXUTBVemhxVFhCbE5ETnZRVVJJWkhKSE9FTlZNRlIxTjJWVVVrMXFKVEpHVmxSdVdtNU5lSGQ0VmxkUlluUXdhM1JIUkRKUmRpVXlRbTVHYUd3M1JqWTFNMXAzTm1wUllVUTJRMUJoVVhsSU9EbHJkR3hDZGpaNFdtcHRjWFpRSlRKR09Hb3pkblp2VEdwMVVtd3pjV1ZyVkRGVVozVk5Ta296U1d4TmRHSkpTVmwzZFdsU2VESk1NR1V6VDB4cVZHWkpZbXBaVUVOWVRXaHFOMkZLWldaMFdteHFSVFZIY1hKWmRFTTFNVGs1VWs1RWVWQm9TbVp2WkRCTVpFaEtOemRNTlZoU1UyUjVUbEowV0VGRGEzZ3lVMWhPYUdnNGRXdE1PVmQwYUhWeFZISTNTa3N4SlRKQ2NrTmFaa1Z6VTFKamN6SjRaWFJYT0RKSVExRnlVR2cyTkdkM05VNTBjVVZwVURWR05rcHVURFYxVFhaWWR5VXpSQ1V6UkxJQnpnUUtGVWRQVDBkTVJWOVRVRkpGUVVSVFNFVkZWRjlKUkJLMEJHaDBkSEJ6T2k4dmMzUnZjbUZuWlM1bmIyOW5iR1ZoY0dsekxtTnZiUzl5WlhCc2FYUXRZV05qYjNWdWRDMXpaV055WlhSekx6UXpNREkxTVRNM0x6VmxaalZpWm1OaExXRmxOVGt0TkdWak1DMWlORGMxTFdRMU9XTTNaRFV5WkdJeVpUOUhiMjluYkdWQlkyTmxjM05KWkQxeVpYQnNhWFF0ZDJWaUpUUXdjbVZ3YkdsMExYZGxZaTVwWVcwdVozTmxjblpwWTJWaFkyTnZkVzUwTG1OdmJTWkZlSEJwY21WelBURTNOVEV3T0RjeU1qZ21VMmxuYm1GMGRYSmxQVTR5VTNoT0pUSkNlbWRCWWs0elFXUjVSa1VsTWtZNVlYTXpRV2xVYjFGWWNUTlZKVEpDVHpCUGNGZGpRMXBGVlU5eU56TnZWRWxFTkdSUk5FRkxkV3huSlRKR2JHNUZZWEJ1Y21ORmJGSkdXRWx4VkVjNVpWQm1aVmhCYlc1c2VuRTRhMmx2ZG1ocloxQk5OV1p6U0NVeVJuYzFkQ1V5UW5WRFUxRTBOMFUwWlZsR1IwYzRSMkZ1TkRkWmVuRnFWVzlVZUZJM2RXSlhZazFPY0dsNmVuSkVZMko2TURsTGVFTnNWbEl4VjNvMVQySldNRFJOTUNVeVFqZFZXamhJTUZrM2QybDRRa1puUzNGaU0xbzNKVEpHY0c1eFpHNTNkakJWUm0xTE5FTjBOa1JEUlRORVpUaElablpSYWtSRU5WSnRRM0Y2VmtjeFVrczFjMHhhYVdOWmNuTlJUVk5NV1VOVU5tSnFaSEZtUkV0aFFrcFVOMFE1Y3lVeVJpVXlRakJ3UlRJbE1rSnVWakJ3Um5sQlkxQjJWMVJNTm1KNmVUVXdRWFpxZVdKclExZHNXRWhSUW5jeFdYRkxSVzlxTkdOeVFWUnJVRmhtYzNOU1JsQjRSakZJUXpjNE5FRlpieVV5UW5sQmR5VXpSQ1V6UkxJQnZ3UUtFRk5GVGtSSFVrbEVYMEZRU1Y5TFJWa1NxZ1JvZEhSd2N6b3ZMM04wYjNKaFoyVXVaMjl2WjJ4bFlYQnBjeTVqYjIwdmNtVndiR2wwTFdGalkyOTFiblF0YzJWamNtVjBjeTgwTXpBeU5URXpOeTgwWXpWallqSTFNUzAzTkRZMkxUUXdNak10T1RSaU9DMWpOekkzWW1Ka1pqSTRNV00vUjI5dloyeGxRV05qWlhOelNXUTljbVZ3YkdsMExYZGxZaVUwTUhKbGNHeHBkQzEzWldJdWFXRnRMbWR6WlhKMmFXTmxZV05qYjNWdWRDNWpiMjBtUlhod2FYSmxjejB4TnpVeE1EZzNNakk0SmxOcFoyNWhkSFZ5WlQxdVdIVmliVFJCVkZBbE1rWXlia1VsTWtaTU9FSjJWMjlUTVZFemJHTmlNSGx4Y0V4cU1ETm9PV1J0Y3pneVQxZDVVMk5qTlZwSWIxTXdaRXRvY2tnMFpIQm5lRmxXUzNVMGNqUmlNVk00YjB4NFNHVk5iMGROYUdoWlRHMTFTR2h2Tlc1VlFYSkpkemMyYUdsNFNrbFRabVJCYUVwQ1RWTjNPV1oyTUhFd01FbE1kMUlsTWtKSk1IRXlWSFJSSlRKR1dVbExRelp4TkdaV2NrTXplSGwzWTBKb1RrZHBhRTFPZGtGWWRsTlJlbGhySlRKQ1FWSlhTMUJ2UTJKNlZITkpNR0V4TjJkek5rMUdXSGRtVldKek5ubFdjMHBRZEZBeUpUSkNVMFo0YUcxWVdUWXdZek13WnpGWmNVUk1abGx6YUZKVFZYQndXbTlsWWxCVFRqWjJlR2N4VnpsNE1XdERVemd3TjNKdWNrVjZUalJwVHpSU1pFWlFVV3BWWm1wT1VHeDJOM293UXlVeVJrMHhPRE16UTFFMFdFNDVXRGh1YVV4c1lsUmtWVFp5Y21GMVFscDBiekp4YUdSVE5sUlZjamhwTWpaeFoxQXpXa0psVkZoVmNrRmlRU1V6UkNVelJBPT1zR7_vog-u3BA6ZS1p3QZ09TWRwS8CufZGVB6BPK5zZFppAVM5u_nLTSfvZiPHnDLDJb5cI1rZ8GCMzyf6zh8J.Q2dad2NtOWtPak1pQ25KbGNHeHBkQzVqYjIwPQ
+[HTTP/1.1 101 Switching Protocols 178ms]
+
+GET
+https://replit.com/public/icons/favicon-prompt-192.png
+[HTTP/3 200  0ms]
+
+GET
+https://replit.com/public/icons/favicon-prompt-192.png
+[HTTP/3 200  0ms]
+
+XHRPOST
+https://replit.com/data/repls/bb1d30f8-d852-4bae-abcd-b7c4521e3d85/get_connection_metadata
+[HTTP/3 200  270ms]
+
+GET
+wss://eval.spock.platform.replit.com/wsv2/v2.public.Q2dZSTM5VDl3Z1lTQmdqKzhQM0NCaUlGYzNCdlkyc3dBRHJTQVFva1ltSXhaRE13WmpndFpEZzFNaTAwWW1GbExXRmlZMlF0WWpkak5EVXlNV1V6WkRnMUVnTnVhWGdhRjNKbGNHeHBkQzF5WlhCc0xXWnBiR1Z6TFhOd2IyTnJJZ3hUWVc1a2QybGphRk41Ym1NcURXdGhkR2xsYkc5dVp6SXpNVFpDVVFvWWNtVndiR2wwTFhKbGNHd3RZbXh2WTJ0ekxYTndiMk5yRWhaeVpYQnNhWFF0Y21Wd2JDMXRaWFJoTFhOd2IyTnJHaDF5WlhCc2FYUXRiV0Z5WjJGeWFXNWxMV0pzYjJOcmN5MXpjRzlqYTBvSENQR0Z3aFFRQVZBQVdnOXBiblJsYm5SZmNHVnljMjl1WVd4NEFGSWpDQUVRZ0lDQWdDQVpBQUFBQUFBQUVFQWhBQUFBQUFBQUVFQW9nSUNBZ01nQk1BSmdBMm9VQ1BHRndoUVNEV3RoZEdsbGJHOXVaekl6TVRhQ0FRSXFBSm9CQ2dvSU1DNHdMakUwTmphZ0FRR3lBY2tFQ2hKSFQwOUhURVZmVUZKSlZrRlVSVjlMUlZrU3NnUm9kSFJ3Y3pvdkwzTjBiM0poWjJVdVoyOXZaMnhsWVhCcGN5NWpiMjB2Y21Wd2JHbDBMV0ZqWTI5MWJuUXRjMlZqY21WMGN5ODBNekF5TlRFek55OWhNemhrT1RZd05DMWxOVEV5TFRRNVltRXRPREU1WkMxalkySTNZamRsTW1aak4yVS9SMjl2WjJ4bFFXTmpaWE56U1dROWNtVndiR2wwTFhkbFlpVTBNSEpsY0d4cGRDMTNaV0l1YVdGdExtZHpaWEoyYVdObFlXTmpiM1Z1ZEM1amIyMG1SWGh3YVhKbGN6MHhOelV4TURnM01qTXdKbE5wWjI1aGRIVnlaVDFXVjFrNU9UVlJOU1V5Um5WRlVEaHJTa1EyVlZSdGEwd2xNa1p5U200bE1rWXpKVEpDU2xSNk5WWXljRGRzWjBKNGRXUjZRMVkxVlVORFVHeEtUMUJRUjFocWNHRnpVSFJ6ZERaRlpYUTNkWE5wTlRSQkpUSkdSREpWVWpaMVkwMGxNa1pUVFVrNVZtMUZiMUJuZFhGeVNtazJlRzFoTjIxTWVrdHpXazVST1ZCb1VEZFFiSFY1T0cxTE1WcHlTMDhsTWtKSmVWRlVaeVV5UWxkc1VrSmFTR0ZaV1VwTWRraElKVEpHVW1zeVUwTkdRVGRFV25sdk1HTm1VRU5VWjBsdFNIWTFSRkppZDFoeWVsSjNUbkk0WXpSWlVsZGpjbmhoUXpSelQwMWtjamc1WlV4WGJqRTFiMnB2WkdWSFprRkpRa3QwYVZKTmRIRktkbGcwWmxOQ1RqaGlUMVpJVmt0SFltWmpNM05KVGt0MWREVTBRa2xyV1VnbE1rWk1jV2g2UlZkMWFWTm9XR0pWU25keU1XbEhhbE4yZGxjMVkyeEtUSHBDUVZSV2NISk5KVEpDUVdadlJscGxkM0J5VlRablVUZG1jVUpOTTFBNFVHVXpiRmQwV2tScGQweHVTblkxYmtOQkpUTkVKVE5Fc2dIVkJBb2NSMDlQUjB4RlgxTkZVbFpKUTBWZlFVTkRUMVZPVkY5RlRVRkpUQkswQkdoMGRIQnpPaTh2YzNSdmNtRm5aUzVuYjI5bmJHVmhjR2x6TG1OdmJTOXlaWEJzYVhRdFlXTmpiM1Z1ZEMxelpXTnlaWFJ6THpRek1ESTFNVE0zTHpNd1pUWXdNakZqTFRrNE0yVXROR0V3WXkwNFpURmhMVGRrT1dZMk5qZzJNMk0zWWo5SGIyOW5iR1ZCWTJObGMzTkpaRDF5WlhCc2FYUXRkMlZpSlRRd2NtVndiR2wwTFhkbFlpNXBZVzB1WjNObGNuWnBZMlZoWTJOdmRXNTBMbU52YlNaRmVIQnBjbVZ6UFRFM05URXdPRGN5TXpBbVUybG5ibUYwZFhKbFBVaElhbGhEVGxKdlFqSktTM2xPZW1Kb1FVNTZiRWxTUjA0ek9ISmtaMjlqUWxnellqaHNSWEZJZWxRelp6RndURzk2TjA1MVpsRmpWa2wwTlRWQ1pETkNTRkp0U25kcEpUSkdSbVJhSlRKQ1YybFhjVllsTWtZMVNrZ2xNa0p0UlRkUVR6TllZWGRTVUZOVlIyOTFSR0Z4ZUdKc0pUSkdibTVJTVNVeVFsWnRSbFIxVjJaWlpuWm5hVGw1VWpkdmFVa2xNa0kwUmpNNGNHNVhSVEZKTUVKbWVFOVlZMU5MZURCQlNscEtiVm9sTWtaR1RFRnlaa1J5TWpsNFN6QlBjVUozV1hkaGFEQndZa0VsTWtJNE0xUktRbkpFTkRaNFVFWm5OR3BMTm5scVF6QlJaR0ZpUjBSWlFtMXJXRXh5Y2tsdU1GVlJOemQ0ZVdveE1uTktaMk5ZTkZWaFRtcFRVMDlTZGxVd2QwUjJNbFpMYm5SSFpYcHpaRGhuZGs5WGRpVXlRazQzZG1wNlRGRktjelo0TTFoUFJFOUNNbTlLV25aYVJ5VXlRbk5qYTJkRE1TVXlRa2RsVXpoVlFsZFhla1J4UjJ0WWQwbHhUekUwWkVoVWJrRjVSRFV6ZDJWNldtUnhNRWR5VVNVelJDVXpSTElCeUFRS0ZVZFBUMGRNUlY5VFNFVkZWRk5mUVZCSlgwdEZXUkt1QkdoMGRIQnpPaTh2YzNSdmNtRm5aUzVuYjI5bmJHVmhjR2x6TG1OdmJTOXlaWEJzYVhRdFlXTmpiM1Z1ZEMxelpXTnlaWFJ6THpRek1ESTFNVE0zTHpCaU16YzJaamcwTFRWallqTXROREppTnkxaE5qYzBMVEE0TW1ZelltTTVaalZsTno5SGIyOW5iR1ZCWTJObGMzTkpaRDF5WlhCc2FYUXRkMlZpSlRRd2NtVndiR2wwTFhkbFlpNXBZVzB1WjNObGNuWnBZMlZoWTJOdmRXNTBMbU52YlNaRmVIQnBjbVZ6UFRFM05URXdPRGN5TXpBbVUybG5ibUYwZFhKbFBVWkpVbFIzUzBoTk0wcEZUbmRGYWxSWlJrRlViRXA2Vld4TlUyTjBSVE5VWVhSdlZsRWxNa1pqU1U5dU5GSkRjMDlhWjFacFdVNXlObGxvVVZWM1pXZFFielpxUm5aeGVWTnNkR3RYTTFjd1JFMXNZek1sTWtKalVtODVaVVJxSlRKQ1JHeFZiekZzTkNVeVFsVm1WV1YyYWtJMFFXOW9SWFJqYjNSWlExbE1hSHBzZVZaUVNsUk1lVGRTU1ZGVVZ6UkxUbGsyYW0xdlZGQTBOV3N3WXpVMU1qYzVkbWxSY0VRMk4zTlFkekVsTWtZeWFXNVFURFppUzNwMlpXOXVRMFZDTkdKTFpXc3pRMmxNTVZsMlpWWm9KVEpDWmpaM2JIYzRkeVV5Um5obE0yaGtWM2M1VGtwT09WRmxOMEZtU1dWWE0xb3dabFl4UTBrMFVqSnJkSFEwUWtremFWbHBiV0l6TlRKVVIybzNSemxFYUVac01sVTFZWHAwYUVzMFpGQmtaRzR4TUNVeVFqTkhkR0p6YTI5blNGUlhiblZsTlVKamRsQnFaa1pqV2pOVUpUSkdRMUoxUjFwQlJqbFRXVU5HZUdoSlRHRlhUSE5CWjJWVWNEZzRXbXMyYTB4UFFTVXpSQ1V6UkxJQjBnUUtGVWRQVDBkTVJWOVRVRkpGUVVSVFNFVkZWRjlKUkJLNEJHaDBkSEJ6T2k4dmMzUnZjbUZuWlM1bmIyOW5iR1ZoY0dsekxtTnZiUzl5WlhCc2FYUXRZV05qYjNWdWRDMXpaV055WlhSekx6UXpNREkxTVRNM0x6VmxaalZpWm1OaExXRmxOVGt0TkdWak1DMWlORGMxTFdRMU9XTTNaRFV5WkdJeVpUOUhiMjluYkdWQlkyTmxjM05KWkQxeVpYQnNhWFF0ZDJWaUpUUXdjbVZ3YkdsMExYZGxZaTVwWVcwdVozTmxjblpwWTJWaFkyTnZkVzUwTG1OdmJTWkZlSEJwY21WelBURTNOVEV3T0RjeU16QW1VMmxuYm1GMGRYSmxQVW96T1dwQlFrTldjM04xU0RWb2JWcGxNazVpV25aQ1RFbEZaMEZxTVdaVGRtWk9RM2R6ZUdaUE5raFdkVEZrU3lVeVFtdGFjbFZZY2pZeE5uWXlaeVV5UW1WSWRUWkpZbnBCYjA5aVVHOUpORzR4TVhneVNITllPRkp6WTNwYU9HNHllVmhRY3pOc1pEVjBjSFJrZEVGbVlYcGlhV2xFUW1sc1V6SnZkVmswVTBwTWFWWWxNa0k1ZEhwTFpUUlFKVEpDZVRka00xVWxNa1l6SlRKQ1JFeGFUV05aSlRKQ05rRnRPVUprVldKWGRVVlVlRXBaU0daWU5USnNPREZNUkRJME9FTlhXbXRSZEVkNGREVkVXRVpNTUdsUloyZG5RVTVKUzBreldGRnFkMmh2VTBGM1dXSjRKVEpDUjFWamNEQnNhVEY2U1c5RFEwTjRPV2tsTWtKc04yRkpTMlJPTW1oQlV6RkVNV1ZNTW1FelJHOWtUMmxuVjFWUVJtSTFPV1pFYWlVeVJuaFFhaVV5UWtvbE1rWjNRMkpSUnpaWVJqSkVNa3hHWnlVeVFqZDNNakl6YWpkRFpIbExUemg1TnpZbE1rSnBNblJIVVVsdmJGWlNiRkJpWTFBelNEbFVkbkF3U0daalJEVXhTa0VsTTBRbE0wU3lBYjhFQ2hCVFJVNUVSMUpKUkY5QlVFbGZTMFZaRXFvRWFIUjBjSE02THk5emRHOXlZV2RsTG1kdmIyZHNaV0Z3YVhNdVkyOXRMM0psY0d4cGRDMWhZMk52ZFc1MExYTmxZM0psZEhNdk5ETXdNalV4TXpjdk5HTTFZMkl5TlRFdE56UTJOaTAwTURJekxUazBZamd0WXpjeU4ySmlaR1l5T0RGalAwZHZiMmRzWlVGalkyVnpjMGxrUFhKbGNHeHBkQzEzWldJbE5EQnlaWEJzYVhRdGQyVmlMbWxoYlM1bmMyVnlkbWxqWldGalkyOTFiblF1WTI5dEprVjRjR2x5WlhNOU1UYzFNVEE0TnpJek1DWlRhV2R1WVhSMWNtVTlhR3hHV1ZWRVFUSXhlRWRDZWxsRmIzRkZiVWRUVERGbE5rMUVia05wWmxCR1ZHRlNUV1ZxZWtjbE1rSkhiR2Q0ZDNGMFptbE5ORzl6U1c5WGFtdEhRamc0U0RCTk5qQktabk5YWTBka2JWaDJkVTE2YkhwTmNFVmFNbm96U1dSaGQwWnpOalY2Um5SUlZqbGpNM2M0Wms5clVsWTJObWxQUTFaa1UzcE5ka3hEYTFveGMyWlhWMEZXWnlVeVFuQkJNRUpKTVVaWlZrOVVWMUEzWkVGWVdWWXlUVFJ5Y0VSMFpGVlBXVTE0SlRKR2NXbFBNbWQ0V1RoMkpUSkdVRUYzUmpoR0pUSkNNamMzY25SdWVFbG9WR1I0SlRKQ2FHVm1SV3BHT1ZCbGVtWTJjRmhsVFRGaWNFVlFWRE5NTTJkeVIxaHRlVmx1UzIxRFowVk9NSEZsUTAwM1RqUXdjSFp1VVZSMk1taFZhbFZaU210VWRtVXdhVTlvTVhKdmVXYzFSSGx2Tm5oTVkyeGpjV3hpUkdoRE1saERaMVZJTVNVeVFqUmFSR2hsWXpCUFYyTkxUVE53VEZSMlJFZHJUVWw2VkVoSlZVOUtka0ozU3paRlNrNXJOSEIxYTNjbE0wUWxNMFE9A4jrm2WBD4gqwlyaP-952WCa7VoOBak6Edelkh0mDtHKta01Itg9TqpLl-sx_wgWpOzQxSPrE9qUwjmRl7Q1Ag.Q2dad2NtOWtPak1pQ25KbGNHeHBkQzVqYjIwPQ
+[HTTP/1.1 101 Switching Protocols 96ms]
+
+GET
+wss://replit.com/graphql_subscriptions
+[HTTP/1.1 101 Switching Protocols 114ms]
+
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+XHRPOST
+https://replit.com/graphql
+[HTTP/3 200  73ms]
+
+stallwart: failed ping 1 stallwart.build.js:1:886
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/login
+[HTTP/1.1 304 Not Modified 659ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/injected.js
+[HTTP/1.1 200 OK 212ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js
+[HTTP/1.1 200 OK 422ms]
+
+The script from “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. login
+The script from “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/injected.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. login
+Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content. eruda.js:2:105892
+Error in parsing value for ‘width’.  Declaration dropped. login:1:8
+Partitioned cookie or storage access was provided to “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/login” because it is loaded in the third-party context and dynamic state partitioning is enabled. eruda.js:2:397271
+GET
+https://replit.com/public/js/beacon.js
+[HTTP/2 200  0ms]
+
+stallwart: failed ping 1 stallwart.build.js:1:886
+XHRPOST
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/login
+[HTTP/1.1 200 OK 906ms]
+
+Cookie warnings 2
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/
+[HTTP/1.1 200 OK 211ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@vite/client
+[HTTP/1.1 304 Not Modified 386ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/injected.js
+[HTTP/1.1 200 OK 363ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js
+[HTTP/1.1 200 OK 422ms]
+
+The script from “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/main.tsx?v=s5bfjorR3FBarR8pYUWxH
+[HTTP/1.1 200 OK 79ms]
+
+GET
+https://replit.com/public/js/replit-dev-banner.js
+[HTTP/2 200  0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-dom_client.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/index.css?v=s5bfjorR3FBarR8pYUWxH
+[HTTP/1.1 200 OK 305ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/App.tsx?v=s5bfjorR3FBarR8pYUWxH
+[HTTP/1.1 200 OK 73ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WOOG5QLI.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-QCHXOAYK.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+The script from “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/injected.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/vite/dist/client/env.mjs
+[HTTP/1.1 304 Not Modified 73ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@react-refresh
+[HTTP/1.1 304 Not Modified 74ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/toaster.tsx
+[HTTP/1.1 304 Not Modified 141ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/hooks/useAuth.ts
+[HTTP/1.1 304 Not Modified 137ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/lib/queryClient.ts
+[HTTP/1.1 304 Not Modified 98ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/dashboard.tsx
+[HTTP/1.1 304 Not Modified 209ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/error-boundary.tsx
+[HTTP/1.1 304 Not Modified 203ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/loading.tsx
+[HTTP/1.1 304 Not Modified 170ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/tooltip.tsx
+[HTTP/1.1 304 Not Modified 141ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/signup.tsx
+[HTTP/1.1 304 Not Modified 213ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/landing.tsx
+[HTTP/1.1 304 Not Modified 214ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/not-found.tsx
+[HTTP/1.1 304 Not Modified 240ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-KBTYAULA.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/hooks/use-toast.ts
+[HTTP/1.1 304 Not Modified 130ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/toast.tsx
+[HTTP/1.1 304 Not Modified 135ms]
+
+Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content. eruda.js:2:105892
+Error in parsing value for ‘width’.  Declaration dropped. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:1:8
+[vite] connecting... eruda.js:2:135516
+GET
+wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=LzQxzoSXswM3
+[HTTP/1.1 101 Switching Protocols 253ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/lib/utils.ts
+[HTTP/1.1 304 Not Modified 107ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+Partitioned cookie or storage access was provided to “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/” because it is loaded in the third-party context and dynamic state partitioning is enabled. eruda.js:2:397271
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-G2DSZ377.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-ZJGUFWDC.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/lucide-react.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-7LBPFXVW.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-LUE5KDWX.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RKDPARZB.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-VNROJUSP.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TR2GJLES.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-Q6YJROYD.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-THUXUCPX.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/button.tsx
+[HTTP/1.1 304 Not Modified 137ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/card.tsx
+[HTTP/1.1 304 Not Modified 145ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/LOGOS/sandwich logo.png?import
+[HTTP/1.1 304 Not Modified 72ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/tabs.tsx
+[HTTP/1.1 304 Not Modified 145ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/dashboard-overview.tsx
+[HTTP/1.1 304 Not Modified 136ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/chat-hub.tsx
+[HTTP/1.1 304 Not Modified 140ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/hosts-management-consolidated.tsx
+[HTTP/1.1 304 Not Modified 206ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/drivers-management.tsx
+[HTTP/1.1 304 Not Modified 220ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/recipients-management.tsx
+[HTTP/1.1 304 Not Modified 74ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/sandwich-collection-log.tsx
+[HTTP/1.1 304 Not Modified 205ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/phone-directory.tsx
+[HTTP/1.1 304 Not Modified 207ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meeting-agenda.tsx
+[HTTP/1.1 304 Not Modified 411ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meeting-minutes.tsx
+[HTTP/1.1 304 Not Modified 354ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meetings.tsx
+[HTTP/1.1 304 Not Modified 347ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/development.tsx
+[HTTP/1.1 304 Not Modified 349ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/analytics-dashboard.tsx
+[HTTP/1.1 304 Not Modified 277ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/impact-dashboard.tsx
+[HTTP/1.1 304 Not Modified 421ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/project-detail-clean.tsx
+[HTTP/1.1 304 Not Modified 412ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/projects-clean.tsx
+[HTTP/1.1 304 Not Modified 414ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/role-demo.tsx
+[HTTP/1.1 304 Not Modified 416ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meeting-calendar.tsx
+[HTTP/1.1 304 Not Modified 411ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/lib/authUtils.ts
+[HTTP/1.1 304 Not Modified 484ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/user-profile.tsx
+[HTTP/1.1 304 Not Modified 484ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/user-management.tsx
+[HTTP/1.1 304 Not Modified 479ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/reporting-dashboard.tsx
+[HTTP/1.1 304 Not Modified 475ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/input.tsx
+[HTTP/1.1 304 Not Modified 273ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/zod.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@hookform_resolvers_zod.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-hook-form.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/checkbox.tsx
+[HTTP/1.1 304 Not Modified 287ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/select.tsx
+[HTTP/1.1 304 Not Modified 281ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/form.tsx
+[HTTP/1.1 304 Not Modified 277ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/label.tsx
+[HTTP/1.1 304 Not Modified 273ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/LOGOS/Copy of TSP_transparent.png?import
+[HTTP/1.1 304 Not Modified 349ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/CMYK_PRINT_TSP-01_1749585167435.png?import
+[HTTP/1.1 304 Not Modified 346ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/documents-browser.tsx
+[HTTP/1.1 304 Not Modified 344ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-4BFJKWC4.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WGQNECLP.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-toast.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/class-variance-authority.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-U7P2NEEE.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TPYHSINA.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/tailwind-merge.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/clsx.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/dialog.tsx
+[HTTP/1.1 304 Not Modified 417ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/badge.tsx
+[HTTP/1.1 304 Not Modified 71ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-slot.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/sandwich-collection-form.tsx
+[HTTP/1.1 304 Not Modified 71ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/committee-chat.tsx
+[HTTP/1.1 304 Not Modified 365ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/host-chat.tsx
+[HTTP/1.1 304 Not Modified 425ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/committee-message-log.tsx
+[HTTP/1.1 304 Not Modified 426ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-4RO2SXZU.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-6H75DGJY.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+[vite] connected. eruda.js:2:135516
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/bulk-data-manager.tsx
+[HTTP/1.1 304 Not Modified 341ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/textarea.tsx
+[HTTP/1.1 304 Not Modified 339ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/switch.tsx
+[HTTP/1.1 304 Not Modified 340ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/dropdown-menu.tsx
+[HTTP/1.1 304 Not Modified 402ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/shared/schema.ts
+[HTTP/1.1 304 Not Modified 344ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-label.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/recharts.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-select.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-PPNHGFME.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-43G6IMPT.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/document-preview.tsx
+[HTTP/1.1 304 Not Modified 286ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/development-documents.tsx
+[HTTP/1.1 304 Not Modified 284ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/progress.tsx
+[HTTP/1.1 304 Not Modified 215ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/celebration-toast.tsx
+[HTTP/1.1 304 Not Modified 214ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/date-fns.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/alert.tsx
+[HTTP/1.1 304 Not Modified 144ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/collapsible-nav.tsx
+[HTTP/1.1 304 Not Modified 200ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/table.tsx
+[HTTP/1.1 304 Not Modified 204ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/separator.tsx
+[HTTP/1.1 304 Not Modified 209ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/avatar.tsx
+[HTTP/1.1 304 Not Modified 206ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-switch.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/drizzle-orm_pg-core.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/drizzle-zod.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-S4QZGJXL.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/framer-motion.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-progress.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-avatar.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-separator.js?v=43ea8165
+[HTTP/1.1 200 OK 0ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user
+[HTTP/1.1 200 OK 69ms]
+
+GET
+https://replit.com/public/js/beacon.js
+[HTTP/2 200  0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/LOGOS/sandwich logo.png
+NS_BINDING_ABORTED
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/hosts
+[HTTP/1.1 304 Not Modified 161ms]
+
+GET
+https://fonts.gstatic.com/s/roboto/v48/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBHMdazQ.woff2
+[HTTP/2 200  0ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/projects
+[HTTP/1.1 304 Not Modified 328ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages
+[HTTP/1.1 304 Not Modified 321ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/sandwich-collections/stats
+[HTTP/1.1 200 OK 544ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/meetings
+[HTTP/1.1 200 OK 412ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/weekly-reports
+[HTTP/1.1 200 OK 330ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/drive-links
+[HTTP/1.1 304 Not Modified 337ms]
+
