@@ -1075,7 +1075,7 @@ export default function SandwichCollectionLog() {
               <Filter className="w-4 h-4" />
               <span>Filter</span>
             </Button>
-            {selectedCollections.size > 0 && (
+            {selectedCollections.size > 0 && canEditData && (
               <>
                 <Button
                   variant="outline"
@@ -1086,15 +1086,17 @@ export default function SandwichCollectionLog() {
                   <Edit className="w-4 h-4 mr-2" />
                   Edit ({selectedCollections.size})
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleBatchDelete}
-                  className="flex items-center text-red-600 hover:text-red-700"
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Delete ({selectedCollections.size})
-                </Button>
+                {canDeleteData && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleBatchDelete}
+                    className="flex items-center text-red-600 hover:text-red-700"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete ({selectedCollections.size})
+                  </Button>
+                )}
               </>
             )}
           </div>
@@ -1261,16 +1263,18 @@ export default function SandwichCollectionLog() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
-                    <button
-                      onClick={() => handleSelectCollection(collection.id, !isSelected)}
-                      className="flex items-center"
-                    >
-                      {isSelected ? (
-                        <CheckSquare className="w-4 h-4 text-blue-600" />
-                      ) : (
-                        <Square className="w-4 h-4 text-slate-400 hover:text-slate-600" />
-                      )}
-                    </button>
+                    {canEditData && (
+                      <button
+                        onClick={() => handleSelectCollection(collection.id, !isSelected)}
+                        className="flex items-center"
+                      >
+                        {isSelected ? (
+                          <CheckSquare className="w-4 h-4 text-blue-600" />
+                        ) : (
+                          <Square className="w-4 h-4 text-slate-400 hover:text-slate-600" />
+                        )}
+                      </button>
+                    )}
                     <div className={`flex items-center ${isInactiveHost ? 'text-gray-600' : 'text-slate-700'}`}>
                       <Calendar className={`w-4 h-4 mr-1 ${isInactiveHost ? 'text-gray-500' : ''}`} />
                       <span className="font-medium">{formatDate(collection.collectionDate)}</span>
