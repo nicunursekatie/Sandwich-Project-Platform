@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar, Clock, ListTodo, Plus, Edit, Trash2, CheckCircle2, Circle } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 
 interface AgendaItem {
   id: number;
@@ -21,12 +23,15 @@ interface AgendaItem {
 }
 
 export default function MeetingAgenda() {
+  const { user } = useAuth();
+  const canModifyAgenda = user?.role !== 'committee_member';
+  
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    submittedBy: "Admin User"
+    submittedBy: user?.firstName || "User"
   });
   const { toast } = useToast();
 

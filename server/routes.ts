@@ -1283,7 +1283,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Meeting Minutes
   app.get("/api/meeting-minutes", isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user?.claims?.sub || req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: "User ID not found" });
+      }
       const user = await storage.getUser(userId);
       
       if (!user) {
@@ -1559,8 +1562,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/agenda-items/:id", async (req, res) => {
+  app.patch("/api/agenda-items/:id", isAuthenticated, async (req: any, res) => {
     try {
+      const userId = req.user?.claims?.sub || req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: "User ID not found" });
+      }
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Committee members cannot modify agenda item statuses
+      if (user.role === 'committee_member') {
+        return res.status(403).json({ message: "Committee members cannot modify agenda item statuses" });
+      }
+
       const id = parseInt(req.params.id);
       const { status } = req.body;
 
@@ -1598,8 +1616,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/agenda-items/:id", async (req, res) => {
+  app.delete("/api/agenda-items/:id", isAuthenticated, async (req: any, res) => {
     try {
+      const userId = req.user?.claims?.sub || req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: "User ID not found" });
+      }
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Committee members cannot delete agenda items
+      if (user.role === 'committee_member') {
+        return res.status(403).json({ message: "Committee members cannot delete agenda items" });
+      }
+
       const id = parseInt(req.params.id);
       const success = await storage.deleteAgendaItem(id);
       
@@ -1640,7 +1673,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/meetings", isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user?.claims?.sub || req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: "User ID not found" });
+      }
       const user = await storage.getUser(userId);
       
       if (!user) {
