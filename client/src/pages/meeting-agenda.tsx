@@ -272,7 +272,7 @@ export default function MeetingAgenda() {
                     
                     {/* Action Buttons */}
                     <div className="flex flex-col gap-2 ml-4">
-                      {item.status === "pending" && (
+                      {item.status === "pending" && canModifyAgenda && (
                         <div className="flex gap-2">
                           <Button 
                             size="sm" 
@@ -303,7 +303,7 @@ export default function MeetingAgenda() {
                         </div>
                       )}
                       
-                      {item.status !== "pending" && (
+                      {item.status !== "pending" && canModifyAgenda && (
                         <div className="flex gap-2">
                           <Button 
                             size="sm" 
@@ -316,15 +316,17 @@ export default function MeetingAgenda() {
                         </div>
                       )}
                       
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="text-red-600 hover:text-red-700"
-                        onClick={() => deleteMutation.mutate(item.id)}
-                        disabled={deleteMutation.isPending}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      {canModifyAgenda && (
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="text-red-600 hover:text-red-700"
+                          onClick={() => deleteMutation.mutate(item.id)}
+                          disabled={deleteMutation.isPending}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </CardContent>
