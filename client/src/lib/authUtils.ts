@@ -60,8 +60,8 @@ export function getRoleDisplayName(role: string): string {
   switch (role) {
     case USER_ROLES.ADMIN:
       return 'Administrator';
-    case USER_ROLES.COORDINATOR:
-      return 'Coordinator';
+    case USER_ROLES.COMMITTEE_MEMBER:
+      return 'Committee Member';
     case USER_ROLES.VOLUNTEER:
       return 'Volunteer';
     case USER_ROLES.VIEWER:

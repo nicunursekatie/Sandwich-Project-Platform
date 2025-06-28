@@ -49,7 +49,7 @@ export default function UserManagement() {
     );
   }
 
-  const { data: users = [], isLoading } = useQuery({
+  const { data: users = [], isLoading } = useQuery<User[]>({
     queryKey: ["/api/users"],
     enabled: hasPermission(currentUser, PERMISSIONS.VIEW_USERS),
   });
@@ -179,7 +179,7 @@ export default function UserManagement() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user: User) => (
+              {users.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell>
                     <div>
