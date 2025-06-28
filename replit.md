@@ -169,6 +169,7 @@ Preferred communication style: Simple, everyday language.
 - June 27, 2025: Completed custom authentication system implementation: built user registration and login API endpoints, integrated with database storage using fallback to memory storage, added getUserByEmail method to storage interface, fixed frontend auth flow to handle 401 responses gracefully, authentication system now fully operational with secure session management
 - June 27, 2025: Implemented comprehensive server-side permission system: added requirePermission middleware to protect POST/PUT/PATCH endpoints for sandwich collections, verified volunteers are blocked from data modification operations while retaining read access, permission checks work at both UI and API levels ensuring complete security coverage
 - June 27, 2025: Fixed database schema persistence issues: added missing metadata column to users table, resolved fallback storage problems, implemented auto-created admin user (admin@sandwich.project / admin123) that persists across server restarts, authentication system now fully operational with PostgreSQL database storage instead of memory fallback
+- June 28, 2025: Implemented comprehensive chat message ownership security: added userId column to messages table for tracking message authors, updated backend validation to prevent users from deleting others' messages, modified all chat components to only show delete buttons for user's own messages, security system works at both UI and API levels ensuring complete message ownership protection
 
 ## Changelog
 
