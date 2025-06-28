@@ -214,15 +214,18 @@ export default function HostChat() {
                         {new Date(message.timestamp).toLocaleTimeString()}
                       </span>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => deleteMessageMutation.mutate(message.id)}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
-                      disabled={deleteMessageMutation.isPending}
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </Button>
+                    {/* Only show delete button for user's own messages */}
+                    {message.sender === getUserName() && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteMessageMutation.mutate(message.id)}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                        disabled={deleteMessageMutation.isPending}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    )}
                   </div>
                   <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3">
                     <p className="text-sm">{message.content}</p>
