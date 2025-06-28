@@ -111,13 +111,11 @@ export function getDefaultPermissionsForRole(role: string): string[] {
     
     case USER_ROLES.VOLUNTEER:
       return [
-        PERMISSIONS.VIEW_PHONE_DIRECTORY,  // Need this for navigation access
-        PERMISSIONS.GENERAL_CHAT,
-        PERMISSIONS.TOOLKIT_ACCESS,
-        PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS
-        // Volunteers should not have EDIT_DATA permission for data management
+        PERMISSIONS.VIEW_PHONE_DIRECTORY,  // Phone directory access
+        PERMISSIONS.GENERAL_CHAT,          // General chat participation  
+        PERMISSIONS.TOOLKIT_ACCESS,        // Toolkit resources
+        PERMISSIONS.VIEW_COLLECTIONS       // Collections viewing only
+        // Volunteers should NOT have access to reports, projects, or data management
       ];
     
     case USER_ROLES.RECIPIENT:
