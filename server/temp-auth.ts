@@ -1,5 +1,6 @@
 import type { Express, RequestHandler } from "express";
 import { storage } from "./storage-wrapper";
+import { getDefaultPermissionsForRole } from "@shared/auth-utils";
 
 // Extend session and request types
 declare module 'express-session' {

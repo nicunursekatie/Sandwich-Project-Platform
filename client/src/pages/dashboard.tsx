@@ -104,8 +104,19 @@ export default function Dashboard() {
     { id: "development", label: "Development", icon: FolderOpen, type: "item", permission: PERMISSIONS.EDIT_DATA },
   ];
 
+  // Debug user permissions
+  React.useEffect(() => {
+    if (user) {
+      console.log('Dashboard user:', user);
+      console.log('User permissions:', user.permissions);
+      console.log('User role:', user.role);
+    }
+  }, [user]);
+
   // Filter navigation items based on user permissions
   const filteredNavigation = navigationStructure.filter(item => {
+    console.log(`Checking nav item: ${item.id}, permission: ${item.permission}`);
+    
     // If item has no permission requirement, check if it's always visible
     if (!item.permission) {
       // For sections, check if any sub-items are accessible
@@ -113,13 +124,16 @@ export default function Dashboard() {
         const accessibleItems = item.items.filter(subItem => 
           !subItem.permission || hasPermission(user, subItem.permission)
         );
+        console.log(`Section ${item.id} has ${accessibleItems.length} accessible items`);
         return accessibleItems.length > 0;
       }
       return true;
     }
     
     // Check if user has permission for this item
-    if (!hasPermission(user, item.permission)) {
+    const hasAccess = hasPermission(user, item.permission);
+    console.log(`Item ${item.id} permission check: ${hasAccess}`);
+    if (!hasAccess) {
       return false;
     }
     
