@@ -1,6 +1,27 @@
 import type { Express, RequestHandler } from "express";
 import { storage } from "./storage-wrapper";
-import { getDefaultPermissionsForRole } from "@shared/auth-utils";
+
+// Define permissions locally for server use
+const VOLUNTEER_PERMISSIONS = [
+  'view_phone_directory',
+  'general_chat', 
+  'toolkit_access',
+  'view_collections',
+  'view_reports',
+  'view_projects',
+  'edit_data'
+];
+
+function getDefaultPermissionsForRole(role: string): string[] {
+  switch (role) {
+    case 'volunteer':
+      return VOLUNTEER_PERMISSIONS;
+    case 'admin':
+      return ['view_phone_directory', 'general_chat', 'toolkit_access', 'view_collections', 'view_reports', 'view_projects', 'edit_data', 'delete_data', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'view_users', 'manage_users'];
+    default:
+      return [];
+  }
+}
 
 // Extend session and request types
 declare module 'express-session' {
@@ -275,13 +296,14 @@ export function setupTempAuth(app: Express) {
 
       // Create new user with unique ID
       const userId = "user_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+      const userRole = role || "volunteer"; // Use provided role or default to volunteer
       const newUser = await storage.createUser({
         id: userId,
         email,
         firstName,
         lastName,
-        role: role || "volunteer", // Use provided role or default to volunteer
-        permissions: [],
+        role: userRole,
+        permissions: getDefaultPermissionsForRole(userRole),
         isActive: true,
         profileImageUrl: null,
         metadata: { password } // Store password in metadata for now
@@ -291,6 +313,29 @@ export function setupTempAuth(app: Express) {
     } catch (error) {
       console.error("Registration error:", error);
       res.status(500).json({ success: false, message: "Registration failed" });
+    }
+  });
+
+  // Fix existing users with empty permissions endpoint
+  app.post("/api/auth/fix-permissions", async (req: any, res) => {
+    try {
+      console.log("Fixing permissions for existing users...");
+      
+      // Get the volunteer user
+      const volunteerUser = await storage.getUserByEmail("mdlouza@gmail.com");
+      if (volunteerUser && volunteerUser.permissions.length === 0) {
+        console.log("Updating volunteer user permissions...");
+        await storage.updateUser(volunteerUser.id, {
+          ...volunteerUser,
+          permissions: getDefaultPermissionsForRole(volunteerUser.role)
+        });
+        console.log("Updated volunteer permissions:", getDefaultPermissionsForRole(volunteerUser.role));
+      }
+
+      res.json({ success: true, message: "Permissions fixed" });
+    } catch (error) {
+      console.error("Fix permissions error:", error);
+      res.status(500).json({ success: false, message: "Failed to fix permissions" });
     }
   });
 
