@@ -37,6 +37,7 @@ export default function DriversManagement() {
   const { toast } = useToast();
   const { user } = useAuth();
   const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
+  const canExport = hasPermission(user, PERMISSIONS.EXPORT_DATA);
   const queryClient = useQueryClient();
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

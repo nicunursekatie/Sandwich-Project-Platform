@@ -37,7 +37,11 @@ export const PERMISSIONS = {
   
   // User management
   VIEW_USERS: 'view_users',
-  MANAGE_USERS: 'manage_users'
+  MANAGE_USERS: 'manage_users',
+  
+  // Data import/export (admin only)
+  EXPORT_DATA: 'export_data',
+  IMPORT_DATA: 'import_data'
 } as const;
 
 export function hasRole(user: any, requiredRoles: string[]): boolean {

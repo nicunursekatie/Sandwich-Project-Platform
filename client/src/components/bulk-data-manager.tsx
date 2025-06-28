@@ -8,6 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 import { Database, FileText, MapPin, BarChart3, RefreshCw, ArrowLeft, Upload, Download, Scan } from "lucide-react";
 
 interface MappingStats {
@@ -38,9 +40,14 @@ export default function BulkDataManager({
 }: BulkDataManagerProps = {}) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedHost, setSelectedHost] = useState<string | null>(null);
   const [showHostRecords, setShowHostRecords] = useState(false);
+
+  // Permission checks
+  const canImport = hasPermission(user, PERMISSIONS.IMPORT_DATA);
+  const canExport = hasPermission(user, PERMISSIONS.EXPORT_DATA);
 
   // Fetch collection statistics
   const { data: stats, isLoading: statsLoading } = useQuery({
@@ -252,6 +259,7 @@ export default function BulkDataManager({
                   </div>
                   <Button 
                     onClick={onImportCSV}
+                    disabled={!canImport}
                     className="w-full flex items-center space-x-2"
                     variant="outline"
                   >
@@ -271,6 +279,7 @@ export default function BulkDataManager({
                   </div>
                   <Button 
                     onClick={onExportCSV}
+                    disabled={!canExport}
                     className="w-full flex items-center space-x-2"
                     variant="outline"
                   >
