@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 
 interface Recipient {
   id: number;
@@ -22,6 +24,8 @@ interface Recipient {
 
 export default function RecipientsManagement() {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingRecipient, setEditingRecipient] = useState<Recipient | null>(null);
@@ -262,7 +266,7 @@ export default function RecipientsManagement() {
 
             <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
               <DialogTrigger asChild>
-                <Button className="flex items-center gap-2">
+                <Button disabled={!canEdit} className="flex items-center gap-2">
                   <Plus className="w-4 h-4" />
                   Add Recipient
                 </Button>
@@ -354,6 +358,7 @@ export default function RecipientsManagement() {
                   <Button
                     size="sm"
                     variant="outline"
+                    disabled={!canEdit}
                     onClick={() => handleEdit(recipient)}
                   >
                     <Edit className="w-3 h-3" />
@@ -361,6 +366,7 @@ export default function RecipientsManagement() {
                   <Button
                     size="sm"
                     variant="outline"
+                    disabled={!canEdit}
                     onClick={() => handleDelete(recipient.id)}
                     className="text-red-600 hover:text-red-700"
                   >

@@ -11,6 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck, AlertTriangle, Download, Truck, Clock, Filter, X } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 
 interface Driver {
   id: number;
