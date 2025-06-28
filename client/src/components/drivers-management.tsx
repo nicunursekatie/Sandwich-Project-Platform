@@ -305,7 +305,7 @@ export default function DriversManagement() {
             Drivers Management
           </h1>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={handleExport} disabled={!drivers || drivers.length === 0}>
+            <Button variant="outline" onClick={handleExport} disabled={!canExport || !drivers || drivers.length === 0}>
               <Download className="w-4 h-4 mr-2" />
               Export CSV
             </Button>

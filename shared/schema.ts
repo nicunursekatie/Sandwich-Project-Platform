@@ -159,6 +159,7 @@ export const meetingMinutes = pgTable("meeting_minutes", {
   filePath: text("file_path"), // stored file path
   fileType: text("file_type"), // 'pdf', 'docx', 'google_docs', 'text'
   mimeType: text("mime_type"), // file mime type
+  committeeType: text("committee_type"), // Committee this minute belongs to - "core_group", "marketing_committee", etc.
 });
 
 export const driveLinks = pgTable("drive_links", {

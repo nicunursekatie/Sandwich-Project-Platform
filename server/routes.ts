@@ -1609,10 +1609,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/meetings", async (req, res) => {
+  app.get("/api/meetings", isAuthenticated, async (req: any, res) => {
     try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
       const meetings = await storage.getAllMeetings();
-      res.json(meetings);
+      
+      // Filter meetings based on user role and committee membership
+      if (user.role === 'admin' || user.role === 'admin_coordinator' || user.role === 'admin_viewer') {
+        // Admins see all meetings
+        res.json(meetings);
+      } else if (user.role === 'committee_member') {
+        // Committee members only see meetings for their committees
+        const userCommittees = await storage.getUserCommittees(userId);
+        const committeeTypes = userCommittees.map(membership => membership.committeeId);
+        
+        const filteredMeetings = meetings.filter(meeting => 
+          meeting.type === 'all_team' || committeeTypes.includes(meeting.type)
+        );
+        res.json(filteredMeetings);
+      } else {
+        // Other roles see all_team meetings and their role-specific meetings
+        const filteredMeetings = meetings.filter(meeting => 
+          meeting.type === 'all_team' || meeting.type === user.role
+        );
+        res.json(filteredMeetings);
+      }
     } catch (error) {
       logger.error("Failed to fetch meetings", error);
       res.status(500).json({ message: "Failed to fetch meetings" });
