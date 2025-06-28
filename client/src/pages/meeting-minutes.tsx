@@ -6,13 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, Clock, FileText, Upload, Eye, Download, Link, Edit, Trash2, Plus } from "lucide-react";
+import { Calendar, Clock, FileText, Upload, Eye, Download, Link, Edit, Trash2, Plus, ArrowLeft } from "lucide-react";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 import { DocumentViewer } from '@/components/DocumentViewer';
 import type { Meeting, MeetingMinutes, InsertMeeting } from "@shared/schema";
 
 export default function MeetingMinutes() {
+  const [, setLocation] = useLocation();
   const [selectedMeetingId, setSelectedMeetingId] = useState<number | null>(null);
   const [isUploadingMinutes, setIsUploadingMinutes] = useState(false);
   const [viewingMinutes, setViewingMinutes] = useState<MeetingMinutes | null>(null);
@@ -623,6 +625,24 @@ export default function MeetingMinutes() {
   // Show main meetings list
   return (
     <div className="space-y-6">
+      {/* Navigation Header */}
+      <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => setLocation('/meetings')}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Meetings Hub
+        </Button>
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <span>Meetings</span>
+          <span>•</span>
+          <span className="text-gray-900 dark:text-white font-medium">Minutes</span>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

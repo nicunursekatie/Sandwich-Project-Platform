@@ -174,6 +174,7 @@ Preferred communication style: Simple, everyday language.
 - June 28, 2025: Enhanced role-based permission system with 7 user types: volunteer (basic access), host (manage own collections), recipient (view distributions), driver (delivery management), committee_member (specific committee access only), admin_viewer (view-only admin), admin_coordinator (moderate editing), admin (full access), updated katielong2316@gmail.com to committee_member role with Finance Committee access only
 - June 28, 2025: Implemented comprehensive UI permission enforcement: added disabled={!canEdit} properties to all edit/delete buttons in hosts, recipients, and drivers management components, committee members now have complete view-only access as intended - can view all data but cannot modify hosts, recipients, or drivers
 - June 28, 2025: Restored committee chat access for committee members: simplified permission system by replacing granular chat permissions (committee_chat_assigned, driver_chat, recipient_chat) with practical committee_chat access, updated committee_member role to include view_phone_directory, view_reports, and view_projects for more useful access levels
+- June 28, 2025: Enhanced meeting pages navigation: added "Back to Meetings Hub" navigation headers to meeting agenda, calendar, and minutes pages with breadcrumb trails showing current location (Meetings • Agenda/Calendar/Minutes), improved user navigation flow between meeting-related pages
 
 ## Changelog
 
