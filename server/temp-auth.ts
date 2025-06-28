@@ -3,11 +3,10 @@ import { storage } from "./storage-wrapper";
 
 // Define permissions locally for server use
 const VOLUNTEER_PERMISSIONS = [
-  'view_phone_directory',  // Phone directory access
   'general_chat',          // General chat participation
   'toolkit_access',        // Toolkit resources  
   'view_collections'       // Collections viewing only
-  // Volunteers should NOT have access to reports, projects, or data management
+  // Volunteers should NOT have access to team section, reports, projects, or data management
 ];
 
 function getDefaultPermissionsForRole(role: string): string[] {
