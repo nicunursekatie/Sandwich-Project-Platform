@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts, notifications,
+  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts, notifications, committees, committeeMemberships,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -16,7 +16,9 @@ import {
   type HostContact, type InsertHostContact,
   type Recipient, type InsertRecipient,
   type Contact, type InsertContact,
-  type Notification, type InsertNotification
+  type Notification, type InsertNotification,
+  type Committee, type InsertCommittee,
+  type CommitteeMembership, type InsertCommitteeMembership
 } from "@shared/schema";
 
 export interface IStorage {
@@ -48,6 +50,21 @@ export interface IStorage {
   getProjectComments(projectId: number): Promise<ProjectComment[]>;
   createProjectComment(comment: InsertProjectComment): Promise<ProjectComment>;
   deleteProjectComment(id: number): Promise<boolean>;
+  
+  // Committee management
+  getAllCommittees(): Promise<Committee[]>;
+  getCommittee(id: string): Promise<Committee | undefined>;
+  createCommittee(committee: InsertCommittee): Promise<Committee>;
+  updateCommittee(id: string, updates: Partial<Committee>): Promise<Committee | undefined>;
+  deleteCommittee(id: string): Promise<boolean>;
+  
+  // Committee membership management
+  getUserCommittees(userId: string): Promise<Array<Committee & { membership: CommitteeMembership }>>;
+  getCommitteeMembers(committeeId: string): Promise<Array<User & { membership: CommitteeMembership }>>;
+  addUserToCommittee(membership: InsertCommitteeMembership): Promise<CommitteeMembership>;
+  updateCommitteeMembership(id: number, updates: Partial<CommitteeMembership>): Promise<CommitteeMembership | undefined>;
+  removeUserFromCommittee(userId: string, committeeId: string): Promise<boolean>;
+  isUserCommitteeMember(userId: string, committeeId: string): Promise<boolean>;
   
   // Messages
   getAllMessages(): Promise<Message[]>;
@@ -158,6 +175,8 @@ export class MemStorage implements IStorage {
   private recipients: Map<number, Recipient>;
   private contacts: Map<number, Contact>;
   private notifications: Map<number, Notification>;
+  private committees: Map<string, Committee>;
+  private committeeMemberships: Map<number, CommitteeMembership>;
   private currentIds: {
     user: number;
     project: number;
@@ -196,6 +215,8 @@ export class MemStorage implements IStorage {
     this.recipients = new Map();
     this.contacts = new Map();
     this.notifications = new Map();
+    this.committees = new Map();
+    this.committeeMemberships = new Map();
     this.currentIds = {
       user: 1,
       project: 1,
