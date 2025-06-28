@@ -79,9 +79,19 @@ export function CollapsibleNav() {
     
     // For sections, show them if they have at least one visible sub-item
     if (item.type === "section" && item.items) {
-      const visibleSubItems = item.items.filter(subItem => 
-        !subItem.permission || hasPermission(user, subItem.permission)
-      );
+      const visibleSubItems = item.items.filter(subItem => {
+        // If no permission required, show the item
+        if (!subItem.permission) return true;
+        
+        // Check if user has the required permission
+        return hasPermission(user, subItem.permission);
+      });
+      
+      // Always show Operations section for logged-in users (but filter sub-items)
+      if (item.id === "operations") {
+        return true;
+      }
+      
       return visibleSubItems.length > 0;
     }
     
