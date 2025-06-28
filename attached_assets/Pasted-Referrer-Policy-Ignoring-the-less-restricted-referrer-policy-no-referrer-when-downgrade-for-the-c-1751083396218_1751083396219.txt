@@ -1,0 +1,216 @@
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 2 l
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 2 l
+Partitioned cookie or storage access was provided to “https://dealfinder.retailmenot.com/experience/app” because it is loaded in the third-party context and dynamic state partitioning is enabled. client.7810f206.js:2:1556750
+
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      _app-d6497657ceb4346c.js:38:5277
+[LaunchDarkly] LaunchDarkly client initialized _app-d6497657ceb4346c.js:38:5277
+Partitioned cookie or storage access was provided to “https://js.stripe.com/v3/controller-with-preconnect-3f56af80c8083f35673b1752f599c94c.html#__shared_params__[version]=acacia&apiKey=pk_live_515YpNsJAmnYVOvfnsBqRdATWS6SzbNAslOz1z2tujdKuvRMDAwWMeFXp6dJL1YKRrQjB0WAp0UDGwlFYL7hxw7Fc00QkfxBFsL&apiVersion=2025-01-27.acacia&stripeJsId=dbdfc600-37a5-455e-a939-df3784685209&stripeObjId=sobj-3167afe2-f2e3-4b91-ac78-a9f2a02474e5&firstStripeInstanceCreatedLatency=3&controllerCount=1&isCheckout=false&stripeJsLoadTime=1751083134447&manualBrowserDeprecationRollout=false&mids[guid]=NA&mids[muid]=34096df2-7bc6-4aba-a97e-4a914417484d6c3709&mids[sid]=NA&referrer=https%3A%2F%2Freplit.com%2F%40katielong2316%2FSandwichSync&controllerId=__privateStripeController0861” because it is loaded in the third-party context and dynamic state partitioning is enabled. controller-with-preconnect-5fa05caa9a253f01ab9035a5962157c7.js:1:26907
+Content-Security-Policy warnings 4
+Ignoring unsupported entryTypes: longtask. recaptcha__en.js:538:180
+Partitioned cookie or storage access was provided to “https://www.google.com/recaptcha/enterprise/anchor?ar=1&k=6LdqhwwoAAAAAFPdw8jCuvY3PaHQItGj3RzOS4fW&co=aHR0cHM6Ly9yZXBsaXQuY29tOjQ0Mw..&hl=en&v=h7qt2xUGz2zqKEhSc8DD8baZ&size=invisible&cb=azn30gj21kh0” because it is loaded in the third-party context and dynamic state partitioning is enabled. recaptcha__en.js:245:377
+Cookie warnings 2
+Partitioned cookie or storage access was provided to “https://www.googletagmanager.com/static/service_worker/56n0/sw_iframe.html?origin=https%3A%2F%2Freplit.com” because it is loaded in the third-party context and dynamic state partitioning is enabled. sw_iframe.html:15:769
+Warning: getPdfFilenameFromUrl: ignore "data:"-URL for performance reasons. pdf.mjs:327:13
+PDF 1c37061c69f842e288eb9a5cf2c171e2 [1.6 Adobe PDF library 16.00 / Adobe Illustrator 25.4 (Macintosh)] (PDF.js: 5.3.42 [250cc7d29]) viewer.mjs:14300:13
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+Partitioned cookie or storage access was provided to “https://m.stripe.network/inner.html#url=https%3A%2F%2Freplit.com%2F%40katielong2316%2FSandwichSync&title=SandwichSync%20-%20Replit&referrer=&muid=34096df2-7bc6-4aba-a97e-4a914417484d6c3709&sid=NA&version=6&preview=false&__shared_params__[version]=acacia” because it is loaded in the third-party context and dynamic state partitioning is enabled. out-4.5.44.js:1:39660
+Cookie warnings 3
+The resource at “https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly. app
+The resource at “https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly. app
+stallwart: failed ping 1 2 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 9 stallwart.build.js:1:886
+Cookie warnings 7
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 3 stallwart.build.js:1:886
+stallwart: failed ping 1 2 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 2 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 3 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 1 3 stallwart.build.js:1:886
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html:151:20
+Partitioned cookie or storage access was provided to “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar7f%3A” because it is loaded in the third-party context and dynamic state partitioning is enabled.
+Cookie warnings 5
+stallwart: failed ping 1 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 1 4 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+stallwart: failed ping 2 stallwart.build.js:1:886
+stallwart: failed ping 1 stallwart.build.js:1:886
+The script from “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+The script from “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/__replco/static/devtools/injected.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content. eruda.js:2:105892
+[vite] connecting... eruda.js:2:135516
+Partitioned cookie or storage access was provided to “https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/” because it is loaded in the third-party context and dynamic state partitioning is enabled. eruda.js:2:397271
+[vite] connected. eruda.js:2:135516
+Expected color but found ‘text’.  Error in parsing value for ‘color’.  Declaration dropped. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:1:6237
+Error in parsing value for ‘-webkit-text-size-adjust’.  Declaration dropped. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:147:29
+GET
+https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2
+[HTTP/3 200  0ms]
+
+GET
+https://fonts.gstatic.com/s/roboto/v18/KFOlCnqEu92Fr1MmEU9fBBc4AMP6lQ.woff2
+
+Unknown property ‘-moz-box-shadow’.  Declaration dropped. styles__ltr.css:1:49169
+Expected ‘none’, URL, or filter function but found ‘progid’.  Error in parsing value for ‘filter’.  Declaration dropped. styles__ltr.css:1:51017
+Unknown property ‘-moz-border-radius’.  Declaration dropped. styles__ltr.css:1:64317
+Error in parsing value for ‘box-shadow’.  Declaration dropped. styles__ltr.css:1:64350
+Unknown descriptor ‘900’ in @font-face rule.  Skipped to next declaration. client.c32b4de4.css:22:38
+Error in parsing value for ‘-webkit-text-size-adjust’.  Declaration dropped. client.c32b4de4.css:76:29
+Unknown property ‘-moz-column-gap’.  Declaration dropped. client.c32b4de4.css:1602:19
+Error in parsing value for ‘text-wrap’.  Declaration dropped. client.c32b4de4.css:1665:14
+Error in parsing value for ‘font-size’.  Declaration dropped. SandwichSync:4:56
+Error in parsing value for ‘font-size’.  Declaration dropped. SandwichSync:121:56
+Unknown descriptor ‘font-feature-settings: '"ss15"';’ in @font-face rule.  Skipped to next declaration. ~:81:30
+Unknown property ‘text-size-adjust’.  Declaration dropped. viewer.css:612:20
+GET
+https://replit.com/public/fonts/ibm-plex-sans-v8-latin-regular.woff2
+[HTTP/3 200  0ms]
+
+GET
+https://replit.com/public/fonts/ibm-plex-sans-v8-latin-500.woff2
+[HTTP/3 200  0ms]
+
+GET
+https://replit.com/public/fonts/hack-bold.woff2?sha=3114f1256
+[HTTP/3 200  0ms]
+
+GET
+https://replit.com/public/fonts/hack-regular.woff2?sha=3114f1256
+[HTTP/3 200  0ms]
+
+GET
+https://replit.com/public/fonts/ibm-plex-sans-v8-latin-600.woff2
+
+Error in parsing value for ‘text-decoration’.  Declaration dropped. d6a706b9558d5d65.css:1:8270
+Error in parsing value for ‘text-decoration’.  Declaration dropped. d6a706b9558d5d65.css:1:8392
+Error in parsing value for ‘text-decoration’.  Declaration dropped. d6a706b9558d5d65.css:1:8518
+Error in parsing value for ‘text-decoration’.  Declaration dropped. d6a706b9558d5d65.css:1:8644
+Error in parsing value for ‘-webkit-text-size-adjust’.  Declaration dropped. f28c7eb0678a8ed9.css:1:3005
+Error in parsing value for ‘-moz-text-size-adjust’.  Declaration dropped. f28c7eb0678a8ed9.css:1:3032
+Unknown property ‘text-size-adjust’.  Declaration dropped. f28c7eb0678a8ed9.css:1:3080
+Error in parsing value for ‘text-wrap’.  Declaration dropped. f28c7eb0678a8ed9.css:1:18017
+Unknown property ‘-moz-text-decoration-color’.  Declaration dropped. f28c7eb0678a8ed9.css:1:23362
+Error in parsing value for ‘text-wrap’.  Declaration dropped. f28c7eb0678a8ed9.css:1:25658
+Error in parsing value for ‘transition-duration’.  Declaration dropped. f28c7eb0678a8ed9.css:1:47947
+Error in parsing value for ‘scrollbar-width’.  Declaration dropped. 06a94a555e2ea639.css:1:4498
+Error in parsing value for ‘-webkit-box-align’.  Declaration dropped. ~:1:212
+Source map error: Error: request failed with status 404
+Stack in the worker:networkRequest@resource://devtools/client/shared/source-map-loader/utils/network-request.js:43:9
+
+Resource URL: https://cdn.replit.com/_next/static/css/f28c7eb0678a8ed9.css
+Source Map URL: f28c7eb0678a8ed9.css.map
+Source map error: Error: request failed with status 404
+Stack in the worker:networkRequest@resource://devtools/client/shared/source-map-loader/utils/network-request.js:43:9
+
+Resource URL: https://cdn.replit.com/_next/static/css/d6a706b9558d5d65.css
+Source Map URL: d6a706b9558d5d65.css.map
+Source map error: Error: request failed with status 404
+Stack in the worker:networkRequest@resource://devtools/client/shared/source-map-loader/utils/network-request.js:43:9
+
+Resource URL: https://cdn.replit.com/_next/static/css/06a94a555e2ea639.css
+Source Map URL: 06a94a555e2ea639.css.map
+GET
+https://www.gstatic.com/recaptcha/api2/logo_48.png
+[HTTP/1.1 200 OK 0ms]
+
+GET
+data:image/png;base64,iVBORw0KGgBX2EQZQBOnoDD2UcBhW1sSiNmRQ8RLXQFNGEeygBY2c9ObVv9U1t63RNBc6wgU2VvBPuEb0HRObDgBXlGjaztkBWm8aGJkATRZZa3RzU6xhDAwBuFJvGDokk0hlRv6FSghlBGdtzcqF6RQBVwudRzWvBcGFXHkxMO6F5Dx0B0GGK82EPKTobIlQ1OwBag4xQGEuQbhhZExTpOMDBdWcMLJAH6z05bpVM3n1yIHoBny71Em5nBb3FFaA1IB1nQYk269fH5kcxBuVnl2DwBHU8DmmdyZWV0Kp9/B/utvhXIgX65veQBbxxyTBBhPIp43wBuV2HH3NWZDvKaRUBcaWcBYwCccgG1CS5ayvpLA+VaS2AoJEGZWOY/OJHry+PRBih8RohtGaoLIEyGBdlheMvRrX9ddH3tfKX9eyhoEy/2dl3sqLyixil0zXIrepVxUhxsq0CN8YypdBCrZLgz43ZCkKTB8Pqf4WkFkNSU3fTWFahPQLh42Bv853YXR2dHIBo7Vtbh5kR3Jm/t/o8WUBb4M/nElvLlCkb4TpsrVtByaN2YWM35OlwBOjsdc8PAB01o/BdE5l9unUdAooYXA74zIBawZfP8ccRU+Gb5hvUABVU0zkLigyABoG7f6XMOZHcTVVMBdAFk3zQB1G/Ea9NwaXQnBZnF2RxZlSI96RQBI89vGAM3C9I9p4U+RXPsBdJjXfmUB/Nt6pN2ZX3cUin0lWs98YnyzBaWA3ZOr3R7hqBfatk020qBfBoRLHL6KHIBakhwo3XdbxkBUh6HRnEkfhv+fV1Zrn87g80uFFbUIA9Qtsxx+4pcPURUGvI/BHxZG75dkfdfKKVTm1OlkAQZD1Hb7EeEgylwBdHIenSyS95xEYe5pbgQBYZV2E255ZTuaZHo
+
