@@ -58,10 +58,10 @@ export function CollapsibleNav() {
       icon: FolderOpen, 
       type: "section",
       items: [
-        { id: "projects", label: "Projects", icon: ListTodo, href: "/projects" },
+        { id: "projects", label: "Projects", icon: ListTodo, href: "/projects", permission: PERMISSIONS.VIEW_PROJECTS },
         { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings" },
         { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics" },
-        { id: "reports", label: "Reports", icon: FileText, href: "/reporting-dashboard" },
+        { id: "reports", label: "Reports", icon: FileText, href: "/reporting-dashboard", permission: PERMISSIONS.VIEW_REPORTS },
         { id: "role-demo", label: "Role Demo", icon: Users, href: "/role-demo" },
       ]
     },
@@ -71,9 +71,21 @@ export function CollapsibleNav() {
   ];
 
   // Filter navigation items based on user permissions
-  const filteredNavigation = navigationStructure.filter(item => 
-    !item.permission || hasPermission(user, item.permission)
-  );
+  const filteredNavigation = navigationStructure.filter(item => {
+    if (item.permission && !hasPermission(user, item.permission)) {
+      return false;
+    }
+    
+    // For sections, show them if they have at least one visible sub-item
+    if (item.type === "section" && item.items) {
+      const visibleSubItems = item.items.filter(subItem => 
+        !subItem.permission || hasPermission(user, subItem.permission)
+      );
+      return visibleSubItems.length > 0;
+    }
+    
+    return true;
+  });
 
   return (
     <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
@@ -103,7 +115,9 @@ export function CollapsibleNav() {
                   </button>
                   {isExpanded && (
                     <ul className="mt-2 ml-8 space-y-1">
-                      {item.items?.map((subItem) => {
+                      {item.items?.filter(subItem => 
+                        !subItem.permission || hasPermission(user, subItem.permission)
+                      ).map((subItem) => {
                         const SubIcon = subItem.icon;
                         const isSubActive = activeSection === subItem.id;
                         return (
