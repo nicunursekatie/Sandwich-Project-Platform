@@ -310,7 +310,7 @@ export default function DriversManagement() {
             </Button>
             <Dialog open={isAgreementModalOpen} onOpenChange={setIsAgreementModalOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
+                <Button disabled={!canEdit} variant="outline" className="flex items-center gap-2">
                   <Upload className="w-4 h-4" />
                   Upload Agreement
                 </Button>
@@ -343,7 +343,7 @@ export default function DriversManagement() {
             
             <Dialog open={isSubmissionModalOpen} onOpenChange={setIsSubmissionModalOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
+                <Button disabled={!canEdit} variant="outline" className="flex items-center gap-2">
                   <Send className="w-4 h-4" />
                   Submit Volunteer Agreement
                 </Button>
@@ -667,6 +667,7 @@ export default function DriversManagement() {
                     <Button
                       variant="outline"
                       size="sm"
+                      disabled={!canEdit}
                       onClick={() => handleEdit(driver)}
                       className="flex items-center gap-1"
                     >
@@ -762,6 +763,7 @@ export default function DriversManagement() {
                     <Button
                       variant="outline"
                       size="sm"
+                      disabled={!canEdit}
                       onClick={() => handleEdit(driver)}
                       className="flex items-center gap-1"
                     >
