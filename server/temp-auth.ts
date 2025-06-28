@@ -44,8 +44,10 @@ const ROLE_PERMISSIONS = {
     'general_chat',
     'toolkit_access',
     'view_collections',
-    'committee_chat_assigned',  // Only committees they're assigned to
-    'view_committee_projects'   // Only projects for their committees
+    'committee_chat',
+    'view_phone_directory',
+    'view_reports',
+    'view_projects'
   ],
   
   // Low-level admin - view everything, minimal editing
@@ -462,6 +464,17 @@ export function setupTempAuth(app: Express) {
           permissions: getDefaultPermissionsForRole(volunteerUser.role)
         });
         console.log("Updated volunteer permissions:", getDefaultPermissionsForRole(volunteerUser.role));
+      }
+
+      // Update Katie's permissions to include committee chat
+      const katieUser = await storage.getUserByEmail("katielong2316@gmail.com");
+      if (katieUser) {
+        console.log("Updating Katie's permissions...");
+        await storage.updateUser(katieUser.id, {
+          ...katieUser,
+          permissions: getDefaultPermissionsForRole("committee_member")
+        });
+        console.log("Updated Katie's permissions:", getDefaultPermissionsForRole("committee_member"));
       }
 
       res.json({ success: true, message: "Permissions fixed" });
