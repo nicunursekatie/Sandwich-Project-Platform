@@ -111,11 +111,13 @@ export function getDefaultPermissionsForRole(role: string): string[] {
     
     case USER_ROLES.VOLUNTEER:
       return [
+        PERMISSIONS.VIEW_PHONE_DIRECTORY,  // Need this for navigation access
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.TOOLKIT_ACCESS,
         PERMISSIONS.VIEW_COLLECTIONS,
         PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS
+        PERMISSIONS.VIEW_PROJECTS,
+        PERMISSIONS.EDIT_DATA  // For development tab access
       ];
     
     case USER_ROLES.RECIPIENT:
