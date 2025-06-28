@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -61,17 +61,20 @@ export default function UserProfile() {
   const { data: userProfile, isLoading } = useQuery({
     queryKey: ["/api/auth/profile"],
     enabled: !!user,
-    onSuccess: (data) => {
-      if (data) {
-        profileForm.reset({
-          firstName: data.firstName || "",
-          lastName: data.lastName || "",
-          displayName: data.displayName || "",
-          email: data.email || "",
-        });
-      }
-    },
   });
+
+  // Update form when profile data loads
+  useEffect(() => {
+    if (userProfile && typeof userProfile === 'object') {
+      const profile = userProfile as any;
+      profileForm.reset({
+        firstName: profile.firstName || "",
+        lastName: profile.lastName || "",
+        displayName: profile.displayName || "",
+        email: profile.email || "",
+      });
+    }
+  }, [userProfile, profileForm]);
 
   // Update profile mutation
   const updateProfileMutation = useMutation({

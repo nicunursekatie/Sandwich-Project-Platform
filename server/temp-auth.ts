@@ -434,6 +434,95 @@ export function setupTempAuth(app: Express) {
       res.json({ success: true, message: 'Logged out successfully' });
     });
   });
+
+  // Profile management endpoints
+  app.get("/api/auth/profile", isAuthenticated, async (req: any, res) => {
+    try {
+      const user = req.session.user;
+      const userData = await storage.getUserByEmail(user.email);
+      if (userData) {
+        res.json({
+          id: userData.id,
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          displayName: userData.displayName,
+          profileImageUrl: userData.profileImageUrl
+        });
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    } catch (error) {
+      console.error("Profile fetch error:", error);
+      res.status(500).json({ message: "Failed to fetch profile" });
+    }
+  });
+
+  app.put("/api/auth/profile", isAuthenticated, async (req: any, res) => {
+    try {
+      const user = req.session.user;
+      const { firstName, lastName, displayName, email } = req.body;
+      
+      const userData = await storage.getUserByEmail(user.email);
+      if (!userData) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const updatedUser = await storage.updateUser(userData.id, {
+        firstName,
+        lastName,
+        displayName,
+        email,
+        updatedAt: new Date()
+      });
+
+      // Update session with new email if changed
+      if (email !== user.email) {
+        req.session.user.email = email;
+      }
+
+      res.json({
+        id: updatedUser.id,
+        email: updatedUser.email,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        displayName: updatedUser.displayName,
+        profileImageUrl: updatedUser.profileImageUrl
+      });
+    } catch (error) {
+      console.error("Profile update error:", error);
+      res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
+  app.put("/api/auth/change-password", isAuthenticated, async (req: any, res) => {
+    try {
+      const user = req.session.user;
+      const { currentPassword, newPassword } = req.body;
+      
+      const userData = await storage.getUserByEmail(user.email);
+      if (!userData) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Check current password
+      const storedPassword = userData.metadata?.password;
+      if (!storedPassword || storedPassword !== currentPassword) {
+        return res.status(400).json({ message: "Current password is incorrect" });
+      }
+
+      // Update password
+      await storage.updateUser(userData.id, {
+        metadata: { ...userData.metadata, password: newPassword },
+        updatedAt: new Date()
+      });
+
+      res.json({ message: "Password changed successfully" });
+    } catch (error) {
+      console.error("Password change error:", error);
+      res.status(500).json({ message: "Failed to change password" });
+    }
+  });
 }
 
 // Middleware to check if user is authenticated

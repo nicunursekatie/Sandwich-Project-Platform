@@ -153,6 +153,8 @@ export default function Dashboard() {
         return <ProjectsClean />;
       case "messages":
         return <ChatHub />;
+      case "profile":
+        return <UserProfile />;
       case "meetings":
         return <MeetingsLandingPage onNavigate={setActiveSection} />;
       case "minutes":
