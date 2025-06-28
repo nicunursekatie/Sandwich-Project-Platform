@@ -362,9 +362,23 @@ export default function Dashboard() {
             <MessageCircle className="w-5 h-5" />
           </button>
           <button 
-            onClick={() => {
-              queryClient.clear();
-              window.location.href = "/";
+            onClick={async () => {
+              try {
+                // Call logout API to clear session
+                await fetch('/api/logout', {
+                  method: 'POST',
+                  credentials: 'include'
+                });
+                // Clear query cache
+                queryClient.clear();
+                // Redirect to landing page
+                window.location.href = "/";
+              } catch (error) {
+                console.error('Logout error:', error);
+                // Fallback: clear cache and redirect anyway
+                queryClient.clear();
+                window.location.href = "/";
+              }
             }}
             className="flex items-center space-x-2 px-2 sm:px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors"
           >

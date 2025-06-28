@@ -382,9 +382,13 @@ export function setupTempAuth(app: Express) {
 
   // Logout endpoint
   app.post("/api/logout", (req: any, res) => {
-    req.session.destroy(() => {
+    req.session.destroy((err: any) => {
+      if (err) {
+        console.error('Session destroy error:', err);
+        return res.status(500).json({ success: false, message: 'Logout failed' });
+      }
       res.clearCookie('connect.sid');
-      res.redirect('/');
+      res.json({ success: true, message: 'Logged out successfully' });
     });
   });
 }
