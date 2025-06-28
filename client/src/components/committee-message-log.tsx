@@ -19,8 +19,23 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Get user name from authenticated user data
+  // Get user profile for display name
+  const { data: userProfile } = useQuery({
+    queryKey: ["/api/auth/profile"],
+    enabled: !!user,
+  });
+
+  // Get user name from profile or fallback to email prefix
   const getUserName = () => {
+    if (userProfile && typeof userProfile === 'object') {
+      const profile = userProfile as any;
+      if (profile.displayName) {
+        return profile.displayName;
+      }
+      if (profile.firstName) {
+        return profile.firstName;
+      }
+    }
     if (user && typeof user === 'object' && 'email' in user && user.email) {
       // Use email prefix as display name (e.g., "john.doe@example.com" -> "john.doe")
       return String(user.email).split('@')[0];
