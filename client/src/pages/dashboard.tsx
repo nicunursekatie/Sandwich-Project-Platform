@@ -1,4 +1,4 @@
-import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone, ChevronDown, ChevronRight, Menu, X } from "lucide-react";
+import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone, ChevronDown, ChevronRight, Menu, X, UserCog } from "lucide-react";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectList from "@/components/project-list";
@@ -28,6 +28,7 @@ import DataManagement from "@/pages/data-management";
 import PerformanceDashboard from "@/pages/performance-dashboard";
 import ReportingDashboard from "@/pages/reporting-dashboard";
 import UserManagement from "@/components/user-management";
+import UserProfile from "@/components/user-profile";
 import { useState } from "react";
 import * as React from "react";
 import { useAuth } from "@/hooks/useAuth";
@@ -360,6 +361,17 @@ export default function Dashboard() {
             title="Messages"
           >
             <MessageCircle className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => setActiveSection("profile")}
+            className={`p-2 rounded-lg transition-colors ${
+              activeSection === "profile"
+                ? "bg-blue-50 text-blue-700 border border-blue-200"
+                : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            }`}
+            title="Account Settings"
+          >
+            <UserCog className="w-5 h-5" />
           </button>
           <button 
             onClick={async () => {
