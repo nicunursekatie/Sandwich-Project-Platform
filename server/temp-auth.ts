@@ -1,24 +1,159 @@
 import type { Express, RequestHandler } from "express";
 import { storage } from "./storage-wrapper";
 
-// Define permissions locally for server use
-const VOLUNTEER_PERMISSIONS = [
-  'general_chat',          // General chat participation
-  'toolkit_access',        // Toolkit resources  
-  'view_collections'       // Collections viewing only
-  // Volunteers should NOT have access to team section, reports, projects, or data management
-];
+// Define permissions for different user types
+const ROLE_PERMISSIONS = {
+  // Basic volunteer access
+  volunteer: [
+    'general_chat',
+    'toolkit_access',
+    'view_collections'
+  ],
+  
+  // Host organizations - manage their own data and collections
+  host: [
+    'general_chat',
+    'toolkit_access',
+    'view_collections',
+    'edit_own_collections',  // Can only edit collections from their host
+    'host_chat',
+    'view_own_host_data'
+  ],
+  
+  // Recipient organizations - view collections and distributions
+  recipient: [
+    'general_chat',
+    'toolkit_access',
+    'view_collections',
+    'recipient_chat',
+    'view_distribution_data'
+  ],
+  
+  // Drivers - manage deliveries and routes
+  driver: [
+    'general_chat',
+    'toolkit_access',
+    'view_collections',
+    'driver_chat',
+    'view_delivery_routes',
+    'update_delivery_status'
+  ],
+  
+  // Committee members - access only to their specific committees
+  committee_member: [
+    'general_chat',
+    'toolkit_access',
+    'view_collections',
+    'committee_chat_assigned',  // Only committees they're assigned to
+    'view_committee_projects'   // Only projects for their committees
+  ],
+  
+  // Low-level admin - view everything, minimal editing
+  admin_viewer: [
+    'general_chat',
+    'toolkit_access',
+    'view_collections',
+    'view_reports',
+    'view_projects',
+    'view_users',
+    'view_phone_directory',
+    'committee_chat',
+    'host_chat',
+    'driver_chat',
+    'recipient_chat',
+    'view_analytics'
+  ],
+  
+  // Mid-tier admin - moderate editing capabilities
+  admin_coordinator: [
+    'general_chat',
+    'toolkit_access',
+    'view_collections',
+    'edit_collections',
+    'view_reports',
+    'view_projects',
+    'edit_projects',
+    'view_users',
+    'edit_users',
+    'view_phone_directory',
+    'committee_chat',
+    'host_chat',
+    'driver_chat',
+    'recipient_chat',
+    'view_analytics',
+    'manage_meetings',
+    'approve_agenda_items'
+  ],
+  
+  // Top-tier admin - full access
+  admin: [
+    'general_chat',
+    'toolkit_access',
+    'view_collections',
+    'edit_collections',
+    'delete_collections',
+    'view_reports',
+    'generate_reports',
+    'view_projects',
+    'edit_projects',
+    'delete_projects',
+    'create_projects',
+    'view_users',
+    'edit_users',
+    'delete_users',
+    'manage_users',
+    'create_users',
+    'view_phone_directory',
+    'edit_phone_directory',
+    'committee_chat',
+    'host_chat',
+    'driver_chat',
+    'recipient_chat',
+    'view_analytics',
+    'manage_meetings',
+    'approve_agenda_items',
+    'manage_committees',
+    'system_administration',
+    'bulk_data_operations',
+    'export_data',
+    'import_data'
+  ]
+};
 
 function getDefaultPermissionsForRole(role: string): string[] {
-  switch (role) {
-    case 'volunteer':
-      return VOLUNTEER_PERMISSIONS;
-    case 'admin':
-      return ['view_phone_directory', 'general_chat', 'toolkit_access', 'view_collections', 'view_reports', 'view_projects', 'edit_data', 'delete_data', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'view_users', 'manage_users'];
-    default:
-      return [];
-  }
+  return ROLE_PERMISSIONS[role as keyof typeof ROLE_PERMISSIONS] || [];
 }
+
+// Committee-specific permission checking
+export const requireCommitteeAccess = (committeeId?: string): RequestHandler => {
+  return async (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = req.user;
+    
+    // Admins have access to all committees
+    if (user.role === 'admin' || user.role === 'admin_coordinator' || user.role === 'admin_viewer') {
+      return next();
+    }
+
+    // For committee members, check specific committee access
+    if (user.role === 'committee_member' && committeeId) {
+      try {
+        const isMember = await storage.isUserCommitteeMember(user.id, committeeId);
+        if (!isMember) {
+          return res.status(403).json({ message: "Access denied: Not a member of this committee" });
+        }
+      } catch (error) {
+        console.error("Error checking committee membership:", error);
+        return res.status(500).json({ message: "Error verifying committee access" });
+      }
+    }
+
+    next();
+  };
+};
 
 // Extend session and request types
 declare module 'express-session' {

@@ -195,6 +195,7 @@ export class MemStorage implements IStorage {
     recipient: number;
     contact: number;
     notification: number;
+    committeeMembership: number;
   };
 
   constructor() {
@@ -235,6 +236,7 @@ export class MemStorage implements IStorage {
       recipient: 1,
       contact: 1,
       notification: 1,
+      committeeMembership: 1,
     };
     
     // No sample data - start with clean storage
@@ -496,6 +498,109 @@ export class MemStorage implements IStorage {
 
   async deleteMessage(id: number): Promise<boolean> {
     return this.messages.delete(id);
+  }
+
+  // Committee management methods
+  async getAllCommittees(): Promise<Committee[]> {
+    return Array.from(this.committees.values());
+  }
+
+  async getCommittee(id: string): Promise<Committee | undefined> {
+    return this.committees.get(id);
+  }
+
+  async createCommittee(committee: InsertCommittee): Promise<Committee> {
+    const newCommittee: Committee = {
+      ...committee,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.committees.set(newCommittee.id, newCommittee);
+    return newCommittee;
+  }
+
+  async updateCommittee(id: string, updates: Partial<Committee>): Promise<Committee | undefined> {
+    const committee = this.committees.get(id);
+    if (!committee) return undefined;
+    
+    const updatedCommittee = { 
+      ...committee, 
+      ...updates, 
+      updatedAt: new Date() 
+    };
+    this.committees.set(id, updatedCommittee);
+    return updatedCommittee;
+  }
+
+  async deleteCommittee(id: string): Promise<boolean> {
+    return this.committees.delete(id);
+  }
+
+  // Committee membership management methods
+  async getUserCommittees(userId: string): Promise<Array<Committee & { membership: CommitteeMembership }>> {
+    const memberships = Array.from(this.committeeMemberships.values())
+      .filter(membership => membership.userId === userId);
+    
+    const result: Array<Committee & { membership: CommitteeMembership }> = [];
+    for (const membership of memberships) {
+      const committee = this.committees.get(membership.committeeId);
+      if (committee) {
+        result.push({ ...committee, membership });
+      }
+    }
+    return result;
+  }
+
+  async getCommitteeMembers(committeeId: string): Promise<Array<User & { membership: CommitteeMembership }>> {
+    const memberships = Array.from(this.committeeMemberships.values())
+      .filter(membership => membership.committeeId === committeeId);
+    
+    const result: Array<User & { membership: CommitteeMembership }> = [];
+    for (const membership of memberships) {
+      const user = await this.getUser(membership.userId);
+      if (user) {
+        result.push({ ...user, membership });
+      }
+    }
+    return result;
+  }
+
+  async addUserToCommittee(membership: InsertCommitteeMembership): Promise<CommitteeMembership> {
+    const id = this.currentIds.committeeMembership++;
+    const newMembership: CommitteeMembership = {
+      ...membership,
+      id,
+      joinedAt: new Date()
+    };
+    this.committeeMemberships.set(id, newMembership);
+    return newMembership;
+  }
+
+  async updateCommitteeMembership(id: number, updates: Partial<CommitteeMembership>): Promise<CommitteeMembership | undefined> {
+    const membership = this.committeeMemberships.get(id);
+    if (!membership) return undefined;
+    
+    const updatedMembership = { ...membership, ...updates };
+    this.committeeMemberships.set(id, updatedMembership);
+    return updatedMembership;
+  }
+
+  async removeUserFromCommittee(userId: string, committeeId: string): Promise<boolean> {
+    for (const [id, membership] of this.committeeMemberships.entries()) {
+      if (membership.userId === userId && membership.committeeId === committeeId) {
+        return this.committeeMemberships.delete(id);
+      }
+    }
+    return false;
+  }
+
+  async isUserCommitteeMember(userId: string, committeeId: string): Promise<boolean> {
+    for (const membership of this.committeeMemberships.values()) {
+      if (membership.userId === userId && membership.committeeId === committeeId) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // Weekly Report methods
