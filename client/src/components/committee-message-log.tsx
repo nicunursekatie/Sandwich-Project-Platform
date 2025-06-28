@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import type { Message } from "@shared/schema";
 
 interface CommitteeMessageLogProps {
@@ -14,15 +15,18 @@ interface CommitteeMessageLogProps {
 
 export default function CommitteeMessageLog({ committee }: CommitteeMessageLogProps) {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [newMessage, setNewMessage] = useState("");
-  const [userName, setUserName] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Load user name from localStorage
-  useEffect(() => {
-    const savedName = localStorage.getItem('chatUserName') || 'Team Member';
-    setUserName(savedName);
-  }, []);
+  // Get user name from authenticated user data
+  const getUserName = () => {
+    if (user && typeof user === 'object' && 'email' in user && user.email) {
+      // Use email prefix as display name (e.g., "john.doe@example.com" -> "john.doe")
+      return String(user.email).split('@')[0];
+    }
+    return 'Team Member';
+  };
 
   const { data: messages = [] } = useQuery<Message[]>({
     queryKey: ['/api/messages', committee],
@@ -76,7 +80,7 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
     sendMessageMutation.mutate({
       content: newMessage.trim(),
       committee: committee,
-      sender: userName || 'Team Member'
+      sender: getUserName()
     });
   };
 
