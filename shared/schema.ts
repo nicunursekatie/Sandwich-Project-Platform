@@ -101,6 +101,7 @@ export const projectComments = pgTable("project_comments", {
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
   sender: text("sender").notNull(),
+  userId: text("user_id"), // User ID who created the message - nullable for backwards compatibility
   content: text("content").notNull(),
   timestamp: timestamp("timestamp").notNull().defaultNow(),
   parentId: integer("parent_id"), // for threading - references another message
