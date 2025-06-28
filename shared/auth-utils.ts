@@ -48,8 +48,7 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.COMMITTEE_CHAT,
         PERMISSIONS.TOOLKIT_ACCESS,
         PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS
+        PERMISSIONS.VIEW_REPORTS
       ];
     
     case USER_ROLES.HOST:

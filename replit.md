@@ -175,6 +175,7 @@ Preferred communication style: Simple, everyday language.
 - June 28, 2025: Implemented comprehensive UI permission enforcement: added disabled={!canEdit} properties to all edit/delete buttons in hosts, recipients, and drivers management components, committee members now have complete view-only access as intended - can view all data but cannot modify hosts, recipients, or drivers
 - June 28, 2025: Restored committee chat access for committee members: simplified permission system by replacing granular chat permissions (committee_chat_assigned, driver_chat, recipient_chat) with practical committee_chat access, updated committee_member role to include view_phone_directory, view_reports, and view_projects for more useful access levels
 - June 28, 2025: Enhanced meeting pages navigation: added "Back to Meetings Hub" navigation headers to meeting agenda, calendar, and minutes pages with breadcrumb trails showing current location (Meetings • Agenda/Calendar/Minutes), improved user navigation flow between meeting-related pages
+- June 28, 2025: Restricted committee member access to Projects tab: removed "view_projects" permission from committee_member role, ensuring only core team members can access project management features while committee members retain access to phone directory, reports, collections, chat, and toolkit
 
 ## Changelog
 
