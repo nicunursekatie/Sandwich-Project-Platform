@@ -422,7 +422,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/messages", async (req, res) => {
     try {
       const messageData = insertMessageSchema.parse(req.body);
-      const message = await storage.createMessage(messageData);
+      // Add user ID to message data if user is authenticated
+      const messageWithUser = {
+        ...messageData,
+        userId: req.user?.id || null
+      };
+      const message = await storage.createMessage(messageWithUser);
       res.status(201).json(message);
     } catch (error) {
       res.status(400).json({ message: "Invalid message data" });
@@ -432,6 +437,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/messages/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      
+      // Check if user is authenticated
+      if (!req.user?.id) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Get message to check ownership
+      const message = await storage.getMessageById(id);
+      if (!message) {
+        return res.status(404).json({ message: "Message not found" });
+      }
+      
+      // Check if user owns the message or is admin
+      if (message.userId !== req.user.id && req.user.role !== 'admin') {
+        return res.status(403).json({ message: "You can only delete your own messages" });
+      }
+      
       const deleted = await storage.deleteMessage(id);
       if (!deleted) {
         return res.status(404).json({ message: "Message not found" });

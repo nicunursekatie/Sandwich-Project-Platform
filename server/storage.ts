@@ -53,6 +53,7 @@ export interface IStorage {
   getAllMessages(): Promise<Message[]>;
   getRecentMessages(limit: number): Promise<Message[]>;
   getMessagesByCommittee(committee: string): Promise<Message[]>;
+  getMessageById(id: number): Promise<Message | undefined>;
   createMessage(message: InsertMessage): Promise<Message>;
   getThreadMessages(threadId: number): Promise<Message[]>;
   createReply(message: InsertMessage, parentId: number): Promise<Message>;
@@ -412,6 +413,10 @@ export class MemStorage implements IStorage {
     return Array.from(this.messages.values())
       .filter(message => message.committee === committee)
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  }
+
+  async getMessageById(id: number): Promise<Message | undefined> {
+    return this.messages.get(id);
   }
 
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
