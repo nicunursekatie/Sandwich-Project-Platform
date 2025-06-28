@@ -35,6 +35,8 @@ interface Driver {
 
 export default function DriversManagement() {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
   const queryClient = useQueryClient();
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -444,7 +446,7 @@ export default function DriversManagement() {
             
             <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
               <DialogTrigger asChild>
-                <Button className="flex items-center gap-2">
+                <Button disabled={!canEdit} className="flex items-center gap-2">
                   <Plus className="w-4 h-4" />
                   Add Driver
                 </Button>
