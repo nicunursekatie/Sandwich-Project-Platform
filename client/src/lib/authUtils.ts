@@ -116,8 +116,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.TOOLKIT_ACCESS,
         PERMISSIONS.VIEW_COLLECTIONS,
         PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS,
-        PERMISSIONS.EDIT_DATA  // For development tab access
+        PERMISSIONS.VIEW_PROJECTS
+        // Volunteers should not have EDIT_DATA permission for data management
       ];
     
     case USER_ROLES.RECIPIENT:

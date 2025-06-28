@@ -8,8 +8,8 @@ const VOLUNTEER_PERMISSIONS = [
   'toolkit_access',
   'view_collections',
   'view_reports',
-  'view_projects',
-  'edit_data'
+  'view_projects'
+  // Volunteers should not have edit_data permission for data management
 ];
 
 function getDefaultPermissionsForRole(role: string): string[] {
