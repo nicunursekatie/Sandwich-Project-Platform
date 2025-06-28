@@ -204,7 +204,14 @@ export default function UserManagement() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Dialog>
+                      <Dialog 
+                        open={selectedUser?.id === user.id} 
+                        onOpenChange={(open) => {
+                          if (!open) {
+                            setSelectedUser(null);
+                          }
+                        }}
+                      >
                         <DialogTrigger asChild>
                           <Button
                             variant="outline"
