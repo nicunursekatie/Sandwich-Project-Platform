@@ -141,7 +141,7 @@ export default function MeetingAgenda() {
         <Button 
           variant="outline" 
           size="sm"
-          onClick={() => setLocation('/meetings')}
+          onClick={() => (window as any).dashboardSetActiveSection?.("meetings")}
           className="flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
