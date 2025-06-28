@@ -49,16 +49,33 @@ const committees = [
 
 export default function CommitteeChat() {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [selectedCommittee, setSelectedCommittee] = useState<any>(null);
   const [newMessage, setNewMessage] = useState("");
-  const [userName, setUserName] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Load user name from localStorage on component mount
-  useEffect(() => {
-    const savedName = localStorage.getItem('chatUserName') || 'Team Member';
-    setUserName(savedName);
-  }, []);
+  // Get user profile for display name
+  const { data: userProfile } = useQuery({
+    queryKey: ["/api/auth/profile"],
+    enabled: !!user,
+  });
+
+  // Get user name from profile or fallback to email prefix
+  const getUserName = () => {
+    if (userProfile && typeof userProfile === 'object') {
+      const profile = userProfile as any;
+      if (profile.displayName) {
+        return profile.displayName;
+      }
+      if (profile.firstName) {
+        return profile.firstName;
+      }
+    }
+    if (user && typeof user === 'object' && 'email' in user && user.email) {
+      return String(user.email).split('@')[0];
+    }
+    return 'Team Member';
+  };
 
   const { data: messages = [] } = useQuery({
     queryKey: ['/api/messages', 'committee', selectedCommittee?.id],
@@ -113,7 +130,7 @@ export default function CommitteeChat() {
     sendMessageMutation.mutate({
       content: newMessage.trim(),
       committee: selectedCommittee.id,
-      sender: userName || 'Team Member'
+      sender: getUserName()
     });
   };
 
@@ -219,16 +236,8 @@ export default function CommitteeChat() {
       {/* Message Input */}
       <div className="border-t p-4 space-y-3">
         <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium text-gray-600">Your name:</span>
-          <Input
-            value={userName}
-            onChange={(e) => {
-              setUserName(e.target.value);
-              localStorage.setItem('chatUserName', e.target.value);
-            }}
-            placeholder="Enter your name"
-            className="w-48"
-          />
+          <span className="text-sm font-medium text-gray-600">Posting as:</span>
+          <span className="text-sm font-semibold text-gray-800">{getUserName()}</span>
         </div>
         <div className="flex space-x-2">
           <Input
