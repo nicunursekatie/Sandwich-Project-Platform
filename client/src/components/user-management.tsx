@@ -56,12 +56,9 @@ export default function UserManagement() {
 
   const updateUserMutation = useMutation({
     mutationFn: async (data: { userId: string; role: string; permissions: string[] }) => {
-      return apiRequest(`/api/users/${data.userId}`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          role: data.role,
-          permissions: data.permissions,
-        }),
+      return apiRequest("PATCH", `/api/users/${data.userId}`, {
+        role: data.role,
+        permissions: data.permissions,
       });
     },
     onSuccess: () => {
@@ -83,9 +80,8 @@ export default function UserManagement() {
 
   const toggleUserStatus = useMutation({
     mutationFn: async (data: { userId: string; isActive: boolean }) => {
-      return apiRequest(`/api/users/${data.userId}/status`, {
-        method: "PATCH",
-        body: JSON.stringify({ isActive: data.isActive }),
+      return apiRequest("PATCH", `/api/users/${data.userId}/status`, {
+        isActive: data.isActive,
       });
     },
     onSuccess: () => {
@@ -130,7 +126,7 @@ export default function UserManagement() {
     switch (role) {
       case USER_ROLES.ADMIN:
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      case USER_ROLES.COORDINATOR:
+      case USER_ROLES.COMMITTEE_MEMBER:
         return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
       case USER_ROLES.VOLUNTEER:
         return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
@@ -239,7 +235,7 @@ export default function UserManagement() {
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectItem value={USER_ROLES.ADMIN}>Administrator</SelectItem>
-                                  <SelectItem value={USER_ROLES.COORDINATOR}>Coordinator</SelectItem>
+                                  <SelectItem value={USER_ROLES.COMMITTEE_MEMBER}>Committee Member</SelectItem>
                                   <SelectItem value={USER_ROLES.VOLUNTEER}>Volunteer</SelectItem>
                                   <SelectItem value={USER_ROLES.VIEWER}>Viewer</SelectItem>
                                 </SelectContent>

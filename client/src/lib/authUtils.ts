@@ -36,6 +36,7 @@ export const PERMISSIONS = {
   VIEW_PROJECTS: 'view_projects',
   
   // User management
+  VIEW_USERS: 'view_users',
   MANAGE_USERS: 'manage_users'
 } as const;
 
