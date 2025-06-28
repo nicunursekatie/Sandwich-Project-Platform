@@ -98,6 +98,27 @@ export const projectComments = pgTable("project_comments", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Committees table for organizing committee information
+export const committees = pgTable("committees", {
+  id: varchar("id").primaryKey(), // 'marketing_committee', 'grant_committee', etc.
+  name: varchar("name").notNull(), // 'Marketing Committee', 'Grant Committee', etc.
+  description: text("description"),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Committee memberships table for tracking which users belong to which committees
+export const committeeMemberships = pgTable("committee_memberships", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  committeeId: varchar("committee_id").notNull(),
+  role: varchar("role").notNull().default("member"), // 'chair', 'co-chair', 'member'
+  permissions: jsonb("permissions").default('[]'), // Specific committee permissions
+  joinedAt: timestamp("joined_at").defaultNow(),
+  isActive: boolean("is_active").notNull().default(true),
+});
+
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
   sender: text("sender").notNull(),
@@ -401,3 +422,20 @@ export const insertNotificationSchema = createInsertSchema(notifications).omit({
 
 export type Notification = typeof notifications.$inferSelect;
 export type InsertNotification = z.infer<typeof insertNotificationSchema>;
+
+// Committee schema types
+export const insertCommitteeSchema = createInsertSchema(committees).omit({
+  createdAt: true,
+  updatedAt: true
+});
+
+export type Committee = typeof committees.$inferSelect;
+export type InsertCommittee = z.infer<typeof insertCommitteeSchema>;
+
+export const insertCommitteeMembershipSchema = createInsertSchema(committeeMemberships).omit({
+  id: true,
+  joinedAt: true
+});
+
+export type CommitteeMembership = typeof committeeMemberships.$inferSelect;
+export type InsertCommitteeMembership = z.infer<typeof insertCommitteeMembershipSchema>;
