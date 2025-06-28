@@ -1281,13 +1281,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Meeting Minutes
-  app.get("/api/meeting-minutes", async (req, res) => {
+  app.get("/api/meeting-minutes", isAuthenticated, async (req: any, res) => {
     try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
       const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
       const minutes = limit 
         ? await storage.getRecentMeetingMinutes(limit)
         : await storage.getAllMeetingMinutes();
-      res.json(minutes);
+      
+      // Filter meeting minutes based on user role and committee membership
+      if (user.role === 'admin' || user.role === 'admin_coordinator' || user.role === 'admin_viewer') {
+        // Admins see all meeting minutes
+        res.json(minutes);
+      } else if (user.role === 'committee_member') {
+        // Committee members only see minutes for their committees
+        const userCommittees = await storage.getUserCommittees(userId);
+        const committeeTypes = userCommittees.map(membership => membership.membership.committeeId);
+        
+        const filteredMinutes = minutes.filter(minute => 
+          !minute.committeeType || // General meeting minutes (no committee assignment)
+          committeeTypes.includes(minute.committeeType)
+        );
+        res.json(filteredMinutes);
+      } else {
+        // Other roles see general meeting minutes and their role-specific minutes
+        const filteredMinutes = minutes.filter(minute => 
+          !minute.committeeType || // General meeting minutes
+          minute.committeeType === user.role
+        );
+        res.json(filteredMinutes);
+      }
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch meeting minutes" });
     }
@@ -1627,7 +1656,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else if (user.role === 'committee_member') {
         // Committee members only see meetings for their committees
         const userCommittees = await storage.getUserCommittees(userId);
-        const committeeTypes = userCommittees.map(membership => membership.committeeId);
+        const committeeTypes = userCommittees.map(membership => membership.membership.committeeId);
         
         const filteredMeetings = meetings.filter(meeting => 
           meeting.type === 'all_team' || committeeTypes.includes(meeting.type)
