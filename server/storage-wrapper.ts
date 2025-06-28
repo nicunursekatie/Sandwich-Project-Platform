@@ -712,6 +712,84 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.deleteDriver(id)
     );
   }
+
+  // Committee management methods
+  async getAllCommittees() {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getAllCommittees(),
+      () => this.fallbackStorage.getAllCommittees()
+    );
+  }
+
+  async getCommittee(id: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getCommittee(id),
+      () => this.fallbackStorage.getCommittee(id)
+    );
+  }
+
+  async createCommittee(committee: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createCommittee(committee),
+      () => this.fallbackStorage.createCommittee(committee)
+    );
+  }
+
+  async updateCommittee(id: string, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateCommittee(id, updates),
+      () => this.fallbackStorage.updateCommittee(id, updates)
+    );
+  }
+
+  async deleteCommittee(id: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteCommittee(id),
+      () => this.fallbackStorage.deleteCommittee(id)
+    );
+  }
+
+  async getUserCommittees(userId: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getUserCommittees(userId),
+      () => this.fallbackStorage.getUserCommittees(userId)
+    );
+  }
+
+  async getCommitteeMembers(committeeId: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getCommitteeMembers(committeeId),
+      () => this.fallbackStorage.getCommitteeMembers(committeeId)
+    );
+  }
+
+  async addUserToCommittee(membership: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.addUserToCommittee(membership),
+      () => this.fallbackStorage.addUserToCommittee(membership)
+    );
+  }
+
+  async updateCommitteeMembership(id: number, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateCommitteeMembership(id, updates),
+      () => this.fallbackStorage.updateCommitteeMembership(id, updates)
+    );
+  }
+
+  async removeUserFromCommittee(userId: string, committeeId: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.removeUserFromCommittee(userId, committeeId),
+      () => this.fallbackStorage.removeUserFromCommittee(userId, committeeId)
+    );
+  }
+
+  async isUserCommitteeMember(userId: string, committeeId: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.isUserCommitteeMember(userId, committeeId),
+      () => this.fallbackStorage.isUserCommitteeMember(userId, committeeId)
+    );
+  }
 }
 
 export const storage = new StorageWrapper();

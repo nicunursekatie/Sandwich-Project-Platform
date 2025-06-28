@@ -698,7 +698,7 @@ export const requirePermission = (permission: string): RequestHandler => {
   };
 };
 
-// Initialize temporary auth system with default admin user
+// Initialize temporary auth system with default admin user and committees
 export async function initializeTempAuth() {
   console.log("Temporary authentication system initialized");
   
@@ -726,5 +726,75 @@ export async function initializeTempAuth() {
     }
   } catch (error) {
     console.log("❌ Could not create default admin user (using fallback):", error.message);
+  }
+
+  // Setup default committees and committee member user
+  try {
+    // Create default committees if they don't exist
+    const committees = await storage.getAllCommittees();
+    if (committees.length === 0) {
+      await storage.createCommittee({
+        id: "finance",
+        name: "Finance Committee",
+        description: "Manages budgets, financial planning, and funding decisions"
+      });
+      
+      await storage.createCommittee({
+        id: "operations",
+        name: "Operations Committee", 
+        description: "Oversees day-to-day operations and logistics"
+      });
+      
+      await storage.createCommittee({
+        id: "outreach",
+        name: "Outreach Committee",
+        description: "Handles community engagement and volunteer recruitment"
+      });
+      
+      console.log("✅ Default committees created");
+    }
+
+    // Create committee member user and assign to specific committee
+    const committeeEmail = "katielong2316@gmail.com";
+    const existingCommitteeMember = await storage.getUserByEmail(committeeEmail);
+    
+    let committeeMemberId;
+    if (!existingCommitteeMember) {
+      committeeMemberId = "committee_" + Date.now();
+      await storage.createUser({
+        id: committeeMemberId,
+        email: committeeEmail,
+        firstName: "Katie",
+        lastName: "Long",
+        role: "committee_member",
+        permissions: getDefaultPermissionsForRole("committee_member"),
+        isActive: true,
+        profileImageUrl: null,
+        metadata: { password: "committee123" }
+      });
+      console.log("✅ Committee member user created: katielong2316@gmail.com / committee123");
+    } else {
+      // Update existing user to committee_member role
+      committeeMemberId = existingCommitteeMember.id;
+      await storage.updateUser(committeeMemberId, {
+        role: "committee_member",
+        permissions: getDefaultPermissionsForRole("committee_member")
+      });
+      console.log("✅ Updated katielong2316@gmail.com to committee_member role");
+    }
+
+    // Assign committee member to finance committee only
+    const isAlreadyMember = await storage.isUserCommitteeMember(committeeMemberId, "finance");
+    if (!isAlreadyMember) {
+      await storage.addUserToCommittee({
+        userId: committeeMemberId,
+        committeeId: "finance",
+        role: "member"
+      });
+      console.log("✅ Assigned katielong2316@gmail.com to Finance Committee only");
+    }
+
+  } catch (error) {
+    console.log("❌ Could not setup committees:", error.message);
   }
 }

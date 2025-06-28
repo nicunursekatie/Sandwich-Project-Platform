@@ -3197,5 +3197,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
+  // Committee management routes
+  app.get('/api/committees', isAuthenticated, async (req: any, res) => {
+    try {
+      const committees = await storage.getAllCommittees();
+      res.json({ committees });
+    } catch (error) {
+      console.error('Error fetching committees:', error);
+      res.status(500).json({ message: 'Failed to fetch committees' });
+    }
+  });
+
+  app.get('/api/committees/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const committee = await storage.getCommittee(id);
+      if (!committee) {
+        return res.status(404).json({ message: 'Committee not found' });
+      }
+      res.json(committee);
+    } catch (error) {
+      console.error('Error fetching committee:', error);
+      res.status(500).json({ message: 'Failed to fetch committee' });
+    }
+  });
+
+  app.post('/api/committees', isAuthenticated, requirePermission('manage_committees'), async (req: any, res) => {
+    try {
+      const committee = await storage.createCommittee(req.body);
+      res.json(committee);
+    } catch (error) {
+      console.error('Error creating committee:', error);
+      res.status(500).json({ message: 'Failed to create committee' });
+    }
+  });
+
+  app.get('/api/committees/:id/members', isAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const members = await storage.getCommitteeMembers(id);
+      res.json({ members });
+    } catch (error) {
+      console.error('Error fetching committee members:', error);
+      res.status(500).json({ message: 'Failed to fetch committee members' });
+    }
+  });
+
+  app.post('/api/committees/:id/members', isAuthenticated, requirePermission('manage_committees'), async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { userId, role } = req.body;
+      const membership = await storage.addUserToCommittee({
+        userId,
+        committeeId: id,
+        role: role || 'member'
+      });
+      res.json(membership);
+    } catch (error) {
+      console.error('Error adding committee member:', error);
+      res.status(500).json({ message: 'Failed to add committee member' });
+    }
+  });
+
+  app.delete('/api/committees/:id/members/:userId', isAuthenticated, requirePermission('manage_committees'), async (req: any, res) => {
+    try {
+      const { id, userId } = req.params;
+      const success = await storage.removeUserFromCommittee(userId, id);
+      if (success) {
+        res.json({ message: 'Member removed successfully' });
+      } else {
+        res.status(404).json({ message: 'Membership not found' });
+      }
+    } catch (error) {
+      console.error('Error removing committee member:', error);
+      res.status(500).json({ message: 'Failed to remove committee member' });
+    }
+  });
+
+  app.get('/api/users/:id/committees', isAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const userCommittees = await storage.getUserCommittees(id);
+      res.json({ committees: userCommittees });
+    } catch (error) {
+      console.error('Error fetching user committees:', error);
+      res.status(500).json({ message: 'Failed to fetch user committees' });
+    }
+  });
+
   return httpServer;
 }
