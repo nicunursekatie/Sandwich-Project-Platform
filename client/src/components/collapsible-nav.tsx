@@ -81,6 +81,7 @@ export function CollapsibleNav() {
     if (item.type === "section" && item.items) {
       // For Operations section specifically, always show if user is authenticated
       if (item.id === "operations" && user) {
+        console.log('Forcing Operations section to show for authenticated user');
         return true;
       }
       
@@ -90,9 +91,12 @@ export function CollapsibleNav() {
         if (!subItem.permission) return true;
         
         // Check if user has the required permission
-        return hasPermission(user, subItem.permission);
+        const hasPermissionResult = hasPermission(user, subItem.permission);
+        console.log(`Sub-item ${subItem.label}: has permission ${subItem.permission} = ${hasPermissionResult}`);
+        return hasPermissionResult;
       });
       
+      console.log(`Section ${item.id}: ${visibleSubItems.length} visible items`);
       return visibleSubItems.length > 0;
     }
     
