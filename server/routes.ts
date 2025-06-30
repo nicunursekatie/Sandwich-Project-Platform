@@ -2896,8 +2896,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       } else if (format === 'pdf') {
         res.setHeader('Content-Type', 'application/pdf');
-        // In production, this would generate actual PDF
-        res.json({ message: 'PDF generation not implemented yet', data: reportData });
+        try {
+          const { PDFGenerator } = await import('./reporting/pdf-generator');
+          const pdfBuffer = await PDFGenerator.generatePDF(reportData);
+          res.send(pdfBuffer);
+        } catch (error) {
+          console.error('PDF generation failed:', error);
+          res.status(500).json({ error: 'PDF generation failed' });
+        }
       } else {
         res.setHeader('Content-Type', 'application/json');
         res.json(reportData);
