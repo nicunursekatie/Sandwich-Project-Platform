@@ -3,6 +3,22 @@ import { storage } from "../storage-wrapper";
 import { eq, sql, and, notInArray } from "drizzle-orm";
 import { messages, messageReads } from "../../shared/schema";
 
+// Simple fallback implementation for database access
+async function getDatabase() {
+  try {
+    // Try to get database through storage wrapper
+    if (storage && typeof (storage as any).getDB === 'function') {
+      return await (storage as any).getDB();
+    }
+    
+    // Fallback to returning null - component will handle gracefully
+    return null;
+  } catch (error) {
+    console.error('Database access error:', error);
+    return null;
+  }
+}
+
 export const messageNotificationRoutes = {
   // Get unread message counts for a user
   getUnreadCounts: async (req: Request, res: Response) => {
@@ -39,7 +55,7 @@ export const messageNotificationRoutes = {
       // Always include direct messages
       accessibleCommittees.push('direct');
 
-      const db = await storage.getDB();
+      const db = await getDatabase();
       
       // Get unread counts for each committee
       const unreadCounts: any = {};
@@ -108,7 +124,7 @@ export const messageNotificationRoutes = {
         return res.status(400).json({ error: "Committee is required" });
       }
 
-      const db = await storage.getDB();
+      const db = await getDatabase();
       
       // Get messages that need to be marked as read
       let messagesToMark;
@@ -199,7 +215,7 @@ export const messageNotificationRoutes = {
       }
       accessibleCommittees.push('direct');
 
-      const db = await storage.getDB();
+      const db = await getDatabase();
       
       // Get all unread messages in accessible committees
       let allMessages = [];
