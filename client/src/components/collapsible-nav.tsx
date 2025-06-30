@@ -21,6 +21,33 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 
+interface NavigationItem {
+  id: string;
+  label: string;
+  icon: any;
+  href: string;
+  permission?: string;
+}
+
+interface NavigationSection {
+  id: string;
+  label: string;
+  icon: any;
+  type: "section";
+  items: NavigationItem[];
+}
+
+interface NavigationPlainItem {
+  id: string;
+  label: string;
+  icon: any;
+  type: "item";
+  href: string;
+  permission?: string;
+}
+
+type NavigationStructureItem = NavigationSection | NavigationPlainItem;
+
 export function CollapsibleNav() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [expandedSections, setExpandedSections] = useState<string[]>(["operations"]);
@@ -39,7 +66,7 @@ export function CollapsibleNav() {
   };
 
   // Navigation structure with expandable sections
-  const navigationStructure = [
+  const navigationStructure: NavigationStructureItem[] = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, type: "item", href: "/" },
     { id: "collections", label: "Collections Log", icon: Sandwich, type: "item", href: "/collections" },
     { id: "messages", label: "Messages", icon: MessageCircle, type: "item", href: "/messages" },
@@ -49,10 +76,10 @@ export function CollapsibleNav() {
       icon: Users, 
       type: "section",
       items: [
-        { id: "hosts", label: "Hosts", icon: Building2, href: "/hosts" },
-        { id: "recipients", label: "Recipients", icon: Users, href: "/recipients" },
-        { id: "drivers", label: "Drivers", icon: Car, href: "/drivers" },
-        { id: "committee", label: "Committee", icon: MessageCircle, href: "/committee" },
+        { id: "hosts", label: "Hosts", icon: Building2, href: "/hosts" } as NavigationItem,
+        { id: "recipients", label: "Recipients", icon: Users, href: "/recipients" } as NavigationItem,
+        { id: "drivers", label: "Drivers", icon: Car, href: "/drivers" } as NavigationItem,
+        { id: "committee", label: "Committee", icon: MessageCircle, href: "/committee" } as NavigationItem,
       ]
     },
     { 
@@ -73,46 +100,48 @@ export function CollapsibleNav() {
     { id: "development", label: "Development", icon: FolderOpen, type: "item", href: "/development" },
   ];
 
-  // Filter navigation items based on user permissions
-  const filteredNavigation = navigationStructure.filter(item => {
-    // If no user, only show items that don't need authentication
-    if (!user) {
-      return !item.permission;
-    }
-    
-    // CRITICAL FIX: Always show Operations section for any authenticated user
+  // Filter and modify navigation items based on user permissions
+  const filteredNavigation = navigationStructure.map((item: any) => {
+    // Special handling for Operations section
     if (item.type === "section" && item.id === "operations") {
-      return true;
-    }
-    
-    // Check item-level permissions for other items
-    if (item.permission && !hasPermission(user, item.permission)) {
-      return false;
-    }
-    
-    // For sections, show them if they have at least one visible sub-item
-    if (item.type === "section" && item.items) {
-      const visibleSubItems = item.items.filter(subItem => {
-        // If no permission required, show the item
+      console.log('Processing Operations section for user:', user?.email);
+      
+      const filteredOperationsItems = item.items.filter((subItem: any) => {
         if (!subItem.permission) {
-          console.log(`Sub-item ${subItem.label}: no permission required - VISIBLE`);
+          console.log(`Operations item ${subItem.label}: no permission required - VISIBLE`);
           return true;
         }
         
-        // Check if user has the required permission
-        const hasPermissionResult = hasPermission(user, subItem.permission);
-        console.log(`Sub-item ${subItem.label}: permission ${subItem.permission} = ${hasPermissionResult}`);
-        return hasPermissionResult;
+        if (!user) {
+          console.log(`Operations item ${subItem.label}: no user - HIDDEN`);
+          return false;
+        }
+        
+        const hasAccess = hasPermission(user, subItem.permission);
+        console.log(`Operations item ${subItem.label}: permission ${subItem.permission} = ${hasAccess ? 'GRANTED' : 'DENIED'}`);
+        console.log(`User permissions:`, user.permissions);
+        
+        return hasAccess;
       });
       
-      console.log(`Section ${item.id}: ${visibleSubItems.length} visible items out of ${item.items.length} total`);
-      console.log(`Visible items:`, visibleSubItems.map(item => item.label));
-      return visibleSubItems.length > 0;
+      console.log(`Operations section final: ${filteredOperationsItems.length}/${item.items.length} items visible`);
+      console.log('Visible operations items:', filteredOperationsItems.map((i: any) => i.label));
+      
+      return { ...item, items: filteredOperationsItems };
     }
     
-    // Show all other items by default
-    return true;
-  });
+    // Handle other sections normally
+    if (item.type === "section") {
+      return item;
+    }
+    
+    // Handle plain items with permissions
+    if (item.permission) {
+      return user && hasPermission(user, item.permission) ? item : null;
+    }
+    
+    return item;
+  }).filter(item => item !== null);
 
   return (
     <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
