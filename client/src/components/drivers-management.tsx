@@ -82,6 +82,7 @@ export default function DriversManagement() {
   const [isAgreementModalOpen, setIsAgreementModalOpen] = useState(false);
   const [isSubmissionModalOpen, setIsSubmissionModalOpen] = useState(false);
   const [editingDriver, setEditingDriver] = useState<Driver | null>(null);
+  const [deletingDriver, setDeletingDriver] = useState<Driver | null>(null);
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -166,6 +167,19 @@ export default function DriversManagement() {
     },
   });
 
+  // Delete driver mutation
+  const deleteDriverMutation = useMutation({
+    mutationFn: (id: number) => apiRequest("DELETE", `/api/drivers/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/drivers"] });
+      setDeletingDriver(null);
+      toast({ title: "Driver deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete driver", variant: "destructive" });
+    },
+  });
+
   // Upload agreement mutation
   const uploadAgreementMutation = useMutation({
     mutationFn: async (file: File) => {
@@ -230,6 +244,15 @@ export default function DriversManagement() {
 
   const handleEdit = (driver: Driver) => {
     setEditingDriver({ ...driver });
+  };
+
+  const handleDelete = (driver: Driver) => {
+    setDeletingDriver(driver);
+  };
+
+  const confirmDelete = () => {
+    if (!deletingDriver) return;
+    deleteDriverMutation.mutate(deletingDriver.id);
   };
 
   const handleUploadAgreement = () => {
@@ -1070,16 +1093,28 @@ export default function DriversManagement() {
                         )}
                       </div>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={!canEdit}
-                      onClick={() => handleEdit(driver)}
-                      className="flex items-center gap-1"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                      Edit
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={!canEdit}
+                        onClick={() => handleEdit(driver)}
+                        className="flex items-center gap-1"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={!canEdit}
+                        onClick={() => handleDelete(driver)}
+                        className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                      >
+                        <X className="w-4 h-4" />
+                        Delete
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-0">
@@ -1441,6 +1476,49 @@ export default function DriversManagement() {
                   {updateDriverMutation.isPending
                     ? "Updating..."
                     : "Update Driver"}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deletingDriver && (
+        <Dialog
+          open={!!deletingDriver}
+          onOpenChange={() => setDeletingDriver(null)}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete Driver</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <p className="text-gray-700">
+                Are you sure you want to permanently delete{" "}
+                <strong>{deletingDriver.name}</strong>? This action cannot be undone.
+              </p>
+              <div className="bg-red-50 border border-red-200 rounded-md p-3">
+                <p className="text-red-800 text-sm">
+                  <strong>Warning:</strong> This will permanently remove all driver information 
+                  including contact details, route assignments, and availability data.
+                </p>
+              </div>
+              <div className="flex justify-end gap-2 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setDeletingDriver(null)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={confirmDelete}
+                  disabled={deleteDriverMutation.isPending}
+                >
+                  {deleteDriverMutation.isPending
+                    ? "Deleting..."
+                    : "Delete Driver"}
                 </Button>
               </div>
             </div>
