@@ -1,129 +1,11 @@
 import type { Express, RequestHandler } from "express";
 import { storage } from "./storage-wrapper";
+import { getDefaultPermissionsForRole as getSharedPermissions } from "../shared/auth-utils";
 
-// Define permissions for different user types
-const ROLE_PERMISSIONS = {
-  // Basic volunteer access
-  volunteer: [
-    'general_chat',
-    'toolkit_access',
-    'view_collections'
-  ],
-  
-  // Host organizations - manage their own data and collections
-  host: [
-    'general_chat',
-    'toolkit_access',
-    'view_collections',
-    'edit_own_collections',  // Can only edit collections from their host
-    'host_chat',
-    'view_own_host_data'
-  ],
-  
-  // Recipient organizations - view collections and distributions
-  recipient: [
-    'general_chat',
-    'toolkit_access',
-    'view_collections',
-    'recipient_chat',
-    'view_distribution_data'
-  ],
-  
-  // Drivers - manage deliveries and routes
-  driver: [
-    'general_chat',
-    'toolkit_access',
-    'view_collections',
-    'driver_chat',
-    'view_delivery_routes',
-    'update_delivery_status'
-  ],
-  
-  // Committee members - access only to their specific committees
-  committee_member: [
-    'general_chat',
-    'toolkit_access',
-    'view_collections',
-    'committee_chat',
-    'view_phone_directory',
-    'view_reports',
-    'view_projects'
-  ],
-  
-  // Low-level admin - view everything, minimal editing
-  admin_viewer: [
-    'general_chat',
-    'toolkit_access',
-    'view_collections',
-    'view_reports',
-    'view_projects',
-    'view_users',
-    'view_phone_directory',
-    'committee_chat',
-    'host_chat',
-    'driver_chat',
-    'recipient_chat',
-    'view_analytics'
-  ],
-  
-  // Mid-tier admin - moderate editing capabilities
-  admin_coordinator: [
-    'general_chat',
-    'toolkit_access',
-    'view_collections',
-    'edit_collections',
-    'view_reports',
-    'view_projects',
-    'edit_projects',
-    'view_users',
-    'edit_users',
-    'view_phone_directory',
-    'committee_chat',
-    'host_chat',
-    'driver_chat',
-    'recipient_chat',
-    'view_analytics',
-    'manage_meetings',
-    'approve_agenda_items'
-  ],
-  
-  // Top-tier admin - full access
-  admin: [
-    'general_chat',
-    'toolkit_access',
-    'view_collections',
-    'edit_collections',
-    'delete_collections',
-    'view_reports',
-    'generate_reports',
-    'view_projects',
-    'edit_projects',
-    'delete_projects',
-    'create_projects',
-    'view_users',
-    'edit_users',
-    'delete_users',
-    'manage_users',
-    'create_users',
-    'view_phone_directory',
-    'edit_phone_directory',
-    'committee_chat',
-    'host_chat',
-    'driver_chat',
-    'recipient_chat',
-    'view_analytics',
-    'manage_meetings',
-    'approve_agenda_items',
-    'manage_committees',
-    'system_administration',
-    'bulk_data_operations',
-    'export_data',
-    'import_data'
-  ]
-};
+// Using shared permissions from auth-utils
 
 function getDefaultPermissionsForRole(role: string): string[] {
-  return ROLE_PERMISSIONS[role as keyof typeof ROLE_PERMISSIONS] || [];
+  return getSharedPermissions(role);
 }
 
 // Committee-specific permission checking
@@ -455,29 +337,24 @@ export function setupTempAuth(app: Express) {
     try {
       console.log("Fixing permissions for existing users...");
       
-      // Get the volunteer user
-      const volunteerUser = await storage.getUserByEmail("mdlouza@gmail.com");
-      if (volunteerUser && volunteerUser.permissions.length === 0) {
-        console.log("Updating volunteer user permissions...");
-        await storage.updateUser(volunteerUser.id, {
-          ...volunteerUser,
-          permissions: getDefaultPermissionsForRole(volunteerUser.role)
-        });
-        console.log("Updated volunteer permissions:", getDefaultPermissionsForRole(volunteerUser.role));
+      // Get all users and update their permissions to match the shared auth system
+      const allUsers = await storage.getAllUsers();
+      
+      for (const user of allUsers) {
+        const correctPermissions = getDefaultPermissionsForRole(user.role);
+        
+        // Update user with correct permissions if they differ
+        if (JSON.stringify(user.permissions) !== JSON.stringify(correctPermissions)) {
+          console.log(`Updating permissions for ${user.email} (${user.role})`);
+          await storage.updateUser(user.id, {
+            ...user,
+            permissions: correctPermissions
+          });
+          console.log(`Updated ${user.email} permissions:`, correctPermissions);
+        }
       }
 
-      // Update Katie's permissions to include committee chat
-      const katieUser = await storage.getUserByEmail("katielong2316@gmail.com");
-      if (katieUser) {
-        console.log("Updating Katie's permissions...");
-        await storage.updateUser(katieUser.id, {
-          ...katieUser,
-          permissions: getDefaultPermissionsForRole("committee_member")
-        });
-        console.log("Updated Katie's permissions:", getDefaultPermissionsForRole("committee_member"));
-      }
-
-      res.json({ success: true, message: "Permissions fixed" });
+      res.json({ success: true, message: "All user permissions fixed" });
     } catch (error) {
       console.error("Fix permissions error:", error);
       res.status(500).json({ success: false, message: "Failed to fix permissions" });
