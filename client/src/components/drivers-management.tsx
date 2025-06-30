@@ -70,6 +70,8 @@ export default function DriversManagement() {
     licenseNumber: "",
     availability: "available" as const,
     zone: "",
+    routeDescription: "" as string | undefined,
+    hostLocation: "" as string | undefined,
     hostId: undefined as number | undefined
   });
 
@@ -109,6 +111,8 @@ export default function DriversManagement() {
         licenseNumber: "",
         availability: "available",
         zone: "",
+        routeDescription: "",
+        hostLocation: "",
         hostId: undefined
       });
       setIsAddModalOpen(false);
@@ -552,12 +556,35 @@ export default function DriversManagement() {
                     </Select>
                   </div>
                   <div>
-                    <Label htmlFor="zone">Zone</Label>
+                    <Label htmlFor="host-location">Host Location</Label>
+                    <Select
+                      value={newDriver.hostLocation || ""}
+                      onValueChange={(value) =>
+                        setNewDriver({ ...newDriver, hostLocation: value || undefined })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a host location" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">No host location assigned</SelectItem>
+                        <SelectItem value="Athens">Athens</SelectItem>
+                        <SelectItem value="Dunwoody/PTC">Dunwoody/PTC</SelectItem>
+                        <SelectItem value="East Cobb/Roswell">East Cobb/Roswell</SelectItem>
+                        <SelectItem value="Intown/Druid Hills">Intown/Druid Hills</SelectItem>
+                        <SelectItem value="Sandy Springs">Sandy Springs</SelectItem>
+                        <SelectItem value="Flowery Branch">Flowery Branch</SelectItem>
+                        <SelectItem value="Alpharetta">Alpharetta</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="route-description">Route Description</Label>
                     <Input
-                      id="zone"
-                      value={newDriver.zone}
-                      onChange={(e) => setNewDriver({ ...newDriver, zone: e.target.value })}
-                      placeholder="Coverage zone"
+                      id="route-description"
+                      value={newDriver.routeDescription || ""}
+                      onChange={(e) => setNewDriver({ ...newDriver, routeDescription: e.target.value })}
+                      placeholder="e.g., SS to Dunwoody, East Cobb to anywhere"
                     />
                   </div>
                   <div className="flex justify-end gap-2">
@@ -905,15 +932,39 @@ export default function DriversManagement() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="edit-zone">Zone</Label>
+                <Label htmlFor="edit-host-location">Host Location</Label>
+                <Select
+                  value={editingDriver.hostLocation || ""}
+                  onValueChange={(value) =>
+                    setEditingDriver({ ...editingDriver, hostLocation: value || undefined })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a host location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">No host location assigned</SelectItem>
+                    <SelectItem value="Athens">Athens</SelectItem>
+                    <SelectItem value="Dunwoody/PTC">Dunwoody/PTC</SelectItem>
+                    <SelectItem value="East Cobb/Roswell">East Cobb/Roswell</SelectItem>
+                    <SelectItem value="Intown/Druid Hills">Intown/Druid Hills</SelectItem>
+                    <SelectItem value="Sandy Springs">Sandy Springs</SelectItem>
+                    <SelectItem value="Flowery Branch">Flowery Branch</SelectItem>
+                    <SelectItem value="Alpharetta">Alpharetta</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-route-description">Route Description</Label>
                 <Input
-                  id="edit-zone"
-                  value={editingDriver.zone}
-                  onChange={(e) => setEditingDriver({ ...editingDriver, zone: e.target.value })}
+                  id="edit-route-description"
+                  value={editingDriver.routeDescription || editingDriver.zone || ""}
+                  onChange={(e) => setEditingDriver({ ...editingDriver, routeDescription: e.target.value })}
+                  placeholder="e.g., SS to Dunwoody, East Cobb to anywhere"
                 />
               </div>
               <div>
-                <Label htmlFor="edit-host">Host Location</Label>
+                <Label htmlFor="edit-host">Directory Connection</Label>
                 <Select
                   value={editingDriver.hostId ? editingDriver.hostId.toString() : ""}
                   onValueChange={(value) =>
@@ -921,7 +972,7 @@ export default function DriversManagement() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a host location" />
+                    <SelectValue placeholder="Select host for directory connection" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">No host assigned</SelectItem>
