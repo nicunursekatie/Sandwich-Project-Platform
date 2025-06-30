@@ -162,16 +162,12 @@ export default function UserManagement() {
 
   const handleCongratulateUser = (user: User) => {
     const achievements = [
-      "outstanding volunteer work",
-      "excellent project management",
-      "dedicated service to the community",
-      "exceptional teamwork and leadership",
-      "going above and beyond expectations",
-      "making a real difference in our mission"
+      "making a real difference in our mission",
+      "way to go"
     ];
     
     const randomAchievement = achievements[Math.floor(Math.random() * achievements.length)];
-    const congratsMessage = `${user.firstName} ${user.lastName} for ${randomAchievement}!`;
+    const congratsMessage = `${user.firstName} ${user.lastName} - ${randomAchievement}! From ${currentUser?.firstName || 'Admin'}`;
     
     triggerCelebration(congratsMessage);
     
