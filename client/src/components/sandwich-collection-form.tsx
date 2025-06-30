@@ -150,13 +150,13 @@ export default function SandwichCollectionForm() {
       }
       
       const validGroupCollections = groupCollections.filter(
-        (g) => g.groupName.trim() && g.sandwichCount > 0,
+        (g) => g.sandwichCount > 0,
       );
       
       if (validGroupCollections.length === 0) {
         toast({
           title: "Missing group collections",
-          description: "Please add at least one group collection with a name and count.",
+          description: "Please add at least one group collection with a sandwich count.",
           variant: "destructive",
         });
         return;
@@ -199,13 +199,13 @@ export default function SandwichCollectionForm() {
     }
 
     const validGroupCollections = groupCollections.filter(
-      (g) => g.groupName.trim() && g.sandwichCount > 0,
+      (g) => g.sandwichCount > 0,
     );
     const groupCollectionsString =
       validGroupCollections.length > 0
         ? JSON.stringify(
             validGroupCollections.map((g) => ({
-              name: g.groupName.trim(),
+              name: g.groupName.trim() || "Unnamed Group",
               count: g.sandwichCount,
             })),
           )
@@ -369,7 +369,7 @@ export default function SandwichCollectionForm() {
             {groupCollections.map((group) => (
               <div key={group.id} className="flex gap-3 items-center">
                 <Input
-                  placeholder="Group name"
+                  placeholder="Group name (optional)"
                   value={group.groupName}
                   onChange={(e) =>
                     updateGroupCollection(group.id, "groupName", e.target.value)
@@ -406,8 +406,8 @@ export default function SandwichCollectionForm() {
           </div>
 
           <p className="text-sm text-gray-600 mt-3">
-            Please record any group collections at your location for the week
-            with the group name and their respective sandwich total.
+            Record group collections with sandwich counts. Group names are optional - 
+            entries without names will be listed as "Unnamed Group".
           </p>
         </div>
 
