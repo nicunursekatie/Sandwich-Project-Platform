@@ -571,18 +571,7 @@ export function setupTempAuth(app: Express) {
     }
   });
 
-  // Debug endpoint to see exact session data
-  app.get("/api/debug/session", (req: any, res) => {
-    console.log("=== SESSION DEBUG ===");
-    console.log("Session user:", req.session.user);
-    console.log("User role:", req.session.user?.role);
-    console.log("User email:", req.session.user?.email);
-    console.log("=== END SESSION DEBUG ===");
-    res.json({
-      sessionExists: !!req.session.user,
-      user: req.session.user
-    });
-  });
+
 
   // Logout endpoint
   app.post("/api/logout", (req: any, res) => {
