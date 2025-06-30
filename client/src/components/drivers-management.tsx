@@ -369,6 +369,31 @@ export default function DriversManagement() {
     );
   };
 
+  // Helper function to clean notes for display (removes redundant area info)
+  const getCleanNotesForDisplay = (notes: string, driverZone: string) => {
+    if (!notes) return null;
+    
+    // Split notes by semicolons and filter out redundant information
+    const parts = notes.split(';').map(part => part.trim()).filter(part => {
+      if (!part) return false;
+      
+      // Remove area information that matches the zone
+      if (part.toLowerCase().startsWith('area:')) {
+        return false; // Area info is redundant since we have zone field
+      }
+      
+      // Keep agreement information (this is important)
+      if (part.toLowerCase().includes('agreement')) {
+        return true;
+      }
+      
+      // Keep other meaningful notes
+      return true;
+    });
+    
+    return parts.length > 0 ? parts.join('; ') : null;
+  };
+
   // Helper function to update agreement status in notes while preserving other content
   const updateAgreementInNotes = (
     currentNotes: string = "",
