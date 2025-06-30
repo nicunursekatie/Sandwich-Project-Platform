@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { WebSocketServer, WebSocket } from "ws";
 import { z } from "zod";
 import express from "express";
 import session from "express-session";
@@ -48,6 +49,7 @@ declare global {
   }
 }
 import dataManagementRoutes from "./routes/data-management";
+import { messageNotificationRoutes } from "./routes/message-notifications";
 import { registerPerformanceRoutes } from "./routes/performance";
 import { SearchEngine } from "./search-engine";
 import { CacheManager } from "./performance/cache-manager";
@@ -4186,6 +4188,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
+  // Message notification routes
+  app.get("/api/messages/unread-counts", isAuthenticated, messageNotificationRoutes.getUnreadCounts);
+  app.post("/api/messages/mark-read", isAuthenticated, messageNotificationRoutes.markMessagesRead);
+  app.post("/api/messages/mark-all-read", isAuthenticated, messageNotificationRoutes.markAllRead);
+
   // Announcement routes
   app.get("/api/announcements", async (req, res) => {
     try {
@@ -4262,6 +4269,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     },
   );
+
+  // Set up WebSocket server for real-time notifications
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  const connectedClients = new Map<string, WebSocket[]>();
+
+  wss.on('connection', (ws: WebSocket, request) => {
+    console.log('WebSocket client connected');
+    
+    ws.on('message', (message: string) => {
+      try {
+        const data = JSON.parse(message);
+        
+        if (data.type === 'identify' && data.userId) {
+          // Associate WebSocket with user ID
+          if (!connectedClients.has(data.userId)) {
+            connectedClients.set(data.userId, []);
+          }
+          connectedClients.get(data.userId)!.push(ws);
+          console.log(`User ${data.userId} connected via WebSocket`);
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    });
+
+    ws.on('close', () => {
+      // Remove WebSocket from all user associations
+      for (const [userId, clients] of connectedClients.entries()) {
+        const index = clients.indexOf(ws);
+        if (index > -1) {
+          clients.splice(index, 1);
+          if (clients.length === 0) {
+            connectedClients.delete(userId);
+          }
+          console.log(`User ${userId} disconnected from WebSocket`);
+          break;
+        }
+      }
+    });
+
+    ws.on('error', (error) => {
+      console.error('WebSocket error:', error);
+    });
+  });
+
+  // Function to broadcast new message notifications
+  const broadcastNewMessage = (message: any) => {
+    try {
+      const notificationData = {
+        type: 'new_message',
+        messageId: message.id,
+        sender: message.sender,
+        content: message.content,
+        committee: message.committee,
+        timestamp: message.timestamp,
+        recipientId: message.recipientId
+      };
+
+      // Determine who should receive this notification
+      const targetUsers = new Set<string>();
+
+      if (message.committee === 'direct' && message.recipientId) {
+        // Direct message - notify recipient only
+        targetUsers.add(message.recipientId);
+      } else {
+        // Committee message - notify all users with access to that committee
+        // This would need to be expanded based on user permissions
+        // For now, broadcast to all connected users except sender
+        for (const userId of connectedClients.keys()) {
+          if (userId !== message.userId) {
+            targetUsers.add(userId);
+          }
+        }
+      }
+
+      // Send notifications to target users
+      for (const userId of targetUsers) {
+        const userClients = connectedClients.get(userId);
+        if (userClients) {
+          userClients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send(JSON.stringify(notificationData));
+            }
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error broadcasting message notification:', error);
+    }
+  };
+
+  // Make broadcast function available globally for use in message routes
+  (global as any).broadcastNewMessage = broadcastNewMessage;
 
   return httpServer;
 }

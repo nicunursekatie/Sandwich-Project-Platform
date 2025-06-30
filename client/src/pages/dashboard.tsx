@@ -38,6 +38,7 @@ import { PERMISSIONS } from "@/lib/authUtils";
 import { queryClient } from "@/lib/queryClient";
 import SimpleNav from "@/components/simple-nav";
 import AnnouncementBanner from "@/components/announcement-banner";
+import MessageNotifications from "@/components/message-notifications";
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");

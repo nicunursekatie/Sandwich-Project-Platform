@@ -30,7 +30,7 @@ export default function MessageNotifications() {
   const [lastCheck, setLastCheck] = useState(Date.now());
 
   // Query for unread message counts
-  const { data: unreadCounts, refetch } = useQuery({
+  const { data: unreadCounts, refetch } = useQuery<UnreadCounts>({
     queryKey: ['/api/messages/unread-counts'],
     enabled: !!user,
     refetchInterval: 30000, // Check every 30 seconds
