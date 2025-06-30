@@ -84,8 +84,11 @@ export default function ProjectsClean() {
     mutationFn: async (projectData: Partial<InsertProject>) => {
       return await apiRequest('POST', '/api/projects', projectData);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Force immediate cache invalidation and refetch
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      queryClient.refetchQueries({ queryKey: ["/api/projects"] });
+      
       setShowCreateDialog(false);
       setNewProject({
         title: '',
@@ -98,12 +101,16 @@ export default function ProjectsClean() {
         startDate: '',
         estimatedHours: 0
       });
+      
       toast({ 
-        title: "Project created", 
-        description: "New project has been created successfully." 
+        title: "Project created successfully!", 
+        description: `"${data.title}" has been added to your Available projects.` 
       });
+      
+      console.log('New project created:', data);
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error('Project creation failed:', error);
       toast({ 
         title: "Error", 
         description: "Failed to create project.",
