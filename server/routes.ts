@@ -4229,8 +4229,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     requirePermission("manage_users"),
     async (req: any, res) => {
       try {
+        console.log("Received announcement data:", req.body);
         const result = insertAnnouncementSchema.safeParse(req.body);
         if (!result.success) {
+          console.log("Validation errors:", result.error.errors);
           return res.status(400).json({
             message: "Invalid announcement data",
             errors: result.error.errors,

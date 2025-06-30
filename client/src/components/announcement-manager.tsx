@@ -55,7 +55,9 @@ export default function AnnouncementManager() {
       const formattedData = {
         ...data,
         startDate: new Date(data.startDate).toISOString(),
-        endDate: new Date(data.endDate).toISOString()
+        endDate: new Date(data.endDate).toISOString(),
+        link: data.link?.trim() || null,
+        linkText: data.linkText?.trim() || null
       };
       return apiRequest("POST", "/api/announcements", formattedData);
     },
@@ -86,6 +88,12 @@ export default function AnnouncementManager() {
       }
       if (data.endDate) {
         formattedData.endDate = new Date(data.endDate).toISOString();
+      }
+      if ('link' in data) {
+        formattedData.link = data.link?.trim() || null;
+      }
+      if ('linkText' in data) {
+        formattedData.linkText = data.linkText?.trim() || null;
       }
       return apiRequest("PATCH", `/api/announcements/${id}`, formattedData);
     },
