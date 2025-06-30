@@ -34,6 +34,9 @@ export const PERMISSIONS = {
   VIEW_COLLECTIONS: 'view_collections',
   VIEW_REPORTS: 'view_reports',
   VIEW_PROJECTS: 'view_projects',
+  VIEW_MEETINGS: 'view_meetings',
+  VIEW_ANALYTICS: 'view_analytics',
+  VIEW_ROLE_DEMO: 'view_role_demo',
   
   // User management
   VIEW_USERS: 'view_users',
@@ -87,7 +90,10 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.COMMITTEE_CHAT,
         PERMISSIONS.TOOLKIT_ACCESS,
         PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.VIEW_REPORTS
+        PERMISSIONS.VIEW_REPORTS,
+        PERMISSIONS.VIEW_MEETINGS,
+        PERMISSIONS.VIEW_ANALYTICS,
+        PERMISSIONS.VIEW_ROLE_DEMO
       ];
     
     case USER_ROLES.HOST:

@@ -61,10 +61,11 @@ export function CollapsibleNav() {
       icon: FolderOpen, 
       type: "section",
       items: [
-        { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings" },
-        { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics" },
+        { id: "projects", label: "Projects", icon: ListTodo, href: "/projects", permission: PERMISSIONS.VIEW_PROJECTS },
+        { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings", permission: PERMISSIONS.VIEW_MEETINGS },
+        { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics", permission: PERMISSIONS.VIEW_ANALYTICS },
         { id: "reports", label: "Reports", icon: FileText, href: "/reporting-dashboard", permission: PERMISSIONS.VIEW_REPORTS },
-        { id: "role-demo", label: "Role Demo", icon: Users, href: "/role-demo" },
+        { id: "role-demo", label: "Role Demo", icon: Users, href: "/role-demo", permission: PERMISSIONS.VIEW_ROLE_DEMO },
       ]
     },
     { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", href: "/toolkit" },
