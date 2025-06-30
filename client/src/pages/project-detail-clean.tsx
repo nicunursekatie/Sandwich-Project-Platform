@@ -46,7 +46,11 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     description: "",
     priority: "medium",
     assigneeName: "",
-    dueDate: ""
+    dueDate: "",
+    status: "active",
+    category: "",
+    budget: "",
+    estimatedHours: ""
   });
 
   // Fetch project details

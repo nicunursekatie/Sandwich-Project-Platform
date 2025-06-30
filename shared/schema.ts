@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, varchar, jsonb, index } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, varchar, jsonb, index, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -68,6 +68,7 @@ export const projects = pgTable("projects", {
   tags: text("tags"), // JSON array of tags
   estimatedHours: integer("estimated_hours"), // Estimated work hours
   actualHours: integer("actual_hours"), // Actual hours worked
+  budget: varchar("budget"), // Project budget
   color: text("color").notNull().default("blue"), // for status indicator
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
