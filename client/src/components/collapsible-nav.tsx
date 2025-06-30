@@ -91,12 +91,19 @@ export function CollapsibleNav() {
     if (item.type === "section" && item.items) {
       const visibleSubItems = item.items.filter(subItem => {
         // If no permission required, show the item
-        if (!subItem.permission) return true;
+        if (!subItem.permission) {
+          console.log(`Sub-item ${subItem.label}: no permission required - VISIBLE`);
+          return true;
+        }
         
         // Check if user has the required permission
-        return hasPermission(user, subItem.permission);
+        const hasPermissionResult = hasPermission(user, subItem.permission);
+        console.log(`Sub-item ${subItem.label}: permission ${subItem.permission} = ${hasPermissionResult}`);
+        return hasPermissionResult;
       });
       
+      console.log(`Section ${item.id}: ${visibleSubItems.length} visible items out of ${item.items.length} total`);
+      console.log(`Visible items:`, visibleSubItems.map(item => item.label));
       return visibleSubItems.length > 0;
     }
     
