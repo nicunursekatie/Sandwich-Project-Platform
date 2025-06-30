@@ -4288,6 +4288,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/messages/mark-read", isAuthenticated, messageNotificationRoutes.markMessagesRead);
   app.post("/api/messages/mark-all-read", isAuthenticated, messageNotificationRoutes.markAllRead);
 
+  // System performance monitoring endpoint
+  app.get("/api/system/health", isAuthenticated, (req, res) => {
+    try {
+      const stats = QueryOptimizer.getCacheStats();
+      const memoryUsage = process.memoryUsage();
+      
+      res.json({
+        status: "healthy",
+        timestamp: new Date().toISOString(),
+        cache: {
+          size: stats.size,
+          activeKeys: stats.keys.length
+        },
+        memory: {
+          used: Math.round(memoryUsage.heapUsed / 1024 / 1024) + "MB",
+          total: Math.round(memoryUsage.heapTotal / 1024 / 1024) + "MB"
+        },
+        uptime: Math.round(process.uptime()) + "s"
+      });
+    } catch (error) {
+      res.status(500).json({ status: "error", message: "Health check failed" });
+    }
+  });
+
   // Set up WebSocket server for real-time notifications
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
   const connectedClients = new Map<string, WebSocket[]>();
