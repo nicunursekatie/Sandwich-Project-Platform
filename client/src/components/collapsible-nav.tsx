@@ -61,7 +61,6 @@ export function CollapsibleNav() {
       icon: FolderOpen, 
       type: "section",
       items: [
-        { id: "projects", label: "Projects", icon: ListTodo, href: "/projects", permission: PERMISSIONS.VIEW_PROJECTS },
         { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings" },
         { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics" },
         { id: "reports", label: "Reports", icon: FileText, href: "/reporting-dashboard", permission: PERMISSIONS.VIEW_REPORTS },
