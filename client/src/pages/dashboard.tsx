@@ -233,7 +233,7 @@ export default function Dashboard() {
         return <RecipientsManagement />;
       case "drivers":
         return <DriversManagement />;
-      case "directory":
+      case "phone-directory":
         return <PhoneDirectory />;
       case "analytics":
         return (
