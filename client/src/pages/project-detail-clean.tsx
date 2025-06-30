@@ -201,7 +201,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       
       // Create notification for task completion
       const notificationData = {
-        userId: user?.id || 'anonymous',
+        userId: (user as any)?.id || 'anonymous',
         type: 'task_completion',
         title: 'Task Completed!',
         message: `You completed: ${task.title}`,
@@ -215,10 +215,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       };
       
       // Send notification to backend
-      apiRequest('/api/notifications', {
-        method: 'POST',
-        body: JSON.stringify(notificationData)
-      }).catch(err => console.log('Notification storage failed:', err));
+      apiRequest('POST', '/api/notifications', notificationData).catch(err => console.log('Notification storage failed:', err));
     }
     
     updateTaskMutation.mutate({
@@ -253,7 +250,11 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       description: project?.description || "",
       priority: project?.priority || "medium",
       assigneeName: project?.assigneeName || "",
-      dueDate: formatDateForInput(project?.dueDate)
+      dueDate: formatDateForInput(project?.dueDate || null),
+      status: project?.status || "planning",
+      category: project?.category || "",
+      budget: project?.budget || "",
+      estimatedHours: project?.estimatedHours?.toString() || ""
     });
     setIsEditingProject(true);
   };
