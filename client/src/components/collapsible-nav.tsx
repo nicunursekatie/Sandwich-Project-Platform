@@ -102,19 +102,19 @@ export function CollapsibleNav() {
 
   // Filter and modify navigation items based on user permissions
   const filteredNavigation = navigationStructure.map((item: any) => {
-    // Special handling for Operations section
+    // Special handling for Operations section - ALWAYS show for authenticated users
     if (item.type === "section" && item.id === "operations") {
       console.log('Processing Operations section for user:', user?.email);
+      
+      if (!user) {
+        // No user = hide entire Operations section
+        return null;
+      }
       
       const filteredOperationsItems = item.items.filter((subItem: any) => {
         if (!subItem.permission) {
           console.log(`Operations item ${subItem.label}: no permission required - VISIBLE`);
           return true;
-        }
-        
-        if (!user) {
-          console.log(`Operations item ${subItem.label}: no user - HIDDEN`);
-          return false;
         }
         
         const hasAccess = hasPermission(user, subItem.permission);
@@ -127,6 +127,8 @@ export function CollapsibleNav() {
       console.log(`Operations section final: ${filteredOperationsItems.length}/${item.items.length} items visible`);
       console.log('Visible operations items:', filteredOperationsItems.map((i: any) => i.label));
       
+      // CRITICAL: Always return Operations section for authenticated users, even if empty
+      // This ensures committee members always see the Operations section
       return { ...item, items: filteredOperationsItems };
     }
     
