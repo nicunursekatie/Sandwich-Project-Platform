@@ -382,12 +382,22 @@ export default function DriversManagement() {
         return false;
       }
       
-      // Remove agreement information (redundant since we have badge)
-      if (part.toLowerCase().includes('agreement')) {
+      // Remove only signed/missing agreement status (redundant since we have badge)
+      // But keep other agreement info like "Agreement SENT"
+      const lowerPart = part.toLowerCase();
+      if (lowerPart.includes('agreement: yes') || 
+          lowerPart.includes('agreement: no') ||
+          lowerPart.includes('agreement: signed') ||
+          lowerPart.includes('agreement received')) {
         return false;
       }
       
-      // Keep other meaningful notes like "Van approved: yes"
+      // Remove van approved info (redundant since we have purple badge)
+      if (lowerPart.includes('van approved')) {
+        return false;
+      }
+      
+      // Keep other meaningful notes like "Agreement SENT"
       return true;
     }).map(part => {
       // Remove "Notes:" prefix from individual parts if it exists
