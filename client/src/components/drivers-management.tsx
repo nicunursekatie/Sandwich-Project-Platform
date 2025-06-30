@@ -257,6 +257,28 @@ export default function DriversManagement() {
         notes: updatedNotes,
       });
     },
+    onMutate: async ({ driverId, status }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["/api/drivers"] });
+
+      // Snapshot the previous value
+      const previousDrivers = queryClient.getQueryData(["/api/drivers"]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["/api/drivers"], (old: Driver[] | undefined) => {
+        if (!old) return old;
+        return old.map(driver => {
+          if (driver.id === driverId) {
+            const updatedNotes = updateAgreementInNotes(driver.notes, status);
+            return { ...driver, notes: updatedNotes };
+          }
+          return driver;
+        });
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousDrivers };
+    },
     onSuccess: (_, { status }) => {
       queryClient.invalidateQueries({ queryKey: ["/api/drivers"] });
       toast({
@@ -264,11 +286,19 @@ export default function DriversManagement() {
         description: "Driver agreement status updated successfully",
       });
     },
-    onError: () => {
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousDrivers) {
+        queryClient.setQueryData(["/api/drivers"], context.previousDrivers);
+      }
       toast({
         title: "Failed to update agreement status",
         variant: "destructive",
       });
+    },
+    onSettled: () => {
+      // Always refetch after error or success
+      queryClient.invalidateQueries({ queryKey: ["/api/drivers"] });
     },
   });
 
