@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Users, Send, Crown, Trash2 } from "lucide-react";
+import { MessageCircle, Plus, Users, Send, Crown, Trash2, UserPlus } from "lucide-react";
 import type { MessageGroup, InsertMessageGroup, GroupMembership, Message, User } from "@shared/schema";
 
 interface GroupWithMembers extends MessageGroup {
@@ -33,9 +33,14 @@ interface GroupMessagesProps {
 export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   const [selectedGroup, setSelectedGroup] = useState<GroupWithMembers | null>(null);
   const [newMessage, setNewMessage] = useState("");
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showAddMemberDialog, setShowAddMemberDialog] = useState(false);
   const [groupForm, setGroupForm] = useState({
     name: "",
     description: "",
+    memberIds: [] as string[]
+  });
+  const [addMemberForm, setAddMemberForm] = useState({
     memberIds: [] as string[]
   });
   const { toast } = useToast();
@@ -74,10 +79,43 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       if (!response.ok) throw new Error("Failed to create group");
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (newGroup) => {
       queryClient.invalidateQueries({ queryKey: ["/api/message-groups"] });
       setGroupForm({ name: "", description: "", memberIds: [] });
+      setShowCreateDialog(false);
+      setSelectedGroup(newGroup);
       toast({ title: "Group created successfully!" });
+      
+      // Send congratulations notification
+      fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: `🎉 Congratulations! You've successfully created the "${newGroup.name}" group. Start collaborating with your team members!`,
+          committee: `group_${newGroup.id}`,
+          sender: "System"
+        }),
+      });
+    },
+  });
+
+  // Add members to group mutation
+  const addMembersMutation = useMutation({
+    mutationFn: async (data: { groupId: number; memberIds: string[] }) => {
+      const response = await fetch(`/api/message-groups/${data.groupId}/members`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ memberIds: data.memberIds }),
+      });
+      if (!response.ok) throw new Error("Failed to add members");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/message-groups"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/message-groups", selectedGroup?.id, "members"] });
+      setAddMemberForm({ memberIds: [] });
+      setShowAddMemberDialog(false);
+      toast({ title: "Members added successfully!" });
     },
   });
 
@@ -106,6 +144,17 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     createGroupMutation.mutate({
       ...groupForm,
       createdBy: currentUser?.id || "",
+    });
+  };
+
+  const handleAddMembers = () => {
+    if (!selectedGroup || addMemberForm.memberIds.length === 0) {
+      toast({ title: "Please select members to add", variant: "destructive" });
+      return;
+    }
+    addMembersMutation.mutate({
+      groupId: selectedGroup.id,
+      memberIds: addMemberForm.memberIds,
     });
   };
 
@@ -150,7 +199,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
         <div className="p-4 border-b">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold">Message Groups</h3>
-            <Dialog>
+            <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
               <DialogTrigger asChild>
                 <Button size="sm" variant="outline">
                   <Plus className="h-4 w-4 mr-1" />
@@ -298,10 +347,85 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                     <p className="text-sm text-gray-500">{selectedGroup.description}</p>
                   )}
                 </div>
-                <Badge variant="outline">
-                  <Users className="h-3 w-3 mr-1" />
-                  {selectedGroup.memberCount} members
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">
+                    <Users className="h-3 w-3 mr-1" />
+                    {selectedGroup.memberCount} members
+                  </Badge>
+                  {selectedGroup.userRole === 'admin' && (
+                    <Dialog open={showAddMemberDialog} onOpenChange={setShowAddMemberDialog}>
+                      <DialogTrigger asChild>
+                        <Button size="sm" variant="outline">
+                          <UserPlus className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Add Members to {selectedGroup.name}</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <div>
+                            <label className="text-sm font-medium">Select Members to Add</label>
+                            <Select onValueChange={(userId) => {
+                              const existingMemberIds = groupMembers.map(m => m.userId);
+                              if (!addMemberForm.memberIds.includes(userId) && !existingMemberIds.includes(userId)) {
+                                setAddMemberForm(prev => ({ 
+                                  memberIds: [...prev.memberIds, userId] 
+                                }));
+                              }
+                            }}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select users to add" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {allUsers
+                                  .filter(user => {
+                                    const existingMemberIds = groupMembers.map(m => m.userId);
+                                    return user.id !== currentUser?.id && 
+                                           !addMemberForm.memberIds.includes(user.id) &&
+                                           !existingMemberIds.includes(user.id);
+                                  })
+                                  .map((user) => (
+                                    <SelectItem key={user.id} value={user.id}>
+                                      {formatDisplayName(user)}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                            {addMemberForm.memberIds.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {addMemberForm.memberIds.map((userId) => {
+                                  const user = allUsers.find(u => u.id === userId);
+                                  return (
+                                    <Badge key={userId} variant="secondary" className="text-xs">
+                                      {user ? formatDisplayName(user) : userId}
+                                      <button
+                                        onClick={() => setAddMemberForm(prev => ({
+                                          memberIds: prev.memberIds.filter(id => id !== userId)
+                                        }))}
+                                        className="ml-1 text-red-500 hover:text-red-700"
+                                      >
+                                        ×
+                                      </button>
+                                    </Badge>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex gap-2">
+                            <Button 
+                              onClick={handleAddMembers}
+                              disabled={addMembersMutation.isPending || addMemberForm.memberIds.length === 0}
+                            >
+                              Add Members
+                            </Button>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                </div>
               </div>
             </div>
 

@@ -4372,6 +4372,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Add members to existing group
+  app.post("/api/message-groups/:groupId/members", isAuthenticated, async (req, res) => {
+    try {
+      const { groupId } = req.params;
+      const { memberIds } = req.body;
+      const userId = (req as any).user?.id;
+      
+      // Check if user is admin of the group
+      const userMembership = await db
+        .select()
+        .from(groupMemberships)
+        .where(
+          and(
+            eq(groupMemberships.groupId, parseInt(groupId)),
+            eq(groupMemberships.userId, userId),
+            eq(groupMemberships.role, 'admin'),
+            eq(groupMemberships.isActive, true)
+          )
+        )
+        .limit(1);
+      
+      if (userMembership.length === 0) {
+        return res.status(403).json({ message: "Only group admins can add members" });
+      }
+      
+      if (!memberIds || !Array.isArray(memberIds) || memberIds.length === 0) {
+        return res.status(400).json({ message: "Member IDs are required" });
+      }
+      
+      // Get existing members to avoid duplicates
+      const existingMembers = await db
+        .select({ userId: groupMemberships.userId })
+        .from(groupMemberships)
+        .where(
+          and(
+            eq(groupMemberships.groupId, parseInt(groupId)),
+            eq(groupMemberships.isActive, true)
+          )
+        );
+      
+      const existingMemberIds = existingMembers.map(m => m.userId);
+      const newMemberIds = memberIds.filter(id => !existingMemberIds.includes(id));
+      
+      if (newMemberIds.length === 0) {
+        return res.status(400).json({ message: "All selected users are already members" });
+      }
+      
+      // Add new members
+      const memberships = newMemberIds.map(memberId => ({
+        groupId: parseInt(groupId),
+        userId: memberId,
+        role: 'member' as const
+      }));
+      
+      await db.insert(groupMemberships).values(memberships);
+      
+      res.json({ message: "Members added successfully", addedCount: newMemberIds.length });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to add members to group" });
+    }
+  });
+
   app.get("/api/message-groups/:groupId/members", isAuthenticated, async (req, res) => {
     try {
       const groupId = parseInt(req.params.groupId);
