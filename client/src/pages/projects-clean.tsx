@@ -31,6 +31,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useCelebration, CelebrationToast } from "@/components/celebration-toast";
+import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
 import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 import type { Project, InsertProject } from "@shared/schema";
 
@@ -436,12 +437,11 @@ export default function ProjectsClean() {
               </div>
               
               <div>
-                <Label htmlFor="assigneeName">Assignee</Label>
-                <Input
-                  id="assigneeName"
+                <ProjectAssigneeSelector
                   value={newProject.assigneeName || ''}
-                  onChange={(e) => setNewProject(prev => ({ ...prev, assigneeName: e.target.value }))}
-                  placeholder="Person responsible for this project"
+                  onChange={(value) => setNewProject(prev => ({ ...prev, assigneeName: value }))}
+                  label="Assignee"
+                  placeholder="Select or enter person responsible"
                 />
               </div>
               
