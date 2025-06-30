@@ -48,7 +48,7 @@ export default function SandwichCollectionForm() {
   });
 
   // Include all hosts (active and inactive) for collection assignment
-  const hostOptions = [...hosts.map((host) => host.name), "Groups", "Other"];
+  const hostOptions = [...hosts.map((host) => host.name).filter(name => name && name.trim() !== ""), "Groups", "Other"];
 
   // Mutation for creating new hosts
   const createHostMutation = useMutation({
