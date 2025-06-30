@@ -1493,12 +1493,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "No file associated with these meeting minutes" });
       }
 
-      const filePath = path.join(process.cwd(), minutes.filePath);
+      // Debug logging
+      logger.info("Meeting minutes file debug", { 
+        minutesId, 
+        storedFilePath: minutes.filePath, 
+        fileName: minutes.fileName 
+      });
+
+      // Handle both absolute and relative paths
+      const filePath = path.isAbsolute(minutes.filePath) 
+        ? minutes.filePath 
+        : path.join(process.cwd(), minutes.filePath);
       
       // Check if file exists
       try {
         await fs.access(filePath);
-      } catch {
+      } catch (error) {
+        logger.error("File access failed", { 
+          filePath, 
+          storedPath: minutes.filePath,
+          error: error.message 
+        });
         return res.status(404).json({ message: "File not found on disk" });
       }
       
