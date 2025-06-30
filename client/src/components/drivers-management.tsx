@@ -143,7 +143,7 @@ export default function DriversManagement() {
         availability: "available",
         zone: "",
         routeDescription: "",
-        hostLocation: "",
+
         hostId: undefined,
       });
       setIsAddModalOpen(false);
@@ -748,44 +748,7 @@ export default function DriversManagement() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div>
-                    <Label htmlFor="host-location">Host Location</Label>
-                    <Select
-                      value={newDriver.hostLocation || "none"}
-                      onValueChange={(value) =>
-                        setNewDriver({
-                          ...newDriver,
-                          hostLocation: value === "none" ? undefined : value,
-                        })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a host location" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">
-                          No host location assigned
-                        </SelectItem>
-                        <SelectItem value="Athens">Athens</SelectItem>
-                        <SelectItem value="Dunwoody/PTC">
-                          Dunwoody/PTC
-                        </SelectItem>
-                        <SelectItem value="East Cobb/Roswell">
-                          East Cobb/Roswell
-                        </SelectItem>
-                        <SelectItem value="Intown/Druid Hills">
-                          Intown/Druid Hills
-                        </SelectItem>
-                        <SelectItem value="Sandy Springs">
-                          Sandy Springs
-                        </SelectItem>
-                        <SelectItem value="Flowery Branch">
-                          Flowery Branch
-                        </SelectItem>
-                        <SelectItem value="Alpharetta">Alpharetta</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+
                   <div>
                     <Label htmlFor="route-description">Route Description</Label>
                     <Input
