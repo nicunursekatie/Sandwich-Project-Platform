@@ -58,70 +58,37 @@ export default function Dashboard() {
     );
   };
 
-  // Navigation structure with expandable sections
-  const navigationStructure = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, type: "item", permission: PERMISSIONS.VIEW_COLLECTIONS },
-    { id: "collections", label: "Collections Log", icon: Sandwich, type: "item", permission: PERMISSIONS.VIEW_COLLECTIONS },
-    { id: "messages", label: "Messages", icon: MessageCircle, type: "item", permission: PERMISSIONS.GENERAL_CHAT },
-    { id: "hosts", label: "Hosts", icon: Building2, type: "item", permission: PERMISSIONS.VIEW_HOSTS },
-    { id: "recipients", label: "Recipients", icon: Users, type: "item", permission: PERMISSIONS.VIEW_RECIPIENTS },
-    { id: "drivers", label: "Drivers", icon: Car, type: "item", permission: PERMISSIONS.VIEW_DRIVERS },
-    { id: "committee", label: "Committee", icon: MessageCircle, type: "item", permission: PERMISSIONS.VIEW_COMMITTEE },
-    { id: "projects", label: "Projects", icon: ListTodo, type: "item", permission: PERMISSIONS.VIEW_PROJECTS },
-    { id: "meetings", label: "Meetings", icon: ClipboardList, type: "item", permission: PERMISSIONS.VIEW_MEETINGS },
-    { id: "analytics", label: "Analytics", icon: BarChart3, type: "item", permission: PERMISSIONS.VIEW_REPORTS },
-    { id: "reports", label: "Reports", icon: FileText, type: "item", permission: PERMISSIONS.VIEW_REPORTS },
-    { id: "role-demo", label: "Role Demo", icon: Users, type: "item", permission: PERMISSIONS.MANAGE_USERS },
-    { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", permission: PERMISSIONS.TOOLKIT_ACCESS },
-    { id: "directory", label: "Phone Directory", icon: Phone, type: "item", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
-    { 
-      id: "administration", 
-      label: "Administration", 
-      icon: Users, 
-      type: "section",
-      permission: PERMISSIONS.MANAGE_USERS,
-      items: [
-        { id: "user-management", label: "User Management", icon: Users, permission: PERMISSIONS.MANAGE_USERS },
-      ]
-    },
-    { id: "development", label: "Development", icon: FolderOpen, type: "item", permission: PERMISSIONS.EDIT_DATA },
+  // Simplified navigation structure
+  const navigationItems = [
+    // Core section
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "collections", label: "Collections", icon: Sandwich },
+    { id: "messages", label: "Messages", icon: MessageCircle },
+    
+    // Data section (filtered by permissions)
+    ...(hasPermission(user, PERMISSIONS.VIEW_HOSTS) ? [{ id: "hosts", label: "Hosts", icon: Building2 }] : []),
+    ...(hasPermission(user, PERMISSIONS.VIEW_RECIPIENTS) ? [{ id: "recipients", label: "Recipients", icon: Users }] : []),
+    ...(hasPermission(user, PERMISSIONS.VIEW_DRIVERS) ? [{ id: "drivers", label: "Drivers", icon: Car }] : []),
+    
+    // Operations section
+    ...(hasPermission(user, PERMISSIONS.VIEW_MEETINGS) ? [{ id: "meetings", label: "Meetings", icon: ClipboardList }] : []),
+    ...(hasPermission(user, PERMISSIONS.VIEW_ANALYTICS) ? [{ id: "analytics", label: "Analytics", icon: BarChart3 }] : []),
+    { id: "reports", label: "Reports", icon: FileText },
+    ...(hasPermission(user, PERMISSIONS.VIEW_PROJECTS) ? [{ id: "projects", label: "Projects", icon: ListTodo }] : []),
+    
+    // Communication section
+    ...(hasPermission(user, PERMISSIONS.VIEW_COMMITTEE) ? [{ id: "committee", label: "Committee", icon: MessageCircle }] : []),
+    { id: "directory", label: "Directory", icon: Phone },
+    
+    // Resources section
+    { id: "toolkit", label: "Toolkit", icon: FolderOpen },
+    { id: "development", label: "Development", icon: FileText },
+    
+    // Admin section
+    ...(hasPermission(user, PERMISSIONS.MANAGE_USERS) ? [{ id: "user-management", label: "Admin", icon: UserCog }] : []),
   ];
 
-  // Filter navigation items based on user permissions
-  const filteredNavigation = navigationStructure.filter(item => {
-    // If item has no permission requirement, check if it's always visible
-    if (!item.permission) {
-      // For sections, check if any sub-items are accessible
-      if (item.type === "section" && item.items) {
-        const accessibleItems = item.items.filter(subItem => 
-          !subItem.permission || hasPermission(user, subItem.permission)
-        );
-        return accessibleItems.length > 0;
-      }
-      return true;
-    }
-    
-    // Check if user has permission for this item
-    if (!hasPermission(user, item.permission)) {
-      return false;
-    }
-    
-    // For sections, also filter out sub-items that user can't access
-    if (item.type === "section" && item.items) {
-      const accessibleItems = item.items.filter(subItem => 
-        !subItem.permission || hasPermission(user, subItem.permission)
-      );
-      // Keep section only if it has accessible items
-      if (accessibleItems.length > 0) {
-        // Update the item's items array to only include accessible items
-        item.items = accessibleItems;
-        return true;
-      }
-      return false;
-    }
-    
-    return true;
-  });
+  // Navigation is already filtered by permissions above
 
   const renderContent = () => {
     // Extract project ID from activeSection if it's a project detail page
