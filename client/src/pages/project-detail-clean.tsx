@@ -648,11 +648,28 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                             variant="outline" 
                             size="sm"
                             onClick={() => {
-                              triggerCelebration(`${task.assigneeName} - completed "${task.title}"! From ${user?.firstName || 'Admin'}`);
-                              toast({
-                                title: "Congratulations Sent!",
-                                description: `Celebrated ${task.assigneeName} for completing "${task.title}".`,
-                              });
+                              // Send congratulations notification to the task assignee only (no popup for sender)
+                              const congratulationData = {
+                                userId: 'system', // System generated message
+                                targetUserId: task.assigneeName, // Send to the task assignee
+                                type: 'congratulations',
+                                title: 'Congratulations!',
+                                message: `making a real difference in our mission! From ${user?.firstName || 'Admin'}`,
+                                relatedType: 'project_task',
+                                relatedId: task.id,
+                                celebrationData: {
+                                  taskTitle: task.title,
+                                  senderName: user?.firstName || 'Admin',
+                                  projectId: projectId,
+                                  sentAt: new Date().toISOString()
+                                }
+                              };
+                              
+                              // Send notification silently (no popup for sender)
+                              apiRequest('/api/notifications', {
+                                method: 'POST',
+                                body: JSON.stringify(congratulationData)
+                              }).catch(err => console.log('Congratulation notification failed:', err));
                             }}
                             className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
                           >
