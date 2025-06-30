@@ -197,11 +197,11 @@ export default function CommitteeChat() {
               <p>No messages yet. Start the conversation!</p>
             </div>
           ) : (
-            messages.map((message) => (
+            messages.map((message: Message) => (
               <div key={message.id} className="flex space-x-3 group">
                 <Avatar className="w-8 h-8">
                   <AvatarFallback className="bg-gray-500 text-white text-xs">
-                    {message.sender?.split(' ').map(n => n[0]).join('').slice(0, 2) || 'TM'}
+                    {message.sender?.split(' ').map((n: string) => n[0]).join('').slice(0, 2) || 'TM'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
