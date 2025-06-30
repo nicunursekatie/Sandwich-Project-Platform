@@ -68,6 +68,20 @@ interface GeneralContact {
   updatedAt: Date;
 }
 
+interface Driver {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  zone: string;
+  hostId?: number;
+  isActive: boolean;
+  notes: string;
+  vanApproved: boolean;
+  homeAddress?: string;
+  availabilityNotes?: string;
+}
+
 function PhoneDirectory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("hosts");

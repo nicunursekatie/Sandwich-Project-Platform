@@ -67,7 +67,8 @@ export default function DriversManagement() {
     vehicleType: "",
     licenseNumber: "",
     availability: "available" as const,
-    zone: ""
+    zone: "",
+    hostId: undefined as number | undefined
   });
 
   const [volunteerForm, setVolunteerForm] = useState({
@@ -105,7 +106,8 @@ export default function DriversManagement() {
         vehicleType: "",
         licenseNumber: "",
         availability: "available",
-        zone: ""
+        zone: "",
+        hostId: undefined
       });
       setIsAddModalOpen(false);
       toast({ title: "Driver added successfully" });
@@ -281,7 +283,13 @@ export default function DriversManagement() {
   };
 
   // Get unique zones for filter dropdown
-  const availableZones = Array.from(new Set(drivers.map(driver => driver.zone).filter(Boolean))).sort();
+  const zoneSet: string[] = [];
+  drivers.forEach(driver => {
+    if (driver.zone && !zoneSet.includes(driver.zone)) {
+      zoneSet.push(driver.zone);
+    }
+  });
+  const availableZones = zoneSet.sort();
 
   // Separate and sort drivers, then apply filters
   const allActiveDrivers = drivers.filter(driver => driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
@@ -521,6 +529,25 @@ export default function DriversManagement() {
                       onChange={(e) => setNewDriver({ ...newDriver, licenseNumber: e.target.value })}
                       placeholder="License number"
                     />
+                  </div>
+                  <div>
+                    <Label htmlFor="host">Host Location</Label>
+                    <Select 
+                      value={newDriver.hostId ? newDriver.hostId.toString() : ""} 
+                      onValueChange={(value) => setNewDriver({ ...newDriver, hostId: value ? parseInt(value) : undefined })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a host location" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">No host assigned</SelectItem>
+                        {hosts.filter(host => host.status === 'active').map((host) => (
+                          <SelectItem key={host.id} value={host.id.toString()}>
+                            {host.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
                     <Label htmlFor="zone">Zone</Label>
@@ -882,6 +909,27 @@ export default function DriversManagement() {
                   value={editingDriver.zone}
                   onChange={(e) => setEditingDriver({ ...editingDriver, zone: e.target.value })}
                 />
+              </div>
+              <div>
+                <Label htmlFor="edit-host">Host Location</Label>
+                <Select
+                  value={editingDriver.hostId ? editingDriver.hostId.toString() : ""}
+                  onValueChange={(value) =>
+                    setEditingDriver({ ...editingDriver, hostId: value ? parseInt(value) : undefined })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a host location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">No host assigned</SelectItem>
+                    {hosts.filter(host => host.status === 'active').map((host) => (
+                      <SelectItem key={host.id} value={host.id.toString()}>
+                        {host.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setEditingDriver(null)}>
