@@ -673,6 +673,43 @@ export function setupTempAuth(app: Express) {
       res.status(500).json({ message: "Failed to change password" });
     }
   });
+
+  // Admin endpoint to reset any user's password
+  app.put("/api/auth/admin/reset-password", isAuthenticated, async (req: any, res) => {
+    try {
+      const user = req.session.user;
+      
+      // Only admins can reset passwords
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Only administrators can reset passwords" });
+      }
+      
+      const { userEmail, newPassword } = req.body;
+      
+      if (!userEmail || !newPassword) {
+        return res.status(400).json({ message: "User email and new password are required" });
+      }
+      
+      const targetUser = await storage.getUserByEmail(userEmail);
+      if (!targetUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Update password
+      await storage.updateUser(targetUser.id, {
+        metadata: { ...targetUser.metadata, password: newPassword },
+        updatedAt: new Date()
+      });
+
+      res.json({ 
+        message: `Password reset successfully for ${userEmail}`,
+        newPassword: newPassword // Include for admin convenience
+      });
+    } catch (error) {
+      console.error("Admin password reset error:", error);
+      res.status(500).json({ message: "Failed to reset password" });
+    }
+  });
 }
 
 // Middleware to check if user is authenticated
