@@ -5,6 +5,7 @@ import CommitteeChat from "@/components/committee-chat";
 import HostChat from "@/components/host-chat";
 import CommitteeMessageLog from "@/components/committee-message-log";
 import CoreTeamChat from "@/components/core-team-chat";
+import DirectMessaging from "@/components/direct-messaging";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, USER_ROLES } from "@/lib/authUtils";
 import { PERMISSIONS } from "@/lib/authUtils";
@@ -38,6 +39,11 @@ export default function ChatHub() {
   // Core team chat for admins only
   if (hasPermission(user, PERMISSIONS.MANAGE_USERS)) {
     availableTabs.push({ value: "core_team", label: "Core Team", component: <CoreTeamChat /> });
+  }
+
+  // Direct messaging for all authenticated users
+  if (user) {
+    availableTabs.push({ value: "direct", label: "Direct Messages", component: <DirectMessaging /> });
   }
 
   const defaultTab = availableTabs.length > 0 ? availableTabs[0].value : "general";

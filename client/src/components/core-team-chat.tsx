@@ -78,15 +78,15 @@ export default function CoreTeamChat() {
   const handleSendMessage = () => {
     if (!message.trim()) return;
 
-    const userName = user?.firstName && user?.lastName 
-      ? `${user.firstName} ${user.lastName}` 
-      : user?.email || "Core Team Member";
+    const userName = (user as any)?.firstName && (user as any)?.lastName 
+      ? `${(user as any).firstName} ${(user as any).lastName}` 
+      : (user as any)?.email || "Core Team Member";
 
     sendMessageMutation.mutate({
       sender: userName,
       content: message.trim(),
       committee: "core_team",
-      userId: user?.id
+      userId: (user as any)?.id
     });
   };
 
