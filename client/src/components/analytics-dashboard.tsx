@@ -61,10 +61,16 @@ export default function AnalyticsDashboard() {
     const topPerformer = Object.entries(hostStats)
       .sort(([,a], [,b]) => b.total - a.total)[0];
 
-    // Calculate weekly data
+    // Calculate weekly data using proper week boundaries (Sunday to Saturday)
+    const getWeekKey = (date: Date) => {
+      const sunday = new Date(date);
+      sunday.setDate(date.getDate() - date.getDay());
+      return sunday.toISOString().split('T')[0];
+    };
+
     const weeklyData = collections.reduce((acc, c) => {
       const date = new Date(c.collectionDate || '');
-      const weekKey = `${date.getFullYear()}-W${Math.ceil((date.getDate() + new Date(date.getFullYear(), date.getMonth(), 1).getDay()) / 7)}`;
+      const weekKey = getWeekKey(date);
       const sandwiches = (c.individualSandwiches || 0) + parseGroups(c.groupCollections);
       
       if (!acc[weekKey]) {
@@ -75,8 +81,14 @@ export default function AnalyticsDashboard() {
       return acc;
     }, {} as Record<string, { total: number; date: string }>);
 
+    // Calculate proper weekly average based on time period
+    const dates = collections.map(c => new Date(c.collectionDate || '')).filter(d => !isNaN(d.getTime()));
+    const minDate = dates.length > 0 ? new Date(Math.min(...dates.map(d => d.getTime()))) : new Date();
+    const maxDate = dates.length > 0 ? new Date(Math.max(...dates.map(d => d.getTime()))) : new Date();
+    const totalWeeks = Math.max(1, Math.ceil((maxDate.getTime() - minDate.getTime()) / (7 * 24 * 60 * 60 * 1000)));
+    const avgWeekly = Math.round(totalSandwiches / totalWeeks);
+    
     const weeklyTotals = Object.values(weeklyData).map(w => w.total).sort((a, b) => b - a);
-    const avgWeekly = weeklyTotals.reduce((sum, w) => sum + w, 0) / weeklyTotals.length || 0;
     const recordWeek = Object.entries(weeklyData)
       .sort(([,a], [,b]) => b.total - a.total)[0];
 
