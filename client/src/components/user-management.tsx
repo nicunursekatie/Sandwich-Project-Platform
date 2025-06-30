@@ -11,9 +11,10 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { useCelebration, CelebrationToast } from "@/components/celebration-toast";
 import { hasPermission, USER_ROLES, PERMISSIONS, getRoleDisplayName, getDefaultPermissionsForRole } from "@/lib/authUtils";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { Users, Shield, Settings, Key } from "lucide-react";
+import { Users, Shield, Settings, Key, Award } from "lucide-react";
 
 interface User {
   id: string;
@@ -29,6 +30,7 @@ interface User {
 export default function UserManagement() {
   const { user: currentUser } = useAuth();
   const { toast } = useToast();
+  const { celebration, triggerCelebration, hideCelebration } = useCelebration();
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [editingRole, setEditingRole] = useState<string>("");
   const [editingPermissions, setEditingPermissions] = useState<string[]>([]);
@@ -155,6 +157,27 @@ export default function UserManagement() {
     resetPasswordMutation.mutate({
       userEmail: resetPasswordUser.email,
       newPassword: newPassword,
+    });
+  };
+
+  const handleCongratulateUser = (user: User) => {
+    const achievements = [
+      "outstanding volunteer work",
+      "excellent project management",
+      "dedicated service to the community",
+      "exceptional teamwork and leadership",
+      "going above and beyond expectations",
+      "making a real difference in our mission"
+    ];
+    
+    const randomAchievement = achievements[Math.floor(Math.random() * achievements.length)];
+    const congratsMessage = `${user.firstName} ${user.lastName} for ${randomAchievement}!`;
+    
+    triggerCelebration(congratsMessage);
+    
+    toast({
+      title: "Congratulations Sent!",
+      description: `Celebrated ${user.firstName} ${user.lastName}'s achievements.`,
     });
   };
 
@@ -374,6 +397,17 @@ export default function UserManagement() {
                         </DialogContent>
                       </Dialog>
                       
+                      {/* Congratulate Button */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleCongratulateUser(user)}
+                        className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                      >
+                        <Award className="h-4 w-4 mr-2" />
+                        Congratulate
+                      </Button>
+                      
                       <Button
                         variant="outline"
                         size="sm"
@@ -392,6 +426,20 @@ export default function UserManagement() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Celebration Toast */}
+      <CelebrationToast
+        isVisible={celebration.isVisible}
+        onClose={hideCelebration}
+        taskTitle={celebration.taskTitle}
+        emoji={celebration.emoji}
+        onSendThanks={(message: string) => {
+          toast({
+            title: "Thank you sent!",
+            description: "Your appreciation message has been recorded.",
+          });
+        }}
+      />
     </div>
   );
 }
