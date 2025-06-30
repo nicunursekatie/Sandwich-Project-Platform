@@ -36,6 +36,7 @@ import { hasPermission } from "@/lib/authUtils";
 import { PERMISSIONS } from "@/lib/authUtils";
 import { queryClient } from "@/lib/queryClient";
 import SimpleNav from "@/components/simple-nav";
+import AnnouncementBanner from "@/components/announcement-banner";
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -288,6 +289,9 @@ export default function Dashboard() {
 
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col">
+      {/* Announcement Banner */}
+      <AnnouncementBanner />
+      
       {/* Top Header */}
       <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-3">

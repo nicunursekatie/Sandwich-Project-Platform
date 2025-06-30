@@ -14,7 +14,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useCelebration, CelebrationToast } from "@/components/celebration-toast";
 import { hasPermission, USER_ROLES, PERMISSIONS, getRoleDisplayName, getDefaultPermissionsForRole } from "@/lib/authUtils";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { Users, Shield, Settings, Key, Award } from "lucide-react";
+import { Users, Shield, Settings, Key, Award, Megaphone } from "lucide-react";
+import AnnouncementManager from "@/components/announcement-manager";
 
 interface User {
   id: string;
@@ -31,6 +32,7 @@ export default function UserManagement() {
   const { user: currentUser } = useAuth();
   const { toast } = useToast();
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
+  const [activeTab, setActiveTab] = useState<"users" | "announcements">("users");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [editingRole, setEditingRole] = useState<string>("");
   const [editingPermissions, setEditingPermissions] = useState<string[]>([]);
@@ -212,16 +214,47 @@ export default function UserManagement() {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
+      {/* Tab Navigation */}
+      <div className="border-b border-slate-200">
+        <nav className="-mb-px flex space-x-8">
+          <button
+            onClick={() => setActiveTab("users")}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === "users"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+            }`}
+          >
+            <Users className="h-4 w-4 inline mr-2" />
             User Management
-          </CardTitle>
-          <CardDescription>
-            Manage user roles and permissions for team members
-          </CardDescription>
-        </CardHeader>
+          </button>
+          <button
+            onClick={() => setActiveTab("announcements")}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === "announcements"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+            }`}
+          >
+            <Megaphone className="h-4 w-4 inline mr-2" />
+            Announcements
+          </button>
+        </nav>
+      </div>
+
+      {activeTab === "announcements" ? (
+        <AnnouncementManager />
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              User Management
+            </CardTitle>
+            <CardDescription>
+              Manage user roles and permissions for team members
+            </CardDescription>
+          </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
@@ -421,7 +454,8 @@ export default function UserManagement() {
             </TableBody>
           </Table>
         </CardContent>
-      </Card>
+        </Card>
+      )}
 
       {/* Celebration Toast */}
       <CelebrationToast

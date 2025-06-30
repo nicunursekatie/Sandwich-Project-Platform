@@ -119,6 +119,22 @@ export const committeeMemberships = pgTable("committee_memberships", {
   isActive: boolean("is_active").notNull().default(true),
 });
 
+// Announcements table for website banners
+export const announcements = pgTable("announcements", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  type: varchar("type").notNull().default("general"), // 'event', 'position', 'alert', 'general'
+  priority: varchar("priority").notNull().default("medium"), // 'low', 'medium', 'high', 'urgent'
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  link: text("link"), // Optional external link
+  linkText: text("link_text"), // Text for the link
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
   sender: text("sender").notNull(),
