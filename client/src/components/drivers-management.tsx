@@ -52,7 +52,6 @@ interface Driver {
   address?: string;
   zone: string; // Keep for backward compatibility
   routeDescription?: string; // New field for route descriptions like "SS to Dunwoody"
-  hostLocation?: string; // New field to connect to specific host locations
   hostId?: number;
   availability?: string;
   isActive: boolean;
@@ -101,7 +100,6 @@ export default function DriversManagement() {
     availability: "available" as const,
     zone: "",
     routeDescription: "" as string | undefined,
-    hostLocation: "" as string | undefined,
     hostId: undefined as number | undefined,
   });
 
@@ -143,7 +141,6 @@ export default function DriversManagement() {
         availability: "available",
         zone: "",
         routeDescription: "",
-        hostLocation: "",
         hostId: undefined,
       });
       setIsAddModalOpen(false);
@@ -748,44 +745,7 @@ export default function DriversManagement() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div>
-                    <Label htmlFor="host-location">Host Location</Label>
-                    <Select
-                      value={newDriver.hostLocation || "none"}
-                      onValueChange={(value) =>
-                        setNewDriver({
-                          ...newDriver,
-                          hostLocation: value === "none" ? undefined : value,
-                        })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a host location" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">
-                          No host location assigned
-                        </SelectItem>
-                        <SelectItem value="Athens">Athens</SelectItem>
-                        <SelectItem value="Dunwoody/PTC">
-                          Dunwoody/PTC
-                        </SelectItem>
-                        <SelectItem value="East Cobb/Roswell">
-                          East Cobb/Roswell
-                        </SelectItem>
-                        <SelectItem value="Intown/Druid Hills">
-                          Intown/Druid Hills
-                        </SelectItem>
-                        <SelectItem value="Sandy Springs">
-                          Sandy Springs
-                        </SelectItem>
-                        <SelectItem value="Flowery Branch">
-                          Flowery Branch
-                        </SelectItem>
-                        <SelectItem value="Alpharetta">Alpharetta</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+
                   <div>
                     <Label htmlFor="route-description">Route Description</Label>
                     <Input
@@ -1230,40 +1190,7 @@ export default function DriversManagement() {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label htmlFor="edit-host-location">Host Location</Label>
-                <Select
-                  value={editingDriver.hostLocation || "none"}
-                  onValueChange={(value) =>
-                    setEditingDriver({
-                      ...editingDriver,
-                      hostLocation: value === "none" ? undefined : value,
-                    })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a host location" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">
-                      No host location assigned
-                    </SelectItem>
-                    <SelectItem value="Athens">Athens</SelectItem>
-                    <SelectItem value="Dunwoody/PTC">Dunwoody/PTC</SelectItem>
-                    <SelectItem value="East Cobb/Roswell">
-                      East Cobb/Roswell
-                    </SelectItem>
-                    <SelectItem value="Intown/Druid Hills">
-                      Intown/Druid Hills
-                    </SelectItem>
-                    <SelectItem value="Sandy Springs">Sandy Springs</SelectItem>
-                    <SelectItem value="Flowery Branch">
-                      Flowery Branch
-                    </SelectItem>
-                    <SelectItem value="Alpharetta">Alpharetta</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+
               <div>
                 <Label htmlFor="edit-route-description">
                   Route Description

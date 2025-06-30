@@ -2176,6 +2176,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const updates = req.body;
       
+      // Log the update data for debugging
+      console.log(`Updating driver ${id} with data:`, JSON.stringify(updates, null, 2));
+      
       // Validate that we have some updates to apply
       if (!updates || Object.keys(updates).length === 0) {
         return res.status(400).json({ message: "No updates provided" });
@@ -2185,6 +2188,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!driver) {
         return res.status(404).json({ message: "Driver not found" });
       }
+      
+      console.log(`Driver ${id} updated successfully:`, JSON.stringify(driver, null, 2));
       res.json(driver);
     } catch (error) {
       logger.error("Failed to update driver", error);
