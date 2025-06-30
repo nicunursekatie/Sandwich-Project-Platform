@@ -1154,36 +1154,42 @@ export default function DriversManagement() {
           open={!!editingDriver}
           onOpenChange={() => setEditingDriver(null)}
         >
-          <DialogContent>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Edit Driver</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="edit-name">Driver Name</Label>
-                <Input
-                  id="edit-name"
-                  value={editingDriver.name ?? ""}
-                  onChange={(e) =>
-                    setEditingDriver({ ...editingDriver, name: e.target.value })
-                  }
-                />
+              {/* Basic Information */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="edit-name">Driver Name *</Label>
+                  <Input
+                    id="edit-name"
+                    value={editingDriver.name ?? ""}
+                    onChange={(e) =>
+                      setEditingDriver({ ...editingDriver, name: e.target.value })
+                    }
+                    placeholder="Full name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-phone">Phone Number *</Label>
+                  <Input
+                    id="edit-phone"
+                    value={editingDriver.phone ?? ""}
+                    onChange={(e) =>
+                      setEditingDriver({
+                        ...editingDriver,
+                        phone: e.target.value,
+                      })
+                    }
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
               </div>
+
               <div>
-                <Label htmlFor="edit-phone">Phone Number</Label>
-                <Input
-                  id="edit-phone"
-                  value={editingDriver.phone ?? ""}
-                  onChange={(e) =>
-                    setEditingDriver({
-                      ...editingDriver,
-                      phone: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit-email">Email</Label>
+                <Label htmlFor="edit-email">Email Address</Label>
                 <Input
                   id="edit-email"
                   type="email"
@@ -1194,31 +1200,137 @@ export default function DriversManagement() {
                       email: e.target.value,
                     })
                   }
+                  placeholder="email@example.com"
                 />
               </div>
-              <div>
-                <Label htmlFor="edit-availability">Availability</Label>
-                <Select
-                  value={editingDriver.availability ?? ""}
-                  onValueChange={(value: "available" | "busy" | "off-duty") =>
-                    setEditingDriver({ ...editingDriver, availability: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="available">Available</SelectItem>
-                    <SelectItem value="busy">Busy</SelectItem>
-                    <SelectItem value="off-duty">Off Duty</SelectItem>
-                  </SelectContent>
-                </Select>
+
+              {/* Status and Permissions */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="edit-status">Status</Label>
+                  <Select
+                    value={editingDriver.isActive ? "active" : "inactive"}
+                    onValueChange={(value) =>
+                      setEditingDriver({
+                        ...editingDriver,
+                        isActive: value === "active",
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="inactive">Inactive</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="edit-van-approved">Van Driver Status</Label>
+                  <Select
+                    value={editingDriver.vanApproved ? "approved" : "not_approved"}
+                    onValueChange={(value) =>
+                      setEditingDriver({
+                        ...editingDriver,
+                        vanApproved: value === "approved",
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="approved">Van Driver Approved</SelectItem>
+                      <SelectItem value="not_approved">Not Van Approved</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
+              {/* Agreement Status */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="edit-agreement">Agreement Status</Label>
+                  <Select
+                    value={editingDriver.emailAgreementSent ? "signed" : "missing"}
+                    onValueChange={(value) =>
+                      setEditingDriver({
+                        ...editingDriver,
+                        emailAgreementSent: value === "signed",
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="signed">Signed Agreement</SelectItem>
+                      <SelectItem value="missing">Missing Agreement</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="edit-voicemail">Communication Status</Label>
+                  <Select
+                    value={editingDriver.voicemailLeft ? "contacted" : "not_contacted"}
+                    onValueChange={(value) =>
+                      setEditingDriver({
+                        ...editingDriver,
+                        voicemailLeft: value === "contacted",
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="contacted">Voicemail Left</SelectItem>
+                      <SelectItem value="not_contacted">Not Contacted</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Availability */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="edit-availability">Availability Status</Label>
+                  <Select
+                    value={editingDriver.availability ?? "available"}
+                    onValueChange={(value: "available" | "busy" | "off-duty") =>
+                      setEditingDriver({ ...editingDriver, availability: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="available">Available</SelectItem>
+                      <SelectItem value="busy">Busy</SelectItem>
+                      <SelectItem value="off-duty">Off Duty</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="edit-availability-notes">Availability Details</Label>
+                  <Input
+                    id="edit-availability-notes"
+                    value={editingDriver.availabilityNotes ?? ""}
+                    onChange={(e) =>
+                      setEditingDriver({
+                        ...editingDriver,
+                        availabilityNotes: e.target.value,
+                      })
+                    }
+                    placeholder="e.g., M-F after 3; weekends"
+                  />
+                </div>
+              </div>
+
+              {/* Route and Location */}
               <div>
-                <Label htmlFor="edit-route-description">
-                  Route Description
-                </Label>
+                <Label htmlFor="edit-route-description">Route Description</Label>
                 <Input
                   id="edit-route-description"
                   value={
@@ -1233,8 +1345,9 @@ export default function DriversManagement() {
                   placeholder="e.g., SS to Dunwoody, East Cobb to anywhere"
                 />
               </div>
+
               <div>
-                <Label htmlFor="edit-host">Directory Connection</Label>
+                <Label htmlFor="edit-host">Associated Host/Organization</Label>
                 <Select
                   value={
                     editingDriver.hostId
@@ -1254,7 +1367,7 @@ export default function DriversManagement() {
                   <SelectContent>
                     <SelectItem value="none">No host assigned</SelectItem>
                     {hosts
-                      .filter((host) => host.status === "active")
+                      ?.filter((host) => host.status === "active")
                       .map((host) => (
                         <SelectItem key={host.id} value={host.id.toString()}>
                           {host.name}
@@ -1263,7 +1376,58 @@ export default function DriversManagement() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex justify-end gap-2">
+
+              {/* Additional Information */}
+              <div>
+                <Label htmlFor="edit-home-address">Home Address</Label>
+                <Input
+                  id="edit-home-address"
+                  value={editingDriver.homeAddress ?? ""}
+                  onChange={(e) =>
+                    setEditingDriver({
+                      ...editingDriver,
+                      homeAddress: e.target.value,
+                    })
+                  }
+                  placeholder="Full home address"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="edit-notes">Additional Notes</Label>
+                <textarea
+                  id="edit-notes"
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  rows={3}
+                  value={editingDriver.notes ?? ""}
+                  onChange={(e) =>
+                    setEditingDriver({
+                      ...editingDriver,
+                      notes: e.target.value,
+                    })
+                  }
+                  placeholder="Additional information, special instructions, etc."
+                />
+              </div>
+
+              {!editingDriver.isActive && (
+                <div>
+                  <Label htmlFor="edit-inactive-reason">Inactive Reason</Label>
+                  <Input
+                    id="edit-inactive-reason"
+                    value={editingDriver.inactiveReason ?? ""}
+                    onChange={(e) =>
+                      setEditingDriver({
+                        ...editingDriver,
+                        inactiveReason: e.target.value,
+                      })
+                    }
+                    placeholder="Reason for inactive status"
+                  />
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2 pt-4">
                 <Button
                   variant="outline"
                   onClick={() => setEditingDriver(null)}
