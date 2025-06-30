@@ -77,15 +77,16 @@ export function ProjectAssigneeSelector({
 
   return (
     <div className={className}>
-      <div className="flex items-center justify-between mb-2">
+      <div className="space-y-2">
         <Label className="text-sm font-medium text-slate-700">{label}</Label>
-        <div className="flex gap-1">
+        
+        <div className="flex gap-2 mb-2">
           <Button
             type="button"
             variant={mode === 'text' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setMode('text')}
-            className="h-7 text-xs"
+            className="h-8 text-xs flex-1"
           >
             <UserPlus className="w-3 h-3 mr-1" />
             Free Text
@@ -95,7 +96,7 @@ export function ProjectAssigneeSelector({
             variant={mode === 'user' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setMode('user')}
-            className="h-7 text-xs"
+            className="h-8 text-xs flex-1"
             disabled={users.length === 0}
           >
             <Users className="w-3 h-3 mr-1" />
@@ -110,11 +111,11 @@ export function ProjectAssigneeSelector({
           placeholder={placeholder}
           value={textValue}
           onChange={(e) => handleTextChange(e.target.value)}
-          className="mt-1"
+          className="w-full"
         />
       ) : (
         <Select value={selectedUserId} onValueChange={handleUserSelect}>
-          <SelectTrigger className="mt-1">
+          <SelectTrigger className="w-full">
             <SelectValue placeholder="Select a user from the system" />
           </SelectTrigger>
           <SelectContent>
