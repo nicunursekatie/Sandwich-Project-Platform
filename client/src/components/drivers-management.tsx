@@ -1207,7 +1207,7 @@ export default function DriversManagement() {
                       <div className="flex items-start gap-2 text-sm text-slate-600">
                         <FileCheck className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         <span>
-                          {getCleanNotesForDisplay(driver.notes, driver.zone)}
+                          <strong>Notes:</strong> {getCleanNotesForDisplay(driver.notes, driver.zone)}
                         </span>
                       </div>
                     </div>
@@ -1404,7 +1404,7 @@ export default function DriversManagement() {
                       <div className="flex items-start gap-2 text-sm text-slate-600">
                         <FileCheck className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         <span>
-                          {getCleanNotesForDisplay(driver.notes, driver.zone)}
+                          <strong>Notes:</strong> {getCleanNotesForDisplay(driver.notes, driver.zone)}
                         </span>
                       </div>
                     </div>
