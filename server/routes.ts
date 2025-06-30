@@ -57,6 +57,7 @@ import { ReportGenerator } from "./reporting/report-generator";
 import { EmailService } from "./notifications/email-service";
 import { VersionControl } from "./middleware/version-control";
 import { BackupManager } from "./operations/backup-manager";
+import { QueryOptimizer } from "./performance/query-optimizer";
 import { db } from "./db";
 
 // Permission middleware to check user roles and permissions
@@ -626,49 +627,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Sandwich Collections Stats - Complete totals including individual + group collections
+  // Sandwich Collections Stats - Complete totals including individual + group collections (Optimized)
   app.get("/api/sandwich-collections/stats", async (req, res) => {
     try {
-      const collections = await storage.getAllSandwichCollections();
+      const stats = await QueryOptimizer.getCachedQuery(
+        "sandwich-collections-stats",
+        async () => {
+          const collections = await storage.getAllSandwichCollections();
 
-      let individualTotal = 0;
-      let groupTotal = 0;
+          let individualTotal = 0;
+          let groupTotal = 0;
 
-      collections.forEach((collection) => {
-        individualTotal += collection.individualSandwiches || 0;
+          collections.forEach((collection) => {
+            individualTotal += collection.individualSandwiches || 0;
 
-        // Calculate group collections total
-        try {
-          const groupData = JSON.parse(collection.groupCollections || "[]");
-          if (Array.isArray(groupData)) {
-            groupTotal += groupData.reduce(
-              (sum: number, group: any) => sum + (group.sandwichCount || 0),
-              0,
-            );
-          }
-        } catch (error) {
-          // Handle text format like "Marketing Team: 8, Development: 6"
-          if (
-            collection.groupCollections &&
-            collection.groupCollections !== "[]"
-          ) {
-            const matches = collection.groupCollections.match(/(\d+)/g);
-            if (matches) {
-              groupTotal += matches.reduce(
-                (sum, num) => sum + parseInt(num),
-                0,
-              );
+            // Calculate group collections total
+            try {
+              const groupData = JSON.parse(collection.groupCollections || "[]");
+              if (Array.isArray(groupData)) {
+                groupTotal += groupData.reduce(
+                  (sum: number, group: any) => sum + (group.sandwichCount || 0),
+                  0,
+                );
+              }
+            } catch (error) {
+              // Handle text format like "Marketing Team: 8, Development: 6"
+              if (
+                collection.groupCollections &&
+                collection.groupCollections !== "[]"
+              ) {
+                const matches = collection.groupCollections.match(/(\d+)/g);
+                if (matches) {
+                  groupTotal += matches.reduce(
+                    (sum, num) => sum + parseInt(num),
+                    0,
+                  );
+                }
+              }
             }
-          }
-        }
-      });
+          });
 
-      res.json({
-        totalEntries: collections.length,
-        individualSandwiches: individualTotal,
-        groupSandwiches: groupTotal,
-        completeTotalSandwiches: individualTotal + groupTotal,
-      });
+          return {
+            totalEntries: collections.length,
+            individualSandwiches: individualTotal,
+            groupSandwiches: groupTotal,
+            completeTotalSandwiches: individualTotal + groupTotal,
+          };
+        },
+        60000 // Cache for 1 minute since this data doesn't change frequently
+      );
+
+      res.json(stats);
     } catch (error) {
       res
         .status(500)
@@ -710,6 +719,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const collectionData = insertSandwichCollectionSchema.parse(req.body);
         const collection =
           await storage.createSandwichCollection(collectionData);
+        
+        // Invalidate cache when new collection is created
+        QueryOptimizer.invalidateCache("sandwich-collections");
+        
         res.status(201).json(collection);
       } catch (error) {
         if (error instanceof z.ZodError) {
