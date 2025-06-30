@@ -177,6 +177,7 @@ Preferred communication style: Simple, everyday language.
 - June 28, 2025: Enhanced meeting pages navigation: added "Back to Meetings Hub" navigation headers to meeting agenda, calendar, and minutes pages with breadcrumb trails showing current location (Meetings • Agenda/Calendar/Minutes), improved user navigation flow between meeting-related pages
 - June 28, 2025: Restricted committee member access to Projects tab: removed "view_projects" permission from committee_member role, ensuring only core team members can access project management features while committee members retain access to phone directory, reports, collections, chat, and toolkit
 - June 28, 2025: Fixed critical Operations section navigation bug: Operations tab was disappearing for committee members due to session caching issues, implemented forced Operations section visibility for authenticated users with proper sub-item filtering to ensure committee members can access Meetings, Analytics, Reports, Role Demo while hiding Projects tab
+- June 30, 2025: Permanently removed Projects tab access for committee members: directly removed "view_projects" permission from committee member database record, Projects tab is now completely hidden from Operations dropdown for katielong2316@gmail.com while maintaining access to Meetings, Analytics, Reports, and Role Demo
 
 ## Changelog
 
