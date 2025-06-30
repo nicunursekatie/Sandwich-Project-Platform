@@ -35,6 +35,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/authUtils";
 import { PERMISSIONS } from "@/lib/authUtils";
 import { queryClient } from "@/lib/queryClient";
+import SimpleNav from "@/components/simple-nav";
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
