@@ -6,6 +6,7 @@ import HostChat from "@/components/host-chat";
 import CommitteeMessageLog from "@/components/committee-message-log";
 import CoreTeamChat from "@/components/core-team-chat";
 import DirectMessaging from "@/components/direct-messaging";
+import { GroupMessaging } from "@/components/group-messaging";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, USER_ROLES } from "@/lib/authUtils";
 import { PERMISSIONS } from "@/lib/authUtils";
@@ -44,6 +45,11 @@ export default function ChatHub() {
   // Direct messaging for all authenticated users
   if (user) {
     availableTabs.push({ value: "direct", label: "Direct Messages", component: <DirectMessaging /> });
+  }
+
+  // Group messaging for all authenticated users
+  if (user) {
+    availableTabs.push({ value: "groups", label: "Group Messages", component: <GroupMessaging currentUser={user} /> });
   }
 
   const defaultTab = availableTabs.length > 0 ? availableTabs[0].value : "general";

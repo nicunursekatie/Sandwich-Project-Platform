@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { z } from "zod";
+import { eq, and, sql } from 'drizzle-orm';
 import express from "express";
 import session from "express-session";
 import multer from "multer";
