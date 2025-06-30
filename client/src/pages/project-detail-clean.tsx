@@ -321,10 +321,59 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
           <Badge className={getPriorityColor(project.priority)}>
             {project.priority}
           </Badge>
-          <Badge variant="outline" className={getStatusColor(project.status)}>
-            {getStatusIcon(project.status)}
-            <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
-          </Badge>
+          
+          {/* Status badge with quick change dropdown */}
+          {canEdit ? (
+            <Select 
+              value={project.status} 
+              onValueChange={(newStatus) => {
+                updateProjectMutation.mutate({ status: newStatus });
+                toast({ 
+                  title: "Status updated", 
+                  description: `Project status changed to ${newStatus.replace('_', ' ')}` 
+                });
+              }}
+            >
+              <SelectTrigger className="w-auto h-8 px-3 border-dashed">
+                <Badge variant="outline" className={getStatusColor(project.status)}>
+                  {getStatusIcon(project.status)}
+                  <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
+                </Badge>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="available">
+                  <div className="flex items-center">
+                    <Circle className="w-4 h-4 mr-2" />
+                    Available
+                  </div>
+                </SelectItem>
+                <SelectItem value="in_progress">
+                  <div className="flex items-center">
+                    <Play className="w-4 h-4 mr-2" />
+                    In Progress
+                  </div>
+                </SelectItem>
+                <SelectItem value="waiting">
+                  <div className="flex items-center">
+                    <Pause className="w-4 h-4 mr-2" />
+                    Waiting
+                  </div>
+                </SelectItem>
+                <SelectItem value="completed">
+                  <div className="flex items-center">
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Completed
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          ) : (
+            <Badge variant="outline" className={getStatusColor(project.status)}>
+              {getStatusIcon(project.status)}
+              <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
+            </Badge>
+          )}
+          
           {canEdit && (
             <Button variant="outline" size="sm" onClick={handleEditProject}>
               <Edit className="w-4 h-4 mr-2" />
