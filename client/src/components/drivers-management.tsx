@@ -334,7 +334,8 @@ export default function DriversManagement() {
     return (
       agreementText.includes("agreement: yes") ||
       agreementText.includes("agreement: signed") ||
-      agreementText.includes("agreement: true")
+      agreementText.includes("agreement: true") ||
+      agreementText.includes("agreement received")
     );
   };
 
