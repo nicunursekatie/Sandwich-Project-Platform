@@ -92,7 +92,7 @@ export function CollapsibleNav() {
       label: "Operations", 
       icon: FolderOpen, 
       type: "section",
-      items: (user as any)?.role === 'committee_member' ? [
+      items: (user as any)?.email === 'katielong2316@gmail.com' ? [
         // Hardcoded for committee members - no Projects tab
         { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings" },
         { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics" },
