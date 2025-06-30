@@ -103,7 +103,10 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       toast({ title: "Group name is required", variant: "destructive" });
       return;
     }
-    createGroupMutation.mutate(groupForm);
+    createGroupMutation.mutate({
+      ...groupForm,
+      createdBy: currentUser?.id || "",
+    });
   };
 
   const handleSendMessage = () => {
@@ -316,12 +319,12 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                     <div key={message.id} className="flex gap-3">
                       <Avatar className="h-8 w-8">
                         <AvatarFallback className="text-xs">
-                          {message.userName ? message.userName[0]?.toUpperCase() : "?"}
+                          {message.sender ? message.sender[0]?.toUpperCase() : "?"}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium text-sm">{message.userName || "Anonymous"}</span>
+                          <span className="font-medium text-sm">{message.sender || "Anonymous"}</span>
                           <span className="text-xs text-gray-500">
                             {new Date(message.timestamp).toLocaleTimeString()}
                           </span>
