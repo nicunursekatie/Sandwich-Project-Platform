@@ -13,6 +13,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -223,6 +229,33 @@ export default function DriversManagement() {
     },
   });
 
+  // Update agreement status mutation
+  const updateAgreementMutation = useMutation({
+    mutationFn: ({ driverId, status }: { driverId: number; status: "signed" | "missing" }) => {
+      const driver = drivers?.find(d => d.id === driverId);
+      if (!driver) throw new Error("Driver not found");
+      
+      const updatedNotes = updateAgreementInNotes(driver.notes, status);
+      
+      return apiRequest("PATCH", `/api/drivers/${driverId}`, {
+        notes: updatedNotes,
+      });
+    },
+    onSuccess: (_, { status }) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/drivers"] });
+      toast({ 
+        title: `Agreement marked as ${status}`,
+        description: "Driver agreement status updated successfully"
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Failed to update agreement status",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleAdd = () => {
     if (!newDriver.name || !newDriver.phone || !newDriver.vehicleType) {
       toast({
@@ -287,6 +320,25 @@ export default function DriversManagement() {
       agreementText.includes("agreement: signed") ||
       agreementText.includes("agreement: true")
     );
+  };
+
+  // Helper function to update agreement status in notes while preserving other content
+  const updateAgreementInNotes = (currentNotes: string = "", newStatus: "signed" | "missing"): string => {
+    // Remove any existing agreement status
+    let updatedNotes = currentNotes.replace(/Agreement:\s*(yes|signed|true|no|missing|false)/gi, "").trim();
+    
+    // Remove trailing semicolons or commas
+    updatedNotes = updatedNotes.replace(/[;,]\s*$/, "").trim();
+    
+    // Add the new agreement status
+    const agreementText = `Agreement: ${newStatus}`;
+    
+    // If there are other notes, add agreement status at the end
+    if (updatedNotes) {
+      return `${updatedNotes}; ${agreementText}`;
+    }
+    
+    return agreementText;
   };
 
   // Export function
@@ -946,24 +998,48 @@ export default function DriversManagement() {
                           </Badge>
                         )}
 
-                        {/* Agreement Status */}
-                        {hasSignedAgreement(driver.notes) ? (
-                          <Badge
-                            variant="outline"
-                            className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1"
-                          >
-                            <FileCheck className="w-3 h-3" />
-                            Signed Agreement
-                          </Badge>
-                        ) : (
-                          <Badge
-                            variant="outline"
-                            className="bg-orange-50 text-orange-700 border-orange-200 flex items-center gap-1"
-                          >
-                            <AlertTriangle className="w-3 h-3" />
-                            Missing Agreement
-                          </Badge>
-                        )}
+                        {/* Agreement Status - Clickable */}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild disabled={!canEdit || updateAgreementMutation.isPending}>
+                            <Badge
+                              variant="outline"
+                              className={`cursor-pointer transition-all duration-200 hover:shadow-sm flex items-center gap-1 ${
+                                hasSignedAgreement(driver.notes)
+                                  ? "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
+                                  : "bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100"
+                              } ${!canEdit ? "cursor-not-allowed opacity-50" : ""} ${
+                                updateAgreementMutation.isPending ? "animate-pulse" : ""
+                              }`}
+                            >
+                              {updateAgreementMutation.isPending ? (
+                                <Clock className="w-3 h-3 animate-spin" />
+                              ) : hasSignedAgreement(driver.notes) ? (
+                                <FileCheck className="w-3 h-3" />
+                              ) : (
+                                <AlertTriangle className="w-3 h-3" />
+                              )}
+                              {hasSignedAgreement(driver.notes) ? "Signed Agreement" : "Missing Agreement"}
+                            </Badge>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem
+                              onClick={() => updateAgreementMutation.mutate({ driverId: driver.id, status: "signed" })}
+                              disabled={updateAgreementMutation.isPending}
+                              className="flex items-center gap-2"
+                            >
+                              <FileCheck className="w-4 h-4 text-blue-600" />
+                              ✅ Mark as Signed
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => updateAgreementMutation.mutate({ driverId: driver.id, status: "missing" })}
+                              disabled={updateAgreementMutation.isPending}
+                              className="flex items-center gap-2"
+                            >
+                              <AlertTriangle className="w-4 h-4 text-orange-600" />
+                              ❌ Mark as Missing
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </div>
                     <div className="flex gap-2">
@@ -1083,16 +1159,48 @@ export default function DriversManagement() {
                           </Badge>
                         )}
 
-                        {/* Agreement Status (for inactive drivers) */}
-                        {hasSignedAgreement(driver.notes) && (
-                          <Badge
-                            variant="outline"
-                            className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1"
-                          >
-                            <FileCheck className="w-3 h-3" />
-                            Signed Agreement
-                          </Badge>
-                        )}
+                        {/* Agreement Status - Clickable (for inactive drivers) */}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild disabled={!canEdit || updateAgreementMutation.isPending}>
+                            <Badge
+                              variant="outline"
+                              className={`cursor-pointer transition-all duration-200 hover:shadow-sm flex items-center gap-1 ${
+                                hasSignedAgreement(driver.notes)
+                                  ? "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
+                                  : "bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100"
+                              } ${!canEdit ? "cursor-not-allowed opacity-50" : ""} ${
+                                updateAgreementMutation.isPending ? "animate-pulse" : ""
+                              }`}
+                            >
+                              {updateAgreementMutation.isPending ? (
+                                <Clock className="w-3 h-3 animate-spin" />
+                              ) : hasSignedAgreement(driver.notes) ? (
+                                <FileCheck className="w-3 h-3" />
+                              ) : (
+                                <AlertTriangle className="w-3 h-3" />
+                              )}
+                              {hasSignedAgreement(driver.notes) ? "Signed Agreement" : "Missing Agreement"}
+                            </Badge>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem
+                              onClick={() => updateAgreementMutation.mutate({ driverId: driver.id, status: "signed" })}
+                              disabled={updateAgreementMutation.isPending}
+                              className="flex items-center gap-2"
+                            >
+                              <FileCheck className="w-4 h-4 text-blue-600" />
+                              ✅ Mark as Signed
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => updateAgreementMutation.mutate({ driverId: driver.id, status: "missing" })}
+                              disabled={updateAgreementMutation.isPending}
+                              className="flex items-center gap-2"
+                            >
+                              <AlertTriangle className="w-4 h-4 text-orange-600" />
+                              ❌ Mark as Missing
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
 
                         {/* Inactive Reason */}
                         {driver.inactiveReason && (
