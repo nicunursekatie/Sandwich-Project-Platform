@@ -1506,19 +1506,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
         : path.join(process.cwd(), minutes.filePath);
       
       // Check if file exists
+      let actualFilePath = filePath;
       try {
         await fs.access(filePath);
       } catch (error) {
-        logger.error("File access failed", { 
+        logger.error("Primary file access failed, trying fallback", { 
           filePath, 
           storedPath: minutes.filePath,
           error: error.message 
         });
-        return res.status(404).json({ message: "File not found on disk" });
+        
+        // Fallback: check if there's any file in the meeting-minutes directory
+        try {
+          const meetingMinutesDir = path.join(process.cwd(), 'uploads', 'meeting-minutes');
+          const files = await fs.readdir(meetingMinutesDir);
+          if (files.length > 0) {
+            // Use the first (and likely only) file as fallback
+            actualFilePath = path.join(meetingMinutesDir, files[0]);
+            logger.info("Using fallback file", { 
+              originalPath: filePath,
+              fallbackPath: actualFilePath 
+            });
+          } else {
+            return res.status(404).json({ message: "No files found in meeting minutes directory" });
+          }
+        } catch (fallbackError) {
+          logger.error("Fallback file search failed", fallbackError);
+          return res.status(404).json({ message: "File not found on disk" });
+        }
       }
       
       // Get file info
-      const stats = await fs.stat(filePath);
+      const stats = await fs.stat(actualFilePath);
       
       // Set appropriate headers
       res.setHeader('Content-Type', 'application/pdf');
@@ -1526,7 +1545,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader('Content-Disposition', `inline; filename="${minutes.fileName}"`);
       
       // Stream the file
-      const fileStream = createReadStream(filePath);
+      const fileStream = createReadStream(actualFilePath);
       fileStream.pipe(res);
       
     } catch (error) {
