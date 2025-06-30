@@ -12,6 +12,7 @@ import path from "path";
 import mammoth from "mammoth";
 import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
+import { messageNotificationRoutes } from "./routes/message-notifications-simple";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
@@ -49,7 +50,6 @@ declare global {
   }
 }
 import dataManagementRoutes from "./routes/data-management";
-import { messageNotificationRoutes } from "./routes/message-notifications";
 import { registerPerformanceRoutes } from "./routes/performance";
 import { SearchEngine } from "./search-engine";
 import { CacheManager } from "./performance/cache-manager";
@@ -4269,6 +4269,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     },
   );
+
+  // Message notification routes
+  app.get("/api/messages/unread-counts", isAuthenticated, messageNotificationRoutes.getUnreadCounts);
+  app.post("/api/messages/mark-read", isAuthenticated, messageNotificationRoutes.markMessagesRead);
+  app.post("/api/messages/mark-all-read", isAuthenticated, messageNotificationRoutes.markAllRead);
 
   // Set up WebSocket server for real-time notifications
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
