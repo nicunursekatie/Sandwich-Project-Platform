@@ -222,6 +222,7 @@ export const drivers = pgTable("drivers", {
   licenseNumber: text("license_number"),
   availability: text("availability").default("available"), // "available", "busy", "off-duty"
   zone: text("zone"),
+  hostId: integer("host_id"), // Reference to hosts table for directory connection
   vanApproved: boolean("van_approved").notNull().default(false),
   homeAddress: text("home_address"),
   availabilityNotes: text("availability_notes"),

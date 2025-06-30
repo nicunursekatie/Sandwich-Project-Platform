@@ -21,6 +21,8 @@ interface Driver {
   email: string;
   address?: string;
   zone: string;
+  hostId?: number;
+  availability?: string;
   isActive: boolean;
   notes: string;
   vanApproved: boolean;
@@ -31,6 +33,12 @@ interface Driver {
   inactiveReason?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+interface Host {
+  id: number;
+  name: string;
+  status: string;
 }
 
 export default function DriversManagement() {
@@ -78,6 +86,11 @@ export default function DriversManagement() {
   // Fetch drivers
   const { data: drivers = [], isLoading } = useQuery<Driver[]>({
     queryKey: ["/api/drivers"],
+  });
+
+  // Fetch hosts for selection dropdown
+  const { data: hosts = [] } = useQuery<Host[]>({
+    queryKey: ["/api/hosts"],
   });
 
   // Add driver mutation
@@ -268,7 +281,7 @@ export default function DriversManagement() {
   };
 
   // Get unique zones for filter dropdown
-  const availableZones = [...new Set(drivers.map(driver => driver.zone).filter(Boolean))].sort();
+  const availableZones = Array.from(new Set(drivers.map(driver => driver.zone).filter(Boolean))).sort();
 
   // Separate and sort drivers, then apply filters
   const allActiveDrivers = drivers.filter(driver => driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
