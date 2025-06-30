@@ -373,8 +373,10 @@ export default function Dashboard() {
         <div className={`${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0 fixed md:relative z-50 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out h-full`}>
-          {/* Simple Navigation */}
-          <SimpleNav onSectionChange={setActiveSection} />
+          {/* Simple Navigation with scrolling */}
+          <div className="flex-1 overflow-y-auto">
+            <SimpleNav onSectionChange={setActiveSection} />
+          </div>
         </div>
 
         {/* Main Content */}
