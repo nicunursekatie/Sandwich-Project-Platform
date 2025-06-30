@@ -659,22 +659,19 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                                 targetUserId: task.assigneeName, // Send to the task assignee
                                 type: 'congratulations',
                                 title: 'Congratulations!',
-                                message: `making a real difference in our mission! From ${user?.firstName || 'Admin'}`,
+                                message: `making a real difference in our mission! From ${(user as any)?.firstName || 'Admin'}`,
                                 relatedType: 'project_task',
                                 relatedId: task.id,
                                 celebrationData: {
                                   taskTitle: task.title,
-                                  senderName: user?.firstName || 'Admin',
+                                  senderName: (user as any)?.firstName || 'Admin',
                                   projectId: projectId,
                                   sentAt: new Date().toISOString()
                                 }
                               };
                               
                               // Send notification silently (no popup for sender)
-                              apiRequest('/api/notifications', {
-                                method: 'POST',
-                                body: JSON.stringify(congratulationData)
-                              }).then(() => {
+                              apiRequest('POST', '/api/notifications', congratulationData).then(() => {
                                 // Simple confirmation toast for sender
                                 toast({
                                   title: "Congratulations sent!",
@@ -839,7 +836,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
         onSendThanks={(message: string) => {
           // Store thank you message as notification
           const thankYouData = {
-            userId: user?.id || 'anonymous',
+            userId: (user as any)?.id || 'anonymous',
             type: 'thank_you',
             title: 'Thank You Sent!',
             message: message,
@@ -853,10 +850,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
             }
           };
           
-          apiRequest('/api/notifications', {
-            method: 'POST',
-            body: JSON.stringify(thankYouData)
-          }).then(() => {
+          apiRequest('POST', '/api/notifications', thankYouData).then(() => {
             toast({ 
               title: "Thank you sent!", 
               description: "Your appreciation has been recorded." 
