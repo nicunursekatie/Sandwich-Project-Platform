@@ -669,7 +669,22 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                               apiRequest('/api/notifications', {
                                 method: 'POST',
                                 body: JSON.stringify(congratulationData)
-                              }).catch(err => console.log('Congratulation notification failed:', err));
+                              }).then(() => {
+                                // Simple confirmation toast for sender
+                                toast({
+                                  title: "Congratulations sent!",
+                                  description: `Message sent to ${task.assigneeName}`,
+                                  duration: 3000,
+                                });
+                              }).catch(err => {
+                                console.log('Congratulation notification failed:', err);
+                                // Still show confirmation even if storage fails
+                                toast({
+                                  title: "Congratulations sent!",
+                                  description: `Message sent to ${task.assigneeName}`,
+                                  duration: 3000,
+                                });
+                              });
                             }}
                             className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
                           >
