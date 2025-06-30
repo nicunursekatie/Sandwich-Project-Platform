@@ -1288,13 +1288,33 @@ export default function DriversManagement() {
                 <div>
                   <Label htmlFor="edit-agreement">Agreement Status</Label>
                   <Select
-                    value={editingDriver.emailAgreementSent ? "signed" : "missing"}
-                    onValueChange={(value) =>
+                    value={hasSignedAgreement(editingDriver.notes) ? "signed" : "missing"}
+                    onValueChange={(value) => {
+                      let updatedNotes = editingDriver.notes || "";
+                      
+                      // Remove any existing agreement status from notes
+                      updatedNotes = updatedNotes
+                        .replace(/agreement:\s*(yes|no|signed|missing|true|false)/gi, "")
+                        .replace(/\s+/g, " ")
+                        .trim();
+                      
+                      // Add new agreement status
+                      if (value === "signed") {
+                        updatedNotes = updatedNotes 
+                          ? `${updatedNotes} Agreement: signed`
+                          : "Agreement: signed";
+                      } else {
+                        updatedNotes = updatedNotes 
+                          ? `${updatedNotes} Agreement: missing`
+                          : "Agreement: missing";
+                      }
+                      
                       setEditingDriver({
                         ...editingDriver,
+                        notes: updatedNotes.trim(),
                         emailAgreementSent: value === "signed",
-                      })
-                    }
+                      });
+                    }}
                   >
                     <SelectTrigger>
                       <SelectValue />
