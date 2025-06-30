@@ -2197,6 +2197,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // DELETE endpoint for drivers
+  app.delete("/api/drivers/:id", sanitizeMiddleware, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      console.log(`Deleting driver ${id}`);
+      
+      const success = await storage.deleteDriver(id);
+      if (!success) {
+        return res.status(404).json({ message: "Driver not found" });
+      }
+      
+      console.log(`Driver ${id} deleted successfully`);
+      res.json({ message: "Driver deleted successfully" });
+    } catch (error) {
+      logger.error("Failed to delete driver", error);
+      res.status(500).json({ message: "Failed to delete driver" });
+    }
+  });
+
   // Driver Agreements (admin access only)
   app.post("/api/driver-agreements", async (req, res) => {
     try {
