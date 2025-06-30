@@ -23,12 +23,14 @@ import {
   Play,
   ArrowRight,
   BarChart3,
-  AlertCircle
+  AlertCircle,
+  Award
 } from "lucide-react";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useCelebration, CelebrationToast } from "@/components/celebration-toast";
 import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 import type { Project, InsertProject } from "@shared/schema";
 
@@ -36,6 +38,7 @@ export default function ProjectsClean() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { celebration, triggerCelebration, hideCelebration } = useCelebration();
   const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [newProject, setNewProject] = useState<Partial<InsertProject>>({

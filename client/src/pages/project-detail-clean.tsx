@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Calendar, User, Clock, Target, CheckCircle2, Circle, Pause, Play, Plus, Trash2, Edit, Check } from "lucide-react";
+import { ArrowLeft, Calendar, User, Clock, Target, CheckCircle2, Circle, Pause, Play, Plus, Trash2, Edit, Check, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -641,6 +641,25 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                             )}
                           </DialogContent>
                         </Dialog>
+                        
+                        {/* Congratulate Button - only show for completed tasks with assignee */}
+                        {task.status === 'completed' && task.assigneeName && (
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              triggerCelebration(`${task.assigneeName} - completed "${task.title}"! From ${user?.firstName || 'Admin'}`);
+                              toast({
+                                title: "Congratulations Sent!",
+                                description: `Celebrated ${task.assigneeName} for completing "${task.title}".`,
+                              });
+                            }}
+                            className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                          >
+                            <Award className="w-3 h-3" />
+                          </Button>
+                        )}
+                        
                         <Button 
                           variant="outline" 
                           size="sm"
