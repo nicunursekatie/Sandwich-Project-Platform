@@ -92,19 +92,15 @@ export function CollapsibleNav() {
       label: "Operations", 
       icon: FolderOpen, 
       type: "section",
-      items: (user as any)?.email === 'katielong2316@gmail.com' ? [
-        // Hardcoded for committee members - no Projects tab
-        { id: "meetings", label: `Meetings [Email: ${(user as any)?.email}]`, icon: ClipboardList, href: "/meetings" },
-        { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics" },
-        { id: "reports", label: "Reports", icon: FileText, href: "/reporting-dashboard" },
-        { id: "role-demo", label: "Role Demo", icon: Users, href: "/role-demo" },
-      ] : [
-        // Full access for all other roles
-        { id: "projects", label: "Projects", icon: ListTodo, href: "/projects", permission: PERMISSIONS.VIEW_PROJECTS },
+      items: [
         { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings", permission: PERMISSIONS.VIEW_MEETINGS },
         { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics", permission: PERMISSIONS.VIEW_ANALYTICS },
         { id: "reports", label: "Reports", icon: FileText, href: "/reporting-dashboard", permission: PERMISSIONS.VIEW_REPORTS },
         { id: "role-demo", label: "Role Demo", icon: Users, href: "/role-demo", permission: PERMISSIONS.VIEW_ROLE_DEMO },
+        // Only show Projects for non-committee members
+        ...((user as any)?.email !== 'katielong2316@gmail.com' ? [
+          { id: "projects", label: "Projects", icon: ListTodo, href: "/projects", permission: PERMISSIONS.VIEW_PROJECTS }
+        ] : [])
       ]
     },
     { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", href: "/toolkit" },

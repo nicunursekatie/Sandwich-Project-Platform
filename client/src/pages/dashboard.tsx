@@ -81,7 +81,6 @@ export default function Dashboard() {
       label: "Operations", 
       icon: FolderOpen, 
       type: "section",
-      permission: PERMISSIONS.VIEW_PROJECTS,
       items: [
         { id: "projects", label: "Projects", icon: ListTodo, permission: PERMISSIONS.VIEW_PROJECTS },
         { id: "meetings", label: "Meetings", icon: ClipboardList, permission: PERMISSIONS.VIEW_PROJECTS },
