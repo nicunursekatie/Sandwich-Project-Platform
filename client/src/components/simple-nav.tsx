@@ -35,9 +35,9 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
   // Flat navigation with smart grouping using visual separators
   const navigationItems: NavigationItem[] = [
     // Core section
-    { id: "overview", label: "Dashboard", icon: LayoutDashboard, href: "overview" },
-    { id: "submit", label: "Submit Collection", icon: Sandwich, href: "submit" },
-    { id: "collections", label: "Collections", icon: ListTodo, href: "collections" },
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "dashboard" },
+    { id: "collections", label: "Collections", icon: Sandwich, href: "collections" },
+    { id: "messages", label: "Messages", icon: MessageCircle, href: "messages" },
     
     // Data section (filtered by permissions)
     ...(hasPermission(user, PERMISSIONS.VIEW_HOSTS) ? [{ id: "hosts", label: "Hosts", icon: Building2, href: "hosts", group: "data" }] : []),
@@ -64,7 +64,8 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
   ];
 
   const isActive = (href: string) => {
-    if (href === "overview") return location === "/" || location === "/overview";
+    // For dashboard, check if we're on root or dashboard
+    if (href === "dashboard") return location === "/" || location === "/dashboard";
     return location === `/${href}`;
   };
 

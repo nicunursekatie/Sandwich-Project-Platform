@@ -364,81 +364,8 @@ export default function Dashboard() {
         <div className={`${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0 fixed md:relative z-50 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out h-full`}>
-          {/* Navigation */}
-          <nav className="flex-1 p-4 overflow-y-auto">
-            <ul className="space-y-2">
-              {filteredNavigation.map((item) => {
-                const Icon = item.icon;
-                
-                if (item.type === "section") {
-                  const isExpanded = expandedSections.includes(item.id);
-                  return (
-                    <li key={item.id}>
-                      <button
-                        onClick={() => toggleSection(item.id)}
-                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors text-slate-700 hover:bg-slate-100 hover:text-slate-900"
-                      >
-                        <div className="flex items-center space-x-3">
-                          <Icon className="w-5 h-5" />
-                          <span className="font-medium">{item.label}</span>
-                        </div>
-                        {isExpanded ? (
-                          <ChevronDown className="w-4 h-4" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4" />
-                        )}
-                      </button>
-                      {isExpanded && (
-                        <ul className="mt-2 ml-8 space-y-1">
-                          {item.items?.map((subItem) => {
-                            const SubIcon = subItem.icon;
-                            return (
-                              <li key={subItem.id}>
-                                <button
-                                  onClick={() => setActiveSection(subItem.id)}
-                                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
-                                    activeSection === subItem.id
-                                      ? "bg-blue-50 text-blue-700 border border-blue-200"
-                                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                                  }`}
-                                >
-                                  <SubIcon className="w-4 h-4" />
-                                  <span className="text-sm">{subItem.label}</span>
-                                </button>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      )}
-                    </li>
-                  );
-                }
-                
-                return (
-                  <li key={item.id}>
-                    <button
-                      onClick={() => setActiveSection(item.id)}
-                      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
-                        activeSection === item.id
-                          ? "bg-blue-50 text-blue-700 border border-blue-200"
-                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                      }`}
-                    >
-                      <Icon className="w-5 h-5" />
-                      <span>{item.label}</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-
-          {/* User Info */}
-          <div className="p-4 border-t border-slate-200">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-600">Welcome, {(user as any)?.firstName || 'Team'}</span>
-            </div>
-          </div>
+          {/* Simple Navigation */}
+          <SimpleNav onSectionChange={setActiveSection} />
         </div>
 
         {/* Main Content */}
