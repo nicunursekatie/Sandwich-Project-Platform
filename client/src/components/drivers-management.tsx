@@ -941,8 +941,6 @@ export default function DriversManagement() {
                           </Badge>
                         )}
 
-                        {/* Host Location */}
-                        )}
                       </div>
                     </div>
                     <Button
@@ -1049,8 +1047,6 @@ export default function DriversManagement() {
                           </Badge>
                         )}
 
-                        {/* Host Location */}
-                        )}
                       </div>
                     </div>
                     <Button
