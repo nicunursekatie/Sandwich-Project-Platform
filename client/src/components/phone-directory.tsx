@@ -146,7 +146,7 @@ function PhoneDirectory() {
   const updateHostMutation = useMutation({
     mutationFn: ({ id, data, isReassignment }: { id: number; data: Partial<z.infer<typeof insertHostSchema>>; isReassignment?: boolean }) => {
       console.log('Updating host with:', { id, data, isReassignment });
-      return apiRequest("PUT", `/api/hosts/${id}`, data);
+      return apiRequest("PATCH", `/api/hosts/${id}`, data);
     },
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });

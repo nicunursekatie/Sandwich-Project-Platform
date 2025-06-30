@@ -141,7 +141,7 @@ export default function ProjectList() {
 
   const updateProjectMutation = useMutation({
     mutationFn: async ({ id, ...updates }: { id: number } & Partial<Project>) => {
-      return apiRequest("PUT", `/api/projects/${id}`, updates);
+      return apiRequest("PATCH", `/api/projects/${id}`, updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });

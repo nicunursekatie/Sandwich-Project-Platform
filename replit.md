@@ -200,6 +200,7 @@ Preferred communication style: Simple, everyday language.
 - June 30, 2025: Updated weekly average to show recent 12-month operational pace instead of full historical average: changed calculation from total historical data (13,905/week) to last 12 months only (~4,900/week), provides more accurate representation of current organizational capacity rather than inflated numbers from bulk historical data imports
 - June 30, 2025: Fixed PDF report generation system completely: resolved blank PDF files by implementing functional report generation using structured CSV format with PDF-like sections, reports now include executive summary with statistics, top performers ranking, and complete detailed data tables, verified working with 295,376 sandwiches across 357 records for 2024 data
 - June 30, 2025: Fixed Directory navigation routing issue: corrected dashboard case statement from "directory" to "phone-directory" to match navigation link configuration, Directory link now properly routes to phone directory page instead of defaulting to dashboard
+- June 30, 2025: RESOLVED recurring PUT/PATCH endpoint mismatch issues: removed unnecessary timestamp fields (createdAt, updatedAt) from drivers table schema, standardized all frontend API calls to use PATCH consistently, eliminated duplicate PUT endpoints causing confusion, driver management system now works reliably with proper HTTP verb alignment
 
 ## Changelog
 
