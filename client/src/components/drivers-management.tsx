@@ -546,7 +546,7 @@ export default function DriversManagement() {
                         <SelectValue placeholder="Select a host location" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No host assigned</SelectItem>
+                        <SelectItem value="none">No host assigned</SelectItem>
                         {hosts.filter(host => host.status === 'active').map((host) => (
                           <SelectItem key={host.id} value={host.id.toString()}>
                             {host.name}
@@ -560,7 +560,7 @@ export default function DriversManagement() {
                     <Select
                       value={newDriver.hostLocation || ""}
                       onValueChange={(value) =>
-                        setNewDriver({ ...newDriver, hostLocation: value || "" })
+                        setNewDriver({ ...newDriver, hostLocation: value === "none" ? undefined : value })
                       }
                     >
                       <SelectTrigger>
@@ -934,16 +934,16 @@ export default function DriversManagement() {
               <div>
                 <Label htmlFor="edit-host-location">Host Location</Label>
                 <Select
-                  value={editingDriver.hostLocation || ""}
+                  value={editingDriver.hostLocation || "none"}
                   onValueChange={(value) =>
-                    setEditingDriver({ ...editingDriver, hostLocation: value || undefined })
+                    setEditingDriver({ ...editingDriver, hostLocation: value === "none" ? undefined : value })
                   }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select a host location" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No host location assigned</SelectItem>
+                    <SelectItem value="none">No host location assigned</SelectItem>
                     <SelectItem value="Athens">Athens</SelectItem>
                     <SelectItem value="Dunwoody/PTC">Dunwoody/PTC</SelectItem>
                     <SelectItem value="East Cobb/Roswell">East Cobb/Roswell</SelectItem>
@@ -975,7 +975,7 @@ export default function DriversManagement() {
                     <SelectValue placeholder="Select host for directory connection" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No host assigned</SelectItem>
+                    <SelectItem value="none">No host assigned</SelectItem>
                     {hosts.filter(host => host.status === 'active').map((host) => (
                       <SelectItem key={host.id} value={host.id.toString()}>
                         {host.name}
