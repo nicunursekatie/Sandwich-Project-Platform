@@ -644,7 +644,7 @@ export default function MeetingMinutes() {
                   <div style={{ height: '600px' }}>
                     {viewingMinutes.fileName.toLowerCase().endsWith('.pdf') ? (
                       <iframe
-                        src={`/api/files/${viewingMinutes.fileName}`}
+                        src={`/api/meeting-minutes/${viewingMinutes.id}/file`}
                         className="w-full h-full border-0"
                         title={viewingMinutes.fileName}
                       />
