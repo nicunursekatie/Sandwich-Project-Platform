@@ -56,8 +56,8 @@ export default function AnnouncementManager() {
         ...data,
         startDate: new Date(data.startDate).toISOString(),
         endDate: new Date(data.endDate).toISOString(),
-        link: data.link?.trim() || null,
-        linkText: data.linkText?.trim() || null
+        link: data.link?.trim() || undefined,
+        linkText: data.linkText?.trim() || undefined
       };
       return apiRequest("POST", "/api/announcements", formattedData);
     },
@@ -90,10 +90,10 @@ export default function AnnouncementManager() {
         formattedData.endDate = new Date(data.endDate).toISOString();
       }
       if ('link' in data) {
-        formattedData.link = data.link?.trim() || null;
+        formattedData.link = data.link?.trim() || undefined;
       }
       if ('linkText' in data) {
-        formattedData.linkText = data.linkText?.trim() || null;
+        formattedData.linkText = data.linkText?.trim() || undefined;
       }
       return apiRequest("PATCH", `/api/announcements/${id}`, formattedData);
     },
