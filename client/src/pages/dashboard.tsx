@@ -76,19 +76,11 @@ export default function Dashboard() {
         { id: "committee", label: "Committee", icon: MessageCircle, permission: PERMISSIONS.COMMITTEE_CHAT },
       ]
     },
-    { 
-      id: "operations", 
-      label: "Operations", 
-      icon: FolderOpen, 
-      type: "section",
-      items: [
-        { id: "projects", label: "Projects", icon: ListTodo, permission: PERMISSIONS.VIEW_PROJECTS },
-        { id: "meetings", label: "Meetings", icon: ClipboardList, permission: PERMISSIONS.VIEW_PROJECTS },
-        { id: "analytics", label: "Analytics", icon: BarChart3, permission: PERMISSIONS.VIEW_REPORTS },
-        { id: "reports", label: "Reports", icon: FileText, permission: PERMISSIONS.VIEW_REPORTS },
-        { id: "role-demo", label: "Role Demo", icon: Users, permission: PERMISSIONS.MANAGE_USERS },
-      ]
-    },
+    { id: "projects", label: "Projects", icon: ListTodo, type: "item", permission: PERMISSIONS.VIEW_PROJECTS },
+    { id: "meetings", label: "Meetings", icon: ClipboardList, type: "item", permission: PERMISSIONS.VIEW_MEETINGS },
+    { id: "analytics", label: "Analytics", icon: BarChart3, type: "item", permission: PERMISSIONS.VIEW_REPORTS },
+    { id: "reports", label: "Reports", icon: FileText, type: "item", permission: PERMISSIONS.VIEW_REPORTS },
+    { id: "role-demo", label: "Role Demo", icon: Users, type: "item", permission: PERMISSIONS.MANAGE_USERS },
     { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", permission: PERMISSIONS.TOOLKIT_ACCESS },
     { id: "directory", label: "Phone Directory", icon: Phone, type: "item", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
     { 
