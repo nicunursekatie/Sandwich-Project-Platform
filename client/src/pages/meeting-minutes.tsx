@@ -11,6 +11,7 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { DocumentViewer } from '@/components/DocumentViewer';
+import { DocumentPreview } from '@/components/document-preview';
 import type { Meeting, MeetingMinutes, InsertMeeting } from "@shared/schema";
 
 export default function MeetingMinutes() {
@@ -18,6 +19,7 @@ export default function MeetingMinutes() {
   const [selectedMeetingId, setSelectedMeetingId] = useState<number | null>(null);
   const [isUploadingMinutes, setIsUploadingMinutes] = useState(false);
   const [viewingMinutes, setViewingMinutes] = useState<MeetingMinutes | null>(null);
+  const [previewDocument, setPreviewDocument] = useState<{path: string, name: string, type: string} | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [googleDocsUrl, setGoogleDocsUrl] = useState("");
   const [uploadType, setUploadType] = useState<"file" | "google_docs">("file");
