@@ -99,6 +99,15 @@ export const projectComments = pgTable("project_comments", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// User-project assignments for visibility control
+export const projectAssignments = pgTable("project_assignments", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: text("user_id").notNull(), // References users.id
+  role: text("role").notNull().default("member"), // 'owner', 'member', 'viewer'
+  assignedAt: timestamp("assigned_at").notNull().defaultNow(),
+});
+
 // Committees table for organizing committee information
 export const committees = pgTable("committees", {
   id: varchar("id").primaryKey(), // 'marketing_committee', 'grant_committee', etc.
@@ -348,6 +357,7 @@ export const insertRecipientSchema = createInsertSchema(recipients).omit({ id: t
 export const insertProjectDocumentSchema = createInsertSchema(projectDocuments).omit({ id: true, uploadedAt: true });
 export const insertProjectTaskSchema = createInsertSchema(projectTasks).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertProjectCommentSchema = createInsertSchema(projectComments).omit({ id: true, createdAt: true });
+export const insertProjectAssignmentSchema = createInsertSchema(projectAssignments).omit({ id: true, assignedAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -383,6 +393,8 @@ export type ProjectTask = typeof projectTasks.$inferSelect;
 export type InsertProjectTask = z.infer<typeof insertProjectTaskSchema>;
 export type ProjectComment = typeof projectComments.$inferSelect;
 export type InsertProjectComment = z.infer<typeof insertProjectCommentSchema>;
+export type ProjectAssignment = typeof projectAssignments.$inferSelect;
+export type InsertProjectAssignment = z.infer<typeof insertProjectAssignmentSchema>;
 
 // Hosted Files table
 export const hostedFiles = pgTable("hosted_files", {
