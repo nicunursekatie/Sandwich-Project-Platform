@@ -92,7 +92,7 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
   };
 
   return (
-    <nav className="space-y-1 p-4">
+    <nav className="space-y-1 p-4 pb-8">
       {groupedItems.map((item, index) => {
         if (item.type === 'separator') {
           return (
