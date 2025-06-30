@@ -1,0 +1,189 @@
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Bell, MessageCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/useAuth";
+import { apiRequest } from "@/lib/queryClient";
+
+interface UnreadCounts {
+  general: number;
+  committee: number;
+  hosts: number;
+  drivers: number;
+  recipients: number;
+  core_team: number;
+  direct: number;
+  total: number;
+}
+
+export default function MessageNotifications() {
+  const { user } = useAuth();
+  const [lastCheck, setLastCheck] = useState(Date.now());
+
+  // Query for unread message counts
+  const { data: unreadCounts, refetch } = useQuery({
+    queryKey: ['/api/messages/unread-counts'],
+    enabled: !!user,
+    refetchInterval: 30000, // Check every 30 seconds
+  });
+
+  // Listen for WebSocket notifications (to be implemented)
+  useEffect(() => {
+    if (!user) return;
+
+    // Set up WebSocket connection for real-time notifications
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    
+    try {
+      const socket = new WebSocket(wsUrl);
+      
+      socket.onopen = () => {
+        console.log('Notification WebSocket connected');
+        // Send user identification
+        socket.send(JSON.stringify({
+          type: 'identify',
+          userId: user.id
+        }));
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'new_message') {
+            // Refetch unread counts when new message arrives
+            refetch();
+            
+            // Show browser notification if permission granted
+            if (Notification.permission === 'granted') {
+              new Notification(`New message in ${data.committee}`, {
+                body: `${data.sender}: ${data.content.substring(0, 100)}...`,
+                icon: '/favicon.ico'
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Error parsing WebSocket message:', error);
+        }
+      };
+
+      socket.onclose = () => {
+        console.log('Notification WebSocket disconnected');
+      };
+
+      return () => {
+        socket.close();
+      };
+    } catch (error) {
+      console.error('WebSocket connection failed:', error);
+    }
+  }, [user, refetch]);
+
+  // Request notification permission on mount
+  useEffect(() => {
+    if (Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  if (!user || !unreadCounts) {
+    return null;
+  }
+
+  const totalUnread = unreadCounts.total || 0;
+
+  const handleMarkAllRead = async () => {
+    try {
+      await apiRequest('POST', '/api/messages/mark-all-read');
+      refetch();
+    } catch (error) {
+      console.error('Failed to mark all messages as read:', error);
+    }
+  };
+
+  const getChatDisplayName = (committee: string) => {
+    const names = {
+      general: 'General Chat',
+      committee: 'Committee Chat',
+      hosts: 'Host Chat',
+      drivers: 'Driver Chat',
+      recipients: 'Recipient Chat',
+      core_team: 'Core Team',
+      direct: 'Direct Messages'
+    };
+    return names[committee as keyof typeof names] || committee;
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" className="relative">
+          <Bell className="h-5 w-5" />
+          {totalUnread > 0 && (
+            <Badge 
+              variant="destructive" 
+              className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
+            >
+              {totalUnread > 99 ? '99+' : totalUnread}
+            </Badge>
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      
+      <DropdownMenuContent align="end" className="w-80">
+        <DropdownMenuLabel className="font-semibold">
+          <div className="flex items-center justify-between">
+            <span>Message Notifications</span>
+            {totalUnread > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleMarkAllRead}
+                className="text-xs h-6 px-2"
+              >
+                Mark all read
+              </Button>
+            )}
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        
+        {totalUnread === 0 ? (
+          <DropdownMenuItem className="text-muted-foreground">
+            No unread messages
+          </DropdownMenuItem>
+        ) : (
+          Object.entries(unreadCounts)
+            .filter(([key, count]) => key !== 'total' && count > 0)
+            .map(([committee, count]) => (
+              <DropdownMenuItem 
+                key={committee}
+                className="flex items-center justify-between cursor-pointer"
+                onClick={() => {
+                  // Navigate to specific chat
+                  window.location.href = `/dashboard?tab=messages&chat=${committee}`;
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <MessageCircle className="h-4 w-4" />
+                  <span>{getChatDisplayName(committee)}</span>
+                </div>
+                <Badge variant="secondary" className="ml-2">
+                  {count}
+                </Badge>
+              </DropdownMenuItem>
+            ))
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

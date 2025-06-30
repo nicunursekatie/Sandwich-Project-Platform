@@ -149,6 +149,15 @@ export const messages = pgTable("messages", {
   recipientId: text("recipient_id"), // For direct messages
 });
 
+// Message read tracking table for notifications
+export const messageReads = pgTable("message_reads", {
+  id: serial("id").primaryKey(),
+  messageId: integer("message_id").notNull(),
+  userId: text("user_id").notNull(),
+  readAt: timestamp("read_at").notNull().defaultNow(),
+  committee: text("committee").notNull(), // Track which chat context the read occurred in
+});
+
 export const weeklyReports = pgTable("weekly_reports", {
   id: serial("id").primaryKey(),
   weekEnding: text("week_ending").notNull(), // date string
@@ -472,3 +481,12 @@ export const insertAnnouncementSchema = createInsertSchema(announcements).omit({
 
 export type Announcement = typeof announcements.$inferSelect;
 export type InsertAnnouncement = z.infer<typeof insertAnnouncementSchema>;
+
+// Message read tracking schema types
+export const insertMessageReadSchema = createInsertSchema(messageReads).omit({
+  id: true,
+  readAt: true
+});
+
+export type MessageRead = typeof messageReads.$inferSelect;
+export type InsertMessageRead = z.infer<typeof insertMessageReadSchema>;
