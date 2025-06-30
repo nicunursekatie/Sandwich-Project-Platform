@@ -1,11 +1,11 @@
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import 'jspdf-autotable';
 import { ReportData } from './report-generator';
 
 export class PDFGenerator {
   static async generatePDF(reportData: ReportData): Promise<Buffer> {
     try {
-      const doc = new jsPDF();
+      const doc = new (jsPDF as any)();
       const { metadata, summary, data, charts } = reportData;
       
       // Set up colors
@@ -48,7 +48,7 @@ export class PDFGenerator {
         ['Active Projects', summary.activeProjects.toString()]
       ];
 
-      autoTable(doc, {
+      (doc as any).autoTable({
         startY: yPosition,
         head: [['Metric', 'Value']],
         body: statsData,
@@ -82,7 +82,7 @@ export class PDFGenerator {
           performer.value.toLocaleString()
         ]);
 
-        autoTable(doc, {
+        (doc as any).autoTable({
           startY: yPosition,
           head: [['Name', 'Count']],
           body: performersData,
@@ -135,7 +135,7 @@ export class PDFGenerator {
               (item.value || 0).toLocaleString()
             ]);
 
-            autoTable(doc, {
+            (doc as any).autoTable({
               startY: yPosition,
               head: [['Category', 'Value']],
               body: chartData,
@@ -178,7 +178,7 @@ export class PDFGenerator {
           headers.map(header => this.formatValue(row[header]))
         );
 
-        autoTable(doc, {
+        (doc as any).autoTable({
           startY: yPosition,
           head: [headers.map(header => this.formatHeader(header))],
           body: tableData,
