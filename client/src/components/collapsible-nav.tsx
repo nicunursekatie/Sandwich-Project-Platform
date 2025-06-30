@@ -100,7 +100,7 @@ export function CollapsibleNav() {
         { id: "role-demo", label: "Role Demo", icon: Users, href: "/role-demo" },
       ] : [
         // Full access for all other roles
-        { id: "projects", label: "Projects", icon: ListTodo, href: "/projects", permission: PERMISSIONS.VIEW_PROJECTS },
+        { id: "projects", label: `Projects [Role: ${(user as any)?.role}]`, icon: ListTodo, href: "/projects", permission: PERMISSIONS.VIEW_PROJECTS },
         { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings", permission: PERMISSIONS.VIEW_MEETINGS },
         { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics", permission: PERMISSIONS.VIEW_ANALYTICS },
         { id: "reports", label: "Reports", icon: FileText, href: "/reporting-dashboard", permission: PERMISSIONS.VIEW_REPORTS },
