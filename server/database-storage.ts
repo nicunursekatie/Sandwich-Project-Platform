@@ -1,9 +1,10 @@
 import { 
-  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts,
+  users, projects, projectTasks, projectComments, projectAssignments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
   type ProjectComment, type InsertProjectComment,
+  type ProjectAssignment, type InsertProjectAssignment,
   type Message, type InsertMessage,
   type WeeklyReport, type InsertWeeklyReport,
   type SandwichCollection, type InsertSandwichCollection,
@@ -19,7 +20,7 @@ import {
   type Contact, type InsertContact
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, and } from "drizzle-orm";
 import type { IStorage } from "./storage";
 
 export class DatabaseStorage implements IStorage {
@@ -523,6 +524,51 @@ export class DatabaseStorage implements IStorage {
     return hostsData.map(host => ({
       ...host,
       contacts: contactsData.filter(contact => contact.hostId === host.id)
+    }));
+  }
+
+  // Project Assignments
+  async getProjectAssignments(projectId: number): Promise<ProjectAssignment[]> {
+    return await db.select().from(projectAssignments).where(eq(projectAssignments.projectId, projectId));
+  }
+
+  async createProjectAssignment(assignment: InsertProjectAssignment): Promise<ProjectAssignment> {
+    const [created] = await db.insert(projectAssignments).values(assignment).returning();
+    return created;
+  }
+
+  async deleteProjectAssignment(projectId: number, userId: string): Promise<boolean> {
+    const result = await db.delete(projectAssignments)
+      .where(and(
+        eq(projectAssignments.projectId, projectId),
+        eq(projectAssignments.userId, userId)
+      ));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  async getUserProjectAssignments(userId: string): Promise<ProjectAssignment[]> {
+    return await db.select().from(projectAssignments).where(eq(projectAssignments.userId, userId));
+  }
+
+  // Modified project methods to support user-specific visibility
+  async getProjectsForUser(userId: string): Promise<Project[]> {
+    // Get projects where user is assigned
+    const assignedProjects = await db
+      .select()
+      .from(projects)
+      .innerJoin(projectAssignments, eq(projects.id, projectAssignments.projectId))
+      .where(eq(projectAssignments.userId, userId));
+    
+    return assignedProjects.map(result => result.projects);
+  }
+
+  async getAllProjectsWithAssignments(): Promise<Array<Project & { assignments: ProjectAssignment[] }>> {
+    const projectsData = await db.select().from(projects).orderBy(projects.createdAt);
+    const assignmentsData = await db.select().from(projectAssignments);
+    
+    return projectsData.map(project => ({
+      ...project,
+      assignments: assignmentsData.filter(assignment => assignment.projectId === project.id)
     }));
   }
 }

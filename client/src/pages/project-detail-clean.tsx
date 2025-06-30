@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CelebrationToast, useCelebration } from "@/components/celebration-toast";
+import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -840,12 +841,11 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                 </Select>
               </div>
               <div>
-                <Label htmlFor="edit-project-assignee">Assigned To</Label>
-                <Input
-                  id="edit-project-assignee"
+                <ProjectAssigneeSelector
                   value={editProject.assigneeName}
-                  onChange={(e) => setEditProject({ ...editProject, assigneeName: e.target.value })}
-                  placeholder="Enter assignee name"
+                  onChange={(value) => setEditProject({ ...editProject, assigneeName: value })}
+                  label="Assigned To"
+                  placeholder="Select or enter assignee"
                 />
               </div>
             </div>
