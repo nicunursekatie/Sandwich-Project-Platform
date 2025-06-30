@@ -22,7 +22,17 @@ export default function MeetingMinutes() {
   const [googleDocsUrl, setGoogleDocsUrl] = useState("");
   const [uploadType, setUploadType] = useState<"file" | "google_docs">("file");
   const [isCreatingMeeting, setIsCreatingMeeting] = useState(false);
+  const [isEditingMeeting, setIsEditingMeeting] = useState(false);
+  const [editingMeetingId, setEditingMeetingId] = useState<number | null>(null);
   const [newMeetingData, setNewMeetingData] = useState({
+    title: "",
+    date: "",
+    time: "",
+    type: "core_team" as "core_team" | "board" | "committee" | "special",
+    location: "",
+    description: ""
+  });
+  const [editMeetingData, setEditMeetingData] = useState({
     title: "",
     date: "",
     time: "",
@@ -128,6 +138,39 @@ export default function MeetingMinutes() {
     }
   });
 
+  const editMeetingMutation = useMutation({
+    mutationFn: async (meetingData: InsertMeeting & { id: number }) => {
+      const response = await fetch(`/api/meetings/${meetingData.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(meetingData),
+      });
+      if (!response.ok) throw new Error("Failed to update meeting");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/meetings"] });
+      setIsEditingMeeting(false);
+      setEditingMeetingId(null);
+      setEditMeetingData({
+        title: "",
+        date: "",
+        time: "",
+        type: "core_team",
+        location: "",
+        description: ""
+      });
+      toast({ title: "Meeting updated successfully" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Error updating meeting", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    }
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedMeetingId) return;
@@ -215,11 +258,16 @@ export default function MeetingMinutes() {
   };
 
   const handleEditMeeting = (meeting: Meeting) => {
-    // For now, show a toast that edit functionality would open a modal
-    toast({ 
-      title: "Edit Meeting", 
-      description: "Edit functionality will be available in the meeting calendar page" 
+    setEditingMeetingId(meeting.id);
+    setEditMeetingData({
+      title: meeting.title,
+      date: meeting.date,
+      time: meeting.time || "",
+      type: meeting.type,
+      location: meeting.location || "",
+      description: meeting.description || ""
     });
+    setIsEditingMeeting(true);
   };
 
   const handleDeleteMeeting = (meetingId: number) => {
@@ -242,6 +290,25 @@ export default function MeetingMinutes() {
     };
 
     createMeetingMutation.mutate(meetingData);
+  };
+
+  const handleEditMeetingSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!editingMeetingId) return;
+    
+    const meetingData = {
+      id: editingMeetingId,
+      title: editMeetingData.title,
+      date: editMeetingData.date,
+      time: editMeetingData.time || "TBD",
+      type: editMeetingData.type,
+      location: editMeetingData.location || undefined,
+      description: editMeetingData.description || undefined,
+      status: "scheduled" as const
+    };
+
+    editMeetingMutation.mutate(meetingData);
   };
 
   const getMeetingMinutes = (meetingId: number) => {
