@@ -81,12 +81,20 @@ export default function AnalyticsDashboard() {
       return acc;
     }, {} as Record<string, { total: number; date: string }>);
 
-    // Calculate proper weekly average based on time period
-    const dates = collections.map(c => new Date(c.collectionDate || '')).filter(d => !isNaN(d.getTime()));
-    const minDate = dates.length > 0 ? new Date(Math.min(...dates.map(d => d.getTime()))) : new Date();
-    const maxDate = dates.length > 0 ? new Date(Math.max(...dates.map(d => d.getTime()))) : new Date();
-    const totalWeeks = Math.max(1, Math.ceil((maxDate.getTime() - minDate.getTime()) / (7 * 24 * 60 * 60 * 1000)));
-    const avgWeekly = Math.round(totalSandwiches / totalWeeks);
+    // Calculate recent 12-month weekly average for current operational pace
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    
+    const recentCollections = collections.filter(c => {
+      const date = new Date(c.collectionDate || '');
+      return !isNaN(date.getTime()) && date >= oneYearAgo;
+    });
+    
+    const recentTotal = recentCollections.reduce((sum, c) => 
+      sum + (c.individualSandwiches || 0) + parseGroups(c.groupCollections), 0
+    );
+    
+    const avgWeekly = Math.round(recentTotal / 52); // 52 weeks in a year
     
     const weeklyTotals = Object.values(weeklyData).map(w => w.total).sort((a, b) => b - a);
     const recordWeek = Object.entries(weeklyData)

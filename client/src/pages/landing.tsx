@@ -38,15 +38,40 @@ export default function Landing() {
 
   const collections = collectionsResponse?.collections || [];
   const totalSandwiches = statsData?.completeTotalSandwiches || 0;
-  // Calculate proper weekly average based on actual time period of operations
+  // Calculate recent 12-month weekly average for current operational pace
   const weeklyAverage = collections?.length > 0 ? (() => {
-    const dates = collections.map((c: any) => new Date(c.collectionDate)).filter((d: Date) => !isNaN(d.getTime()));
-    if (dates.length === 0) return 0;
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
     
-    const minDate = new Date(Math.min(...dates.map((d: Date) => d.getTime())));
-    const maxDate = new Date(Math.max(...dates.map((d: Date) => d.getTime())));
-    const totalWeeks = Math.max(1, Math.ceil((maxDate.getTime() - minDate.getTime()) / (7 * 24 * 60 * 60 * 1000)));
-    return Math.round(totalSandwiches / totalWeeks);
+    // Filter to last 12 months of data
+    const recentCollections = collections.filter((c: any) => {
+      const date = new Date(c.collectionDate);
+      return !isNaN(date.getTime()) && date >= oneYearAgo;
+    });
+    
+    if (recentCollections.length === 0) return 0;
+    
+    // Calculate total sandwiches in last 12 months
+    const recentTotal = recentCollections.reduce((sum: number, c: any) => {
+      const individual = c.individualSandwiches || 0;
+      let groups = 0;
+      try {
+        if (typeof c.groupCollections === 'string') {
+          const parsed = JSON.parse(c.groupCollections);
+          if (Array.isArray(parsed)) {
+            groups = parsed.reduce((gSum: number, g: any) => gSum + (Number(g.sandwichCount) || 0), 0);
+          }
+        } else if (Array.isArray(c.groupCollections)) {
+          groups = c.groupCollections.reduce((gSum: number, g: any) => gSum + (Number(g.sandwichCount) || 0), 0);
+        }
+      } catch (e) {
+        // Ignore parsing errors
+      }
+      return sum + individual + groups;
+    }, 0);
+    
+    // 52 weeks in a year
+    return Math.round(recentTotal / 52);
   })() : 0;
   // Use the verified record week from database query (34,100 on 2022-11-16)
   const recordWeek = 34100;

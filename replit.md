@@ -197,6 +197,7 @@ Preferred communication style: Simple, everyday language.
 - June 30, 2025: Cleaned up duplicate Messages navigation: removed standalone Messages item from top-level navigation in simple-nav.tsx (correct navigation file), consolidated messaging functionality under Communication section as single Messages entry pointing to /messages, eliminated navigation duplication and confusion between multiple message-related menu items
 - June 30, 2025: Fixed report generation format handling: corrected ReportGenerator to include format field in metadata, changed default report format from PDF to CSV for better Excel compatibility, reports now download as proper CSV files that open directly in spreadsheet software instead of JSON files
 - June 30, 2025: Fixed weekly average calculation errors on both analytics dashboard and landing page: replaced flawed week numbering system with proper time-based calculation using actual data collection timespan, weekly average now calculates total sandwiches divided by total weeks from first to last collection date instead of distinct weeks found in data, provides realistic weekly averages instead of inflated numbers
+- June 30, 2025: Updated weekly average to show recent 12-month operational pace instead of full historical average: changed calculation from total historical data (13,905/week) to last 12 months only (~4,900/week), provides more accurate representation of current organizational capacity rather than inflated numbers from bulk historical data imports
 
 ## Changelog
 
