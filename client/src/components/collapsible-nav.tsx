@@ -68,7 +68,6 @@ export function CollapsibleNav() {
   const navigationStructure: NavigationStructureItem[] = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, type: "item", href: "/" },
     { id: "collections", label: "Collections Log", icon: Sandwich, type: "item", href: "/collections" },
-    { id: "messages", label: "Messages", icon: MessageCircle, type: "item", href: "/messages" },
     { 
       id: "team", 
       label: "Team", 
@@ -78,7 +77,6 @@ export function CollapsibleNav() {
         { id: "hosts", label: "Hosts", icon: Building2, href: "/hosts", permission: PERMISSIONS.VIEW_HOSTS } as NavigationItem,
         { id: "recipients", label: "Recipients", icon: Users, href: "/recipients", permission: PERMISSIONS.VIEW_RECIPIENTS } as NavigationItem,
         { id: "drivers", label: "Drivers", icon: Car, href: "/drivers", permission: PERMISSIONS.VIEW_DRIVERS } as NavigationItem,
-        { id: "committee", label: "Committee", icon: MessageCircle, href: "/committee", permission: PERMISSIONS.VIEW_COMMITTEE } as NavigationItem,
       ]
     },
     { 
@@ -94,8 +92,18 @@ export function CollapsibleNav() {
         { id: "role-demo", label: "Role Demo", icon: Users, href: "/role-demo", permission: PERMISSIONS.VIEW_ROLE_DEMO }
       ]
     },
+    { 
+      id: "communication", 
+      label: "Communication", 
+      icon: MessageCircle, 
+      type: "section",
+      items: [
+        { id: "committee", label: "Committee", icon: Users, href: "/committee", permission: PERMISSIONS.VIEW_COMMITTEE },
+        { id: "messages-comm", label: "Messages", icon: MessageCircle, href: "/messages" },
+        { id: "directory", label: "Directory", icon: Phone, href: "/directory", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY }
+      ]
+    },
     { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", href: "/toolkit" },
-    { id: "directory", label: "Phone Directory", icon: Phone, type: "item", href: "/directory", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
     { id: "development", label: "Development", icon: FolderOpen, type: "item", href: "/development" },
     { id: "admin", label: "Admin", icon: Users, type: "item", href: "/admin", permission: PERMISSIONS.MANAGE_USERS },
   ];
