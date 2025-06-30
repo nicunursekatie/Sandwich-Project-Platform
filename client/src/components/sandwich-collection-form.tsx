@@ -211,9 +211,16 @@ export default function SandwichCollectionForm() {
           )
         : "[]";
 
+    // In group-only mode, use the first group name or "Community Groups" as host name
+    let finalHostName = hostName.trim();
+    if (groupOnlyMode) {
+      const firstGroup = validGroupCollections[0];
+      finalHostName = firstGroup?.groupName?.trim() || "Community Groups";
+    }
+
     submitCollectionMutation.mutate({
       collectionDate,
-      hostName: groupOnlyMode ? "Groups - Unassigned" : hostName.trim(),
+      hostName: finalHostName,
       individualSandwiches: groupOnlyMode ? 0 : parseInt(individualSandwiches),
       groupCollections: groupCollectionsString,
     });

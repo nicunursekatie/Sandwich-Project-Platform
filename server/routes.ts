@@ -3373,10 +3373,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
           doc.fontSize(12).font('Helvetica');
           doc.text(`Total Sandwiches: ${reportData.summary.totalSandwiches?.toLocaleString() || 0}`, 50, yPosition);
           yPosition += 18;
-          doc.text(`Total Hosts: ${reportData.summary.totalHosts || 0}`, 50, yPosition);
+          doc.text(`Total Collection Entries: ${reportData.metadata.totalRecords}`, 50, yPosition);
           yPosition += 18;
-          doc.text(`Active Projects: ${reportData.summary.activeProjects || 0}`, 50, yPosition);
-          yPosition += 30;
+          doc.text(`Unique Host Locations: ${reportData.summary.totalHosts || 0}`, 50, yPosition);
+          yPosition += 18;
+          doc.text(`Date Range Covered: ${reportData.metadata.dateRange}`, 50, yPosition);
+          yPosition += 18;
+          
+          // Calculate averages if we have data
+          if (Array.isArray(reportData.data) && reportData.data.length > 0) {
+            const totalSandwiches = reportData.data.reduce((sum, record) => {
+              const individual = record.individualSandwiches || 0;
+              const group = record.groupSandwiches || 0;
+              return sum + individual + group;
+            }, 0);
+            const avgPerCollection = Math.round(totalSandwiches / reportData.data.length);
+            doc.text(`Average Sandwiches per Collection: ${avgPerCollection}`, 50, yPosition);
+            yPosition += 18;
+          }
+          
+          yPosition += 15;
 
           // Top Performers
           if (reportData.summary.topPerformers?.length > 0) {
@@ -3413,10 +3429,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 yPosition = 50;
               }
               
-              let recordText = `${index + 1}. `;
-              if (record.hostName) recordText += `${record.hostName} - `;
-              if (record.collectionDate) recordText += `${record.collectionDate} - `;
-              if (record.individualSandwiches) recordText += `${record.individualSandwiches} sandwiches`;
+              const date = new Date(record.collectionDate).toLocaleDateString();
+              const individual = record.individualSandwiches || 0;
+              const group = record.groupSandwiches || 0;
+              const total = individual + group;
+              
+              let recordText = `${index + 1}. ${date} | ${record.hostName || 'Group Collection'} | `;
+              recordText += `Individual: ${individual}, Group: ${group}, Total: ${total}`;
+              if (record.notes) recordText += ` | Notes: ${record.notes.substring(0, 50)}${record.notes.length > 50 ? '...' : ''}`;
               
               doc.text(recordText, 50, yPosition);
               yPosition += 12;
@@ -3427,6 +3447,73 @@ export async function registerRoutes(app: Express): Promise<Server> {
               doc.fontSize(10).font('Helvetica-Oblique');
               doc.text(`Note: Showing first 20 of ${reportData.data.length} total records. Download CSV format for complete data.`, 50, yPosition);
             }
+            
+            yPosition += 30;
+          }
+          
+          // Add a comprehensive data table if we have space
+          if (Array.isArray(reportData.data) && reportData.data.length > 0 && yPosition < 600) {
+            if (yPosition > 650) {
+              doc.addPage();
+              yPosition = 50;
+            }
+            
+            doc.fontSize(14).font('Helvetica-Bold');
+            doc.text('Collection Summary Table', 50, yPosition);
+            yPosition += 25;
+            
+            // Table headers
+            doc.fontSize(9).font('Helvetica-Bold');
+            doc.text('Date', 50, yPosition);
+            doc.text('Host/Group', 120, yPosition);
+            doc.text('Individual', 280, yPosition);
+            doc.text('Group', 340, yPosition);
+            doc.text('Total', 400, yPosition);
+            doc.text('Notes', 450, yPosition);
+            yPosition += 15;
+            
+            // Line under headers
+            doc.moveTo(50, yPosition).lineTo(550, yPosition).stroke();
+            yPosition += 10;
+            
+            // Table data (first 15 records for space)
+            doc.fontSize(8).font('Helvetica');
+            const tableData = reportData.data.slice(0, 15);
+            
+            tableData.forEach((record, index) => {
+              if (yPosition > 720) {
+                doc.addPage();
+                yPosition = 50;
+                
+                // Reprint headers on new page
+                doc.fontSize(9).font('Helvetica-Bold');
+                doc.text('Date', 50, yPosition);
+                doc.text('Host/Group', 120, yPosition);
+                doc.text('Individual', 280, yPosition);
+                doc.text('Group', 340, yPosition);
+                doc.text('Total', 400, yPosition);
+                doc.text('Notes', 450, yPosition);
+                yPosition += 15;
+                doc.moveTo(50, yPosition).lineTo(550, yPosition).stroke();
+                yPosition += 10;
+                doc.fontSize(8).font('Helvetica');
+              }
+              
+              const date = new Date(record.collectionDate).toLocaleDateString();
+              const individual = record.individualSandwiches || 0;
+              const group = record.groupSandwiches || 0;
+              const total = individual + group;
+              const hostName = (record.hostName || 'Group Collection').substring(0, 20);
+              const notes = (record.notes || '').substring(0, 15);
+              
+              doc.text(date, 50, yPosition);
+              doc.text(hostName, 120, yPosition);
+              doc.text(individual.toString(), 290, yPosition);
+              doc.text(group.toString(), 350, yPosition);
+              doc.text(total.toString(), 410, yPosition);
+              doc.text(notes, 450, yPosition);
+              yPosition += 12;
+            });
           }
 
           // Footer
