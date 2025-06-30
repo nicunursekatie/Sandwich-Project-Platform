@@ -6,6 +6,8 @@ export function useAuth() {
     queryKey: ["/api/auth/user"],
     queryFn: getQueryFn({ on401: "returnNull" }),
     retry: false,
+    staleTime: 0, // Force fresh data
+    gcTime: 0, // Don't cache
   });
 
   return {
