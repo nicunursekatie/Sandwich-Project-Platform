@@ -369,7 +369,7 @@ export default function DriversManagement() {
     );
   };
 
-  // Helper function to clean notes for display (removes redundant area info)
+  // Helper function to clean notes for display (removes redundant info)
   const getCleanNotesForDisplay = (notes: string, driverZone: string) => {
     if (!notes) return null;
     
@@ -377,17 +377,17 @@ export default function DriversManagement() {
     const parts = notes.split(';').map(part => part.trim()).filter(part => {
       if (!part) return false;
       
-      // Remove area information that matches the zone
+      // Remove area information (redundant since we have zone field)
       if (part.toLowerCase().startsWith('area:')) {
-        return false; // Area info is redundant since we have zone field
+        return false;
       }
       
-      // Keep agreement information (this is important)
+      // Remove agreement information (redundant since we have badge)
       if (part.toLowerCase().includes('agreement')) {
-        return true;
+        return false;
       }
       
-      // Keep other meaningful notes
+      // Keep other meaningful notes like "Van approved: yes"
       return true;
     });
     
