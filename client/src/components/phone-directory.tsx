@@ -124,6 +124,11 @@ function PhoneDirectory() {
     queryKey: ["/api/contacts"],
   });
 
+  // Fetch drivers
+  const { data: drivers = [], isLoading: driversLoading } = useQuery<Driver[]>({
+    queryKey: ["/api/drivers"],
+  });
+
   // Mutations for CRUD operations
   const createHostMutation = useMutation({
     mutationFn: (data: z.infer<typeof insertHostSchema>) => apiRequest("POST", `/api/hosts`, data),
