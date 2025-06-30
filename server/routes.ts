@@ -34,6 +34,11 @@ import {
   insertContactSchema,
   insertAnnouncementSchema,
   drivers,
+  messageGroups,
+  insertMessageGroupSchema,
+  groupMemberships,
+  insertGroupMembershipSchema,
+  users,
 } from "@shared/schema";
 
 // Extend Request interface to include file metadata
@@ -4287,6 +4292,131 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/messages/unread-counts", isAuthenticated, messageNotificationRoutes.getUnreadCounts);
   app.post("/api/messages/mark-read", isAuthenticated, messageNotificationRoutes.markMessagesRead);
   app.post("/api/messages/mark-all-read", isAuthenticated, messageNotificationRoutes.markAllRead);
+
+  // Custom Message Groups API
+  app.get("/api/message-groups", isAuthenticated, async (req, res) => {
+    try {
+      const userId = (req as any).user?.id;
+      
+      // Get groups where user is a member
+      const groups = await db
+        .select({
+          id: messageGroups.id,
+          name: messageGroups.name,
+          description: messageGroups.description,
+          createdBy: messageGroups.createdBy,
+          isActive: messageGroups.isActive,
+          createdAt: messageGroups.createdAt,
+          memberCount: sql<number>`count(${groupMemberships.userId})`,
+          userRole: groupMemberships.role
+        })
+        .from(messageGroups)
+        .leftJoin(groupMemberships, eq(messageGroups.id, groupMemberships.groupId))
+        .where(
+          and(
+            eq(messageGroups.isActive, true),
+            eq(groupMemberships.userId, userId),
+            eq(groupMemberships.isActive, true)
+          )
+        )
+        .groupBy(messageGroups.id, groupMemberships.role);
+      
+      res.json(groups);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch message groups" });
+    }
+  });
+
+  app.post("/api/message-groups", isAuthenticated, async (req, res) => {
+    try {
+      const { name, description, memberIds } = req.body;
+      const userId = (req as any).user?.id;
+      
+      if (!name?.trim()) {
+        return res.status(400).json({ message: "Group name is required" });
+      }
+      
+      // Create the group
+      const [group] = await db.insert(messageGroups).values({
+        name: name.trim(),
+        description: description?.trim() || null,
+        createdBy: userId,
+      }).returning();
+      
+      // Add creator as admin
+      await db.insert(groupMemberships).values({
+        groupId: group.id,
+        userId: userId,
+        role: 'admin'
+      });
+      
+      // Add other members
+      if (memberIds && Array.isArray(memberIds)) {
+        const memberships = memberIds
+          .filter(id => id !== userId) // Don't duplicate creator
+          .map(memberId => ({
+            groupId: group.id,
+            userId: memberId,
+            role: 'member' as const
+          }));
+        
+        if (memberships.length > 0) {
+          await db.insert(groupMemberships).values(memberships);
+        }
+      }
+      
+      res.status(201).json(group);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create message group" });
+    }
+  });
+
+  app.get("/api/message-groups/:groupId/members", isAuthenticated, async (req, res) => {
+    try {
+      const groupId = parseInt(req.params.groupId);
+      const userId = (req as any).user?.id;
+      
+      // Verify user is member of this group
+      const membership = await db
+        .select()
+        .from(groupMemberships)
+        .where(
+          and(
+            eq(groupMemberships.groupId, groupId),
+            eq(groupMemberships.userId, userId),
+            eq(groupMemberships.isActive, true)
+          )
+        )
+        .limit(1);
+      
+      if (membership.length === 0) {
+        return res.status(403).json({ message: "Not a member of this group" });
+      }
+      
+      // Get all group members with user details
+      const members = await db
+        .select({
+          userId: groupMemberships.userId,
+          role: groupMemberships.role,
+          joinedAt: groupMemberships.joinedAt,
+          firstName: users.firstName,
+          lastName: users.lastName,
+          email: users.email
+        })
+        .from(groupMemberships)
+        .leftJoin(users, eq(groupMemberships.userId, users.id))
+        .where(
+          and(
+            eq(groupMemberships.groupId, groupId),
+            eq(groupMemberships.isActive, true)
+          )
+        );
+      
+      res.json(members);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch group members" });
+    }
+  });
 
   // System performance monitoring endpoint
   app.get("/api/system/health", isAuthenticated, (req, res) => {

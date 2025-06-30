@@ -158,6 +158,27 @@ export const messageReads = pgTable("message_reads", {
   committee: text("committee").notNull(), // Track which chat context the read occurred in
 });
 
+// Custom message groups table
+export const messageGroups = pgTable("message_groups", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  createdBy: text("created_by").notNull(), // User ID who created the group
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Group memberships table
+export const groupMemberships = pgTable("group_memberships", {
+  id: serial("id").primaryKey(),
+  groupId: integer("group_id").notNull(),
+  userId: text("user_id").notNull(),
+  role: text("role").notNull().default("member"), // 'admin', 'member'
+  joinedAt: timestamp("joined_at").defaultNow(),
+  isActive: boolean("is_active").notNull().default(true),
+});
+
 export const weeklyReports = pgTable("weekly_reports", {
   id: serial("id").primaryKey(),
   weekEnding: text("week_ending").notNull(), // date string
@@ -490,3 +511,21 @@ export const insertMessageReadSchema = createInsertSchema(messageReads).omit({
 
 export type MessageRead = typeof messageReads.$inferSelect;
 export type InsertMessageRead = z.infer<typeof insertMessageReadSchema>;
+
+// Message group schema types
+export const insertMessageGroupSchema = createInsertSchema(messageGroups).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export type MessageGroup = typeof messageGroups.$inferSelect;
+export type InsertMessageGroup = z.infer<typeof insertMessageGroupSchema>;
+
+export const insertGroupMembershipSchema = createInsertSchema(groupMemberships).omit({
+  id: true,
+  joinedAt: true
+});
+
+export type GroupMembership = typeof groupMemberships.$inferSelect;
+export type InsertGroupMembership = z.infer<typeof insertGroupMembershipSchema>;
