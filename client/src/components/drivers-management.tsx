@@ -539,8 +539,8 @@ export default function DriversManagement() {
                   <div>
                     <Label htmlFor="host">Host Location</Label>
                     <Select 
-                      value={newDriver.hostId ? newDriver.hostId.toString() : ""} 
-                      onValueChange={(value) => setNewDriver({ ...newDriver, hostId: value ? parseInt(value) : undefined })}
+                      value={newDriver.hostId ? newDriver.hostId.toString() : "none"} 
+                      onValueChange={(value) => setNewDriver({ ...newDriver, hostId: value === "none" ? undefined : parseInt(value) })}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a host location" />
@@ -558,7 +558,7 @@ export default function DriversManagement() {
                   <div>
                     <Label htmlFor="host-location">Host Location</Label>
                     <Select
-                      value={newDriver.hostLocation || ""}
+                      value={newDriver.hostLocation || "none"}
                       onValueChange={(value) =>
                         setNewDriver({ ...newDriver, hostLocation: value === "none" ? undefined : value })
                       }
@@ -966,9 +966,9 @@ export default function DriversManagement() {
               <div>
                 <Label htmlFor="edit-host">Directory Connection</Label>
                 <Select
-                  value={editingDriver.hostId ? editingDriver.hostId.toString() : ""}
+                  value={editingDriver.hostId ? editingDriver.hostId.toString() : "none"}
                   onValueChange={(value) =>
-                    setEditingDriver({ ...editingDriver, hostId: value ? parseInt(value) : undefined })
+                    setEditingDriver({ ...editingDriver, hostId: value === "none" ? undefined : parseInt(value) })
                   }
                 >
                   <SelectTrigger>
