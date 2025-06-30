@@ -11,7 +11,6 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { DocumentViewer } from '@/components/DocumentViewer';
-import { DocumentPreview } from '@/components/document-preview';
 import type { Meeting, MeetingMinutes, InsertMeeting } from "@shared/schema";
 
 export default function MeetingMinutes() {
@@ -592,88 +591,85 @@ export default function MeetingMinutes() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Document Type Indicator */}
-            {isGoogleDocsLink && (
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Link className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <span className="font-semibold text-blue-900 dark:text-blue-100">Google Docs Document</span>
-                </div>
-                <Button variant="outline" asChild>
-                  <a href={viewingMinutes.summary.split("Google Docs link: ")[1]} target="_blank" rel="noopener noreferrer">
-                    <Link className="w-4 h-4 mr-2" />
-                    Open in Google Docs
-                  </a>
-                </Button>
-              </div>
-            )}
-            
-            {hasExtractedContent && (
-              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-                <div className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-green-600 dark:text-green-400" />
-                  <span className="font-semibold text-green-900 dark:text-green-100">Document Content Extracted</span>
-                </div>
-                <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-                  Content has been extracted and is displayed below
-                </p>
-              </div>
-            )}
-            
-            {isPdfFile && (
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                <div className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <span className="font-semibold text-blue-900 dark:text-blue-100">PDF Document Uploaded</span>
-                </div>
-                <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                  PDF uploaded successfully. Text extraction for PDFs will be available in a future update.
-                </p>
-              </div>
-            )}
-            
-            {isUploadedFile && extractionFailed && !isPdfFile && (
-              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
-                <div className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-                  <span className="font-semibold text-orange-900 dark:text-orange-100">Document Uploaded</span>
-                </div>
-                <p className="text-sm text-orange-700 dark:text-orange-300 mt-1">
-                  File was uploaded successfully but content could not be extracted for preview
-                </p>
-              </div>
-            )}
+
 
             {/* Document Content */}
             <div>
               <h4 className="font-semibold text-lg mb-4 text-gray-900 dark:text-gray-100">Meeting Minutes Document</h4>
               {isGoogleDocsLink ? (
-                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
-                  <p className="text-gray-600 dark:text-gray-400 italic text-center py-8">
-                    This document is hosted on Google Docs. Click "Open in Google Docs" above to view the full content.
-                  </p>
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                  {/* Header with download */}
+                  <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                    <div className="flex items-center gap-2">
+                      <Link className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                      <span className="font-medium">Google Docs Document</span>
+                    </div>
+                    <Button variant="outline" size="sm" asChild>
+                      <a href={viewingMinutes.summary.split("Google Docs link: ")[1]} target="_blank" rel="noopener noreferrer">
+                        <Link className="w-4 h-4 mr-2" />
+                        Open in Google Docs
+                      </a>
+                    </Button>
+                  </div>
+                  {/* Google Docs iframe */}
+                  <div style={{ height: '600px' }}>
+                    <iframe
+                      src={`https://docs.google.com/document/d/${viewingMinutes.summary.split("Google Docs link: ")[1].split("/d/")[1]?.split("/")[0]}/preview`}
+                      className="w-full h-full border-0"
+                      title="Google Docs Preview"
+                    />
+                  </div>
                 </div>
               ) : viewingMinutes.fileName ? (
-                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
-                  <div className="text-center py-8">
-                    <FileText className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                      Document: {viewingMinutes.fileName}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">
-                      Click the download button above to view the full document.
-                    </p>
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                  {/* Header with download */}
+                  <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                    <div className="flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                      <span className="font-medium">{viewingMinutes.fileName}</span>
+                      <span className="text-sm text-gray-500 uppercase">
+                        {viewingMinutes.fileName.split('.').pop()}
+                      </span>
+                    </div>
                     <Button 
+                      variant="outline" 
+                      size="sm"
                       onClick={() => handleDownloadFile(viewingMinutes.fileName!)}
-                      className="inline-flex items-center"
                     >
                       <Download className="w-4 h-4 mr-2" />
-                      Download Document
+                      Download File
                     </Button>
+                  </div>
+                  {/* Document preview */}
+                  <div style={{ height: '600px' }}>
+                    {viewingMinutes.fileName.toLowerCase().endsWith('.pdf') ? (
+                      <iframe
+                        src={`/api/files/${viewingMinutes.fileName}`}
+                        className="w-full h-full border-0"
+                        title={viewingMinutes.fileName}
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+                        <FileText className="w-16 h-16 text-gray-400 mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+                          {viewingMinutes.fileName}
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">
+                          Click the download button above to view this document.
+                        </p>
+                        <Button 
+                          onClick={() => handleDownloadFile(viewingMinutes.fileName!)}
+                          className="inline-flex items-center"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Download Document
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : (
-                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                   <div className="prose max-w-none dark:prose-invert">
                     <div className="whitespace-pre-wrap text-gray-900 dark:text-gray-100 leading-relaxed">
                       {viewingMinutes.summary}
