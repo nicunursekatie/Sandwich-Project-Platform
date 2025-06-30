@@ -63,8 +63,6 @@ interface Driver {
   emailAgreementSent: boolean;
   voicemailLeft: boolean;
   inactiveReason?: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 interface Host {
@@ -157,7 +155,7 @@ export default function DriversManagement() {
   // Update driver mutation
   const updateDriverMutation = useMutation({
     mutationFn: ({ id, updates }: { id: number; updates: Partial<Driver> }) =>
-      apiRequest("PUT", `/api/drivers/${id}`, updates),
+      apiRequest("PATCH", `/api/drivers/${id}`, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/drivers"] });
       setEditingDriver(null);

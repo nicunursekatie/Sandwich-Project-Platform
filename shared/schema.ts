@@ -231,8 +231,6 @@ export const drivers = pgTable("drivers", {
   emailAgreementSent: boolean("email_agreement_sent").notNull().default(false),
   voicemailLeft: boolean("voicemail_left").notNull().default(false),
   inactiveReason: text("inactive_reason"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const driverAgreements = pgTable("driver_agreements", {
@@ -413,9 +411,7 @@ export type InsertAuditLog = z.infer<typeof insertAuditLogSchema>;
 
 // Driver types
 export const insertDriverSchema = createInsertSchema(drivers).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true
+  id: true
 });
 
 export type Driver = typeof drivers.$inferSelect;
