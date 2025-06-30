@@ -81,10 +81,10 @@ export function CollapsibleNav() {
       icon: Users, 
       type: "section",
       items: [
-        { id: "hosts", label: "Hosts", icon: Building2, href: "/hosts" } as NavigationItem,
-        { id: "recipients", label: "Recipients", icon: Users, href: "/recipients" } as NavigationItem,
-        { id: "drivers", label: "Drivers", icon: Car, href: "/drivers" } as NavigationItem,
-        { id: "committee", label: "Committee", icon: MessageCircle, href: "/committee" } as NavigationItem,
+        { id: "hosts", label: "Hosts", icon: Building2, href: "/hosts", permission: PERMISSIONS.VIEW_HOSTS } as NavigationItem,
+        { id: "recipients", label: "Recipients", icon: Users, href: "/recipients", permission: PERMISSIONS.VIEW_RECIPIENTS } as NavigationItem,
+        { id: "drivers", label: "Drivers", icon: Car, href: "/drivers", permission: PERMISSIONS.VIEW_DRIVERS } as NavigationItem,
+        { id: "committee", label: "Committee", icon: MessageCircle, href: "/committee", permission: PERMISSIONS.VIEW_COMMITTEE } as NavigationItem,
       ]
     },
     { 

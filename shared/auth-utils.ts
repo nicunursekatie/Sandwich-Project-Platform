@@ -34,6 +34,12 @@ export const PERMISSIONS = {
   VIEW_ANALYTICS: 'view_analytics',
   VIEW_ROLE_DEMO: 'view_role_demo',
   
+  // Individual tab access
+  VIEW_HOSTS: 'view_hosts',
+  VIEW_RECIPIENTS: 'view_recipients', 
+  VIEW_DRIVERS: 'view_drivers',
+  VIEW_COMMITTEE: 'view_committee',
+  
   // User management
   VIEW_USERS: 'view_users',
   MANAGE_USERS: 'manage_users'
@@ -47,6 +53,10 @@ export function getDefaultPermissionsForRole(role: string): string[] {
     case USER_ROLES.COMMITTEE_MEMBER:
       return [
         PERMISSIONS.VIEW_PHONE_DIRECTORY,
+        PERMISSIONS.VIEW_HOSTS,
+        PERMISSIONS.VIEW_RECIPIENTS,
+        PERMISSIONS.VIEW_DRIVERS,
+        PERMISSIONS.VIEW_COMMITTEE,
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.COMMITTEE_CHAT,
         PERMISSIONS.TOOLKIT_ACCESS,
