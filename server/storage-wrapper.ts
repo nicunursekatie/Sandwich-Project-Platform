@@ -790,6 +790,35 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.isUserCommitteeMember(userId, committeeId)
     );
   }
+
+  // Announcement methods
+  async getAllAnnouncements() {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getAllAnnouncements(),
+      () => this.fallbackStorage.getAllAnnouncements()
+    );
+  }
+
+  async createAnnouncement(announcement: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createAnnouncement(announcement),
+      () => this.fallbackStorage.createAnnouncement(announcement)
+    );
+  }
+
+  async updateAnnouncement(id: number, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateAnnouncement(id, updates),
+      () => this.fallbackStorage.updateAnnouncement(id, updates)
+    );
+  }
+
+  async deleteAnnouncement(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteAnnouncement(id),
+      () => this.fallbackStorage.deleteAnnouncement(id)
+    );
+  }
 }
 
 export const storage = new StorageWrapper();

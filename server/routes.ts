@@ -13,7 +13,7 @@ import { sendDriverAgreementNotification } from "./sendgrid";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
-import { insertProjectSchema, insertProjectTaskSchema, insertProjectCommentSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertDriverSchema, insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
+import { insertProjectSchema, insertProjectTaskSchema, insertProjectCommentSchema, insertMessageSchema, insertWeeklyReportSchema, insertSandwichCollectionSchema, insertMeetingMinutesSchema, insertAgendaItemSchema, insertMeetingSchema, insertDriverAgreementSchema, insertDriverSchema, insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema, insertAnnouncementSchema } from "@shared/schema";
 
 // Extend Request interface to include file metadata
 declare global {
@@ -3374,6 +3374,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error fetching user committees:', error);
       res.status(500).json({ message: 'Failed to fetch user committees' });
+    }
+  });
+
+  // Announcement routes
+  app.get('/api/announcements', async (req, res) => {
+    try {
+      const announcements = await storage.getAllAnnouncements();
+      res.json(announcements);
+    } catch (error) {
+      console.error('Error fetching announcements:', error);
+      res.status(500).json({ message: 'Failed to fetch announcements' });
+    }
+  });
+
+  app.post('/api/announcements', isAuthenticated, requirePermission('manage_users'), async (req: any, res) => {
+    try {
+      const result = insertAnnouncementSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ message: 'Invalid announcement data', errors: result.error.errors });
+      }
+
+      const announcement = await storage.createAnnouncement(result.data);
+      res.status(201).json(announcement);
+    } catch (error) {
+      console.error('Error creating announcement:', error);
+      res.status(500).json({ message: 'Failed to create announcement' });
+    }
+  });
+
+  app.patch('/api/announcements/:id', isAuthenticated, requirePermission('manage_users'), async (req: any, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      
+      const announcement = await storage.updateAnnouncement(id, updates);
+      if (!announcement) {
+        return res.status(404).json({ message: 'Announcement not found' });
+      }
+      
+      res.json(announcement);
+    } catch (error) {
+      console.error('Error updating announcement:', error);
+      res.status(500).json({ message: 'Failed to update announcement' });
+    }
+  });
+
+  app.delete('/api/announcements/:id', isAuthenticated, requirePermission('manage_users'), async (req: any, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      const success = await storage.deleteAnnouncement(id);
+      if (!success) {
+        return res.status(404).json({ message: 'Announcement not found' });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      console.error('Error deleting announcement:', error);
+      res.status(500).json({ message: 'Failed to delete announcement' });
     }
   });
 

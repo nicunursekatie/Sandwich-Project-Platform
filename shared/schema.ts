@@ -456,3 +456,13 @@ export const insertCommitteeMembershipSchema = createInsertSchema(committeeMembe
 
 export type CommitteeMembership = typeof committeeMemberships.$inferSelect;
 export type InsertCommitteeMembership = z.infer<typeof insertCommitteeMembershipSchema>;
+
+// Announcement schema types
+export const insertAnnouncementSchema = createInsertSchema(announcements).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export type Announcement = typeof announcements.$inferSelect;
+export type InsertAnnouncement = z.infer<typeof insertAnnouncementSchema>;
