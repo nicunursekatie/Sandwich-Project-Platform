@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import BulkDataManager from "@/components/bulk-data-manager";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -94,6 +95,7 @@ export default function SandwichCollectionLog() {
   const [newGroupCollections, setNewGroupCollections] = useState<Array<{id: string, groupName: string, sandwichCount: number}>>([
     { id: Math.random().toString(36), groupName: "", sandwichCount: 0 }
   ]);
+  const [newCollectionGroupOnlyMode, setNewCollectionGroupOnlyMode] = useState(false);
 
   // Memoize expensive computations
   const needsAllData = useMemo(() => 
@@ -951,6 +953,30 @@ export default function SandwichCollectionLog() {
                   <DialogTitle>Add New Collection</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleNewCollectionSubmit} className="space-y-4">
+                  {/* Group-only mode toggle */}
+                  <div className="flex items-center space-x-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <Checkbox
+                      id="newCollectionGroupOnlyMode"
+                      checked={newCollectionGroupOnlyMode}
+                      onCheckedChange={(checked) => {
+                        setNewCollectionGroupOnlyMode(checked as boolean);
+                        // Reset form when switching modes
+                        if (checked) {
+                          setNewCollectionData(prev => ({
+                            ...prev,
+                            hostName: "",
+                            individualSandwiches: ""
+                          }));
+                        }
+                      }}
+                    />
+                    <Label htmlFor="newCollectionGroupOnlyMode" className="text-sm font-medium text-blue-900">
+                      Group Collections Only Mode
+                    </Label>
+                    <span className="text-xs text-blue-700 ml-2">
+                      (For logging group collections without specifying a host)
+                    </span>
+                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="collectionDate">Collection Date *</Label>
@@ -965,50 +991,54 @@ export default function SandwichCollectionLog() {
                         required
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="hostName">Host Name *</Label>
-                      <Select
-                        value={newCollectionData.hostName}
-                        onValueChange={(value) => setNewCollectionData(prev => ({
-                          ...prev,
-                          hostName: value
-                        }))}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a host" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {hostOptions.map((hostName, index) => (
-                            <SelectItem key={index} value={hostName}>
-                              {hostName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    {!newCollectionGroupOnlyMode && (
+                      <div>
+                        <Label htmlFor="hostName">Host Name *</Label>
+                        <Select
+                          value={newCollectionData.hostName}
+                          onValueChange={(value) => setNewCollectionData(prev => ({
+                            ...prev,
+                            hostName: value
+                          }))}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a host" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {hostOptions.map((hostName, index) => (
+                              <SelectItem key={index} value={hostName}>
+                                {hostName}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
                   </div>
 
-                  <div>
-                    <Label htmlFor="individualSandwiches">Individual Sandwiches</Label>
-                    <Input
-                      id="individualSandwiches"
-                      type="number"
-                      min="0"
-                      value={newCollectionData.individualSandwiches}
-                      onChange={(e) => setNewCollectionData(prev => ({
-                        ...prev,
-                        individualSandwiches: e.target.value
-                      }))}
-                      placeholder="0"
-                    />
-                  </div>
+                  {!newCollectionGroupOnlyMode && (
+                    <div>
+                      <Label htmlFor="individualSandwiches">Individual Sandwiches</Label>
+                      <Input
+                        id="individualSandwiches"
+                        type="number"
+                        min="0"
+                        value={newCollectionData.individualSandwiches}
+                        onChange={(e) => setNewCollectionData(prev => ({
+                          ...prev,
+                          individualSandwiches: e.target.value
+                        }))}
+                        placeholder="0"
+                      />
+                    </div>
+                  )}
 
                   <div>
                     <Label>Group Collections</Label>
                     {newGroupCollections.map((group, index) => (
                       <div key={group.id} className="flex items-center space-x-2 mt-2">
                         <Input
-                          placeholder="Group name"
+                          placeholder="Group name (optional)"
                           value={group.groupName}
                           onChange={(e) => updateNewGroupCollection(group.id, 'groupName', e.target.value)}
                           className="flex-1"
