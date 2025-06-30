@@ -1539,10 +1539,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get file info
       const stats = await fs.stat(actualFilePath);
       
+      // Detect actual file type by reading first few bytes
+      const buffer = Buffer.alloc(50);
+      const fd = await fs.open(actualFilePath, 'r');
+      await fd.read(buffer, 0, 50, 0);
+      await fd.close();
+      
+      let contentType = 'application/octet-stream';
+      const fileHeader = buffer.toString('utf8', 0, 20);
+      
+      if (fileHeader.startsWith('%PDF')) {
+        contentType = 'application/pdf';
+      } else if (fileHeader.includes('[Content_Types].xml') || fileHeader.startsWith('PK')) {
+        // This is a Microsoft Office document (DOCX, XLSX, etc.)
+        if (minutes.fileName.toLowerCase().endsWith('.docx')) {
+          contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        } else if (minutes.fileName.toLowerCase().endsWith('.xlsx')) {
+          contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        } else {
+          contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; // Default to DOCX
+        }
+      }
+      
+      logger.info("File type detected", { 
+        fileName: minutes.fileName,
+        detectedType: contentType,
+        fileHeader: fileHeader.substring(0, 20)
+      });
+      
       // Set appropriate headers
-      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Type', contentType);
       res.setHeader('Content-Length', stats.size);
-      res.setHeader('Content-Disposition', `inline; filename="${minutes.fileName}"`);
+      res.setHeader('Content-Disposition', contentType === 'application/pdf' ? `inline; filename="${minutes.fileName}"` : `attachment; filename="${minutes.fileName}"`);
       
       // Stream the file
       const fileStream = createReadStream(actualFilePath);
