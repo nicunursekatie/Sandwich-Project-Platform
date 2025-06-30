@@ -418,9 +418,10 @@ export default function SandwichCollectionLog() {
         groupCollections: ""
       });
       setNewGroupCollections([{ id: Math.random().toString(36), groupName: "", sandwichCount: 0 }]);
+      setNewCollectionGroupOnlyMode(false);
       toast({
         title: "Collection added",
-        description: "The sandwich collection has been added successfully.",
+        description: "The sandbox collection has been added successfully.",
       });
     },
     onError: () => {
@@ -799,28 +800,54 @@ export default function SandwichCollectionLog() {
   const handleNewCollectionSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!newCollectionData.collectionDate || !newCollectionData.hostName) {
-      toast({
-        title: "Missing required fields",
-        description: "Please fill in the collection date and host name.",
-        variant: "destructive",
-      });
-      return;
+    // In group-only mode, we only require collection date and group collections
+    if (newCollectionGroupOnlyMode) {
+      if (!newCollectionData.collectionDate) {
+        toast({
+          title: "Missing information",
+          description: "Please fill in the collection date.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const validGroupCollections = newGroupCollections.filter(
+        (g) => g.sandwichCount > 0,
+      );
+      
+      if (validGroupCollections.length === 0) {
+        toast({
+          title: "Missing group collections",
+          description: "Please add at least one group collection with a sandwich count.",
+          variant: "destructive",
+        });
+        return;
+      }
+    } else {
+      // Regular mode requires host name and collection date
+      if (!newCollectionData.collectionDate || !newCollectionData.hostName) {
+        toast({
+          title: "Missing required fields",
+          description: "Please fill in the collection date and host name.",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     // Format group collections as JSON to match the schema
-    const validGroupCollections = newGroupCollections.filter(group => group.groupName.trim() && group.sandwichCount > 0);
+    const validGroupCollections = newGroupCollections.filter(group => group.sandwichCount > 0);
     const formattedGroupCollections = validGroupCollections.length > 0 
       ? JSON.stringify(validGroupCollections.map(g => ({ 
-          name: g.groupName.trim(), 
+          name: g.groupName.trim() || "Unnamed Group", 
           count: g.sandwichCount 
         })))
       : '[]';
 
     const submissionData = {
       collectionDate: newCollectionData.collectionDate,
-      hostName: newCollectionData.hostName,
-      individualSandwiches: parseInt(newCollectionData.individualSandwiches) || 0,
+      hostName: newCollectionGroupOnlyMode ? "Groups - Unassigned" : newCollectionData.hostName,
+      individualSandwiches: newCollectionGroupOnlyMode ? 0 : parseInt(newCollectionData.individualSandwiches) || 0,
       groupCollections: formattedGroupCollections
     };
 
@@ -1073,6 +1100,10 @@ export default function SandwichCollectionLog() {
                       <Plus className="w-4 h-4 mr-2" />
                       Add Group
                     </Button>
+                    <p className="text-sm text-gray-600 mt-3">
+                      Record group collections with sandwich counts. Group names are optional - 
+                      entries without names will be listed as "Unnamed Group".
+                    </p>
                   </div>
 
                   <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 pt-4">
