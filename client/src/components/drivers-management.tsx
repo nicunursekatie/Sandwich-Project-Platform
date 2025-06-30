@@ -946,6 +946,25 @@ export default function DriversManagement() {
                           </Badge>
                         )}
 
+                        {/* Availability Status */}
+                        {driver.availability && (
+                          <Badge
+                            variant="outline"
+                            className={
+                              driver.availability === "available"
+                                ? "bg-green-50 text-green-700 border-green-200 flex items-center gap-1"
+                                : driver.availability === "busy"
+                                ? "bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1"
+                                : "bg-gray-50 text-gray-700 border-gray-200 flex items-center gap-1"
+                            }
+                          >
+                            <Clock className="w-3 h-3" />
+                            {driver.availability === "available" ? "Available" 
+                             : driver.availability === "busy" ? "Busy" 
+                             : "Off Duty"}
+                          </Badge>
+                        )}
+
                         {/* Agreement Status */}
                         {hasSignedAgreement(driver.notes) ? (
                           <Badge
@@ -1068,6 +1087,25 @@ export default function DriversManagement() {
                           >
                             <Truck className="w-3 h-3" />
                             Van Driver
+                          </Badge>
+                        )}
+
+                        {/* Availability Status (for inactive drivers) */}
+                        {driver.availability && (
+                          <Badge
+                            variant="outline"
+                            className={
+                              driver.availability === "available"
+                                ? "bg-green-50 text-green-700 border-green-200 flex items-center gap-1"
+                                : driver.availability === "busy"
+                                ? "bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1"
+                                : "bg-gray-50 text-gray-700 border-gray-200 flex items-center gap-1"
+                            }
+                          >
+                            <Clock className="w-3 h-3" />
+                            {driver.availability === "available" ? "Available" 
+                             : driver.availability === "busy" ? "Busy" 
+                             : "Off Duty"}
                           </Badge>
                         )}
 
@@ -1284,67 +1322,45 @@ export default function DriversManagement() {
               </div>
 
               {/* Agreement Status */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="edit-agreement">Agreement Status</Label>
-                  <Select
-                    value={hasSignedAgreement(editingDriver.notes) ? "signed" : "missing"}
-                    onValueChange={(value) => {
-                      let updatedNotes = editingDriver.notes || "";
-                      
-                      // Remove any existing agreement status from notes
-                      updatedNotes = updatedNotes
-                        .replace(/agreement:\s*(yes|no|signed|missing|true|false)/gi, "")
-                        .replace(/\s+/g, " ")
-                        .trim();
-                      
-                      // Add new agreement status
-                      if (value === "signed") {
-                        updatedNotes = updatedNotes 
-                          ? `${updatedNotes} Agreement: signed`
-                          : "Agreement: signed";
-                      } else {
-                        updatedNotes = updatedNotes 
-                          ? `${updatedNotes} Agreement: missing`
-                          : "Agreement: missing";
-                      }
-                      
-                      setEditingDriver({
-                        ...editingDriver,
-                        notes: updatedNotes.trim(),
-                        emailAgreementSent: value === "signed",
-                      });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="signed">Signed Agreement</SelectItem>
-                      <SelectItem value="missing">Missing Agreement</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="edit-voicemail">Communication Status</Label>
-                  <Select
-                    value={editingDriver.voicemailLeft ? "contacted" : "not_contacted"}
-                    onValueChange={(value) =>
-                      setEditingDriver({
-                        ...editingDriver,
-                        voicemailLeft: value === "contacted",
-                      })
+              <div>
+                <Label htmlFor="edit-agreement">Agreement Status</Label>
+                <Select
+                  value={hasSignedAgreement(editingDriver.notes) ? "signed" : "missing"}
+                  onValueChange={(value) => {
+                    let updatedNotes = editingDriver.notes || "";
+                    
+                    // Remove any existing agreement status from notes
+                    updatedNotes = updatedNotes
+                      .replace(/agreement:\s*(yes|no|signed|missing|true|false)/gi, "")
+                      .replace(/\s+/g, " ")
+                      .trim();
+                    
+                    // Add new agreement status
+                    if (value === "signed") {
+                      updatedNotes = updatedNotes 
+                        ? `${updatedNotes} Agreement: signed`
+                        : "Agreement: signed";
+                    } else {
+                      updatedNotes = updatedNotes 
+                        ? `${updatedNotes} Agreement: missing`
+                        : "Agreement: missing";
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="contacted">Voicemail Left</SelectItem>
-                      <SelectItem value="not_contacted">Not Contacted</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                    
+                    setEditingDriver({
+                      ...editingDriver,
+                      notes: updatedNotes.trim(),
+                      emailAgreementSent: value === "signed",
+                    });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="signed">Signed Agreement</SelectItem>
+                    <SelectItem value="missing">Missing Agreement</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Availability */}
