@@ -375,8 +375,11 @@ export function setupTempAuth(app: Express) {
           console.log(`New: [${correctPermissions.join(', ')}]`);
         }
         
-        // Update user with correct permissions if they differ
-        if (JSON.stringify(user.permissions) !== JSON.stringify(correctPermissions)) {
+        // Update user with correct permissions if they differ, or force update for Katie
+        const shouldUpdate = JSON.stringify(user.permissions) !== JSON.stringify(correctPermissions) || 
+                           user.email === "katielong2316@gmail.com";
+        
+        if (shouldUpdate) {
           console.log(`Updating permissions for ${user.email} (${user.role})`);
           await storage.updateUser(user.id, {
             ...user,
