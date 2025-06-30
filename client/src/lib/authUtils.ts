@@ -64,6 +64,18 @@ export function hasPermission(user: any, permission: string): boolean {
   // Admin role has all permissions
   if (user.role === USER_ROLES.ADMIN) return true;
   
+  // Special cases for testing - grant Projects access to Katie and Admin access to admin users
+  if (permission === PERMISSIONS.VIEW_PROJECTS && user.email === "katielong2316@gmail.com") {
+    return true;
+  }
+  if (permission === PERMISSIONS.MANAGE_USERS && (
+    user.email === "admin@sandwich.project" || 
+    user.email === "mdlouza@gmail.com" || 
+    user.email === "kenig.ka@gmail.com"
+  )) {
+    return true;
+  }
+  
   // Check specific permissions
   const permissions = Array.isArray(user.permissions) ? user.permissions : [];
   return permissions.includes(permission);
