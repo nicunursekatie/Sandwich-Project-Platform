@@ -389,6 +389,9 @@ export default function DriversManagement() {
       
       // Keep other meaningful notes like "Van approved: yes"
       return true;
+    }).map(part => {
+      // Remove "Notes:" prefix from individual parts if it exists
+      return part.replace(/^notes:\s*/i, '');
     });
     
     return parts.length > 0 ? parts.join('; ') : null;
