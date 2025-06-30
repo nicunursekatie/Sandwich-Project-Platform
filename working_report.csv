@@ -1,0 +1,1 @@
+{"error":"PDF generation failed"}

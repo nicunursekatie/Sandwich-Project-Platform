@@ -2895,15 +2895,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
           res.send('No data available');
         }
       } else if (format === 'pdf') {
-        res.setHeader('Content-Type', 'application/pdf');
-        try {
-          const { PDFGenerator } = await import('./reporting/pdf-generator');
-          const pdfBuffer = await PDFGenerator.generatePDF(reportData);
-          res.send(pdfBuffer);
-        } catch (error) {
-          console.error('PDF generation failed:', error);
-          res.status(500).json({ error: 'PDF generation failed' });
+        // Temporarily serve as CSV with PDF-like formatting while fixing jsPDF issues
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', `attachment; filename="report-${reportId}.csv"`);
+        
+        // Create detailed CSV with metadata
+        let csvContent = `# ${reportData.metadata.title}\n`;
+        csvContent += `# Generated: ${new Date(reportData.metadata.generatedAt).toLocaleString()}\n`;
+        csvContent += `# Date Range: ${reportData.metadata.dateRange}\n`;
+        csvContent += `# Total Records: ${reportData.metadata.totalRecords}\n`;
+        csvContent += `\n# EXECUTIVE SUMMARY\n`;
+        csvContent += `Total Sandwiches,${reportData.summary.totalSandwiches}\n`;
+        csvContent += `Total Hosts,${reportData.summary.totalHosts}\n`;
+        csvContent += `Active Projects,${reportData.summary.activeProjects}\n`;
+        
+        if (reportData.summary.topPerformers?.length > 0) {
+          csvContent += `\n# TOP PERFORMERS\n`;
+          csvContent += `Name,Count\n`;
+          reportData.summary.topPerformers.forEach(performer => {
+            csvContent += `"${performer.name}",${performer.value}\n`;
+          });
         }
+        
+        if (Array.isArray(reportData.data) && reportData.data.length > 0) {
+          csvContent += `\n# DETAILED DATA\n`;
+          const headers = Object.keys(reportData.data[0]);
+          const csvHeader = headers.join(',');
+          const csvRows = reportData.data.map(row => 
+            headers.map(header => `"${row[header] || ''}"`).join(',')
+          );
+          csvContent += csvHeader + '\n';
+          csvContent += csvRows.join('\n');
+        }
+        
+        res.send(csvContent);
       } else {
         res.setHeader('Content-Type', 'application/json');
         res.json(reportData);
