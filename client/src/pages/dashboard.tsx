@@ -63,19 +63,10 @@ export default function Dashboard() {
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, type: "item", permission: PERMISSIONS.VIEW_COLLECTIONS },
     { id: "collections", label: "Collections Log", icon: Sandwich, type: "item", permission: PERMISSIONS.VIEW_COLLECTIONS },
     { id: "messages", label: "Messages", icon: MessageCircle, type: "item", permission: PERMISSIONS.GENERAL_CHAT },
-    { 
-      id: "team", 
-      label: "Team", 
-      icon: Users, 
-      type: "section",
-      permission: PERMISSIONS.VIEW_PHONE_DIRECTORY,
-      items: [
-        { id: "hosts", label: "Hosts", icon: Building2, permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
-        { id: "recipients", label: "Recipients", icon: Users, permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
-        { id: "drivers", label: "Drivers", icon: Car, permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
-        { id: "committee", label: "Committee", icon: MessageCircle, permission: PERMISSIONS.COMMITTEE_CHAT },
-      ]
-    },
+    { id: "hosts", label: "Hosts", icon: Building2, type: "item", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
+    { id: "recipients", label: "Recipients", icon: Users, type: "item", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
+    { id: "drivers", label: "Drivers", icon: Car, type: "item", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY },
+    { id: "committee", label: "Committee", icon: MessageCircle, type: "item", permission: PERMISSIONS.COMMITTEE_CHAT },
     { id: "projects", label: "Projects", icon: ListTodo, type: "item", permission: PERMISSIONS.VIEW_PROJECTS },
     { id: "meetings", label: "Meetings", icon: ClipboardList, type: "item", permission: PERMISSIONS.VIEW_MEETINGS },
     { id: "analytics", label: "Analytics", icon: BarChart3, type: "item", permission: PERMISSIONS.VIEW_REPORTS },
