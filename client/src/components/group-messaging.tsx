@@ -57,7 +57,13 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   });
 
   // Fetch group members when a group is selected
-  const { data: groupMembers = [] } = useQuery({
+  const { data: groupMembers = [] } = useQuery<Array<{
+    userId: string;
+    role: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  }>>({
     queryKey: ["/api/message-groups", selectedGroup?.id, "members"],
     enabled: !!selectedGroup,
   });
@@ -86,16 +92,29 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       setSelectedGroup(newGroup);
       toast({ title: "Group created successfully!" });
       
-      // Send congratulations notification
+      // Send congratulations notification through the notification system
+      fetch("/api/notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUser?.id,
+          type: "success",
+          title: "Group Created Successfully!",
+          message: `🎉 You've successfully created the "${newGroup.name}" group. Start collaborating with your team members!`,
+          data: { groupId: newGroup.id, action: "group_created" }
+        }),
+      }).catch(err => console.log("Notification failed:", err));
+      
+      // Also send a welcome message to the group
       fetch("/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          content: `🎉 Congratulations! You've successfully created the "${newGroup.name}" group. Start collaborating with your team members!`,
+          content: `Welcome to ${newGroup.name}! This group was created by ${currentUser?.firstName || currentUser?.email}. Let's start collaborating! 🚀`,
           committee: `group_${newGroup.id}`,
           sender: "System"
         }),
-      });
+      }).catch(err => console.log("Welcome message failed:", err));
     },
   });
 
