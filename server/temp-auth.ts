@@ -755,13 +755,9 @@ export async function initializeTempAuth() {
       });
       console.log("✅ Committee member user created: katielong2316@gmail.com / committee123");
     } else {
-      // Update existing user to committee_member role
+      // Use existing user without updating role (preserve current role and permissions)
       committeeMemberId = existingCommitteeMember.id;
-      await storage.updateUser(committeeMemberId, {
-        role: "committee_member",
-        permissions: getDefaultPermissionsForRole("committee_member")
-      });
-      console.log("✅ Updated katielong2316@gmail.com to committee_member role");
+      console.log("✅ Found existing user: katielong2316@gmail.com (preserving current role)");
     }
 
     // Assign committee member to finance committee only
