@@ -229,9 +229,9 @@ export default function MeetingMinutes() {
     setUploadType("file");
   };
 
-  const handleDownloadFile = async (fileName: string) => {
+  const handleDownloadFile = async (minutesId: number, fileName: string) => {
     try {
-      const response = await fetch(`/api/files/${fileName}`);
+      const response = await fetch(`/api/meeting-minutes/${minutesId}/file`);
       if (!response.ok) {
         throw new Error('File not found');
       }
@@ -241,7 +241,7 @@ export default function MeetingMinutes() {
       const a = document.createElement('a');
       a.style.display = 'none';
       a.href = url;
-      a.download = fileName;
+      a.download = fileName || 'meeting-minutes-document';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
