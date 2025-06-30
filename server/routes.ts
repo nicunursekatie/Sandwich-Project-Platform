@@ -3326,128 +3326,139 @@ export async function registerRoutes(app: Express): Promise<Server> {
           res.send("No data available");
         }
       } else if (format === "pdf") {
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader(
-          "Content-Disposition",
-          `attachment; filename="report-${reportId}.pdf"`,
-        );
-
-        // Generate PDF using jsPDF
-        const jsPDF = require('jspdf').jsPDF;
-        require('jspdf-autotable');
-        
-        const doc = new jsPDF();
-        let yPosition = 20;
-
-        // Title
-        doc.setFontSize(18);
-        doc.setFont('helvetica', 'bold');
-        doc.text(reportData.metadata.title, 20, yPosition);
-        yPosition += 15;
-
-        // Metadata
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
-        doc.text(`Generated: ${new Date(reportData.metadata.generatedAt).toLocaleString()}`, 20, yPosition);
-        yPosition += 6;
-        doc.text(`Date Range: ${reportData.metadata.dateRange}`, 20, yPosition);
-        yPosition += 6;
-        doc.text(`Total Records: ${reportData.metadata.totalRecords}`, 20, yPosition);
-        yPosition += 15;
-
-        // Executive Summary
-        doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Executive Summary', 20, yPosition);
-        yPosition += 10;
-
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
-        doc.text(`Total Sandwiches: ${reportData.summary.totalSandwiches?.toLocaleString() || 0}`, 20, yPosition);
-        yPosition += 6;
-        doc.text(`Total Hosts: ${reportData.summary.totalHosts || 0}`, 20, yPosition);
-        yPosition += 6;
-        doc.text(`Active Projects: ${reportData.summary.activeProjects || 0}`, 20, yPosition);
-        yPosition += 15;
-
-        // Top Performers
-        if (reportData.summary.topPerformers?.length > 0) {
-          doc.setFontSize(14);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Top Performers', 20, yPosition);
-          yPosition += 10;
-
-          const performerTableData = reportData.summary.topPerformers.map(performer => [
-            performer.name,
-            performer.value?.toLocaleString() || '0'
-          ]);
-
-          doc.autoTable({
-            startY: yPosition,
-            head: [['Host/Group', 'Sandwiches']],
-            body: performerTableData,
-            margin: { left: 20 },
-            styles: { fontSize: 9 },
-            headStyles: { fillColor: [35, 99, 131] } // TSP brand color
-          });
-
-          yPosition = doc.lastAutoTable.finalY + 15;
-        }
-
-        // Detailed Data
-        if (Array.isArray(reportData.data) && reportData.data.length > 0) {
-          // Check if we need a new page
-          if (yPosition > 250) {
-            doc.addPage();
-            yPosition = 20;
-          }
-
-          doc.setFontSize(14);
-          doc.setFont('helvetica', 'bold');
-          doc.text('Detailed Data', 20, yPosition);
-          yPosition += 10;
-
-          const headers = Object.keys(reportData.data[0]);
-          const tableData = reportData.data.slice(0, 100).map(row => // Limit to first 100 rows for PDF
-            headers.map(header => {
-              const value = row[header];
-              if (typeof value === 'number') return value.toLocaleString();
-              return String(value || '').substring(0, 50); // Truncate long text
-            })
+        try {
+          // Import PDFDocument from pdfkit (already installed)
+          const PDFDocument = require('pdfkit');
+          const doc = new PDFDocument();
+          
+          // Set response headers for PDF
+          res.setHeader("Content-Type", "application/pdf");
+          res.setHeader(
+            "Content-Disposition",
+            `attachment; filename="report-${reportId}.pdf"`,
           );
 
-          doc.autoTable({
-            startY: yPosition,
-            head: [headers.map(h => h.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()))],
-            body: tableData,
-            margin: { left: 20 },
-            styles: { fontSize: 8 },
-            headStyles: { fillColor: [35, 99, 131] },
-            columnStyles: {
-              0: { cellWidth: 'auto' }
-            }
-          });
+          // Pipe the PDF to the response
+          doc.pipe(res);
 
-          if (reportData.data.length > 100) {
-            const finalY = doc.lastAutoTable.finalY + 10;
-            doc.setFontSize(9);
-            doc.setFont('helvetica', 'italic');
-            doc.text(`Note: Showing first 100 of ${reportData.data.length} total records`, 20, finalY);
+          // Add content to PDF
+          let yPosition = 50;
+
+          // Title
+          doc.fontSize(20).font('Helvetica-Bold');
+          doc.text(reportData.metadata.title, 50, yPosition);
+          yPosition += 40;
+
+          // Metadata
+          doc.fontSize(10).font('Helvetica');
+          doc.text(`Generated: ${new Date(reportData.metadata.generatedAt).toLocaleString()}`, 50, yPosition);
+          yPosition += 15;
+          doc.text(`Date Range: ${reportData.metadata.dateRange}`, 50, yPosition);
+          yPosition += 15;
+          doc.text(`Total Records: ${reportData.metadata.totalRecords}`, 50, yPosition);
+          yPosition += 30;
+
+          // Executive Summary
+          doc.fontSize(16).font('Helvetica-Bold');
+          doc.text('Executive Summary', 50, yPosition);
+          yPosition += 25;
+
+          doc.fontSize(12).font('Helvetica');
+          doc.text(`Total Sandwiches: ${reportData.summary.totalSandwiches?.toLocaleString() || 0}`, 50, yPosition);
+          yPosition += 18;
+          doc.text(`Total Hosts: ${reportData.summary.totalHosts || 0}`, 50, yPosition);
+          yPosition += 18;
+          doc.text(`Active Projects: ${reportData.summary.activeProjects || 0}`, 50, yPosition);
+          yPosition += 30;
+
+          // Top Performers
+          if (reportData.summary.topPerformers?.length > 0) {
+            doc.fontSize(16).font('Helvetica-Bold');
+            doc.text('Top Performers', 50, yPosition);
+            yPosition += 25;
+
+            doc.fontSize(10).font('Helvetica');
+            reportData.summary.topPerformers.slice(0, 10).forEach((performer) => {
+              doc.text(`${performer.name}: ${performer.value?.toLocaleString() || '0'} sandwiches`, 50, yPosition);
+              yPosition += 15;
+            });
+            yPosition += 20;
           }
-        }
 
-        // Footer
-        const pageCount = doc.internal.getNumberOfPages();
-        for (let i = 1; i <= pageCount; i++) {
-          doc.setPage(i);
-          doc.setFontSize(8);
-          doc.setFont('helvetica', 'normal');
-          doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 40, doc.internal.pageSize.height - 10);
-          doc.text('The Sandwich Project - Report', 20, doc.internal.pageSize.height - 10);
-        }
+          // Data summary (first 20 records for space)
+          if (Array.isArray(reportData.data) && reportData.data.length > 0) {
+            // Check if we need a new page
+            if (yPosition > 650) {
+              doc.addPage();
+              yPosition = 50;
+            }
 
-        const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
-        res.send(pdfBuffer);
+            doc.fontSize(16).font('Helvetica-Bold');
+            doc.text('Sample Data Records', 50, yPosition);
+            yPosition += 25;
+
+            doc.fontSize(9).font('Helvetica');
+            const sampleData = reportData.data.slice(0, 20);
+            
+            sampleData.forEach((record, index) => {
+              if (yPosition > 720) {
+                doc.addPage();
+                yPosition = 50;
+              }
+              
+              let recordText = `${index + 1}. `;
+              if (record.hostName) recordText += `${record.hostName} - `;
+              if (record.collectionDate) recordText += `${record.collectionDate} - `;
+              if (record.individualSandwiches) recordText += `${record.individualSandwiches} sandwiches`;
+              
+              doc.text(recordText, 50, yPosition);
+              yPosition += 12;
+            });
+
+            if (reportData.data.length > 20) {
+              yPosition += 10;
+              doc.fontSize(10).font('Helvetica-Oblique');
+              doc.text(`Note: Showing first 20 of ${reportData.data.length} total records. Download CSV format for complete data.`, 50, yPosition);
+            }
+          }
+
+          // Footer
+          const pages = doc.bufferedPageRange();
+          for (let i = 0; i < pages.count; i++) {
+            doc.switchToPage(i);
+            doc.fontSize(8).font('Helvetica');
+            doc.text(`Page ${i + 1} of ${pages.count}`, 50, doc.page.height - 30);
+            doc.text('The Sandwich Project - Report', doc.page.width - 200, doc.page.height - 30);
+          }
+
+          // Finalize the PDF
+          doc.end();
+
+        } catch (error) {
+          console.error('PDF generation error:', error);
+          // Fallback to enhanced CSV if PDF fails
+          res.setHeader("Content-Type", "text/csv");
+          res.setHeader(
+            "Content-Disposition",
+            `attachment; filename="report-${reportId}.csv"`,
+          );
+
+          let csvContent = `# THE SANDWICH PROJECT - ${reportData.metadata.title}\n`;
+          csvContent += `# Generated: ${new Date(reportData.metadata.generatedAt).toLocaleString()}\n`;
+          csvContent += `# Date Range: ${reportData.metadata.dateRange}\n`;
+          csvContent += `# Total Records: ${reportData.metadata.totalRecords}\n\n`;
+
+          if (Array.isArray(reportData.data) && reportData.data.length > 0) {
+            const headers = Object.keys(reportData.data[0]);
+            csvContent += headers.join(',') + '\n';
+            reportData.data.forEach(row => {
+              const values = headers.map(h => `"${row[h] || ''}"`);
+              csvContent += values.join(',') + '\n';
+            });
+          }
+
+          res.send(csvContent);
+        }
       } else {
         res.setHeader("Content-Type", "application/json");
         res.json(reportData);
