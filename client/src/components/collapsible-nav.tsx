@@ -54,6 +54,10 @@ export function CollapsibleNav() {
   const [location, setLocation] = useLocation();
   const { user } = useAuth();
   
+  // Debug: log user info to see what role is being detected
+  console.log('Navigation user:', (user as any)?.email, 'role:', (user as any)?.role);
+  console.log('Role comparison result:', (user as any)?.role === 'committee_member');
+  
   // Debug: Log user data
   console.log('Navigation user data:', user);
 
@@ -87,7 +91,7 @@ export function CollapsibleNav() {
       label: "Operations", 
       icon: FolderOpen, 
       type: "section",
-      items: user?.role === 'committee_member' ? [
+      items: (user as any)?.role === 'committee_member' ? [
         // Hardcoded for committee members - no Projects tab
         { id: "meetings", label: "Meetings", icon: ClipboardList, href: "/meetings" },
         { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics" },
