@@ -221,7 +221,9 @@ export const drivers = pgTable("drivers", {
   vehicleType: text("vehicle_type"),
   licenseNumber: text("license_number"),
   availability: text("availability").default("available"), // "available", "busy", "off-duty"
-  zone: text("zone"),
+  zone: text("zone"), // Keep for migration compatibility
+  routeDescription: text("route_description"), // New field to preserve route info like "SS to Dunwoody"
+  hostLocation: text("host_location"), // Connect to specific host locations
   hostId: integer("host_id"), // Reference to hosts table for directory connection
   vanApproved: boolean("van_approved").notNull().default(false),
   homeAddress: text("home_address"),

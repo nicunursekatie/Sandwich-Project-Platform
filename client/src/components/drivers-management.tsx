@@ -20,7 +20,9 @@ interface Driver {
   phone: string;
   email: string;
   address?: string;
-  zone: string;
+  zone: string; // Keep for backward compatibility 
+  routeDescription?: string; // New field for route descriptions like "SS to Dunwoody"
+  hostLocation?: string; // New field to connect to specific host locations
   hostId?: number;
   availability?: string;
   isActive: boolean;
