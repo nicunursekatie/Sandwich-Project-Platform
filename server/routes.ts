@@ -2170,27 +2170,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/drivers/:id", async (req, res) => {
-    const driverId = req.params.id;
-    const data = req.body;
-
-    if (!data) {
-      return res.status(400).json({ error: "Missing data" });
+  // PATCH endpoint for partial driver updates (used by frontend)
+  app.patch("/api/drivers/:id", sanitizeMiddleware, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      
+      // Validate that we have some updates to apply
+      if (!updates || Object.keys(updates).length === 0) {
+        return res.status(400).json({ message: "No updates provided" });
+      }
+      
+      const driver = await storage.updateDriver(id, updates);
+      if (!driver) {
+        return res.status(404).json({ message: "Driver not found" });
+      }
+      res.json(driver);
+    } catch (error) {
+      logger.error("Failed to update driver", error);
+      res.status(500).json({ message: "Failed to update driver" });
     }
-
-    const updated = await db
-      .update(drivers)
-      .set({
-        name: data.name,
-        phone: data.phone,
-        isActive: data.active,
-        hostLocation: data.hostLocation,
-        routeDescription: data.routeDescription,
-      })
-      .where(eq(drivers.id, driverId))
-      .returning();
-
-    return res.status(200).json({ success: true, driver: updated[0] });
   });
 
   // Driver Agreements (admin access only)
