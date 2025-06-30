@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts, notifications, committees, committeeMemberships,
+  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts, notifications, committees, committeeMemberships, announcements,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -1057,6 +1057,41 @@ export class MemStorage implements IStorage {
       }
     });
   }
+
+  // Announcement methods
+  async getAllAnnouncements(): Promise<any[]> {
+    return Array.from(this.announcements.values());
+  }
+
+  async createAnnouncement(announcement: any): Promise<any> {
+    const id = this.currentIds.announcement++;
+    const newAnnouncement = {
+      id,
+      ...announcement,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.announcements.set(id, newAnnouncement);
+    return newAnnouncement;
+  }
+
+  async updateAnnouncement(id: number, updates: any): Promise<any | undefined> {
+    const announcement = this.announcements.get(id);
+    if (announcement) {
+      const updatedAnnouncement = {
+        ...announcement,
+        ...updates,
+        updatedAt: new Date(),
+      };
+      this.announcements.set(id, updatedAnnouncement);
+      return updatedAnnouncement;
+    }
+    return undefined;
+  }
+
+  async deleteAnnouncement(id: number): Promise<boolean> {
+    return this.announcements.delete(id);
+  }
 }
 
 import { GoogleSheetsStorage } from './google-sheets';
@@ -1344,6 +1379,50 @@ export class DatabaseStorage implements IStorage {
         completedAt: new Date().toISOString()
       }
     });
+  }
+
+  // Announcement methods
+  async getAllAnnouncements(): Promise<any[]> {
+    // Import the announcements from schema when it's available
+    try {
+      return await db.select().from(announcements).orderBy(desc(announcements.createdAt));
+    } catch (error) {
+      console.warn('Announcements table not found, returning empty array');
+      return [];
+    }
+  }
+
+  async createAnnouncement(announcement: any): Promise<any> {
+    try {
+      const [newAnnouncement] = await db.insert(announcements).values(announcement).returning();
+      return newAnnouncement;
+    } catch (error) {
+      console.warn('Failed to create announcement:', error);
+      throw error;
+    }
+  }
+
+  async updateAnnouncement(id: number, updates: any): Promise<any | undefined> {
+    try {
+      const [updatedAnnouncement] = await db.update(announcements)
+        .set({ ...updates, updatedAt: new Date() })
+        .where(eq(announcements.id, id))
+        .returning();
+      return updatedAnnouncement;
+    } catch (error) {
+      console.warn('Failed to update announcement:', error);
+      return undefined;
+    }
+  }
+
+  async deleteAnnouncement(id: number): Promise<boolean> {
+    try {
+      const result = await db.delete(announcements).where(eq(announcements.id, id));
+      return result.rowCount > 0;
+    } catch (error) {
+      console.warn('Failed to delete announcement:', error);
+      return false;
+    }
   }
 }
 
