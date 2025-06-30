@@ -3375,7 +3375,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           yPosition += 18;
           doc.text(`Total Collection Entries: ${reportData.metadata.totalRecords}`, 50, yPosition);
           yPosition += 18;
-          doc.text(`Unique Host Locations: ${reportData.summary.totalHosts || 0}`, 50, yPosition);
+          // Calculate unique hosts from the data
+          const uniqueHosts = Array.isArray(reportData.data) 
+            ? new Set(reportData.data.map(item => item.hostName).filter(Boolean)).size 
+            : reportData.summary.totalHosts || 0;
+          doc.text(`Unique Host Locations: ${uniqueHosts}`, 50, yPosition);
           yPosition += 18;
           doc.text(`Date Range Covered: ${reportData.metadata.dateRange}`, 50, yPosition);
           yPosition += 18;
@@ -3384,7 +3388,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           if (Array.isArray(reportData.data) && reportData.data.length > 0) {
             const totalSandwiches = reportData.data.reduce((sum, record) => {
               const individual = record.individualSandwiches || 0;
-              const group = record.groupSandwiches || 0;
+              const group = record.groupSandwiches || record.groupCollections || 0;
               return sum + individual + group;
             }, 0);
             const avgPerCollection = Math.round(totalSandwiches / reportData.data.length);
@@ -3429,9 +3433,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 yPosition = 50;
               }
               
-              const date = new Date(record.collectionDate).toLocaleDateString();
+              // Handle date conversion properly
+              let date = 'Invalid Date';
+              try {
+                if (record.collectionDate || record.date) {
+                  const dateStr = record.collectionDate || record.date;
+                  const parsedDate = new Date(dateStr);
+                  if (!isNaN(parsedDate.getTime())) {
+                    date = parsedDate.toLocaleDateString();
+                  }
+                }
+              } catch (e) {
+                console.warn('Date parsing error for record:', record);
+              }
+              
               const individual = record.individualSandwiches || 0;
-              const group = record.groupSandwiches || 0;
+              const group = record.groupSandwiches || record.groupCollections || 0;
               const total = individual + group;
               
               let recordText = `${index + 1}. ${date} | ${record.hostName || 'Group Collection'} | `;
@@ -3499,9 +3516,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 doc.fontSize(8).font('Helvetica');
               }
               
-              const date = new Date(record.collectionDate).toLocaleDateString();
+              // Handle date conversion properly
+              let date = 'Invalid Date';
+              try {
+                if (record.collectionDate || record.date) {
+                  const dateStr = record.collectionDate || record.date;
+                  const parsedDate = new Date(dateStr);
+                  if (!isNaN(parsedDate.getTime())) {
+                    date = parsedDate.toLocaleDateString();
+                  }
+                }
+              } catch (e) {
+                console.warn('Date parsing error for record:', record);
+              }
+              
               const individual = record.individualSandwiches || 0;
-              const group = record.groupSandwiches || 0;
+              const group = record.groupSandwiches || record.groupCollections || 0;
               const total = individual + group;
               const hostName = (record.hostName || 'Group Collection').substring(0, 20);
               const notes = (record.notes || '').substring(0, 15);
