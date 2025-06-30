@@ -54,12 +54,13 @@ export function CollapsibleNav() {
   const [location, setLocation] = useLocation();
   const { user } = useAuth();
   
-  // Debug: log user info to see what role is being detected
-  console.log('Navigation user:', (user as any)?.email, 'role:', (user as any)?.role);
-  console.log('Role comparison result:', (user as any)?.role === 'committee_member');
-  
-  // Debug: Log user data
-  console.log('Navigation user data:', user);
+  // Debug: FORCED console logs
+  console.error('=== NAVIGATION DEBUG ===');
+  console.error('User object:', user);
+  console.error('User email:', (user as any)?.email);
+  console.error('User role:', (user as any)?.role);
+  console.error('Is committee member?', (user as any)?.role === 'committee_member');
+  console.error('=== END DEBUG ===');
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => 
