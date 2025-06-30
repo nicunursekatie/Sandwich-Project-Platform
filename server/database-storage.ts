@@ -377,7 +377,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateDriver(id: number, updates: Partial<Driver>): Promise<Driver | undefined> {
-    const [driver] = await db.update(drivers).set(updates).where(eq(drivers.id, id)).returning();
+    // Remove timestamps from updates and set updatedAt to current time
+    const { createdAt, updatedAt, ...safeUpdates } = updates;
+    const updateData = {
+      ...safeUpdates,
+      updatedAt: new Date()
+    };
+    
+    const [driver] = await db.update(drivers).set(updateData).where(eq(drivers.id, id)).returning();
     return driver || undefined;
   }
 

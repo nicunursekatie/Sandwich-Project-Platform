@@ -702,7 +702,9 @@ class StorageWrapper implements IStorage {
   async updateDriver(id: number, updates: any) {
     return this.executeWithFallback(
       () => this.primaryStorage.updateDriver(id, updates),
-      () => this.fallbackStorage.updateDriver(id, updates)
+      () => {
+        throw new Error("Driver operations not available in fallback storage");
+      }
     );
   }
 
