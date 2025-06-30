@@ -442,6 +442,108 @@ export default function MeetingMinutes() {
     );
   }
 
+  // Show edit meeting form
+  if (isEditingMeeting) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Button variant="outline" onClick={() => setIsEditingMeeting(false)}>
+            ← Back to Meetings
+          </Button>
+        </div>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Edit Meeting</CardTitle>
+            <CardDescription>Update meeting details and information</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleEditMeetingSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Meeting Title</label>
+                <Input
+                  value={editMeetingData.title}
+                  onChange={(e) => setEditMeetingData({...editMeetingData, title: e.target.value})}
+                  placeholder="e.g., Core Team Meeting"
+                  required
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Date</label>
+                  <Input
+                    type="date"
+                    value={editMeetingData.date}
+                    onChange={(e) => setEditMeetingData({...editMeetingData, date: e.target.value})}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Time</label>
+                  <Input
+                    type="time"
+                    value={editMeetingData.time}
+                    onChange={(e) => setEditMeetingData({...editMeetingData, time: e.target.value})}
+                    placeholder="Optional"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Meeting Type</label>
+                <Select 
+                  value={editMeetingData.type} 
+                  onValueChange={(value: "core_team" | "board" | "committee" | "special") => 
+                    setEditMeetingData({...editMeetingData, type: value})
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="core_team">Core Team</SelectItem>
+                    <SelectItem value="board">Board Meeting</SelectItem>
+                    <SelectItem value="committee">Committee</SelectItem>
+                    <SelectItem value="special">Special Meeting</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Location</label>
+                <Input
+                  value={editMeetingData.location}
+                  onChange={(e) => setEditMeetingData({...editMeetingData, location: e.target.value})}
+                  placeholder="e.g., Conference Room A or Zoom"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Description</label>
+                <Textarea
+                  value={editMeetingData.description}
+                  onChange={(e) => setEditMeetingData({...editMeetingData, description: e.target.value})}
+                  placeholder="Optional meeting agenda or notes"
+                  rows={3}
+                />
+              </div>
+              
+              <div className="flex gap-2">
+                <Button type="submit" disabled={editMeetingMutation.isPending}>
+                  {editMeetingMutation.isPending ? "Updating..." : "Update Meeting"}
+                </Button>
+                <Button type="button" variant="outline" onClick={() => setIsEditingMeeting(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   // Show individual meeting minutes view
   if (viewingMinutes) {
     const isGoogleDocsLink = viewingMinutes.summary.startsWith("Google Docs link:");
