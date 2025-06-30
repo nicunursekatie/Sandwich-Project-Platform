@@ -101,7 +101,7 @@ const upload = multer({
 
 // Configure multer for meeting minutes file uploads
 const meetingMinutesUpload = multer({
-  dest: 'uploads/meeting-minutes/',
+  dest: 'uploads/temp/', // Use temp directory first
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
   fileFilter: (req, file, cb) => {
     const allowedMimeTypes = [
@@ -1380,11 +1380,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
         
         try {
-          // Create permanent storage path
+          // Create permanent storage path with consistent filename
           const uploadsDir = path.join(process.cwd(), 'uploads', 'meeting-minutes');
           await fs.mkdir(uploadsDir, { recursive: true });
           
-          const permanentPath = path.join(uploadsDir, req.file.filename);
+          // Generate a consistent filename using the multer-generated filename
+          const permanentFilename = req.file.filename;
+          const permanentPath = path.join(uploadsDir, permanentFilename);
           await fs.copyFile(req.file.path, permanentPath);
           
           // Determine file type
