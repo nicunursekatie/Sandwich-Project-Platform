@@ -966,16 +966,28 @@ export default function DriversManagement() {
                         )}
                       </div>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={!canEdit}
-                      onClick={() => handleEdit(driver)}
-                      className="flex items-center gap-1"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                      Edit
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={!canEdit}
+                        onClick={() => handleEdit(driver)}
+                        className="flex items-center gap-1"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={!canEdit}
+                        onClick={() => handleDelete(driver)}
+                        className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                      >
+                        <X className="w-4 h-4" />
+                        Delete
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-0">
