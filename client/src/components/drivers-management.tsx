@@ -821,11 +821,11 @@ export default function DriversManagement() {
                           </Badge>
                         )}
                         
-                        {/* Zone */}
-                        {driver.zone && (
-                          <Badge variant="outline" className="flex items-center gap-1">
+                        {/* Host Location */}
+                        {driver.hostLocation && (
+                          <Badge variant="outline" className="bg-teal-50 text-teal-700 border-teal-200 flex items-center gap-1">
                             <MapPin className="w-3 h-3" />
-                            {driver.zone}
+                            {driver.hostLocation}
                           </Badge>
                         )}
                       </div>
