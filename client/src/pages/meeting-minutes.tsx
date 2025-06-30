@@ -581,7 +581,7 @@ export default function MeetingMinutes() {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  onClick={() => handleDownloadFile(viewingMinutes.fileName!)}
+                  onClick={() => handleDownloadFile(viewingMinutes.id, viewingMinutes.fileName!)}
                   className="ml-4"
                 >
                   <Download className="w-4 h-4 mr-2" />
@@ -634,7 +634,7 @@ export default function MeetingMinutes() {
                     <Button 
                       variant="outline" 
                       size="sm"
-                      onClick={() => handleDownloadFile(viewingMinutes.fileName!)}
+                      onClick={() => handleDownloadFile(viewingMinutes.id, viewingMinutes.fileName!)}
                     >
                       <Download className="w-4 h-4 mr-2" />
                       Download File
@@ -658,7 +658,7 @@ export default function MeetingMinutes() {
                           Click the download button above to view this document.
                         </p>
                         <Button 
-                          onClick={() => handleDownloadFile(viewingMinutes.fileName!)}
+                          onClick={() => handleDownloadFile(viewingMinutes.id, viewingMinutes.fileName!)}
                           className="inline-flex items-center"
                         >
                           <Download className="w-4 h-4 mr-2" />
