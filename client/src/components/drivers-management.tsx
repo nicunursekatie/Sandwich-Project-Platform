@@ -1177,6 +1177,16 @@ export default function DriversManagement() {
                       </div>
                     </div>
                   )}
+                  {driver.notes && (
+                    <div className="mt-3 pt-3 border-t border-slate-200">
+                      <div className="flex items-start gap-2 text-sm text-slate-600">
+                        <FileCheck className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <span>
+                          <strong>Notes:</strong> {driver.notes}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}
