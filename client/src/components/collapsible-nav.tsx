@@ -26,6 +26,9 @@ export function CollapsibleNav() {
   const [expandedSections, setExpandedSections] = useState<string[]>(["operations"]);
   const [location, setLocation] = useLocation();
   const { user } = useAuth();
+  
+  // Debug: Log user data
+  console.log('Navigation user data:', user);
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => 
