@@ -37,7 +37,6 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
     // Core section
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "dashboard" },
     { id: "collections", label: "Collections", icon: Sandwich, href: "collections" },
-    { id: "messages", label: "Messages", icon: MessageCircle, href: "messages" },
     
     // Data section (filtered by permissions)
     ...(hasPermission(user, PERMISSIONS.VIEW_HOSTS) ? [{ id: "hosts", label: "Hosts", icon: Building2, href: "hosts", group: "data" }] : []),
@@ -52,7 +51,7 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
     
     // Communication section  
     ...(hasPermission(user, PERMISSIONS.VIEW_COMMITTEE) ? [{ id: "committee-chat", label: "Committee", icon: MessageCircle, href: "committee-chat", group: "comm" }] : []),
-    { id: "host-chat", label: "Messages", icon: MessageCircle, href: "host-chat", group: "comm" },
+    { id: "messages", label: "Messages", icon: MessageCircle, href: "messages", group: "comm" },
     { id: "phone-directory", label: "Directory", icon: Phone, href: "phone-directory", group: "comm" },
     
     // Resources section
