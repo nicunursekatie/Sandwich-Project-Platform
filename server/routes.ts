@@ -3326,43 +3326,128 @@ export async function registerRoutes(app: Express): Promise<Server> {
           res.send("No data available");
         }
       } else if (format === "pdf") {
-        // Temporarily serve as CSV with PDF-like formatting while fixing jsPDF issues
-        res.setHeader("Content-Type", "text/csv");
+        res.setHeader("Content-Type", "application/pdf");
         res.setHeader(
           "Content-Disposition",
-          `attachment; filename="report-${reportId}.csv"`,
+          `attachment; filename="report-${reportId}.pdf"`,
         );
 
-        // Create detailed CSV with metadata
-        let csvContent = `# ${reportData.metadata.title}\n`;
-        csvContent += `# Generated: ${new Date(reportData.metadata.generatedAt).toLocaleString()}\n`;
-        csvContent += `# Date Range: ${reportData.metadata.dateRange}\n`;
-        csvContent += `# Total Records: ${reportData.metadata.totalRecords}\n`;
-        csvContent += `\n# EXECUTIVE SUMMARY\n`;
-        csvContent += `Total Sandwiches,${reportData.summary.totalSandwiches}\n`;
-        csvContent += `Total Hosts,${reportData.summary.totalHosts}\n`;
-        csvContent += `Active Projects,${reportData.summary.activeProjects}\n`;
+        // Generate PDF using jsPDF
+        const jsPDF = require('jspdf').jsPDF;
+        require('jspdf-autotable');
+        
+        const doc = new jsPDF();
+        let yPosition = 20;
 
+        // Title
+        doc.setFontSize(18);
+        doc.setFont('helvetica', 'bold');
+        doc.text(reportData.metadata.title, 20, yPosition);
+        yPosition += 15;
+
+        // Metadata
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Generated: ${new Date(reportData.metadata.generatedAt).toLocaleString()}`, 20, yPosition);
+        yPosition += 6;
+        doc.text(`Date Range: ${reportData.metadata.dateRange}`, 20, yPosition);
+        yPosition += 6;
+        doc.text(`Total Records: ${reportData.metadata.totalRecords}`, 20, yPosition);
+        yPosition += 15;
+
+        // Executive Summary
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Executive Summary', 20, yPosition);
+        yPosition += 10;
+
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Total Sandwiches: ${reportData.summary.totalSandwiches?.toLocaleString() || 0}`, 20, yPosition);
+        yPosition += 6;
+        doc.text(`Total Hosts: ${reportData.summary.totalHosts || 0}`, 20, yPosition);
+        yPosition += 6;
+        doc.text(`Active Projects: ${reportData.summary.activeProjects || 0}`, 20, yPosition);
+        yPosition += 15;
+
+        // Top Performers
         if (reportData.summary.topPerformers?.length > 0) {
-          csvContent += `\n# TOP PERFORMERS\n`;
-          csvContent += `Name,Count\n`;
-          reportData.summary.topPerformers.forEach((performer) => {
-            csvContent += `"${performer.name}",${performer.value}\n`;
+          doc.setFontSize(14);
+          doc.setFont('helvetica', 'bold');
+          doc.text('Top Performers', 20, yPosition);
+          yPosition += 10;
+
+          const performerTableData = reportData.summary.topPerformers.map(performer => [
+            performer.name,
+            performer.value?.toLocaleString() || '0'
+          ]);
+
+          doc.autoTable({
+            startY: yPosition,
+            head: [['Host/Group', 'Sandwiches']],
+            body: performerTableData,
+            margin: { left: 20 },
+            styles: { fontSize: 9 },
+            headStyles: { fillColor: [35, 99, 131] } // TSP brand color
           });
+
+          yPosition = doc.lastAutoTable.finalY + 15;
         }
 
+        // Detailed Data
         if (Array.isArray(reportData.data) && reportData.data.length > 0) {
-          csvContent += `\n# DETAILED DATA\n`;
+          // Check if we need a new page
+          if (yPosition > 250) {
+            doc.addPage();
+            yPosition = 20;
+          }
+
+          doc.setFontSize(14);
+          doc.setFont('helvetica', 'bold');
+          doc.text('Detailed Data', 20, yPosition);
+          yPosition += 10;
+
           const headers = Object.keys(reportData.data[0]);
-          const csvHeader = headers.join(",");
-          const csvRows = reportData.data.map((row) =>
-            headers.map((header) => `"${row[header] || ""}"`).join(","),
+          const tableData = reportData.data.slice(0, 100).map(row => // Limit to first 100 rows for PDF
+            headers.map(header => {
+              const value = row[header];
+              if (typeof value === 'number') return value.toLocaleString();
+              return String(value || '').substring(0, 50); // Truncate long text
+            })
           );
-          csvContent += csvHeader + "\n";
-          csvContent += csvRows.join("\n");
+
+          doc.autoTable({
+            startY: yPosition,
+            head: [headers.map(h => h.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()))],
+            body: tableData,
+            margin: { left: 20 },
+            styles: { fontSize: 8 },
+            headStyles: { fillColor: [35, 99, 131] },
+            columnStyles: {
+              0: { cellWidth: 'auto' }
+            }
+          });
+
+          if (reportData.data.length > 100) {
+            const finalY = doc.lastAutoTable.finalY + 10;
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'italic');
+            doc.text(`Note: Showing first 100 of ${reportData.data.length} total records`, 20, finalY);
+          }
         }
 
-        res.send(csvContent);
+        // Footer
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+          doc.setPage(i);
+          doc.setFontSize(8);
+          doc.setFont('helvetica', 'normal');
+          doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 40, doc.internal.pageSize.height - 10);
+          doc.text('The Sandwich Project - Report', 20, doc.internal.pageSize.height - 10);
+        }
+
+        const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
+        res.send(pdfBuffer);
       } else {
         res.setHeader("Content-Type", "application/json");
         res.json(reportData);
