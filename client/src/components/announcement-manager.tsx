@@ -51,11 +51,14 @@ export default function AnnouncementManager() {
 
   // Create announcement mutation
   const createAnnouncementMutation = useMutation({
-    mutationFn: (data: typeof newAnnouncement) => 
-      apiRequest("/api/announcements", {
-        method: "POST",
-        body: JSON.stringify(data)
-      }),
+    mutationFn: (data: typeof newAnnouncement) => {
+      const formattedData = {
+        ...data,
+        startDate: new Date(data.startDate).toISOString(),
+        endDate: new Date(data.endDate).toISOString()
+      };
+      return apiRequest("POST", "/api/announcements", formattedData);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/announcements"] });
       setShowCreateDialog(false);
@@ -76,11 +79,16 @@ export default function AnnouncementManager() {
 
   // Update announcement mutation
   const updateAnnouncementMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<Announcement> }) =>
-      apiRequest(`/api/announcements/${id}`, {
-        method: "PATCH",
-        body: JSON.stringify(data)
-      }),
+    mutationFn: ({ id, data }: { id: number; data: Partial<Announcement> }) => {
+      const formattedData = { ...data };
+      if (data.startDate) {
+        formattedData.startDate = new Date(data.startDate).toISOString();
+      }
+      if (data.endDate) {
+        formattedData.endDate = new Date(data.endDate).toISOString();
+      }
+      return apiRequest("PATCH", `/api/announcements/${id}`, formattedData);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/announcements"] });
       setEditingAnnouncement(null);
@@ -101,9 +109,7 @@ export default function AnnouncementManager() {
   // Delete announcement mutation
   const deleteAnnouncementMutation = useMutation({
     mutationFn: (id: number) =>
-      apiRequest(`/api/announcements/${id}`, {
-        method: "DELETE"
-      }),
+      apiRequest("DELETE", `/api/announcements/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/announcements"] });
       toast({
