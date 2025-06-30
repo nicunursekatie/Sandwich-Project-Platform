@@ -23,6 +23,7 @@ export interface ReportData {
     generatedAt: string;
     dateRange: string;
     totalRecords: number;
+    format: string;
   };
   summary: {
     totalSandwiches: number;
@@ -90,7 +91,8 @@ export class ReportGenerator {
         title: this.getReportTitle(config),
         generatedAt: new Date().toISOString(),
         dateRange: `${format(startDate, 'MMM dd, yyyy')} - ${format(endDate, 'MMM dd, yyyy')}`,
-        totalRecords: Array.isArray(data) ? data.length : Object.values(data).flat().length
+        totalRecords: Array.isArray(data) ? data.length : Object.values(data).flat().length,
+        format: config.format
       },
       summary: {
         totalSandwiches,

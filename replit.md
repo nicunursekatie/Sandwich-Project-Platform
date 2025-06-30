@@ -195,6 +195,7 @@ Preferred communication style: Simple, everyday language.
 - June 30, 2025: Fixed project creation cache invalidation issue: enhanced createProjectMutation with forced cache invalidation and refetch to ensure newly created projects appear immediately in UI, added better success messaging and console logging for debugging
 - June 30, 2025: Fixed meeting minutes file serving system: resolved "File not found on disk" error by creating new authenticated endpoint `/api/meeting-minutes/:id/file` that properly handles both absolute and relative file paths, corrected file path resolution logic to work with database-stored paths, removed flawed fallback logic that was showing same file for all meetings, verified upload system works correctly with proper file storage in temp directory before permanent placement, each meeting now displays its own unique document content
 - June 30, 2025: Cleaned up duplicate Messages navigation: removed standalone Messages item from top-level navigation in simple-nav.tsx (correct navigation file), consolidated messaging functionality under Communication section as single Messages entry pointing to /messages, eliminated navigation duplication and confusion between multiple message-related menu items
+- June 30, 2025: Fixed report generation format handling: corrected ReportGenerator to include format field in metadata, changed default report format from PDF to CSV for better Excel compatibility, reports now download as proper CSV files that open directly in spreadsheet software instead of JSON files
 
 ## Changelog
 
