@@ -941,7 +941,6 @@ export default function DriversManagement() {
                             Missing Agreement
                           </Badge>
                         )}
-
                       </div>
                     </div>
                     <Button
@@ -988,6 +987,28 @@ export default function DriversManagement() {
                         <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         <span>
                           <strong>Address:</strong> {driver.homeAddress}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {driver.routeDescription && (
+                    <div className="mt-2">
+                      <div className="flex items-start gap-2 text-sm text-slate-600">
+                        <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <span>
+                          <strong>Route:</strong> {driver.routeDescription}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {driver.hostId && hosts.length > 0 && (
+                    <div className="mt-2">
+                      <div className="flex items-start gap-2 text-sm text-slate-600">
+                        <Truck className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <span>
+                          <strong>Host:</strong>{" "}
+                          {hosts.find((h) => h.id === driver.hostId)?.name ||
+                            "Unknown"}
                         </span>
                       </div>
                     </div>
@@ -1047,7 +1068,6 @@ export default function DriversManagement() {
                             {driver.inactiveReason}
                           </Badge>
                         )}
-
                       </div>
                     </div>
                     <Button
@@ -1094,6 +1114,29 @@ export default function DriversManagement() {
                         <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         <span>
                           <strong>Address:</strong> {driver.homeAddress}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {driver.routeDescription && (
+                    <div className="mt-2">
+                      <div className="flex items-start gap-2 text-sm text-slate-600">
+                        <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <span>
+                          <strong>Route:</strong> {driver.routeDescription}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {driver.hostId && hosts.length > 0 && (
+                    <div className="mt-2">
+                      <div className="flex items-start gap-2 text-sm text-slate-600">
+                        <Truck className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <span>
+                          <strong>Host:</strong>{" "}
+                          {hosts.find((h) => h.id === driver.hostId)?.name ||
+                            "Unknown"}
                         </span>
                       </div>
                     </div>
