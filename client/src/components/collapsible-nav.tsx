@@ -54,13 +54,7 @@ export function CollapsibleNav() {
   const [location, setLocation] = useLocation();
   const { user } = useAuth();
   
-  // Debug: FORCED console logs
-  console.error('=== NAVIGATION DEBUG ===');
-  console.error('User object:', user);
-  console.error('User email:', (user as any)?.email);
-  console.error('User role:', (user as any)?.role);
-  console.error('Is committee member?', (user as any)?.role === 'committee_member');
-  console.error('=== END DEBUG ===');
+
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => 
@@ -97,10 +91,8 @@ export function CollapsibleNav() {
         { id: "analytics", label: "Analytics", icon: BarChart3, href: "/analytics", permission: PERMISSIONS.VIEW_ANALYTICS },
         { id: "reports", label: "Reports", icon: FileText, href: "/reporting-dashboard", permission: PERMISSIONS.VIEW_REPORTS },
         { id: "role-demo", label: "Role Demo", icon: Users, href: "/role-demo", permission: PERMISSIONS.VIEW_ROLE_DEMO },
-        // Only show Projects for non-committee members
-        ...((user as any)?.email !== 'katielong2316@gmail.com' ? [
-          { id: "projects", label: "Projects", icon: ListTodo, href: "/projects", permission: PERMISSIONS.VIEW_PROJECTS }
-        ] : [])
+        // Projects access based on user permissions
+        { id: "projects", label: "Projects", icon: ListTodo, href: "/projects", permission: PERMISSIONS.VIEW_PROJECTS }
       ]
     },
     { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", href: "/toolkit" },
@@ -125,10 +117,7 @@ export function CollapsibleNav() {
 
   return (
     <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
-      {/* DEBUG: Visual indicator */}
-      <div className="bg-red-500 text-white p-2 text-xs">
-        DEBUG: User: {(user as any)?.email} | Role: {(user as any)?.role} | Committee: {(user as any)?.role === 'committee_member' ? 'YES' : 'NO'}
-      </div>
+
       {/* Navigation */}
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
