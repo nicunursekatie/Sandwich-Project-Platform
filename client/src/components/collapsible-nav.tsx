@@ -129,6 +129,10 @@ export function CollapsibleNav() {
 
   return (
     <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+      {/* DEBUG: Visual indicator */}
+      <div className="bg-red-500 text-white p-2 text-xs">
+        DEBUG: User: {(user as any)?.email} | Role: {(user as any)?.role} | Committee: {(user as any)?.role === 'committee_member' ? 'YES' : 'NO'}
+      </div>
       {/* Navigation */}
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
