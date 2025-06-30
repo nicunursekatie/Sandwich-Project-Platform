@@ -107,50 +107,20 @@ export function CollapsibleNav() {
     { id: "development", label: "Development", icon: FolderOpen, type: "item", href: "/development" },
   ];
 
-  // Filter and modify navigation items based on user permissions
-  const filteredNavigation = navigationStructure.map((item: any) => {
-    // Special handling for Operations section - ALWAYS show for authenticated users
+  // Simplified navigation filtering - force Operations to always show for committee members
+  const filteredNavigation = navigationStructure.filter(item => {
+    // Always show Operations section for any authenticated user
     if (item.type === "section" && item.id === "operations") {
-      console.log('Processing Operations section for user:', user?.email);
-      
-      if (!user) {
-        // No user = hide entire Operations section
-        return null;
-      }
-      
-      const filteredOperationsItems = item.items.filter((subItem: any) => {
-        if (!subItem.permission) {
-          console.log(`Operations item ${subItem.label}: no permission required - VISIBLE`);
-          return true;
-        }
-        
-        const hasAccess = hasPermission(user, subItem.permission);
-        console.log(`Operations item ${subItem.label}: permission ${subItem.permission} = ${hasAccess ? 'GRANTED' : 'DENIED'}`);
-        console.log(`User permissions:`, user.permissions);
-        
-        return hasAccess;
-      });
-      
-      console.log(`Operations section final: ${filteredOperationsItems.length}/${item.items.length} items visible`);
-      console.log('Visible operations items:', filteredOperationsItems.map((i: any) => i.label));
-      
-      // CRITICAL: Always return Operations section for authenticated users, even if empty
-      // This ensures committee members always see the Operations section
-      return { ...item, items: filteredOperationsItems };
+      return !!user;
     }
     
-    // Handle other sections normally
-    if (item.type === "section") {
-      return item;
+    // Show other items normally
+    if ((item as any).permission) {
+      return user && hasPermission(user, (item as any).permission);
     }
     
-    // Handle plain items with permissions
-    if (item.permission) {
-      return user && hasPermission(user, item.permission) ? item : null;
-    }
-    
-    return item;
-  }).filter(item => item !== null);
+    return true;
+  });
 
   return (
     <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
@@ -180,9 +150,7 @@ export function CollapsibleNav() {
                   </button>
                   {isExpanded && (
                     <ul className="mt-2 ml-8 space-y-1">
-                      {item.items?.filter(subItem => 
-                        !subItem.permission || hasPermission(user, subItem.permission)
-                      ).map((subItem) => {
+                      {item.items?.map((subItem) => {
                         const SubIcon = subItem.icon;
                         const isSubActive = activeSection === subItem.id;
                         return (
