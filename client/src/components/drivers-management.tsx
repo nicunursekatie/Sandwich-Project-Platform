@@ -5,11 +5,41 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Car, Plus, Send, Upload, Phone, Mail, Edit2, MapPin, CheckCircle, XCircle, FileCheck, AlertTriangle, Download, Truck, Clock, Filter, X } from "lucide-react";
+import {
+  Car,
+  Plus,
+  Send,
+  Upload,
+  Phone,
+  Mail,
+  Edit2,
+  MapPin,
+  CheckCircle,
+  XCircle,
+  FileCheck,
+  AlertTriangle,
+  Download,
+  Truck,
+  Clock,
+  Filter,
+  X,
+} from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
@@ -20,7 +50,7 @@ interface Driver {
   phone: string;
   email: string;
   address?: string;
-  zone: string; // Keep for backward compatibility 
+  zone: string; // Keep for backward compatibility
   routeDescription?: string; // New field for route descriptions like "SS to Dunwoody"
   hostLocation?: string; // New field to connect to specific host locations
   hostId?: number;
@@ -49,19 +79,19 @@ export default function DriversManagement() {
   const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
   const canExport = hasPermission(user, PERMISSIONS.EXPORT_DATA);
   const queryClient = useQueryClient();
-  
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAgreementModalOpen, setIsAgreementModalOpen] = useState(false);
   const [isSubmissionModalOpen, setIsSubmissionModalOpen] = useState(false);
   const [editingDriver, setEditingDriver] = useState<Driver | null>(null);
-  
+
   // Filter states
   const [filters, setFilters] = useState({
     vanDriversOnly: false,
     missingAgreementsOnly: false,
-    selectedZone: 'all'
+    selectedZone: "all",
   });
-  
+
   const [newDriver, setNewDriver] = useState({
     name: "",
     phone: "",
@@ -72,7 +102,7 @@ export default function DriversManagement() {
     zone: "",
     routeDescription: "" as string | undefined,
     hostLocation: "" as string | undefined,
-    hostId: undefined as number | undefined
+    hostId: undefined as number | undefined,
   });
 
   const [volunteerForm, setVolunteerForm] = useState({
@@ -83,7 +113,7 @@ export default function DriversManagement() {
     vehicleInfo: "",
     emergencyContact: "",
     emergencyPhone: "",
-    agreementAccepted: false
+    agreementAccepted: false,
   });
 
   const [agreementFile, setAgreementFile] = useState<File | null>(null);
@@ -100,7 +130,8 @@ export default function DriversManagement() {
 
   // Add driver mutation
   const addDriverMutation = useMutation({
-    mutationFn: (driver: typeof newDriver) => apiRequest("POST", "/api/drivers", driver),
+    mutationFn: (driver: typeof newDriver) =>
+      apiRequest("POST", "/api/drivers", driver),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/drivers"] });
       setNewDriver({
@@ -113,14 +144,14 @@ export default function DriversManagement() {
         zone: "",
         routeDescription: "",
         hostLocation: "",
-        hostId: undefined
+        hostId: undefined,
       });
       setIsAddModalOpen(false);
       toast({ title: "Driver added successfully" });
     },
     onError: () => {
       toast({ title: "Failed to add driver", variant: "destructive" });
-    }
+    },
   });
 
   // Update driver mutation
@@ -134,7 +165,7 @@ export default function DriversManagement() {
     },
     onError: () => {
       toast({ title: "Failed to update driver", variant: "destructive" });
-    }
+    },
   });
 
   // Upload agreement mutation
@@ -151,7 +182,7 @@ export default function DriversManagement() {
     },
     onError: () => {
       toast({ title: "Failed to upload agreement", variant: "destructive" });
-    }
+    },
   });
 
   // Submit volunteer agreement mutation
@@ -167,19 +198,25 @@ export default function DriversManagement() {
         vehicleInfo: "",
         emergencyContact: "",
         emergencyPhone: "",
-        agreementAccepted: false
+        agreementAccepted: false,
       });
       setIsSubmissionModalOpen(false);
       toast({ title: "Volunteer agreement submitted successfully" });
     },
     onError: () => {
-      toast({ title: "Failed to submit volunteer agreement", variant: "destructive" });
-    }
+      toast({
+        title: "Failed to submit volunteer agreement",
+        variant: "destructive",
+      });
+    },
   });
 
   const handleAdd = () => {
     if (!newDriver.name || !newDriver.phone || !newDriver.vehicleType) {
-      toast({ title: "Please fill in required fields", variant: "destructive" });
+      toast({
+        title: "Please fill in required fields",
+        variant: "destructive",
+      });
       return;
     }
     addDriverMutation.mutate(newDriver);
@@ -189,7 +226,7 @@ export default function DriversManagement() {
     if (!editingDriver) return;
     updateDriverMutation.mutate({
       id: editingDriver.id,
-      updates: editingDriver
+      updates: editingDriver,
     });
   };
 
@@ -206,8 +243,16 @@ export default function DriversManagement() {
   };
 
   const handleSubmitVolunteer = () => {
-    if (!volunteerForm.submittedBy || !volunteerForm.phone || !volunteerForm.email || !volunteerForm.agreementAccepted) {
-      toast({ title: "Please fill in all required fields and accept the agreement", variant: "destructive" });
+    if (
+      !volunteerForm.submittedBy ||
+      !volunteerForm.phone ||
+      !volunteerForm.email ||
+      !volunteerForm.agreementAccepted
+    ) {
+      toast({
+        title: "Please fill in all required fields and accept the agreement",
+        variant: "destructive",
+      });
       return;
     }
     submitVolunteerMutation.mutate(volunteerForm);
@@ -216,50 +261,69 @@ export default function DriversManagement() {
   const hasSignedAgreement = (notes: string) => {
     if (!notes) return false;
     const agreementText = notes.toLowerCase();
-    return agreementText.includes('agreement: yes') || 
-           agreementText.includes('agreement: signed') || 
-           agreementText.includes('agreement: true');
+    return (
+      agreementText.includes("agreement: yes") ||
+      agreementText.includes("agreement: signed") ||
+      agreementText.includes("agreement: true")
+    );
   };
 
   // Export function
   const handleExport = () => {
     if (!drivers || drivers.length === 0) return;
-    
-    const headers = ['Name', 'Phone', 'Email', 'Zone', 'Active', 'Agreement', 'Van Approved', 'Home Address', 'Availability', 'Email Sent', 'Voicemail Left', 'Inactive Reason', 'Notes'];
+
+    const headers = [
+      "Name",
+      "Phone",
+      "Email",
+      "Zone",
+      "Active",
+      "Agreement",
+      "Van Approved",
+      "Home Address",
+      "Availability",
+      "Email Sent",
+      "Voicemail Left",
+      "Inactive Reason",
+      "Notes",
+    ];
     const csvContent = [
-      headers.join(','),
-      ...drivers.map(driver => {
+      headers.join(","),
+      ...drivers.map((driver) => {
         const hasAgreement = hasSignedAgreement(driver.notes);
         return [
           `"${driver.name}"`,
-          `"${driver.phone || ''}"`,
-          `"${driver.email || ''}"`,
-          `"${driver.zone || ''}"`,
-          driver.isActive ? 'Yes' : 'No',
-          hasAgreement ? 'Yes' : 'No',
-          driver.vanApproved ? 'Yes' : 'No',
-          `"${driver.homeAddress || ''}"`,
-          `"${driver.availabilityNotes || ''}"`,
-          driver.emailAgreementSent ? 'Yes' : 'No',
-          driver.voicemailLeft ? 'Yes' : 'No',
-          `"${driver.inactiveReason || ''}"`,
-          `"${driver.notes || ''}"`
-        ].join(',');
-      })
-    ].join('\n');
+          `"${driver.phone || ""}"`,
+          `"${driver.email || ""}"`,
+          `"${driver.zone || ""}"`,
+          driver.isActive ? "Yes" : "No",
+          hasAgreement ? "Yes" : "No",
+          driver.vanApproved ? "Yes" : "No",
+          `"${driver.homeAddress || ""}"`,
+          `"${driver.availabilityNotes || ""}"`,
+          driver.emailAgreementSent ? "Yes" : "No",
+          driver.voicemailLeft ? "Yes" : "No",
+          `"${driver.inactiveReason || ""}"`,
+          `"${driver.notes || ""}"`,
+        ].join(",");
+      }),
+    ].join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
     if (link.download !== undefined) {
       const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `drivers_export_${new Date().toISOString().split('T')[0]}.csv`);
-      link.style.visibility = 'hidden';
+      link.setAttribute("href", url);
+      link.setAttribute(
+        "download",
+        `drivers_export_${new Date().toISOString().split("T")[0]}.csv`,
+      );
+      link.style.visibility = "hidden";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
-    
+
     toast({
       title: "Export Complete",
       description: `Exported ${drivers.length} drivers to CSV file`,
@@ -268,29 +332,32 @@ export default function DriversManagement() {
 
   // Apply filters
   const applyFilters = (driverList: Driver[]) => {
-    return driverList.filter(driver => {
+    return driverList.filter((driver) => {
       // Van drivers filter
       if (filters.vanDriversOnly && !driver.vanApproved) {
         return false;
       }
-      
+
       // Missing agreements filter
       if (filters.missingAgreementsOnly && hasSignedAgreement(driver.notes)) {
         return false;
       }
-      
+
       // Zone filter
-      if (filters.selectedZone !== 'all' && driver.zone !== filters.selectedZone) {
+      if (
+        filters.selectedZone !== "all" &&
+        driver.zone !== filters.selectedZone
+      ) {
         return false;
       }
-      
+
       return true;
     });
   };
 
   // Get unique zones for filter dropdown
   const zoneSet: string[] = [];
-  drivers.forEach(driver => {
+  drivers.forEach((driver) => {
     if (driver.zone && !zoneSet.includes(driver.zone)) {
       zoneSet.push(driver.zone);
     }
@@ -298,9 +365,13 @@ export default function DriversManagement() {
   const availableZones = zoneSet.sort();
 
   // Separate and sort drivers, then apply filters
-  const allActiveDrivers = drivers.filter(driver => driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
-  const allInactiveDrivers = drivers.filter(driver => !driver.isActive).sort((a, b) => a.name.localeCompare(b.name));
-  
+  const allActiveDrivers = drivers
+    .filter((driver) => driver.isActive)
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const allInactiveDrivers = drivers
+    .filter((driver) => !driver.isActive)
+    .sort((a, b) => a.name.localeCompare(b.name));
+
   const activeDrivers = applyFilters(allActiveDrivers);
   const inactiveDrivers = applyFilters(allInactiveDrivers);
 
@@ -309,14 +380,15 @@ export default function DriversManagement() {
     setFilters({
       vanDriversOnly: false,
       missingAgreementsOnly: false,
-      selectedZone: 'all'
+      selectedZone: "all",
     });
   };
 
   // Check if any filters are active
-  const hasActiveFilters = filters.vanDriversOnly || filters.missingAgreementsOnly || filters.selectedZone !== 'all';
-
-
+  const hasActiveFilters =
+    filters.vanDriversOnly ||
+    filters.missingAgreementsOnly ||
+    filters.selectedZone !== "all";
 
   if (isLoading) {
     return <div className="p-6">Loading drivers...</div>;
@@ -332,13 +404,24 @@ export default function DriversManagement() {
             Drivers Management
           </h1>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={handleExport} disabled={!canExport || !drivers || drivers.length === 0}>
+            <Button
+              variant="outline"
+              onClick={handleExport}
+              disabled={!canExport || !drivers || drivers.length === 0}
+            >
               <Download className="w-4 h-4 mr-2" />
               Export CSV
             </Button>
-            <Dialog open={isAgreementModalOpen} onOpenChange={setIsAgreementModalOpen}>
+            <Dialog
+              open={isAgreementModalOpen}
+              onOpenChange={setIsAgreementModalOpen}
+            >
               <DialogTrigger asChild>
-                <Button disabled={!canEdit} variant="outline" className="flex items-center gap-2">
+                <Button
+                  disabled={!canEdit}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
                   <Upload className="w-4 h-4" />
                   Upload Agreement
                 </Button>
@@ -354,24 +437,41 @@ export default function DriversManagement() {
                       id="agreement-file"
                       type="file"
                       accept=".pdf"
-                      onChange={(e) => setAgreementFile(e.target.files?.[0] || null)}
+                      onChange={(e) =>
+                        setAgreementFile(e.target.files?.[0] || null)
+                      }
                     />
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setIsAgreementModalOpen(false)}>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsAgreementModalOpen(false)}
+                    >
                       Cancel
                     </Button>
-                    <Button onClick={handleUploadAgreement} disabled={uploadAgreementMutation.isPending}>
-                      {uploadAgreementMutation.isPending ? "Uploading..." : "Upload"}
+                    <Button
+                      onClick={handleUploadAgreement}
+                      disabled={uploadAgreementMutation.isPending}
+                    >
+                      {uploadAgreementMutation.isPending
+                        ? "Uploading..."
+                        : "Upload"}
                     </Button>
                   </div>
                 </div>
               </DialogContent>
             </Dialog>
-            
-            <Dialog open={isSubmissionModalOpen} onOpenChange={setIsSubmissionModalOpen}>
+
+            <Dialog
+              open={isSubmissionModalOpen}
+              onOpenChange={setIsSubmissionModalOpen}
+            >
               <DialogTrigger asChild>
-                <Button disabled={!canEdit} variant="outline" className="flex items-center gap-2">
+                <Button
+                  disabled={!canEdit}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
                   <Send className="w-4 h-4" />
                   Submit Volunteer Agreement
                 </Button>
@@ -380,13 +480,24 @@ export default function DriversManagement() {
                 <DialogHeader>
                   <DialogTitle>Submit Volunteer Driver Agreement</DialogTitle>
                 </DialogHeader>
-                <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmitVolunteer(); }}>
+                <form
+                  className="space-y-4"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmitVolunteer();
+                  }}
+                >
                   <div>
                     <Label htmlFor="volunteer-name">Full Name *</Label>
                     <Input
                       id="volunteer-name"
                       value={volunteerForm.submittedBy}
-                      onChange={(e) => setVolunteerForm({ ...volunteerForm, submittedBy: e.target.value })}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          submittedBy: e.target.value,
+                        })
+                      }
                       placeholder="Enter your full name"
                       required
                     />
@@ -396,7 +507,12 @@ export default function DriversManagement() {
                     <Input
                       id="volunteer-phone"
                       value={volunteerForm.phone}
-                      onChange={(e) => setVolunteerForm({ ...volunteerForm, phone: e.target.value })}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          phone: e.target.value,
+                        })
+                      }
                       placeholder="(555) 123-4567"
                       required
                     />
@@ -407,44 +523,77 @@ export default function DriversManagement() {
                       id="volunteer-email"
                       type="email"
                       value={volunteerForm.email}
-                      onChange={(e) => setVolunteerForm({ ...volunteerForm, email: e.target.value })}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          email: e.target.value,
+                        })
+                      }
                       placeholder="email@example.com"
                       required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="volunteer-license">Driver's License Number</Label>
+                    <Label htmlFor="volunteer-license">
+                      Driver's License Number
+                    </Label>
                     <Input
                       id="volunteer-license"
                       value={volunteerForm.licenseNumber}
-                      onChange={(e) => setVolunteerForm({ ...volunteerForm, licenseNumber: e.target.value })}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          licenseNumber: e.target.value,
+                        })
+                      }
                       placeholder="License number"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="volunteer-vehicle">Vehicle Information</Label>
+                    <Label htmlFor="volunteer-vehicle">
+                      Vehicle Information
+                    </Label>
                     <Input
                       id="volunteer-vehicle"
                       value={volunteerForm.vehicleInfo}
-                      onChange={(e) => setVolunteerForm({ ...volunteerForm, vehicleInfo: e.target.value })}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          vehicleInfo: e.target.value,
+                        })
+                      }
                       placeholder="Year, Make, Model, Color"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="emergency-contact">Emergency Contact Name</Label>
+                    <Label htmlFor="emergency-contact">
+                      Emergency Contact Name
+                    </Label>
                     <Input
                       id="emergency-contact"
                       value={volunteerForm.emergencyContact}
-                      onChange={(e) => setVolunteerForm({ ...volunteerForm, emergencyContact: e.target.value })}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          emergencyContact: e.target.value,
+                        })
+                      }
                       placeholder="Emergency contact name"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="emergency-phone">Emergency Contact Phone</Label>
+                    <Label htmlFor="emergency-phone">
+                      Emergency Contact Phone
+                    </Label>
                     <Input
                       id="emergency-phone"
                       value={volunteerForm.emergencyPhone}
-                      onChange={(e) => setVolunteerForm({ ...volunteerForm, emergencyPhone: e.target.value })}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          emergencyPhone: e.target.value,
+                        })
+                      }
                       placeholder="Emergency contact phone"
                     />
                   </div>
@@ -453,25 +602,40 @@ export default function DriversManagement() {
                       type="checkbox"
                       id="agreement-accepted"
                       checked={volunteerForm.agreementAccepted}
-                      onChange={(e) => setVolunteerForm({ ...volunteerForm, agreementAccepted: e.target.checked })}
+                      onChange={(e) =>
+                        setVolunteerForm({
+                          ...volunteerForm,
+                          agreementAccepted: e.target.checked,
+                        })
+                      }
                       required
                     />
                     <Label htmlFor="agreement-accepted" className="text-sm">
-                      I have read and agree to the volunteer driver agreement terms *
+                      I have read and agree to the volunteer driver agreement
+                      terms *
                     </Label>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button type="button" variant="outline" onClick={() => setIsSubmissionModalOpen(false)}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsSubmissionModalOpen(false)}
+                    >
                       Cancel
                     </Button>
-                    <Button type="submit" disabled={submitVolunteerMutation.isPending}>
-                      {submitVolunteerMutation.isPending ? "Submitting..." : "Submit Agreement"}
+                    <Button
+                      type="submit"
+                      disabled={submitVolunteerMutation.isPending}
+                    >
+                      {submitVolunteerMutation.isPending
+                        ? "Submitting..."
+                        : "Submit Agreement"}
                     </Button>
                   </div>
                 </form>
               </DialogContent>
             </Dialog>
-            
+
             <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
               <DialogTrigger asChild>
                 <Button disabled={!canEdit} className="flex items-center gap-2">
@@ -489,7 +653,9 @@ export default function DriversManagement() {
                     <Input
                       id="name"
                       value={newDriver.name}
-                      onChange={(e) => setNewDriver({ ...newDriver, name: e.target.value })}
+                      onChange={(e) =>
+                        setNewDriver({ ...newDriver, name: e.target.value })
+                      }
                       placeholder="Enter driver name"
                     />
                   </div>
@@ -498,7 +664,9 @@ export default function DriversManagement() {
                     <Input
                       id="phone"
                       value={newDriver.phone}
-                      onChange={(e) => setNewDriver({ ...newDriver, phone: e.target.value })}
+                      onChange={(e) =>
+                        setNewDriver({ ...newDriver, phone: e.target.value })
+                      }
                       placeholder="(555) 123-4567"
                     />
                   </div>
@@ -508,13 +676,20 @@ export default function DriversManagement() {
                       id="email"
                       type="email"
                       value={newDriver.email}
-                      onChange={(e) => setNewDriver({ ...newDriver, email: e.target.value })}
+                      onChange={(e) =>
+                        setNewDriver({ ...newDriver, email: e.target.value })
+                      }
                       placeholder="email@example.com"
                     />
                   </div>
                   <div>
                     <Label htmlFor="vehicle-type">Vehicle Type *</Label>
-                    <Select value={newDriver.vehicleType} onValueChange={(value) => setNewDriver({ ...newDriver, vehicleType: value })}>
+                    <Select
+                      value={newDriver.vehicleType}
+                      onValueChange={(value) =>
+                        setNewDriver({ ...newDriver, vehicleType: value })
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select vehicle type" />
                       </SelectTrigger>
@@ -532,26 +707,44 @@ export default function DriversManagement() {
                     <Input
                       id="license"
                       value={newDriver.licenseNumber}
-                      onChange={(e) => setNewDriver({ ...newDriver, licenseNumber: e.target.value })}
+                      onChange={(e) =>
+                        setNewDriver({
+                          ...newDriver,
+                          licenseNumber: e.target.value,
+                        })
+                      }
                       placeholder="License number"
                     />
                   </div>
                   <div>
                     <Label htmlFor="host">Host Location</Label>
-                    <Select 
-                      value={newDriver.hostId ? newDriver.hostId.toString() : "none"} 
-                      onValueChange={(value) => setNewDriver({ ...newDriver, hostId: value === "none" ? undefined : parseInt(value) })}
+                    <Select
+                      value={
+                        newDriver.hostId ? newDriver.hostId.toString() : "none"
+                      }
+                      onValueChange={(value) =>
+                        setNewDriver({
+                          ...newDriver,
+                          hostId:
+                            value === "none" ? undefined : parseInt(value),
+                        })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a host location" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="none">No host assigned</SelectItem>
-                        {hosts.filter(host => host.status === 'active').map((host) => (
-                          <SelectItem key={host.id} value={host.id.toString()}>
-                            {host.name}
-                          </SelectItem>
-                        ))}
+                        {hosts
+                          .filter((host) => host.status === "active")
+                          .map((host) => (
+                            <SelectItem
+                              key={host.id}
+                              value={host.id.toString()}
+                            >
+                              {host.name}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -560,20 +753,35 @@ export default function DriversManagement() {
                     <Select
                       value={newDriver.hostLocation || "none"}
                       onValueChange={(value) =>
-                        setNewDriver({ ...newDriver, hostLocation: value === "none" ? undefined : value })
+                        setNewDriver({
+                          ...newDriver,
+                          hostLocation: value === "none" ? undefined : value,
+                        })
                       }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a host location" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No host location assigned</SelectItem>
+                        <SelectItem value="">
+                          No host location assigned
+                        </SelectItem>
                         <SelectItem value="Athens">Athens</SelectItem>
-                        <SelectItem value="Dunwoody/PTC">Dunwoody/PTC</SelectItem>
-                        <SelectItem value="East Cobb/Roswell">East Cobb/Roswell</SelectItem>
-                        <SelectItem value="Intown/Druid Hills">Intown/Druid Hills</SelectItem>
-                        <SelectItem value="Sandy Springs">Sandy Springs</SelectItem>
-                        <SelectItem value="Flowery Branch">Flowery Branch</SelectItem>
+                        <SelectItem value="Dunwoody/PTC">
+                          Dunwoody/PTC
+                        </SelectItem>
+                        <SelectItem value="East Cobb/Roswell">
+                          East Cobb/Roswell
+                        </SelectItem>
+                        <SelectItem value="Intown/Druid Hills">
+                          Intown/Druid Hills
+                        </SelectItem>
+                        <SelectItem value="Sandy Springs">
+                          Sandy Springs
+                        </SelectItem>
+                        <SelectItem value="Flowery Branch">
+                          Flowery Branch
+                        </SelectItem>
                         <SelectItem value="Alpharetta">Alpharetta</SelectItem>
                       </SelectContent>
                     </Select>
@@ -583,15 +791,26 @@ export default function DriversManagement() {
                     <Input
                       id="route-description"
                       value={newDriver.routeDescription || ""}
-                      onChange={(e) => setNewDriver({ ...newDriver, routeDescription: e.target.value })}
+                      onChange={(e) =>
+                        setNewDriver({
+                          ...newDriver,
+                          routeDescription: e.target.value,
+                        })
+                      }
                       placeholder="e.g., SS to Dunwoody, East Cobb to anywhere"
                     />
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsAddModalOpen(false)}
+                    >
                       Cancel
                     </Button>
-                    <Button onClick={handleAdd} disabled={addDriverMutation.isPending}>
+                    <Button
+                      onClick={handleAdd}
+                      disabled={addDriverMutation.isPending}
+                    >
                       {addDriverMutation.isPending ? "Adding..." : "Add Driver"}
                     </Button>
                   </div>
@@ -609,42 +828,65 @@ export default function DriversManagement() {
             <Filter className="w-4 h-4 text-slate-600" />
             <span className="text-sm font-medium text-slate-700">Filters:</span>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
               id="van-drivers"
               checked={filters.vanDriversOnly}
-              onChange={(e) => setFilters(prev => ({ ...prev, vanDriversOnly: e.target.checked }))}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  vanDriversOnly: e.target.checked,
+                }))
+              }
               className="rounded border-slate-300"
             />
-            <label htmlFor="van-drivers" className="text-sm text-slate-600 cursor-pointer">
+            <label
+              htmlFor="van-drivers"
+              className="text-sm text-slate-600 cursor-pointer"
+            >
               Van Drivers Only
             </label>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
               id="missing-agreements"
               checked={filters.missingAgreementsOnly}
-              onChange={(e) => setFilters(prev => ({ ...prev, missingAgreementsOnly: e.target.checked }))}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  missingAgreementsOnly: e.target.checked,
+                }))
+              }
               className="rounded border-slate-300"
             />
-            <label htmlFor="missing-agreements" className="text-sm text-slate-600 cursor-pointer">
+            <label
+              htmlFor="missing-agreements"
+              className="text-sm text-slate-600 cursor-pointer"
+            >
               Missing Agreements Only
             </label>
           </div>
-          
+
           <div className="flex items-center gap-2">
-            <label htmlFor="zone-filter" className="text-sm text-slate-600">Zone:</label>
-            <Select value={filters.selectedZone} onValueChange={(value) => setFilters(prev => ({ ...prev, selectedZone: value }))}>
+            <label htmlFor="zone-filter" className="text-sm text-slate-600">
+              Zone:
+            </label>
+            <Select
+              value={filters.selectedZone}
+              onValueChange={(value) =>
+                setFilters((prev) => ({ ...prev, selectedZone: value }))
+              }
+            >
               <SelectTrigger className="w-40">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Zones</SelectItem>
-                {availableZones.map(zone => (
+                {availableZones.map((zone) => (
                   <SelectItem key={zone} value={zone}>
                     {zone}
                   </SelectItem>
@@ -652,7 +894,7 @@ export default function DriversManagement() {
               </SelectContent>
             </Select>
           </div>
-          
+
           {hasActiveFilters && (
             <Button
               variant="outline"
@@ -665,13 +907,15 @@ export default function DriversManagement() {
             </Button>
           )}
         </div>
-        
+
         {hasActiveFilters && (
           <div className="mt-3 text-sm text-slate-500">
-            Showing {activeDrivers.length} active and {inactiveDrivers.length} inactive drivers
-            {filters.vanDriversOnly && ' (van drivers only)'}
-            {filters.missingAgreementsOnly && ' (missing agreements only)'}
-            {filters.selectedZone !== 'all' && ` (${filters.selectedZone} zone)`}
+            Showing {activeDrivers.length} active and {inactiveDrivers.length}{" "}
+            inactive drivers
+            {filters.vanDriversOnly && " (van drivers only)"}
+            {filters.missingAgreementsOnly && " (missing agreements only)"}
+            {filters.selectedZone !== "all" &&
+              ` (${filters.selectedZone} zone)`}
           </div>
         )}
       </div>
@@ -688,7 +932,7 @@ export default function DriversManagement() {
             Inactive Drivers ({inactiveDrivers.length})
           </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="active" className="mt-6">
           <div className="grid gap-4">
             {activeDrivers.map((driver) => (
@@ -699,35 +943,50 @@ export default function DriversManagement() {
                       <CardTitle className="text-lg">{driver.name}</CardTitle>
                       <div className="flex items-center gap-2 mt-1">
                         {/* Active Status */}
-                        <Badge variant="default" className="bg-green-100 text-green-800 flex items-center gap-1">
+                        <Badge
+                          variant="default"
+                          className="bg-green-100 text-green-800 flex items-center gap-1"
+                        >
                           <CheckCircle className="w-3 h-3" />
                           Active
                         </Badge>
-                        
+
                         {/* Van Approval */}
                         {driver.vanApproved && (
-                          <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 flex items-center gap-1">
+                          <Badge
+                            variant="outline"
+                            className="bg-purple-50 text-purple-700 border-purple-200 flex items-center gap-1"
+                          >
                             <Truck className="w-3 h-3" />
                             Van Driver
                           </Badge>
                         )}
-                        
+
                         {/* Agreement Status */}
                         {hasSignedAgreement(driver.notes) ? (
-                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
+                          <Badge
+                            variant="outline"
+                            className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1"
+                          >
                             <FileCheck className="w-3 h-3" />
                             Signed Agreement
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 flex items-center gap-1">
+                          <Badge
+                            variant="outline"
+                            className="bg-orange-50 text-orange-700 border-orange-200 flex items-center gap-1"
+                          >
                             <AlertTriangle className="w-3 h-3" />
                             Missing Agreement
                           </Badge>
                         )}
-                        
+
                         {/* Host Location */}
                         {driver.hostLocation && (
-                          <Badge variant="outline" className="bg-teal-50 text-teal-700 border-teal-200 flex items-center gap-1">
+                          <Badge
+                            variant="outline"
+                            className="bg-teal-50 text-teal-700 border-teal-200 flex items-center gap-1"
+                          >
                             <MapPin className="w-3 h-3" />
                             {driver.hostLocation}
                           </Badge>
@@ -765,7 +1024,10 @@ export default function DriversManagement() {
                     <div className="mt-3 pt-3 border-t border-slate-200">
                       <div className="flex items-start gap-2 text-sm text-slate-600">
                         <Clock className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                        <span><strong>Availability:</strong> {driver.availabilityNotes}</span>
+                        <span>
+                          <strong>Availability:</strong>{" "}
+                          {driver.availabilityNotes}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -773,7 +1035,9 @@ export default function DriversManagement() {
                     <div className="mt-2">
                       <div className="flex items-start gap-2 text-sm text-slate-600">
                         <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                        <span><strong>Address:</strong> {driver.homeAddress}</span>
+                        <span>
+                          <strong>Address:</strong> {driver.homeAddress}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -782,7 +1046,7 @@ export default function DriversManagement() {
             ))}
           </div>
         </TabsContent>
-        
+
         <TabsContent value="inactive" className="mt-6">
           <div className="grid gap-4">
             {inactiveDrivers.map((driver) => (
@@ -793,37 +1057,52 @@ export default function DriversManagement() {
                       <CardTitle className="text-lg">{driver.name}</CardTitle>
                       <div className="flex items-center gap-2 mt-1">
                         {/* Inactive Status */}
-                        <Badge variant="secondary" className="bg-gray-100 text-gray-600 flex items-center gap-1">
+                        <Badge
+                          variant="secondary"
+                          className="bg-gray-100 text-gray-600 flex items-center gap-1"
+                        >
                           <XCircle className="w-3 h-3" />
                           Inactive
                         </Badge>
-                        
+
                         {/* Van Approval (for inactive drivers) */}
                         {driver.vanApproved && (
-                          <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 flex items-center gap-1">
+                          <Badge
+                            variant="outline"
+                            className="bg-purple-50 text-purple-700 border-purple-200 flex items-center gap-1"
+                          >
                             <Truck className="w-3 h-3" />
                             Van Driver
                           </Badge>
                         )}
-                        
+
                         {/* Agreement Status (for inactive drivers) */}
                         {hasSignedAgreement(driver.notes) && (
-                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
+                          <Badge
+                            variant="outline"
+                            className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1"
+                          >
                             <FileCheck className="w-3 h-3" />
                             Signed Agreement
                           </Badge>
                         )}
-                        
+
                         {/* Inactive Reason */}
                         {driver.inactiveReason && (
-                          <Badge variant="outline" className="bg-gray-50 text-gray-600 border-gray-200 flex items-center gap-1">
+                          <Badge
+                            variant="outline"
+                            className="bg-gray-50 text-gray-600 border-gray-200 flex items-center gap-1"
+                          >
                             {driver.inactiveReason}
                           </Badge>
                         )}
-                        
+
                         {/* Host Location */}
                         {driver.hostLocation && (
-                          <Badge variant="outline" className="bg-teal-50 text-teal-700 border-teal-200 flex items-center gap-1">
+                          <Badge
+                            variant="outline"
+                            className="bg-teal-50 text-teal-700 border-teal-200 flex items-center gap-1"
+                          >
                             <MapPin className="w-3 h-3" />
                             {driver.hostLocation}
                           </Badge>
@@ -861,7 +1140,10 @@ export default function DriversManagement() {
                     <div className="mt-3 pt-3 border-t border-slate-200">
                       <div className="flex items-start gap-2 text-sm text-slate-600">
                         <Clock className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                        <span><strong>Availability:</strong> {driver.availabilityNotes}</span>
+                        <span>
+                          <strong>Availability:</strong>{" "}
+                          {driver.availabilityNotes}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -869,7 +1151,9 @@ export default function DriversManagement() {
                     <div className="mt-2">
                       <div className="flex items-start gap-2 text-sm text-slate-600">
                         <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                        <span><strong>Address:</strong> {driver.homeAddress}</span>
+                        <span>
+                          <strong>Address:</strong> {driver.homeAddress}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -882,7 +1166,10 @@ export default function DriversManagement() {
 
       {/* Edit Driver Modal */}
       {editingDriver && (
-        <Dialog open={!!editingDriver} onOpenChange={() => setEditingDriver(null)}>
+        <Dialog
+          open={!!editingDriver}
+          onOpenChange={() => setEditingDriver(null)}
+        >
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Edit Driver</DialogTitle>
@@ -892,16 +1179,23 @@ export default function DriversManagement() {
                 <Label htmlFor="edit-name">Driver Name</Label>
                 <Input
                   id="edit-name"
-                  value={editingDriver.name}
-                  onChange={(e) => setEditingDriver({ ...editingDriver, name: e.target.value })}
+                  value={editingDriver.name ?? ""}
+                  onChange={(e) =>
+                    setEditingDriver({ ...editingDriver, name: e.target.value })
+                  }
                 />
               </div>
               <div>
                 <Label htmlFor="edit-phone">Phone Number</Label>
                 <Input
                   id="edit-phone"
-                  value={editingDriver.phone}
-                  onChange={(e) => setEditingDriver({ ...editingDriver, phone: e.target.value })}
+                  value={editingDriver.phone ?? ""}
+                  onChange={(e) =>
+                    setEditingDriver({
+                      ...editingDriver,
+                      phone: e.target.value,
+                    })
+                  }
                 />
               </div>
               <div>
@@ -909,14 +1203,19 @@ export default function DriversManagement() {
                 <Input
                   id="edit-email"
                   type="email"
-                  value={editingDriver.email}
-                  onChange={(e) => setEditingDriver({ ...editingDriver, email: e.target.value })}
+                  value={editingDriver.email ?? ""}
+                  onChange={(e) =>
+                    setEditingDriver({
+                      ...editingDriver,
+                      email: e.target.value,
+                    })
+                  }
                 />
               </div>
               <div>
                 <Label htmlFor="edit-availability">Availability</Label>
                 <Select
-                  value={editingDriver.availability}
+                  value={editingDriver.availability ?? ""}
                   onValueChange={(value: "available" | "busy" | "off-duty") =>
                     setEditingDriver({ ...editingDriver, availability: value })
                   }
@@ -936,39 +1235,66 @@ export default function DriversManagement() {
                 <Select
                   value={editingDriver.hostLocation || "none"}
                   onValueChange={(value) =>
-                    setEditingDriver({ ...editingDriver, hostLocation: value === "none" ? undefined : value })
+                    setEditingDriver({
+                      ...editingDriver,
+                      hostLocation: value === "none" ? undefined : value,
+                    })
                   }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select a host location" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">No host location assigned</SelectItem>
+                    <SelectItem value="none">
+                      No host location assigned
+                    </SelectItem>
                     <SelectItem value="Athens">Athens</SelectItem>
                     <SelectItem value="Dunwoody/PTC">Dunwoody/PTC</SelectItem>
-                    <SelectItem value="East Cobb/Roswell">East Cobb/Roswell</SelectItem>
-                    <SelectItem value="Intown/Druid Hills">Intown/Druid Hills</SelectItem>
+                    <SelectItem value="East Cobb/Roswell">
+                      East Cobb/Roswell
+                    </SelectItem>
+                    <SelectItem value="Intown/Druid Hills">
+                      Intown/Druid Hills
+                    </SelectItem>
                     <SelectItem value="Sandy Springs">Sandy Springs</SelectItem>
-                    <SelectItem value="Flowery Branch">Flowery Branch</SelectItem>
+                    <SelectItem value="Flowery Branch">
+                      Flowery Branch
+                    </SelectItem>
                     <SelectItem value="Alpharetta">Alpharetta</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label htmlFor="edit-route-description">Route Description</Label>
+                <Label htmlFor="edit-route-description">
+                  Route Description
+                </Label>
                 <Input
                   id="edit-route-description"
-                  value={editingDriver.routeDescription || editingDriver.zone || ""}
-                  onChange={(e) => setEditingDriver({ ...editingDriver, routeDescription: e.target.value })}
+                  value={
+                    editingDriver.routeDescription || editingDriver.zone || ""
+                  }
+                  onChange={(e) =>
+                    setEditingDriver({
+                      ...editingDriver,
+                      routeDescription: e.target.value,
+                    })
+                  }
                   placeholder="e.g., SS to Dunwoody, East Cobb to anywhere"
                 />
               </div>
               <div>
                 <Label htmlFor="edit-host">Directory Connection</Label>
                 <Select
-                  value={editingDriver.hostId ? editingDriver.hostId.toString() : "none"}
+                  value={
+                    editingDriver.hostId
+                      ? editingDriver.hostId.toString()
+                      : "none"
+                  }
                   onValueChange={(value) =>
-                    setEditingDriver({ ...editingDriver, hostId: value === "none" ? undefined : parseInt(value) })
+                    setEditingDriver({
+                      ...editingDriver,
+                      hostId: value === "none" ? undefined : parseInt(value),
+                    })
                   }
                 >
                   <SelectTrigger>
@@ -976,20 +1302,30 @@ export default function DriversManagement() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">No host assigned</SelectItem>
-                    {hosts.filter(host => host.status === 'active').map((host) => (
-                      <SelectItem key={host.id} value={host.id.toString()}>
-                        {host.name}
-                      </SelectItem>
-                    ))}
+                    {hosts
+                      .filter((host) => host.status === "active")
+                      .map((host) => (
+                        <SelectItem key={host.id} value={host.id.toString()}>
+                          {host.name}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setEditingDriver(null)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setEditingDriver(null)}
+                >
                   Cancel
                 </Button>
-                <Button onClick={handleUpdate} disabled={updateDriverMutation.isPending}>
-                  {updateDriverMutation.isPending ? "Updating..." : "Update Driver"}
+                <Button
+                  onClick={handleUpdate}
+                  disabled={updateDriverMutation.isPending}
+                >
+                  {updateDriverMutation.isPending
+                    ? "Updating..."
+                    : "Update Driver"}
                 </Button>
               </div>
             </div>
