@@ -1506,42 +1506,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         : path.join(process.cwd(), minutes.filePath);
       
       // Check if file exists
-      let actualFilePath = filePath;
       try {
         await fs.access(filePath);
       } catch (error) {
-        logger.error("Primary file access failed, trying fallback", { 
+        logger.error("File access failed", { 
           filePath, 
           storedPath: minutes.filePath,
           error: error.message 
         });
-        
-        // Fallback: check if there's any file in the meeting-minutes directory
-        try {
-          const meetingMinutesDir = path.join(process.cwd(), 'uploads', 'meeting-minutes');
-          const files = await fs.readdir(meetingMinutesDir);
-          if (files.length > 0) {
-            // Use the first (and likely only) file as fallback
-            actualFilePath = path.join(meetingMinutesDir, files[0]);
-            logger.info("Using fallback file", { 
-              originalPath: filePath,
-              fallbackPath: actualFilePath 
-            });
-          } else {
-            return res.status(404).json({ message: "No files found in meeting minutes directory" });
-          }
-        } catch (fallbackError) {
-          logger.error("Fallback file search failed", fallbackError);
-          return res.status(404).json({ message: "File not found on disk" });
-        }
+        return res.status(404).json({ message: "File not found on disk" });
       }
       
       // Get file info
-      const stats = await fs.stat(actualFilePath);
+      const stats = await fs.stat(filePath);
       
       // Detect actual file type by reading first few bytes
       const buffer = Buffer.alloc(50);
-      const fd = await fs.open(actualFilePath, 'r');
+      const fd = await fs.open(filePath, 'r');
       await fd.read(buffer, 0, 50, 0);
       await fd.close();
       
@@ -1573,7 +1554,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader('Content-Disposition', contentType === 'application/pdf' ? `inline; filename="${minutes.fileName}"` : `attachment; filename="${minutes.fileName}"`);
       
       // Stream the file
-      const fileStream = createReadStream(actualFilePath);
+      const fileStream = createReadStream(filePath);
       fileStream.pipe(res);
       
     } catch (error) {
