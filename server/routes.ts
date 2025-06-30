@@ -6,6 +6,7 @@ import session from "express-session";
 import multer from "multer";
 import { parse } from 'csv-parse/sync';
 import fs from 'fs/promises';
+import { createReadStream } from 'fs';
 import path from 'path';
 import mammoth from 'mammoth';
 import { storage } from "./storage-wrapper";
@@ -1473,7 +1474,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // File serving endpoint for meeting minutes documents
+  // File serving endpoint for meeting minutes documents by ID
+  app.get("/api/meeting-minutes/:id/file", isAuthenticated, async (req: any, res) => {
+    try {
+      const minutesId = parseInt(req.params.id);
+      if (isNaN(minutesId)) {
+        return res.status(400).json({ message: "Invalid meeting minutes ID" });
+      }
+
+      // Get all meeting minutes and find the specific one
+      const allMinutes = await storage.getAllMeetingMinutes();
+      const minutes = allMinutes.find((m: any) => m.id === minutesId);
+      if (!minutes) {
+        return res.status(404).json({ message: "Meeting minutes not found" });
+      }
+
+      if (!minutes.filePath) {
+        return res.status(404).json({ message: "No file associated with these meeting minutes" });
+      }
+
+      const filePath = path.join(process.cwd(), minutes.filePath);
+      
+      // Check if file exists
+      try {
+        await fs.access(filePath);
+      } catch {
+        return res.status(404).json({ message: "File not found on disk" });
+      }
+      
+      // Get file info
+      const stats = await fs.stat(filePath);
+      
+      // Set appropriate headers
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Length', stats.size);
+      res.setHeader('Content-Disposition', `inline; filename="${minutes.fileName}"`);
+      
+      // Stream the file
+      const fileStream = createReadStream(filePath);
+      fileStream.pipe(res);
+      
+    } catch (error) {
+      logger.error("Failed to serve meeting minutes file", error);
+      res.status(500).json({ message: "Failed to serve file" });
+    }
+  });
+
+  // File serving endpoint for meeting minutes documents by filename (legacy)
   app.get("/api/files/:filename", async (req, res) => {
     try {
       const filename = req.params.filename;
