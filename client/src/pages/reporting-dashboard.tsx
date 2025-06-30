@@ -77,10 +77,8 @@ export default function ReportingDashboard({ isEmbedded = false }: { isEmbedded?
   // Generate report mutation
   const generateReport = useMutation({
     mutationFn: async (config: ReportConfig) => {
-      return apiRequest('/api/reports/generate', {
-        method: 'POST',
-        body: JSON.stringify(config)
-      });
+      const response = await apiRequest('POST', '/api/reports/generate', config);
+      return await response.json();
     },
     onSuccess: (data) => {
       toast({
@@ -109,13 +107,11 @@ export default function ReportingDashboard({ isEmbedded = false }: { isEmbedded?
   // Schedule report mutation
   const scheduleReport = useMutation({
     mutationFn: async () => {
-      return apiRequest('/api/reports/schedule', {
-        method: 'POST',
-        body: JSON.stringify({
-          config: reportConfig,
-          schedule: scheduleConfig
-        })
+      const response = await apiRequest('POST', '/api/reports/schedule', {
+        config: reportConfig,
+        schedule: scheduleConfig
       });
+      return await response.json();
     },
     onSuccess: () => {
       toast({

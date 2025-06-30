@@ -188,6 +188,7 @@ Preferred communication style: Simple, everyday language.
 - June 30, 2025: Fixed hardcoded navigation filtering that prevented Projects access: removed email-based exclusion logic from CollapsibleNav component, manually granted VIEW_PROJECTS permission to katielong2316@gmail.com, Projects tab now appears for users with proper permissions regardless of role
 - June 30, 2025: Resolved Admin tab visibility issues: ensured all admin users have MANAGE_USERS permission through permission fix system, admin users (admin@sandwich.project, mdlouza@gmail.com, kenig.ka@gmail.com) now have complete admin interface access including user management and announcement controls
 - June 30, 2025: Completed authentication system debugging: identified and resolved auth route conflicts, verified temp-auth system functionality, confirmed admin login works with updated password "sandwich", Katie's permissions successfully updated to include VIEW_PROJECTS, all navigation tabs now display correctly based on actual user permissions from database
+- June 30, 2025: Fixed report generation system: corrected frontend API call syntax from incorrect object parameter format to proper apiRequest('POST', url, data) method, resolved "Invalid request method" error that was preventing report generation, both generate and schedule report functions now work correctly with backend API
 
 ## Changelog
 
