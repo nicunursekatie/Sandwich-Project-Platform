@@ -946,25 +946,6 @@ export default function DriversManagement() {
                           </Badge>
                         )}
 
-                        {/* Availability Status */}
-                        {driver.availability && (
-                          <Badge
-                            variant="outline"
-                            className={
-                              driver.availability === "available"
-                                ? "bg-green-50 text-green-700 border-green-200 flex items-center gap-1"
-                                : driver.availability === "busy"
-                                ? "bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1"
-                                : "bg-gray-50 text-gray-700 border-gray-200 flex items-center gap-1"
-                            }
-                          >
-                            <Clock className="w-3 h-3" />
-                            {driver.availability === "available" ? "Available" 
-                             : driver.availability === "busy" ? "Busy" 
-                             : "Off Duty"}
-                          </Badge>
-                        )}
-
                         {/* Agreement Status */}
                         {hasSignedAgreement(driver.notes) ? (
                           <Badge
@@ -1087,25 +1068,6 @@ export default function DriversManagement() {
                           >
                             <Truck className="w-3 h-3" />
                             Van Driver
-                          </Badge>
-                        )}
-
-                        {/* Availability Status (for inactive drivers) */}
-                        {driver.availability && (
-                          <Badge
-                            variant="outline"
-                            className={
-                              driver.availability === "available"
-                                ? "bg-green-50 text-green-700 border-green-200 flex items-center gap-1"
-                                : driver.availability === "busy"
-                                ? "bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1"
-                                : "bg-gray-50 text-gray-700 border-gray-200 flex items-center gap-1"
-                            }
-                          >
-                            <Clock className="w-3 h-3" />
-                            {driver.availability === "available" ? "Available" 
-                             : driver.availability === "busy" ? "Busy" 
-                             : "Off Duty"}
                           </Badge>
                         )}
 
@@ -1363,40 +1325,20 @@ export default function DriversManagement() {
                 </Select>
               </div>
 
-              {/* Availability */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="edit-availability">Availability Status</Label>
-                  <Select
-                    value={editingDriver.availability ?? "available"}
-                    onValueChange={(value: "available" | "busy" | "off-duty") =>
-                      setEditingDriver({ ...editingDriver, availability: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="available">Available</SelectItem>
-                      <SelectItem value="busy">Busy</SelectItem>
-                      <SelectItem value="off-duty">Off Duty</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="edit-availability-notes">Availability Details</Label>
-                  <Input
-                    id="edit-availability-notes"
-                    value={editingDriver.availabilityNotes ?? ""}
-                    onChange={(e) =>
-                      setEditingDriver({
-                        ...editingDriver,
-                        availabilityNotes: e.target.value,
-                      })
-                    }
-                    placeholder="e.g., M-F after 3; weekends"
-                  />
-                </div>
+              {/* Availability Details */}
+              <div>
+                <Label htmlFor="edit-availability-notes">Availability Notes</Label>
+                <Input
+                  id="edit-availability-notes"
+                  value={editingDriver.availabilityNotes ?? ""}
+                  onChange={(e) =>
+                    setEditingDriver({
+                      ...editingDriver,
+                      availabilityNotes: e.target.value,
+                    })
+                  }
+                  placeholder="e.g., M-F after 3; weekends; unavailable until June"
+                />
               </div>
 
               {/* Route and Location */}
