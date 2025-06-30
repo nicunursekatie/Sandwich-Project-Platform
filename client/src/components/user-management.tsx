@@ -7,12 +7,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { hasPermission, USER_ROLES, PERMISSIONS, getRoleDisplayName, getDefaultPermissionsForRole } from "@/lib/authUtils";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { Users, Shield, Settings } from "lucide-react";
+import { Users, Shield, Settings, Key } from "lucide-react";
 
 interface User {
   id: string;
@@ -31,6 +32,8 @@ export default function UserManagement() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [editingRole, setEditingRole] = useState<string>("");
   const [editingPermissions, setEditingPermissions] = useState<string[]>([]);
+  const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null);
+  const [newPassword, setNewPassword] = useState<string>("");
 
   // Check if current user can manage users
   if (!hasPermission(currentUser, PERMISSIONS.MANAGE_USERS)) {
@@ -93,6 +96,30 @@ export default function UserManagement() {
     },
   });
 
+  const resetPasswordMutation = useMutation({
+    mutationFn: async (data: { userEmail: string; newPassword: string }) => {
+      return apiRequest("PUT", "/api/auth/admin/reset-password", {
+        userEmail: data.userEmail,
+        newPassword: data.newPassword,
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Password Reset",
+        description: `Password has been successfully reset.`,
+      });
+      setResetPasswordUser(null);
+      setNewPassword("");
+    },
+    onError: (error) => {
+      toast({
+        title: "Reset Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
     setEditingRole(user.role);
@@ -119,6 +146,15 @@ export default function UserManagement() {
       userId: selectedUser.id,
       role: editingRole,
       permissions: editingPermissions,
+    });
+  };
+
+  const handleResetPassword = () => {
+    if (!resetPasswordUser || !newPassword) return;
+    
+    resetPasswordMutation.mutate({
+      userEmail: resetPasswordUser.email,
+      newPassword: newPassword,
     });
   };
 
@@ -276,6 +312,62 @@ export default function UserManagement() {
                               </Button>
                               <Button onClick={handleSaveChanges}>
                                 Save Changes
+                              </Button>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                      
+                      {/* Password Reset Dialog */}
+                      <Dialog open={resetPasswordUser?.id === user.id} onOpenChange={(open) => {
+                        if (!open) {
+                          setResetPasswordUser(null);
+                          setNewPassword("");
+                        }
+                      }}>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setResetPasswordUser(user)}
+                          >
+                            <Key className="h-4 w-4 mr-2" />
+                            Reset Password
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Reset Password</DialogTitle>
+                            <DialogDescription>
+                              Reset password for {user.firstName} {user.lastName} ({user.email})
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="newPassword">New Password</Label>
+                              <Input
+                                id="newPassword"
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                placeholder="Enter new password"
+                              />
+                            </div>
+                            <div className="flex justify-end gap-2">
+                              <Button 
+                                variant="outline" 
+                                onClick={() => {
+                                  setResetPasswordUser(null);
+                                  setNewPassword("");
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                              <Button 
+                                onClick={handleResetPassword}
+                                disabled={!newPassword || resetPasswordMutation.isPending}
+                              >
+                                {resetPasswordMutation.isPending ? "Resetting..." : "Reset Password"}
                               </Button>
                             </div>
                           </div>
