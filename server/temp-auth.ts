@@ -353,6 +353,23 @@ export function setupTempAuth(app: Express) {
     }
   });
 
+  // Debug endpoint to check specific user
+  app.get("/api/auth/debug-user/:email", async (req: any, res) => {
+    try {
+      const { email } = req.params;
+      const user = await storage.getUserByEmail(email);
+      res.json(user ? { 
+        email: user.email, 
+        role: user.role, 
+        permissions: user.permissions,
+        exists: true 
+      } : { exists: false });
+    } catch (error) {
+      console.error("Debug user error:", error);
+      res.status(500).json({ error: "Failed to get user" });
+    }
+  });
+
   // Fix existing users with empty permissions endpoint
   app.post("/api/auth/fix-permissions", async (req: any, res) => {
     try {
