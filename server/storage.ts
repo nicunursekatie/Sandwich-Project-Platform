@@ -155,6 +155,12 @@ export interface IStorage {
   markNotificationRead(id: number): Promise<boolean>;
   deleteNotification(id: number): Promise<boolean>;
   createCelebration(userId: string, taskId: number, message: string): Promise<Notification>;
+  
+  // Announcements
+  getAllAnnouncements(): Promise<any[]>;
+  createAnnouncement(announcement: any): Promise<any>;
+  updateAnnouncement(id: number, updates: any): Promise<any | undefined>;
+  deleteAnnouncement(id: number): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -177,6 +183,7 @@ export class MemStorage implements IStorage {
   private notifications: Map<number, Notification>;
   private committees: Map<string, Committee>;
   private committeeMemberships: Map<number, CommitteeMembership>;
+  private announcements: Map<number, any>;
   private currentIds: {
     user: number;
     project: number;
@@ -196,6 +203,7 @@ export class MemStorage implements IStorage {
     contact: number;
     notification: number;
     committeeMembership: number;
+    announcement: number;
   };
 
   constructor() {
@@ -218,6 +226,7 @@ export class MemStorage implements IStorage {
     this.notifications = new Map();
     this.committees = new Map();
     this.committeeMemberships = new Map();
+    this.announcements = new Map();
     this.currentIds = {
       user: 1,
       project: 1,
@@ -237,6 +246,7 @@ export class MemStorage implements IStorage {
       contact: 1,
       notification: 1,
       committeeMembership: 1,
+      announcement: 1,
     };
     
     // No sample data - start with clean storage
