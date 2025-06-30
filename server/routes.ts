@@ -3327,8 +3327,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       } else if (format === "pdf") {
         try {
-          // Import PDFDocument from pdfkit (already installed)
-          const PDFDocument = require('pdfkit');
+          // Import PDFDocument from pdfkit using dynamic import  
+          const PDFKit = await import('pdfkit');
+          const PDFDocument = PDFKit.default;
+          
+          // Verify PDFDocument is a constructor
+          if (typeof PDFDocument !== 'function') {
+            throw new Error('PDFDocument is not a constructor');
+          }
+          
           const doc = new PDFDocument();
           
           // Set response headers for PDF
