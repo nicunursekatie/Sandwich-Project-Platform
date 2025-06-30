@@ -332,6 +332,27 @@ export function setupTempAuth(app: Express) {
     }
   });
 
+  // Debug endpoint to check user permissions
+  app.get("/api/debug/user/:email", async (req: any, res) => {
+    try {
+      const email = req.params.email;
+      const user = await storage.getUserByEmail(email);
+      if (user) {
+        res.json({
+          email: user.email,
+          role: user.role,
+          permissions: user.permissions,
+          isActive: user.isActive
+        });
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    } catch (error) {
+      console.error("Debug user error:", error);
+      res.status(500).json({ error: "Failed to get user" });
+    }
+  });
+
   // Fix existing users with empty permissions endpoint
   app.post("/api/auth/fix-permissions", async (req: any, res) => {
     try {
@@ -341,7 +362,18 @@ export function setupTempAuth(app: Express) {
       const allUsers = await storage.getAllUsers();
       
       for (const user of allUsers) {
-        const correctPermissions = getDefaultPermissionsForRole(user.role);
+        let correctPermissions = getDefaultPermissionsForRole(user.role);
+        
+        // Special case: Give Katie projects access if requested by admin
+        if (user.email === "katielong2316@gmail.com") {
+          if (!correctPermissions.includes("view_projects")) {
+            correctPermissions = [...correctPermissions, "view_projects"];
+            console.log("Adding VIEW_PROJECTS permission to Katie");
+          }
+          // Force update Katie regardless to ensure she gets projects access
+          console.log(`Forcing Katie's permission update. Current: [${user.permissions.join(', ')}]`);
+          console.log(`New: [${correctPermissions.join(', ')}]`);
+        }
         
         // Update user with correct permissions if they differ
         if (JSON.stringify(user.permissions) !== JSON.stringify(correctPermissions)) {
