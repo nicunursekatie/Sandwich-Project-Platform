@@ -4230,7 +4230,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     async (req: any, res) => {
       try {
         console.log("Received announcement data:", req.body);
-        const result = insertAnnouncementSchema.safeParse(req.body);
+        
+        // Convert ISO strings to Date objects for validation
+        const processedData = {
+          ...req.body,
+          startDate: new Date(req.body.startDate),
+          endDate: new Date(req.body.endDate)
+        };
+        
+        const result = insertAnnouncementSchema.safeParse(processedData);
         if (!result.success) {
           console.log("Validation errors:", result.error.errors);
           return res.status(400).json({
@@ -4255,7 +4263,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     async (req: any, res) => {
       try {
         const id = parseInt(req.params.id);
-        const updates = req.body;
+        const updates = { ...req.body };
+        
+        // Convert ISO strings to Date objects if present
+        if (updates.startDate) {
+          updates.startDate = new Date(updates.startDate);
+        }
+        if (updates.endDate) {
+          updates.endDate = new Date(updates.endDate);
+        }
 
         const announcement = await storage.updateAnnouncement(id, updates);
         if (!announcement) {
