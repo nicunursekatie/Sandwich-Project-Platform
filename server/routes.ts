@@ -215,13 +215,19 @@ const projectFilesUpload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Add session middleware
+  // Add session middleware with better configuration
   app.use(
     session({
-      secret: process.env.SESSION_SECRET || "temp-secret-key",
+      secret: process.env.SESSION_SECRET || "temp-secret-key-for-development",
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }, // 24 hours
+      cookie: { 
+        secure: false, // Should be true in production with HTTPS, false for development
+        httpOnly: true, // Prevent XSS attacks
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: 'lax' // CSRF protection
+      },
+      name: 'tsp.session' // Custom session name
     }),
   );
 
@@ -241,12 +247,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { signupRoutes } = await import("./routes/signup");
   app.use("/api", signupRoutes);
 
-  // Auth routes
+  // Debug endpoint to check session status
+  app.get("/api/debug/session", async (req: any, res) => {
+    try {
+      const sessionUser = req.session?.user;
+      const reqUser = req.user;
+      
+      res.json({
+        hasSession: !!req.session,
+        sessionId: req.sessionID,
+        sessionUser: sessionUser ? {
+          id: sessionUser.id,
+          email: sessionUser.email,
+          role: sessionUser.role,
+          isActive: sessionUser.isActive
+        } : null,
+        reqUser: reqUser ? {
+          id: reqUser.id,
+          email: reqUser.email,
+          role: reqUser.role,
+          isActive: reqUser.isActive
+        } : null,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Debug session error:", error);
+      res.status(500).json({ error: "Failed to get session info" });
+    }
+  });
+
+  // Auth routes - Fixed to work with temp auth system
   app.get("/api/auth/user", isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
+      // Get user from session (temp auth) or req.user (Replit auth)
+      const user = req.session?.user || req.user;
+      
+      if (!user) {
+        return res.status(401).json({ message: "No user in session" });
+      }
+
+      // For temp auth, user is directly in session
+      if (req.session?.user) {
+        res.json(user);
+        return;
+      }
+
+      // For Replit auth, get user from database
+      const userId = req.user.claims?.sub || req.user.id;
+      const dbUser = await storage.getUser(userId);
+      res.json(dbUser || user);
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
