@@ -495,8 +495,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         : undefined;
       const committee = req.query.committee as string;
       const recipientId = req.query.recipientId as string;
+      const groupId = req.query.group ? parseInt(req.query.group as string) : undefined;
       
-      console.log(`[DEBUG] API call received - committee: "${committee}", recipientId: "${recipientId}"`);
+      console.log(`[DEBUG] API call received - committee: "${committee}", recipientId: "${recipientId}", groupId: ${groupId}`);
 
       let messages;
       if (committee === "direct" && recipientId) {
@@ -508,6 +509,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         messages = await storage.getDirectMessages(currentUserId, recipientId);
         console.log(`[DEBUG] Direct messages found: ${messages.length} messages`);
+      } else if (groupId) {
+        // For group messages, verify user membership first
+        const currentUserId = (req as any).user?.id;
+        if (!currentUserId) {
+          return res.status(401).json({ message: "Authentication required for group messages" });
+        }
+        
+        console.log(`[DEBUG] Group messages requested - currentUserId: ${currentUserId}, groupId: ${groupId}`);
+        
+        // Verify user is member of this group
+        const membership = await db
+          .select()
+          .from(groupMemberships)
+          .where(
+            and(
+              eq(groupMemberships.groupId, groupId),
+              eq(groupMemberships.userId, currentUserId),
+              eq(groupMemberships.isActive, true)
+            )
+          )
+          .limit(1);
+        
+        if (membership.length === 0) {
+          console.log(`[DEBUG] User ${currentUserId} is not a member of group ${groupId}`);
+          return res.status(403).json({ message: "Not a member of this group" });
+        }
+        
+        console.log(`[DEBUG] User ${currentUserId} verified as member of group ${groupId}`);
+        // Get messages for this group using the committee format
+        messages = await storage.getMessagesByCommittee(`group_${groupId}`);
+        console.log(`[DEBUG] Group messages found: ${messages.length} messages`);
       } else if (committee) {
         messages = await storage.getMessagesByCommittee(committee);
       } else {
