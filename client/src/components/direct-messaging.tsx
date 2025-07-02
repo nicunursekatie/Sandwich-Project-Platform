@@ -42,11 +42,13 @@ export default function DirectMessaging() {
     queryKey: ["/api/users"],
   });
 
-  // Fetch direct messages with selected user
+  // Fetch direct messages with selected user - force fresh requests
   const { data: messages = [] } = useQuery<Message[]>({
-    queryKey: selectedUser ? [`/api/messages?committee=direct&recipientId=${selectedUser.id}`] : ["/api/messages?committee=direct&recipientId=none"],
+    queryKey: selectedUser ? [`/api/messages?committee=direct&recipientId=${selectedUser.id}&_t=${Date.now()}`] : ["/api/messages?committee=direct&recipientId=none&_t=${Date.now()}"],
     enabled: !!selectedUser,
     refetchInterval: 3000, // Refresh every 3 seconds for real-time feel
+    cacheTime: 0, // Don't cache the results
+    staleTime: 0, // Always consider data stale
   });
 
   // Send message mutation

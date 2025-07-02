@@ -476,14 +476,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Messages
-  app.get("/api/messages", async (req, res) => {
+  // Messages - disable ALL caching middleware for this endpoint
+  app.get("/api/messages", (req, res, next) => {
+    // Completely disable caching at the Express level
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache'); 
+    res.set('Expires', '0');
+    res.set('Last-Modified', new Date().toUTCString()); // Force fresh response
+    next();
+  }, async (req, res) => {
     try {
-      // Disable all caching including ETags for messages to ensure proper filtering
-      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.set('Pragma', 'no-cache');
-      res.set('Expires', '0');
-      res.removeHeader('ETag'); // Remove ETag header to prevent 304 responses
       
       console.log(`[DEBUG] FULL URL: ${req.url}`);
       console.log(`[DEBUG] QUERY OBJECT:`, req.query);
