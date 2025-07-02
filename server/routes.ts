@@ -479,6 +479,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Messages
   app.get("/api/messages", async (req, res) => {
     try {
+      console.log(`[DEBUG] FULL URL: ${req.url}`);
+      console.log(`[DEBUG] QUERY OBJECT:`, req.query);
+      
       const limit = req.query.limit
         ? parseInt(req.query.limit as string)
         : undefined;
