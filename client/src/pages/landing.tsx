@@ -97,7 +97,7 @@ export default function Landing() {
           </p>
           <div className="flex gap-4 justify-center">
             <Button onClick={handleLogin} size="lg" className="btn-tsp-primary">
-              Our Team
+              Enter Platform
             </Button>
             <Button 
               variant="outline" 
@@ -174,7 +174,7 @@ export default function Landing() {
                   variant="outline" 
                   className="mb-4"
                 >
-                  ← Back to Dashboard
+                  ← Access Full Platform
                 </Button>
               </div>
               <DocumentsBrowser />
@@ -257,18 +257,21 @@ export default function Landing() {
           </Card>
         </div>
 
-        {/* Login Section */}
+        {/* Contact Information */}
         <Card className="max-w-md mx-auto">
           <CardHeader className="text-center">
-            <CardTitle>Welcome to TSP</CardTitle>
+            <CardTitle>Get Involved</CardTitle>
             <CardDescription>
-              Sign in with your account to access the platform
+              Ready to make a difference in your community?
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex justify-center">
-            <Button onClick={handleLogin} size="lg" className="w-full btn-tsp-primary">
-              Access Platform
-            </Button>
+          <CardContent className="text-center space-y-2">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Contact us to learn about volunteer opportunities
+            </p>
+            <p className="text-sm font-medium">
+              Visit: <span className="text-blue-600">thesandwichproject.org</span>
+            </p>
           </CardContent>
         </Card>
       </div>
