@@ -4341,8 +4341,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = (req as any).user?.id;
       
-      // Get groups where user is a member
-      const groups = await db
+      // Get groups where user is a member - use INNER JOIN to ensure membership
+      const userGroups = await db
         .select({
           id: messageGroups.id,
           name: messageGroups.name,
@@ -4350,21 +4350,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
           createdBy: messageGroups.createdBy,
           isActive: messageGroups.isActive,
           createdAt: messageGroups.createdAt,
-          memberCount: sql<number>`count(${groupMemberships.userId})`,
           userRole: groupMemberships.role
         })
         .from(messageGroups)
-        .leftJoin(groupMemberships, eq(messageGroups.id, groupMemberships.groupId))
+        .innerJoin(groupMemberships, eq(messageGroups.id, groupMemberships.groupId))
         .where(
           and(
             eq(messageGroups.isActive, true),
             eq(groupMemberships.userId, userId),
             eq(groupMemberships.isActive, true)
           )
-        )
-        .groupBy(messageGroups.id, groupMemberships.role);
+        );
+
+      // Get member counts for each group separately
+      const groupsWithCounts = await Promise.all(
+        userGroups.map(async (group) => {
+          const memberCount = await db
+            .select({ count: sql<number>`count(*)` })
+            .from(groupMemberships)
+            .where(
+              and(
+                eq(groupMemberships.groupId, group.id),
+                eq(groupMemberships.isActive, true)
+              )
+            );
+          
+          return {
+            ...group,
+            memberCount: memberCount[0]?.count || 0
+          };
+        })
+      );
       
-      res.json(groups);
+      res.json(groupsWithCounts);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch message groups" });
     }
