@@ -778,4 +778,35 @@ export async function initializeTempAuth() {
   } catch (error) {
     console.log("❌ Could not setup committees:", error.message);
   }
+
+  // Setup driver user - kenig.ka@gmail.com with restricted permissions
+  try {
+    const driverEmail = "kenig.ka@gmail.com";
+    const existingDriver = await storage.getUserByEmail(driverEmail);
+    
+    if (!existingDriver) {
+      const driverId = `driver_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      await storage.createUser({
+        id: driverId,
+        email: driverEmail,
+        firstName: "Ken",
+        lastName: "Ig",
+        role: "driver",
+        permissions: getDefaultPermissionsForRole("driver"),
+        isActive: true,
+        profileImageUrl: null,
+        metadata: { password: "driver123" }
+      });
+      console.log("✅ Driver user created: kenig.ka@gmail.com / driver123");
+    } else {
+      // Update existing user to driver role with restricted permissions
+      await storage.updateUser(existingDriver.id, {
+        role: "driver",
+        permissions: getDefaultPermissionsForRole("driver")
+      });
+      console.log("✅ Updated kenig.ka@gmail.com to driver role with restricted permissions");
+    }
+  } catch (error) {
+    console.log("❌ Could not setup driver user:", error.message);
+  }
 }
