@@ -5,6 +5,7 @@ import { z } from "zod";
 import { eq, and, sql } from 'drizzle-orm';
 import express from "express";
 import session from "express-session";
+import connectPg from "connect-pg-simple";
 import multer from "multer";
 import { parse } from "csv-parse/sync";
 import fs from "fs/promises";
@@ -215,16 +216,25 @@ const projectFilesUpload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Add session middleware with better configuration
+  // Setup PostgreSQL session store for persistent sessions
+  const PgSession = connectPg(session);
+  const sessionStore = new PgSession({
+    conString: process.env.DATABASE_URL,
+    tableName: 'user_sessions', // Custom table name
+    createTableIfMissing: true, // Automatically create session table
+  });
+
+  // Add session middleware with PostgreSQL storage
   app.use(
     session({
+      store: sessionStore,
       secret: process.env.SESSION_SECRET || "temp-secret-key-for-development",
       resave: false,
       saveUninitialized: false,
       cookie: { 
         secure: false, // Should be true in production with HTTPS, false for development
         httpOnly: true, // Prevent XSS attacks
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days for better persistence
         sameSite: 'lax' // CSRF protection
       },
       name: 'tsp.session' // Custom session name
@@ -247,7 +257,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { signupRoutes } = await import("./routes/signup");
   app.use("/api", signupRoutes);
 
-  // Debug endpoint to check session status
+  // Comprehensive debug endpoints for authentication troubleshooting
   app.get("/api/debug/session", async (req: any, res) => {
     try {
       const sessionUser = req.session?.user;
@@ -256,6 +266,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         hasSession: !!req.session,
         sessionId: req.sessionID,
+        sessionStore: !!sessionStore,
         sessionUser: sessionUser ? {
           id: sessionUser.id,
           email: sessionUser.email,
@@ -268,11 +279,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
           role: reqUser.role,
           isActive: reqUser.isActive
         } : null,
-        timestamp: new Date().toISOString()
+        cookies: req.headers.cookie,
+        userAgent: req.headers['user-agent'],
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development'
       });
     } catch (error) {
       console.error("Debug session error:", error);
       res.status(500).json({ error: "Failed to get session info" });
+    }
+  });
+
+  // Debug endpoint to check authentication status
+  app.get("/api/debug/auth-status", async (req: any, res) => {
+    try {
+      const user = req.session?.user || req.user;
+      
+      res.json({
+        isAuthenticated: !!user,
+        sessionExists: !!req.session,
+        userInSession: !!req.session?.user,
+        userInRequest: !!req.user,
+        userId: user?.id || null,
+        userEmail: user?.email || null,
+        userRole: user?.role || null,
+        sessionId: req.sessionID,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Debug auth status error:", error);
+      res.status(500).json({ error: "Failed to get auth status" });
     }
   });
 
@@ -360,6 +396,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } catch (error) {
         console.error("Error updating user status:", error);
         res.status(500).json({ message: "Failed to update user status" });
+      }
+    },
+  );
+
+  app.delete(
+    "/api/users/:id",
+    isAuthenticated,
+    requirePermission("manage_users"),
+    async (req, res) => {
+      try {
+        const { id } = req.params;
+        await storage.deleteUser(id);
+        res.json({ success: true, message: "User deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        res.status(500).json({ message: "Failed to delete user" });
       }
     },
   );

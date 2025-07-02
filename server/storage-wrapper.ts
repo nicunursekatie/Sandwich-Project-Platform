@@ -116,6 +116,13 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async deleteUser(id: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteUser(id),
+      () => this.fallbackStorage.deleteUser(id)
+    );
+  }
+
   // Legacy user methods (for backwards compatibility)
   async getUserByUsername(username: string) {
     return this.executeWithFallback(

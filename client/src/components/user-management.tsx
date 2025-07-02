@@ -14,8 +14,9 @@ import { useToast } from "@/hooks/use-toast";
 import { useCelebration, CelebrationToast } from "@/components/celebration-toast";
 import { hasPermission, USER_ROLES, PERMISSIONS, getRoleDisplayName, getDefaultPermissionsForRole } from "@/lib/authUtils";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { Users, Shield, Settings, Key, Award, Megaphone, Trash2 } from "lucide-react";
+import { Users, Shield, Settings, Key, Award, Megaphone, Trash2, Bug } from "lucide-react";
 import AnnouncementManager from "@/components/announcement-manager";
+import AuthDebug from "@/components/auth-debug";
 
 interface User {
   id: string;
@@ -32,7 +33,7 @@ export default function UserManagement() {
   const { user: currentUser } = useAuth();
   const { toast } = useToast();
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
-  const [activeTab, setActiveTab] = useState<"users" | "announcements">("users");
+  const [activeTab, setActiveTab] = useState<"users" | "announcements" | "auth-debug">("users");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [editingRole, setEditingRole] = useState<string>("");
   const [editingPermissions, setEditingPermissions] = useState<string[]>([]);
@@ -269,11 +270,24 @@ export default function UserManagement() {
             <Megaphone className="h-4 w-4 inline mr-2" />
             Announcements
           </button>
+          <button
+            onClick={() => setActiveTab("auth-debug")}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === "auth-debug"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+            }`}
+          >
+            <Bug className="h-4 w-4 inline mr-2" />
+            Auth Debug
+          </button>
         </nav>
       </div>
 
       {activeTab === "announcements" ? (
         <AnnouncementManager />
+      ) : activeTab === "auth-debug" ? (
+        <AuthDebug />
       ) : (
         <Card>
           <CardHeader>
@@ -479,6 +493,18 @@ export default function UserManagement() {
                         })}
                       >
                         {user.isActive ? "Deactivate" : "Activate"}
+                      </Button>
+
+                      {/* Delete Button */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteUser(user)}
+                        disabled={deleteUserMutation.isPending}
+                        className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {deleteUserMutation.isPending ? "Deleting..." : "Delete"}
                       </Button>
                     </div>
                   </TableCell>
