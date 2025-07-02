@@ -71,9 +71,22 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     enabled: !!selectedGroup,
   });
 
-  // Fetch messages for selected group
+  // Fetch messages for selected group with proper API call
   const { data: groupMessages = [] } = useQuery<Message[]>({
     queryKey: ["/api/messages", "group", selectedGroup?.id],
+    queryFn: async () => {
+      if (!selectedGroup) return [];
+      const response = await fetch(`/api/messages?groupId=${selectedGroup.id}`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        if (response.status === 403) {
+          throw new Error("Not authorized to view messages in this group");
+        }
+        throw new Error("Failed to fetch group messages");
+      }
+      return response.json();
+    },
     enabled: !!selectedGroup,
   });
 

@@ -592,7 +592,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         : undefined;
       const committee = req.query.committee as string;
       const recipientId = req.query.recipientId as string;
-      const groupId = req.query.group ? parseInt(req.query.group as string) : undefined;
+      const groupId = req.query.groupId ? parseInt(req.query.groupId as string) : undefined;
       
       console.log(`[DEBUG] API call received - committee: "${committee}", recipientId: "${recipientId}", groupId: ${groupId}`);
 
@@ -610,6 +610,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // For group messages, verify user membership first
         const currentUserId = (req as any).user?.id;
         if (!currentUserId) {
+          console.log(`[DEBUG] No user authentication found for group ${groupId} request`);
           return res.status(401).json({ message: "Authentication required for group messages" });
         }
         
