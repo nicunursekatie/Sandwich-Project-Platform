@@ -88,20 +88,51 @@ export default function DirectMessaging() {
     staleTime: 0,
   });
 
-  // Send message mutation
+  // Send message mutation with optimistic updates
   const sendMessageMutation = useMutation({
     mutationFn: async (newMessage: { sender: string; content: string; committee: string; recipientId: string; userId?: string }) => {
       return await apiRequest('POST', '/api/messages', newMessage);
     },
-    onSuccess: () => {
-      // Only invalidate the current conversation query
+    onMutate: async (newMessage) => {
+      // Cancel outgoing refetches to prevent overwrites
+      await queryClient.cancelQueries({ queryKey: ["direct-messages", selectedUser?.id] });
+      
+      // Snapshot the previous value
+      const previousMessages = queryClient.getQueryData(["direct-messages", selectedUser?.id]);
+      
+      // Optimistically update to the new value - ONLY for this specific conversation
       if (selectedUser) {
-        queryClient.invalidateQueries({ queryKey: ["direct-messages", selectedUser.id] });
+        const optimisticMessage = {
+          id: Date.now(), // Temporary ID
+          sender: newMessage.sender,
+          userId: newMessage.userId || "",
+          content: newMessage.content,
+          timestamp: new Date().toISOString(),
+          committee: "direct",
+          recipientId: selectedUser.id,
+        };
+        
+        queryClient.setQueryData(
+          ["direct-messages", selectedUser.id], 
+          (old: Message[] = []) => [...old, optimisticMessage]
+        );
+      }
+      
+      return { previousMessages, selectedUserId: selectedUser?.id };
+    },
+    onError: (err, newMessage, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.selectedUserId) {
+        queryClient.setQueryData(["direct-messages", context.selectedUserId], context.previousMessages);
+      }
+      toast({ title: "Failed to send message", variant: "destructive" });
+    },
+    onSuccess: (data, variables, context) => {
+      // Invalidate and refetch only the specific conversation
+      if (context?.selectedUserId) {
+        queryClient.invalidateQueries({ queryKey: ["direct-messages", context.selectedUserId] });
       }
       setMessage("");
-    },
-    onError: () => {
-      toast({ title: "Failed to send message", variant: "destructive" });
     },
   });
 
