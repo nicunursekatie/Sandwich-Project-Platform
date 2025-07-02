@@ -13,6 +13,7 @@ import { PERMISSIONS } from "@/lib/authUtils";
 
 export default function ChatHub() {
   const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState("");
 
   // Determine available chat tabs based on user role
   const availableTabs = [];
@@ -53,6 +54,11 @@ export default function ChatHub() {
   }
 
   const defaultTab = availableTabs.length > 0 ? availableTabs[0].value : "general";
+  
+  // Initialize activeTab to defaultTab if not set
+  if (!activeTab && defaultTab) {
+    setActiveTab(defaultTab);
+  }
 
   return (
     <div className="space-y-6">
@@ -68,18 +74,17 @@ export default function ChatHub() {
           <p className="text-slate-600">You don't have access to any chat channels.</p>
         </div>
       ) : (
-        <Tabs defaultValue={defaultTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className={`grid w-full mb-6`} style={{ gridTemplateColumns: `repeat(${availableTabs.length}, 1fr)` }}>
             {availableTabs.map(tab => (
               <TabsTrigger key={tab.value} value={tab.value}>{tab.label}</TabsTrigger>
             ))}
           </TabsList>
           
-          {availableTabs.map(tab => (
-            <TabsContent key={tab.value} value={tab.value} className="space-y-6">
-              {tab.component}
-            </TabsContent>
-          ))}
+          <div className="space-y-6">
+            {/* Only render the active tab component to prevent simultaneous API calls */}
+            {availableTabs.find(tab => tab.value === activeTab)?.component}
+          </div>
         </Tabs>
       )}
     </div>

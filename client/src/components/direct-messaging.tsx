@@ -42,16 +42,14 @@ export default function DirectMessaging() {
     queryKey: ["/api/users"],
   });
 
-  // Fetch direct messages with selected user - force fresh requests
+  // Fetch direct messages with selected user - ISOLATED query key to prevent conflicts
   const { data: messages = [] } = useQuery<Message[]>({
-    queryKey: selectedUser ? ["/api/messages", "direct", selectedUser.id] : ["/api/messages", "direct", "none"],
+    queryKey: selectedUser ? ["direct-messages", user?.id, selectedUser.id] : ["direct-messages", "none"],
     queryFn: () => {
       if (!selectedUser) return Promise.resolve([]);
-      const url = `/api/messages?committee=direct&recipientId=${selectedUser.id}&_cacheBust=${Date.now()}`;
-      return fetch(url, { 
-        headers: { 'Cache-Control': 'no-cache' },
-        cache: 'no-store'
-      }).then(res => res.json());
+      const url = `/api/messages?committee=direct&recipientId=${selectedUser.id}`;
+      console.log(`[DirectMessaging] Fetching direct messages for ${selectedUser.firstName} ${selectedUser.lastName}`);
+      return apiRequest("GET", url);
     },
     enabled: !!selectedUser,
     refetchInterval: 3000,
