@@ -449,6 +449,17 @@ export class MemStorage implements IStorage {
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
+  async getDirectMessages(userId1: string, userId2: string): Promise<Message[]> {
+    return Array.from(this.messages.values())
+      .filter(message => 
+        message.committee === "direct" && (
+          (message.userId === userId1 && message.recipientId === userId2) ||
+          (message.userId === userId2 && message.recipientId === userId1)
+        )
+      )
+      .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+  }
+
   async getMessageById(id: number): Promise<Message | undefined> {
     return this.messages.get(id);
   }
