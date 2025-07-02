@@ -71,6 +71,11 @@ export class DatabaseStorage implements IStorage {
     return user || undefined;
   }
 
+  async deleteUser(id: string): Promise<boolean> {
+    const result = await db.delete(users).where(eq(users.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
   // Legacy user methods (for backwards compatibility)
   async getUserByUsername(username: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.email, username));

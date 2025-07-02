@@ -130,7 +130,9 @@ export default function UserManagement() {
       return apiRequest("DELETE", `/api/users/${userId}`);
     },
     onSuccess: () => {
+      // Force a complete refetch of the users list
       queryClient.invalidateQueries({ queryKey: ["/api/users"] });
+      queryClient.refetchQueries({ queryKey: ["/api/users"] });
       toast({
         title: "User Deleted",
         description: "User has been successfully deleted.",
