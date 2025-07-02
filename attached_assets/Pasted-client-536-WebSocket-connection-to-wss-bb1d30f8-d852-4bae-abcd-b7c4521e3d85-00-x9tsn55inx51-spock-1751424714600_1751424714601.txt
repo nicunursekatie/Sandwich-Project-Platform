@@ -1,0 +1,453 @@
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=mx4X7DFCBYtP' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=mx4X7DFCBYtP' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+/api/auth/user:1 
+            
+            
+           Failed to load resource: the server responded with a status of 401 (Unauthorized)
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+Navigated to https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/login
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+t.js:1 
+            
+            
+           POST https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/login 502 (Bad Gateway)
+apply @ t.js:1
+(anonymous) @ login:164
+app:1 The resource https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+app:1 The resource https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+Navigated to https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=3IE_YYlldxpk' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=3IE_YYlldxpk' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+message-notifications.tsx:51 Notification WebSocket connected
+app:1 The resource https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+app:1 The resource https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+committee-message-log.tsx:49 [CommitteeMessageLog] Fetching messages for committee: general
+committee-message-log.tsx:52 [CommitteeMessageLog] API Response: (2) [{…}, {…}]
+committee-message-log.tsx:53 [CommitteeMessageLog] Response type: object true
+direct-messaging.tsx:271 [DEBUG] User clicked: {id: 'user_1751250351194_sdteqpzz5', email: 'kenig.ka@gmail.com', password: null, firstName: 'Katie', lastName: 'Long', …}
+direct-messaging.tsx:52 [DirectMessaging] Cleaned up old queries for user selection: Katie Long
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Katie (user_1751250351194_sdteqpzz5) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Katie: (4) [{…}, {…}, {…}, {…}]
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 4 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 1 (from 4 total) ***
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Katie (user_1751250351194_sdteqpzz5) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Katie: (3) [{…}, {…}, {…}]
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 3 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 0 (from 3 total) ***
+direct-messaging.tsx:271 [DEBUG] User clicked: {id: 'user_1751072243271_fc8jaxl6u', email: 'mdlouza@gmail.com', password: null, firstName: 'Marcy', lastName: 'Louza', …}
+direct-messaging.tsx:52 [DirectMessaging] Cleaned up old queries for user selection: Marcy Louza
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Marcy (user_1751072243271_fc8jaxl6u) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Marcy: (3) [{…}, {…}, {…}]
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 3 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 3 (from 3 total) ***
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Marcy (user_1751072243271_fc8jaxl6u) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Marcy: (2) [{…}, {…}]
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 2 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 2 (from 2 total) ***
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Marcy (user_1751072243271_fc8jaxl6u) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Marcy: [{…}]
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 1 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 1 (from 1 total) ***
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Marcy (user_1751072243271_fc8jaxl6u) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Marcy: []
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 0 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 0 (from 0 total) ***
+direct-messaging.tsx:271 [DEBUG] User clicked: {id: 'user_1751065277733_b1b4jj0qq', email: 'test@sandwich.project', password: null, firstName: 'Test', lastName: 'User', …}
+direct-messaging.tsx:52 [DirectMessaging] Cleaned up old queries for user selection: Test User
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Test (user_1751065277733_b1b4jj0qq) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Test: []
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 0 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 0 (from 0 total) ***
+direct-messaging.tsx:271 [DEBUG] User clicked: {id: 'admin_1751065261945', email: 'admin@sandwich.project', password: null, firstName: 'Admin', lastName: 'User', …}
+direct-messaging.tsx:52 [DirectMessaging] Cleaned up old queries for user selection: Admin User
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Admin (admin_1751065261945) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Admin: []
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 0 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 0 (from 0 total) ***
+direct-messaging.tsx:271 [DEBUG] User clicked: {id: 'user_1751250351194_sdteqpzz5', email: 'kenig.ka@gmail.com', password: null, firstName: 'Katie', lastName: 'Long', …}
+direct-messaging.tsx:52 [DirectMessaging] Cleaned up old queries for user selection: Katie Long
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Katie (user_1751250351194_sdteqpzz5) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Katie: []
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 0 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 0 (from 0 total) ***
+direct-messaging.tsx:271 [DEBUG] User clicked: {id: 'user_1751072243271_fc8jaxl6u', email: 'mdlouza@gmail.com', password: null, firstName: 'Marcy', lastName: 'Louza', …}
+direct-messaging.tsx:52 [DirectMessaging] Cleaned up old queries for user selection: Marcy Louza
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Marcy (user_1751072243271_fc8jaxl6u) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Marcy: []
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 0 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 0 (from 0 total) ***
+direct-messaging.tsx:186 [DEBUG] *** SENDING MESSAGE DATA ***
+direct-messaging.tsx:187 [DEBUG] From: Katie (user_1751071509329_mrkw2z95z)
+direct-messaging.tsx:188 [DEBUG] To: Marcy (user_1751072243271_fc8jaxl6u)
+direct-messaging.tsx:189 [DEBUG] Message Data: {sender: 'Katie Long', content: 'hi!', committee: 'direct', recipientId: 'user_1751072243271_fc8jaxl6u', userId: 'user_1751071509329_mrkw2z95z'}
+direct-messaging.tsx:190 [DEBUG] *** END MESSAGE DATA ***
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Marcy (user_1751072243271_fc8jaxl6u) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Marcy: [{…}]
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 1 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 1 (from 1 total) ***
+direct-messaging.tsx:271 [DEBUG] User clicked: {id: 'user_1751250351194_sdteqpzz5', email: 'kenig.ka@gmail.com', password: null, firstName: 'Katie', lastName: 'Long', …}
+direct-messaging.tsx:52 [DirectMessaging] Cleaned up old queries for user selection: Katie Long
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Katie (user_1751250351194_sdteqpzz5) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Katie: [{…}]
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 1 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 0 (from 1 total) ***
+direct-messaging.tsx:271 [DEBUG] User clicked: {id: 'admin_1751065261945', email: 'admin@sandwich.project', password: null, firstName: 'Admin', lastName: 'User', …}
+direct-messaging.tsx:52 [DirectMessaging] Cleaned up old queries for user selection: Admin User
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Admin (admin_1751065261945) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Admin: [{…}]
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 1 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 0 (from 1 total) ***
+direct-messaging.tsx:271 [DEBUG] User clicked: {id: 'user_1751065277733_b1b4jj0qq', email: 'test@sandwich.project', password: null, firstName: 'Test', lastName: 'User', …}
+direct-messaging.tsx:52 [DirectMessaging] Cleaned up old queries for user selection: Test User
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Test (user_1751065277733_b1b4jj0qq) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Test: [{…}]
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 1 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 0 (from 1 total) ***
+direct-messaging.tsx:68 [DirectMessaging] *** FETCHING FOR CONVERSATION: Katie <-> Test (user_1751065277733_b1b4jj0qq) ***
+direct-messaging.tsx:73 [DirectMessaging] *** API RESPONSE FOR Test: [{…}]
+direct-messaging.tsx:74 [DirectMessaging] *** MESSAGE COUNT: 1 ***
+direct-messaging.tsx:83 [DirectMessaging] *** FRONTEND FILTERED COUNT: 0 (from 1 total) ***
