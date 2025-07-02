@@ -50,7 +50,10 @@ export default function DirectMessaging() {
       const url = `/api/messages?committee=direct&recipientId=${selectedUser.id}`;
       console.log(`[DirectMessaging] Fetching direct messages for ${selectedUser.firstName} ${selectedUser.lastName}`);
       const response = await apiRequest("GET", url);
-      return await response.json();
+      const data = await response.json();
+      console.log(`[DirectMessaging] API Response:`, data);
+      console.log(`[DirectMessaging] Response type:`, typeof data, Array.isArray(data));
+      return data;
     },
     enabled: !!selectedUser,
     refetchInterval: 3000,
