@@ -1,0 +1,1254 @@
+{
+  "log": {
+    "version": "1.2",
+    "creator": {
+      "name": "Firefox",
+      "version": "141.0"
+    },
+    "browser": {
+      "name": "Firefox",
+      "version": "141.0"
+    },
+    "pages": [
+      {
+        "id": "page_3",
+        "pageTimings": {
+          "onContentLoad": -13047,
+          "onLoad": -11879
+        },
+        "startedDateTime": "2025-07-01T22:10:50.524-04:00",
+        "title": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+      }
+    ],
+    "entries": [
+      {
+        "startedDateTime": "2025-07-01T22:10:50.524-04:00",
+        "request": {
+          "bodySize": 0,
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=direct&recipientId=user_1751072243271_fc8jaxl6u",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "connect.sid=s%3ACI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "If-None-Match",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Priority",
+              "value": "u=4"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "connect.sid",
+              "value": "s:CI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            }
+          ],
+          "queryString": [
+            {
+              "name": "committee",
+              "value": "direct"
+            },
+            {
+              "name": "recipientId",
+              "value": "user_1751072243271_fc8jaxl6u"
+            }
+          ],
+          "headersSize": 707
+        },
+        "response": {
+          "status": 304,
+          "statusText": "Not Modified",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Date",
+              "value": "Wed, 02 Jul 2025 02:10:50 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 480,
+            "text": "[{\"id\":16,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi\",\"timestamp\":\"2025-07-02T01:44:49.720Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"},{\"id\":17,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi!\",\"timestamp\":\"2025-07-02T01:52:45.515Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"}]"
+          },
+          "redirectURL": "",
+          "headersSize": 313,
+          "bodySize": 793
+        },
+        "cache": {
+          "afterRequest": null
+        },
+        "timings": {
+          "blocked": 0,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 149,
+          "receive": 0
+        },
+        "time": 149,
+        "_securityState": "secure",
+        "serverIPAddress": "34.82.58.13",
+        "connection": "443",
+        "pageref": "page_3"
+      },
+      {
+        "startedDateTime": "2025-07-01T22:10:53.703-04:00",
+        "request": {
+          "bodySize": 0,
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=direct&recipientId=user_1751072243271_fc8jaxl6u",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "connect.sid=s%3ACI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "If-None-Match",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Priority",
+              "value": "u=4"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "connect.sid",
+              "value": "s:CI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            }
+          ],
+          "queryString": [
+            {
+              "name": "committee",
+              "value": "direct"
+            },
+            {
+              "name": "recipientId",
+              "value": "user_1751072243271_fc8jaxl6u"
+            }
+          ],
+          "headersSize": 707
+        },
+        "response": {
+          "status": 304,
+          "statusText": "Not Modified",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Date",
+              "value": "Wed, 02 Jul 2025 02:10:53 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 480,
+            "text": "[{\"id\":16,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi\",\"timestamp\":\"2025-07-02T01:44:49.720Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"},{\"id\":17,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi!\",\"timestamp\":\"2025-07-02T01:52:45.515Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"}]"
+          },
+          "redirectURL": "",
+          "headersSize": 313,
+          "bodySize": 793
+        },
+        "cache": {
+          "afterRequest": null
+        },
+        "timings": {
+          "blocked": 0,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 146,
+          "receive": 0
+        },
+        "time": 146,
+        "_securityState": "secure",
+        "serverIPAddress": "34.82.58.13",
+        "connection": "443",
+        "pageref": "page_3"
+      },
+      {
+        "startedDateTime": "2025-07-01T22:10:54.599-04:00",
+        "request": {
+          "bodySize": 0,
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=direct&recipientId=user_1751065277733_b1b4jj0qq",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "connect.sid=s%3ACI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Priority",
+              "value": "u=0"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "connect.sid",
+              "value": "s:CI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            }
+          ],
+          "queryString": [
+            {
+              "name": "committee",
+              "value": "direct"
+            },
+            {
+              "name": "recipientId",
+              "value": "user_1751065277733_b1b4jj0qq"
+            }
+          ],
+          "headersSize": 655
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Content-Length",
+              "value": "480"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "Date",
+              "value": "Wed, 02 Jul 2025 02:10:54 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 480,
+            "text": "[{\"id\":16,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi\",\"timestamp\":\"2025-07-02T01:44:49.720Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"},{\"id\":17,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi!\",\"timestamp\":\"2025-07-02T01:52:45.515Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"}]"
+          },
+          "redirectURL": "",
+          "headersSize": 371,
+          "bodySize": 851
+        },
+        "cache": {},
+        "timings": {
+          "blocked": 0,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 145,
+          "receive": 0
+        },
+        "time": 145,
+        "_securityState": "secure",
+        "serverIPAddress": "34.82.58.13",
+        "connection": "443",
+        "pageref": "page_3"
+      },
+      {
+        "startedDateTime": "2025-07-01T22:10:55.879-04:00",
+        "request": {
+          "bodySize": 0,
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=direct&recipientId=admin_1751065261945",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "connect.sid=s%3ACI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Priority",
+              "value": "u=0"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "connect.sid",
+              "value": "s:CI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            }
+          ],
+          "queryString": [
+            {
+              "name": "committee",
+              "value": "direct"
+            },
+            {
+              "name": "recipientId",
+              "value": "admin_1751065261945"
+            }
+          ],
+          "headersSize": 646
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Content-Length",
+              "value": "480"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "Date",
+              "value": "Wed, 02 Jul 2025 02:10:56 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 480,
+            "text": "[{\"id\":16,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi\",\"timestamp\":\"2025-07-02T01:44:49.720Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"},{\"id\":17,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi!\",\"timestamp\":\"2025-07-02T01:52:45.515Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"}]"
+          },
+          "redirectURL": "",
+          "headersSize": 371,
+          "bodySize": 851
+        },
+        "cache": {},
+        "timings": {
+          "blocked": -1,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 206,
+          "receive": 0
+        },
+        "time": 206,
+        "_securityState": "secure",
+        "serverIPAddress": "34.82.58.13",
+        "connection": "443",
+        "pageref": "page_3"
+      },
+      {
+        "startedDateTime": "2025-07-01T22:10:59.094-04:00",
+        "request": {
+          "bodySize": 0,
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=direct&recipientId=admin_1751065261945",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "connect.sid=s%3ACI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "If-None-Match",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Priority",
+              "value": "u=4"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "connect.sid",
+              "value": "s:CI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            }
+          ],
+          "queryString": [
+            {
+              "name": "committee",
+              "value": "direct"
+            },
+            {
+              "name": "recipientId",
+              "value": "admin_1751065261945"
+            }
+          ],
+          "headersSize": 698
+        },
+        "response": {
+          "status": 304,
+          "statusText": "Not Modified",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Date",
+              "value": "Wed, 02 Jul 2025 02:10:59 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 480,
+            "text": "[{\"id\":16,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi\",\"timestamp\":\"2025-07-02T01:44:49.720Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"},{\"id\":17,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi!\",\"timestamp\":\"2025-07-02T01:52:45.515Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"}]"
+          },
+          "redirectURL": "",
+          "headersSize": 313,
+          "bodySize": 793
+        },
+        "cache": {
+          "afterRequest": null
+        },
+        "timings": {
+          "blocked": -1,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 153,
+          "receive": 0
+        },
+        "time": 153,
+        "_securityState": "secure",
+        "serverIPAddress": "34.82.58.13",
+        "connection": "443",
+        "pageref": "page_3"
+      },
+      {
+        "startedDateTime": "2025-07-01T22:11:02.257-04:00",
+        "request": {
+          "bodySize": 0,
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=direct&recipientId=admin_1751065261945",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "connect.sid=s%3ACI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "If-None-Match",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Priority",
+              "value": "u=4"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "connect.sid",
+              "value": "s:CI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            }
+          ],
+          "queryString": [
+            {
+              "name": "committee",
+              "value": "direct"
+            },
+            {
+              "name": "recipientId",
+              "value": "admin_1751065261945"
+            }
+          ],
+          "headersSize": 698
+        },
+        "response": {
+          "status": 304,
+          "statusText": "Not Modified",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Date",
+              "value": "Wed, 02 Jul 2025 02:11:02 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 480,
+            "text": "[{\"id\":16,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi\",\"timestamp\":\"2025-07-02T01:44:49.720Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"},{\"id\":17,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi!\",\"timestamp\":\"2025-07-02T01:52:45.515Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"}]"
+          },
+          "redirectURL": "",
+          "headersSize": 313,
+          "bodySize": 793
+        },
+        "cache": {
+          "afterRequest": null
+        },
+        "timings": {
+          "blocked": -1,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 145,
+          "receive": 0
+        },
+        "time": 145,
+        "_securityState": "secure",
+        "serverIPAddress": "34.82.58.13",
+        "connection": "443",
+        "pageref": "page_3"
+      },
+      {
+        "startedDateTime": "2025-07-01T22:11:08.815-04:00",
+        "request": {
+          "bodySize": 0,
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages/unread-counts",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "connect.sid=s%3ACI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "If-None-Match",
+              "value": "W/\"63-NP8tZsPSKhEtl4nenJV7wrxvewc\""
+            },
+            {
+              "name": "Priority",
+              "value": "u=4"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "connect.sid",
+              "value": "s:CI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            }
+          ],
+          "queryString": [],
+          "headersSize": 662
+        },
+        "response": {
+          "status": 304,
+          "statusText": "Not Modified",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Date",
+              "value": "Wed, 02 Jul 2025 02:11:09 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"63-NP8tZsPSKhEtl4nenJV7wrxvewc\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 99,
+            "text": "{\"general\":0,\"committee\":0,\"hosts\":0,\"drivers\":0,\"recipients\":0,\"core_team\":0,\"direct\":0,\"total\":0}"
+          },
+          "redirectURL": "",
+          "headersSize": 312,
+          "bodySize": 411
+        },
+        "cache": {
+          "afterRequest": null
+        },
+        "timings": {
+          "blocked": 0,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 74,
+          "receive": 0
+        },
+        "time": 74,
+        "_securityState": "secure",
+        "serverIPAddress": "34.82.58.13",
+        "connection": "443",
+        "pageref": "page_3"
+      },
+      {
+        "startedDateTime": "2025-07-01T22:11:09.046-04:00",
+        "request": {
+          "bodySize": 0,
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=direct&recipientId=admin_1751065261945",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "connect.sid=s%3ACI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "If-None-Match",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Priority",
+              "value": "u=4"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "connect.sid",
+              "value": "s:CI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            }
+          ],
+          "queryString": [
+            {
+              "name": "committee",
+              "value": "direct"
+            },
+            {
+              "name": "recipientId",
+              "value": "admin_1751065261945"
+            }
+          ],
+          "headersSize": 698
+        },
+        "response": {
+          "status": 304,
+          "statusText": "Not Modified",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Date",
+              "value": "Wed, 02 Jul 2025 02:11:09 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 480,
+            "text": "[{\"id\":16,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi\",\"timestamp\":\"2025-07-02T01:44:49.720Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"},{\"id\":17,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi!\",\"timestamp\":\"2025-07-02T01:52:45.515Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"}]"
+          },
+          "redirectURL": "",
+          "headersSize": 313,
+          "bodySize": 793
+        },
+        "cache": {
+          "afterRequest": null
+        },
+        "timings": {
+          "blocked": 0,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 336,
+          "receive": 0
+        },
+        "time": 336,
+        "_securityState": "secure",
+        "serverIPAddress": "34.82.58.13",
+        "connection": "443",
+        "pageref": "page_3"
+      },
+      {
+        "startedDateTime": "2025-07-01T22:11:15.535-04:00",
+        "request": {
+          "bodySize": 0,
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=direct&recipientId=admin_1751065261945",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "connect.sid=s%3ACI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "If-None-Match",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Priority",
+              "value": "u=4"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "connect.sid",
+              "value": "s:CI8TzeYufm3qYCBZm73IIJGaOIdcFr5O.kEyfAARDZn66jnD2VUW2NN08YQGxtlmt09fS7YvRpbo"
+            }
+          ],
+          "queryString": [
+            {
+              "name": "committee",
+              "value": "direct"
+            },
+            {
+              "name": "recipientId",
+              "value": "admin_1751065261945"
+            }
+          ],
+          "headersSize": 698
+        },
+        "response": {
+          "status": 304,
+          "statusText": "Not Modified",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Date",
+              "value": "Wed, 02 Jul 2025 02:11:15 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"1e0-hA3R2dKPhh9BySx/o+n928CiC88\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 480,
+            "text": "[{\"id\":16,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi\",\"timestamp\":\"2025-07-02T01:44:49.720Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"},{\"id\":17,\"sender\":\"Katie Long\",\"userId\":\"user_1751071509329_mrkw2z95z\",\"content\":\"hi!\",\"timestamp\":\"2025-07-02T01:52:45.515Z\",\"parentId\":null,\"threadId\":null,\"replyCount\":0,\"committee\":\"direct\",\"recipientId\":\"user_1751072243271_fc8jaxl6u\"}]"
+          },
+          "redirectURL": "",
+          "headersSize": 313,
+          "bodySize": 793
+        },
+        "cache": {
+          "afterRequest": null
+        },
+        "timings": {
+          "blocked": 0,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 299,
+          "receive": 0
+        },
+        "time": 299,
+        "_securityState": "secure",
+        "serverIPAddress": "34.82.58.13",
+        "connection": "443",
+        "pageref": "page_3"
+      }
+    ]
+  }
+}

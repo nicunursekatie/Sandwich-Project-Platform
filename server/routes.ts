@@ -479,6 +479,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Messages
   app.get("/api/messages", async (req, res) => {
     try {
+      // Disable caching for messages to ensure proper filtering
+      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.set('Pragma', 'no-cache');
+      res.set('Expires', '0');
+      
       console.log(`[DEBUG] FULL URL: ${req.url}`);
       console.log(`[DEBUG] QUERY OBJECT:`, req.query);
       
