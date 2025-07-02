@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCelebration, CelebrationToast } from "@/components/celebration-toast";
 import { hasPermission, USER_ROLES, PERMISSIONS, getRoleDisplayName, getDefaultPermissionsForRole } from "@/lib/authUtils";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { Users, Shield, Settings, Key, Award, Megaphone } from "lucide-react";
+import { Users, Shield, Settings, Key, Award, Megaphone, Trash2 } from "lucide-react";
 import AnnouncementManager from "@/components/announcement-manager";
 
 interface User {
@@ -124,6 +124,26 @@ export default function UserManagement() {
     },
   });
 
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      return apiRequest("DELETE", `/api/users/${userId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/users"] });
+      toast({
+        title: "User Deleted",
+        description: "User has been successfully deleted.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Delete Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
     setEditingRole(user.role);
@@ -177,6 +197,16 @@ export default function UserManagement() {
       title: "Congratulations Sent!",
       description: `Celebrated ${user.firstName} ${user.lastName}'s achievements.`,
     });
+  };
+
+  const handleDeleteUser = (user: User) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete ${user.firstName} ${user.lastName}? This action cannot be undone.`
+    );
+    
+    if (confirmDelete) {
+      deleteUserMutation.mutate(user.id);
+    }
   };
 
   const getRoleBadgeColor = (role: string) => {
