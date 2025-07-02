@@ -675,6 +675,10 @@ export const requirePermission = (permission: string): RequestHandler => {
       return next();
     }
     
+    if (user.role === "driver" && ["view_users", "read_collections", "general_chat", "driver_chat", "view_phone_directory", "toolkit_access"].includes(permission)) {
+      return next();
+    }
+    
     res.status(403).json({ message: "Forbidden" });
   };
 };

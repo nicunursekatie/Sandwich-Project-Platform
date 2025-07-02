@@ -46,7 +46,7 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
     // Operations section (filtered by permissions)
     ...(hasPermission(user, PERMISSIONS.VIEW_MEETINGS) ? [{ id: "meetings", label: "Meetings", icon: ClipboardList, href: "meetings", group: "ops" }] : []),
     ...(hasPermission(user, PERMISSIONS.VIEW_ANALYTICS) ? [{ id: "analytics", label: "Analytics", icon: BarChart3, href: "analytics", group: "ops" }] : []),
-    { id: "reports", label: "Reports", icon: FileText, href: "reports", group: "ops" },
+    ...(hasPermission(user, PERMISSIONS.VIEW_REPORTS) ? [{ id: "reports", label: "Reports", icon: FileText, href: "reports", group: "ops" }] : []),
     ...(hasPermission(user, PERMISSIONS.VIEW_PROJECTS) ? [{ id: "projects", label: "Projects", icon: ClipboardList, href: "projects", group: "ops" }] : []),
     
     // Communication section  
