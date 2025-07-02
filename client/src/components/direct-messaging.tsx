@@ -149,6 +149,25 @@ export default function DirectMessaging() {
     },
   });
 
+  // Edit message mutation
+  const editMessageMutation = useMutation({
+    mutationFn: async ({ messageId, content }: { messageId: number; content: string }) => {
+      return await apiRequest('PATCH', `/api/messages/${messageId}`, { content });
+    },
+    onSuccess: () => {
+      if (selectedUser) {
+        const queryKey = ["direct-messages", selectedUser.id];
+        queryClient.invalidateQueries({ queryKey });
+      }
+      setEditingMessage(null);
+      setEditedContent("");
+      toast({ title: "Message updated successfully!" });
+    },
+    onError: () => {
+      toast({ title: "Failed to edit message", variant: "destructive" });
+    },
+  });
+
   // Delete message mutation with conversation-specific cache invalidation
   const deleteMessageMutation = useMutation({
     mutationFn: async (messageId: number) => {
@@ -208,6 +227,35 @@ export default function DirectMessaging() {
       hour: '2-digit', 
       minute: '2-digit' 
     });
+  };
+
+  const handleEditMessage = (message: Message) => {
+    setEditingMessage(message);
+    setEditedContent(message.content);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingMessage || !editedContent.trim()) return;
+    
+    editMessageMutation.mutate({
+      messageId: editingMessage.id,
+      content: editedContent,
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessage(null);
+    setEditedContent("");
+  };
+
+  const handleDeleteMessage = (messageId: number) => {
+    if (confirm("Are you sure you want to delete this message?")) {
+      deleteMessageMutation.mutate(messageId);
+    }
+  };
+
+  const canEditMessage = (message: Message) => {
+    return message.userId === (user as any)?.id;
   };
 
   const formatDate = (timestamp: string) => {
@@ -362,25 +410,73 @@ export default function DirectMessaging() {
                                 <span className="text-xs text-slate-500">
                                   {formatTime(msg.timestamp)}
                                 </span>
-                                {/* Delete button - only show for current user's messages */}
-                                {isCurrentUser && (
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => deleteMessageMutation.mutate(msg.id)}
-                                    className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
-                                    disabled={deleteMessageMutation.isPending}
-                                  >
-                                    <Trash2 className="w-3 h-3" />
-                                  </Button>
+                                
+                                {/* Edit/Delete buttons - only show for current user's messages */}
+                                {canEditMessage(msg) && (
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0 text-slate-500 hover:text-slate-700"
+                                      >
+                                        <MoreVertical className="w-3 h-3" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align={isCurrentUser ? "end" : "start"} sideOffset={5}>
+                                      <DropdownMenuItem
+                                        onClick={() => handleEditMessage(msg)}
+                                        className="text-blue-600 hover:text-blue-700"
+                                      >
+                                        <Edit className="w-3 h-3 mr-2" />
+                                        Edit message
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem
+                                        onClick={() => handleDeleteMessage(msg.id)}
+                                        className="text-red-600 hover:text-red-700"
+                                      >
+                                        <Trash2 className="w-3 h-3 mr-2" />
+                                        Delete message
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
                                 )}
                               </div>
                               
-                              <div className={`${isCurrentUser ? 'bg-orange-50 border border-orange-200' : 'bg-slate-50 border border-slate-200'} rounded-lg p-3 inline-block max-w-xs`}>
-                                <p className="text-sm text-slate-800 whitespace-pre-wrap">
-                                  {msg.content}
-                                </p>
-                              </div>
+                              {editingMessage?.id === msg.id ? (
+                                <div className="w-full max-w-xs">
+                                  <Textarea
+                                    value={editedContent}
+                                    onChange={(e) => setEditedContent(e.target.value)}
+                                    className="mb-2 min-h-[80px] text-sm"
+                                    placeholder="Edit your message..."
+                                  />
+                                  <div className="flex gap-2 justify-end">
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={handleCancelEdit}
+                                      disabled={editMessageMutation.isPending}
+                                    >
+                                      Cancel
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      onClick={handleSaveEdit}
+                                      disabled={!editedContent.trim() || editMessageMutation.isPending}
+                                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                                    >
+                                      {editMessageMutation.isPending ? "Saving..." : "Save"}
+                                    </Button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className={`${isCurrentUser ? 'bg-orange-50 border border-orange-200' : 'bg-slate-50 border border-slate-200'} rounded-lg p-3 inline-block max-w-xs`}>
+                                  <p className="text-sm text-slate-800 whitespace-pre-wrap">
+                                    {msg.content}
+                                  </p>
+                                </div>
+                              )}
                             </div>
                           </div>
                         );
