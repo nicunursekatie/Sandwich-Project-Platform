@@ -75,6 +75,12 @@ export function getRoleDisplayName(role: string): string {
       return 'Administrator';
     case USER_ROLES.COMMITTEE_MEMBER:
       return 'Committee Member';
+    case USER_ROLES.HOST:
+      return 'Host';
+    case USER_ROLES.DRIVER:
+      return 'Driver';
+    case USER_ROLES.RECIPIENT:
+      return 'Recipient';
     case USER_ROLES.VOLUNTEER:
       return 'Volunteer';
     case USER_ROLES.VIEWER:

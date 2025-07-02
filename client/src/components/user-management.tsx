@@ -331,6 +331,9 @@ export default function UserManagement() {
                                 <SelectContent>
                                   <SelectItem value={USER_ROLES.ADMIN}>Administrator</SelectItem>
                                   <SelectItem value={USER_ROLES.COMMITTEE_MEMBER}>Committee Member</SelectItem>
+                                  <SelectItem value={USER_ROLES.HOST}>Host</SelectItem>
+                                  <SelectItem value={USER_ROLES.DRIVER}>Driver</SelectItem>
+                                  <SelectItem value={USER_ROLES.RECIPIENT}>Recipient</SelectItem>
                                   <SelectItem value={USER_ROLES.VOLUNTEER}>Volunteer</SelectItem>
                                   <SelectItem value={USER_ROLES.VIEWER}>Viewer</SelectItem>
                                 </SelectContent>
