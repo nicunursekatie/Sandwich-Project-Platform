@@ -1065,10 +1065,11 @@ export default function SandwichCollectionLog() {
                     {newGroupCollections.map((group, index) => (
                       <div key={group.id} className="flex items-center space-x-2 mt-2">
                         <Input
-                          placeholder="Group name (optional)"
+                          placeholder="Group name"
                           value={group.groupName}
                           onChange={(e) => updateNewGroupCollection(group.id, 'groupName', e.target.value)}
                           className="flex-1"
+                          required
                         />
                         <Input
                           type="number"
@@ -1671,6 +1672,7 @@ export default function SandwichCollectionLog() {
                       value={group.groupName}
                       onChange={(e) => updateEditGroupCollection(group.id, "groupName", e.target.value)}
                       className="flex-1"
+                      required
                     />
                     <Input
                       type="number"
