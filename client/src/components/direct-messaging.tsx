@@ -48,6 +48,7 @@ export default function DirectMessaging() {
     enabled: !!selectedUser,
     queryFn: () => {
       if (!selectedUser) return [];
+      console.log(`[DEBUG] Making direct message API call to: /api/messages?committee=direct&recipientId=${selectedUser.id}`);
       return fetch(`/api/messages?committee=direct&recipientId=${selectedUser.id}`).then(res => res.json());
     },
     refetchInterval: 3000, // Refresh every 3 seconds for real-time feel
@@ -163,7 +164,10 @@ export default function DirectMessaging() {
               filteredUsers.map((u) => (
                 <div
                   key={u.id}
-                  onClick={() => setSelectedUser(u)}
+                  onClick={() => {
+                    console.log(`[DEBUG] User clicked:`, u);
+                    setSelectedUser(u);
+                  }}
                   className={`flex items-center p-3 rounded-lg cursor-pointer hover:bg-slate-100 ${
                     selectedUser?.id === u.id ? 'bg-teal-50 border border-teal-200' : ''
                   }`}
