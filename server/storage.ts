@@ -327,6 +327,15 @@ export class MemStorage implements IStorage {
     return updated;
   }
 
+  async deleteUser(id: string): Promise<boolean> {
+    const numericId = Number(id);
+    if (this.users.has(numericId)) {
+      this.users.delete(numericId);
+      return true;
+    }
+    return false;
+  }
+
   // Legacy user methods (for backwards compatibility)
   async getUserByUsername(username: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(user => user.email === username);
