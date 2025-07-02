@@ -483,9 +483,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ? parseInt(req.query.limit as string)
         : undefined;
       const committee = req.query.committee as string;
+      const recipientId = req.query.recipientId as string;
 
       let messages;
-      if (committee) {
+      if (committee === "direct" && recipientId) {
+        // For direct messages, get conversations between current user and recipient
+        const currentUserId = (req as any).user?.id;
+        if (!currentUserId) {
+          return res.status(401).json({ message: "Authentication required for direct messages" });
+        }
+        messages = await storage.getDirectMessages(currentUserId, recipientId);
+      } else if (committee) {
         messages = await storage.getMessagesByCommittee(committee);
       } else {
         messages = limit
@@ -495,6 +503,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(messages);
     } catch (error) {
+      console.error("Error fetching messages:", error);
       res.status(500).json({ message: "Failed to fetch messages" });
     }
   });

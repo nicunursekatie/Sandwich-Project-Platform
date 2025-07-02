@@ -70,6 +70,7 @@ export interface IStorage {
   getAllMessages(): Promise<Message[]>;
   getRecentMessages(limit: number): Promise<Message[]>;
   getMessagesByCommittee(committee: string): Promise<Message[]>;
+  getDirectMessages(userId1: string, userId2: string): Promise<Message[]>;
   getMessageById(id: number): Promise<Message | undefined>;
   createMessage(message: InsertMessage): Promise<Message>;
   getThreadMessages(threadId: number): Promise<Message[]>;

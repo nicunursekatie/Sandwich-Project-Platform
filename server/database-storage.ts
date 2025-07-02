@@ -20,7 +20,7 @@ import {
   type Contact, type InsertContact
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, sql, and } from "drizzle-orm";
+import { eq, desc, sql, and, or } from "drizzle-orm";
 import type { IStorage } from "./storage";
 
 export class DatabaseStorage implements IStorage {
@@ -180,6 +180,20 @@ export class DatabaseStorage implements IStorage {
 
   async getMessagesByCommittee(committee: string): Promise<Message[]> {
     return await db.select().from(messages).where(eq(messages.committee, committee)).orderBy(messages.id);
+  }
+
+  async getDirectMessages(userId1: string, userId2: string): Promise<Message[]> {
+    return await db.select().from(messages)
+      .where(
+        and(
+          eq(messages.committee, "direct"),
+          or(
+            and(eq(messages.userId, userId1), eq(messages.recipientId, userId2)),
+            and(eq(messages.userId, userId2), eq(messages.recipientId, userId1))
+          )
+        )
+      )
+      .orderBy(messages.timestamp);
   }
 
   async getMessageById(id: number): Promise<Message | undefined> {
