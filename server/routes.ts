@@ -484,6 +484,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         : undefined;
       const committee = req.query.committee as string;
       const recipientId = req.query.recipientId as string;
+      
+      console.log(`[DEBUG] API call received - committee: "${committee}", recipientId: "${recipientId}"`);
 
       let messages;
       if (committee === "direct" && recipientId) {
