@@ -586,6 +586,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       console.log(`[DEBUG] FULL URL: ${req.url}`);
       console.log(`[DEBUG] QUERY OBJECT:`, req.query);
+      console.log(`[DEBUG] USER SESSION:`, (req as any).user);
       
       const limit = req.query.limit
         ? parseInt(req.query.limit as string)
