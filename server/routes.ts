@@ -489,10 +489,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (committee === "direct" && recipientId) {
         // For direct messages, get conversations between current user and recipient
         const currentUserId = (req as any).user?.id;
+        console.log(`[DEBUG] Direct messages requested - currentUserId: ${currentUserId}, recipientId: ${recipientId}`);
         if (!currentUserId) {
           return res.status(401).json({ message: "Authentication required for direct messages" });
         }
         messages = await storage.getDirectMessages(currentUserId, recipientId);
+        console.log(`[DEBUG] Direct messages found: ${messages.length} messages`);
       } else if (committee) {
         messages = await storage.getMessagesByCommittee(committee);
       } else {
