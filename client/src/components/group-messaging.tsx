@@ -157,10 +157,17 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   // Send message mutation  
   const sendMessageMutation = useMutation({
     mutationFn: async (data: { content: string; committee: string }) => {
+      const messageData = {
+        ...data,
+        sender: currentUser?.firstName && currentUser?.lastName 
+          ? `${currentUser.firstName} ${currentUser.lastName}`
+          : currentUser?.email || "Anonymous",
+        userId: currentUser?.id
+      };
       const response = await fetch("/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(messageData),
       });
       if (!response.ok) throw new Error("Failed to send message");
       return response.json();
