@@ -4,6 +4,7 @@ export function isUnauthorizedError(error: Error): boolean {
 
 export const USER_ROLES = {
   ADMIN: 'admin',
+  SUPER_ADMIN: 'super_admin',
   COMMITTEE_MEMBER: 'committee_member',
   HOST: 'host',
   DRIVER: 'driver',
@@ -61,8 +62,8 @@ export function hasRole(user: any, requiredRoles: string[]): boolean {
 export function hasPermission(user: any, permission: string): boolean {
   if (!user) return false;
   
-  // Admin role has all permissions
-  if (user.role === USER_ROLES.ADMIN) return true;
+  // Admin and super_admin roles have all permissions
+  if (user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.SUPER_ADMIN) return true;
   
   // Check specific permissions
   const permissions = Array.isArray(user.permissions) ? user.permissions : [];
@@ -73,6 +74,8 @@ export function getRoleDisplayName(role: string): string {
   switch (role) {
     case USER_ROLES.ADMIN:
       return 'Administrator';
+    case USER_ROLES.SUPER_ADMIN:
+      return 'Super Administrator';
     case USER_ROLES.COMMITTEE_MEMBER:
       return 'Committee Member';
     case USER_ROLES.HOST:
@@ -93,6 +96,7 @@ export function getRoleDisplayName(role: string): string {
 export function getDefaultPermissionsForRole(role: string): string[] {
   switch (role) {
     case USER_ROLES.ADMIN:
+    case USER_ROLES.SUPER_ADMIN:
       return Object.values(PERMISSIONS);
     
     case USER_ROLES.COMMITTEE_MEMBER:
