@@ -28,10 +28,119 @@ export const messageNotificationRoutes = {
         return res.status(401).json({ error: "User not authenticated" });
       }
 
+      const db = await getDatabase();
+      if (!db) {
+        // Fallback response when database is not available
+        return res.json({
+          general: 0,
+          committee: 0,
+          hosts: 0,
+          drivers: 0,
+          recipients: 0,
+          core_team: 0,
+          direct: 0,
+          groups: 0,
+          total: 0
+        });
+      }
+
       // Get all messages that user has access to based on their permissions
       const user = (req as any).user;
       const userPermissions = user.permissions || [];
       const userRole = user.role || 'volunteer';
+
+      // Initialize counts
+      let unreadCounts = {
+        general: 0,
+        committee: 0,
+        hosts: 0,
+        drivers: 0,
+        recipients: 0,
+        core_team: 0,
+        direct: 0,
+        groups: 0,
+        total: 0
+      };
+
+      try {
+        // Get unread counts for regular committee messages
+        const regularMessages = await db
+          .select({
+            committee: messages.committee,
+            count: sql<number>`count(*)`
+          })
+          .from(messages)
+          .leftJoin(messageReads, and(
+            eq(messageReads.messageId, messages.id),
+            eq(messageReads.userId, userId)
+          ))
+          .where(and(
+            eq(messages.committee, sql`${messages.committee}`), // Not group messages
+            sql`${messageReads.id} IS NULL` // Not read by user
+          ))
+          .groupBy(messages.committee);
+
+        // Get unread counts for group messages
+        const groupMessages = await db
+          .select({
+            count: sql<number>`count(*)`
+          })
+          .from(messages)
+          .leftJoin(messageReads, and(
+            eq(messageReads.messageId, messages.id),
+            eq(messageReads.userId, userId)
+          ))
+          .where(and(
+            sql`${messages.groupId} IS NOT NULL`, // Group messages
+            sql`${messageReads.id} IS NULL` // Not read by user
+          ));
+
+        // Get direct messages count  
+        const directMessages = await db
+          .select({
+            count: sql<number>`count(*)`
+          })
+          .from(messages)
+          .leftJoin(messageReads, and(
+            eq(messageReads.messageId, messages.id),
+            eq(messageReads.userId, userId)
+          ))
+          .where(and(
+            eq(messages.committee, 'direct'),
+            eq(messages.recipientId, userId),
+            sql`${messageReads.id} IS NULL`
+          ));
+
+        // Process regular message counts
+        for (const msg of regularMessages) {
+          const committee = msg.committee as string;
+          const count = Number(msg.count) || 0;
+          
+          if (committee in unreadCounts) {
+            (unreadCounts as any)[committee] = count;
+          }
+        }
+
+        // Add group message count
+        if (groupMessages.length > 0) {
+          unreadCounts.groups = Number(groupMessages[0].count) || 0;
+        }
+
+        // Add direct message count
+        if (directMessages.length > 0) {
+          unreadCounts.direct = Number(directMessages[0].count) || 0;
+        }
+
+        // Calculate total
+        unreadCounts.total = Object.values(unreadCounts).reduce((sum, count) => {
+          return typeof count === 'number' ? sum + count : sum;
+        }, 0) - unreadCounts.total; // Subtract total to avoid double counting
+
+      } catch (dbError) {
+        console.error('Database query error in unread counts:', dbError);
+      }
+
+      res.json(unreadCounts);
 
       // Define which committees user has access to based on permissions
       const accessibleCommittees = ['general']; // Everyone has general access

@@ -1,4 +1,5 @@
 export const USER_ROLES = {
+  SUPER_ADMIN: 'super_admin',
   ADMIN: 'admin',
   COMMITTEE_MEMBER: 'committee_member',
   HOST: 'host',
@@ -15,6 +16,9 @@ export const PERMISSIONS = {
   // Editing permissions (admin only)
   EDIT_DATA: 'edit_data',
   DELETE_DATA: 'delete_data',
+  
+  // Message moderation (super admin only)
+  MODERATE_MESSAGES: 'moderate_messages',
   
   // Chat access
   GENERAL_CHAT: 'general_chat',
@@ -47,8 +51,11 @@ export const PERMISSIONS = {
 
 export function getDefaultPermissionsForRole(role: string): string[] {
   switch (role) {
-    case USER_ROLES.ADMIN:
+    case USER_ROLES.SUPER_ADMIN:
       return Object.values(PERMISSIONS);
+      
+    case USER_ROLES.ADMIN:
+      return Object.values(PERMISSIONS).filter(p => p !== PERMISSIONS.MODERATE_MESSAGES);
     
     case USER_ROLES.COMMITTEE_MEMBER:
       return [

@@ -22,6 +22,7 @@ interface UnreadCounts {
   recipients: number;
   core_team: number;
   direct: number;
+  groups: number;
   total: number;
 }
 
@@ -118,9 +119,21 @@ export default function MessageNotifications() {
       drivers: 'Driver Chat',
       recipients: 'Recipient Chat',
       core_team: 'Core Team',
-      direct: 'Direct Messages'
+      direct: 'Direct Messages',
+      groups: 'Group Messages'
     };
     return names[committee as keyof typeof names] || committee;
+  };
+
+  const navigateToChat = (chatType: string) => {
+    // Navigate to the appropriate chat page
+    if (chatType === 'direct') {
+      window.location.href = '/messages';
+    } else if (chatType === 'groups') {
+      window.location.href = '/messages?tab=groups';
+    } else {
+      window.location.href = `/messages?tab=${chatType}`;
+    }
   };
 
   return (
@@ -168,10 +181,7 @@ export default function MessageNotifications() {
               <DropdownMenuItem 
                 key={committee}
                 className="flex items-center justify-between cursor-pointer"
-                onClick={() => {
-                  // Navigate to specific chat
-                  window.location.href = `/dashboard?tab=messages&chat=${committee}`;
-                }}
+                onClick={() => navigateToChat(committee)}
               >
                 <div className="flex items-center gap-2">
                   <MessageCircle className="h-4 w-4" />

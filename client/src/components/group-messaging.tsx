@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { MessageCircle, Plus, Users, Send, Crown, Trash2, UserPlus, Edit, MoreVertical } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { MessageGroup, InsertMessageGroup, GroupMembership, Message, User } from "@shared/schema";
+import { PERMISSIONS } from "@shared/auth-utils";
 
 interface GroupWithMembers extends MessageGroup {
   memberCount: number;
@@ -269,7 +270,17 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   };
 
   const canEditMessage = (message: Message) => {
-    return message.userId === currentUser?.id;
+    // Message owner can always edit their own messages
+    if (message.userId === currentUser?.id) {
+      return true;
+    }
+    
+    // Super admins can moderate any message
+    if (currentUser?.permissions?.includes(PERMISSIONS.MODERATE_MESSAGES)) {
+      return true;
+    }
+    
+    return false;
   };
 
   const formatDisplayName = (user: any) => {
