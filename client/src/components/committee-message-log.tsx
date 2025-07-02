@@ -47,7 +47,8 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
     queryKey: [`committee-messages`, committee],
     queryFn: async () => {
       console.log(`[CommitteeMessageLog] Fetching messages for committee: ${committee}`);
-      return apiRequest("GET", `/api/messages?committee=${committee}`);
+      const response = await apiRequest("GET", `/api/messages?committee=${committee}`);
+      return await response.json();
     },
     refetchInterval: 3000, // Refetch every 3 seconds
     staleTime: 0, // Always consider data stale for real-time messaging
