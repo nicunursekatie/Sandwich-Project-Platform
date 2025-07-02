@@ -37,6 +37,22 @@ export default function DirectMessaging() {
   const { user } = useAuth();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Clean up previous queries when user changes selection
+  useEffect(() => {
+    if (selectedUser) {
+      // Cancel and remove all other direct message queries to prevent pollution
+      queryClient.cancelQueries({ queryKey: ["direct-messages"] });
+      queryClient.removeQueries({ 
+        queryKey: ["direct-messages"],
+        predicate: (query) => {
+          const key = query.queryKey as string[];
+          return key[0] === "direct-messages" && key[1] !== selectedUser.id && key[1] !== "none";
+        }
+      });
+      console.log(`[DirectMessaging] Cleaned up old queries for user selection: ${selectedUser.firstName} ${selectedUser.lastName}`);
+    }
+  }, [selectedUser]);
+
   // Fetch all users for selection
   const { data: users = [] } = useQuery<User[]>({
     queryKey: ["/api/users"],
@@ -44,9 +60,13 @@ export default function DirectMessaging() {
 
   // Fetch direct messages with selected user - ISOLATED query key to prevent conflicts
   const { data: messages = [], error, isLoading } = useQuery<Message[]>({
-    queryKey: selectedUser ? ["direct-messages", user?.id || "anonymous", selectedUser.id] : ["direct-messages", "none"],
+    queryKey: selectedUser ? ["direct-messages", selectedUser.id] : ["direct-messages", "none"],
     queryFn: async () => {
       if (!selectedUser) return Promise.resolve([]);
+      
+      // Cancel all previous direct message queries to prevent simultaneous API calls
+      queryClient.cancelQueries({ queryKey: ["direct-messages"] });
+      
       const url = `/api/messages?committee=direct&recipientId=${selectedUser.id}`;
       console.log(`[DirectMessaging] Fetching direct messages for ${selectedUser.firstName} ${selectedUser.lastName}`);
       const response = await apiRequest("GET", url);
@@ -63,7 +83,7 @@ export default function DirectMessaging() {
       return data;
     },
     enabled: !!selectedUser && !!user,
-    refetchInterval: 3000,
+    refetchInterval: selectedUser ? 3000 : false,
     gcTime: 0,
     staleTime: 0,
   });
@@ -74,7 +94,10 @@ export default function DirectMessaging() {
       return await apiRequest('POST', '/api/messages', newMessage);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["direct-messages", user?.id || "anonymous", selectedUser?.id] });
+      // Only invalidate the current conversation query
+      if (selectedUser) {
+        queryClient.invalidateQueries({ queryKey: ["direct-messages", selectedUser.id] });
+      }
       setMessage("");
     },
     onError: () => {
