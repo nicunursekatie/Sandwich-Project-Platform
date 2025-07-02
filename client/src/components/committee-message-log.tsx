@@ -43,7 +43,7 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
     return 'Team Member';
   };
 
-  const { data: messages = [] } = useQuery<Message[]>({
+  const { data: messages = [], error, isLoading } = useQuery<Message[]>({
     queryKey: [`committee-messages`, committee],
     queryFn: async () => {
       console.log(`[CommitteeMessageLog] Fetching messages for committee: ${committee}`);
@@ -51,6 +51,13 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
       const data = await response.json();
       console.log(`[CommitteeMessageLog] API Response:`, data);
       console.log(`[CommitteeMessageLog] Response type:`, typeof data, Array.isArray(data));
+      
+      // Ensure we always return an array
+      if (!Array.isArray(data)) {
+        console.warn(`[CommitteeMessageLog] Expected array but got:`, typeof data, data);
+        return [];
+      }
+      
       return data;
     },
     refetchInterval: 3000, // Refetch every 3 seconds

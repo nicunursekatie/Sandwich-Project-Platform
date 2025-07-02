@@ -43,8 +43,8 @@ export default function DirectMessaging() {
   });
 
   // Fetch direct messages with selected user - ISOLATED query key to prevent conflicts
-  const { data: messages = [] } = useQuery<Message[]>({
-    queryKey: selectedUser ? ["direct-messages", user?.id, selectedUser.id] : ["direct-messages", "none"],
+  const { data: messages = [], error, isLoading } = useQuery<Message[]>({
+    queryKey: selectedUser ? ["direct-messages", user?.id || "anonymous", selectedUser.id] : ["direct-messages", "none"],
     queryFn: async () => {
       if (!selectedUser) return Promise.resolve([]);
       const url = `/api/messages?committee=direct&recipientId=${selectedUser.id}`;
@@ -53,9 +53,16 @@ export default function DirectMessaging() {
       const data = await response.json();
       console.log(`[DirectMessaging] API Response:`, data);
       console.log(`[DirectMessaging] Response type:`, typeof data, Array.isArray(data));
+      
+      // Ensure we always return an array
+      if (!Array.isArray(data)) {
+        console.warn(`[DirectMessaging] Expected array but got:`, typeof data, data);
+        return [];
+      }
+      
       return data;
     },
-    enabled: !!selectedUser,
+    enabled: !!selectedUser && !!user,
     refetchInterval: 3000,
     gcTime: 0,
     staleTime: 0,
@@ -67,7 +74,7 @@ export default function DirectMessaging() {
       return await apiRequest('POST', '/api/messages', newMessage);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["direct-messages", user?.id, selectedUser?.id] });
+      queryClient.invalidateQueries({ queryKey: ["direct-messages", user?.id || "anonymous", selectedUser?.id] });
       setMessage("");
     },
     onError: () => {
