@@ -44,12 +44,13 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
   };
 
   const { data: messages = [] } = useQuery<Message[]>({
-    queryKey: ['/api/messages', committee],
+    queryKey: [`committee-messages`, committee],
     queryFn: async () => {
-      const response = await fetch(`/api/messages?committee=${committee}`);
-      if (!response.ok) return [];
-      return response.json();
-    }
+      console.log(`[CommitteeMessageLog] Fetching messages for committee: ${committee}`);
+      return apiRequest("GET", `/api/messages?committee=${committee}`);
+    },
+    refetchInterval: 3000, // Refetch every 3 seconds
+    staleTime: 0, // Always consider data stale for real-time messaging
   });
 
   const sendMessageMutation = useMutation({
@@ -57,7 +58,7 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
       return await apiRequest('POST', '/api/messages', data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/messages', committee] });
+      queryClient.invalidateQueries({ queryKey: [`committee-messages`, committee] });
       setNewMessage("");
     },
     onError: () => {

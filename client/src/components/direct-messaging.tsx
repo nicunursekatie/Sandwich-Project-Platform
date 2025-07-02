@@ -63,7 +63,7 @@ export default function DirectMessaging() {
       return await apiRequest('POST', '/api/messages', newMessage);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages", "direct", selectedUser?.id] });
+      queryClient.invalidateQueries({ queryKey: ["direct-messages", user?.id, selectedUser?.id] });
       setMessage("");
     },
     onError: () => {

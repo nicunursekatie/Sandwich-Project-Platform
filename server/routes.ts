@@ -525,9 +525,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/messages", async (req, res) => {
     try {
-      console.log("[DEBUG] POST /api/messages - Request body:", JSON.stringify(req.body, null, 2));
       const messageData = insertMessageSchema.parse(req.body);
-      console.log("[DEBUG] POST /api/messages - Parsed data:", JSON.stringify(messageData, null, 2));
       // Add user ID to message data if user is authenticated
       const messageWithUser = {
         ...messageData,
@@ -536,8 +534,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const message = await storage.createMessage(messageWithUser);
       res.status(201).json(message);
     } catch (error) {
-      console.error("[DEBUG] POST /api/messages - Validation error:", error);
-      res.status(400).json({ message: "Invalid message data", error: error.message });
+      res.status(400).json({ message: "Invalid message data" });
     }
   });
 
