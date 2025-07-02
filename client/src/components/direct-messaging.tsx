@@ -64,9 +64,6 @@ export default function DirectMessaging() {
     queryFn: async () => {
       if (!selectedUser) return Promise.resolve([]);
       
-      // Cancel all previous direct message queries to prevent simultaneous API calls
-      queryClient.cancelQueries({ queryKey: ["direct-messages"] });
-      
       const url = `/api/messages?committee=direct&recipientId=${selectedUser.id}`;
       console.log(`[DirectMessaging] Fetching direct messages for ${selectedUser.firstName} ${selectedUser.lastName}`);
       const response = await apiRequest("GET", url);
@@ -94,43 +91,47 @@ export default function DirectMessaging() {
       return await apiRequest('POST', '/api/messages', newMessage);
     },
     onMutate: async (newMessage) => {
+      if (!selectedUser) return { previousMessages: [], selectedUserId: null };
+      
+      const queryKey = ["direct-messages", selectedUser.id];
+      
       // Cancel outgoing refetches to prevent overwrites
-      await queryClient.cancelQueries({ queryKey: ["direct-messages", selectedUser?.id] });
+      await queryClient.cancelQueries({ queryKey });
       
       // Snapshot the previous value
-      const previousMessages = queryClient.getQueryData(["direct-messages", selectedUser?.id]);
+      const previousMessages = queryClient.getQueryData(queryKey);
       
       // Optimistically update to the new value - ONLY for this specific conversation
-      if (selectedUser) {
-        const optimisticMessage = {
-          id: Date.now(), // Temporary ID
-          sender: newMessage.sender,
-          userId: newMessage.userId || "",
-          content: newMessage.content,
-          timestamp: new Date().toISOString(),
-          committee: "direct",
-          recipientId: selectedUser.id,
-        };
-        
-        queryClient.setQueryData(
-          ["direct-messages", selectedUser.id], 
-          (old: Message[] = []) => [...old, optimisticMessage]
-        );
-      }
+      const optimisticMessage = {
+        id: Date.now(), // Temporary ID
+        sender: newMessage.sender,
+        userId: newMessage.userId || "",
+        content: newMessage.content,
+        timestamp: new Date().toISOString(),
+        committee: "direct",
+        recipientId: selectedUser.id,
+      };
       
-      return { previousMessages, selectedUserId: selectedUser?.id };
+      queryClient.setQueryData(
+        queryKey, 
+        (old: Message[] = []) => [...old, optimisticMessage]
+      );
+      
+      return { previousMessages, selectedUserId: selectedUser.id };
     },
     onError: (err, newMessage, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.selectedUserId) {
-        queryClient.setQueryData(["direct-messages", context.selectedUserId], context.previousMessages);
+        const queryKey = ["direct-messages", context.selectedUserId];
+        queryClient.setQueryData(queryKey, context.previousMessages);
       }
       toast({ title: "Failed to send message", variant: "destructive" });
     },
     onSuccess: (data, variables, context) => {
       // Invalidate and refetch only the specific conversation
       if (context?.selectedUserId) {
-        queryClient.invalidateQueries({ queryKey: ["direct-messages", context.selectedUserId] });
+        const queryKey = ["direct-messages", context.selectedUserId];
+        queryClient.invalidateQueries({ queryKey });
       }
       setMessage("");
     },
