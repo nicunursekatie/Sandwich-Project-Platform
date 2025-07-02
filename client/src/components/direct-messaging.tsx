@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Send, MessageCircle, User, Search } from "lucide-react";
+import { Send, MessageCircle, User, Search, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -58,29 +58,37 @@ export default function DirectMessaging() {
     queryKey: ["/api/users"],
   });
 
-  // Fetch direct messages with selected user - ISOLATED query key to prevent conflicts
+  // Fetch direct messages with selected user - COMPLETELY ISOLATED per conversation
   const { data: messages = [], error, isLoading } = useQuery<Message[]>({
-    queryKey: selectedUser ? ["direct-messages", selectedUser.id] : ["direct-messages", "none"],
+    queryKey: selectedUser ? ["direct-messages", selectedUser.id, (user as any)?.id] : ["direct-messages", "none"],
     queryFn: async () => {
-      if (!selectedUser) return Promise.resolve([]);
+      if (!selectedUser || !user) return Promise.resolve([]);
       
       const url = `/api/messages?committee=direct&recipientId=${selectedUser.id}`;
-      console.log(`[DirectMessaging] Fetching direct messages for ${selectedUser.firstName} ${selectedUser.lastName}`);
+      console.log(`[DirectMessaging] *** FETCHING FOR CONVERSATION: ${(user as any)?.firstName} <-> ${selectedUser.firstName} (${selectedUser.id}) ***`);
+      
       const response = await apiRequest("GET", url);
       const data = await response.json();
-      console.log(`[DirectMessaging] API Response:`, data);
-      console.log(`[DirectMessaging] Response type:`, typeof data, Array.isArray(data));
       
-      // Ensure we always return an array
-      if (!Array.isArray(data)) {
-        console.warn(`[DirectMessaging] Expected array but got:`, typeof data, data);
-        return [];
+      console.log(`[DirectMessaging] *** API RESPONSE FOR ${selectedUser.firstName}:`, data);
+      console.log(`[DirectMessaging] *** MESSAGE COUNT: ${Array.isArray(data) ? data.length : 'NOT_ARRAY'} ***`);
+      
+      // Additional verification: ensure messages are actually for this conversation
+      if (Array.isArray(data)) {
+        const filteredData = data.filter(msg => 
+          msg.committee === "direct" && 
+          ((msg.userId === (user as any)?.id && msg.recipientId === selectedUser.id) ||
+           (msg.userId === selectedUser.id && msg.recipientId === (user as any)?.id))
+        );
+        console.log(`[DirectMessaging] *** FRONTEND FILTERED COUNT: ${filteredData.length} (from ${data.length} total) ***`);
+        return filteredData;
       }
       
-      return data;
+      console.warn(`[DirectMessaging] *** UNEXPECTED RESPONSE TYPE:`, typeof data, data);
+      return [];
     },
     enabled: !!selectedUser && !!user,
-    refetchInterval: selectedUser ? 3000 : false,
+    refetchInterval: selectedUser ? 5000 : false, // Slower refresh to reduce noise
     gcTime: 0,
     staleTime: 0,
   });
@@ -137,6 +145,24 @@ export default function DirectMessaging() {
     },
   });
 
+  // Delete message mutation with conversation-specific cache invalidation
+  const deleteMessageMutation = useMutation({
+    mutationFn: async (messageId: number) => {
+      return await apiRequest('DELETE', `/api/messages/${messageId}`);
+    },
+    onSuccess: (data, messageId) => {
+      // Invalidate and refetch only the specific conversation
+      if (selectedUser) {
+        const queryKey = ["direct-messages", selectedUser.id];
+        queryClient.invalidateQueries({ queryKey });
+      }
+      toast({ title: "Message deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete message", variant: "destructive" });
+    },
+  });
+
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -149,13 +175,21 @@ export default function DirectMessaging() {
       ? `${(user as any).firstName} ${(user as any).lastName}` 
       : (user as any)?.email || "User";
 
-    sendMessageMutation.mutate({
+    const messageData = {
       sender: userName,
       content: message.trim(),
       committee: "direct",
       recipientId: selectedUser.id,
       userId: (user as any)?.id
-    });
+    };
+
+    console.log(`[DEBUG] *** SENDING MESSAGE DATA ***`);
+    console.log(`[DEBUG] From: ${(user as any)?.firstName} (${(user as any)?.id})`);
+    console.log(`[DEBUG] To: ${selectedUser.firstName} (${selectedUser.id})`);
+    console.log(`[DEBUG] Message Data:`, messageData);
+    console.log(`[DEBUG] *** END MESSAGE DATA ***`);
+
+    sendMessageMutation.mutate(messageData);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -309,7 +343,7 @@ export default function DirectMessaging() {
                         const isCurrentUser = msg.userId === (user as any)?.id;
                         
                         return (
-                          <div key={msg.id} className={`flex items-start space-x-3 mb-4 ${isCurrentUser ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                          <div key={msg.id} className={`group flex items-start space-x-3 mb-4 ${isCurrentUser ? 'flex-row-reverse space-x-reverse' : ''}`}>
                             <Avatar className="w-8 h-8">
                               <AvatarFallback className={`text-xs ${isCurrentUser ? 'bg-orange-100 text-orange-700' : 'bg-teal-100 text-teal-700'}`}>
                                 {msg.sender.split(' ').map(n => n[0]).join('').toUpperCase()}
@@ -324,6 +358,18 @@ export default function DirectMessaging() {
                                 <span className="text-xs text-slate-500">
                                   {formatTime(msg.timestamp)}
                                 </span>
+                                {/* Delete button - only show for current user's messages */}
+                                {isCurrentUser && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => deleteMessageMutation.mutate(msg.id)}
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                    disabled={deleteMessageMutation.isPending}
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </Button>
+                                )}
                               </div>
                               
                               <div className={`${isCurrentUser ? 'bg-orange-50 border border-orange-200' : 'bg-slate-50 border border-slate-200'} rounded-lg p-3 inline-block max-w-xs`}>
