@@ -479,10 +479,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Messages
   app.get("/api/messages", async (req, res) => {
     try {
-      // Disable caching for messages to ensure proper filtering
+      // Disable all caching including ETags for messages to ensure proper filtering
       res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
       res.set('Pragma', 'no-cache');
       res.set('Expires', '0');
+      res.removeHeader('ETag'); // Remove ETag header to prevent 304 responses
       
       console.log(`[DEBUG] FULL URL: ${req.url}`);
       console.log(`[DEBUG] QUERY OBJECT:`, req.query);
