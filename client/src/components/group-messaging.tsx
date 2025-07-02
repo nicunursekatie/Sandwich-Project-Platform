@@ -11,7 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Users, Send, Crown, Trash2, UserPlus } from "lucide-react";
+import { MessageCircle, Plus, Users, Send, Crown, Trash2, UserPlus, Edit, MoreVertical } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { MessageGroup, InsertMessageGroup, GroupMembership, Message, User } from "@shared/schema";
 
 interface GroupWithMembers extends MessageGroup {
@@ -35,6 +36,8 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   const [newMessage, setNewMessage] = useState("");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showAddMemberDialog, setShowAddMemberDialog] = useState(false);
+  const [editingMessage, setEditingMessage] = useState<Message | null>(null);
+  const [editedContent, setEditedContent] = useState("");
   const [groupForm, setGroupForm] = useState({
     name: "",
     description: "",
@@ -155,6 +158,40 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     },
   });
 
+  // Edit message mutation
+  const editMessageMutation = useMutation({
+    mutationFn: async ({ messageId, content }: { messageId: number; content: string }) => {
+      const response = await fetch(`/api/messages/${messageId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content }),
+      });
+      if (!response.ok) throw new Error("Failed to edit message");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/messages", "group", selectedGroup?.id] });
+      setEditingMessage(null);
+      setEditedContent("");
+      toast({ title: "Message updated successfully!" });
+    },
+  });
+
+  // Delete message mutation
+  const deleteMessageMutation = useMutation({
+    mutationFn: async (messageId: number) => {
+      const response = await fetch(`/api/messages/${messageId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete message");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/messages", "group", selectedGroup?.id] });
+      toast({ title: "Message deleted successfully!" });
+    },
+  });
+
   const handleCreateGroup = () => {
     if (!groupForm.name.trim()) {
       toast({ title: "Group name is required", variant: "destructive" });
@@ -184,6 +221,35 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       content: newMessage,
       committee: `group_${selectedGroup.id}`,
     });
+  };
+
+  const handleEditMessage = (message: Message) => {
+    setEditingMessage(message);
+    setEditedContent(message.content);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingMessage || !editedContent.trim()) return;
+    
+    editMessageMutation.mutate({
+      messageId: editingMessage.id,
+      content: editedContent,
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessage(null);
+    setEditedContent("");
+  };
+
+  const handleDeleteMessage = (messageId: number) => {
+    if (confirm("Are you sure you want to delete this message?")) {
+      deleteMessageMutation.mutate(messageId);
+    }
+  };
+
+  const canEditMessage = (message: Message) => {
+    return message.userId === currentUser?.id;
   };
 
   const formatDisplayName = (user: any) => {
@@ -459,22 +525,77 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                   </div>
                 ) : (
                   groupMessages.map((message) => (
-                    <div key={message.id} className="flex gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="text-xs">
-                          {message.sender ? message.sender[0]?.toUpperCase() : "?"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium text-sm">{message.sender || "Anonymous"}</span>
-                          <span className="text-xs text-gray-500">
-                            {new Date(message.timestamp).toLocaleTimeString()}
-                          </span>
+                    <div key={message.id} className="group relative">
+                      <div className="flex gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="text-xs">
+                            {message.sender ? message.sender[0]?.toUpperCase() : "?"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-medium text-sm">{message.sender || "Anonymous"}</span>
+                            <span className="text-xs text-gray-500">
+                              {new Date(message.timestamp).toLocaleTimeString()}
+                            </span>
+                            {canEditMessage(message) && (
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  >
+                                    <MoreVertical className="h-3 w-3" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem onClick={() => handleEditMessage(message)}>
+                                    <Edit className="h-3 w-3 mr-2" />
+                                    Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem 
+                                    onClick={() => handleDeleteMessage(message.id)}
+                                    className="text-red-600"
+                                  >
+                                    <Trash2 className="h-3 w-3 mr-2" />
+                                    Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            )}
+                          </div>
+                          {editingMessage?.id === message.id ? (
+                            <div className="space-y-2">
+                              <Textarea
+                                value={editedContent}
+                                onChange={(e) => setEditedContent(e.target.value)}
+                                className="text-sm"
+                                rows={2}
+                              />
+                              <div className="flex gap-2">
+                                <Button 
+                                  size="sm" 
+                                  onClick={handleSaveEdit}
+                                  disabled={editMessageMutation.isPending}
+                                >
+                                  Save
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline" 
+                                  onClick={handleCancelEdit}
+                                >
+                                  Cancel
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <p className="text-sm bg-gray-100 dark:bg-gray-700 rounded-lg p-2">
+                              {message.content}
+                            </p>
+                          )}
                         </div>
-                        <p className="text-sm bg-gray-100 dark:bg-gray-700 rounded-lg p-2">
-                          {message.content}
-                        </p>
                       </div>
                     </div>
                   ))
