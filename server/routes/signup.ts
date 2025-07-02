@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { z } from "zod";
-import { storage } from "../storage";
-import type { InsertUser } from "@shared/schema";
+import { storage } from "../storage-wrapper";
+import { db } from "../db";
+import { users } from "@shared/schema";
 
 const router = Router();
 
@@ -23,20 +24,42 @@ const signupSchema = z.object({
 });
 
 router.post("/auth/signup", async (req, res) => {
+  console.log("=== SIGNUP ROUTE HIT ===");
+  console.log("Request method:", req.method);
+  console.log("Request URL:", req.url);
+  console.log("Request body:", req.body);
   try {
     // Validate request body
     const validatedData = signupSchema.parse(req.body);
     
-    // Create user account with registration data
-    const userData: InsertUser = {
+    // Check if user already exists first
+    const existingUser = await storage.getUserByEmail(validatedData.email);
+    if (existingUser) {
+      return res.status(400).json({
+        message: "User with this email already exists"
+      });
+    }
+
+    // Create user account with registration data using direct database insert
+    const userId = "user_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+    
+    // Use direct database insert with explicit casting
+    console.log("Creating user with ID:", userId);
+    const [newUser] = await db.insert(users).values({
+      id: userId,
       email: validatedData.email,
       firstName: validatedData.firstName,
       lastName: validatedData.lastName,
       role: validatedData.role,
+      permissions: [] as any, // Cast to any to avoid type issues
       isActive: false, // Requires approval
-    };
-
-    const newUser = await storage.createUser(userData);
+      metadata: {
+        registrationData: validatedData,
+        status: "pending_approval",
+        registrationDate: new Date().toISOString()
+      } as any // Cast to any for metadata
+    } as any).returning();
+    console.log("User created successfully:", newUser);
 
     // Store registration details in a simple format for admin review
     console.log(`
