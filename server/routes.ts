@@ -216,13 +216,9 @@ const projectFilesUpload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup PostgreSQL session store for persistent sessions
-  const PgSession = connectPg(session);
-  const sessionStore = new PgSession({
-    conString: process.env.DATABASE_URL,
-    tableName: 'user_sessions', // Custom table name
-    createTableIfMissing: true, // Automatically create session table
-  });
+  // Setup memory session store as fallback since PostgreSQL sessions have conflicts
+  // We'll use PostgreSQL for data persistence but memory for sessions to avoid table conflicts
+  const sessionStore = new session.MemoryStore();
 
   // Add session middleware with PostgreSQL storage
   app.use(
