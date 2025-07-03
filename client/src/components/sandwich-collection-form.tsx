@@ -210,14 +210,15 @@ export default function SandwichCollectionForm() {
       }
     }
 
+    // Filter for valid group collections (only those with sandwich counts > 0)
     const validGroupCollections = groupCollections.filter(
-      (g) => g.sandwichCount > 0,
+      (g) => g.sandwichCount > 0 && g.groupName.trim() !== "",
     );
     const groupCollectionsString =
       validGroupCollections.length > 0
         ? JSON.stringify(
             validGroupCollections.map((g) => ({
-              name: g.groupName.trim() || "Unnamed Group",
+              name: g.groupName.trim(),
               count: g.sandwichCount,
             })),
           )
@@ -388,13 +389,12 @@ export default function SandwichCollectionForm() {
             {groupCollections.map((group) => (
               <div key={group.id} className="flex gap-3 items-center">
                 <Input
-                  placeholder="Group name"
+                  placeholder="Group name (optional)"
                   value={group.groupName}
                   onChange={(e) =>
                     updateGroupCollection(group.id, "groupName", e.target.value)
                   }
                   className="flex-1"
-                  required
                 />
                 <Input
                   type="number"
@@ -426,8 +426,7 @@ export default function SandwichCollectionForm() {
           </div>
 
           <p className="text-sm text-gray-600 mt-3">
-            Record group collections with sandwich counts. Group names are optional - 
-            entries without names will be listed as "Unnamed Group".
+            Add group collections if you have specific group donations to record.
           </p>
         </div>
 
