@@ -48,7 +48,7 @@ export default function SandwichCollectionForm() {
   });
 
   // Include all hosts (active and inactive) for collection assignment
-  const hostOptions = [...hosts.map((host) => host.name).filter(name => name && name.trim() !== ""), "Groups", "Other"];
+  const hostOptions = [...hosts.map((host) => host.name).filter(name => name && name.trim() !== ""), "Other"];
 
   // Mutation for creating new hosts
   const createHostMutation = useMutation({
@@ -77,12 +77,11 @@ export default function SandwichCollectionForm() {
       individualSandwiches: number;
       groupCollections: string;
     }) => {
-      const response = await apiRequest(
+      return await apiRequest(
         "POST",
         "/api/sandwich-collections",
         data,
       );
-      return response.json();
     },
     onSuccess: async (data) => {
       queryClient.invalidateQueries({
