@@ -15,6 +15,7 @@ import mammoth from "mammoth";
 import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
 import { messageNotificationRoutes } from "./routes/message-notifications-simple";
+import googleSheetsRoutes from "./routes/google-sheets";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
@@ -4885,6 +4886,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ status: "error", message: "Health check failed" });
     }
   });
+
+  // Register Google Sheets routes
+  app.use('/api/google-sheets', googleSheetsRoutes);
 
   // Set up WebSocket server for real-time notifications
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });

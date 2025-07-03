@@ -566,3 +566,29 @@ export const insertGroupMessageParticipantSchema = createInsertSchema(groupMessa
 
 export type GroupMessageParticipant = typeof groupMessageParticipants.$inferSelect;
 export type InsertGroupMessageParticipant = z.infer<typeof insertGroupMessageParticipantSchema>;
+
+// Google Sheets integration table
+export const googleSheets = pgTable("google_sheets", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  sheetId: varchar("sheet_id").notNull(), // Google Sheets document ID
+  isPublic: boolean("is_public").notNull().default(true),
+  embedUrl: text("embed_url").notNull(),
+  directUrl: text("direct_url").notNull(),
+  createdBy: varchar("created_by").references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertGoogleSheetSchema = createInsertSchema(googleSheets).omit({
+  id: true,
+  embedUrl: true,
+  directUrl: true,
+  createdBy: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export type GoogleSheet = typeof googleSheets.$inferSelect;
+export type InsertGoogleSheet = z.infer<typeof insertGoogleSheetSchema>;

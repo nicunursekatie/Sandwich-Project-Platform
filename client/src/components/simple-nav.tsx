@@ -13,7 +13,8 @@ import {
   Building2, 
   FileText, 
   Phone,
-  Settings
+  Settings,
+  Sheet
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
