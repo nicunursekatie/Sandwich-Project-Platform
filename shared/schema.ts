@@ -188,6 +188,19 @@ export const groupMemberships = pgTable("group_memberships", {
   isActive: boolean("is_active").notNull().default(true),
 });
 
+// Individual thread participation tracking
+export const groupMessageParticipants = pgTable("group_message_participants", {
+  id: serial("id").primaryKey(),
+  threadId: integer("thread_id").notNull(), // References message_groups.id
+  userId: text("user_id").notNull(),
+  status: text("status").notNull().default("active"), // 'active', 'archived', 'left', 'muted'
+  lastReadAt: timestamp("last_read_at"),
+  joinedAt: timestamp("joined_at").notNull().defaultNow(),
+  leftAt: timestamp("left_at"),
+  archivedAt: timestamp("archived_at"),
+  mutedAt: timestamp("muted_at"),
+});
+
 export const weeklyReports = pgTable("weekly_reports", {
   id: serial("id").primaryKey(),
   weekEnding: text("week_ending").notNull(), // date string
@@ -541,3 +554,12 @@ export const insertGroupMembershipSchema = createInsertSchema(groupMemberships).
 
 export type GroupMembership = typeof groupMemberships.$inferSelect;
 export type InsertGroupMembership = z.infer<typeof insertGroupMembershipSchema>;
+
+// Group message participant schema types
+export const insertGroupMessageParticipantSchema = createInsertSchema(groupMessageParticipants).omit({
+  id: true,
+  joinedAt: true
+});
+
+export type GroupMessageParticipant = typeof groupMessageParticipants.$inferSelect;
+export type InsertGroupMessageParticipant = z.infer<typeof insertGroupMessageParticipantSchema>;

@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { z } from "zod";
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and, or, sql } from 'drizzle-orm';
 import express from "express";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
@@ -40,6 +40,8 @@ import {
   insertMessageGroupSchema,
   groupMemberships,
   insertGroupMembershipSchema,
+  groupMessageParticipants,
+  messages,
   users,
 } from "@shared/schema";
 
@@ -4471,27 +4473,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/message-groups", isAuthenticated, async (req, res) => {
     try {
       const userId = (req as any).user?.id;
+      const user = (req as any).user;
       
-      // Get groups where user is a member - use INNER JOIN to ensure membership
-      const userGroups = await db
-        .select({
-          id: messageGroups.id,
-          name: messageGroups.name,
-          description: messageGroups.description,
-          createdBy: messageGroups.createdBy,
-          isActive: messageGroups.isActive,
-          createdAt: messageGroups.createdAt,
-          userRole: groupMemberships.role
-        })
-        .from(messageGroups)
-        .innerJoin(groupMemberships, eq(messageGroups.id, groupMemberships.groupId))
-        .where(
-          and(
-            eq(messageGroups.isActive, true),
-            eq(groupMemberships.userId, userId),
-            eq(groupMemberships.isActive, true)
-          )
-        );
+      // Check if user has moderation permissions (super_admin or admin with moderate_messages)
+      const canModerateMessages = user.role === 'super_admin' || 
+        (user.permissions && user.permissions.includes('moderate_messages'));
+      
+      let userGroups;
+      
+      if (canModerateMessages) {
+        // Super admins and moderators see ALL groups
+        userGroups = await db
+          .select({
+            id: messageGroups.id,
+            name: messageGroups.name,
+            description: messageGroups.description,
+            createdBy: messageGroups.createdBy,
+            isActive: messageGroups.isActive,
+            createdAt: messageGroups.createdAt,
+            userRole: sql<string>`'moderator'` // Mark as moderator role for super admins
+          })
+          .from(messageGroups)
+          .where(eq(messageGroups.isActive, true));
+      } else {
+        // Regular users only see groups where they are members
+        userGroups = await db
+          .select({
+            id: messageGroups.id,
+            name: messageGroups.name,
+            description: messageGroups.description,
+            createdBy: messageGroups.createdBy,
+            isActive: messageGroups.isActive,
+            createdAt: messageGroups.createdAt,
+            userRole: groupMemberships.role
+          })
+          .from(messageGroups)
+          .innerJoin(groupMemberships, eq(messageGroups.id, groupMemberships.groupId))
+          .where(
+            and(
+              eq(messageGroups.isActive, true),
+              eq(groupMemberships.userId, userId),
+              eq(groupMemberships.isActive, true)
+            )
+          );
+      }
 
       // Get member counts for each group separately
       const groupsWithCounts = await Promise.all(
@@ -4669,6 +4694,171 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(members);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch group members" });
+    }
+  });
+
+  // Thread Participant Management API - Individual user control over group threads
+  app.get("/api/threads/:threadId/participants", isAuthenticated, async (req, res) => {
+    try {
+      const threadId = parseInt(req.params.threadId);
+      const userId = (req as any).user?.id;
+      
+      // Verify user has access to this thread
+      const userStatus = await db
+        .select({ status: groupMessageParticipants.status })
+        .from(groupMessageParticipants)
+        .where(
+          and(
+            eq(groupMessageParticipants.threadId, threadId),
+            eq(groupMessageParticipants.userId, userId)
+          )
+        );
+      
+      if (userStatus.length === 0 || userStatus[0].status === 'left') {
+        return res.status(403).json({ message: "No access to this thread" });
+      }
+      
+      const participants = await db
+        .select({
+          userId: groupMessageParticipants.userId,
+          status: groupMessageParticipants.status,
+          joinedAt: groupMessageParticipants.joinedAt,
+          lastReadAt: groupMessageParticipants.lastReadAt,
+          firstName: users.firstName,
+          lastName: users.lastName,
+          email: users.email
+        })
+        .from(groupMessageParticipants)
+        .leftJoin(users, eq(groupMessageParticipants.userId, users.id))
+        .where(eq(groupMessageParticipants.threadId, threadId));
+      
+      res.json(participants);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch thread participants" });
+    }
+  });
+
+  app.patch("/api/threads/:threadId/my-status", isAuthenticated, async (req, res) => {
+    try {
+      const threadId = parseInt(req.params.threadId);
+      const userId = (req as any).user?.id;
+      const { status } = req.body;
+      
+      if (!['active', 'archived', 'left', 'muted'].includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+      
+      // Update participant status with timestamp
+      const timestampField = status === 'left' ? 'left_at' : 
+                            status === 'archived' ? 'archived_at' : 
+                            status === 'muted' ? 'muted_at' : null;
+      
+      const updates: any = { status };
+      if (timestampField) {
+        updates[timestampField] = new Date();
+      }
+      
+      const result = await db
+        .update(groupMessageParticipants)
+        .set(updates)
+        .where(
+          and(
+            eq(groupMessageParticipants.threadId, threadId),
+            eq(groupMessageParticipants.userId, userId)
+          )
+        );
+      
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: "Participant record not found" });
+      }
+      
+      res.json({ message: `Thread status updated to ${status}`, status });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update thread status" });
+    }
+  });
+
+  app.patch("/api/threads/:threadId/mark-read", isAuthenticated, async (req, res) => {
+    try {
+      const threadId = parseInt(req.params.threadId);
+      const userId = (req as any).user?.id;
+      
+      const result = await db
+        .update(groupMessageParticipants)
+        .set({ lastReadAt: new Date() })
+        .where(
+          and(
+            eq(groupMessageParticipants.threadId, threadId),
+            eq(groupMessageParticipants.userId, userId)
+          )
+        );
+      
+      res.json({ message: "Thread marked as read" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to mark thread as read" });
+    }
+  });
+
+  app.get("/api/threads/:threadId/my-status", isAuthenticated, async (req, res) => {
+    try {
+      const threadId = parseInt(req.params.threadId);
+      const userId = (req as any).user?.id;
+      
+      const [participant] = await db
+        .select({
+          status: groupMessageParticipants.status,
+          lastReadAt: groupMessageParticipants.lastReadAt,
+          joinedAt: groupMessageParticipants.joinedAt
+        })
+        .from(groupMessageParticipants)
+        .where(
+          and(
+            eq(groupMessageParticipants.threadId, threadId),
+            eq(groupMessageParticipants.userId, userId)
+          )
+        );
+      
+      if (!participant) {
+        return res.status(404).json({ message: "Not a participant in this thread" });
+      }
+      
+      res.json(participant);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch thread status" });
+    }
+  });
+
+  // Updated group messages endpoint to respect individual participant status
+  app.get("/api/message-groups/:groupId/messages", isAuthenticated, async (req, res) => {
+    try {
+      const groupId = parseInt(req.params.groupId);
+      const userId = (req as any).user?.id;
+      
+      // Check if user has access to this thread (not left)
+      const participantStatus = await db
+        .select({ status: groupMessageParticipants.status })
+        .from(groupMessageParticipants)
+        .where(
+          and(
+            eq(groupMessageParticipants.threadId, groupId),
+            eq(groupMessageParticipants.userId, userId)
+          )
+        );
+      
+      if (participantStatus.length === 0 || participantStatus[0].status === 'left') {
+        return res.json([]); // Return empty array for users who left
+      }
+      
+      // Get messages from the thread
+      const groupMessages = await db
+        .select()
+        .from(messages)
+        .where(eq(messages.threadId, groupId))
+        .orderBy(messages.timestamp);
+      
+      res.json(groupMessages);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch group messages" });
     }
   });
 

@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, projectAssignments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts,
+  users, projects, projectTasks, projectComments, projectAssignments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, groupMessageParticipants, messageGroups, groupMemberships,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -17,7 +17,8 @@ import {
   type Host, type InsertHost,
   type HostContact, type InsertHostContact,
   type Recipient, type InsertRecipient,
-  type Contact, type InsertContact
+  type Contact, type InsertContact,
+  type GroupMessageParticipant, type InsertGroupMessageParticipant
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql, and, or } from "drizzle-orm";
@@ -229,6 +230,124 @@ export class DatabaseStorage implements IStorage {
 
   async deleteMessage(id: number): Promise<boolean> {
     const result = await db.delete(messages).where(eq(messages.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  // Group messaging with individual thread management
+  async getUserMessageGroups(userId: string): Promise<any[]> {
+    // Return groups where user has active or muted participation
+    const groups = await db
+      .select({
+        id: messageGroups.id,
+        name: messageGroups.name,
+        description: messageGroups.description,
+        createdBy: messageGroups.createdBy,
+        isActive: messageGroups.isActive,
+        createdAt: messageGroups.createdAt,
+        userStatus: groupMessageParticipants.status
+      })
+      .from(messageGroups)
+      .innerJoin(groupMessageParticipants, eq(messageGroups.id, groupMessageParticipants.threadId))
+      .where(
+        and(
+          eq(groupMessageParticipants.userId, userId),
+          or(
+            eq(groupMessageParticipants.status, 'active'),
+            eq(groupMessageParticipants.status, 'muted')
+          )
+        )
+      );
+    return groups;
+  }
+
+  async getMessageGroupMessages(groupId: number, userId: string): Promise<Message[]> {
+    // Only return messages if user has active or muted participation
+    const participantStatus = await this.getParticipantStatus(groupId, userId);
+    if (!participantStatus || participantStatus === 'left') {
+      return [];
+    }
+
+    return await db.select().from(messages)
+      .where(eq(messages.threadId, groupId))
+      .orderBy(messages.timestamp);
+  }
+
+  async createMessageGroup(group: any): Promise<any> {
+    // This will be implemented with proper types later
+    return {};
+  }
+
+  async addUserToMessageGroup(groupId: number, userId: string, role: string = 'member'): Promise<any> {
+    // Add user as active participant
+    return await this.createThreadParticipant(groupId, userId);
+  }
+
+  // Thread participant management - individual user control over group threads
+  async getThreadParticipants(threadId: number): Promise<any[]> {
+    const participants = await db
+      .select()
+      .from(groupMessageParticipants)
+      .where(eq(groupMessageParticipants.threadId, threadId));
+    return participants;
+  }
+
+  async getParticipantStatus(threadId: number, userId: string): Promise<string | null> {
+    const [participant] = await db
+      .select({ status: groupMessageParticipants.status })
+      .from(groupMessageParticipants)
+      .where(
+        and(
+          eq(groupMessageParticipants.threadId, threadId),
+          eq(groupMessageParticipants.userId, userId)
+        )
+      );
+    return participant?.status || null;
+  }
+
+  async updateParticipantStatus(threadId: number, userId: string, status: 'active' | 'archived' | 'left' | 'muted'): Promise<boolean> {
+    const timestampField = status === 'left' ? 'leftAt' : 
+                          status === 'archived' ? 'archivedAt' : 
+                          status === 'muted' ? 'mutedAt' : null;
+    
+    const updates: any = { status };
+    if (timestampField) {
+      updates[timestampField] = new Date();
+    }
+
+    const result = await db
+      .update(groupMessageParticipants)
+      .set(updates)
+      .where(
+        and(
+          eq(groupMessageParticipants.threadId, threadId),
+          eq(groupMessageParticipants.userId, userId)
+        )
+      );
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  async createThreadParticipant(threadId: number, userId: string): Promise<any> {
+    const [participant] = await db
+      .insert(groupMessageParticipants)
+      .values({
+        threadId,
+        userId,
+        status: 'active'
+      })
+      .returning();
+    return participant;
+  }
+
+  async updateParticipantLastRead(threadId: number, userId: string): Promise<boolean> {
+    const result = await db
+      .update(groupMessageParticipants)
+      .set({ lastReadAt: new Date() })
+      .where(
+        and(
+          eq(groupMessageParticipants.threadId, threadId),
+          eq(groupMessageParticipants.userId, userId)
+        )
+      );
     return (result.rowCount ?? 0) > 0;
   }
 

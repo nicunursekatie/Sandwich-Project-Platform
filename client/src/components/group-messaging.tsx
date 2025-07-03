@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Users, Send, Crown, Trash2, UserPlus, Edit, MoreVertical } from "lucide-react";
+import { MessageCircle, Plus, Users, Send, Crown, Trash2, UserPlus, Edit, MoreVertical, Archive, LogOut, VolumeX, Eye } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { MessageGroup, InsertMessageGroup, GroupMembership, Message, User } from "@shared/schema";
 import { PERMISSIONS } from "@shared/auth-utils";
@@ -213,6 +213,43 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     },
   });
 
+  // Thread status management mutations
+  const updateThreadStatusMutation = useMutation({
+    mutationFn: async ({ threadId, status }: { threadId: number; status: string }) => {
+      const response = await fetch(`/api/threads/${threadId}/my-status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      if (!response.ok) throw new Error("Failed to update thread status");
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/message-groups"] });
+      const statusLabels = {
+        archived: "archived",
+        left: "left",
+        muted: "muted",
+        active: "restored"
+      };
+      toast({ 
+        title: `Thread ${statusLabels[variables.status as keyof typeof statusLabels]}!`,
+        description: variables.status === 'left' 
+          ? "You have left this conversation and will no longer receive messages."
+          : variables.status === 'archived' 
+          ? "This conversation has been archived and moved to your archived folder."
+          : variables.status === 'muted'
+          ? "You will no longer receive notifications from this conversation."
+          : "This conversation has been restored to your active conversations."
+      });
+      
+      // If user left or archived the thread, deselect it
+      if (variables.status === 'left' || variables.status === 'archived') {
+        setSelectedGroup(null);
+      }
+    },
+  });
+
   const handleCreateGroup = () => {
     if (!groupForm.name.trim()) {
       toast({ title: "Group name is required", variant: "destructive" });
@@ -267,6 +304,25 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     if (confirm("Are you sure you want to delete this message?")) {
       deleteMessageMutation.mutate(messageId);
     }
+  };
+
+  // Thread management handlers
+  const handleArchiveThread = (threadId: number) => {
+    updateThreadStatusMutation.mutate({ threadId, status: 'archived' });
+  };
+
+  const handleLeaveThread = (threadId: number) => {
+    if (confirm("Are you sure you want to leave this conversation? You won't be able to see new messages.")) {
+      updateThreadStatusMutation.mutate({ threadId, status: 'left' });
+    }
+  };
+
+  const handleMuteThread = (threadId: number) => {
+    updateThreadStatusMutation.mutate({ threadId, status: 'muted' });
+  };
+
+  const handleUnmuteThread = (threadId: number) => {
+    updateThreadStatusMutation.mutate({ threadId, status: 'active' });
   };
 
   const canEditMessage = (message: Message) => {
@@ -468,6 +524,40 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                     <Users className="h-3 w-3 mr-1" />
                     {selectedGroup.memberCount} members
                   </Badge>
+                  
+                  {/* Thread Management Dropdown */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button size="sm" variant="outline">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem 
+                        onClick={() => handleArchiveThread(selectedGroup.id)}
+                        disabled={updateThreadStatusMutation.isPending}
+                      >
+                        <Archive className="h-4 w-4 mr-2" />
+                        Archive Thread
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleMuteThread(selectedGroup.id)}
+                        disabled={updateThreadStatusMutation.isPending}
+                      >
+                        <VolumeX className="h-4 w-4 mr-2" />
+                        Mute Notifications
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleLeaveThread(selectedGroup.id)}
+                        disabled={updateThreadStatusMutation.isPending}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Leave Conversation
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
                   {selectedGroup.userRole === 'admin' && (
                     <Dialog open={showAddMemberDialog} onOpenChange={setShowAddMemberDialog}>
                       <DialogTrigger asChild>

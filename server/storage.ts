@@ -78,6 +78,19 @@ export interface IStorage {
   updateReplyCount(messageId: number): Promise<void>;
   deleteMessage(id: number): Promise<boolean>;
   
+  // Group messaging with individual thread management
+  getUserMessageGroups(userId: string): Promise<any[]>;
+  getMessageGroupMessages(groupId: number, userId: string): Promise<Message[]>;
+  createMessageGroup(group: any): Promise<any>;
+  addUserToMessageGroup(groupId: number, userId: string, role?: string): Promise<any>;
+  
+  // Thread participant management - individual user control over group threads
+  getThreadParticipants(threadId: number): Promise<any[]>;
+  getParticipantStatus(threadId: number, userId: string): Promise<string | null>;
+  updateParticipantStatus(threadId: number, userId: string, status: 'active' | 'archived' | 'left' | 'muted'): Promise<boolean>;
+  createThreadParticipant(threadId: number, userId: string): Promise<any>;
+  updateParticipantLastRead(threadId: number, userId: string): Promise<boolean>;
+  
   // Weekly Reports
   getAllWeeklyReports(): Promise<WeeklyReport[]>;
   createWeeklyReport(report: InsertWeeklyReport): Promise<WeeklyReport>;
