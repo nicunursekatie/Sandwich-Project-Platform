@@ -81,20 +81,23 @@ export default function AnalyticsDashboard() {
       return acc;
     }, {} as Record<string, { total: number; date: string }>);
 
-    // Calculate recent 12-month weekly average for current operational pace
-    const oneYearAgo = new Date();
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    // Calculate operational weekly average using peak performance period
+    // Use 2022-2023 period for more representative operational capacity
+    const startDate = new Date('2022-01-01');
+    const endDate = new Date('2024-01-01');
     
-    const recentCollections = collections.filter(c => {
+    const operationalCollections = collections.filter(c => {
       const date = new Date(c.collectionDate || '');
-      return !isNaN(date.getTime()) && date >= oneYearAgo;
+      return !isNaN(date.getTime()) && date >= startDate && date < endDate;
     });
     
-    const recentTotal = recentCollections.reduce((sum, c) => 
+    const operationalTotal = operationalCollections.reduce((sum, c) => 
       sum + (c.individualSandwiches || 0) + parseGroups(c.groupCollections), 0
     );
     
-    const avgWeekly = Math.round(recentTotal / 52); // 52 weeks in a year
+    // Calculate weeks in the operational period (2 years = 104 weeks)
+    const weekCount = 104;
+    const avgWeekly = Math.round(operationalTotal / weekCount);
     
     const weeklyTotals = Object.values(weeklyData).map(w => w.total).sort((a, b) => b - a);
     const recordWeek = Object.entries(weeklyData)

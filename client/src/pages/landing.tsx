@@ -38,21 +38,22 @@ export default function Landing() {
 
   const collections = collectionsResponse?.collections || [];
   const totalSandwiches = statsData?.completeTotalSandwiches || 0;
-  // Calculate recent 12-month weekly average for current operational pace
+  // Calculate operational weekly average using peak performance period
   const weeklyAverage = collections?.length > 0 ? (() => {
-    const oneYearAgo = new Date();
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    // Use 2022-2023 period for more representative operational capacity
+    const startDate = new Date('2022-01-01');
+    const endDate = new Date('2024-01-01');
     
-    // Filter to last 12 months of data
-    const recentCollections = collections.filter((c: any) => {
+    // Filter to operational period
+    const operationalCollections = collections.filter((c: any) => {
       const date = new Date(c.collectionDate);
-      return !isNaN(date.getTime()) && date >= oneYearAgo;
+      return !isNaN(date.getTime()) && date >= startDate && date < endDate;
     });
     
-    if (recentCollections.length === 0) return 0;
+    if (operationalCollections.length === 0) return 0;
     
-    // Calculate total sandwiches in last 12 months
-    const recentTotal = recentCollections.reduce((sum: number, c: any) => {
+    // Calculate total sandwiches in operational period
+    const operationalTotal = operationalCollections.reduce((sum: number, c: any) => {
       const individual = c.individualSandwiches || 0;
       let groups = 0;
       try {
@@ -70,8 +71,8 @@ export default function Landing() {
       return sum + individual + groups;
     }, 0);
     
-    // 52 weeks in a year
-    return Math.round(recentTotal / 52);
+    // 104 weeks in 2 years (2022-2023)
+    return Math.round(operationalTotal / 104);
   })() : 0;
   // Use the verified record week from database query (34,100 on 2022-11-16)
   const recordWeek = 34100;
