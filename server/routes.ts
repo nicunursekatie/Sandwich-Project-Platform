@@ -916,9 +916,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (!collection) {
           return res.status(404).json({ message: "Collection not found" });
         }
+        
+        // Invalidate cache when collection is updated
+        QueryOptimizer.invalidateCache("sandwich-collections");
+        
         res.json(collection);
       } catch (error) {
+        logger.error("Failed to update sandwich collection", error);
         res.status(400).json({ message: "Invalid update data" });
+      }
+    },
+  );
+
+  app.patch(
+    "/api/sandwich-collections/:id",
+    requirePermission("edit_data"),
+    async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+          return res.status(400).json({ message: "Invalid collection ID" });
+        }
+
+        const updates = req.body;
+        const collection = await storage.updateSandwichCollection(id, updates);
+        if (!collection) {
+          return res.status(404).json({ message: "Collection not found" });
+        }
+        
+        // Invalidate cache when collection is updated
+        QueryOptimizer.invalidateCache("sandwich-collections");
+        
+        res.json(collection);
+      } catch (error) {
+        logger.error("Failed to patch sandwich collection", error);
+        res.status(500).json({ message: "Failed to update collection" });
       }
     },
   );

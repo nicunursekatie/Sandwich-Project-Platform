@@ -1,0 +1,520 @@
+{
+  "log": {
+    "version": "1.2",
+    "creator": {
+      "name": "Firefox",
+      "version": "141.0"
+    },
+    "browser": {
+      "name": "Firefox",
+      "version": "141.0"
+    },
+    "pages": [
+      {
+        "id": "page_1",
+        "pageTimings": {
+          "onContentLoad": -2342704,
+          "onLoad": -2342677
+        },
+        "startedDateTime": "2025-07-02T21:31:50.945-04:00",
+        "title": "https://sandwich-sync-katielong2316.replit.app/"
+      }
+    ],
+    "entries": [
+      {
+        "startedDateTime": "2025-07-02T21:31:50.945-04:00",
+        "request": {
+          "bodySize": 114,
+          "method": "PATCH",
+          "url": "https://sandwich-sync-katielong2316.replit.app/api/sandwich-collections/1887",
+          "httpVersion": "HTTP/3",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "sandwich-sync-katielong2316.replit.app"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://sandwich-sync-katielong2316.replit.app/"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Length",
+              "value": "114"
+            },
+            {
+              "name": "Origin",
+              "value": "https://sandwich-sync-katielong2316.replit.app"
+            },
+            {
+              "name": "Alt-Used",
+              "value": "sandwich-sync-katielong2316.replit.app"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "tsp.session=s%3AfnSc2VJG7p4KkHfGCoE2sCGrCsfNyJK_.BAWRX7q5T5E%2FgspO1jSFffiANfDkCdCBIGJ948tRQrg"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Priority",
+              "value": "u=0"
+            },
+            {
+              "name": "TE",
+              "value": "trailers"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "tsp.session",
+              "value": "s:fnSc2VJG7p4KkHfGCoE2sCGrCsfNyJK_.BAWRX7q5T5E/gspO1jSFffiANfDkCdCBIGJ948tRQrg"
+            }
+          ],
+          "queryString": [],
+          "headersSize": 715,
+          "postData": {
+            "mimeType": "application/json",
+            "params": [],
+            "text": "{\"collectionDate\":\"2023-01-04\",\"hostName\":\"East Cobb/Roswell\",\"individualSandwiches\":1204,\"groupCollections\":\"[]\"}"
+          }
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "HTTP/3",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=0"
+            },
+            {
+              "name": "content-length",
+              "value": "665"
+            },
+            {
+              "name": "content-type",
+              "value": "text/html; charset=UTF-8"
+            },
+            {
+              "name": "date",
+              "value": "Thu, 03 Jul 2025 01:31:51 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "W/\"299-197cdc32218\""
+            },
+            {
+              "name": "last-modified",
+              "value": "Thu, 03 Jul 2025 00:50:07 GMT"
+            },
+            {
+              "name": "server",
+              "value": "Google Frontend"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; includeSubDomains"
+            },
+            {
+              "name": "x-cloud-trace-context",
+              "value": "c5788a3e61b181ea187c1f74135bdb95;o=1"
+            },
+            {
+              "name": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "name": "via",
+              "value": "1.1 google"
+            },
+            {
+              "name": "alt-svc",
+              "value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "text/html; charset=UTF-8",
+            "size": 665,
+            "text": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1\" />\n    <title>The Sandwich Project</title>\n    <script type=\"module\" crossorigin src=\"/assets/index-DuRjTJwx.js\"></script>\n    <link rel=\"stylesheet\" crossorigin href=\"/assets/index-BWgjCxFo.css\">\n  </head>\n  <body>\n    <div id=\"root\"></div>\n    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->\n    <script type=\"text/javascript\" src=\"https://replit.com/public/js/replit-dev-banner.js\"></script>\n  </body>\n</html>"
+          },
+          "redirectURL": "",
+          "headersSize": 489,
+          "bodySize": 1154
+        },
+        "cache": {},
+        "timings": {
+          "blocked": 0,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 69,
+          "receive": 0
+        },
+        "time": 69,
+        "_securityState": "secure",
+        "serverIPAddress": "34.117.33.233",
+        "connection": "443",
+        "pageref": "page_1"
+      },
+      {
+        "startedDateTime": "2025-07-02T21:31:56.131-04:00",
+        "request": {
+          "bodySize": 0,
+          "method": "GET",
+          "url": "https://sandwich-sync-katielong2316.replit.app/api/messages/unread-counts",
+          "httpVersion": "HTTP/3",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "sandwich-sync-katielong2316.replit.app"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://sandwich-sync-katielong2316.replit.app/"
+            },
+            {
+              "name": "Alt-Used",
+              "value": "sandwich-sync-katielong2316.replit.app"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "tsp.session=s%3AfnSc2VJG7p4KkHfGCoE2sCGrCsfNyJK_.BAWRX7q5T5E%2FgspO1jSFffiANfDkCdCBIGJ948tRQrg"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "If-None-Match",
+              "value": "W/\"63-NP8tZsPSKhEtl4nenJV7wrxvewc\""
+            },
+            {
+              "name": "Priority",
+              "value": "u=4"
+            },
+            {
+              "name": "TE",
+              "value": "trailers"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "tsp.session",
+              "value": "s:fnSc2VJG7p4KkHfGCoE2sCGrCsfNyJK_.BAWRX7q5T5E/gspO1jSFffiANfDkCdCBIGJ948tRQrg"
+            }
+          ],
+          "queryString": [],
+          "headersSize": 652
+        },
+        "response": {
+          "status": 304,
+          "statusText": "",
+          "httpVersion": "HTTP/3",
+          "headers": [
+            {
+              "name": "date",
+              "value": "Thu, 03 Jul 2025 01:31:56 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "W/\"63-NP8tZsPSKhEtl4nenJV7wrxvewc\""
+            },
+            {
+              "name": "server",
+              "value": "Google Frontend"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; includeSubDomains"
+            },
+            {
+              "name": "x-cloud-trace-context",
+              "value": "f4e7be363645f0af3c360f200ec56c16"
+            },
+            {
+              "name": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "name": "via",
+              "value": "1.1 google"
+            },
+            {
+              "name": "alt-svc",
+              "value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 99,
+            "text": "{\"general\":0,\"committee\":0,\"hosts\":0,\"drivers\":0,\"recipients\":0,\"core_team\":0,\"direct\":0,\"total\":0}"
+          },
+          "redirectURL": "",
+          "headersSize": 337,
+          "bodySize": 436
+        },
+        "cache": {
+          "afterRequest": null
+        },
+        "timings": {
+          "blocked": -1,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 73,
+          "receive": 0
+        },
+        "time": 73,
+        "_securityState": "secure",
+        "serverIPAddress": "34.117.33.233",
+        "connection": "443",
+        "pageref": "page_1"
+      },
+      {
+        "startedDateTime": "2025-07-02T21:31:57.682-04:00",
+        "request": {
+          "bodySize": 114,
+          "method": "PATCH",
+          "url": "https://sandwich-sync-katielong2316.replit.app/api/sandwich-collections/1887",
+          "httpVersion": "HTTP/3",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "sandwich-sync-katielong2316.replit.app"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://sandwich-sync-katielong2316.replit.app/"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Length",
+              "value": "114"
+            },
+            {
+              "name": "Origin",
+              "value": "https://sandwich-sync-katielong2316.replit.app"
+            },
+            {
+              "name": "Alt-Used",
+              "value": "sandwich-sync-katielong2316.replit.app"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "tsp.session=s%3AfnSc2VJG7p4KkHfGCoE2sCGrCsfNyJK_.BAWRX7q5T5E%2FgspO1jSFffiANfDkCdCBIGJ948tRQrg"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Priority",
+              "value": "u=0"
+            },
+            {
+              "name": "TE",
+              "value": "trailers"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "tsp.session",
+              "value": "s:fnSc2VJG7p4KkHfGCoE2sCGrCsfNyJK_.BAWRX7q5T5E/gspO1jSFffiANfDkCdCBIGJ948tRQrg"
+            }
+          ],
+          "queryString": [],
+          "headersSize": 715,
+          "postData": {
+            "mimeType": "application/json",
+            "params": [],
+            "text": "{\"collectionDate\":\"2023-01-04\",\"hostName\":\"East Cobb/Roswell\",\"individualSandwiches\":1204,\"groupCollections\":\"[]\"}"
+          }
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "HTTP/3",
+          "headers": [
+            {
+              "name": "accept-ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "cache-control",
+              "value": "public, max-age=0"
+            },
+            {
+              "name": "content-length",
+              "value": "665"
+            },
+            {
+              "name": "content-type",
+              "value": "text/html; charset=UTF-8"
+            },
+            {
+              "name": "date",
+              "value": "Thu, 03 Jul 2025 01:31:57 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "W/\"299-197cdc32218\""
+            },
+            {
+              "name": "last-modified",
+              "value": "Thu, 03 Jul 2025 00:50:07 GMT"
+            },
+            {
+              "name": "server",
+              "value": "Google Frontend"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; includeSubDomains"
+            },
+            {
+              "name": "x-cloud-trace-context",
+              "value": "e7566f98344e33303c360f200ec56548"
+            },
+            {
+              "name": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "name": "via",
+              "value": "1.1 google"
+            },
+            {
+              "name": "alt-svc",
+              "value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "text/html; charset=UTF-8",
+            "size": 665,
+            "text": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1\" />\n    <title>The Sandwich Project</title>\n    <script type=\"module\" crossorigin src=\"/assets/index-DuRjTJwx.js\"></script>\n    <link rel=\"stylesheet\" crossorigin href=\"/assets/index-BWgjCxFo.css\">\n  </head>\n  <body>\n    <div id=\"root\"></div>\n    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->\n    <script type=\"text/javascript\" src=\"https://replit.com/public/js/replit-dev-banner.js\"></script>\n  </body>\n</html>"
+          },
+          "redirectURL": "",
+          "headersSize": 485,
+          "bodySize": 1150
+        },
+        "cache": {},
+        "timings": {
+          "blocked": 0,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 49,
+          "receive": 0
+        },
+        "time": 49,
+        "_securityState": "secure",
+        "serverIPAddress": "34.117.33.233",
+        "connection": "443",
+        "pageref": "page_1"
+      }
+    ]
+  }
+}
