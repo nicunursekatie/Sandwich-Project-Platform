@@ -27,14 +27,19 @@ interface UnreadCounts {
 }
 
 export default function MessageNotifications() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [lastCheck, setLastCheck] = useState(Date.now());
 
-  // Query for unread message counts
+  // Early return if user is not authenticated to prevent any queries
+  if (!isAuthenticated || !user) {
+    return null;
+  }
+
+  // Query for unread message counts - only when authenticated
   const { data: unreadCounts, refetch } = useQuery<UnreadCounts>({
     queryKey: ['/api/messages/unread-counts'],
-    enabled: !!user,
-    refetchInterval: 30000, // Check every 30 seconds
+    enabled: !!user && isAuthenticated,
+    refetchInterval: isAuthenticated ? 30000 : false, // Check every 30 seconds only when authenticated
   });
 
   // Listen for WebSocket notifications (to be implemented)
@@ -96,7 +101,7 @@ export default function MessageNotifications() {
     }
   }, []);
 
-  if (!user || !unreadCounts) {
+  if (!unreadCounts) {
     return null;
   }
 
