@@ -426,7 +426,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/projects", async (req, res) => {
+  app.post("/api/projects", requirePermission("edit_data"), async (req, res) => {
     try {
       console.log("Received project data:", req.body);
       const projectData = insertProjectSchema.parse(req.body);
@@ -463,7 +463,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/projects/:id", async (req, res) => {
+  app.put("/api/projects/:id", requirePermission("edit_data"), async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
@@ -484,7 +484,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/projects/:id", async (req, res) => {
+  app.patch("/api/projects/:id", requirePermission("edit_data"), async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
@@ -505,7 +505,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/projects/:id", async (req, res) => {
+  app.delete("/api/projects/:id", requirePermission("edit_data"), async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -657,7 +657,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/messages", async (req, res) => {
+  app.post("/api/messages", requirePermission("send_messages"), async (req, res) => {
     try {
       const messageData = insertMessageSchema.parse(req.body);
       // Add user ID to message data if user is authenticated
@@ -672,7 +672,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/messages/:id", async (req, res) => {
+  app.delete("/api/messages/:id", requirePermission("send_messages"), async (req, res) => {
     try {
       const id = parseInt(req.params.id);
 
@@ -1165,21 +1165,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/sandwich-collections/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid collection ID" });
+  app.delete(
+    "/api/sandwich-collections/:id",
+    requirePermission("edit_data"),
+    async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+          return res.status(400).json({ message: "Invalid collection ID" });
+        }
+        
+        const deleted = await storage.deleteSandwichCollection(id);
+        if (!deleted) {
+          return res.status(404).json({ message: "Collection not found" });
+        }
+        
+        // Invalidate cache when collection is deleted
+        QueryOptimizer.invalidateCache("sandwich-collections");
+        
+        res.status(204).send();
+      } catch (error) {
+        logger.error("Failed to delete sandwich collection", error);
+        res.status(500).json({ message: "Failed to delete collection" });
       }
-      const deleted = await storage.deleteSandwichCollection(id);
-      if (!deleted) {
-        return res.status(404).json({ message: "Collection not found" });
-      }
-      res.status(204).send();
-    } catch (error) {
-      res.status(500).json({ message: "Failed to delete collection" });
-    }
-  });
+    },
+  );
 
   // Analyze duplicates in sandwich collections
   app.get("/api/sandwich-collections/analyze-duplicates", async (req, res) => {
@@ -2580,7 +2590,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/hosts", async (req, res) => {
+  app.post("/api/hosts", requirePermission("edit_data"), async (req, res) => {
     try {
       const hostData = insertHostSchema.parse(req.body);
       const host = await storage.createHost(hostData);
@@ -2598,7 +2608,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/hosts/:id", async (req, res) => {
+  app.put("/api/hosts/:id", requirePermission("edit_data"), async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
