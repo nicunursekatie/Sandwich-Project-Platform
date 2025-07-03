@@ -389,7 +389,7 @@ export default function SandwichCollectionForm() {
             {groupCollections.map((group) => (
               <div key={group.id} className="flex gap-3 items-center">
                 <Input
-                  placeholder="Group name (optional)"
+                  placeholder="Group name"
                   value={group.groupName}
                   onChange={(e) =>
                     updateGroupCollection(group.id, "groupName", e.target.value)
