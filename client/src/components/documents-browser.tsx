@@ -16,8 +16,8 @@ interface DocumentFile {
 const documentFiles: DocumentFile[] = [
   {
     name: "Summer Food Safety Guidelines",
-    path: "/attached_assets/Doc85(1).docx",
-    type: "docx",
+    path: "/attached_assets/Summer Food Safety Guidelines_1751569876472.pdf",
+    type: "pdf",
     category: "Safety",
     description: "Important summer food safety guidelines for home hosts"
   },
