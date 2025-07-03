@@ -28,6 +28,7 @@ export const users = pgTable("users", {
   permissions: jsonb("permissions").default('[]'), // Array of specific permissions
   metadata: jsonb("metadata").default('{}'), // Additional user data (phone, address, availability, etc.)
   isActive: boolean("is_active").notNull().default(true),
+  lastLoginAt: timestamp("last_login_at"), // Track when user last logged in
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

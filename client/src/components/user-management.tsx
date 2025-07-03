@@ -26,6 +26,7 @@ interface User {
   role: string;
   permissions: string[];
   isActive: boolean;
+  lastLoginAt: string | null;
   createdAt: string;
 }
 
@@ -308,6 +309,7 @@ export default function UserManagement() {
                 <TableHead>User</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Last Login</TableHead>
                 <TableHead>Joined</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -332,6 +334,13 @@ export default function UserManagement() {
                     <Badge variant={user.isActive ? "default" : "secondary"}>
                       {user.isActive ? "Active" : "Inactive"}
                     </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {user.lastLoginAt 
+                      ? new Date(user.lastLoginAt).toLocaleDateString() + ' ' + 
+                        new Date(user.lastLoginAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                      : <span className="text-gray-500 italic">Never</span>
+                    }
                   </TableCell>
                   <TableCell>
                     {new Date(user.createdAt).toLocaleDateString()}

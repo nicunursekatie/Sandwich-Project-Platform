@@ -455,6 +455,9 @@ export function setupTempAuth(app: Express) {
         isActive: user.isActive
       };
 
+      // Update last login time
+      await storage.updateUser(user.id, { lastLoginAt: new Date() });
+
       // Store user in session
       req.session.user = sessionUser;
       req.user = sessionUser;
