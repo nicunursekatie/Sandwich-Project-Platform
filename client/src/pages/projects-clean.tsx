@@ -208,41 +208,42 @@ export default function ProjectsClean() {
       className="hover:shadow-md transition-shadow cursor-pointer"
       onClick={() => handleProjectClick(project.id)}
     >
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
+      <CardHeader className="pb-3 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-base font-semibold text-slate-900 truncate">
+            <CardTitle className="text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
               {project.title}
             </CardTitle>
-            <CardDescription className="text-sm text-slate-600 mt-1 line-clamp-2">
+            <CardDescription className="text-xs sm:text-sm text-slate-600 mt-1 line-clamp-2">
               {project.description}
             </CardDescription>
           </div>
-          <div className="flex flex-col items-end space-y-2 ml-4 shrink-0">
-            <Badge className={getPriorityColor(project.priority)}>
+          <div className="flex flex-row sm:flex-col items-start sm:items-end gap-2 sm:space-y-2 sm:ml-4 shrink-0">
+            <Badge className={`${getPriorityColor(project.priority)} text-xs px-2 py-1`}>
               {project.priority}
             </Badge>
-            <Badge variant="outline" className={getStatusColor(project.status)}>
+            <Badge variant="outline" className={`${getStatusColor(project.status)} text-xs px-2 py-1`}>
               {getStatusIcon(project.status)}
-              <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
+              <span className="ml-1 capitalize hidden sm:inline">{project.status.replace('_', ' ')}</span>
+              <span className="ml-1 capitalize sm:hidden">{project.status.split('_')[0]}</span>
             </Badge>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="flex items-center justify-between text-sm text-slate-600">
+      <CardContent className="space-y-3 p-4 sm:p-6 pt-0">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs sm:text-sm text-slate-600">
           <div className="flex items-center">
-            <User className="w-4 h-4 mr-2" />
-            <span>{project.assigneeName || 'Unassigned'}</span>
+            <User className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+            <span className="truncate">{project.assigneeName || 'Unassigned'}</span>
           </div>
           <div className="flex items-center">
-            <Calendar className="w-4 h-4 mr-2" />
-            <span>{new Date(project.dueDate).toLocaleDateString()}</span>
+            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+            <span className="text-xs sm:text-sm">{new Date(project.dueDate).toLocaleDateString()}</span>
           </div>
         </div>
         
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-xs sm:text-sm">
             <span className="text-slate-600">Progress</span>
             <span className="font-medium text-slate-900">{project.progress || 0}%</span>
           </div>
@@ -251,7 +252,7 @@ export default function ProjectsClean() {
 
         <div className="flex items-center justify-between pt-2">
           <div className="text-xs text-slate-500">
-            Due: {new Date(project.dueDate).toLocaleDateString()}
+            <span className="hidden sm:inline">Due: </span>{new Date(project.dueDate).toLocaleDateString()}
           </div>
           <ArrowRight className="w-4 h-4 text-slate-400" />
         </div>
@@ -366,13 +367,13 @@ export default function ProjectsClean() {
 
       {/* Create Project Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-md sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Create New Project</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">Create New Project</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleCreateProject} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="sm:col-span-2">
                 <Label htmlFor="title">Project Title *</Label>
                 <Input
                   id="title"
@@ -380,10 +381,11 @@ export default function ProjectsClean() {
                   onChange={(e) => setNewProject(prev => ({ ...prev, title: e.target.value }))}
                   required
                   placeholder="Enter project title"
+                  className="h-11 text-base"
                 />
               </div>
               
-              <div className="md:col-span-2">
+              <div className="sm:col-span-2">
                 <Label htmlFor="description">Description</Label>
                 <Textarea
                   id="description"
@@ -391,6 +393,7 @@ export default function ProjectsClean() {
                   onChange={(e) => setNewProject(prev => ({ ...prev, description: e.target.value }))}
                   rows={3}
                   placeholder="Describe the project goals and requirements"
+                  className="text-base"
                 />
               </div>
               
