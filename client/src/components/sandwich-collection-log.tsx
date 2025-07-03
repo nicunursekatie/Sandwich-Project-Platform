@@ -362,8 +362,7 @@ export default function SandwichCollectionLog() {
   // Mutations for update and delete
   const updateMutation = useMutation({
     mutationFn: async (data: { id: number; updates: any }) => {
-      const response = await apiRequest('PATCH', `/api/sandwich-collections/${data.id}`, data.updates);
-      return response.json();
+      return await apiRequest('PATCH', `/api/sandwich-collections/${data.id}`, data.updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
