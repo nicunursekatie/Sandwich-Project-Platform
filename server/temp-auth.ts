@@ -655,26 +655,43 @@ export const isAuthenticated: RequestHandler = (req: any, res, next) => {
 
 // Permission checking middleware
 export const requirePermission = (permission: string): RequestHandler => {
-  return (req: any, res, next) => {
-    const user = req.session.user;
-    if (!user) {
+  return async (req: any, res, next) => {
+    const sessionUser = req.session.user;
+    if (!sessionUser) {
       return res.status(401).json({ message: "Unauthorized" });
     }
     
-    // Check role-based permissions
-    if (user.role === "admin" || user.role === "super_admin") {
+    // Super admins have all permissions
+    if (sessionUser.role === "super_admin" || sessionUser.role === "admin") {
       return next();
     }
     
-    if (user.role === "coordinator" && !["manage_users", "system_admin"].includes(permission)) {
-      return next();
+    // If session user doesn't have permissions array, fetch fresh user data
+    let user = sessionUser;
+    if (!user.permissions) {
+      try {
+        const freshUser = await storage.getUserByEmail(sessionUser.email);
+        if (freshUser) {
+          user = freshUser;
+          // Update session with fresh user data
+          req.session.user = {
+            id: freshUser.id,
+            email: freshUser.email,
+            firstName: freshUser.firstName,
+            lastName: freshUser.lastName,
+            profileImageUrl: freshUser.profileImageUrl,
+            role: freshUser.role,
+            permissions: freshUser.permissions,
+            isActive: freshUser.isActive
+          };
+        }
+      } catch (error) {
+        console.error("Error fetching fresh user data:", error);
+      }
     }
     
-    if (user.role === "volunteer" && ["read_collections", "general_chat", "volunteer_chat"].includes(permission)) {
-      return next();
-    }
-    
-    if (user.role === "viewer" && ["read_collections", "read_reports"].includes(permission)) {
+    // Check if user has the specific permission
+    if (user.permissions && user.permissions.includes(permission)) {
       return next();
     }
     
