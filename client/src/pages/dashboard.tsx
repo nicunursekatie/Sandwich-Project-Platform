@@ -49,6 +49,14 @@ export default function Dashboard() {
   // Make setActiveSection available globally for embedded components
   React.useEffect(() => {
     (window as any).dashboardSetActiveSection = setActiveSection;
+    
+    // Check URL params on load for direct navigation
+    const urlParams = new URLSearchParams(window.location.search);
+    const section = urlParams.get('section');
+    if (section) {
+      setActiveSection(section);
+    }
+    
     return () => {
       delete (window as any).dashboardSetActiveSection;
     };

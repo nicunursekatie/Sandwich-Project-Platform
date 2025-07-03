@@ -155,7 +155,8 @@ export default function ProjectsClean() {
     if ((window as any).dashboardSetActiveSection) {
       (window as any).dashboardSetActiveSection(`project-${projectId}`);
     } else {
-      setLocation(`/projects/${projectId}`);
+      // Fallback to direct wouter routing
+      setLocation(`/dashboard?section=project-${projectId}`);
     }
   };
 
