@@ -1,0 +1,18 @@
+-- 2024-04-23 entries (8 records)
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2024-04-23', 'Alpharetta', 2244, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2024-04-23', 'Dunwoody/PTC', 2223, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2024-04-23', 'East Cobb/Roswell', 1122, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2024-04-23', 'Sandy Springs', 527, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2024-04-23', 'Intown/Druid Hills', 1344, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2024-04-23', 'Flowery Branch', 350, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2024-04-23', 'Collective Learning', 50, '[]', NOW());
+
+-- 2025 entries (7 records)  
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2025-01-22', 'Flowery Branch', 258, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2025-05-29', 'Alpharetta', 768, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2025-05-29', 'Dunwoody/PTC', 1066, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2025-05-29', 'East Cobb/Roswell', 901, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2025-05-29', 'Sandy Springs', 529, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2025-05-29', 'Intown/Druid Hills', 832, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2025-05-29', 'Flowery Branch', 275, '[]', NOW());
+INSERT INTO sandwich_collections (collection_date, host_name, individual_sandwiches, group_collections, submitted_at) VALUES ('2025-06-04', 'Intown/Druid Hills', 1221, '[]', NOW());
