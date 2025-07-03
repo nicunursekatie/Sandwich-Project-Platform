@@ -143,7 +143,7 @@ export default function Dashboard() {
                 {
                   title: "Summer Food Safety Guidelines",
                   description: "Important summer food safety guidelines for home hosts",
-                  path: "/documents/Doc85(1).docx",
+                  path: "/attached_assets/Summer Food Safety Guidelines_1751569876472.pdf",
                   category: "Safety"
                 },
                 {
