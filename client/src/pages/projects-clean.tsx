@@ -151,10 +151,13 @@ export default function ProjectsClean() {
   };
 
   const handleProjectClick = (projectId: number) => {
+    console.log('Navigating to project:', projectId);
     // Use dashboard navigation instead of routing
     if ((window as any).dashboardSetActiveSection) {
+      console.log('Using dashboard navigation');
       (window as any).dashboardSetActiveSection(`project-${projectId}`);
     } else {
+      console.log('Using fallback routing');
       // Fallback to direct wouter routing
       setLocation(`/dashboard?section=project-${projectId}`);
     }

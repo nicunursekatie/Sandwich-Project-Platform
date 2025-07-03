@@ -294,6 +294,13 @@ export default function Dashboard() {
         if (projectId) {
           return <ProjectDetailClean projectId={projectId} onBack={() => setActiveSection("projects")} />;
         }
+        // Handle legacy project routes
+        if (activeSection.startsWith("project-")) {
+          const legacyProjectId = parseInt(activeSection.replace("project-", ""));
+          if (!isNaN(legacyProjectId)) {
+            return <ProjectDetailClean projectId={legacyProjectId} onBack={() => setActiveSection("projects")} />;
+          }
+        }
         return <DashboardOverview onSectionChange={setActiveSection} />;
     }
   };
