@@ -84,11 +84,23 @@ export default function SandwichCollectionForm() {
       );
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({
         queryKey: ["/api/sandwich-collections"],
       });
       queryClient.invalidateQueries({ queryKey: ["/api/hosts"] });
+
+      // Sync to Google Sheets
+      try {
+        await apiRequest("POST", "/api/google-sheets/sync-entry", {
+          collectionData: data
+        });
+        console.log("Collection synced to Google Sheets");
+      } catch (error) {
+        console.warn("Google Sheets sync failed:", error);
+        // Don't show error to user as the main collection was successful
+      }
+
       // Reset form
       setHostName("");
       setIsCustomHost(false);
@@ -97,7 +109,7 @@ export default function SandwichCollectionForm() {
       setGroupOnlyMode(false);
       toast({
         title: "Collection submitted",
-        description: "Sandwich collection has been logged successfully.",
+        description: "Sandwich collection has been logged and synced to Google Sheets.",
       });
     },
     onError: () => {

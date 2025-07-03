@@ -4932,6 +4932,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register Google Sheets routes
   app.use('/api/google-sheets', googleSheetsRoutes);
 
+  // Google Sheets sync endpoint for individual collection entries
+  app.post('/api/google-sheets/sync-entry', async (req, res) => {
+    try {
+      const { collectionData } = req.body;
+      
+      if (!collectionData) {
+        return res.status(400).json({ error: 'Collection data is required' });
+      }
+
+      // Import the sync service dynamically to avoid dependency issues
+      const { GoogleSheetsSyncService } = await import('./google-sheets-sync');
+      
+      // Create minimal storage interface for the sync
+      const mockStorage = {
+        getAllSandwichCollections: async () => [],
+        createSandwichCollection: async (data: any) => data
+      };
+
+      const syncService = new GoogleSheetsSyncService(mockStorage);
+      
+      // Add the entry to the ReplitDatabase sheet
+      await syncService.addEntryToSheet(collectionData);
+
+      res.json({ 
+        success: true, 
+        message: 'Entry synced to Google Sheets successfully' 
+      });
+
+    } catch (error: any) {
+      console.error('Error syncing entry to Google Sheets:', error);
+      res.status(500).json({ 
+        error: 'Failed to sync to Google Sheets',
+        details: error.message 
+      });
+    }
+  });
+
   // Set up WebSocket server for real-time notifications
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
   const connectedClients = new Map<string, WebSocket[]>();

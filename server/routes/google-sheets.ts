@@ -189,4 +189,136 @@ router.post('/:id/test', async (req, res) => {
   }
 });
 
+// Analyze the structure of the target Google Sheet
+router.get('/sync/analyze', async (req, res) => {
+  try {
+    const { GoogleSheetsSyncService } = await import('../google-sheets-sync');
+    const { StorageWrapper } = await import('../storage-wrapper');
+    const storage = new StorageWrapper();
+    const syncService = new GoogleSheetsSyncService(storage);
+    
+    const sheetName = req.query.sheet as string || 'Sheet1';
+    const analysis = await syncService.analyzeSheetStructure(sheetName);
+    
+    res.json({
+      success: true,
+      analysis,
+      sheetUrl: `https://docs.google.com/spreadsheets/d/1mjx5o6boluo8mNx8tzAV76NBGS6tF0um2Rq9bIdxPo8/edit`,
+      targetSpreadsheetId: '1mjx5o6boluo8mNx8tzAV76NBGS6tF0um2Rq9bIdxPo8'
+    });
+  } catch (error) {
+    console.error('Error analyzing Google Sheet:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Google Sheets analysis failed. Please check API credentials.',
+      error: error.message 
+    });
+  }
+});
+
+// Import data from the target Google Sheet to database
+router.post('/sync/import', isAuthenticated, async (req, res) => {
+  try {
+    const { GoogleSheetsSyncService } = await import('../google-sheets-sync');
+    const { StorageWrapper } = await import('../storage-wrapper');
+    const storage = new StorageWrapper();
+    const syncService = new GoogleSheetsSyncService(storage);
+    
+    const { 
+      sheetName = 'Sheet1',
+      dateColumn,
+      hostColumn, 
+      sandwichColumn,
+      groupColumn,
+      skipRows = 1,
+      dryRun = false
+    } = req.body;
+
+    const result = await syncService.importFromGoogleSheet(sheetName, {
+      dateColumn,
+      hostColumn,
+      sandwichColumn,
+      groupColumn,
+      skipRows,
+      dryRun
+    });
+
+    res.json({
+      success: true,
+      result,
+      message: dryRun 
+        ? `Preview complete: ${result.preview?.length || 0} rows analyzed`
+        : `Import complete: ${result.imported} records imported, ${result.skipped} skipped`
+    });
+  } catch (error) {
+    console.error('Error importing from Google Sheet:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Google Sheets import failed',
+      error: error.message 
+    });
+  }
+});
+
+// Export database data to Google Sheet
+router.post('/sync/export', isAuthenticated, async (req, res) => {
+  try {
+    const { GoogleSheetsSyncService } = await import('../google-sheets-sync');
+    const { StorageWrapper } = await import('../storage-wrapper');
+    const storage = new StorageWrapper();
+    const syncService = new GoogleSheetsSyncService(storage);
+    
+    const { sheetName = 'Database_Export' } = req.body;
+    const result = await syncService.exportToGoogleSheet(sheetName);
+
+    res.json({
+      success: true,
+      result,
+      message: `Export complete: ${result.exported} records exported to ${sheetName}`
+    });
+  } catch (error) {
+    console.error('Error exporting to Google Sheet:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Google Sheets export failed',
+      error: error.message 
+    });
+  }
+});
+
+// Bidirectional sync between database and Google Sheet
+router.post('/sync/bidirectional', isAuthenticated, async (req, res) => {
+  try {
+    const { GoogleSheetsSyncService } = await import('../google-sheets-sync');
+    const { StorageWrapper } = await import('../storage-wrapper');
+    const storage = new StorageWrapper();
+    const syncService = new GoogleSheetsSyncService(storage);
+    
+    const { 
+      importFrom = 'Sheet1',
+      exportTo = 'Database_Export',
+      direction = 'both'
+    } = req.body;
+
+    const result = await syncService.syncWithGoogleSheet({
+      importFrom,
+      exportTo,
+      direction
+    });
+
+    res.json({
+      success: true,
+      result,
+      message: `Sync complete: ${result.syncSummary}`
+    });
+  } catch (error) {
+    console.error('Error syncing with Google Sheet:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Google Sheets sync failed',
+      error: error.message 
+    });
+  }
+});
+
 export default router;
