@@ -17,6 +17,8 @@ import { z } from "zod";
 import { insertHostSchema, insertHostContactSchema, insertRecipientSchema, insertContactSchema } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 import { Phone, Mail, MapPin, Search, Download, User, Users, Star, Building2, Plus, Edit, Trash2, Upload, FileSpreadsheet, Crown, Settings, ChevronDown } from "lucide-react";
 
 interface Host {
@@ -97,6 +99,10 @@ function PhoneDirectory() {
   const [isImporting, setIsImporting] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const { toast } = useToast();
+  
+  // Auth and permissions
+  const { user } = useAuth();
+  const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
 
   // Optimized: Fetch hosts with contacts in single query
   const { data: hosts = [], isLoading, refetch: refetchHostsWithContacts } = useQuery<HostWithContacts[]>({
@@ -477,134 +483,153 @@ function PhoneDirectory() {
   const HostCard = ({ host }: { host: HostWithContacts }) => (
     <Card className="mb-4">
       <CardContent className="pt-4">
-        <div className="flex items-start gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-3">
-              <Building2 className="w-5 h-5 text-blue-600" />
-              <h3 className="font-bold text-lg text-gray-900">{host.name}</h3>
+        {/* Mobile-First Host Card Layout */}
+        <div className="space-y-4">
+          {/* Host Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-blue-600 flex-shrink-0" />
+              <h3 className="font-bold text-lg text-gray-900 break-words">{host.name}</h3>
               {host.status === 'inactive' && (
                 <Badge variant="secondary">Inactive</Badge>
               )}
             </div>
             
-            {host.address && (
-              <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-                <MapPin className="w-4 h-4" />
-                <span>{host.address}</span>
-              </div>
-            )}
-            
-            {host.contacts.length === 0 ? (
-              <div className="text-gray-500 text-sm italic">No contact information available</div>
-            ) : (
-              <div className="space-y-3">
-                {host.contacts.map((contact) => (
-                  <div key={contact.id} className="border-l-2 border-blue-200 pl-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-gray-900">{contact.name}</span>
-                        <RoleBadge role={contact.role} />
-                        {contact.isPrimary && (
-                          <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setEditingHostContact(contact)}
-                          className="flex items-center gap-1 h-7 px-2"
-                        >
-                          <Edit className="w-3 h-3" />
-                          Edit
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => deleteHostContactMutation.mutate(contact.id)}
-                          className="flex items-center gap-1 h-7 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 mb-2">
-                      <a 
-                        href={`tel:${contact.phone}`} 
-                        className="flex items-center gap-2 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors group"
-                      >
-                        <Phone className="w-4 h-4 text-blue-600" />
-                        <span className="font-medium text-blue-700 text-lg">
-                          {formatPhone(contact.phone)}
-                        </span>
-                      </a>
-                      
-                      {contact.email && (
-                        <a 
-                          href={`mailto:${contact.email}`} 
-                          className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors"
-                        >
-                          <Mail className="w-4 h-4" />
-                          <span className="text-sm">{contact.email}</span>
-                        </a>
+            {/* Action Buttons - Mobile Responsive */}
+            <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSelectedHostForContact(host);
+                  setIsAddingHostContact(true);
+                }}
+                className="flex items-center gap-1 text-xs sm:text-sm h-8 px-2"
+                disabled={!canEdit}
+              >
+                <Plus className="w-3 h-3" />
+                <span className="hidden sm:inline">Add Contact</span>
+                <span className="sm:hidden">Add</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditingHost(host)}
+                className="flex items-center gap-1 text-xs sm:text-sm h-8 px-2"
+                disabled={!canEdit}
+              >
+                <Edit className="w-3 h-3" />
+                Edit
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (confirm(`Are you sure you want to delete the host location "${host.name}"? This will also delete all associated contacts.`)) {
+                    deleteHostMutation.mutate(host.id);
+                  }
+                }}
+                className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50 text-xs sm:text-sm h-8 px-2"
+                disabled={deleteHostMutation.isPending || !canEdit}
+              >
+                <Trash2 className="w-3 h-3" />
+                <span className="hidden sm:inline">Delete</span>
+                <span className="sm:hidden">Del</span>
+              </Button>
+            </div>
+          </div>
+          
+          {/* Host Address */}
+          {host.address && (
+            <div className="flex items-start gap-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+              <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <span className="break-words">{host.address}</span>
+            </div>
+          )}
+          
+          {/* Contact List */}
+          {host.contacts.length === 0 ? (
+            <div className="text-gray-500 text-sm italic bg-gray-50 p-4 rounded-lg text-center">
+              No contact information available
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {host.contacts.map((contact) => (
+                <div key={contact.id} className="border border-blue-200 rounded-lg p-4 bg-blue-50/20">
+                  {/* Contact Header */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-medium text-gray-900 text-base">{contact.name}</span>
+                      <RoleBadge role={contact.role} />
+                      {contact.isPrimary && (
+                        <Star className="w-3 h-3 text-yellow-500 fill-current" />
                       )}
                     </div>
                     
-                    {contact.notes && (
-                      <div className="text-xs text-gray-500">
-                        <strong>Notes:</strong> {contact.notes}
-                      </div>
+                    {/* Contact Actions */}
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditingHostContact(contact)}
+                        className="flex items-center gap-1 h-7 px-2 text-xs"
+                        disabled={!canEdit}
+                      >
+                        <Edit className="w-3 h-3" />
+                        <span className="hidden sm:inline">Edit</span>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteHostContactMutation.mutate(contact.id)}
+                        className="flex items-center gap-1 h-7 px-2 text-red-600 hover:text-red-700 hover:bg-red-50 text-xs"
+                        disabled={!canEdit}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        <span className="hidden sm:inline">Delete</span>
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  {/* Contact Info - Mobile Stacked */}
+                  <div className="space-y-2">
+                    <a 
+                      href={`tel:${contact.phone}`} 
+                      className="flex items-center gap-2 bg-blue-100 hover:bg-blue-200 px-3 py-3 rounded-lg transition-colors group w-full touch-manipulation"
+                    >
+                      <Phone className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                      <span className="font-medium text-blue-700 text-base sm:text-lg">
+                        {formatPhone(contact.phone)}
+                      </span>
+                    </a>
+                    
+                    {contact.email && (
+                      <a 
+                        href={`mailto:${contact.email}`} 
+                        className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors py-2 touch-manipulation"
+                      >
+                        <Mail className="w-4 h-4 flex-shrink-0" />
+                        <span className="text-sm break-all">{contact.email}</span>
+                      </a>
                     )}
                   </div>
-                ))}
-              </div>
-            )}
-            
-            {host.notes && (
-              <div className="mt-3 pt-3 border-t border-gray-200 text-sm text-gray-600">
-                <strong>Location Notes:</strong> {host.notes}
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setSelectedHostForContact(host);
-                setIsAddingHostContact(true);
-              }}
-              className="flex items-center gap-1"
-            >
-              <Plus className="w-3 h-3" />
-              Add Contact
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setEditingHost(host)}
-              className="flex items-center gap-1"
-            >
-              <Edit className="w-3 h-3" />
-              Edit
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                if (confirm(`Are you sure you want to delete the host location "${host.name}"? This will also delete all associated contacts.`)) {
-                  deleteHostMutation.mutate(host.id);
-                }
-              }}
-              className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50"
-              disabled={deleteHostMutation.isPending}
-            >
-              <Trash2 className="w-3 h-3" />
-              Delete
-            </Button>
-          </div>
+                  
+                  {contact.notes && (
+                    <div className="text-xs text-gray-600 mt-3 bg-white/80 p-2 rounded border">
+                      <strong>Notes:</strong> {contact.notes}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {/* Host Notes */}
+          {host.notes && (
+            <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border">
+              <strong>Location Notes:</strong> {host.notes}
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
@@ -782,12 +807,12 @@ function PhoneDirectory() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Phone Directory</h2>
-          <p className="text-slate-600">Contact information for hosts, recipients, and general contacts</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Phone Directory</h2>
+          <p className="text-slate-600 text-sm sm:text-base">Contact information for hosts, recipients, and general contacts</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {activeTab === "hosts" && (
             <Button 
               onClick={() => setIsAddingHost(true)}
