@@ -64,8 +64,8 @@ export default function ChatHub() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-main-heading text-primary">Team Communication</h1>
-          <p className="font-body text-muted-foreground">Stay connected with your team and committees</p>
+          <h1 className="text-xl sm:text-2xl font-main-heading text-primary">Team Communication</h1>
+          <p className="text-sm sm:text-base font-body text-muted-foreground">Stay connected with your team and committees</p>
         </div>
       </div>
 
@@ -75,9 +75,12 @@ export default function ChatHub() {
         </div>
       ) : (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={`grid w-full mb-6`} style={{ gridTemplateColumns: `repeat(${availableTabs.length}, 1fr)` }}>
+          <TabsList className={`grid w-full mb-4 sm:mb-6 overflow-x-auto`} style={{ gridTemplateColumns: `repeat(${availableTabs.length}, minmax(80px, 1fr))` }}>
             {availableTabs.map(tab => (
-              <TabsTrigger key={tab.value} value={tab.value}>{tab.label}</TabsTrigger>
+              <TabsTrigger key={tab.value} value={tab.value} className="text-xs sm:text-sm whitespace-nowrap px-2 sm:px-4">
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+              </TabsTrigger>
             ))}
           </TabsList>
           

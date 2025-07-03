@@ -188,21 +188,23 @@ export default function ReportingDashboard({ isEmbedded = false }: { isEmbedded?
   // Render content-only when embedded in dashboard
   const renderReportingContent = () => (
     <div className="max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Reporting Dashboard</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Reporting Dashboard</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-2">
             Generate comprehensive reports and schedule automated deliveries
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="h-10 text-sm">
             <FileText className="w-4 h-4 mr-2" />
-            Templates
+            <span className="hidden sm:inline">Templates</span>
+            <span className="sm:hidden">Temp</span>
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="h-10 text-sm">
             <Settings className="w-4 h-4 mr-2" />
-            Settings
+            <span className="hidden sm:inline">Settings</span>
+            <span className="sm:hidden">Set</span>
           </Button>
         </div>
       </div>

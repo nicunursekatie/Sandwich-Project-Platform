@@ -406,9 +406,9 @@ export default function HostsManagementConsolidated() {
                       Edit
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="max-w-md sm:max-w-lg max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle>Edit Host</DialogTitle>
+                      <DialogTitle className="text-lg sm:text-xl">Edit Host</DialogTitle>
                     </DialogHeader>
                     {editingHost && (
                       <div className="space-y-4">
@@ -500,9 +500,9 @@ export default function HostsManagementConsolidated() {
               Add Host
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-md sm:max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Add New Host</DialogTitle>
+              <DialogTitle className="text-lg sm:text-xl">Add New Host</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>

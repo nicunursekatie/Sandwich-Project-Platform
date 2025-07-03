@@ -935,11 +935,12 @@ export default function SandwichCollectionLog() {
               onClick={() => setShowDataManagement(true)}
               variant="outline"
               size="sm"
-              className="flex items-center space-x-2 w-full sm:w-auto btn-outline-tsp"
+              className="flex items-center space-x-2 w-full sm:w-auto btn-outline-tsp h-10 text-sm"
               style={{borderColor: 'var(--tsp-teal)', color: 'var(--tsp-teal)'}}
             >
               <Database className="w-4 h-4" />
-              <span>Data Management</span>
+              <span className="hidden sm:inline">Data Management</span>
+              <span className="sm:hidden">Data</span>
             </Button>
           )}
         </div>

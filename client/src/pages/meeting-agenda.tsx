@@ -156,18 +156,19 @@ export default function MeetingAgenda() {
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-xl">
-            <ListTodo className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 dark:bg-blue-900/20 rounded-xl">
+            <ListTodo className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Meeting Agenda</h1>
-            <p className="text-gray-600 dark:text-gray-400">Plan and organize meeting topics and discussions</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Meeting Agenda</h1>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Plan and organize meeting topics and discussions</p>
           </div>
         </div>
-        <Button onClick={() => setIsCreating(true)} className="self-start">
+        <Button onClick={() => setIsCreating(true)} className="self-start h-10 text-sm">
           <Plus className="w-4 h-4 mr-2" />
-          New Agenda Item
+          <span className="hidden sm:inline">New Agenda Item</span>
+          <span className="sm:hidden">New Item</span>
         </Button>
       </div>
 

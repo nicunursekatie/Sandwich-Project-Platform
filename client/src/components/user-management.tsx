@@ -250,39 +250,42 @@ export default function UserManagement() {
     <div className="space-y-6">
       {/* Tab Navigation */}
       <div className="border-b border-slate-200">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px flex space-x-4 sm:space-x-8 overflow-x-auto">
           <button
             onClick={() => setActiveTab("users")}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
               activeTab === "users"
                 ? "border-blue-500 text-blue-600"
                 : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
             }`}
           >
-            <Users className="h-4 w-4 inline mr-2" />
-            User Management
+            <Users className="h-4 w-4 inline mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">User Management</span>
+            <span className="sm:hidden">Users</span>
           </button>
           <button
             onClick={() => setActiveTab("announcements")}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
               activeTab === "announcements"
                 ? "border-blue-500 text-blue-600"
                 : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
             }`}
           >
-            <Megaphone className="h-4 w-4 inline mr-2" />
-            Announcements
+            <Megaphone className="h-4 w-4 inline mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">Announcements</span>
+            <span className="sm:hidden">Announce</span>
           </button>
           <button
             onClick={() => setActiveTab("auth-debug")}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
               activeTab === "auth-debug"
                 ? "border-blue-500 text-blue-600"
                 : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
             }`}
           >
-            <Bug className="h-4 w-4 inline mr-2" />
-            Auth Debug
+            <Bug className="h-4 w-4 inline mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">Auth Debug</span>
+            <span className="sm:hidden">Debug</span>
           </button>
         </nav>
       </div>
