@@ -907,10 +907,10 @@ function PhoneDirectory() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
-              placeholder="Search by name, phone, or email..."
+              placeholder="Search contacts..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 h-11 text-base"
             />
           </div>
         </CardContent>
@@ -1055,7 +1055,7 @@ function PhoneDirectory() {
 
       {/* Add Host Dialog */}
       <Dialog open={isAddingHost} onOpenChange={setIsAddingHost}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Add New Location</DialogTitle>
             <DialogDescription>
@@ -1072,7 +1072,7 @@ function PhoneDirectory() {
 
       {/* Edit Host Dialog */}
       <Dialog open={!!editingHost} onOpenChange={(open) => !open && setEditingHost(null)}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Host Location</DialogTitle>
             <DialogDescription>
@@ -1331,7 +1331,7 @@ const HostForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3 sm:space-y-4">
         {initialData && (
           <div className="space-y-3 p-4 bg-blue-50 rounded-lg border">
             <div className="flex items-center space-x-2">
@@ -1396,7 +1396,7 @@ const HostForm = ({
                 <FormItem>
                   <FormLabel>Location Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter host location name" {...field} />
+                    <Input placeholder="Enter host location name" {...field} className="h-11 text-base" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -1410,7 +1410,13 @@ const HostForm = ({
                 <FormItem>
                   <FormLabel>Address</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Enter full address" {...field} value={field.value || ""} />
+                    <Textarea 
+                      placeholder="Enter full address" 
+                      {...field} 
+                      value={field.value || ""} 
+                      className="min-h-[80px] text-base resize-none" 
+                      rows={3}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -1424,7 +1430,13 @@ const HostForm = ({
                 <FormItem>
                   <FormLabel>Notes</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Additional notes about this location" {...field} value={field.value || ""} />
+                    <Textarea 
+                      placeholder="Additional notes about this location" 
+                      {...field} 
+                      value={field.value || ""} 
+                      className="min-h-[80px] text-base resize-none"
+                      rows={3}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -1455,11 +1467,11 @@ const HostForm = ({
           )}
         />
 
-        <div className="flex justify-end gap-2 pt-4">
-          <Button type="button" variant="outline" onClick={onCancel}>
+        <div className="flex flex-col sm:flex-row sm:justify-end gap-2 pt-4">
+          <Button type="button" variant="outline" onClick={onCancel} className="h-11 text-base">
             Cancel
           </Button>
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isLoading} className="h-11 text-base">
             {isLoading ? "Saving..." : 
              useExistingLocation && initialData ? "Reassign Location" :
              initialData ? "Update Host" : "Add Host"}
