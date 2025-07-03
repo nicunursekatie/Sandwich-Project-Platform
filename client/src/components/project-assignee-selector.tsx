@@ -4,14 +4,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { UserPlus, Users } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { UserPlus, Users, X } from "lucide-react";
 
 interface ProjectAssigneeSelectorProps {
   value: string;
-  onChange: (value: string, userId?: string) => void;
+  onChange: (value: string, userIds?: string[]) => void;
   placeholder?: string;
   label?: string;
   className?: string;
+  multiple?: boolean;
 }
 
 interface User {
@@ -21,16 +23,23 @@ interface User {
   lastName: string | null;
 }
 
+interface SelectedUser {
+  id: string;
+  name: string;
+}
+
 export function ProjectAssigneeSelector({ 
   value, 
   onChange, 
-  placeholder = "Enter assignee name or select user",
+  placeholder = "Enter assignee names or select users",
   label = "Assigned To",
-  className 
+  className,
+  multiple = true
 }: ProjectAssigneeSelectorProps) {
   const [mode, setMode] = useState<'text' | 'user'>('text');
   const [textValue, setTextValue] = useState(value || '');
-  const [selectedUserId, setSelectedUserId] = useState<string>('');
+  const [selectedUsers, setSelectedUsers] = useState<SelectedUser[]>([]);
+  const [pendingUserId, setPendingUserId] = useState<string>('');
 
   // Fetch system users
   const { data: users = [] } = useQuery<User[]>({
@@ -38,110 +47,184 @@ export function ProjectAssigneeSelector({
     retry: false,
   });
 
-  // Determine if current value matches a system user
+  // Initialize from existing value
   useEffect(() => {
-    if (users.length > 0 && value) {
-      const matchedUser = users.find(user => {
-        const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim();
-        return fullName === value || user.email === value;
-      });
-      
-      if (matchedUser) {
+    if (value && users.length > 0) {
+      if (value.includes(',')) {
+        // Multiple names - try to match them to users
+        const nameList = value.split(',').map(n => n.trim());
+        const matchedUsers: SelectedUser[] = [];
+        
+        nameList.forEach(name => {
+          const matchedUser = users.find(user => {
+            const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+            return fullName === name || user.email === name;
+          });
+          
+          if (matchedUser) {
+            matchedUsers.push({
+              id: matchedUser.id,
+              name: `${matchedUser.firstName || ''} ${matchedUser.lastName || ''}`.trim() || matchedUser.email
+            });
+          } else {
+            // Keep as text if no user match
+            matchedUsers.push({
+              id: `text_${name}`,
+              name: name
+            });
+          }
+        });
+        
+        setSelectedUsers(matchedUsers);
         setMode('user');
-        setSelectedUserId(matchedUser.id);
+        // Update parent with the matched users
+        const userNames = matchedUsers.map(u => u.name).join(', ');
+        const userIds = matchedUsers.filter(u => !u.id.startsWith('text_')).map(u => u.id);
+        onChange(userNames, userIds);
       } else {
-        setMode('text');
         setTextValue(value);
+        setMode('text');
       }
     }
   }, [users, value]);
 
   const handleTextChange = (newValue: string) => {
     setTextValue(newValue);
-    onChange(newValue);
+    onChange(newValue, []);
   };
 
-  const handleUserSelect = (userId: string) => {
-    setSelectedUserId(userId);
-    const user = users.find(u => u.id === userId);
-    if (user) {
-      const displayName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email;
-      onChange(displayName, userId);
+  const addUser = () => {
+    if (!pendingUserId) return;
+    
+    const user = users.find(u => u.id === pendingUserId);
+    if (!user) return;
+
+    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email;
+    const newUser: SelectedUser = {
+      id: user.id,
+      name: fullName
+    };
+
+    // Check if already selected
+    if (selectedUsers.some(u => u.id === user.id)) {
+      setPendingUserId('');
+      return;
     }
+
+    const updatedUsers = [...selectedUsers, newUser];
+    setSelectedUsers(updatedUsers);
+    setPendingUserId('');
+    
+    // Update parent with names and IDs
+    const names = updatedUsers.map(u => u.name).join(', ');
+    const userIds = updatedUsers.filter(u => !u.id.startsWith('text_')).map(u => u.id);
+    onChange(names, userIds);
   };
 
-  const formatUserName = (user: User) => {
-    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim();
-    return fullName || user.email;
+  const removeUser = (userId: string) => {
+    const updatedUsers = selectedUsers.filter(u => u.id !== userId);
+    setSelectedUsers(updatedUsers);
+    
+    const names = updatedUsers.map(u => u.name).join(', ');
+    const userIds = updatedUsers.filter(u => !u.id.startsWith('text_')).map(u => u.id);
+    onChange(names, userIds);
+  };
+
+  const toggleMode = () => {
+    const newMode = mode === 'text' ? 'user' : 'text';
+    setMode(newMode);
+    
+    if (newMode === 'text') {
+      setSelectedUsers([]);
+      setPendingUserId('');
+      onChange(textValue, []);
+    } else {
+      setTextValue('');
+      onChange('', []);
+    }
   };
 
   return (
     <div className={className}>
-      <div className="space-y-2">
-        <Label className="text-sm font-medium text-slate-700">{label}</Label>
-        
-        <div className="flex gap-2 mb-2">
+      <div className="flex items-center gap-2 mb-2">
+        <Label>{label}</Label>
+        <div className="flex gap-1">
           <Button
             type="button"
             variant={mode === 'text' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => setMode('text')}
-            className="h-8 text-xs flex-1"
+            onClick={toggleMode}
+            className="h-6 px-2 text-xs"
           >
-            <UserPlus className="w-3 h-3 mr-1" />
-            Free Text
+            Text
           </Button>
           <Button
             type="button"
             variant={mode === 'user' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => setMode('user')}
-            className="h-8 text-xs flex-1"
-            disabled={users.length === 0}
+            onClick={toggleMode}
+            className="h-6 px-2 text-xs"
           >
-            <Users className="w-3 h-3 mr-1" />
-            Select User
+            <Users className="h-3 w-3 mr-1" />
+            Users
           </Button>
         </div>
       </div>
 
       {mode === 'text' ? (
         <Input
-          type="text"
-          placeholder={placeholder}
           value={textValue}
           onChange={(e) => handleTextChange(e.target.value)}
-          className="w-full"
+          placeholder={placeholder}
         />
       ) : (
-        <Select value={selectedUserId} onValueChange={handleUserSelect}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select a user from the system" />
-          </SelectTrigger>
-          <SelectContent>
-            {users.map((user) => (
-              <SelectItem key={user.id} value={user.id}>
-                <div className="flex flex-col">
-                  <span className="font-medium">{formatUserName(user)}</span>
-                  {user.firstName && (
-                    <span className="text-xs text-slate-500">{user.email}</span>
-                  )}
-                </div>
-              </SelectItem>
-            ))}
-            {users.length === 0 && (
-              <SelectItem value="" disabled>
-                No system users available
-              </SelectItem>
-            )}
-          </SelectContent>
-        </Select>
-      )}
-
-      {mode === 'user' && users.length === 0 && (
-        <p className="text-xs text-slate-500 mt-1">
-          No users have set up accounts yet. Use "Free Text" mode to enter names manually.
-        </p>
+        <div className="space-y-2">
+          {/* Selected Users */}
+          {selectedUsers.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {selectedUsers.map((user) => (
+                <Badge key={user.id} variant="secondary" className="pr-1">
+                  {user.name}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeUser(user.id)}
+                    className="h-4 w-4 p-0 ml-1 hover:bg-destructive hover:text-destructive-foreground"
+                  >
+                    <X className="h-2 w-2" />
+                  </Button>
+                </Badge>
+              ))}
+            </div>
+          )}
+          
+          {/* Add User Select */}
+          <div className="flex gap-2">
+            <Select value={pendingUserId} onValueChange={setPendingUserId}>
+              <SelectTrigger className="flex-1">
+                <SelectValue placeholder="Select team member to add" />
+              </SelectTrigger>
+              <SelectContent>
+                {users
+                  .filter(user => !selectedUsers.some(su => su.id === user.id))
+                  .map((user) => (
+                    <SelectItem key={user.id} value={user.id}>
+                      {`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+            <Button
+              type="button"
+              onClick={addUser}
+              disabled={!pendingUserId}
+              size="sm"
+            >
+              <UserPlus className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   );

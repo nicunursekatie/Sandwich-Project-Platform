@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Plus, Users, Clock, CheckCircle, AlertCircle, FolderOpen, Edit2, Trash2 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 import { useLocation } from "wouter";
+import { ProjectAssigneeSelector } from '@/components/project-assignee-selector';
 
 interface Project {
   id: number;
@@ -40,6 +41,7 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
     description: '',
     priority: 'medium' as 'low' | 'medium' | 'high',
     assignedTo: '',
+    assigneeIds: [] as string[],
     dueDate: ''
   });
 
@@ -52,12 +54,12 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
   // Create project mutation
   const createMutation = useMutation({
     mutationFn: async (projectData: any) => 
-      apiRequest('/api/projects', { method: 'POST', body: projectData }),
+      apiRequest('POST', '/api/projects', projectData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
       refetch(); // Force immediate refetch
       setIsAddModalOpen(false);
-      setNewProject({ title: '', description: '', priority: 'medium', assignedTo: '', dueDate: '' });
+      setNewProject({ title: '', description: '', priority: 'medium', assignedTo: '', assigneeIds: [], dueDate: '' });
       toast({ description: 'Project created successfully!' });
     },
     onError: (error: any) => {
@@ -69,13 +71,13 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
   // Update project mutation  
   const updateMutation = useMutation({
     mutationFn: async ({ id, ...data }: any) => 
-      apiRequest(`/api/projects/${id}`, { method: 'PUT', body: data }),
+      apiRequest('PATCH', `/api/projects/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
       refetch(); // Force immediate refetch
       setEditingProject(null);
       setIsAddModalOpen(false);
-      setNewProject({ title: '', description: '', priority: 'medium', assignedTo: '', dueDate: '' });
+      setNewProject({ title: '', description: '', priority: 'medium', assignedTo: '', assigneeIds: [], dueDate: '' });
       toast({ description: 'Project updated successfully!' });
     },
     onError: (error: any) => {
@@ -87,7 +89,7 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
   // Delete project mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => 
-      apiRequest(`/api/projects/${id}`, { method: 'DELETE' }),
+      apiRequest('DELETE', `/api/projects/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
       refetch(); // Force immediate refetch
@@ -107,6 +109,8 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
       description: newProject.description,
       priority: newProject.priority,
       assigneeName: newProject.assignedTo || null,
+      assigneeNames: newProject.assignedTo || null,
+      assigneeIds: JSON.stringify(newProject.assigneeIds || []),
       dueDate: newProject.dueDate || null,
       status: 'available',
       category: 'general',
@@ -130,6 +134,7 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
       description: project.description || '',
       priority: project.priority as 'low' | 'medium' | 'high',
       assignedTo: project.assigneeName || '',
+      assigneeIds: [], // Will be parsed from project data if available
       dueDate: project.dueDate || ''
     });
     setIsAddModalOpen(true);
@@ -213,12 +218,17 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="assignedTo">Assigned To</Label>
-                  <Input
-                    id="assignedTo"
-                    value={newProject.assignedTo || ''}
-                    onChange={(e) => setNewProject(prev => ({ ...prev, assignedTo: e.target.value }))}
-                    placeholder="Enter assignee name"
+                  <ProjectAssigneeSelector
+                    value={newProject.assignedTo}
+                    onChange={(value, userIds) => 
+                      setNewProject(prev => ({ 
+                        ...prev, 
+                        assignedTo: value,
+                        assigneeIds: userIds || []
+                      }))
+                    }
+                    placeholder="Select team members or enter names"
+                    multiple={true}
                   />
                 </div>
               </div>
@@ -235,7 +245,7 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
                 <Button type="button" variant="outline" onClick={() => {
                   setIsAddModalOpen(false);
                   setEditingProject(null);
-                  setNewProject({ title: '', description: '', priority: 'medium', assignedTo: '', dueDate: '' });
+                  setNewProject({ title: '', description: '', priority: 'medium', assignedTo: '', assigneeIds: [], dueDate: '' });
                 }}>
                   Cancel
                 </Button>

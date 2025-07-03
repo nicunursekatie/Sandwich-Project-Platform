@@ -57,6 +57,8 @@ export const projects = pgTable("projects", {
   category: text("category").notNull().default("general"), // 'general', 'marketing', 'operations', 'grants', 'events'
   assigneeId: integer("assignee_id"),
   assigneeName: text("assignee_name"),
+  assigneeIds: jsonb("assignee_ids").default('[]'), // Array of user IDs for multiple assignees
+  assigneeNames: text("assignee_names"), // Comma-separated names for multiple assignees
   dueDate: text("due_date"), // ISO date string
   startDate: text("start_date"), // ISO date string
   completionDate: text("completion_date"), // ISO date string
