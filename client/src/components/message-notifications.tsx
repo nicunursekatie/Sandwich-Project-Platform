@@ -69,8 +69,8 @@ export default function MessageNotifications() {
             // Refetch unread counts when new message arrives
             refetch();
             
-            // Show browser notification if permission granted
-            if (Notification.permission === 'granted') {
+            // Show browser notification if permission granted and available
+            if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
               new Notification(`New message in ${data.committee}`, {
                 body: `${data.sender}: ${data.content.substring(0, 100)}...`,
                 icon: '/favicon.ico'
@@ -96,7 +96,7 @@ export default function MessageNotifications() {
 
   // Request notification permission on mount
   useEffect(() => {
-    if (Notification.permission === 'default') {
+    if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
       Notification.requestPermission();
     }
   }, []);
