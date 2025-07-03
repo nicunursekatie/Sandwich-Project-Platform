@@ -224,18 +224,24 @@ export default function SandwichCollectionForm() {
           )
         : "[]";
 
-    // In group-only mode, use the first group name or "Community Groups" as host name
+    // In group-only mode, use "Groups" as host name and move group totals to individual sandwiches
     let finalHostName = hostName.trim();
+    let finalIndividualSandwiches = parseInt(individualSandwiches) || 0;
+    let finalGroupCollections = groupCollectionsString;
+    
     if (groupOnlyMode) {
-      const firstGroup = validGroupCollections[0];
-      finalHostName = firstGroup?.groupName?.trim() || "Community Groups";
+      finalHostName = "Groups";
+      // In group-only mode, sum all group collections and put in individual sandwiches field
+      const totalGroupSandwiches = validGroupCollections.reduce((sum, group) => sum + group.sandwichCount, 0);
+      finalIndividualSandwiches = totalGroupSandwiches;
+      finalGroupCollections = groupCollectionsString; // Keep the group breakdown for reference
     }
 
     submitCollectionMutation.mutate({
       collectionDate,
       hostName: finalHostName,
-      individualSandwiches: groupOnlyMode ? 0 : parseInt(individualSandwiches),
-      groupCollections: groupCollectionsString,
+      individualSandwiches: finalIndividualSandwiches,
+      groupCollections: finalGroupCollections,
     });
   };
 
