@@ -58,7 +58,7 @@ export default function MessageNotifications() {
         // Send user identification
         socket.send(JSON.stringify({
           type: 'identify',
-          userId: user.id
+          userId: (user as any)?.id
         }));
       };
 

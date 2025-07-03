@@ -665,7 +665,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                           </div>
                         </div>
                       </div>
-                      <div className="flex space-x-1 ml-4">
+                      <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1 ml-2 sm:ml-4 shrink-0">
                         <Dialog open={editingTask?.id === task.id} onOpenChange={(open) => !open && setEditingTask(null)}>
                           <DialogTrigger asChild>
                             <Button 
@@ -673,6 +673,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                               size="sm"
                               disabled={!canEdit}
                               onClick={() => setEditingTask(task)}
+                              className="w-8 h-8 p-0"
                             >
                               <Edit className="w-3 h-3" />
                             </Button>
@@ -770,6 +771,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                           <Button 
                             variant="outline" 
                             size="sm"
+                            className="w-8 h-8 p-0 bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
                             onClick={() => {
                               // Send congratulations notification to the task assignee only (no popup for sender)
                               const congratulationData = {
@@ -806,7 +808,6 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                                 });
                               });
                             }}
-                            className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
                           >
                             <Award className="w-3 h-3" />
                           </Button>
@@ -817,7 +818,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                           size="sm"
                           disabled={!canEdit}
                           onClick={() => handleDeleteTask(task.id)}
-                          className="text-red-600 hover:text-red-700"
+                          className="w-8 h-8 p-0 text-red-600 hover:text-red-700"
                         >
                           <Trash2 className="w-3 h-3" />
                         </Button>
