@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, projectAssignments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, groupMessageParticipants, messageGroups, groupMemberships,
+  users, projects, projectTasks, projectComments, projectAssignments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, groupMessageParticipants, messageGroups, groupMemberships, committees, committeeMemberships,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -18,7 +18,9 @@ import {
   type HostContact, type InsertHostContact,
   type Recipient, type InsertRecipient,
   type Contact, type InsertContact,
-  type GroupMessageParticipant, type InsertGroupMessageParticipant
+  type GroupMessageParticipant, type InsertGroupMessageParticipant,
+  type Committee, type InsertCommittee,
+  type CommitteeMembership, type InsertCommitteeMembership
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql, and, or } from "drizzle-orm";
@@ -81,11 +83,6 @@ export class DatabaseStorage implements IStorage {
   async getUserByUsername(username: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.email, username));
     return user || undefined;
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
-    return user;
   }
 
   // Projects
@@ -708,5 +705,137 @@ export class DatabaseStorage implements IStorage {
       ...project,
       assignments: assignmentsData.filter(assignment => assignment.projectId === project.id)
     }));
+  }
+
+  // Committee management
+  async getAllCommittees(): Promise<Committee[]> {
+    return await db.select().from(committees).orderBy(committees.createdAt);
+  }
+
+  async getCommittee(id: string): Promise<Committee | undefined> {
+    const [committee] = await db.select().from(committees).where(eq(committees.id, id));
+    return committee || undefined;
+  }
+
+  async createCommittee(committee: InsertCommittee): Promise<Committee> {
+    const [newCommittee] = await db.insert(committees).values(committee).returning();
+    return newCommittee;
+  }
+
+  async updateCommittee(id: string, updates: Partial<Committee>): Promise<Committee | undefined> {
+    const [committee] = await db
+      .update(committees)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(committees.id, id))
+      .returning();
+    return committee || undefined;
+  }
+
+  async deleteCommittee(id: string): Promise<boolean> {
+    const result = await db.delete(committees).where(eq(committees.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  // Committee membership management
+  async getUserCommittees(userId: string): Promise<Array<Committee & { membership: CommitteeMembership }>> {
+    const userCommittees = await db
+      .select()
+      .from(committeeMemberships)
+      .innerJoin(committees, eq(committeeMemberships.committeeId, committees.id))
+      .where(eq(committeeMemberships.userId, userId));
+    
+    return userCommittees.map(result => ({
+      ...result.committees,
+      membership: result.committee_memberships
+    }));
+  }
+
+  async getCommitteeMembers(committeeId: string): Promise<Array<User & { membership: CommitteeMembership }>> {
+    const members = await db
+      .select()
+      .from(committeeMemberships)
+      .innerJoin(users, eq(committeeMemberships.userId, users.id))
+      .where(eq(committeeMemberships.committeeId, committeeId));
+    
+    return members.map(result => ({
+      ...result.users,
+      membership: result.committee_memberships
+    }));
+  }
+
+  async addUserToCommittee(membership: InsertCommitteeMembership): Promise<CommitteeMembership> {
+    const [newMembership] = await db.insert(committeeMemberships).values(membership).returning();
+    return newMembership;
+  }
+
+  async updateCommitteeMembership(id: number, updates: Partial<CommitteeMembership>): Promise<CommitteeMembership | undefined> {
+    const [membership] = await db
+      .update(committeeMemberships)
+      .set(updates)
+      .where(eq(committeeMemberships.id, id))
+      .returning();
+    return membership || undefined;
+  }
+
+  async removeUserFromCommittee(userId: string, committeeId: string): Promise<boolean> {
+    const result = await db
+      .delete(committeeMemberships)
+      .where(and(eq(committeeMemberships.userId, userId), eq(committeeMemberships.committeeId, committeeId)));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  async isUserCommitteeMember(userId: string, committeeId: string): Promise<boolean> {
+    const [membership] = await db
+      .select()
+      .from(committeeMemberships)
+      .where(and(eq(committeeMemberships.userId, userId), eq(committeeMemberships.committeeId, committeeId)));
+    return !!membership;
+  }
+
+  // Notifications & Celebrations
+  async getUserNotifications(userId: string): Promise<any[]> {
+    // For now return empty array - notifications can be implemented later
+    return [];
+  }
+
+  async createNotification(notification: any): Promise<any> {
+    // Basic notification creation - can be enhanced later
+    return notification;
+  }
+
+  async markNotificationRead(id: number): Promise<boolean> {
+    // For now return true - can be implemented later
+    return true;
+  }
+
+  async deleteNotification(id: number): Promise<boolean> {
+    // For now return true - can be implemented later
+    return true;
+  }
+
+  async createCelebration(userId: string, taskId: number, message: string): Promise<any> {
+    // For now return basic celebration object - can be implemented later
+    return { userId, taskId, message, type: 'celebration' };
+  }
+
+  // Announcements
+  async getAllAnnouncements(): Promise<any[]> {
+    // For now return empty array - announcements can be implemented later
+    return [];
+  }
+
+  async createAnnouncement(announcement: any): Promise<any> {
+    // Basic announcement creation - can be enhanced later
+    return announcement;
+  }
+
+  async updateAnnouncement(id: number, updates: any): Promise<any | undefined> {
+    // For now return the updates - can be implemented later
+    return updates;
+  }
+
+  async deleteAnnouncement(id: number): Promise<boolean> {
+    // For now return true - can be implemented later
+    return true;
   }
 }

@@ -54,11 +54,16 @@ export default function ChatHub() {
   }
 
   const defaultTab = availableTabs.length > 0 ? availableTabs[0].value : "general";
-  
+
   // Initialize activeTab to defaultTab if not set
   if (!activeTab && defaultTab) {
     setActiveTab(defaultTab);
   }
+
+  const renderChatComponent = () => {
+    const activeTabComponent = availableTabs.find(tab => tab.value === activeTab)?.component;
+    return activeTabComponent;
+  };
 
   return (
     <div className="space-y-6">
@@ -89,19 +94,19 @@ export default function ChatHub() {
               ))}
             </select>
           </div>
-          
+
           {/* Desktop: Tab list */}
-          <TabsList className="hidden sm:grid w-full mb-6" style={{ gridTemplateColumns: `repeat(${availableTabs.length}, 1fr)` }}>
+          <TabsList className="hidden sm:grid w-full mb-6" style={{ gridTemplateColumns: "repeat(" + availableTabs.length + ", 1fr)" }}>
             {availableTabs.map(tab => (
               <TabsTrigger key={tab.value} value={tab.value} className="text-sm px-4">
                 {tab.label}
               </TabsTrigger>
             ))}
           </TabsList>
-          
+
           <div className="space-y-6">
             {/* Only render the active tab component to prevent simultaneous API calls */}
-            {availableTabs.find(tab => tab.value === activeTab)?.component}
+            <div className="flex-1 min-h-0 overflow-hidden">{renderChatComponent()}</div>
           </div>
         </Tabs>
       )}

@@ -188,16 +188,16 @@ export default function MessageLog() {
   }
 
   return (
-    <div className="bg-white h-[calc(100vh-8rem)] flex flex-col">
+    <div className="bg-white min-h-0 flex-1 flex flex-col max-h-screen">
       {/* Chat Header - Slack style */}
-      <div className="px-4 py-3 border-b border-slate-200 flex items-center">
+      <div className="px-2 sm:px-4 py-3 border-b border-slate-200 flex items-center flex-shrink-0">
         <Hash className="w-4 h-4 text-slate-500 mr-2" />
-        <h2 className="text-lg font-bold text-slate-900">team-chat</h2>
-        <div className="ml-auto flex items-center gap-3">
+        <h2 className="text-base sm:text-lg font-bold text-slate-900">team-chat</h2>
+        <div className="ml-auto flex items-center gap-1 sm:gap-3">
           {userName && (
-            <div className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">
-              <User className="w-4 h-4" />
-              {userName}
+            <div className="hidden sm:flex items-center gap-2 px-2 sm:px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs sm:text-sm">
+              <User className="w-3 sm:w-4 h-3 sm:h-4" />
+              <span className="hidden md:inline">{userName}</span>
             </div>
           )}
           <Dialog open={isNameDialogOpen} onOpenChange={setIsNameDialogOpen}>
@@ -205,13 +205,14 @@ export default function MessageLog() {
               <Button 
                 variant="outline" 
                 size="sm"
+                className="text-xs sm:text-sm px-2 sm:px-3"
                 onClick={() => {
                   setTempUserName(userName);
                   setIsNameDialogOpen(true);
                 }}
               >
-                <Settings className="w-4 h-4 mr-2" />
-                {userName ? "Change Name" : "Set Name"}
+                <Settings className="w-3 sm:w-4 h-3 sm:h-4 sm:mr-2" />
+                <span className="hidden sm:inline">{userName ? "Change Name" : "Set Name"}</span>
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -247,7 +248,7 @@ export default function MessageLog() {
       </div>
 
       {/* Chat Messages - Slack style */}
-      <div className="flex-1 overflow-y-auto px-4 py-2">
+      <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-2 min-h-0">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <MessageCircle className="w-12 h-12 text-slate-300 mb-4" />
@@ -414,7 +415,7 @@ export default function MessageLog() {
       </div>
 
       {/* Message Input - Slack style */}
-      <div className="border-t border-slate-200 p-4">
+      <div className="border-t border-slate-200 p-2 sm:p-4 flex-shrink-0">
         {/* Reply indicator */}
         {replyingTo && (
           <div className="mb-3 p-2 bg-slate-50 border-l-4 border-blue-500 rounded-r">

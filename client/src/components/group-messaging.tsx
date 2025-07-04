@@ -365,9 +365,9 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   }
 
   return (
-    <div className="h-[600px] flex">
+    <div className="h-full max-h-screen flex flex-col lg:flex-row">
       {/* Groups sidebar */}
-      <div className="w-1/3 border-r bg-gray-50 dark:bg-gray-900 flex flex-col">
+      <div className="w-full lg:w-1/3 lg:border-r bg-gray-50 dark:bg-gray-900 flex flex-col lg:min-h-0">
         <div className="p-4 border-b">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold">Message Groups</h3>
@@ -502,7 +502,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       </div>
 
       {/* Chat area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0">
         {selectedGroup ? (
           <>
             {/* Group header */}

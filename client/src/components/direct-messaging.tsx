@@ -67,16 +67,16 @@ export default function DirectMessaging() {
     queryKey: selectedUser ? ["direct-messages", selectedUser.id, (user as any)?.id] : ["direct-messages", "none"],
     queryFn: async () => {
       if (!selectedUser || !user) return Promise.resolve([]);
-      
+
       const url = `/api/messages?committee=direct&recipientId=${selectedUser.id}`;
       console.log(`[DirectMessaging] *** FETCHING FOR CONVERSATION: ${(user as any)?.firstName} <-> ${selectedUser.firstName} (${selectedUser.id}) ***`);
-      
+
       const response = await apiRequest("GET", url);
       const data = await response.json();
-      
+
       console.log(`[DirectMessaging] *** API RESPONSE FOR ${selectedUser.firstName}:`, data);
       console.log(`[DirectMessaging] *** MESSAGE COUNT: ${Array.isArray(data) ? data.length : 'NOT_ARRAY'} ***`);
-      
+
       // Additional verification: ensure messages are actually for this conversation
       if (Array.isArray(data)) {
         const filteredData = data.filter(msg => 
@@ -87,7 +87,7 @@ export default function DirectMessaging() {
         console.log(`[DirectMessaging] *** FRONTEND FILTERED COUNT: ${filteredData.length} (from ${data.length} total) ***`);
         return filteredData;
       }
-      
+
       console.warn(`[DirectMessaging] *** UNEXPECTED RESPONSE TYPE:`, typeof data, data);
       return [];
     },
@@ -104,15 +104,15 @@ export default function DirectMessaging() {
     },
     onMutate: async (newMessage) => {
       if (!selectedUser) return { previousMessages: [], selectedUserId: null };
-      
+
       const queryKey = ["direct-messages", selectedUser.id];
-      
+
       // Cancel outgoing refetches to prevent overwrites
       await queryClient.cancelQueries({ queryKey });
-      
+
       // Snapshot the previous value
       const previousMessages = queryClient.getQueryData(queryKey);
-      
+
       // Optimistically update to the new value - ONLY for this specific conversation
       const optimisticMessage = {
         id: Date.now(), // Temporary ID
@@ -123,12 +123,12 @@ export default function DirectMessaging() {
         committee: "direct",
         recipientId: selectedUser.id,
       };
-      
+
       queryClient.setQueryData(
         queryKey, 
         (old: Message[] = []) => [...old, optimisticMessage]
       );
-      
+
       return { previousMessages, selectedUserId: selectedUser.id };
     },
     onError: (err, newMessage, context) => {
@@ -236,7 +236,7 @@ export default function DirectMessaging() {
 
   const handleSaveEdit = () => {
     if (!editingMessage || !editedContent.trim()) return;
-    
+
     editMessageMutation.mutate({
       messageId: editingMessage.id,
       content: editedContent,
@@ -292,9 +292,9 @@ export default function DirectMessaging() {
   }, {});
 
   return (
-    <div className="flex h-[600px] gap-4">
+    <div className="h-full max-h-screen flex flex-col lg:flex-row">
       {/* User Selection Sidebar */}
-      <div className="w-80 border-r border-slate-200">
+      <div className="w-full lg:w-1/3 lg:border-r bg-gray-50 dark:bg-gray-900 flex flex-col lg:min-h-0">
         <div className="p-4 border-b border-slate-200">
           <h2 className="font-sub-heading text-lg mb-3">Direct Messages</h2>
           <div className="relative">
@@ -349,7 +349,7 @@ export default function DirectMessaging() {
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1">
+      <div className="flex-1 flex flex-col min-h-0">
         {!selectedUser ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
@@ -373,7 +373,7 @@ export default function DirectMessaging() {
                 </div>
               </CardTitle>
             </CardHeader>
-            
+
             <CardContent className="flex-1 flex flex-col p-0">
               <ScrollArea className="flex-1 p-4">
                 {Object.keys(groupedMessages).length === 0 ? (
@@ -390,10 +390,10 @@ export default function DirectMessaging() {
                           {date}
                         </Badge>
                       </div>
-                      
+
                       {dateMessages.map((msg) => {
                         const isCurrentUser = msg.userId === (user as any)?.id;
-                        
+
                         return (
                           <div key={msg.id} className={`group flex items-start space-x-3 mb-4 ${isCurrentUser ? 'flex-row-reverse space-x-reverse' : ''}`}>
                             <Avatar className="w-8 h-8">
@@ -401,7 +401,7 @@ export default function DirectMessaging() {
                                 {msg.sender.split(' ').map(n => n[0]).join('').toUpperCase()}
                               </AvatarFallback>
                             </Avatar>
-                            
+
                             <div className={`flex-1 min-w-0 ${isCurrentUser ? 'text-right' : ''}`}>
                               <div className={`flex items-center space-x-2 mb-1 ${isCurrentUser ? 'justify-end' : ''}`}>
                                 <span className="font-medium text-sm text-slate-900">
@@ -410,7 +410,7 @@ export default function DirectMessaging() {
                                 <span className="text-xs text-slate-500">
                                   {formatTime(msg.timestamp)}
                                 </span>
-                                
+
                                 {/* Edit/Delete buttons - only show for current user's messages */}
                                 {canEditMessage(msg) && (
                                   <DropdownMenu>
@@ -442,7 +442,7 @@ export default function DirectMessaging() {
                                   </DropdownMenu>
                                 )}
                               </div>
-                              
+
                               {editingMessage?.id === msg.id ? (
                                 <div className="w-full max-w-xs">
                                   <Textarea
@@ -486,7 +486,7 @@ export default function DirectMessaging() {
                 )}
                 <div ref={messagesEndRef} />
               </ScrollArea>
-              
+
               <div className="border-t border-slate-200 p-4">
                 <div className="flex space-x-2">
                   <Input
