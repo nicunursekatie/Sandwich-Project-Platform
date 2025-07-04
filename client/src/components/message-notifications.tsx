@@ -65,16 +65,21 @@ export default function MessageNotifications() {
       socket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
+          console.log('Received WebSocket message:', data);
           if (data.type === 'new_message') {
+            console.log('Processing new_message notification');
             // Refetch unread counts when new message arrives
             refetch();
             
             // Show browser notification if permission granted and available
             if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+              console.log('Showing browser notification');
               new Notification(`New message in ${data.committee}`, {
                 body: `${data.sender}: ${data.content.substring(0, 100)}...`,
                 icon: '/favicon.ico'
               });
+            } else {
+              console.log('Browser notifications not available or not granted');
             }
           }
         } catch (error) {
