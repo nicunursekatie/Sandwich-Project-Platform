@@ -56,8 +56,12 @@ router.post("/messages", sanitizeMiddleware, async (req, res) => {
     }
     
     // Broadcast notification for new messages
+    console.log('Broadcasting new message notification:', message);
     if ((global as any).broadcastNewMessage) {
       (global as any).broadcastNewMessage(message);
+      console.log('Message broadcast sent successfully');
+    } else {
+      console.error('broadcastNewMessage function not available');
     }
     
     res.status(201).json(message);

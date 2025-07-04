@@ -5022,6 +5022,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Function to broadcast new message notifications
   const broadcastNewMessage = (message: any) => {
     try {
+      console.log('broadcastNewMessage called with:', message);
+      console.log('Connected clients count:', connectedClients.size);
+      
       const notificationData = {
         type: 'new_message',
         messageId: message.id,
@@ -5038,6 +5041,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (message.committee === 'direct' && message.recipientId) {
         // Direct message - notify recipient only
         targetUsers.add(message.recipientId);
+        console.log('Direct message, notifying recipient:', message.recipientId);
       } else {
         // Committee message - notify all users with access to that committee
         // This would need to be expanded based on user permissions
@@ -5047,19 +5051,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
             targetUsers.add(userId);
           }
         }
+        console.log('Committee message, target users:', Array.from(targetUsers));
       }
 
       // Send notifications to target users
+      let sentCount = 0;
       for (const userId of targetUsers) {
         const userClients = connectedClients.get(userId);
+        console.log(`Checking user ${userId}, clients:`, userClients?.length || 0);
         if (userClients) {
           userClients.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {
+              console.log('Sending notification to client:', notificationData);
               client.send(JSON.stringify(notificationData));
+              sentCount++;
+            } else {
+              console.log('Client not ready, readyState:', client.readyState);
             }
           });
         }
       }
+      console.log(`Sent ${sentCount} notifications total`);
     } catch (error) {
       console.error('Error broadcasting message notification:', error);
     }
