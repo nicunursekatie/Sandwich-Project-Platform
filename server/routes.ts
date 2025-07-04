@@ -4976,7 +4976,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Set up WebSocket server for real-time notifications
-  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  const wss = new WebSocketServer({ server: httpServer, path: '/notifications' });
   const connectedClients = new Map<string, WebSocket[]>();
 
   wss.on('connection', (ws: WebSocket, request) => {

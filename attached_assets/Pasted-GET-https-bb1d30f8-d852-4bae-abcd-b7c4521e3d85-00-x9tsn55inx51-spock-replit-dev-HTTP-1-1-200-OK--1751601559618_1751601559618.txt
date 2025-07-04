@@ -1,0 +1,713 @@
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/
+[HTTP/1.1 200 OK 216ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@vite/client
+[HTTP/1.1 304 Not Modified 71ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@react-refresh
+[HTTP/1.1 304 Not Modified 68ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/vite/dist/client/env.mjs
+[HTTP/1.1 304 Not Modified 72ms]
+
+GET
+https://replit.com/public/js/replit-dev-banner.js
+[HTTP/2 200  0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/main.tsx?v=0se22ITAxLlUdBJzR3OML
+[HTTP/1.1 200 OK 74ms]
+
+[vite] connecting... client:495:9
+GET
+wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=0J-8GlZxnq3f
+NS_ERROR_WEBSOCKET_CONNECTION_REFUSED
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/index.css?v=0se22ITAxLlUdBJzR3OML
+[HTTP/1.1 200 OK 289ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/App.tsx?v=0se22ITAxLlUdBJzR3OML
+[HTTP/1.1 200 OK 78ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-dom_client.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WOOG5QLI.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-QCHXOAYK.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/lib/queryClient.ts
+[HTTP/1.1 304 Not Modified 75ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/hooks/useAuth.ts
+[HTTP/1.1 304 Not Modified 75ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/tooltip.tsx
+[HTTP/1.1 304 Not Modified 77ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/toaster.tsx
+[HTTP/1.1 304 Not Modified 71ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/signup.tsx
+[HTTP/1.1 304 Not Modified 228ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/landing.tsx
+[HTTP/1.1 304 Not Modified 160ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/dashboard.tsx
+[HTTP/1.1 304 Not Modified 150ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/error-boundary.tsx
+[HTTP/1.1 304 Not Modified 160ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/loading.tsx
+[HTTP/1.1 304 Not Modified 76ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/not-found.tsx
+[HTTP/1.1 304 Not Modified 230ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-KBTYAULA.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/hooks/use-toast.ts
+[HTTP/1.1 304 Not Modified 81ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/toast.tsx
+[HTTP/1.1 304 Not Modified 160ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/lucide-react.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/lib/utils.ts
+[HTTP/1.1 304 Not Modified 87ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-4XNOAIBL.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPVX7IVH.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AFLIZ4FI.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TR2GJLES.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RKDPARZB.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-LUE5KDWX.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-YJYX7EAP.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-AXMZZQ2X.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-OXZDJRWN.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-THUXUCPX.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5Q5YC75F.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-2K77HOHX.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+Firefox can’t establish a connection to the server at wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=0J-8GlZxnq3f. client:536:19
+Uncaught (in promise) DOMException: An invalid or illegal string was specified
+    setupWebSocket client:536
+    fallback client:509
+    setupWebSocket client:555
+    setupWebSocket client:552
+    <anonymous> client:531
+client:536
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/LOGOS/sandwich logo.png?import
+[HTTP/1.1 304 Not Modified 77ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/chat-hub.tsx
+[HTTP/1.1 304 Not Modified 117ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/tabs.tsx
+[HTTP/1.1 304 Not Modified 80ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/committee-chat.tsx
+[HTTP/1.1 304 Not Modified 142ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/sandwich-collection-log.tsx
+[HTTP/1.1 304 Not Modified 141ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/dashboard-overview.tsx
+[HTTP/1.1 304 Not Modified 146ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/drivers-management.tsx
+[HTTP/1.1 304 Not Modified 145ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/recipients-management.tsx
+[HTTP/1.1 304 Not Modified 145ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meetings.tsx
+[HTTP/1.1 304 Not Modified 217ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/development.tsx
+[HTTP/1.1 304 Not Modified 212ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/analytics-dashboard.tsx
+[HTTP/1.1 304 Not Modified 210ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/phone-directory.tsx
+[HTTP/1.1 304 Not Modified 207ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/hosts-management-consolidated.tsx
+[HTTP/1.1 304 Not Modified 183ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/role-demo.tsx
+[HTTP/1.1 304 Not Modified 280ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meeting-calendar.tsx
+[HTTP/1.1 304 Not Modified 275ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meeting-agenda.tsx
+[HTTP/1.1 304 Not Modified 257ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/meeting-minutes.tsx
+[HTTP/1.1 304 Not Modified 216ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/reporting-dashboard.tsx
+[HTTP/1.1 304 Not Modified 319ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/impact-dashboard.tsx
+[HTTP/1.1 304 Not Modified 277ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/project-detail-clean.tsx
+[HTTP/1.1 304 Not Modified 276ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/pages/projects-clean.tsx
+[HTTP/1.1 304 Not Modified 283ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/announcement-banner.tsx
+[HTTP/1.1 304 Not Modified 350ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/simple-nav.tsx
+[HTTP/1.1 304 Not Modified 350ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/lib/authUtils.ts
+[HTTP/1.1 304 Not Modified 343ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/user-profile.tsx
+[HTTP/1.1 304 Not Modified 340ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/user-management.tsx
+[HTTP/1.1 304 Not Modified 334ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/message-notifications.tsx
+[HTTP/1.1 304 Not Modified 395ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/clsx.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/card.tsx
+[HTTP/1.1 304 Not Modified 405ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/button.tsx
+[HTTP/1.1 304 Not Modified 398ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/documents-browser.tsx
+[HTTP/1.1 304 Not Modified 405ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/tailwind-merge.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/LOGOS/Copy of TSP_transparent.png?import
+[HTTP/1.1 304 Not Modified 414ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/CMYK_PRINT_TSP-01_1749585167435.png?import
+[HTTP/1.1 304 Not Modified 412ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-U7P2NEEE.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@hookform_resolvers_zod.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-hook-form.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/input.tsx
+[HTTP/1.1 304 Not Modified 405ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/zod.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/form.tsx
+[HTTP/1.1 304 Not Modified 418ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/label.tsx
+[HTTP/1.1 304 Not Modified 414ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/checkbox.tsx
+[HTTP/1.1 304 Not Modified 427ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/select.tsx
+[HTTP/1.1 304 Not Modified 423ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/class-variance-authority.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-toast.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-4BFJKWC4.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WGQNECLP.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-TPYHSINA.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-4RO2SXZU.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-PZ5PNPXC.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/committee-message-log.tsx
+[HTTP/1.1 304 Not Modified 439ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/host-chat.tsx
+[HTTP/1.1 304 Not Modified 433ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/badge.tsx
+[HTTP/1.1 304 Not Modified 387ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/group-messaging.tsx
+[HTTP/1.1 304 Not Modified 457ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/direct-messaging.tsx
+[HTTP/1.1 304 Not Modified 450ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/core-team-chat.tsx
+[HTTP/1.1 304 Not Modified 445ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/avatar.tsx
+[HTTP/1.1 304 Not Modified 437ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/sandwich-collection-form.tsx
+[HTTP/1.1 304 Not Modified 478ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/bulk-data-manager.tsx
+[HTTP/1.1 304 Not Modified 484ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/dialog.tsx
+[HTTP/1.1 304 Not Modified 480ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/dropdown-menu.tsx
+[HTTP/1.1 304 Not Modified 486ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/switch.tsx
+[HTTP/1.1 304 Not Modified 461ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/textarea.tsx
+[HTTP/1.1 304 Not Modified 457ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/shared/schema.ts
+[HTTP/1.1 304 Not Modified 482ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/recharts.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/development-documents.tsx
+[HTTP/1.1 304 Not Modified 484ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/progress.tsx
+[HTTP/1.1 304 Not Modified 415ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/project-assignee-selector.tsx
+[HTTP/1.1 304 Not Modified 428ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/celebration-toast.tsx
+[HTTP/1.1 304 Not Modified 418ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/task-assignee-selector.tsx
+[HTTP/1.1 304 Not Modified 427ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/date-fns.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/alert.tsx
+[HTTP/1.1 304 Not Modified 445ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/collapsible-nav.tsx
+[HTTP/1.1 304 Not Modified 442ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/auth-debug.tsx
+[HTTP/1.1 304 Not Modified 439ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/announcement-manager.tsx
+[HTTP/1.1 304 Not Modified 428ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/table.tsx
+[HTTP/1.1 304 Not Modified 428ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/separator.tsx
+[HTTP/1.1 304 Not Modified 438ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-slot.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/document-preview.tsx
+[HTTP/1.1 304 Not Modified 420ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-label.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-select.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-HG7P5XMB.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-6ZMM2PAV.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-43G6IMPT.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/src/components/ui/scroll-area.tsx
+[HTTP/1.1 304 Not Modified 284ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/shared/auth-utils.ts
+[HTTP/1.1 304 Not Modified 273ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-avatar.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-switch.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/drizzle-zod.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/drizzle-orm_pg-core.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-V444TFVM.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-progress.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/framer-motion.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-separator.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-scroll-area.js?v=cb28a80d
+[HTTP/1.1 200 OK 0ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user
+[HTTP/1.1 200 OK 70ms]
+
+Feature Policy: Skipping unsupported feature name “clipboard-write”. inject.bundle.js:1:37648
+Feature Policy: Skipping unsupported feature name “clipboard-write”. inject.bundle.js:1:38665
+Feature Policy: Skipping unsupported feature name “clipboard-write”. inject.bundle.js:1:37648
+GET
+https://dealfinder.retailmenot.com/experience/app
+[HTTP/2 200  0ms]
+
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 l
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 l
+GET
+https://dealfinder.retailmenot.com/experience/static/css/client.508c65bc.css
+[HTTP/2 200 OK 0ms]
+
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 l
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 l
+GET
+https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3
+[HTTP/2 200  0ms]
+
+GET
+https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3
+[HTTP/2 200  0ms]
+
+GET
+https://dealfinder.retailmenot.com/experience/static/js/vendor.480aa7c5.js
+[HTTP/2 200  0ms]
+
+GET
+https://dealfinder.retailmenot.com/experience/static/js/client.480aa7c5.js
+[HTTP/2 200  0ms]
+
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/favicon.ico
+[HTTP/1.1 200 OK 0ms]
+
+MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+GET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@fs/home/runner/workspace/attached_assets/LOGOS/sandwich logo.png
+NS_BINDING_ABORTED
+
+Partitioned cookie or storage access was provided to “https://dealfinder.retailmenot.com/experience/app” because it is loaded in the third-party context and dynamic state partitioning is enabled. client.480aa7c5.js:2:1542169
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/announcements
+[HTTP/1.1 304 Not Modified 69ms]
+
+Setting up WebSocket for user: user_1751071509329_mrkw2z95z message-notifications.tsx:50:13
+Connecting to WebSocket: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/ws message-notifications.tsx:53:13
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages/unread-counts
+[HTTP/1.1 304 Not Modified 70ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user
+[HTTP/1.1 304 Not Modified 74ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/projects
+[HTTP/1.1 304 Not Modified 358ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/hosts
+[HTTP/1.1 304 Not Modified 211ms]
+
+GET
+wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/ws
+[HTTP/1.1 101 Switching Protocols 216ms]
+
+MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/sandwich-collections/stats
+[HTTP/1.1 304 Not Modified 73ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/meetings
+[HTTP/1.1 304 Not Modified 299ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/weekly-reports
+[HTTP/1.1 304 Not Modified 226ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/drive-links
+[HTTP/1.1 304 Not Modified 365ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages
+[HTTP/1.1 200 OK 147ms]
+
+The Notification permission may only be requested from inside a short running user-generated event handler. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+upsell state 
+Object { state: "inactive", canUpsell: false }
+client.480aa7c5.js:2:1544837
+MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+Notification WebSocket connected successfully message-notifications.tsx:57:17
+User ID: user_1751071509329_mrkw2z95z message-notifications.tsx:58:17
+The resource at “https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly. app
+The resource at “https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly. app
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user
+[HTTP/1.1 304 Not Modified 79ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/sandwich-collections/stats
+[HTTP/1.1 304 Not Modified 81ms]
+
+MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user
+[HTTP/1.1 304 Not Modified 70ms]
+
+[CommitteeMessageLog] Fetching messages for committee: general committee-message-log.tsx:55:15
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/profile
+[HTTP/1.1 304 Not Modified 288ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 288ms]
+
+MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+[CommitteeMessageLog] API Response: 
+Array(5) [ {…}, {…}, {…}, {…}, {…} ]
+committee-message-log.tsx:58:15
+[CommitteeMessageLog] Response type: object true committee-message-log.tsx:59:15

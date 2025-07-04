@@ -52,7 +52,7 @@ export default function MessageNotifications() {
     console.log('Setting up WebSocket for user:', (user as any)?.id);
     // Set up WebSocket connection for real-time notifications
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    const wsUrl = `${protocol}//${window.location.host}/notifications`;
     console.log('Connecting to WebSocket:', wsUrl);
     
     try {
