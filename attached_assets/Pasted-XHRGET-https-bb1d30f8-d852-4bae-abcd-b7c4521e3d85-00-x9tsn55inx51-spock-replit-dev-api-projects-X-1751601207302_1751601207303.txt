@@ -1,0 +1,92 @@
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/projects
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user
+[HTTP/1.1 304 Not Modified 70ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/sandwich-collections/stats
+[HTTP/1.1 304 Not Modified 71ms]
+
+Error in parsing value for ‘-webkit-text-size-adjust’.  Declaration dropped. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:147:29
+Unknown descriptor ‘900’ in @font-face rule.  Skipped to next declaration. client.508c65bc.css:22:38
+Error in parsing value for ‘-webkit-text-size-adjust’.  Declaration dropped. client.508c65bc.css:76:29
+Unknown property ‘-moz-column-gap’.  Declaration dropped. client.508c65bc.css:1625:19
+Error in parsing value for ‘text-wrap’.  Declaration dropped. client.508c65bc.css:1688:14
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user
+[HTTP/1.1 304 Not Modified 78ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/profile
+[HTTP/1.1 304 Not Modified 294ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 293ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 142ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 142ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 141ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 176ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user
+[HTTP/1.1 304 Not Modified 77ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 289ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 146ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages/unread-counts
+[HTTP/1.1 304 Not Modified 75ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 143ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user
+[HTTP/1.1 304 Not Modified 77ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 285ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 141ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages/unread-counts
+[HTTP/1.1 304 Not Modified 69ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 144ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user
+[HTTP/1.1 304 Not Modified 77ms]
+
+XHRGET
+https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages?committee=general
+[HTTP/1.1 304 Not Modified 290ms]
+
