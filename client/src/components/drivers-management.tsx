@@ -561,34 +561,39 @@ export default function DriversManagement() {
     <div className="space-y-6">
       {/* Header */}
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-        <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center">
-            <Car className="text-blue-500 mr-3 w-6 h-6" />
-            Drivers Management
-          </h1>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleExport}
-              disabled={!canExport || !drivers || drivers.length === 0}
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Export CSV
-            </Button>
-            <Dialog
-              open={isAgreementModalOpen}
-              onOpenChange={setIsAgreementModalOpen}
-            >
-              <DialogTrigger asChild>
-                <Button
-                  disabled={!canEdit}
-                  variant="outline"
-                  className="flex items-center gap-2"
-                >
-                  <Upload className="w-4 h-4" />
-                  Upload Agreement
-                </Button>
-              </DialogTrigger>
+        <div className="px-4 sm:px-6 py-4 border-b border-slate-200">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center">
+              <Car className="text-blue-500 mr-2 sm:mr-3 w-5 h-5 sm:w-6 sm:h-6" />
+              <span className="hidden sm:inline">Drivers Management</span>
+              <span className="sm:hidden">Drivers</span>
+            </h1>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button
+                variant="outline"
+                onClick={handleExport}
+                disabled={!canExport || !drivers || drivers.length === 0}
+                className="text-xs sm:text-sm"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Export CSV</span>
+                <span className="sm:hidden">Export</span>
+              </Button>
+              <Dialog
+                open={isAgreementModalOpen}
+                onOpenChange={setIsAgreementModalOpen}
+              >
+                <DialogTrigger asChild>
+                  <Button
+                    disabled={!canEdit}
+                    variant="outline"
+                    className="flex items-center gap-2 text-xs sm:text-sm"
+                  >
+                    <Upload className="w-4 h-4" />
+                    <span className="hidden sm:inline">Upload Agreement</span>
+                    <span className="sm:hidden">Upload</span>
+                  </Button>
+                </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Upload Driver Agreement Template</DialogTitle>
@@ -633,10 +638,12 @@ export default function DriversManagement() {
                 <Button
                   disabled={!canEdit}
                   variant="outline"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 text-xs sm:text-sm"
                 >
                   <Send className="w-4 h-4" />
-                  Submit Volunteer Agreement
+                  <span className="hidden lg:inline">Submit Volunteer Agreement</span>
+                  <span className="lg:hidden hidden sm:inline">Submit Agreement</span>
+                  <span className="sm:hidden">Submit</span>
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -801,9 +808,10 @@ export default function DriversManagement() {
 
             <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
               <DialogTrigger asChild>
-                <Button disabled={!canEdit} className="flex items-center gap-2">
+                <Button disabled={!canEdit} className="flex items-center gap-2 text-xs sm:text-sm">
                   <Plus className="w-4 h-4" />
-                  Add Driver
+                  <span className="hidden sm:inline">Add Driver</span>
+                  <span className="sm:hidden">Add</span>
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -943,6 +951,7 @@ export default function DriversManagement() {
                 </div>
               </DialogContent>
             </Dialog>
+            </div>
           </div>
         </div>
       </div>
