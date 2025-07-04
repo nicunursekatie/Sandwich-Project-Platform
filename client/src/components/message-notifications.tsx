@@ -30,8 +30,11 @@ export default function MessageNotifications() {
   const { user, isAuthenticated } = useAuth();
   const [lastCheck, setLastCheck] = useState(Date.now());
 
+  console.log('MessageNotifications: user=', (user as any)?.id, 'isAuthenticated=', isAuthenticated);
+
   // Early return if user is not authenticated to prevent any queries
   if (!isAuthenticated || !user) {
+    console.log('MessageNotifications: Early return - not authenticated or no user');
     return null;
   }
 
