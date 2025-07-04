@@ -54,12 +54,21 @@ export default function MessageNotifications() {
       const socket = new WebSocket(wsUrl);
       
       socket.onopen = () => {
-        console.log('Notification WebSocket connected');
+        console.log('Notification WebSocket connected successfully');
+        console.log('User ID:', (user as any)?.id);
         // Send user identification
         socket.send(JSON.stringify({
           type: 'identify',
           userId: (user as any)?.id
         }));
+      };
+
+      socket.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
+
+      socket.onclose = (event) => {
+        console.log('WebSocket closed:', event.code, event.reason);
       };
 
       socket.onmessage = (event) => {
