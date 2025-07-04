@@ -55,6 +55,11 @@ router.post("/messages", sanitizeMiddleware, async (req, res) => {
       message = await storage.createMessage(messageData);
     }
     
+    // Broadcast notification for new messages
+    if ((global as any).broadcastNewMessage) {
+      (global as any).broadcastNewMessage(message);
+    }
+    
     res.status(201).json(message);
   } catch (error) {
     console.error("Error creating message:", error);

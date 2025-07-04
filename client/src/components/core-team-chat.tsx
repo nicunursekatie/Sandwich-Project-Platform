@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Send, Crown, Shield, AlertTriangle, Users } from "lucide-react";
+import { Send, Crown, Shield, AlertTriangle, Users, Trash2, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
@@ -67,6 +68,27 @@ export default function CoreTeamChat() {
     },
     onError: () => {
       toast({ title: "Failed to send message", variant: "destructive" });
+    },
+  });
+
+  // Delete message mutation
+  const deleteMessageMutation = useMutation({
+    mutationFn: async (messageId: number) => {
+      return await apiRequest('DELETE', `/api/messages/${messageId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/messages", "core_team"] });
+      toast({
+        title: "Message deleted",
+        description: "The message has been removed.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete message. Please try again.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -172,17 +194,41 @@ export default function CoreTeamChat() {
                     </Avatar>
                     
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <span className="font-medium text-sm text-slate-900">
-                          {msg.sender}
-                        </span>
-                        <Badge variant="secondary" className="text-xs">
-                          <Crown className="w-3 h-3 mr-1" />
-                          Admin
-                        </Badge>
-                        <span className="text-xs text-slate-500">
-                          {formatTime(msg.timestamp)}
-                        </span>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-sm text-slate-900">
+                            {msg.sender}
+                          </span>
+                          <Badge variant="secondary" className="text-xs">
+                            <Crown className="w-3 h-3 mr-1" />
+                            Admin
+                          </Badge>
+                          <span className="text-xs text-slate-500">
+                            {formatTime(msg.timestamp)}
+                          </span>
+                        </div>
+                        
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 hover:bg-orange-100"
+                            >
+                              <MoreVertical className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() => deleteMessageMutation.mutate(msg.id)}
+                              className="text-red-600 hover:text-red-700"
+                              disabled={deleteMessageMutation.isPending}
+                            >
+                              <Trash2 className="h-3 w-3 mr-2" />
+                              Delete Message
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                       
                       <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
