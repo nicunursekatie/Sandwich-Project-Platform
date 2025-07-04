@@ -49,9 +49,9 @@ export default function ChatHub() {
       value: "general", 
       label: "General Chat", 
       description: "Open discussion for all team members",
-      icon: <MessageSquare className="h-5 w-5" />,
+      icon: <MessageSquare className="h-4 w-4" />,
       component: <CommitteeMessageLog committee="general" />,
-      color: "bg-blue-500"
+      color: "bg-blue-100 text-blue-800"
     });
   }
 
@@ -60,9 +60,9 @@ export default function ChatHub() {
       value: "committee", 
       label: "Committee Chat", 
       description: "Specific committee discussions",
-      icon: <Users className="h-5 w-5" />,
+      icon: <Users className="h-4 w-4" />,
       component: <CommitteeChat />,
-      color: "bg-purple-500"
+      color: "bg-purple-100 text-purple-800"
     });
   }
 
@@ -71,9 +71,9 @@ export default function ChatHub() {
       value: "hosts", 
       label: "Host Chat", 
       description: "Coordination with sandwich collection hosts",
-      icon: <Building2 className="h-5 w-5" />,
+      icon: <Building2 className="h-4 w-4" />,
       component: <HostChat />,
-      color: "bg-green-500"
+      color: "bg-green-100 text-green-800"
     });
   }
 
@@ -82,9 +82,9 @@ export default function ChatHub() {
       value: "drivers", 
       label: "Driver Chat", 
       description: "Delivery and transportation coordination",
-      icon: <Truck className="h-5 w-5" />,
+      icon: <Truck className="h-4 w-4" />,
       component: <CommitteeMessageLog committee="drivers" />,
-      color: "bg-orange-500"
+      color: "bg-orange-100 text-orange-800"
     });
   }
 
@@ -93,9 +93,9 @@ export default function ChatHub() {
       value: "recipients", 
       label: "Recipient Chat", 
       description: "Communication with receiving organizations",
-      icon: <Heart className="h-5 w-5" />,
+      icon: <Heart className="h-4 w-4" />,
       component: <CommitteeMessageLog committee="recipients" />,
-      color: "bg-red-500"
+      color: "bg-red-100 text-red-800"
     });
   }
 
@@ -105,10 +105,10 @@ export default function ChatHub() {
       value: "core_team", 
       label: "Core Team", 
       description: "Private administrative discussions",
-      icon: <Shield className="h-5 w-5" />,
+      icon: <Shield className="h-4 w-4" />,
       component: <CoreTeamChat />,
       badge: "Admin",
-      color: "bg-indigo-500"
+      color: "bg-indigo-100 text-indigo-800"
     });
   }
 
@@ -118,9 +118,9 @@ export default function ChatHub() {
       value: "direct", 
       label: "Direct Messages", 
       description: "One-on-one conversations",
-      icon: <Mail className="h-5 w-5" />,
+      icon: <Mail className="h-4 w-4" />,
       component: <DirectMessaging />,
-      color: "bg-teal-500"
+      color: "bg-teal-100 text-teal-800"
     });
   }
 
@@ -130,9 +130,9 @@ export default function ChatHub() {
       value: "groups", 
       label: "Group Messages", 
       description: "Custom group conversations",
-      icon: <UsersRound className="h-5 w-5" />,
+      icon: <UsersRound className="h-4 w-4" />,
       component: <GroupMessaging currentUser={user} />,
-      color: "bg-pink-500"
+      color: "bg-pink-100 text-pink-800"
     });
   }
 
@@ -170,7 +170,7 @@ export default function ChatHub() {
   return (
     <div className="flex h-[calc(100vh-200px)] gap-4">
       {/* Sidebar with Channel List */}
-      <div className={`${sidebarCollapsed ? 'w-16' : 'w-72'} transition-all duration-300 flex-shrink-0`}>
+      <div className={`${sidebarCollapsed ? 'w-16' : 'w-80'} transition-all duration-300 flex-shrink-0`}>
         <Card className="h-full">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
@@ -190,29 +190,29 @@ export default function ChatHub() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="p-2 space-y-1">
+          <CardContent className="p-2 space-y-2 overflow-y-auto">
             {availableChannels.map((channel) => (
               <Button
                 key={channel.value}
                 variant={activeChannel === channel.value ? "default" : "ghost"}
-                className={`w-full justify-start h-auto p-3 ${sidebarCollapsed ? 'px-2' : ''}`}
+                className={`w-full justify-start h-auto min-h-[60px] p-3 ${sidebarCollapsed ? 'px-2' : ''}`}
                 onClick={() => setActiveChannel(channel.value)}
               >
                 <div className="flex items-center gap-3 w-full">
-                  <div className={`p-1.5 rounded ${channel.color} text-white flex-shrink-0`}>
+                  <div className={`p-2 rounded-md ${channel.color} flex-shrink-0`}>
                     {channel.icon}
                   </div>
                   {!sidebarCollapsed && (
-                    <div className="flex-1 text-left">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-sm">{channel.label}</span>
+                    <div className="flex-1 text-left min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-sm truncate">{channel.label}</span>
                         {channel.badge && (
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant="secondary" className="text-xs flex-shrink-0">
                             {channel.badge}
                           </Badge>
                         )}
                       </div>
-                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                      <p className="text-xs text-muted-foreground leading-tight line-clamp-2">
                         {channel.description}
                       </p>
                     </div>
@@ -227,26 +227,26 @@ export default function ChatHub() {
       {/* Main Chat Area */}
       <div className="flex-1 min-w-0">
         <Card className="h-full">
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-3 border-b">
             {activeChannel && (
               <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg ${availableChannels.find(ch => ch.value === activeChannel)?.color} text-white`}>
+                <div className={`p-2 rounded-md ${availableChannels.find(ch => ch.value === activeChannel)?.color}`}>
                   {availableChannels.find(ch => ch.value === activeChannel)?.icon}
                 </div>
-                <div>
-                  <CardTitle className="text-lg font-sub-heading">
-                    <Hash className="h-4 w-4 inline mr-1" />
-                    {availableChannels.find(ch => ch.value === activeChannel)?.label}
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="text-lg font-sub-heading flex items-center gap-2">
+                    <Hash className="h-4 w-4 text-muted-foreground" />
+                    <span className="truncate">{availableChannels.find(ch => ch.value === activeChannel)?.label}</span>
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground truncate">
                     {availableChannels.find(ch => ch.value === activeChannel)?.description}
                   </p>
                 </div>
               </div>
             )}
           </CardHeader>
-          <CardContent className="p-0 h-[calc(100%-80px)]">
-            <div className="h-full">
+          <CardContent className="p-0 h-[calc(100%-90px)] overflow-hidden">
+            <div className="h-full w-full">
               {renderActiveChannel()}
             </div>
           </CardContent>
