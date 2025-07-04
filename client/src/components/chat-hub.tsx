@@ -245,8 +245,8 @@ export default function ChatHub() {
               </div>
             )}
           </CardHeader>
-          <CardContent className="p-0 h-[calc(100%-90px)] overflow-hidden">
-            <div className="h-full w-full">
+          <CardContent className="p-0 h-[calc(100%-90px)]">
+            <div className="h-full w-full overflow-auto">
               {renderActiveChannel()}
             </div>
           </CardContent>

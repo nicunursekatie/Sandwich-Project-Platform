@@ -666,6 +666,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userId: req.user?.id || null,
       };
       const message = await storage.createMessage(messageWithUser);
+      
+      // Broadcast new message notification to connected clients
+      if (typeof (global as any).broadcastNewMessage === 'function') {
+        (global as any).broadcastNewMessage(message);
+      }
+      
       res.status(201).json(message);
     } catch (error) {
       res.status(400).json({ message: "Invalid message data" });
