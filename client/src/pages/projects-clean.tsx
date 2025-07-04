@@ -4,7 +4,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -42,6 +42,7 @@ export default function ProjectsClean() {
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
   const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [activeTab, setActiveTab] = useState("active");
   const [newProject, setNewProject] = useState<Partial<InsertProject>>({
     title: '',
     description: '',
@@ -288,94 +289,113 @@ export default function ProjectsClean() {
         </Button>
       </div>
 
-      <Tabs defaultValue="active" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
-          <TabsTrigger value="active" className="flex flex-col items-center gap-1 text-xs px-2 py-2 h-auto">
-            <div className="flex items-center gap-1">
-              <Play className="w-3 h-3" />
-              <span>Active</span>
-            </div>
-            <span className="text-xs text-muted-foreground">({activeProjects.length})</span>
-          </TabsTrigger>
-          <TabsTrigger value="available" className="flex flex-col items-center gap-1 text-xs px-2 py-2 h-auto">
-            <div className="flex items-center gap-1">
-              <Circle className="w-3 h-3" />
-              <span>Available</span>
-            </div>
-            <span className="text-xs text-muted-foreground">({availableProjects.length})</span>
-          </TabsTrigger>
-          <TabsTrigger value="waiting" className="flex flex-col items-center gap-1 text-xs px-2 py-2 h-auto">
-            <div className="flex items-center gap-1">
-              <Pause className="w-3 h-3" />
-              <span>Waiting</span>
-            </div>
-            <span className="text-xs text-muted-foreground">({waitingProjects.length})</span>
-          </TabsTrigger>
-          <TabsTrigger value="completed" className="flex flex-col items-center gap-1 text-xs px-2 py-2 h-auto">
-            <div className="flex items-center gap-1">
-              <CheckCircle2 className="w-3 h-3" />
-              <span>Completed</span>
-            </div>
-            <span className="text-xs text-muted-foreground">({completedProjects.length})</span>
-          </TabsTrigger>
-        </TabsList>
+      {/* Simple Mobile-First Tab Navigation */}
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-2 w-full">
+          <Button
+            variant={activeTab === "active" ? "default" : "outline"}
+            onClick={() => setActiveTab("active")}
+            className="flex flex-col items-center p-4 h-16 text-xs"
+          >
+            <Play className="w-4 h-4 mb-1" />
+            <span>Active ({activeProjects.length})</span>
+          </Button>
+          <Button
+            variant={activeTab === "available" ? "default" : "outline"}
+            onClick={() => setActiveTab("available")}
+            className="flex flex-col items-center p-4 h-16 text-xs"
+          >
+            <Circle className="w-4 h-4 mb-1" />
+            <span>Available ({availableProjects.length})</span>
+          </Button>
+        </div>
         
-        <TabsContent value="active" className="mt-6">
-          {activeProjects.length === 0 ? (
-            <div className="text-center py-12">
-              <Play className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-slate-900 mb-2">No active projects</h3>
-              <p className="text-slate-500">Start working on available projects or create a new one.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {activeProjects.map(renderProjectCard)}
-            </div>
-          )}
-        </TabsContent>
+        <div className="grid grid-cols-2 gap-2 w-full">
+          <Button
+            variant={activeTab === "waiting" ? "default" : "outline"}
+            onClick={() => setActiveTab("waiting")}
+            className="flex flex-col items-center p-4 h-16 text-xs"
+          >
+            <Pause className="w-4 h-4 mb-1" />
+            <span>Waiting ({waitingProjects.length})</span>
+          </Button>
+          <Button
+            variant={activeTab === "completed" ? "default" : "outline"}
+            onClick={() => setActiveTab("completed")}
+            className="flex flex-col items-center p-4 h-16 text-xs"
+          >
+            <CheckCircle2 className="w-4 h-4 mb-1" />
+            <span>Done ({completedProjects.length})</span>
+          </Button>
+        </div>
+      </div>
+      
+      {/* Project Content */}
+      <div className="mt-6">
+        {activeTab === "active" && (
+          <>
+            {activeProjects.length === 0 ? (
+              <div className="text-center py-12">
+                <Play className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-slate-900 mb-2">No active projects</h3>
+                <p className="text-slate-500">Start working on available projects or create a new one.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {activeProjects.map(renderProjectCard)}
+              </div>
+            )}
+          </>
+        )}
         
-        <TabsContent value="available" className="mt-6">
-          {availableProjects.length === 0 ? (
-            <div className="text-center py-12">
-              <Circle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-slate-900 mb-2">No available projects</h3>
-              <p className="text-slate-500">All projects are either active or completed.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {availableProjects.map(renderProjectCard)}
-            </div>
-          )}
-        </TabsContent>
+        {activeTab === "available" && (
+          <>
+            {availableProjects.length === 0 ? (
+              <div className="text-center py-12">
+                <Circle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-slate-900 mb-2">No available projects</h3>
+                <p className="text-slate-500">All projects are either active or completed.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {availableProjects.map(renderProjectCard)}
+              </div>
+            )}
+          </>
+        )}
         
-        <TabsContent value="waiting" className="mt-6">
-          {waitingProjects.length === 0 ? (
-            <div className="text-center py-12">
-              <Pause className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-slate-900 mb-2">No waiting projects</h3>
-              <p className="text-slate-500">No projects are currently on hold.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {waitingProjects.map(renderProjectCard)}
-            </div>
-          )}
-        </TabsContent>
+        {activeTab === "waiting" && (
+          <>
+            {waitingProjects.length === 0 ? (
+              <div className="text-center py-12">
+                <Pause className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-slate-900 mb-2">No waiting projects</h3>
+                <p className="text-slate-500">No projects are currently on hold.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {waitingProjects.map(renderProjectCard)}
+              </div>
+            )}
+          </>
+        )}
         
-        <TabsContent value="completed" className="mt-6">
-          {completedProjects.length === 0 ? (
-            <div className="text-center py-12">
-              <CheckCircle2 className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-slate-900 mb-2">No completed projects</h3>
-              <p className="text-slate-500">Completed projects will appear here.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {completedProjects.map(renderProjectCard)}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+        {activeTab === "completed" && (
+          <>
+            {completedProjects.length === 0 ? (
+              <div className="text-center py-12">
+                <CheckCircle2 className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-slate-900 mb-2">No completed projects</h3>
+                <p className="text-slate-500">Completed projects will appear here.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {completedProjects.map(renderProjectCard)}
+              </div>
+            )}
+          </>
+        )}
+      </div>
 
       {/* Create Project Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
