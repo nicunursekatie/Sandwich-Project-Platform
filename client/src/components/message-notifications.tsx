@@ -46,9 +46,11 @@ export default function MessageNotifications() {
   useEffect(() => {
     if (!user) return;
 
+    console.log('Setting up WebSocket for user:', (user as any)?.id);
     // Set up WebSocket connection for real-time notifications
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const wsUrl = `${protocol}//${window.location.host}/ws`;
+    console.log('Connecting to WebSocket:', wsUrl);
     
     try {
       const socket = new WebSocket(wsUrl);
