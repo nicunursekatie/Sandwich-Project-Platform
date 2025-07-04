@@ -75,11 +75,26 @@ export default function ChatHub() {
         </div>
       ) : (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={`grid w-full mb-4 sm:mb-6 overflow-x-auto`} style={{ gridTemplateColumns: `repeat(${availableTabs.length}, minmax(80px, 1fr))` }}>
+          {/* Mobile: Dropdown selector */}
+          <div className="block sm:hidden mb-4">
+            <select 
+              value={activeTab} 
+              onChange={(e) => setActiveTab(e.target.value)}
+              className="chat-mobile-selector"
+            >
+              {availableTabs.map(tab => (
+                <option key={tab.value} value={tab.value}>
+                  {tab.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          {/* Desktop: Tab list */}
+          <TabsList className="hidden sm:grid w-full mb-6" style={{ gridTemplateColumns: `repeat(${availableTabs.length}, 1fr)` }}>
             {availableTabs.map(tab => (
-              <TabsTrigger key={tab.value} value={tab.value} className="text-xs sm:text-sm whitespace-nowrap px-2 sm:px-4">
-                <span className="hidden sm:inline">{tab.label}</span>
-                <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+              <TabsTrigger key={tab.value} value={tab.value} className="text-sm px-4">
+                {tab.label}
               </TabsTrigger>
             ))}
           </TabsList>

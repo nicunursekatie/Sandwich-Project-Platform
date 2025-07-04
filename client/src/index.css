@@ -425,4 +425,67 @@
     flex-direction: column !important;
     justify-content: center !important;
   }
+
+  /* Project detail mobile optimizations */
+  .project-detail-header h1 {
+    font-size: 1.25rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .project-detail-header p {
+    font-size: 0.875rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  .project-detail-cards {
+    gap: 1rem !important;
+  }
+  
+  .project-detail-cards .card {
+    padding: 1rem !important;
+  }
+  
+  .project-detail-cards .card-title {
+    font-size: 0.75rem !important;
+  }
+  
+  .project-detail-cards .card-content {
+    padding-top: 0.5rem !important;
+  }
+
+  /* Make edit buttons more prominent on mobile */
+  .edit-project-btn {
+    background-color: var(--tsp-teal) !important;
+    color: white !important;
+    border: 1px solid var(--tsp-teal) !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1rem !important;
+  }
+
+  .edit-project-btn:hover {
+    background-color: var(--tsp-teal-dark) !important;
+  }
+
+  /* Chat hub mobile optimizations */
+  .chat-mobile-selector {
+    width: 100% !important;
+    padding: 0.75rem !important;
+    border: 2px solid var(--tsp-teal) !important;
+    border-radius: 0.5rem !important;
+    background: white !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: var(--tsp-teal) !important;
+    appearance: none !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+    background-position: right 0.5rem center !important;
+    background-repeat: no-repeat !important;
+    background-size: 1.5em 1.5em !important;
+    padding-right: 2.5rem !important;
+  }
+
+  .chat-mobile-selector:focus {
+    outline: 2px solid var(--tsp-teal) !important;
+    outline-offset: 2px !important;
+  }
 }

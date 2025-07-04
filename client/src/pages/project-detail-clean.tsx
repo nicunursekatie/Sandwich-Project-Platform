@@ -305,20 +305,24 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          {onBack && (
-            <Button variant="outline" onClick={onBack}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
-          )}
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">{project.title}</h1>
-            <p className="text-slate-600 mt-1">{project.description}</p>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            {onBack && (
+              <Button variant="outline" onClick={onBack} className="flex-shrink-0">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Back</span>
+              </Button>
+            )}
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 truncate">{project.title}</h1>
+              <p className="text-slate-600 mt-1 text-sm sm:text-base line-clamp-2">{project.description}</p>
+            </div>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
+        
+        {/* Mobile-friendly action bar */}
+        <div className="flex flex-wrap items-center gap-2">
           <Badge className={getPriorityColor(project.priority)}>
             {project.priority}
           </Badge>
@@ -376,16 +380,17 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
           )}
           
           {canEdit && (
-            <Button variant="outline" size="sm" onClick={handleEditProject}>
+            <Button variant="outline" size="sm" onClick={handleEditProject} className="btn-tsp-primary text-white border-[var(--tsp-teal)]">
               <Edit className="w-4 h-4 mr-2" />
-              Edit Project
+              <span className="hidden xs:inline">Edit Project</span>
+              <span className="xs:hidden">Edit</span>
             </Button>
           )}
         </div>
       </div>
 
       {/* Project Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Assignee Card */}
         <Card className="border-l-4 border-l-blue-500 bg-gradient-to-br from-blue-50 to-slate-50 hover:shadow-lg transition-all duration-200">
           <CardHeader className="pb-4">
