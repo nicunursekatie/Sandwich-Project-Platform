@@ -130,24 +130,24 @@ export default function CoreTeamChat() {
   }, {});
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader className="border-b border-slate-200 bg-gradient-to-r from-red-50 to-orange-50">
-        <CardTitle className="flex items-center">
+    <div className="flex flex-col h-full">
+      <div className="border-b border-slate-200 bg-gradient-to-r from-red-50 to-orange-50 p-4">
+        <div className="flex items-center mb-2">
           <Crown className="w-5 h-5 mr-2 text-orange-600" />
           Core Team Chat
           <Badge variant="destructive" className="ml-2 text-xs">
             <Shield className="w-3 h-3 mr-1" />
             Admin Only
           </Badge>
-        </CardTitle>
+        </div>
         <p className="text-sm text-slate-600 flex items-center">
           <Users className="w-4 h-4 mr-1" />
           Secure communication channel for core team administrators
         </p>
-      </CardHeader>
+      </div>
       
-      <CardContent className="p-0">
-        <ScrollArea className="h-96 p-4">
+      <div className="flex-1 min-h-0">
+        <ScrollArea className="h-full p-4">
           {Object.keys(groupedMessages).length === 0 ? (
             <div className="text-center py-8">
               <Crown className="w-12 h-12 mx-auto text-orange-400 mb-4" />
@@ -198,31 +198,31 @@ export default function CoreTeamChat() {
           )}
           <div ref={messagesEndRef} />
         </ScrollArea>
+      </div>
         
-        <div className="border-t border-slate-200 p-4">
-          <div className="flex space-x-2">
-            <Input
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Send a secure message to the core team..."
-              className="flex-1"
-              disabled={sendMessageMutation.isPending}
-            />
-            <Button 
-              onClick={handleSendMessage}
-              disabled={!message.trim() || sendMessageMutation.isPending}
-              className="bg-orange-600 hover:bg-orange-700"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
-          </div>
-          <p className="text-xs text-slate-500 mt-2 flex items-center">
-            <Shield className="w-3 h-3 mr-1" />
-            Messages in this channel are only visible to core team administrators
-          </p>
+      <div className="border-t border-slate-200 p-4">
+        <div className="flex space-x-2">
+          <Input
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Send a secure message to the core team..."
+            className="flex-1"
+            disabled={sendMessageMutation.isPending}
+          />
+          <Button 
+            onClick={handleSendMessage}
+            disabled={!message.trim() || sendMessageMutation.isPending}
+            className="bg-orange-600 hover:bg-orange-700"
+          >
+            <Send className="w-4 h-4" />
+          </Button>
         </div>
-      </CardContent>
-    </Card>
+        <p className="text-xs text-slate-500 mt-2 flex items-center">
+          <Shield className="w-3 h-3 mr-1" />
+          Messages in this channel are only visible to core team administrators
+        </p>
+      </div>
+    </div>
   );
 }
