@@ -205,54 +205,56 @@ export default function ProjectsClean() {
   const renderProjectCard = (project: Project) => (
     <Card 
       key={project.id} 
-      className="hover:shadow-md transition-shadow cursor-pointer"
+      className="hover:shadow-md transition-shadow cursor-pointer project-card"
       onClick={() => handleProjectClick(project.id)}
     >
-      <CardHeader className="pb-3 p-4 sm:p-6">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-sm sm:text-base font-semibold text-slate-900 line-clamp-2">
+      <CardContent className="p-4">
+        {/* Header with title and badges */}
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1 min-w-0 pr-3">
+            <h3 className="text-base font-semibold text-slate-900 line-clamp-2 leading-tight">
               {project.title}
-            </CardTitle>
-            <CardDescription className="text-xs sm:text-sm text-slate-600 mt-1 line-clamp-2">
+            </h3>
+            <p className="text-sm text-slate-600 mt-1 line-clamp-2">
               {project.description}
-            </CardDescription>
+            </p>
           </div>
-          <div className="flex flex-row sm:flex-col items-start sm:items-end gap-2 sm:space-y-2 sm:ml-4 shrink-0">
-            <Badge className={`${getPriorityColor(project.priority)} text-xs px-2 py-1`}>
+          <div className="flex flex-col gap-1 shrink-0">
+            <Badge className={`${getPriorityColor(project.priority)} text-xs px-2 py-1 badge`}>
               {project.priority}
             </Badge>
-            <Badge variant="outline" className={`${getStatusColor(project.status)} text-xs px-2 py-1`}>
+            <Badge variant="outline" className={`${getStatusColor(project.status)} text-xs px-2 py-1 badge`}>
               {getStatusIcon(project.status)}
-              <span className="ml-1 capitalize hidden sm:inline">{project.status.replace('_', ' ')}</span>
-              <span className="ml-1 capitalize sm:hidden">{project.status.split('_')[0]}</span>
+              <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
             </Badge>
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-3 p-4 sm:p-6 pt-0">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs sm:text-sm text-slate-600">
+
+        {/* Assignment and Date */}
+        <div className="flex items-center justify-between text-sm text-slate-600 mb-3">
           <div className="flex items-center">
-            <User className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+            <User className="w-4 h-4 mr-2" />
             <span className="truncate">{project.assigneeName || 'Unassigned'}</span>
           </div>
           <div className="flex items-center">
-            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-            <span className="text-xs sm:text-sm">{new Date(project.dueDate).toLocaleDateString()}</span>
+            <Calendar className="w-4 h-4 mr-2" />
+            <span>{project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No due date'}</span>
           </div>
         </div>
         
+        {/* Progress bar */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs sm:text-sm">
+          <div className="flex items-center justify-between text-sm">
             <span className="text-slate-600">Progress</span>
-            <span className="font-medium text-slate-900">{project.progress || 0}%</span>
+            <span className="font-medium text-slate-900">{(project as any).progress || 0}%</span>
           </div>
-          <Progress value={project.progress || 0} className="h-2" />
+          <Progress value={(project as any).progress || 0} className="h-2 progress-bar" />
         </div>
 
-        <div className="flex items-center justify-between pt-2">
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-3 mt-3 border-t border-slate-100 card-footer">
           <div className="text-xs text-slate-500">
-            <span className="hidden sm:inline">Due: </span>{new Date(project.dueDate).toLocaleDateString()}
+            Due: {project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No date'}
           </div>
           <ArrowRight className="w-4 h-4 text-slate-400" />
         </div>
@@ -286,25 +288,29 @@ export default function ProjectsClean() {
 
       <Tabs defaultValue="active" className="w-full">
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
-          <TabsTrigger value="active" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-            <Play className="w-3 h-3 sm:w-4 sm:h-4" />
+          <TabsTrigger value="active" className="flex items-center gap-1 text-xs px-2 py-2">
+            <Play className="w-3 h-3" />
+            <span className="hidden xs:inline sm:hidden">Act</span>
             <span className="hidden sm:inline">Active</span>
-            <span className="sm:hidden">Act</span> ({activeProjects.length})
+            <span className="ml-1">({activeProjects.length})</span>
           </TabsTrigger>
-          <TabsTrigger value="available" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-            <Circle className="w-3 h-3 sm:w-4 sm:h-4" />
+          <TabsTrigger value="available" className="flex items-center gap-1 text-xs px-2 py-2">
+            <Circle className="w-3 h-3" />
+            <span className="hidden xs:inline sm:hidden">Avail</span>
             <span className="hidden sm:inline">Available</span>
-            <span className="sm:hidden">Avail</span> ({availableProjects.length})
+            <span className="ml-1">({availableProjects.length})</span>
           </TabsTrigger>
-          <TabsTrigger value="waiting" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-            <Pause className="w-3 h-3 sm:w-4 sm:h-4" />
+          <TabsTrigger value="waiting" className="flex items-center gap-1 text-xs px-2 py-2">
+            <Pause className="w-3 h-3" />
+            <span className="hidden xs:inline sm:hidden">Wait</span>
             <span className="hidden sm:inline">Waiting</span>
-            <span className="sm:hidden">Wait</span> ({waitingProjects.length})
+            <span className="ml-1">({waitingProjects.length})</span>
           </TabsTrigger>
-          <TabsTrigger value="completed" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-            <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4" />
+          <TabsTrigger value="completed" className="flex items-center gap-1 text-xs px-2 py-2">
+            <CheckCircle2 className="w-3 h-3" />
+            <span className="hidden xs:inline sm:hidden">Done</span>
             <span className="hidden sm:inline">Completed</span>
-            <span className="sm:hidden">Done</span> ({completedProjects.length})
+            <span className="ml-1">({completedProjects.length})</span>
           </TabsTrigger>
         </TabsList>
         
@@ -316,7 +322,7 @@ export default function ProjectsClean() {
               <p className="text-slate-500">Start working on available projects or create a new one.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {activeProjects.map(renderProjectCard)}
             </div>
           )}
@@ -330,7 +336,7 @@ export default function ProjectsClean() {
               <p className="text-slate-500">All projects are either active or completed.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {availableProjects.map(renderProjectCard)}
             </div>
           )}
@@ -344,7 +350,7 @@ export default function ProjectsClean() {
               <p className="text-slate-500">No projects are currently on hold.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {waitingProjects.map(renderProjectCard)}
             </div>
           )}
@@ -358,7 +364,7 @@ export default function ProjectsClean() {
               <p className="text-slate-500">Completed projects will appear here.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {completedProjects.map(renderProjectCard)}
             </div>
           )}
