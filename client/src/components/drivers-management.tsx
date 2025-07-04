@@ -1073,10 +1073,10 @@ export default function DriversManagement() {
             {activeDrivers.map((driver) => (
               <Card key={driver.id} className="border border-slate-200">
                 <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="flex-1 min-w-0">
                       <CardTitle className="text-lg">{driver.name}</CardTitle>
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
                         {/* Active Status */}
                         <Badge
                           variant="default"
@@ -1142,7 +1142,7 @@ export default function DriversManagement() {
                         </DropdownMenu>
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 shrink-0 self-start">
                       <Button
                         variant="outline"
                         size="sm"
@@ -1151,7 +1151,7 @@ export default function DriversManagement() {
                         className="flex items-center gap-1"
                       >
                         <Edit2 className="w-4 h-4" />
-                        Edit
+                        <span className="hidden xs:inline">Edit</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -1161,7 +1161,7 @@ export default function DriversManagement() {
                         className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
                       >
                         <X className="w-4 h-4" />
-                        Delete
+                        <span className="hidden xs:inline">Delete</span>
                       </Button>
                     </div>
                   </div>
@@ -1245,10 +1245,10 @@ export default function DriversManagement() {
             {inactiveDrivers.map((driver) => (
               <Card key={driver.id} className="border border-slate-200">
                 <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="flex-1 min-w-0">
                       <CardTitle className="text-lg">{driver.name}</CardTitle>
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
                         {/* Inactive Status */}
                         <Badge
                           variant="secondary"
@@ -1338,7 +1338,7 @@ export default function DriversManagement() {
                         )}
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 shrink-0 self-start">
                       <Button
                         variant="outline"
                         size="sm"
@@ -1347,7 +1347,7 @@ export default function DriversManagement() {
                         className="flex items-center gap-1"
                       >
                         <Edit2 className="w-4 h-4" />
-                        Edit
+                        <span className="hidden xs:inline">Edit</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -1357,7 +1357,7 @@ export default function DriversManagement() {
                         className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
                       >
                         <X className="w-4 h-4" />
-                        Delete
+                        <span className="hidden xs:inline">Delete</span>
                       </Button>
                     </div>
                   </div>
