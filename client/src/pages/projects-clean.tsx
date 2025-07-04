@@ -231,14 +231,16 @@ export default function ProjectsClean() {
         </div>
 
         {/* Assignment and Date */}
-        <div className="flex items-center justify-between text-sm text-slate-600 mb-3">
-          <div className="flex items-center">
-            <User className="w-4 h-4 mr-2" />
-            <span className="truncate">{project.assigneeName || 'Unassigned'}</span>
+        <div className="space-y-2 mb-3">
+          <div className="flex items-center min-w-0">
+            <User className="w-4 h-4 mr-2 flex-shrink-0" />
+            <span className="text-sm text-slate-600 truncate min-w-0 flex-1">
+              {project.assigneeName ? project.assigneeName.split(', ').slice(0, 2).join(', ') + (project.assigneeName.split(', ').length > 2 ? '...' : '') : 'Unassigned'}
+            </span>
           </div>
           <div className="flex items-center">
-            <Calendar className="w-4 h-4 mr-2" />
-            <span>{project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No due date'}</span>
+            <Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
+            <span className="text-sm text-slate-600">{project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No due date'}</span>
           </div>
         </div>
         
@@ -288,29 +290,33 @@ export default function ProjectsClean() {
 
       <Tabs defaultValue="active" className="w-full">
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
-          <TabsTrigger value="active" className="flex items-center gap-1 text-xs px-2 py-2">
-            <Play className="w-3 h-3" />
-            <span className="hidden xs:inline sm:hidden">Act</span>
-            <span className="hidden sm:inline">Active</span>
-            <span className="ml-1">({activeProjects.length})</span>
+          <TabsTrigger value="active" className="flex flex-col items-center gap-1 text-xs px-2 py-2 h-auto">
+            <div className="flex items-center gap-1">
+              <Play className="w-3 h-3" />
+              <span>Active</span>
+            </div>
+            <span className="text-xs text-muted-foreground">({activeProjects.length})</span>
           </TabsTrigger>
-          <TabsTrigger value="available" className="flex items-center gap-1 text-xs px-2 py-2">
-            <Circle className="w-3 h-3" />
-            <span className="hidden xs:inline sm:hidden">Avail</span>
-            <span className="hidden sm:inline">Available</span>
-            <span className="ml-1">({availableProjects.length})</span>
+          <TabsTrigger value="available" className="flex flex-col items-center gap-1 text-xs px-2 py-2 h-auto">
+            <div className="flex items-center gap-1">
+              <Circle className="w-3 h-3" />
+              <span>Available</span>
+            </div>
+            <span className="text-xs text-muted-foreground">({availableProjects.length})</span>
           </TabsTrigger>
-          <TabsTrigger value="waiting" className="flex items-center gap-1 text-xs px-2 py-2">
-            <Pause className="w-3 h-3" />
-            <span className="hidden xs:inline sm:hidden">Wait</span>
-            <span className="hidden sm:inline">Waiting</span>
-            <span className="ml-1">({waitingProjects.length})</span>
+          <TabsTrigger value="waiting" className="flex flex-col items-center gap-1 text-xs px-2 py-2 h-auto">
+            <div className="flex items-center gap-1">
+              <Pause className="w-3 h-3" />
+              <span>Waiting</span>
+            </div>
+            <span className="text-xs text-muted-foreground">({waitingProjects.length})</span>
           </TabsTrigger>
-          <TabsTrigger value="completed" className="flex items-center gap-1 text-xs px-2 py-2">
-            <CheckCircle2 className="w-3 h-3" />
-            <span className="hidden xs:inline sm:hidden">Done</span>
-            <span className="hidden sm:inline">Completed</span>
-            <span className="ml-1">({completedProjects.length})</span>
+          <TabsTrigger value="completed" className="flex flex-col items-center gap-1 text-xs px-2 py-2 h-auto">
+            <div className="flex items-center gap-1">
+              <CheckCircle2 className="w-3 h-3" />
+              <span>Completed</span>
+            </div>
+            <span className="text-xs text-muted-foreground">({completedProjects.length})</span>
           </TabsTrigger>
         </TabsList>
         
