@@ -21,7 +21,9 @@ import {
   Shield,
   Mail,
   UsersRound,
-  ArrowLeft
+  ChevronLeft,
+  ChevronRight,
+  Hash
 } from "lucide-react";
 
 interface ChatChannel {
@@ -37,7 +39,7 @@ interface ChatChannel {
 export default function ChatHub() {
   const { user } = useAuth();
   const [activeChannel, setActiveChannel] = useState<string | null>(null);
-  const [showChannelList, setShowChannelList] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Determine available chat channels based on user role
   const availableChannels: ChatChannel[] = [];
@@ -134,103 +136,122 @@ export default function ChatHub() {
     });
   }
 
+  // Auto-select first channel if none selected
+  if (!activeChannel && availableChannels.length > 0) {
+    setActiveChannel(availableChannels[0].value);
+  }
+
   const renderActiveChannel = () => {
     if (!activeChannel) return null;
     const channel = availableChannels.find(ch => ch.value === activeChannel);
     return channel?.component;
   };
 
-  return (
-    <div className="space-y-6">
-      {showChannelList ? (
-        // Channel Selection View
-        <div>
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-xl sm:text-2xl font-main-heading text-primary">Team Communication</h1>
-              <p className="text-sm sm:text-base font-body text-muted-foreground">Choose a channel to join the conversation</p>
-            </div>
+  if (availableChannels.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-main-heading text-primary">Team Communication</h1>
+            <p className="text-sm sm:text-base font-body text-muted-foreground">Stay connected with your team and committees</p>
           </div>
-
-          {availableChannels.length === 0 ? (
-            <Card className="p-8 text-center">
-              <div className="text-muted-foreground">
-                <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p className="text-lg font-medium mb-2">No Chat Channels Available</p>
-                <p className="text-sm">You don't have access to any chat channels yet.</p>
-              </div>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {availableChannels.map((channel) => (
-                <Card 
-                  key={channel.value} 
-                  className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 border-2 hover:border-primary/20"
-                  onClick={() => {
-                    setActiveChannel(channel.value);
-                    setShowChannelList(false);
-                  }}
-                >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className={`p-2 rounded-lg ${channel.color} text-white`}>
-                        {channel.icon}
-                      </div>
-                      {channel.badge && (
-                        <Badge variant="secondary" className="text-xs">
-                          {channel.badge}
-                        </Badge>
-                      )}
-                    </div>
-                    <CardTitle className="text-lg font-sub-heading">{channel.label}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground font-body">{channel.description}</p>
-                    <Button variant="ghost" size="sm" className="mt-3 w-full">
-                      Join Channel →
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
         </div>
-      ) : (
-        // Active Channel View
-        <div>
-          <div className="flex items-center gap-4 mb-6">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => setShowChannelList(true)}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Channels
-            </Button>
-            
+        <Card className="p-8 text-center">
+          <div className="text-muted-foreground">
+            <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
+            <p className="text-lg font-medium mb-2">No Chat Channels Available</p>
+            <p className="text-sm">You don't have access to any chat channels yet.</p>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-[calc(100vh-200px)] gap-4">
+      {/* Sidebar with Channel List */}
+      <div className={`${sidebarCollapsed ? 'w-16' : 'w-72'} transition-all duration-300 flex-shrink-0`}>
+        <Card className="h-full">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              {!sidebarCollapsed && (
+                <div>
+                  <CardTitle className="text-lg font-sub-heading">Channels</CardTitle>
+                  <p className="text-xs text-muted-foreground">Select a conversation</p>
+                </div>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                className="h-8 w-8 p-0"
+              >
+                {sidebarCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="p-2 space-y-1">
+            {availableChannels.map((channel) => (
+              <Button
+                key={channel.value}
+                variant={activeChannel === channel.value ? "default" : "ghost"}
+                className={`w-full justify-start h-auto p-3 ${sidebarCollapsed ? 'px-2' : ''}`}
+                onClick={() => setActiveChannel(channel.value)}
+              >
+                <div className="flex items-center gap-3 w-full">
+                  <div className={`p-1.5 rounded ${channel.color} text-white flex-shrink-0`}>
+                    {channel.icon}
+                  </div>
+                  {!sidebarCollapsed && (
+                    <div className="flex-1 text-left">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-sm">{channel.label}</span>
+                        {channel.badge && (
+                          <Badge variant="secondary" className="text-xs">
+                            {channel.badge}
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                        {channel.description}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </Button>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Chat Area */}
+      <div className="flex-1 min-w-0">
+        <Card className="h-full">
+          <CardHeader className="pb-3">
             {activeChannel && (
               <div className="flex items-center gap-3">
                 <div className={`p-2 rounded-lg ${availableChannels.find(ch => ch.value === activeChannel)?.color} text-white`}>
                   {availableChannels.find(ch => ch.value === activeChannel)?.icon}
                 </div>
                 <div>
-                  <h2 className="text-lg font-sub-heading">
+                  <CardTitle className="text-lg font-sub-heading">
+                    <Hash className="h-4 w-4 inline mr-1" />
                     {availableChannels.find(ch => ch.value === activeChannel)?.label}
-                  </h2>
+                  </CardTitle>
                   <p className="text-sm text-muted-foreground">
                     {availableChannels.find(ch => ch.value === activeChannel)?.description}
                   </p>
                 </div>
               </div>
             )}
-          </div>
-
-          <div className="min-h-[600px]">
-            {renderActiveChannel()}
-          </div>
-        </div>
-      )}
+          </CardHeader>
+          <CardContent className="p-0 h-[calc(100%-80px)]">
+            <div className="h-full">
+              {renderActiveChannel()}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
