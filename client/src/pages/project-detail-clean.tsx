@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Checkbox } from "@/components/ui/checkbox";
 import { CelebrationToast, useCelebration } from "@/components/celebration-toast";
 import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
+import { TaskAssigneeSelector } from "@/components/task-assignee-selector";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -39,7 +40,8 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     description: "",
     status: "pending",
     priority: "medium",
-    assigneeName: "",
+    assigneeId: undefined as string | undefined,
+    assigneeName: undefined as string | undefined,
     dueDate: ""
   });
   const [editProject, setEditProject] = useState({
@@ -75,7 +77,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "tasks"] });
-      setNewTask({ title: "", description: "", status: "pending", priority: "medium", assigneeName: "", dueDate: "" });
+      setNewTask({ title: "", description: "", status: "pending", priority: "medium", assigneeId: undefined, assigneeName: undefined, dueDate: "" });
       setIsAddingTask(false);
       toast({ title: "Task created successfully" });
     },
@@ -618,11 +620,17 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="task-assignee">Assignee</Label>
-                      <Input
-                        id="task-assignee"
-                        value={newTask.assigneeName}
-                        onChange={(e) => setNewTask({ ...newTask, assigneeName: e.target.value })}
+                      <Label>Assignee</Label>
+                      <TaskAssigneeSelector
+                        value={{ 
+                          assigneeId: newTask.assigneeId, 
+                          assigneeName: newTask.assigneeName 
+                        }}
+                        onChange={(value) => setNewTask({ 
+                          ...newTask, 
+                          assigneeId: value.assigneeId,
+                          assigneeName: value.assigneeName 
+                        })}
                         placeholder="Assign to someone"
                       />
                     </div>
@@ -697,9 +705,16 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                           )}
                           <div className="flex items-center space-x-4 text-sm text-slate-500">
                             {task.assigneeName && (
-                              <div className="flex items-center">
-                                <User className="w-3 h-3 mr-1" />
-                                {task.assigneeName}
+                              <div className="flex items-center space-x-2">
+                                <div className="flex items-center">
+                                  <User className="w-3 h-3 mr-1" />
+                                  {task.assigneeName}
+                                </div>
+                                {task.assigneeId && (
+                                  <Badge variant="secondary" className="text-xs">
+                                    System User
+                                  </Badge>
+                                )}
                               </div>
                             )}
                             {task.dueDate && (

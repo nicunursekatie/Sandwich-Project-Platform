@@ -84,7 +84,8 @@ export const projectTasks = pgTable("project_tasks", {
   description: text("description"),
   status: text("status").notNull().default("pending"), // 'pending', 'in_progress', 'completed'
   priority: text("priority").notNull().default("medium"), // 'low', 'medium', 'high'
-  assigneeName: text("assignee_name"),
+  assigneeId: text("assignee_id"), // Reference to users table
+  assigneeName: text("assignee_name"), // Keep for backward compatibility and external users
   dueDate: text("due_date"),
   completedAt: timestamp("completed_at"),
   attachments: text("attachments"), // JSON array of file paths
