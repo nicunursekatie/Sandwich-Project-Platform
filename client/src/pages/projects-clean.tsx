@@ -52,7 +52,9 @@ export default function ProjectsClean() {
     assigneeName: '',
     dueDate: '',
     startDate: '',
-    estimatedHours: 0
+    estimatedHours: 0,
+    actualHours: 0,
+    budget: ''
   });
 
   // Fetch all projects
@@ -187,7 +189,9 @@ export default function ProjectsClean() {
       assigneeName: '',
       dueDate: '',
       startDate: '',
-      estimatedHours: 0
+      estimatedHours: 0,
+      actualHours: 0,
+      budget: ''
     });
   };
 
@@ -501,6 +505,29 @@ export default function ProjectsClean() {
                   type="date"
                   value={newProject.dueDate || ''}
                   onChange={(e) => setNewProject(prev => ({ ...prev, dueDate: e.target.value }))}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="estimatedHours">Estimated Hours</Label>
+                <Input
+                  id="estimatedHours"
+                  type="number"
+                  min="0"
+                  value={newProject.estimatedHours || ''}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, estimatedHours: parseInt(e.target.value) || 0 }))}
+                  placeholder="0"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="budget">Budget</Label>
+                <Input
+                  id="budget"
+                  type="text"
+                  value={newProject.budget || ''}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, budget: e.target.value }))}
+                  placeholder="e.g., $500 or TBD"
                 />
               </div>
             </div>

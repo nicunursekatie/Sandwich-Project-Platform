@@ -51,7 +51,8 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     status: "active",
     category: "",
     budget: "",
-    estimatedHours: ""
+    estimatedHours: "",
+    actualHours: ""
   });
 
   // Fetch project details
@@ -255,7 +256,8 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       status: project?.status || "planning",
       category: project?.category || "",
       budget: project?.budget || "",
-      estimatedHours: project?.estimatedHours?.toString() || ""
+      estimatedHours: project?.estimatedHours?.toString() || "",
+      actualHours: project?.actualHours?.toString() || ""
     });
     setIsEditingProject(true);
   };
@@ -271,7 +273,10 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       dueDate: editProject.dueDate || null,
       status: project?.status || 'available',
       category: project?.category || 'general',
-      progressPercentage: project?.progressPercentage || 0
+      progressPercentage: project?.progressPercentage || 0,
+      budget: editProject.budget || null,
+      estimatedHours: editProject.estimatedHours ? parseInt(editProject.estimatedHours) : null,
+      actualHours: editProject.actualHours ? parseInt(editProject.actualHours) : null
     };
 
     updateProjectMutation.mutate(projectData);
@@ -390,7 +395,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       </div>
 
       {/* Project Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {/* Assignee Card */}
         <Card className="border-l-4 border-l-blue-500 bg-gradient-to-br from-blue-50 to-slate-50 hover:shadow-lg transition-all duration-200">
           <CardHeader className="pb-4">
@@ -498,6 +503,42 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                     {projectTasks.length - projectTasks.filter(task => task.status === 'completed').length} remaining
                   </span>
                 </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Budget Card */}
+        <Card className="border-l-4 border-l-purple-500 bg-gradient-to-br from-purple-50 to-slate-50 hover:shadow-lg transition-all duration-200">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xs font-semibold text-purple-600 uppercase tracking-wider">Budget</CardTitle>
+              <div className="p-2 bg-purple-100 rounded-full">
+                <Award className="w-5 h-5 text-purple-600" />
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="space-y-2">
+              <p className="text-2xl font-bold text-slate-900">
+                {project.budget || 'Not set'}
+              </p>
+              <div className="space-y-1">
+                {project.estimatedHours && (
+                  <p className="text-sm text-slate-600">
+                    Est: {project.estimatedHours}h
+                  </p>
+                )}
+                {project.actualHours && project.actualHours > 0 && (
+                  <p className="text-sm text-slate-600">
+                    Actual: {project.actualHours}h
+                  </p>
+                )}
+                {project.estimatedHours && project.actualHours && project.actualHours > 0 && (
+                  <p className="text-sm text-slate-500">
+                    {((project.actualHours / project.estimatedHours) * 100).toFixed(0)}% of estimate
+                  </p>
+                )}
               </div>
             </div>
           </CardContent>
@@ -1073,6 +1114,40 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                 value={editProject.dueDate}
                 onChange={(e) => setEditProject({ ...editProject, dueDate: e.target.value })}
               />
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="edit-project-estimated-hours">Estimated Hours</Label>
+                <Input
+                  id="edit-project-estimated-hours"
+                  type="number"
+                  min="0"
+                  value={editProject.estimatedHours}
+                  onChange={(e) => setEditProject({ ...editProject, estimatedHours: e.target.value })}
+                  placeholder="0"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-project-actual-hours">Actual Hours</Label>
+                <Input
+                  id="edit-project-actual-hours"
+                  type="number"
+                  min="0"
+                  value={editProject.actualHours}
+                  onChange={(e) => setEditProject({ ...editProject, actualHours: e.target.value })}
+                  placeholder="0"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-project-budget">Budget</Label>
+                <Input
+                  id="edit-project-budget"
+                  type="text"
+                  value={editProject.budget}
+                  onChange={(e) => setEditProject({ ...editProject, budget: e.target.value })}
+                  placeholder="e.g., $500 or TBD"
+                />
+              </div>
             </div>
             <div className="flex justify-end gap-2">
               <Button 
