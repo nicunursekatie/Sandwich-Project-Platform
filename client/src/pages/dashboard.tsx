@@ -336,7 +336,7 @@ export default function Dashboard() {
           >
             <MessageCircle className="w-5 h-5" />
           </button>
-          <MessageNotifications />
+          <MessageNotifications user={user} />
           <button
             onClick={() => setActiveSection("profile")}
             className={`p-2 rounded-lg transition-colors ${

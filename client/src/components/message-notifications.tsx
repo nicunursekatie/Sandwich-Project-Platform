@@ -26,10 +26,14 @@ interface UnreadCounts {
   total: number;
 }
 
-export default function MessageNotifications() {
+interface MessageNotificationsProps {
+  user: any; // User object passed from parent Dashboard
+}
+
+export default function MessageNotifications({ user }: MessageNotificationsProps) {
   console.log('🔔 MessageNotifications component mounting...');
   
-  const { user, isAuthenticated } = useAuth();
+  const isAuthenticated = !!user;
   const [lastCheck, setLastCheck] = useState(Date.now());
 
   console.log('🔔 MessageNotifications: user=', (user as any)?.id, 'isAuthenticated=', isAuthenticated);
