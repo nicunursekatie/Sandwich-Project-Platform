@@ -410,8 +410,8 @@ export default function UserManagement() {
                                     { key: 'DRIVER_CHAT', label: 'Driver Chat', permission: PERMISSIONS.DRIVER_CHAT },
                                     { key: 'RECIPIENT_CHAT', label: 'Recipient Chat', permission: PERMISSIONS.RECIPIENT_CHAT },
                                     { key: 'CORE_TEAM_CHAT', label: 'Core Team Chat', permission: 'core_team_chat' },
-                                    { key: 'DIRECT_MESSAGES', label: 'Direct Messages', permission: PERMISSIONS.DIRECT_MESSAGES },
-                                    { key: 'GROUP_MESSAGES', label: 'Group Messages', permission: PERMISSIONS.GROUP_MESSAGES }
+                                    { key: 'DIRECT_MESSAGES', label: 'Direct Messages', permission: 'direct_messages' },
+                                    { key: 'GROUP_MESSAGES', label: 'Group Messages', permission: 'group_messages' }
                                   ].map(({ key, label, permission }) => (
                                     <div key={permission} className="flex items-center space-x-2">
                                       <Checkbox
