@@ -4674,14 +4674,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         createdBy: userId,
       }).returning();
       
-      // Add creator as admin
+      // Create a conversation thread for this group
+      const [thread] = await db.insert(conversationThreads).values({
+        type: 'group',
+        referenceId: group.id.toString(),
+        title: name.trim(),
+        isActive: true,
+        createdBy: userId
+      }).returning();
+      
+      console.log(`[DEBUG] Created thread ${thread.id} for group ${group.id} (${name})`);
+      
+      // Add creator as admin to group membership
       await db.insert(groupMemberships).values({
         groupId: group.id,
         userId: userId,
         role: 'admin'
       });
       
-      // Add other members
+      // Add creator as participant to thread
+      await db.insert(groupMessageParticipants).values({
+        threadId: thread.id,
+        userId: userId,
+        status: 'active',
+        joinedAt: new Date()
+      });
+      
+      // Add other members to both group and thread
       if (memberIds && Array.isArray(memberIds)) {
         const memberships = memberIds
           .filter(id => id !== userId) // Don't duplicate creator
@@ -4691,13 +4710,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
             role: 'member' as const
           }));
         
+        const participants = memberIds
+          .filter(id => id !== userId) // Don't duplicate creator
+          .map(memberId => ({
+            threadId: thread.id,
+            userId: memberId,
+            status: 'active' as const,
+            joinedAt: new Date()
+          }));
+        
         if (memberships.length > 0) {
           await db.insert(groupMemberships).values(memberships);
+          await db.insert(groupMessageParticipants).values(participants);
         }
       }
       
-      res.status(201).json(group);
+      // Send welcome message notification
+      if ((global as any).broadcastNewMessage) {
+        (global as any).broadcastNewMessage({
+          content: `Welcome to ${name}! This group has been created for team collaboration.`,
+          sender: 'System',
+          threadId: thread.id,
+          timestamp: new Date()
+        });
+      }
+      
+      res.status(201).json({ ...group, threadId: thread.id });
     } catch (error) {
+      console.error("Error creating message group:", error);
       res.status(500).json({ message: "Failed to create message group" });
     }
   });
@@ -4948,30 +4988,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const groupId = parseInt(req.params.groupId);
       const userId = (req as any).user?.id;
       
+      // Get the thread ID for this group
+      const [thread] = await db
+        .select({ threadId: conversationThreads.id })
+        .from(conversationThreads)
+        .where(
+          and(
+            eq(conversationThreads.type, 'group'),
+            eq(conversationThreads.referenceId, groupId.toString()),
+            eq(conversationThreads.isActive, true)
+          )
+        );
+      
+      if (!thread) {
+        console.log(`[DEBUG] No thread found for group ${groupId}`);
+        return res.json([]);
+      }
+      
       // Check if user has access to this thread (not left)
       const participantStatus = await db
         .select({ status: groupMessageParticipants.status })
         .from(groupMessageParticipants)
         .where(
           and(
-            eq(groupMessageParticipants.threadId, groupId),
+            eq(groupMessageParticipants.threadId, thread.threadId),
             eq(groupMessageParticipants.userId, userId)
           )
         );
       
       if (participantStatus.length === 0 || participantStatus[0].status === 'left') {
+        console.log(`[DEBUG] User ${userId} has no access to thread ${thread.threadId} for group ${groupId}`);
         return res.json([]); // Return empty array for users who left
       }
       
       // Get messages from the thread
       const groupMessages = await db
         .select()
-        .from(messages)
-        .where(eq(messages.threadId, groupId))
-        .orderBy(messages.timestamp);
+        .from(messagesTable)
+        .where(eq(messagesTable.threadId, thread.threadId))
+        .orderBy(messagesTable.timestamp);
       
+      console.log(`[DEBUG] Found ${groupMessages.length} messages for group ${groupId} thread ${thread.threadId}`);
       res.json(groupMessages);
     } catch (error) {
+      console.error("Error fetching group messages:", error);
       res.status(500).json({ message: "Failed to fetch group messages" });
     }
   });
