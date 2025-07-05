@@ -167,11 +167,15 @@ export default function MessageNotifications() {
     }
   };
 
+  console.log('🔔 MessageNotifications rendering with totalUnread:', totalUnread);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="relative">
           <Bell className="h-5 w-5" />
+          {/* Debug indicator - green dot shows component is mounted */}
+          <div className="absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full" title="Notifications Active"></div>
           {totalUnread > 0 && (
             <Badge 
               variant="destructive" 
