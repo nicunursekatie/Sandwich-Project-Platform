@@ -398,24 +398,62 @@ export default function UserManagement() {
                               </Select>
                             </div>
 
-                            <div>
-                              <Label>Specific Permissions</Label>
-                              <div className="grid grid-cols-2 gap-4 mt-2">
-                                {Object.entries(PERMISSIONS).map(([key, permission]) => (
-                                  <div key={permission} className="flex items-center space-x-2">
-                                    <Checkbox
-                                      id={permission}
-                                      checked={editingPermissions.includes(permission)}
-                                      onCheckedChange={() => handlePermissionToggle(permission)}
-                                    />
-                                    <Label
-                                      htmlFor={permission}
-                                      className="text-sm font-normal"
-                                    >
-                                      {key.replace(/_/g, ' ').toLowerCase()}
-                                    </Label>
-                                  </div>
-                                ))}
+                            <div className="space-y-6">
+                              {/* Chat Access Permissions */}
+                              <div>
+                                <Label className="text-base font-semibold">Chat Access</Label>
+                                <div className="grid grid-cols-2 gap-4 mt-3 p-4 bg-gray-50 rounded-lg">
+                                  {[
+                                    { key: 'GENERAL_CHAT', label: 'General Chat', permission: PERMISSIONS.GENERAL_CHAT },
+                                    { key: 'COMMITTEE_CHAT', label: 'Committee Chat', permission: PERMISSIONS.COMMITTEE_CHAT },
+                                    { key: 'HOST_CHAT', label: 'Host Chat', permission: PERMISSIONS.HOST_CHAT },
+                                    { key: 'DRIVER_CHAT', label: 'Driver Chat', permission: PERMISSIONS.DRIVER_CHAT },
+                                    { key: 'RECIPIENT_CHAT', label: 'Recipient Chat', permission: PERMISSIONS.RECIPIENT_CHAT },
+                                    { key: 'CORE_TEAM_CHAT', label: 'Core Team Chat', permission: 'core_team_chat' },
+                                    { key: 'DIRECT_MESSAGES', label: 'Direct Messages', permission: PERMISSIONS.DIRECT_MESSAGES },
+                                    { key: 'GROUP_MESSAGES', label: 'Group Messages', permission: PERMISSIONS.GROUP_MESSAGES }
+                                  ].map(({ key, label, permission }) => (
+                                    <div key={permission} className="flex items-center space-x-2">
+                                      <Checkbox
+                                        id={permission}
+                                        checked={editingPermissions.includes(permission)}
+                                        onCheckedChange={() => handlePermissionToggle(permission)}
+                                      />
+                                      <Label
+                                        htmlFor={permission}
+                                        className="text-sm font-normal"
+                                      >
+                                        {label}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Other Permissions */}
+                              <div>
+                                <Label className="text-base font-semibold">Other Permissions</Label>
+                                <div className="grid grid-cols-2 gap-4 mt-3">
+                                  {Object.entries(PERMISSIONS)
+                                    .filter(([key, permission]) => 
+                                      !['GENERAL_CHAT', 'COMMITTEE_CHAT', 'HOST_CHAT', 'DRIVER_CHAT', 'RECIPIENT_CHAT', 'DIRECT_MESSAGES', 'GROUP_MESSAGES'].includes(key)
+                                    )
+                                    .map(([key, permission]) => (
+                                      <div key={permission} className="flex items-center space-x-2">
+                                        <Checkbox
+                                          id={permission}
+                                          checked={editingPermissions.includes(permission)}
+                                          onCheckedChange={() => handlePermissionToggle(permission)}
+                                        />
+                                        <Label
+                                          htmlFor={permission}
+                                          className="text-sm font-normal"
+                                        >
+                                          {key.replace(/_/g, ' ').toLowerCase()}
+                                        </Label>
+                                      </div>
+                                    ))}
+                                </div>
                               </div>
                             </div>
 

@@ -667,9 +667,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       const message = await storage.createMessage(messageWithUser);
       
-      // Broadcast new message notification to connected clients
+      // Broadcast new message notification to connected clients  
       if (typeof (global as any).broadcastNewMessage === 'function') {
-        (global as any).broadcastNewMessage(message);
+        await (global as any).broadcastNewMessage(message);
       }
       
       res.status(201).json(message);
@@ -5019,8 +5019,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Helper function to get users with access to a specific chat
+  const getUsersWithChatAccess = async (chatName: string): Promise<string[]> => {
+    try {
+      // Import chat permissions from shared utilities
+      const { CHAT_PERMISSIONS } = await import('../shared/auth-utils.js');
+      const requiredPermission = CHAT_PERMISSIONS[chatName as keyof typeof CHAT_PERMISSIONS];
+      
+      if (!requiredPermission) {
+        console.log(`No permission mapping found for chat: ${chatName}`);
+        return [];
+      }
+
+      // Get all users with the required permission
+      const users = await storage.getAllUsers();
+      const usersWithAccess = users
+        .filter(user => user.permissions && user.permissions.includes(requiredPermission))
+        .map(user => user.id);
+      
+      console.log(`Users with access to ${chatName} chat:`, usersWithAccess);
+      return usersWithAccess;
+    } catch (error) {
+      console.error('Error getting users with chat access:', error);
+      return [];
+    }
+  };
+
   // Function to broadcast new message notifications
-  const broadcastNewMessage = (message: any) => {
+  const broadcastNewMessage = async (message: any) => {
     try {
       console.log('broadcastNewMessage called with:', message);
       console.log('Connected clients count:', connectedClients.size);
@@ -5035,23 +5061,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         recipientId: message.recipientId
       };
 
-      // Determine who should receive this notification
-      const targetUsers = new Set<string>();
+      // Determine who should receive this notification based on chat permissions
+      let targetUsers = new Set<string>();
 
       if (message.committee === 'direct' && message.recipientId) {
         // Direct message - notify recipient only
         targetUsers.add(message.recipientId);
         console.log('Direct message, notifying recipient:', message.recipientId);
       } else {
-        // Committee message - notify all users with access to that committee
-        // This would need to be expanded based on user permissions
-        // For now, broadcast to all connected users except sender
-        for (const userId of connectedClients.keys()) {
+        // Committee/chat room message - notify only users with access to that specific chat
+        const usersWithAccess = await getUsersWithChatAccess(message.committee);
+        
+        for (const userId of usersWithAccess) {
+          // Don't notify the sender
           if (userId !== message.userId) {
             targetUsers.add(userId);
           }
         }
-        console.log('Committee message, target users:', Array.from(targetUsers));
+        console.log(`${message.committee} chat message, target users:`, Array.from(targetUsers));
       }
 
       // Send notifications to target users

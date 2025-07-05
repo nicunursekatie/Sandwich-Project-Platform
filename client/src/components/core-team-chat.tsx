@@ -28,10 +28,10 @@ export default function CoreTeamChat() {
   const { user } = useAuth();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  // Only allow admin users to access core team chat
-  const isAdmin = hasPermission(user, PERMISSIONS.MANAGE_USERS);
+  // Only allow users with core team chat access
+  const hasCoreTeamAccess = hasPermission(user, 'core_team_chat');
   
-  if (!isAdmin) {
+  if (!hasCoreTeamAccess) {
     return (
       <Card className="w-full max-w-4xl mx-auto">
         <CardHeader>

@@ -20,12 +20,15 @@ export const PERMISSIONS = {
   // Message moderation (super admin only)
   MODERATE_MESSAGES: 'moderate_messages',
   
-  // Chat access
+  // Chat access - specific chat room permissions
   GENERAL_CHAT: 'general_chat',
   COMMITTEE_CHAT: 'committee_chat',
   HOST_CHAT: 'host_chat',
   DRIVER_CHAT: 'driver_chat',
   RECIPIENT_CHAT: 'recipient_chat',
+  CORE_TEAM_CHAT: 'core_team_chat',
+  DIRECT_MESSAGES: 'direct_messages',
+  GROUP_MESSAGES: 'group_messages',
   
   // Toolkit access (public but tracked)
   TOOLKIT_ACCESS: 'toolkit_access',
@@ -46,7 +49,11 @@ export const PERMISSIONS = {
   
   // User management
   VIEW_USERS: 'view_users',
-  MANAGE_USERS: 'manage_users'
+  MANAGE_USERS: 'manage_users',
+  
+  // Data export (admin only)
+  EXPORT_DATA: 'export_data',
+  IMPORT_DATA: 'import_data'
 } as const;
 
 export function getDefaultPermissionsForRole(role: string): string[] {
@@ -126,4 +133,26 @@ export function getDefaultPermissionsForRole(role: string): string[] {
     default:
       return [];
   }
+}
+
+// Chat room to permission mapping
+export const CHAT_PERMISSIONS = {
+  'general': PERMISSIONS.GENERAL_CHAT,
+  'committee': PERMISSIONS.COMMITTEE_CHAT,
+  'hosts': PERMISSIONS.HOST_CHAT,
+  'drivers': PERMISSIONS.DRIVER_CHAT,
+  'recipients': PERMISSIONS.RECIPIENT_CHAT,
+  'core_team': PERMISSIONS.CORE_TEAM_CHAT,
+  'direct': PERMISSIONS.DIRECT_MESSAGES,
+  'groups': PERMISSIONS.GROUP_MESSAGES
+} as const;
+
+// Function to check if user has access to a specific chat room
+export function hasAccessToChat(user: any, chatRoom: string): boolean {
+  if (!user || !user.permissions) return false;
+  
+  const requiredPermission = CHAT_PERMISSIONS[chatRoom as keyof typeof CHAT_PERMISSIONS];
+  if (!requiredPermission) return false;
+  
+  return user.permissions.includes(requiredPermission);
 }
