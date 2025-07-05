@@ -4,14 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Users, Send, Crown, Trash2, UserPlus, Edit, MoreVertical, Archive, LogOut, VolumeX, Eye } from "lucide-react";
+import { MessageCircle, Plus, Users, Send, Crown, Trash2, UserPlus, Edit, MoreVertical, Archive, LogOut, VolumeX, Eye, X } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { MessageGroup, InsertMessageGroup, GroupMembership, Message, User } from "@shared/schema";
 import { PERMISSIONS } from "@shared/auth-utils";
@@ -37,6 +37,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   const [newMessage, setNewMessage] = useState("");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showAddMemberDialog, setShowAddMemberDialog] = useState(false);
+  const [showMemberDialog, setShowMemberDialog] = useState(false);
   const [editingMessage, setEditingMessage] = useState<Message | null>(null);
   const [editedContent, setEditedContent] = useState("");
   const [groupForm, setGroupForm] = useState({
@@ -247,6 +248,24 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       if (variables.status === 'left' || variables.status === 'archived') {
         setSelectedGroup(null);
       }
+    },
+  });
+
+
+
+  // Remove member mutation
+  const removeMemberMutation = useMutation({
+    mutationFn: async ({ groupId, userId }: { groupId: number; userId: string }) => {
+      const response = await fetch(`/api/message-groups/${groupId}/members/${userId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to remove member");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/message-groups"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/message-groups", selectedGroup?.id, "members"] });
+      toast({ title: "Member removed successfully!" });
     },
   });
 
@@ -489,7 +508,16 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                         )}
                         <div className="flex items-center gap-1 mt-1">
                           <Users className="h-3 w-3 text-gray-400" />
-                          <span className="text-xs text-gray-500">{group.memberCount} members</span>
+                          <button 
+                            className="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedGroup(group);
+                              setShowMemberDialog(true);
+                            }}
+                          >
+                            {group.memberCount} members
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -518,6 +546,15 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                   {selectedGroup.description && (
                     <p className="text-sm text-gray-500">{selectedGroup.description}</p>
                   )}
+                  <div className="flex items-center gap-2 mt-1">
+                    <button 
+                      className="flex items-center gap-1 px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded"
+                      onClick={() => setShowMemberDialog(true)}
+                    >
+                      <Users className="h-3 w-3" />
+                      {selectedGroup.memberCount} members
+                    </button>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline">
@@ -752,6 +789,143 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
           </div>
         )}
       </div>
+
+      {/* Member Management Dialog */}
+      <Dialog open={showMemberDialog} onOpenChange={setShowMemberDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Group Members - {selectedGroup?.name}</DialogTitle>
+            <DialogDescription>
+              View and manage group members. Admins can add or remove members.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {/* Current Members */}
+            <div>
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Current Members ({groupMembers.length})
+              </h4>
+              <div className="max-h-60 overflow-y-auto space-y-2">
+                {groupMembers.map((member) => (
+                  <div key={member.userId} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback>
+                          {member.firstName?.[0]?.toUpperCase() || "?"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium">
+                          {member.firstName} {member.lastName}
+                        </div>
+                        <div className="text-sm text-gray-500">{member.email}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {member.role === 'admin' && (
+                        <Badge variant="secondary" className="text-xs">
+                          <Crown className="h-3 w-3 mr-1" />
+                          Admin
+                        </Badge>
+                      )}
+                      {/* Only show remove button if current user is admin and target is not admin */}
+                      {selectedGroup?.userRole === 'admin' && member.role !== 'admin' && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            if (confirm(`Remove ${member.firstName} ${member.lastName} from this group?`)) {
+                              removeMemberMutation.mutate({
+                                groupId: selectedGroup.id,
+                                userId: member.userId,
+                              });
+                            }
+                          }}
+                          disabled={removeMemberMutation.isPending}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Add Members Section (Admin Only) */}
+            {selectedGroup?.userRole === 'admin' && (
+              <div className="border-t pt-4">
+                <h4 className="font-medium mb-3 flex items-center gap-2">
+                  <UserPlus className="h-4 w-4" />
+                  Add New Members
+                </h4>
+                <div className="space-y-3">
+                  <Select
+                    value=""
+                    onValueChange={(userId) => {
+                      if (userId && !addMemberForm.memberIds.includes(userId)) {
+                        setAddMemberForm(prev => ({
+                          memberIds: [...prev.memberIds, userId]
+                        }));
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select users to add..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {allUsers
+                        .filter(user => 
+                          !groupMembers.some(member => member.userId === user.id) &&
+                          !addMemberForm.memberIds.includes(user.id)
+                        )
+                        .map((user) => (
+                          <SelectItem key={user.id} value={user.id}>
+                            {user.firstName} {user.lastName} ({user.email})
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+
+                  {/* Selected Users to Add */}
+                  {addMemberForm.memberIds.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium">Selected to add:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {addMemberForm.memberIds.map((userId) => {
+                          const user = allUsers.find(u => u.id === userId);
+                          return (
+                            <Badge key={userId} variant="secondary" className="flex items-center gap-1">
+                              {user?.firstName} {user?.lastName}
+                              <X
+                                className="h-3 w-3 cursor-pointer"
+                                onClick={() => {
+                                  setAddMemberForm(prev => ({
+                                    memberIds: prev.memberIds.filter(id => id !== userId)
+                                  }));
+                                }}
+                              />
+                            </Badge>
+                          );
+                        })}
+                      </div>
+                      <Button
+                        onClick={handleAddMembers}
+                        disabled={addMembersMutation.isPending}
+                        className="w-full"
+                      >
+                        {addMembersMutation.isPending ? "Adding..." : `Add ${addMemberForm.memberIds.length} Member(s)`}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
