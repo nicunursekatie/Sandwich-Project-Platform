@@ -4808,22 +4808,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const groupId = parseInt(req.params.groupId);
       const userId = (req as any).user?.id;
+      const user = (req as any).user;
       
-      // Verify user is member of this group
-      const membership = await db
-        .select()
-        .from(groupMemberships)
-        .where(
-          and(
-            eq(groupMemberships.groupId, groupId),
-            eq(groupMemberships.userId, userId),
-            eq(groupMemberships.isActive, true)
+      // Check if user has moderation permissions (super_admin or admin with moderate_messages)
+      const canModerateMessages = user.role === 'super_admin' || 
+        (user.permissions && user.permissions.includes('moderate_messages'));
+      
+      if (!canModerateMessages) {
+        // Regular users need to be members of the group
+        const membership = await db
+          .select()
+          .from(groupMemberships)
+          .where(
+            and(
+              eq(groupMemberships.groupId, groupId),
+              eq(groupMemberships.userId, userId),
+              eq(groupMemberships.isActive, true)
+            )
           )
-        )
-        .limit(1);
-      
-      if (membership.length === 0) {
-        return res.status(403).json({ message: "Not a member of this group" });
+          .limit(1);
+        
+        if (membership.length === 0) {
+          return res.status(403).json({ message: "Not a member of this group" });
+        }
       }
       
       // Get all group members with user details
