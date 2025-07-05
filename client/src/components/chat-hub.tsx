@@ -100,7 +100,7 @@ export default function ChatHub() {
   }
 
   // Core team chat for admins only
-  if (hasPermission(user, PERMISSIONS.MANAGE_USERS)) {
+  if (hasPermission(user, PERMISSIONS.CORE_TEAM_CHAT)) {
     availableChannels.push({ 
       value: "core_team", 
       label: "Core Team", 

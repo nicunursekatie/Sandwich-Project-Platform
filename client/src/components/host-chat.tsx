@@ -46,6 +46,16 @@ export default function HostChat() {
     return 'Team Member';
   };
 
+  const canDeleteMessage = (message: Message) => {
+    const currentUser = user as any;
+    const isOwner = message.sender === getUserName();
+    const isSuperAdmin = currentUser?.role === "super_admin";
+    const isAdmin = currentUser?.role === "admin";
+    const hasModeratePermission = currentUser?.permissions?.includes("moderate_messages");
+    
+    return isOwner || isSuperAdmin || isAdmin || hasModeratePermission;
+  };
+
   const { data: hosts = [] } = useQuery<HostWithContacts[]>({
     queryKey: ['/api/hosts-with-contacts'],
   });
@@ -214,8 +224,8 @@ export default function HostChat() {
                         {new Date(message.timestamp).toLocaleTimeString()}
                       </span>
                     </div>
-                    {/* Only show delete button for user's own messages */}
-                    {message.sender === getUserName() && (
+                    {/* Show delete button for message owners or super admins */}
+                    {canDeleteMessage(message) && (
                       <Button
                         variant="ghost"
                         size="sm"

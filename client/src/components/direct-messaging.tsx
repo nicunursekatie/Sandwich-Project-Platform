@@ -255,7 +255,13 @@ export default function DirectMessaging() {
   };
 
   const canEditMessage = (message: Message) => {
-    return message.userId === (user as any)?.id;
+    const currentUser = user as any;
+    const isOwner = message.userId === currentUser?.id;
+    const isSuperAdmin = currentUser?.role === "super_admin";
+    const isAdmin = currentUser?.role === "admin";
+    const hasModeratePermission = currentUser?.permissions?.includes("moderate_messages");
+    
+    return isOwner || isSuperAdmin || isAdmin || hasModeratePermission;
   };
 
   const formatDate = (timestamp: string) => {

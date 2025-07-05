@@ -693,8 +693,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Message not found" });
       }
 
-      // Check if user owns the message or is admin
-      if (message.userId !== req.user.id && req.user.role !== "admin") {
+      // Check if user owns the message or has admin privileges
+      const user = req.user as any;
+      const isOwner = message.userId === user.id;
+      const isSuperAdmin = user.role === "super_admin";
+      const isAdmin = user.role === "admin";
+      const hasModeratePermission = user.permissions?.includes("moderate_messages");
+      
+      if (!isOwner && !isSuperAdmin && !isAdmin && !hasModeratePermission) {
         return res
           .status(403)
           .json({ message: "You can only delete your own messages" });

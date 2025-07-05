@@ -53,7 +53,10 @@ export const PERMISSIONS = {
   
   // Data export (admin only)
   EXPORT_DATA: 'export_data',
-  IMPORT_DATA: 'import_data'
+  IMPORT_DATA: 'import_data',
+  
+  // Message sending
+  SEND_MESSAGES: 'send_messages'
 } as const;
 
 export function getDefaultPermissionsForRole(role: string): string[] {
@@ -80,7 +83,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_REPORTS,
         PERMISSIONS.VIEW_MEETINGS,
         PERMISSIONS.VIEW_ANALYTICS,
-        PERMISSIONS.VIEW_ROLE_DEMO
+        PERMISSIONS.VIEW_ROLE_DEMO,
+        PERMISSIONS.SEND_MESSAGES
       ];
     
     case USER_ROLES.HOST:
@@ -93,7 +97,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.TOOLKIT_ACCESS,
         PERMISSIONS.VIEW_COLLECTIONS,
         PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS
+        PERMISSIONS.VIEW_PROJECTS,
+        PERMISSIONS.SEND_MESSAGES
       ];
     
     case USER_ROLES.DRIVER:
@@ -106,7 +111,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.TOOLKIT_ACCESS,
         PERMISSIONS.VIEW_COLLECTIONS,
         PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS
+        PERMISSIONS.VIEW_PROJECTS,
+        PERMISSIONS.SEND_MESSAGES
       ];
     
     case USER_ROLES.VOLUNTEER:
@@ -119,7 +125,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_COLLECTIONS,
         PERMISSIONS.VIEW_REPORTS,
         PERMISSIONS.VIEW_PROJECTS,
-        PERMISSIONS.EDIT_DATA  // For development tab access
+        PERMISSIONS.EDIT_DATA,  // For development tab access
+        PERMISSIONS.SEND_MESSAGES
       ];
     
     case USER_ROLES.RECIPIENT:
@@ -128,7 +135,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.RECIPIENT_CHAT,
         PERMISSIONS.DIRECT_MESSAGES,
         PERMISSIONS.GROUP_MESSAGES,
-        PERMISSIONS.VIEW_COLLECTIONS
+        PERMISSIONS.VIEW_COLLECTIONS,
+        PERMISSIONS.SEND_MESSAGES
       ];
     
     case USER_ROLES.VIEWER:
@@ -139,7 +147,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.TOOLKIT_ACCESS,
         PERMISSIONS.VIEW_COLLECTIONS,
         PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS
+        PERMISSIONS.VIEW_PROJECTS,
+        PERMISSIONS.SEND_MESSAGES
       ];
     
     default:
