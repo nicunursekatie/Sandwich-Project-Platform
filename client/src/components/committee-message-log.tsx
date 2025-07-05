@@ -43,6 +43,16 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
     return 'Team Member';
   };
 
+  const canDeleteMessage = (message: Message) => {
+    const currentUser = user as any;
+    const isOwner = message.sender === getUserName();
+    const isSuperAdmin = currentUser?.role === "super_admin";
+    const isAdmin = currentUser?.role === "admin";
+    const hasModeratePermission = currentUser?.permissions?.includes("moderate_messages");
+    
+    return isOwner || isSuperAdmin || isAdmin || hasModeratePermission;
+  };
+
   const { data: messages = [], error, isLoading } = useQuery<Message[]>({
     queryKey: [`committee-messages`, committee],
     queryFn: async () => {
@@ -141,8 +151,8 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
                         {new Date(message.timestamp).toLocaleTimeString()}
                       </span>
                     </div>
-                    {/* Only show delete button for user's own messages */}
-                    {message.sender === getUserName() && (
+                    {/* Show delete button for user's own messages or super admin */}
+                    {canDeleteMessage(message) && (
                       <Button
                         variant="ghost"
                         size="sm"

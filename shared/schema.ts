@@ -192,10 +192,24 @@ export const groupMemberships = pgTable("group_memberships", {
   isActive: boolean("is_active").notNull().default(true),
 });
 
+// Conversation threads table - master thread registry
+export const conversationThreads = pgTable("conversation_threads", {
+  id: serial("id").primaryKey(),
+  type: text("type").notNull(), // 'group', 'direct', 'committee', 'host_chat'
+  referenceId: text("reference_id"), // group_id for groups, committee_id for committees, etc.
+  title: text("title"), // Thread display name
+  description: text("description"),
+  createdBy: text("created_by").notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  lastMessageAt: timestamp("last_message_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Individual thread participation tracking
 export const groupMessageParticipants = pgTable("group_message_participants", {
   id: serial("id").primaryKey(),
-  threadId: integer("thread_id").notNull(), // References message_groups.id
+  threadId: integer("thread_id").notNull(), // References conversation_threads.id
   userId: text("user_id").notNull(),
   status: text("status").notNull().default("active"), // 'active', 'archived', 'left', 'muted'
   lastReadAt: timestamp("last_read_at"),

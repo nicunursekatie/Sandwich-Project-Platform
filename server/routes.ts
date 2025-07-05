@@ -42,7 +42,8 @@ import {
   groupMemberships,
   insertGroupMembershipSchema,
   groupMessageParticipants,
-  messages,
+  conversationThreads,
+  messages as messagesTable,
   users,
 } from "@shared/schema";
 
@@ -594,14 +595,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const limit = req.query.limit
         ? parseInt(req.query.limit as string)
         : undefined;
-      const committee = req.query.committee as string;
+      const chatType = req.query.chatType as string;
+      const committee = req.query.committee as string; // Keep for backwards compatibility
       const recipientId = req.query.recipientId as string;
       const groupId = req.query.groupId ? parseInt(req.query.groupId as string) : undefined;
       
-      console.log(`[DEBUG] API call received - committee: "${committee}", recipientId: "${recipientId}", groupId: ${groupId}`);
+      // Use chatType if provided, otherwise fall back to committee for backwards compatibility
+      const messageContext = chatType || committee;
+      console.log(`[DEBUG] API call received - chatType: "${chatType}", committee: "${committee}", recipientId: "${recipientId}", groupId: ${groupId}`);
 
       let messages;
-      if (committee === "direct" && recipientId) {
+      if (messageContext === "direct" && recipientId) {
         // For direct messages, get conversations between current user and recipient
         const currentUserId = (req as any).user?.id;
         console.log(`[DEBUG] Direct messages requested - currentUserId: ${currentUserId}, recipientId: ${recipientId}`);
@@ -611,7 +615,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages = await storage.getDirectMessages(currentUserId, recipientId);
         console.log(`[DEBUG] Direct messages found: ${messages.length} messages`);
       } else if (groupId) {
-        // For group messages, verify user membership first
+        // For group messages, use proper thread-based filtering
         const currentUserId = (req as any).user?.id;
         if (!currentUserId) {
           console.log(`[DEBUG] No user authentication found for group ${groupId} request`);
@@ -639,11 +643,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         
         console.log(`[DEBUG] User ${currentUserId} verified as member of group ${groupId}`);
-        // Get messages for this group using the committee format
-        messages = await storage.getMessagesByCommittee(`group_${groupId}`);
-        console.log(`[DEBUG] Group messages found: ${messages.length} messages`);
-      } else if (committee) {
-        messages = await storage.getMessagesByCommittee(committee);
+        
+        // Get the conversation thread ID for this group
+        const thread = await db
+          .select()
+          .from(conversationThreads)
+          .where(
+            and(
+              eq(conversationThreads.type, "group"),
+              eq(conversationThreads.referenceId, groupId.toString()),
+              eq(conversationThreads.isActive, true)
+            )
+          )
+          .limit(1);
+          
+        if (thread.length === 0) {
+          console.log(`[DEBUG] No conversation thread found for group ${groupId}`);
+          return res.json([]); // Return empty array if no thread exists
+        }
+        
+        const threadId = thread[0].id;
+        console.log(`[DEBUG] Using thread ID ${threadId} for group ${groupId}`);
+        
+        // Get messages for this specific thread
+        const messageResults = await db
+          .select()
+          .from(messagesTable)
+          .where(eq(messagesTable.threadId, threadId))
+          .orderBy(messagesTable.timestamp);
+        messages = messageResults;
+          
+        console.log(`[DEBUG] Group messages found: ${messages.length} messages for thread ${threadId}`);
+      } else if (messageContext) {
+        // For chat types, use thread-based filtering
+        const thread = await db
+          .select()
+          .from(conversationThreads)
+          .where(
+            and(
+              eq(conversationThreads.type, "chat"),
+              eq(conversationThreads.referenceId, messageContext),
+              eq(conversationThreads.isActive, true)
+            )
+          )
+          .limit(1);
+          
+        if (thread.length > 0) {
+          const threadId = thread[0].id;
+          console.log(`[DEBUG] Using thread ID ${threadId} for chat type ${messageContext}`);
+          
+          const messageResults = await db
+            .select()
+            .from(messagesTable)
+            .where(eq(messagesTable.threadId, threadId))
+            .orderBy(messagesTable.timestamp);
+          messages = messageResults;
+        } else {
+          // Fallback to committee-based filtering for legacy messages
+          console.log(`[DEBUG] No thread found for chat type ${messageContext}, using legacy filtering`);
+          messages = await storage.getMessagesByCommittee(messageContext);
+        }
       } else {
         messages = limit
           ? await storage.getRecentMessages(limit)
