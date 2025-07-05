@@ -27,14 +27,17 @@ interface UnreadCounts {
 }
 
 export default function MessageNotifications() {
+  console.log('🔔 MessageNotifications component mounting...');
+  
   const { user, isAuthenticated } = useAuth();
   const [lastCheck, setLastCheck] = useState(Date.now());
 
-  console.log('MessageNotifications: user=', (user as any)?.id, 'isAuthenticated=', isAuthenticated);
+  console.log('🔔 MessageNotifications: user=', (user as any)?.id, 'isAuthenticated=', isAuthenticated);
+  console.log('🔔 MessageNotifications: user object=', user);
 
   // Early return if user is not authenticated to prevent any queries
   if (!isAuthenticated || !user) {
-    console.log('MessageNotifications: Early return - not authenticated or no user');
+    console.log('🔔 MessageNotifications: Early return - not authenticated or no user');
     return null;
   }
 
@@ -47,9 +50,13 @@ export default function MessageNotifications() {
 
   // Listen for WebSocket notifications (to be implemented)
   useEffect(() => {
-    if (!user) return;
+    console.log('🔔 WebSocket useEffect triggered, user=', user);
+    if (!user) {
+      console.log('🔔 WebSocket setup skipped - no user');
+      return;
+    }
 
-    console.log('Setting up WebSocket for user:', (user as any)?.id);
+    console.log('🔔 Setting up WebSocket for user:', (user as any)?.id);
     // Set up WebSocket connection for real-time notifications
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const wsUrl = `${protocol}//${window.location.host}/notifications`;
