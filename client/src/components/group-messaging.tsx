@@ -74,10 +74,10 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
 
   // Fetch messages for selected group with proper API call
   const { data: groupMessages = [] } = useQuery<Message[]>({
-    queryKey: ["/api/messages", "group", selectedGroup?.id],
+    queryKey: ["/api/message-groups", selectedGroup?.id, "messages"],
     queryFn: async () => {
       if (!selectedGroup) return [];
-      const response = await fetch(`/api/messages?groupId=${selectedGroup.id}`, {
+      const response = await fetch(`/api/message-groups/${selectedGroup.id}/messages`, {
         credentials: 'include'
       });
       if (!response.ok) {
@@ -157,15 +157,15 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
 
   // Send message mutation  
   const sendMessageMutation = useMutation({
-    mutationFn: async (data: { content: string; committee: string }) => {
+    mutationFn: async (data: { content: string; groupId: number }) => {
       const messageData = {
-        ...data,
+        content: data.content,
         sender: currentUser?.firstName && currentUser?.lastName 
           ? `${currentUser.firstName} ${currentUser.lastName}`
           : currentUser?.email || "Anonymous",
         userId: currentUser?.id
       };
-      const response = await fetch("/api/messages", {
+      const response = await fetch(`/api/message-groups/${data.groupId}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(messageData),
@@ -174,7 +174,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages", "group", selectedGroup?.id] });
+      queryClient.invalidateQueries({ queryKey: ["/api/message-groups", selectedGroup?.id, "messages"] });
       setNewMessage("");
     },
   });
@@ -277,7 +277,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     
     sendMessageMutation.mutate({
       content: newMessage,
-      committee: `group_${selectedGroup.id}`,
+      groupId: selectedGroup.id,
     });
   };
 

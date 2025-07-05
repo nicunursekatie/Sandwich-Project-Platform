@@ -5036,6 +5036,79 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // POST endpoint for sending messages to group threads
+  app.post("/api/message-groups/:groupId/messages", isAuthenticated, async (req, res) => {
+    try {
+      const groupId = parseInt(req.params.groupId);
+      const userId = (req as any).user?.id;
+      const { content, sender } = req.body;
+
+      if (!content?.trim()) {
+        return res.status(400).json({ message: "Message content is required" });
+      }
+
+      // Get the thread ID for this group
+      const [thread] = await db
+        .select({ threadId: conversationThreads.id })
+        .from(conversationThreads)
+        .where(
+          and(
+            eq(conversationThreads.type, 'group'),
+            eq(conversationThreads.referenceId, groupId.toString()),
+            eq(conversationThreads.isActive, true)
+          )
+        );
+
+      if (!thread) {
+        return res.status(404).json({ message: "Group thread not found" });
+      }
+
+      // Check if user has access to this thread
+      const participantStatus = await db
+        .select({ status: groupMessageParticipants.status })
+        .from(groupMessageParticipants)
+        .where(
+          and(
+            eq(groupMessageParticipants.threadId, thread.threadId),
+            eq(groupMessageParticipants.userId, userId)
+          )
+        );
+
+      if (participantStatus.length === 0 || participantStatus[0].status === 'left') {
+        return res.status(403).json({ message: "Not authorized to send messages to this group" });
+      }
+
+      // Insert the message
+      const [message] = await db.insert(messagesTable).values({
+        content: content.trim(),
+        sender: sender || "Anonymous",
+        userId: userId,
+        threadId: thread.threadId,
+        timestamp: new Date()
+      }).returning();
+
+      // Update thread's last message timestamp
+      await db.update(conversationThreads)
+        .set({ lastMessageAt: new Date() })
+        .where(eq(conversationThreads.id, thread.threadId));
+
+      console.log(`[DEBUG] Message sent to group ${groupId} thread ${thread.threadId}`);
+      
+      // Broadcast notification via WebSocket
+      broadcastMessage({
+        type: 'group_message',
+        groupId: groupId,
+        threadId: thread.threadId,
+        message: message
+      });
+
+      res.json(message);
+    } catch (error) {
+      console.error("Error sending group message:", error);
+      res.status(500).json({ message: "Failed to send message" });
+    }
+  });
+
   // System performance monitoring endpoint
   app.get("/api/system/health", isAuthenticated, (req, res) => {
     try {
