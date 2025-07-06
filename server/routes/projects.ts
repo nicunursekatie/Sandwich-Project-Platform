@@ -158,6 +158,18 @@ router.delete("/projects/:projectId/tasks/:taskId", async (req, res) => {
   }
 });
 
+// Get project congratulations
+router.get("/projects/:projectId/congratulations", async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.projectId);
+    const congratulations = await storage.getProjectCongratulations(projectId);
+    res.json(congratulations);
+  } catch (error) {
+    console.error("Error fetching project congratulations:", error);
+    res.status(500).json({ error: "Failed to fetch congratulations" });
+  }
+});
+
 // Task file upload route
 router.post("/projects/:projectId/tasks/:taskId/upload", taskUpload.array('files', 5), async (req, res) => {
   try {

@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, groupMessageParticipants, messageGroups, groupMemberships, committees, committeeMemberships,
+  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, groupMessageParticipants, messageGroups, groupMemberships, committees, committeeMemberships, notifications,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -174,6 +174,19 @@ export class DatabaseStorage implements IStorage {
   async deleteProjectTask(id: number): Promise<boolean> {
     const result = await db.delete(projectTasks).where(eq(projectTasks.id, id));
     return (result.rowCount ?? 0) > 0;
+  }
+
+  async getProjectCongratulations(projectId: number): Promise<any[]> {
+    const result = await db.select().from(notifications)
+      .where(
+        and(
+          eq(notifications.relatedType, 'project'),
+          eq(notifications.relatedId, projectId),
+          eq(notifications.type, 'congratulations')
+        )
+      )
+      .orderBy(desc(notifications.createdAt));
+    return result;
   }
 
   async getTaskById(id: number): Promise<ProjectTask | undefined> {

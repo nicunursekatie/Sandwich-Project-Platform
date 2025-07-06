@@ -16,6 +16,7 @@ import { CelebrationToast, useCelebration } from "@/components/celebration-toast
 import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
 import { TaskAssigneeSelector } from "@/components/task-assignee-selector";
 import { MultiUserTaskCompletion } from "@/components/multi-user-task-completion";
+import ProjectCongratulations from "@/components/project-congratulations";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -585,6 +586,14 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
           </CardContent>
         </Card>
       </div>
+
+      {/* Project Congratulations Section - Only show for completed projects */}
+      <ProjectCongratulations 
+        projectId={projectId}
+        projectTitle={project.title}
+        currentUser={user}
+        isCompleted={project.status === 'completed'}
+      />
 
       {/* Tasks Section */}
       <Tabs defaultValue="tasks" className="w-full">

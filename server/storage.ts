@@ -48,6 +48,7 @@ export interface IStorage {
   updateProjectTask(id: number, updates: Partial<ProjectTask>): Promise<ProjectTask | undefined>;
   updateTaskStatus(id: number, status: string): Promise<boolean>;
   deleteProjectTask(id: number): Promise<boolean>;
+  getProjectCongratulations(projectId: number): Promise<any[]>;
   
   // Task Completions
   createTaskCompletion(completion: InsertTaskCompletion): Promise<TaskCompletion>;
