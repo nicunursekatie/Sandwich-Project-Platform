@@ -155,6 +155,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       const response = await fetch(`/api/message-groups/${data.groupId}/members`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify({ memberIds: data.memberIds }),
       });
       if (!response.ok) throw new Error("Failed to add members");
@@ -182,6 +183,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       const response = await fetch(`/api/message-groups/${data.groupId}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify(messageData),
       });
       if (!response.ok) throw new Error("Failed to send message");
@@ -199,6 +201,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       const response = await fetch(`/api/messages/${messageId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify({ content }),
       });
       if (!response.ok) throw new Error("Failed to edit message");
@@ -217,6 +220,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     mutationFn: async (messageId: number) => {
       const response = await fetch(`/api/messages/${messageId}`, {
         method: "DELETE",
+        credentials: 'include',
       });
       if (!response.ok) throw new Error("Failed to delete message");
       return response.json();
@@ -271,6 +275,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     mutationFn: async ({ groupId, userId }: { groupId: number; userId: string }) => {
       const response = await fetch(`/api/message-groups/${groupId}/members/${userId}`, {
         method: "DELETE",
+        credentials: 'include'
       });
       if (!response.ok) throw new Error("Failed to remove member");
       return response.json();
