@@ -43,12 +43,15 @@ export function MultiUserTaskCompletion({
   const queryClient = useQueryClient();
 
   // Fetch task completions
-  const { data: completions = [], isLoading, refetch } = useQuery({
+  const { data: completionsData, isLoading, refetch } = useQuery({
     queryKey: ['/api/tasks', taskId, 'completions'],
     enabled: !!taskId,
     refetchInterval: 2000, // Refresh every 2 seconds for real-time updates
     queryFn: () => apiRequest('GET', `/api/tasks/${taskId}/completions`)
   });
+
+  // Ensure completions is always an array
+  const completions = Array.isArray(completionsData) ? completionsData : [];
 
   // Mark task complete mutation
   const markCompleteMutation = useMutation({
@@ -178,7 +181,7 @@ export function MultiUserTaskCompletion({
       <div className="flex items-center gap-2">
         <Users className="w-4 h-4 text-gray-500" />
         <span className="text-sm font-medium">
-          Team Progress: {completions?.length || 0}/{totalAssignees}
+          Team Progress: {completions.length}/{totalAssignees}
         </span>
         {isFullyCompleted && (
           <Badge className="bg-green-600 hover:bg-green-700">
