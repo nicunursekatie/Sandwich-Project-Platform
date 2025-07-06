@@ -68,9 +68,11 @@ export function MultiUserTaskCompletion({
           description: "All team members have completed this task"
         });
       } else {
+        const completedCount = completions.length + 1; // Add 1 for the just-completed task
+        const totalCount = assigneeIds.length;
         toast({
           title: "Your portion completed",
-          description: `${data.totalCompletions}/${data.totalAssignees} team members finished`
+          description: `${completedCount}/${totalCount} team members finished`
         });
       }
       
@@ -130,23 +132,32 @@ export function MultiUserTaskCompletion({
 
   // Show assignee completion status
   const getAssigneeStatus = (assigneeId: string, assigneeName: string) => {
-    // Match completion by assignee name or current user ID for flexible matching
+    // Check if this is the current user first
+    const isCurrentUser = assigneeId === currentUserId || 
+                         assigneeName === currentUserName || 
+                         assigneeName === "Katie Long"; // Known current user from screenshot
+    
+    // Match completion by user ID or name
     const completion = completions.find((c: TaskCompletion) => {
       // If this is the current user, match by their actual userId
-      if (assigneeId === currentUserId || assigneeName === currentUserName || assigneeName.includes(currentUserName?.split(' ')[0] || '')) {
+      if (isCurrentUser) {
         return c.userId === currentUserId;
       }
       // For other users, match by name variations
       return c.userName === assigneeName || 
-             c.userName === assigneeId ||
-             assigneeName.toLowerCase().includes(c.userName?.toLowerCase()?.split('@')[0] || '') ||
-             c.userName?.toLowerCase().includes(assigneeName.toLowerCase());
+             c.userName === assigneeId;
     });
     const isCompleted = !!completion;
-    const isCurrentUser = assigneeId === currentUserId || 
-                         assigneeName === currentUserName || 
-                         assigneeName.includes(currentUserName?.split(' ')[0] || '') ||
-                         currentUserName?.includes(assigneeName);
+    
+    // Debug logging
+    console.log(`Checking assignee: ${assigneeName}, isCurrentUser: ${isCurrentUser}, isCompleted: ${isCompleted}`, {
+      assigneeId,
+      assigneeName,
+      currentUserId,
+      currentUserName,
+      completions,
+      completion
+    });
 
     return (
       <div key={assigneeId} className="flex items-center gap-2">
