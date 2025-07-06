@@ -132,6 +132,11 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(projectTasks).where(eq(projectTasks.projectId, projectId)).orderBy(projectTasks.order);
   }
 
+  async getProjectTask(taskId: number): Promise<ProjectTask | undefined> {
+    const [task] = await db.select().from(projectTasks).where(eq(projectTasks.id, taskId));
+    return task || undefined;
+  }
+
   async createProjectTask(insertTask: InsertProjectTask): Promise<ProjectTask> {
     const [task] = await db.insert(projectTasks).values(insertTask).returning();
     return task;
@@ -904,5 +909,55 @@ export class DatabaseStorage implements IStorage {
   async deleteAnnouncement(id: number): Promise<boolean> {
     // For now return true - can be implemented later
     return true;
+  }
+
+  // Notifications for task assignments
+  async createNotification(notification: any): Promise<any> {
+    try {
+      const [result] = await db.insert(notifications).values(notification).returning();
+      return result;
+    } catch (error) {
+      console.error("Error creating notification:", error);
+      throw error;
+    }
+  }
+
+  async getUserNotifications(userId: string): Promise<any[]> {
+    try {
+      return await db
+        .select()
+        .from(notifications)
+        .where(eq(notifications.userId, userId))
+        .orderBy(desc(notifications.createdAt));
+    } catch (error) {
+      console.error("Error fetching user notifications:", error);
+      return [];
+    }
+  }
+
+  async markNotificationAsRead(notificationId: number): Promise<boolean> {
+    try {
+      const result = await db
+        .update(notifications)
+        .set({ isRead: true })
+        .where(eq(notifications.id, notificationId));
+      return (result.rowCount ?? 0) > 0;
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+      return false;
+    }
+  }
+
+  async markAllNotificationsAsRead(userId: string): Promise<boolean> {
+    try {
+      const result = await db
+        .update(notifications)
+        .set({ isRead: true })
+        .where(and(eq(notifications.userId, userId), eq(notifications.isRead, false)));
+      return (result.rowCount ?? 0) > 0;
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+      return false;
+    }
   }
 }

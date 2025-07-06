@@ -114,6 +114,43 @@ router.post("/projects/:projectId/tasks", sanitizeMiddleware, async (req, res) =
       return res.status(400).json({ error: result.error.message });
     }
     const task = await storage.createProjectTask(result.data);
+    
+    // Create task assignment notifications and emit WebSocket events
+    if (task.assigneeIds && task.assigneeIds.length > 0) {
+      const user = (req as any).user; // Standardized authentication
+      
+      for (const assigneeId of task.assigneeIds) {
+        if (assigneeId && assigneeId.trim()) {
+          try {
+            // Create notification in database
+            const notification = await storage.createNotification({
+              userId: assigneeId,
+              type: 'task_assignment',
+              title: 'New Task Assignment',
+              message: `${task.title} has been assigned to you`,
+              relatedType: 'task',
+              relatedId: task.id,
+              isRead: false
+            });
+
+            // Emit WebSocket notification if available
+            if (typeof (global as any).broadcastTaskAssignment === 'function') {
+              (global as any).broadcastTaskAssignment(assigneeId, {
+                type: 'task_assignment',
+                message: 'You have been assigned a new task',
+                taskId: task.id,
+                taskTitle: task.title,
+                notificationId: notification.id
+              });
+            }
+          } catch (notificationError) {
+            console.error(`Error creating notification for user ${assigneeId}:`, notificationError);
+            // Don't fail task creation if notification fails
+          }
+        }
+      }
+    }
+    
     res.status(201).json(task);
   } catch (error) {
     console.error("Error creating project task:", error);
@@ -130,10 +167,55 @@ router.patch("/projects/:projectId/tasks/:taskId", sanitizeMiddleware, async (re
     console.log(`PATCH request - Task ID: ${taskId}, Project ID: ${projectId}`);
     console.log("Updates payload:", updates);
     
+    // Get original task to compare assignees
+    const originalTask = await storage.getProjectTask(taskId);
+    
     const task = await storage.updateProjectTask(taskId, updates);
     if (!task) {
       console.log(`Task ${taskId} not found in database`);
       return res.status(404).json({ error: "Task not found" });
+    }
+    
+    // Check if assignees were added (new assigneeIds that weren't in original)
+    if (updates.assigneeIds && Array.isArray(updates.assigneeIds)) {
+      const originalAssigneeIds = originalTask?.assigneeIds || [];
+      const newAssigneeIds = updates.assigneeIds.filter(id => 
+        id && id.trim() && !originalAssigneeIds.includes(id)
+      );
+      
+      // Create notifications for newly assigned users
+      if (newAssigneeIds.length > 0) {
+        const user = (req as any).user; // Standardized authentication
+        
+        for (const assigneeId of newAssigneeIds) {
+          try {
+            // Create notification in database
+            const notification = await storage.createNotification({
+              userId: assigneeId,
+              type: 'task_assignment',
+              title: 'New Task Assignment',
+              message: `${task.title} has been assigned to you`,
+              relatedType: 'task',
+              relatedId: task.id,
+              isRead: false
+            });
+
+            // Emit WebSocket notification if available
+            if (typeof (global as any).broadcastTaskAssignment === 'function') {
+              (global as any).broadcastTaskAssignment(assigneeId, {
+                type: 'task_assignment',
+                message: 'You have been assigned a new task',
+                taskId: task.id,
+                taskTitle: task.title,
+                notificationId: notification.id
+              });
+            }
+          } catch (notificationError) {
+            console.error(`Error creating notification for user ${assigneeId}:`, notificationError);
+            // Don't fail task update if notification fails
+          }
+        }
+      }
     }
     
     console.log(`Task ${taskId} updated successfully`);

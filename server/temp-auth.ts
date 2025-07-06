@@ -495,9 +495,23 @@ export function setupTempAuth(app: Express) {
   });
 
   // Get current user endpoint
-  app.get("/api/auth/user", (req: any, res) => {
+  app.get("/api/auth/user", async (req: any, res) => {
     if (req.session.user) {
-      res.json(req.session.user);
+      try {
+        // Get fresh user data from database to ensure permissions are current
+        const dbUser = await storage.getUserByEmail(req.session.user.email);
+        if (!dbUser || !dbUser.isActive) {
+          return res.status(401).json({ message: "User account not found or inactive" });
+        }
+        
+        // Standardize authentication - Always use (req as any).user and attach dbUser to request
+        (req as any).user = dbUser;
+        
+        res.json(req.session.user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        res.status(500).json({ message: "Error fetching user data" });
+      }
     } else {
       res.status(401).json({ message: "Unauthorized" });
     }
@@ -663,6 +677,15 @@ export const requirePermission = (permission: string): RequestHandler => {
     
     // Super admins have all permissions
     if (sessionUser.role === "super_admin" || sessionUser.role === "admin") {
+      // Standardize authentication - Always use (req as any).user and attach dbUser to request
+      try {
+        const dbUser = await storage.getUserByEmail(sessionUser.email);
+        if (dbUser) {
+          (req as any).user = dbUser;
+        }
+      } catch (error) {
+        console.error("Error fetching dbUser in requirePermission:", error);
+      }
       return next();
     }
     
@@ -684,9 +707,21 @@ export const requirePermission = (permission: string): RequestHandler => {
             permissions: freshUser.permissions,
             isActive: freshUser.isActive
           };
+          // Standardize authentication - Always use (req as any).user and attach dbUser to request
+          (req as any).user = freshUser;
         }
       } catch (error) {
         console.error("Error fetching fresh user data:", error);
+      }
+    } else {
+      // Standardize authentication - Always use (req as any).user and attach dbUser to request
+      try {
+        const dbUser = await storage.getUserByEmail(sessionUser.email);
+        if (dbUser) {
+          (req as any).user = dbUser;
+        }
+      } catch (error) {
+        console.error("Error fetching dbUser in requirePermission:", error);
       }
     }
     

@@ -5626,8 +5626,73 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   };
 
-  // Make broadcast function available globally for use in message routes
+  // Task assignment notification broadcasting function
+  const broadcastTaskAssignment = (userId: string, notificationData: any) => {
+    try {
+      console.log(`Broadcasting task assignment notification to user: ${userId}`);
+      const userClients = connectedClients.get(userId);
+      
+      if (userClients) {
+        let sentCount = 0;
+        userClients.forEach(client => {
+          if (client.readyState === WebSocket.OPEN) {
+            console.log('Sending task assignment notification to client:', notificationData);
+            client.send(JSON.stringify({
+              type: 'notification',
+              data: notificationData
+            }));
+            sentCount++;
+          }
+        });
+        console.log(`Sent task assignment notification to ${sentCount} clients for user ${userId}`);
+      } else {
+        console.log(`No connected clients found for user ${userId}`);
+      }
+    } catch (error) {
+      console.error('Error broadcasting task assignment notification:', error);
+    }
+  };
+
+  // Notification API endpoints
+  app.get("/api/notifications", isAuthenticated, async (req: any, res) => {
+    try {
+      const user = (req as any).user; // Standardized authentication
+      const notifications = await storage.getUserNotifications(user.id);
+      res.json(notifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      res.status(500).json({ error: "Failed to fetch notifications" });
+    }
+  });
+
+  app.patch("/api/notifications/:id/read", isAuthenticated, async (req: any, res) => {
+    try {
+      const notificationId = parseInt(req.params.id);
+      const success = await storage.markNotificationAsRead(notificationId);
+      if (!success) {
+        return res.status(404).json({ error: "Notification not found" });
+      }
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+      res.status(500).json({ error: "Failed to mark notification as read" });
+    }
+  });
+
+  app.patch("/api/notifications/mark-all-read", isAuthenticated, async (req: any, res) => {
+    try {
+      const user = (req as any).user; // Standardized authentication
+      const success = await storage.markAllNotificationsAsRead(user.id);
+      res.json({ success });
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+      res.status(500).json({ error: "Failed to mark all notifications as read" });
+    }
+  });
+
+  // Make broadcast functions available globally for use in other routes
   (global as any).broadcastNewMessage = broadcastNewMessage;
+  (global as any).broadcastTaskAssignment = broadcastTaskAssignment;
 
   return httpServer;
 }
