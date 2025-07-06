@@ -60,10 +60,20 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
   const { data: messages = [], error, isLoading } = useQuery<Message[]>({
     queryKey: [`committee-messages`, committee],
     queryFn: async () => {
-      console.log(`[CommitteeMessageLog] Fetching messages for committee: ${committee}`);
-      const response = await apiRequest("GET", `/api/messages?committee=${committee}`);
+      console.log(`🔍 CommitteeMessageLog: Fetching messages for committee: ${committee}`);
+      
+      // CRITICAL FIX: Get threadId for this committee first
+      const threadResponse = await apiRequest("POST", "/api/conversation-threads", {
+        type: committee,
+        referenceId: null,
+        title: `${committee.charAt(0).toUpperCase() + committee.slice(1)} Chat`
+      });
+      const threadData = await threadResponse.json();
+      const threadId = threadData.id;
+
+      const response = await apiRequest("GET", `/api/messages?threadId=${threadId}`);
       const data = await response.json();
-      console.log(`[CommitteeMessageLog] API Response:`, data);
+      console.log(`📤 CommitteeMessageLog: Received ${data.length} messages for ${committee} (threadId: ${threadId})`);
       console.log(`[CommitteeMessageLog] Response type:`, typeof data, Array.isArray(data));
       
       // Ensure we always return an array
@@ -83,7 +93,17 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
 
   const sendMessageMutation = useMutation({
     mutationFn: async (data: { content: string; committee: string; sender: string }) => {
-      return await apiRequest('POST', '/api/messages', data);
+      // CRITICAL FIX: Get threadId before sending message
+      const threadResponse = await apiRequest("POST", "/api/conversation-threads", {
+        type: committee,
+        referenceId: null,
+        title: `${committee.charAt(0).toUpperCase() + committee.slice(1)} Chat`
+      });
+      const threadData = await threadResponse.json();
+      const messageWithThread = { ...data, threadId: threadData.id };
+      console.log(`📤 CommitteeMessageLog: Sending message with threadId ${threadData.id}`);
+      
+      return await apiRequest('POST', '/api/messages', messageWithThread);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`committee-messages`, committee] });

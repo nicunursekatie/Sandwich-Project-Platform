@@ -72,24 +72,31 @@ export default function DirectMessaging() {
     queryFn: async () => {
       if (!selectedUser || !user) return Promise.resolve([]);
 
-      const url = `/api/messages?committee=direct&recipientId=${selectedUser.id}`;
-      console.log(`[DirectMessaging] *** FETCHING FOR CONVERSATION: ${(user as any)?.firstName} <-> ${selectedUser.firstName} (${selectedUser.id}) ***`);
+      // CRITICAL FIX: Get threadId for this specific conversation first
+      const userIds = [(user as any)?.id, selectedUser.id].sort();
+      const referenceId = userIds.join('_');
+      
+      const threadResponse = await apiRequest("POST", "/api/conversation-threads", {
+        type: "direct",
+        referenceId,
+        title: `Direct Messages - ${referenceId}`
+      });
+      const threadData = await threadResponse.json();
+      const threadId = threadData.id;
+
+      const url = `/api/messages?threadId=${threadId}`;
+      console.log(`🔍 DirectMessaging: Fetching conversation ${(user as any)?.firstName} <-> ${selectedUser.firstName} with threadId: ${threadId}`);
 
       const response = await apiRequest("GET", url);
       const data = await response.json();
 
-      console.log(`[DirectMessaging] *** API RESPONSE FOR ${selectedUser.firstName}:`, data);
-      console.log(`[DirectMessaging] *** MESSAGE COUNT: ${Array.isArray(data) ? data.length : 'NOT_ARRAY'} ***`);
+      console.log(`📤 DirectMessaging: API response for ${selectedUser.firstName}:`, data);
+      console.log(`📊 DirectMessaging: Message count: ${Array.isArray(data) ? data.length : 'NOT_ARRAY'}`);
 
-      // Additional verification: ensure messages are actually for this conversation
+      // ThreadId-based messages are already properly isolated, no filtering needed
       if (Array.isArray(data)) {
-        const filteredData = data.filter(msg => 
-          msg.committee === "direct" && 
-          ((msg.userId === (user as any)?.id && msg.recipientId === selectedUser.id) ||
-           (msg.userId === selectedUser.id && msg.recipientId === (user as any)?.id))
-        );
-        console.log(`[DirectMessaging] *** FRONTEND FILTERED COUNT: ${filteredData.length} (from ${data.length} total) ***`);
-        return filteredData;
+        console.log(`✅ DirectMessaging: Received ${data.length} messages for threadId ${threadId} (no filtering needed)`);
+        return data;
       }
 
       console.warn(`[DirectMessaging] *** UNEXPECTED RESPONSE TYPE:`, typeof data, data);
@@ -111,6 +118,23 @@ export default function DirectMessaging() {
   // Send message mutation with optimistic updates
   const sendMessageMutation = useMutation({
     mutationFn: async (newMessage: { sender: string; content: string; committee: string; recipientId: string; userId?: string }) => {
+      // CRITICAL FIX: Get threadId before sending message
+      if (selectedUser && user) {
+        const userIds = [(user as any)?.id, selectedUser.id].sort();
+        const referenceId = userIds.join('_');
+        
+        const threadResponse = await apiRequest("POST", "/api/conversation-threads", {
+          type: "direct",
+          referenceId,
+          title: `Direct Messages - ${referenceId}`
+        });
+        const threadData = await threadResponse.json();
+        const messageWithThread = { ...newMessage, threadId: threadData.id };
+        console.log(`📤 DirectMessaging: Sending message with threadId ${threadData.id}`);
+        
+        return await apiRequest('POST', '/api/messages', messageWithThread);
+      }
+      
       return await apiRequest('POST', '/api/messages', newMessage);
     },
     onMutate: async (newMessage) => {

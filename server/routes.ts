@@ -796,9 +796,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .orderBy(messagesTable.timestamp);
           messages = messageResults;
         } else {
-          // Fallback to committee-based filtering for legacy messages
-          console.log(`[DEBUG] No thread found for chat type ${messageContext}, using legacy filtering`);
-          messages = await storage.getMessagesByCommittee(messageContext);
+          // FIXED: Use storage layer to create thread instead of legacy committee filtering
+          console.log(`❌ CRITICAL: No thread found for chat type ${messageContext}, creating via storage layer`);
+          const threadId = await storage.getOrCreateThreadId(messageContext);
+          console.log(`✅ Created threadId ${threadId} for ${messageContext} via storage layer`);
+          messages = await storage.getMessagesByThreadId(threadId);
         }
       } else {
         messages = limit
@@ -817,11 +819,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const messageData = insertMessageSchema.parse(req.body);
       // Add user ID to message data if user is authenticated
+      // ENHANCED: Add debug logging for message creation
       const messageWithUser = {
         ...messageData,
         userId: req.user?.id || null,
       };
+      console.log(`📤 CREATING MESSAGE: committee=${messageData.committee}, threadId=${messageData.threadId}, userId=${req.user?.id}`);
       const message = await storage.createMessage(messageWithUser);
+      console.log(`✅ MESSAGE CREATED: id=${message.id}, threadId=${message.threadId}`);
       
       // Broadcast new message notification to connected clients  
       if (typeof (global as any).broadcastNewMessage === 'function') {
@@ -831,6 +836,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(message);
     } catch (error) {
       res.status(400).json({ message: "Invalid message data" });
+    }
+  });
+
+  // NEW: Thread management endpoint for proper message isolation
+  app.post("/api/conversation-threads", async (req, res) => {
+    try {
+      const { type, referenceId, title } = req.body;
+      console.log(`🔍 Thread API: Creating/getting thread - type: ${type}, referenceId: ${referenceId}`);
+      
+      const threadId = await storage.getOrCreateThreadId(type, referenceId);
+      console.log(`✅ Thread API: Using threadId ${threadId} for ${type} conversation`);
+      
+      res.json({ id: threadId, type, referenceId, title });
+    } catch (error) {
+      console.error("Error creating/getting thread:", error);
+      res.status(500).json({ message: "Failed to manage conversation thread" });
     }
   });
 

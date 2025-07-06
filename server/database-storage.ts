@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, groupMessageParticipants, messageGroups, groupMemberships, committees, committeeMemberships, notifications,
+  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, groupMessageParticipants, messageGroups, groupMemberships, committees, committeeMemberships, notifications, conversationThreads,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -24,7 +24,7 @@ import {
   type CommitteeMembership, type InsertCommitteeMembership
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, sql, and, or } from "drizzle-orm";
+import { eq, desc, sql, and, or, isNull, ne, isNotNull, gt, gte, lte, inArray, like } from "drizzle-orm";
 import type { IStorage } from "./storage";
 
 export class DatabaseStorage implements IStorage {
@@ -253,22 +253,89 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(messages).orderBy(messages.id).limit(limit);
   }
 
-  async getMessagesByCommittee(committee: string): Promise<Message[]> {
-    return await db.select().from(messages).where(eq(messages.committee, committee)).orderBy(messages.id);
+  // FIXED: Messages must be filtered by threadId to prevent cross-chat contamination
+  async getMessagesByCommittee(committee: string, threadId?: number): Promise<Message[]> {
+    if (threadId) {
+      // Filter by specific threadId for proper conversation isolation
+      return await db.select().from(messages)
+        .where(and(eq(messages.committee, committee), eq(messages.threadId, threadId)))
+        .orderBy(messages.id);
+    } else {
+      // Legacy fallback - but this should be avoided
+      console.warn(`⚠️  getMessagesByCommittee called without threadId for committee: ${committee}`);
+      return await db.select().from(messages).where(eq(messages.committee, committee)).orderBy(messages.id);
+    }
   }
 
-  async getDirectMessages(userId1: string, userId2: string): Promise<Message[]> {
+  // NEW: Get messages by threadId only (preferred method)
+  async getMessagesByThreadId(threadId: number): Promise<Message[]> {
     return await db.select().from(messages)
-      .where(
-        and(
-          eq(messages.committee, "direct"),
-          or(
-            and(eq(messages.userId, userId1), eq(messages.recipientId, userId2)),
-            and(eq(messages.userId, userId2), eq(messages.recipientId, userId1))
-          )
-        )
-      )
+      .where(eq(messages.threadId, threadId))
+      .orderBy(messages.id);
+  }
+
+  // NEW: Get or create threadId for specific conversation types
+  async getOrCreateThreadId(type: string, referenceId?: string): Promise<number> {
+    try {
+      // Check if thread already exists
+      const [existing] = await db.select()
+        .from(conversationThreads)
+        .where(and(
+          eq(conversationThreads.type, type),
+          referenceId ? eq(conversationThreads.referenceId, referenceId) : isNull(conversationThreads.referenceId)
+        ));
+
+      if (existing) {
+        return existing.id;
+      }
+
+      // Create new thread
+      const [newThread] = await db.insert(conversationThreads).values({
+        type,
+        referenceId: referenceId || null,
+        title: this.generateThreadTitle(type, referenceId),
+        createdBy: 'system', // System-generated thread
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }).returning();
+
+      return newThread.id;
+    } catch (error) {
+      console.error("Error getting/creating threadId:", error);
+      throw error;
+    }
+  }
+
+  private generateThreadTitle(type: string, referenceId?: string): string {
+    switch (type) {
+      case 'general': return 'General Chat';
+      case 'committee': return `Committee Chat - ${referenceId}`;
+      case 'host': return 'Host Chat';
+      case 'driver': return 'Driver Chat';
+      case 'recipient': return 'Recipient Chat';
+      case 'core_team': return 'Core Team';
+      case 'direct': return `Direct Messages - ${referenceId}`;
+      case 'group': return `Group Chat - ${referenceId}`;
+      default: return `${type} Chat`;
+    }
+  }
+
+  // FIXED: Direct messages must use threadId for proper isolation
+  async getDirectMessages(userId1: string, userId2: string): Promise<Message[]> {
+    // Create consistent reference ID for direct message thread
+    const userIds = [userId1, userId2].sort();
+    const referenceId = userIds.join('_');
+    const threadId = await this.getOrCreateThreadId('direct', referenceId);
+    
+    console.log(`🔍 QUERY: getDirectMessages - threadId: ${threadId}, users: ${userId1} <-> ${userId2}, referenceId: ${referenceId}`);
+    
+    const messages = await db.select().from(messages)
+      .where(eq(messages.threadId, threadId))
       .orderBy(messages.timestamp);
+      
+    console.log(`🔍 RESULT: Found ${messages.length} direct messages for threadId ${threadId}`);
+    return messages;
   }
 
   async getMessageById(id: number): Promise<Message | undefined> {
@@ -277,12 +344,40 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
+    // Ensure threadId is set for proper conversation isolation
+    if (!insertMessage.threadId) {
+      // Auto-assign threadId based on committee type and reference
+      let referenceId: string | undefined;
+      
+      if (insertMessage.committee === 'direct' && insertMessage.recipientId) {
+        // For direct messages, create unique reference combining both user IDs
+        const userIds = [insertMessage.userId, insertMessage.recipientId].filter(Boolean).sort();
+        referenceId = userIds.join('_');
+        console.log(`🔍 DIRECT MESSAGE: Creating thread for users ${insertMessage.userId} <-> ${insertMessage.recipientId}, referenceId: ${referenceId}`);
+      } else if (insertMessage.committee === 'group') {
+        // For group messages, use a specific group identifier (to be implemented)
+        referenceId = 'group_' + Date.now(); // Temporary fallback
+        console.log(`🔍 GROUP MESSAGE: Creating thread with referenceId: ${referenceId}`);
+      } else {
+        console.log(`🔍 ${insertMessage.committee.toUpperCase()} MESSAGE: Creating thread for committee ${insertMessage.committee}`);
+      }
+      
+      insertMessage.threadId = await this.getOrCreateThreadId(insertMessage.committee, referenceId);
+      console.log(`✅ SEND: threadId ${insertMessage.threadId} assigned for ${insertMessage.committee} message from ${insertMessage.userId}`);
+    } else {
+      console.log(`🔄 SEND: Using existing threadId ${insertMessage.threadId} for ${insertMessage.committee} message from ${insertMessage.userId}`);
+    }
+    
     const [message] = await db.insert(messages).values(insertMessage).returning();
+    console.log(`📤 MESSAGE SENT: id=${message.id}, threadId=${message.threadId}, committee=${message.committee}, sender=${message.userId}`);
     return message;
   }
 
   async getThreadMessages(threadId: number): Promise<Message[]> {
-    return await db.select().from(messages).where(eq(messages.threadId, threadId)).orderBy(messages.timestamp);
+    console.log(`🔍 QUERY: getThreadMessages - threadId: ${threadId}`);
+    const messages = await db.select().from(messages).where(eq(messages.threadId, threadId)).orderBy(messages.timestamp);
+    console.log(`🔍 RESULT: Found ${messages.length} messages for threadId ${threadId}`);
+    return messages;
   }
 
   async createReply(insertMessage: InsertMessage, parentId: number): Promise<Message> {
@@ -330,15 +425,21 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getMessageGroupMessages(groupId: number, userId: string): Promise<Message[]> {
+    console.log(`🔍 QUERY: getMessageGroupMessages - groupId: ${groupId}, userId: ${userId}`);
+    
     // Only return messages if user has active or muted participation
     const participantStatus = await this.getParticipantStatus(groupId, userId);
     if (!participantStatus || participantStatus === 'left') {
+      console.log(`❌ ACCESS DENIED: User ${userId} has no access to group ${groupId} (status: ${participantStatus})`);
       return [];
     }
 
-    return await db.select().from(messages)
+    const messages = await db.select().from(messages)
       .where(eq(messages.threadId, groupId))
       .orderBy(messages.timestamp);
+      
+    console.log(`🔍 RESULT: Found ${messages.length} group messages for groupId ${groupId}, user ${userId}`);
+    return messages;
   }
 
   async createMessageGroup(group: any): Promise<any> {
