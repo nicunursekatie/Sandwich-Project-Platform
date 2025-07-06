@@ -5213,6 +5213,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const currentUser = (req as any).user;
       const isPlatformSuperAdmin = currentUser?.role === 'super_admin';
       
+      console.log(`[DEBUG] Delete member - Current user:`, JSON.stringify(currentUser, null, 2));
+      console.log(`[DEBUG] Delete member - isPlatformSuperAdmin:`, isPlatformSuperAdmin);
+      console.log(`[DEBUG] Delete member - User role check:`, currentUser?.role);
+      console.log(`[DEBUG] Delete member - User role === 'super_admin':`, currentUser?.role === 'super_admin');
+      
       if (!isPlatformSuperAdmin) {
         const membership = await db
           .select({ role: groupMemberships.role })
@@ -5230,20 +5235,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Check if target user is also an admin (prevent removing other admins)
-      const targetMembership = await db
-        .select({ role: groupMemberships.role })
-        .from(groupMemberships)
-        .where(
-          and(
-            eq(groupMemberships.groupId, groupId),
-            eq(groupMemberships.userId, targetUserId),
-            eq(groupMemberships.isActive, true)
-          )
-        );
+      // Only prevent removing other admins if current user is not a platform super admin
+      if (!isPlatformSuperAdmin) {
+        const targetMembership = await db
+          .select({ role: groupMemberships.role })
+          .from(groupMemberships)
+          .where(
+            and(
+              eq(groupMemberships.groupId, groupId),
+              eq(groupMemberships.userId, targetUserId),
+              eq(groupMemberships.isActive, true)
+            )
+          );
 
-      if (targetMembership.length > 0 && targetMembership[0].role === 'admin') {
-        return res.status(403).json({ message: "Cannot remove group administrators" });
+        if (targetMembership.length > 0 && targetMembership[0].role === 'admin') {
+          return res.status(403).json({ message: "Cannot remove group administrators" });
+        }
       }
 
       // Get the thread for this group
