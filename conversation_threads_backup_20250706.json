@@ -1,0 +1,176 @@
+{
+  "export_date": "2025-07-06T16:59:00Z",
+  "total_threads": 17,
+  "conversation_threads": [
+    {
+      "id": 1,
+      "type": "group",
+      "reference_id": "1",
+      "title": "Giving Circle",
+      "created_by": "user_1751071509329_mrkw2z95z",
+      "is_active": true,
+      "created_at": "2025-07-05 18:40:12.303549",
+      "updated_at": "2025-07-05 18:40:12.303549"
+    },
+    {
+      "id": 2,
+      "type": "group",
+      "reference_id": "2",
+      "title": "Test Group A",
+      "created_by": "admin_1751065261945",
+      "is_active": false,
+      "created_at": "2025-07-05 18:40:12.303549",
+      "updated_at": "2025-07-05 18:40:12.303549"
+    },
+    {
+      "id": 3,
+      "type": "group",
+      "reference_id": "4",
+      "title": "Allstate Grant",
+      "created_by": "user_1751072243271_fc8jaxl6u",
+      "is_active": true,
+      "created_at": "2025-07-05 18:40:12.303549",
+      "updated_at": "2025-07-05 18:40:12.303549"
+    },
+    {
+      "id": 4,
+      "type": "chat",
+      "reference_id": "general",
+      "title": "General Chat",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-05 18:41:44.316258",
+      "updated_at": "2025-07-05 18:41:44.316258"
+    },
+    {
+      "id": 5,
+      "type": "chat",
+      "reference_id": "core_team",
+      "title": "Core Team Chat",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-05 18:41:44.316258",
+      "updated_at": "2025-07-05 18:41:44.316258"
+    },
+    {
+      "id": 6,
+      "type": "chat",
+      "reference_id": "committee_marketing",
+      "title": "Marketing Committee",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-05 18:41:44.316258",
+      "updated_at": "2025-07-05 18:41:44.316258"
+    },
+    {
+      "id": 7,
+      "type": "chat",
+      "reference_id": "hosts",
+      "title": "Host Chat",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-05 18:41:44.316258",
+      "updated_at": "2025-07-05 18:41:44.316258"
+    },
+    {
+      "id": 8,
+      "type": "chat",
+      "reference_id": "drivers",
+      "title": "Driver Chat",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-05 18:41:44.316258",
+      "updated_at": "2025-07-05 18:41:44.316258"
+    },
+    {
+      "id": 9,
+      "type": "chat",
+      "reference_id": "recipients",
+      "title": "Recipient Chat",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-05 18:41:44.316258",
+      "updated_at": "2025-07-05 18:41:44.316258"
+    },
+    {
+      "id": 10,
+      "type": "general",
+      "reference_id": null,
+      "title": "General Chat",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-06 16:58:21.004825",
+      "updated_at": "2025-07-06 16:58:21.00483"
+    },
+    {
+      "id": 11,
+      "type": "core_team",
+      "reference_id": null,
+      "title": "Core Team Chat",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-06 16:58:21.153812",
+      "updated_at": "2025-07-06 16:58:21.153817"
+    },
+    {
+      "id": 12,
+      "type": "host",
+      "reference_id": null,
+      "title": "Host Chat",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-06 16:58:21.294537",
+      "updated_at": "2025-07-06 16:58:21.294541"
+    },
+    {
+      "id": 13,
+      "type": "driver",
+      "reference_id": null,
+      "title": "Driver Chat",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-06 16:58:21.434923",
+      "updated_at": "2025-07-06 16:58:21.434927"
+    },
+    {
+      "id": 14,
+      "type": "recipient",
+      "reference_id": null,
+      "title": "Recipient Chat",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-06 16:58:21.576864",
+      "updated_at": "2025-07-06 16:58:21.57687"
+    },
+    {
+      "id": 15,
+      "type": "direct",
+      "reference_id": "user_1751071509329_mrkw2z95z_user_1751493923615_nbcyq3am7",
+      "title": "Direct Messages - user_1751071509329_mrkw2z95z_user_1751493923615_nbcyq3am7",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-06 04:26:27.3673",
+      "updated_at": "2025-07-06 16:58:40.036831"
+    },
+    {
+      "id": 16,
+      "type": "direct",
+      "reference_id": "user_1751071509329_mrkw2z95z_user_1751492211973_0pi1jdl3p",
+      "title": "Direct Messages - user_1751071509329_mrkw2z95z_user_1751492211973_0pi1jdl3p",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-06 04:26:30.216642",
+      "updated_at": "2025-07-06 16:58:40.254921"
+    },
+    {
+      "id": 17,
+      "type": "direct",
+      "reference_id": "user_1751071509329_mrkw2z95z_user_1751072243271_fc8jaxl6u",
+      "title": "Direct Messages - user_1751071509329_mrkw2z95z_user_1751072243271_fc8jaxl6u",
+      "created_by": "system",
+      "is_active": true,
+      "created_at": "2025-07-06 04:26:33.884994",
+      "updated_at": "2025-07-06 16:58:40.465496"
+    }
+  ]
+}
