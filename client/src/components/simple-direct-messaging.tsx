@@ -57,7 +57,7 @@ export default function SimpleDirectMessaging() {
 
   // Get or create conversation when user is selected
   useEffect(() => {
-    if (selectedUser && user) {
+    if (selectedUser && user && conversations.length > 0) {
       const userIds = [(user as any).id, selectedUser.id].sort();
       const conversationName = `${userIds[0]}_${userIds[1]}`;
       
@@ -68,25 +68,20 @@ export default function SimpleDirectMessaging() {
       
       if (conversation) {
         setCurrentConversation(conversation);
-      } else {
-        // Create new conversation
+      } else if (!createConversationMutation.isPending) {
+        // Create new conversation only if not already creating one
         createConversationMutation.mutate({
           type: "direct",
           name: conversationName,
-          participants: [user.id, selectedUser.id]
+          participants: [(user as any).id, selectedUser.id]
         });
       }
     }
-  }, [selectedUser, conversations, user]);
+  }, [selectedUser, user]);
 
   // Fetch messages for current conversation
   const { data: messages = [] } = useQuery<Message[]>({
     queryKey: ["conversation-messages", currentConversation?.id],
-    queryFn: async () => {
-      if (!currentConversation) return [];
-      const response = await apiRequest("GET", `/api/conversations/${currentConversation.id}/messages`);
-      return await response.json();
-    },
     enabled: !!currentConversation,
     refetchInterval: 3000,
   });
@@ -94,14 +89,14 @@ export default function SimpleDirectMessaging() {
   // Create conversation mutation
   const createConversationMutation = useMutation({
     mutationFn: async (data: { type: string; name: string; participants: string[] }) => {
-      const response = await apiRequest("POST", "/api/conversations", data);
-      return await response.json();
+      return await apiRequest("POST", "/api/conversations", data);
     },
     onSuccess: (conversation) => {
       setCurrentConversation(conversation);
       queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Failed to create conversation:", error);
       toast({ title: "Failed to create conversation", variant: "destructive" });
     },
   });
@@ -110,10 +105,9 @@ export default function SimpleDirectMessaging() {
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
       if (!currentConversation) throw new Error("No conversation selected");
-      const response = await apiRequest("POST", `/api/conversations/${currentConversation.id}/messages`, {
+      return await apiRequest("POST", `/api/conversations/${currentConversation.id}/messages`, {
         content
       });
-      return await response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["conversation-messages", currentConversation?.id] });
