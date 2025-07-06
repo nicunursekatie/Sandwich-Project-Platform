@@ -837,21 +837,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // NEW: Thread management endpoint for proper message isolation
-  app.post("/api/conversation-threads", async (req, res) => {
-    try {
-      const { type, referenceId, title } = req.body;
-      console.log(`🔍 Thread API: Creating/getting thread - type: ${type}, referenceId: ${referenceId}`);
-      
-      const threadId = await storage.getOrCreateThreadId(type, referenceId);
-      console.log(`✅ Thread API: Using threadId ${threadId} for ${type} conversation`);
-      
-      res.json({ id: threadId, type, referenceId, title });
-    } catch (error) {
-      console.error("Error creating/getting thread:", error);
-      res.status(500).json({ message: "Failed to manage conversation thread" });
-    }
-  });
+  // REMOVED OLD ENDPOINT - using new conversation system instead
 
   app.delete("/api/messages/:id", requirePermission("send_messages"), async (req, res) => {
     try {
@@ -5710,9 +5696,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Simple conversation API endpoints for the new 3-table messaging system
-  app.get("/api/conversations", async (req, res) => {
+  app.get("/api/conversations", isAuthenticated, async (req, res) => {
     try {
-      const user = req.user;
+      const user = (req as any).user;
       if (!user?.id) {
         return res.status(401).json({ message: "Unauthorized" });
       }
@@ -5742,9 +5728,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/conversations", async (req, res) => {
+  app.post("/api/conversations", isAuthenticated, async (req, res) => {
     try {
-      const user = req.user;
+      const user = (req as any).user;
       if (!user?.id) {
         return res.status(401).json({ message: "Unauthorized" });
       }
@@ -5777,9 +5763,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/conversations/:id/messages", async (req, res) => {
+  app.get("/api/conversations/:id/messages", isAuthenticated, async (req, res) => {
     try {
-      const user = req.user;
+      const user = (req as any).user;
       if (!user?.id) {
         return res.status(401).json({ message: "Unauthorized" });
       }
@@ -5814,9 +5800,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/conversations/:id/messages", async (req, res) => {
+  app.post("/api/conversations/:id/messages", isAuthenticated, async (req, res) => {
     try {
-      const user = req.user;
+      const user = (req as any).user;
       if (!user?.id) {
         return res.status(401).json({ message: "Unauthorized" });
       }

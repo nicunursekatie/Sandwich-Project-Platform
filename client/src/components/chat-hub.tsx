@@ -7,7 +7,7 @@ import CommitteeChat from "@/components/committee-chat";
 import HostChat from "@/components/host-chat";
 import CommitteeMessageLog from "@/components/committee-message-log";
 import CoreTeamChat from "@/components/core-team-chat";
-import DirectMessaging from "@/components/direct-messaging";
+import SimpleDirectMessaging from "@/components/simple-direct-messaging";
 import { GroupMessaging } from "@/components/group-messaging";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, USER_ROLES } from "@/lib/authUtils";
@@ -119,7 +119,7 @@ export default function ChatHub() {
       label: "Direct Messages", 
       description: "One-on-one conversations",
       icon: <Mail className="h-4 w-4" />,
-      component: <DirectMessaging />,
+      component: <SimpleDirectMessaging />,
       color: "bg-primary/10 text-primary"
     });
   }
