@@ -130,9 +130,23 @@ export function MultiUserTaskCompletion({
 
   // Show assignee completion status
   const getAssigneeStatus = (assigneeId: string, assigneeName: string) => {
-    const completion = completions.find((c: TaskCompletion) => c.userId === assigneeId);
+    // Match completion by assignee name or current user ID for flexible matching
+    const completion = completions.find((c: TaskCompletion) => {
+      // If this is the current user, match by their actual userId
+      if (assigneeId === currentUserId || assigneeName === currentUserName || assigneeName.includes(currentUserName?.split(' ')[0] || '')) {
+        return c.userId === currentUserId;
+      }
+      // For other users, match by name variations
+      return c.userName === assigneeName || 
+             c.userName === assigneeId ||
+             assigneeName.toLowerCase().includes(c.userName?.toLowerCase()?.split('@')[0] || '') ||
+             c.userName?.toLowerCase().includes(assigneeName.toLowerCase());
+    });
     const isCompleted = !!completion;
-    const isCurrentUser = assigneeId === currentUserId;
+    const isCurrentUser = assigneeId === currentUserId || 
+                         assigneeName === currentUserName || 
+                         assigneeName.includes(currentUserName?.split(' ')[0] || '') ||
+                         currentUserName?.includes(assigneeName);
 
     return (
       <div key={assigneeId} className="flex items-center gap-2">

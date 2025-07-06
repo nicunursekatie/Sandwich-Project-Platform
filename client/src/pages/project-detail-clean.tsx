@@ -209,8 +209,34 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     }
   };
 
-  const handleToggleTaskCompletion = (task: ProjectTask) => {
+  const handleToggleTaskCompletion = async (task: ProjectTask) => {
     const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+    
+    // For multi-user tasks, check if all team members have completed before allowing main completion
+    if (newStatus === 'completed' && task.assigneeIds?.length > 1) {
+      try {
+        const completionsResponse = await apiRequest('GET', `/api/tasks/${task.id}/completions`);
+        const completions = completionsResponse || [];
+        const totalAssignees = task.assigneeIds.length;
+        
+        if (completions.length < totalAssignees) {
+          toast({
+            title: "Team Completion Required",
+            description: `All ${totalAssignees} team members must complete their portions first (${completions.length}/${totalAssignees} completed)`,
+            variant: "destructive"
+          });
+          return; // Prevent main completion
+        }
+      } catch (error) {
+        console.error('Failed to check team completions:', error);
+        toast({
+          title: "Error",
+          description: "Failed to verify team completion status",
+          variant: "destructive"
+        });
+        return;
+      }
+    }
     
     // If we're marking the task as completed, trigger celebration
     if (newStatus === 'completed') {
@@ -701,6 +727,9 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                             onCheckedChange={() => handleToggleTaskCompletion(task)}
                             disabled={!canEdit}
                             className="w-5 h-5"
+                            title={task.assigneeIds?.length > 1 ? "All team members must complete their portions first" : "Mark task complete"}
+                            className="w-5 h-5"
+                            title={task.assigneeIds?.length > 1 ? "All team members must complete their portions first" : "Mark task complete"}
                           />
                         </div>
                         <div className="flex-1">
