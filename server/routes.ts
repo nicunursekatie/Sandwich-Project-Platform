@@ -5347,6 +5347,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delete entire group message thread (super admin only)
+  app.delete("/api/message-groups/:groupId", isAuthenticated, async (req, res) => {
+    try {
+      const groupId = parseInt(req.params.groupId);
+      const currentUser = (req as any).user;
+
+      // Only platform super admins can delete entire groups
+      if (currentUser?.role !== 'super_admin') {
+        return res.status(403).json({ message: "Only platform super admins can delete message groups" });
+      }
+
+      // Start transaction to ensure data consistency
+      await db.transaction(async (tx) => {
+        // 1. Get the conversation thread for this group
+        const [thread] = await tx
+          .select({ threadId: conversationThreads.id })
+          .from(conversationThreads)
+          .where(
+            and(
+              eq(conversationThreads.type, 'group'),
+              eq(conversationThreads.referenceId, groupId.toString()),
+              eq(conversationThreads.isActive, true)
+            )
+          );
+
+        if (thread) {
+          // 2. Delete all messages in the thread
+          await tx.delete(messages)
+            .where(eq(messages.threadId, thread.threadId));
+
+          // 3. Delete all thread participants
+          await tx.delete(groupMessageParticipants)
+            .where(eq(groupMessageParticipants.threadId, thread.threadId));
+
+          // 4. Mark conversation thread as inactive
+          await tx.update(conversationThreads)
+            .set({ isActive: false })
+            .where(eq(conversationThreads.id, thread.threadId));
+        }
+
+        // 5. Delete all group memberships
+        await tx.delete(groupMemberships)
+          .where(eq(groupMemberships.groupId, groupId));
+
+        // 6. Mark the group as inactive
+        await tx.update(messageGroups)
+          .set({ isActive: false })
+          .where(eq(messageGroups.id, groupId));
+      });
+
+      console.log(`[DEBUG] Super admin deleted entire group ${groupId}`);
+      res.json({ success: true, message: "Group deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting group:", error);
+      res.status(500).json({ message: "Failed to delete group" });
+    }
+  });
+
   // System performance monitoring endpoint
   app.get("/api/system/health", isAuthenticated, (req, res) => {
     try {

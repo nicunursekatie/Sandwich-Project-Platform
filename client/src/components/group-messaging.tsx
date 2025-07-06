@@ -306,6 +306,26 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     },
   });
 
+  // Delete entire group mutation (super admin only)
+  const deleteGroupMutation = useMutation({
+    mutationFn: async (groupId: number) => {
+      const response = await fetch(`/api/message-groups/${groupId}`, {
+        method: "DELETE",
+        credentials: 'include',
+      });
+      if (!response.ok) throw new Error("Failed to delete group");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/message-groups"] });
+      setSelectedGroup(null);
+      toast({ title: "Group deleted successfully!", description: "The entire group and all messages have been permanently removed." });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete group", variant: "destructive" });
+    },
+  });
+
   const handleCreateGroup = () => {
     if (!groupForm.name.trim()) {
       toast({ title: "Group name is required", variant: "destructive" });
@@ -629,6 +649,20 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                         <LogOut className="h-4 w-4 mr-2" />
                         Leave Conversation
                       </DropdownMenuItem>
+                      {currentUser?.role === 'super_admin' && (
+                        <DropdownMenuItem 
+                          onClick={() => {
+                            if (confirm(`⚠️ DANGER: Delete entire group "${selectedGroup.name}"?\n\nThis will permanently delete:\n• All messages in this group\n• All member information\n• The entire conversation thread\n\nThis action CANNOT be undone. Are you absolutely sure?`)) {
+                              deleteGroupMutation.mutate(selectedGroup.id);
+                            }
+                          }}
+                          disabled={deleteGroupMutation.isPending}
+                          className="text-red-700 hover:text-red-800 font-semibold border-t"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete Entire Group
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
 
