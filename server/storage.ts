@@ -249,6 +249,7 @@ export class MemStorage implements IStorage {
     this.committees = new Map();
     this.committeeMemberships = new Map();
     this.announcements = new Map();
+    this.taskCompletions = new Map();
     this.currentIds = {
       user: 1,
       project: 1,
@@ -437,6 +438,42 @@ export class MemStorage implements IStorage {
 
   async deleteProjectTask(id: number): Promise<boolean> {
     return this.projectTasks.delete(id);
+  }
+
+  async getTaskById(id: number): Promise<ProjectTask | undefined> {
+    return this.projectTasks.get(id);
+  }
+
+  async updateTaskStatus(id: number, status: string): Promise<boolean> {
+    const task = this.projectTasks.get(id);
+    if (!task) return false;
+    task.status = status;
+    this.projectTasks.set(id, task);
+    return true;
+  }
+
+  // Task completion methods (for fallback storage)
+  async createTaskCompletion(completion: InsertTaskCompletion): Promise<TaskCompletion> {
+    // For fallback storage, we'll just return a mock completion
+    const mockCompletion: TaskCompletion = {
+      id: Date.now(),
+      taskId: completion.taskId,
+      userId: completion.userId,
+      userName: completion.userName,
+      completedAt: new Date(),
+      notes: completion.notes
+    };
+    return mockCompletion;
+  }
+
+  async getTaskCompletions(taskId: number): Promise<TaskCompletion[]> {
+    // For fallback storage, return empty array
+    return [];
+  }
+
+  async removeTaskCompletion(taskId: number, userId: string): Promise<boolean> {
+    // For fallback storage, always return true
+    return true;
   }
 
   // Project Comment methods

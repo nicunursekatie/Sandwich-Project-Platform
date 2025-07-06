@@ -45,7 +45,8 @@ export function MultiUserTaskCompletion({
   // Fetch task completions
   const { data: completions = [], isLoading } = useQuery({
     queryKey: ['/api/tasks', taskId, 'completions'],
-    enabled: !!taskId
+    enabled: !!taskId,
+    refetchInterval: 5000 // Refresh every 5 seconds for real-time updates
   });
 
   // Mark task complete mutation

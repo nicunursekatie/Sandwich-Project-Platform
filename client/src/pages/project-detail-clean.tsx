@@ -762,6 +762,25 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                               </div>
                             )}
                           </div>
+
+                          {/* Multi-user completion system for tasks with multiple assignees */}
+                          {task.assigneeIds?.length > 1 && (
+                            <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                              <div className="text-sm font-medium text-blue-800 mb-3">Team Completion Status</div>
+                              <MultiUserTaskCompletion
+                                taskId={task.id}
+                                assigneeIds={task.assigneeIds || []}
+                                assigneeNames={task.assigneeNames || []}
+                                currentUserId={user?.id}
+                                currentUserName={user?.displayName || user?.email}
+                                taskStatus={task.status}
+                                onStatusChange={(isCompleted) => {
+                                  queryClient.invalidateQueries({ queryKey: ['/api/projects', project.id, 'tasks'] });
+                                  queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+                                }}
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1 ml-2 sm:ml-4 shrink-0">
