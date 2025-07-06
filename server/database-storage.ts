@@ -261,9 +261,39 @@ export class DatabaseStorage implements IStorage {
         .where(and(eq(messages.committee, committee), eq(messages.threadId, threadId)))
         .orderBy(messages.id);
     } else {
-      // Legacy fallback - but this should be avoided
-      console.warn(`⚠️  getMessagesByCommittee called without threadId for committee: ${committee}`);
+      // Legacy fallback with migration support for messages without threadId
+      console.warn(`⚠️  getMessagesByCommittee called without threadId for committee: ${committee} - checking for orphaned messages`);
+      
+      // First, try to migrate any orphaned messages for this committee
+      await this.migrateOrphanedMessages(committee);
+      
+      // Then return all messages for this committee (including newly migrated ones)
       return await db.select().from(messages).where(eq(messages.committee, committee)).orderBy(messages.id);
+    }
+  }
+
+  // NEW: Migrate orphaned messages that don't have threadId
+  async migrateOrphanedMessages(committee: string): Promise<void> {
+    try {
+      console.log(`🔧 Checking for orphaned ${committee} messages without threadId...`);
+      
+      // Get or create thread for this committee
+      const threadId = await this.getOrCreateThreadId(committee);
+      
+      // Update messages without threadId for this committee
+      const result = await db.update(messages)
+        .set({ threadId })
+        .where(and(
+          eq(messages.committee, committee),
+          isNull(messages.threadId)
+        ));
+      
+      const updatedCount = result.rowCount || 0;
+      if (updatedCount > 0) {
+        console.log(`✅ Migrated ${updatedCount} orphaned ${committee} messages to threadId ${threadId}`);
+      }
+    } catch (error) {
+      console.error(`❌ Failed to migrate orphaned messages for ${committee}:`, error);
     }
   }
 
