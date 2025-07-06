@@ -557,7 +557,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                 <div>
                   <h3 className="font-semibold flex items-center gap-2">
                     {selectedGroup.name}
-                    {selectedGroup.userRole === 'admin' && (
+                    {(selectedGroup.userRole === 'admin' || selectedGroup.userRole === 'moderator') && (
                       <Crown className="h-4 w-4 text-yellow-500" />
                     )}
                   </h3>
@@ -613,7 +613,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  {selectedGroup.userRole === 'admin' && (
+                  {(selectedGroup.userRole === 'admin' || selectedGroup.userRole === 'moderator') && (
                     <Dialog open={showAddMemberDialog} onOpenChange={setShowAddMemberDialog}>
                       <DialogTrigger asChild>
                         <Button size="sm" variant="outline">
@@ -848,8 +848,8 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                           Admin
                         </Badge>
                       )}
-                      {/* Only show remove button if current user is admin and target is not admin */}
-                      {selectedGroup?.userRole === 'admin' && member.role !== 'admin' && (
+                      {/* Only show remove button if current user is admin/moderator and target is not admin */}
+                      {(selectedGroup?.userRole === 'admin' || selectedGroup?.userRole === 'moderator') && member.role !== 'admin' && (
                         <Button
                           variant="outline"
                           size="sm"
@@ -872,8 +872,8 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
               </div>
             </div>
 
-            {/* Add Members Section (Admin Only) */}
-            {selectedGroup?.userRole === 'admin' && (
+            {/* Add Members Section (Admin/Moderator Only) */}
+            {(selectedGroup?.userRole === 'admin' || selectedGroup?.userRole === 'moderator') && (
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-3 flex items-center gap-2">
                   <UserPlus className="h-4 w-4" />
