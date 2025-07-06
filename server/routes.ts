@@ -4747,24 +4747,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { groupId } = req.params;
       const { memberIds } = req.body;
-      const userId = (req as any).user?.id;
+      const currentUser = (req as any).user;
+      const userId = currentUser?.id;
       
-      // Check if user is admin of the group
-      const userMembership = await db
-        .select()
-        .from(groupMemberships)
-        .where(
-          and(
-            eq(groupMemberships.groupId, parseInt(groupId)),
-            eq(groupMemberships.userId, userId),
-            eq(groupMemberships.role, 'admin'),
-            eq(groupMemberships.isActive, true)
+      // Platform super admins can add members to any group
+      const isPlatformSuperAdmin = currentUser?.role === 'super_admin';
+      
+      if (!isPlatformSuperAdmin) {
+        // Check if user is admin of the group
+        const userMembership = await db
+          .select()
+          .from(groupMemberships)
+          .where(
+            and(
+              eq(groupMemberships.groupId, parseInt(groupId)),
+              eq(groupMemberships.userId, userId),
+              eq(groupMemberships.role, 'admin'),
+              eq(groupMemberships.isActive, true)
+            )
           )
-        )
-        .limit(1);
-      
-      if (userMembership.length === 0) {
-        return res.status(403).json({ message: "Only group admins can add members" });
+          .limit(1);
+        
+        if (userMembership.length === 0) {
+          return res.status(403).json({ message: "Only group admins can add members" });
+        }
       }
       
       if (!memberIds || !Array.isArray(memberIds) || memberIds.length === 0) {
@@ -5116,91 +5122,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Add members to group endpoint
-  app.post("/api/message-groups/:groupId/members", isAuthenticated, async (req, res) => {
-    try {
-      const groupId = parseInt(req.params.groupId);
-      const userId = (req as any).user?.id;
-      const { userIds } = req.body;
 
-      if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
-        return res.status(400).json({ message: "User IDs are required" });
-      }
-
-      // Check if current user is admin of this group
-      const membership = await db
-        .select({ role: groupMemberships.role })
-        .from(groupMemberships)
-        .where(
-          and(
-            eq(groupMemberships.groupId, groupId),
-            eq(groupMemberships.userId, userId),
-            eq(groupMemberships.isActive, true)
-          )
-        );
-
-      if (membership.length === 0 || membership[0].role !== 'admin') {
-        return res.status(403).json({ message: "Only group admins can add members" });
-      }
-
-      // Get the thread for this group
-      const [thread] = await db
-        .select({ threadId: conversationThreads.id })
-        .from(conversationThreads)
-        .where(
-          and(
-            eq(conversationThreads.type, 'group'),
-            eq(conversationThreads.referenceId, groupId.toString()),
-            eq(conversationThreads.isActive, true)
-          )
-        );
-
-      if (!thread) {
-        return res.status(404).json({ message: "Group thread not found" });
-      }
-
-      const addedMembers = [];
-
-      for (const newUserId of userIds) {
-        // Check if user is already a member
-        const existingMember = await db
-          .select()
-          .from(groupMemberships)
-          .where(
-            and(
-              eq(groupMemberships.groupId, groupId),
-              eq(groupMemberships.userId, newUserId),
-              eq(groupMemberships.isActive, true)
-            )
-          );
-
-        if (existingMember.length === 0) {
-          // Add to group membership
-          await db.insert(groupMemberships).values({
-            groupId: groupId,
-            userId: newUserId,
-            role: 'member'
-          });
-
-          // Add to thread participants
-          await db.insert(groupMessageParticipants).values({
-            threadId: thread.threadId,
-            userId: newUserId,
-            status: 'active',
-            joinedAt: new Date()
-          });
-
-          addedMembers.push(newUserId);
-        }
-      }
-
-      console.log(`[DEBUG] Added ${addedMembers.length} members to group ${groupId}`);
-      res.json({ success: true, addedCount: addedMembers.length });
-    } catch (error) {
-      console.error("Error adding members to group:", error);
-      res.status(500).json({ message: "Failed to add members" });
-    }
-  });
 
   // Remove member from group endpoint
   app.delete("/api/message-groups/:groupId/members/:userId", isAuthenticated, async (req, res) => {
