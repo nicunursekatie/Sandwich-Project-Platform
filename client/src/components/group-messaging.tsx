@@ -70,6 +70,19 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     email: string;
   }>>({
     queryKey: ["/api/message-groups", selectedGroup?.id, "members"],
+    queryFn: async () => {
+      if (!selectedGroup) return [];
+      const response = await fetch(`/api/message-groups/${selectedGroup.id}/members`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        if (response.status === 403) {
+          throw new Error("Not authorized to view members in this group");
+        }
+        throw new Error("Failed to fetch group members");
+      }
+      return response.json();
+    },
     enabled: !!selectedGroup,
   });
 
