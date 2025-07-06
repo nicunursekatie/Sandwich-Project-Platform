@@ -71,11 +71,12 @@ export function MultiUserTaskCompletion({
         notes: completionNotes
       });
     },
-    onSuccess: (data) => {
-      // Force refresh completions data immediately
-      refetch();
-      queryClient.invalidateQueries({ queryKey: ['/api/tasks', taskId, 'completions'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+    onSuccess: async (data) => {
+      // Force comprehensive cache invalidation and refresh
+      await queryClient.invalidateQueries({ queryKey: ['/api/tasks', taskId, 'completions'] });
+      await queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      await queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId, 'tasks'] });
+      await refetch();
       setShowCompletionDialog(false);
       setNotes("");
       
@@ -146,6 +147,16 @@ export function MultiUserTaskCompletion({
   const completedCount = completions.length;
   const totalAssignees = assigneeIds.length;
   const isFullyCompleted = completedCount >= totalAssignees && taskStatus === 'completed';
+  
+  // Debug the specific values
+  console.log('Team Progress Debug:', {
+    completedCount,
+    totalAssignees,
+    completions: completions.map(c => ({ userId: c.userId, userName: c.userName })),
+    assigneeIds,
+    currentUserId,
+    isCurrentUserCompleted
+  });
 
   // Show assignee completion status
   const getAssigneeStatus = (assigneeId: string, assigneeName: string) => {
