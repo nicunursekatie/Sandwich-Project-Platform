@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { storage } from "../storage-wrapper";
 import { eq, sql, and } from "drizzle-orm";
-import { messages, messageReads } from "../../shared/schema";
+import { messages } from "../../shared/schema";
 import { db } from "../db";
 
 // Helper function to check if user has permission for specific chat type

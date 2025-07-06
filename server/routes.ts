@@ -40,12 +40,10 @@ import {
   drivers,
   projectTasks,
   taskCompletions,
-  messageGroups,
-  insertMessageGroupSchema,
-  groupMemberships,
-  insertGroupMembershipSchema,
-  groupMessageParticipants,
-  conversationThreads,
+
+
+  conversations,
+  conversationParticipants,
   messages as messagesTable,
   users,
 } from "@shared/schema";
