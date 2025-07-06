@@ -1,0 +1,152 @@
+[vite] connecting... client:495:9
+Firefox can’t establish a connection to the server at wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=LkN2mblBl4O6. client:536:19
+Uncaught (in promise) DOMException: An invalid or illegal string was specified
+    setupWebSocket https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@vite/client:536
+    fallback https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@vite/client:509
+    setupWebSocket https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@vite/client:555
+    setupWebSocket https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@vite/client:552
+    <anonymous> https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/@vite/client:531
+client:536
+Feature Policy: Skipping unsupported feature name “clipboard-write”. inject.bundle.js:1:37648
+Feature Policy: Skipping unsupported feature name “clipboard-write”. inject.bundle.js:1:38665
+Feature Policy: Skipping unsupported feature name “clipboard-write”. inject.bundle.js:1:37648
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 2 l
+Referrer Policy: Ignoring the less restricted referrer policy “no-referrer-when-downgrade” for the cross-site request: https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 2 l
+🔔 MessageNotifications component mounting... message-notifications.tsx:34:11
+🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+🔔 MessageNotifications: user object= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:38:11
+🔔 WebSocket useEffect triggered, user= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:50:13
+🔔 Setting up WebSocket for user: user_1751071509329_mrkw2z95z message-notifications.tsx:55:13
+Connecting to WebSocket: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications message-notifications.tsx:58:13
+🔔 MessageNotifications component mounting... message-notifications.tsx:34:11
+🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+🔔 MessageNotifications: user object= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:38:11
+Partitioned cookie or storage access was provided to “https://dealfinder.retailmenot.com/experience/app” because it is loaded in the third-party context and dynamic state partitioning is enabled. client.480aa7c5.js:2:1542169
+The Notification permission may only be requested from inside a short running user-generated event handler. bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+upsell state 
+Object { state: "inactive", canUpsell: false }
+client.480aa7c5.js:2:1544837
+🔔 MessageNotifications component mounting... message-notifications.tsx:34:11
+🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+🔔 MessageNotifications: user object= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:38:11
+🔔 MessageNotifications rendering with totalUnread: 0 message-notifications.tsx:145:11
+Notification WebSocket connected successfully message-notifications.tsx:62:17
+User ID: user_1751071509329_mrkw2z95z message-notifications.tsx:63:17
+🔔 MessageNotifications component mounting... message-notifications.tsx:34:11
+🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+🔔 MessageNotifications: user object= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:38:11
+🔔 MessageNotifications rendering with totalUnread: 0 message-notifications.tsx:145:11
+🔔 MessageNotifications component mounting... message-notifications.tsx:34:11
+🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+🔔 MessageNotifications: user object= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:38:11
+🔔 MessageNotifications rendering with totalUnread: 0 message-notifications.tsx:145:11
+Navigating to project: 25 projects-clean.tsx:188:13
+Using dashboard navigation projects-clean.tsx:190:15
+🔔 MessageNotifications component mounting... message-notifications.tsx:34:11
+🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+🔔 MessageNotifications: user object= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:38:11
+🔔 MessageNotifications rendering with totalUnread: 0 message-notifications.tsx:145:11
+🔔 MessageNotifications component mounting... message-notifications.tsx:34:11
+🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+🔔 MessageNotifications: user object= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:38:11
+🔔 MessageNotifications rendering with totalUnread: 0 message-notifications.tsx:145:11
+The resource at “https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly. app
+The resource at “https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly. app
+🔔 MessageNotifications component mounting... message-notifications.tsx:34:11
+🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+🔔 MessageNotifications: user object= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:38:11
+🔔 MessageNotifications rendering with totalUnread: 0 message-notifications.tsx:145:11
+🔔 MessageNotifications component mounting... message-notifications.tsx:34:11
+🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+🔔 MessageNotifications: user object= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:38:11
+🔔 MessageNotifications rendering with totalUnread: 0 message-notifications.tsx:145:11
+Navigating to project: 20 projects-clean.tsx:188:13
+Using dashboard navigation projects-clean.tsx:190:15
+🔔 MessageNotifications component mounting... message-notifications.tsx:34:11
+🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+🔔 MessageNotifications: user object= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:38:11
+🔔 MessageNotifications rendering with totalUnread: 0 message-notifications.tsx:145:11
+🔔 MessageNotifications component mounting... message-notifications.tsx:34:11
+🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true message-notifications.tsx:37:11
+🔔 MessageNotifications: user object= 
+Object { id: "user_1751071509329_mrkw2z95z", email: "katielong2316@gmail.com", firstName: "Katie", lastName: "Long", profileImageUrl: null, role: "admin", permissions: (29) […], isActive: true }
+message-notifications.tsx:38:11
+🔔 MessageNotifications rendering with totalUnread: 0 message-notifications.tsx:145:11
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. Component Stack: 
+    DescriptionWarning dialog.tsx:533
+    DialogContentImpl dialog.tsx:385
+    DialogContentModal dialog.tsx:260
+    Presence presence.tsx:12
+    DialogContent dialog.tsx:235
+    SlotClone slot.tsx:68
+    Slot2 slot.tsx:15
+    Node primitive.tsx:39
+    Portal portal.tsx:22
+    Presence presence.tsx:12
+    Provider create-context.tsx:59
+    DialogPortal dialog.tsx:145
+    _c3 dialog.tsx:35
+    Provider create-context.tsx:59
+    Dialog dialog.tsx:58
+    div unknown:0
+    div unknown:0
+    div unknown:0
+    _c9 card.tsx:62
+    div unknown:0
+    _c card.tsx:8
+    div unknown:0
+    div unknown:0
+    Node primitive.tsx:39
+    Presence presence.tsx:12
+    TabsContent tabs.tsx:229
+    _c5 tabs.tsx:41
+    div unknown:0
+    Node primitive.tsx:39
+    Provider create-context.tsx:59
+    Tabs tabs.tsx:75
+    div unknown:0
+    ProjectDetailClean project-detail-clean.tsx:30
+    div unknown:0
+    div unknown:0
+    div unknown:0
+    div unknown:0
+    Dashboard dashboard.tsx:44
+    Route index.js:227
+    Switch index.js:314
+    Router App.tsx:18
+    Provider create-context.tsx:59
+    TooltipProvider tooltip.tsx:73
+    QueryClientProvider QueryClientProvider.tsx:29
+    ErrorBoundary error-boundary.tsx:19
+    App unknown:0
+<anonymous code>:1:145535
+Source map error: Error: JSON.parse: unexpected character at line 1 column 1 of the JSON data
+Stack in the worker:parseSourceMapInput@resource://devtools/client/shared/vendor/source-map/lib/util.js:163:15
+_factory@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:1066:22
+SourceMapConsumer@resource://devtools/client/shared/vendor/source-map/lib/source-map-consumer.js:26:12
+_fetch@resource://devtools/client/shared/source-map-loader/utils/fetchSourceMap.js:83:19
+
+Resource URL: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/%3Canonymous%20code%3E
+Source Map URL: installHook.js.map 2

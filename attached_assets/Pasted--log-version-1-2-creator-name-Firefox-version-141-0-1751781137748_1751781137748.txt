@@ -1,0 +1,303 @@
+{
+  "log": {
+    "version": "1.2",
+    "creator": {
+      "name": "Firefox",
+      "version": "141.0"
+    },
+    "browser": {
+      "name": "Firefox",
+      "version": "141.0"
+    },
+    "pages": [
+      {
+        "id": "page_1",
+        "pageTimings": {
+          "onContentLoad": -122636,
+          "onLoad": -121365
+        },
+        "startedDateTime": "2025-07-06T01:51:59.031-04:00",
+        "title": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+      }
+    ],
+    "entries": [
+      {
+        "startedDateTime": "2025-07-06T01:51:59.031-04:00",
+        "request": {
+          "bodySize": 0,
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/messages/unread-counts",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "tsp.session=s%3AAyJQrfXdU6WCvj_a_-q8zKQnz-nUA0we.faw98HNNUsdefu3x2QDq8f9hxEieF2uTHP3fADww388"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Priority",
+              "value": "u=4"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "tsp.session",
+              "value": "s:AyJQrfXdU6WCvj_a_-q8zKQnz-nUA0we.faw98HNNUsdefu3x2QDq8f9hxEieF2uTHP3fADww388"
+            }
+          ],
+          "queryString": [],
+          "headersSize": 611
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Content-Length",
+              "value": "110"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "Date",
+              "value": "Sun, 06 Jul 2025 05:51:59 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"6e-U3HyPMIdP3qefuf6JIzpCScugQk\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 110,
+            "text": "{\"general\":0,\"committee\":0,\"hosts\":0,\"drivers\":0,\"recipients\":0,\"core_team\":0,\"direct\":0,\"groups\":0,\"total\":0}"
+          },
+          "redirectURL": "",
+          "headersSize": 370,
+          "bodySize": 480
+        },
+        "cache": {},
+        "timings": {
+          "blocked": 0,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 84,
+          "receive": 0
+        },
+        "time": 84,
+        "_securityState": "secure",
+        "serverIPAddress": "34.82.58.13",
+        "connection": "443",
+        "pageref": "page_1"
+      },
+      {
+        "startedDateTime": "2025-07-06T01:52:06.742-04:00",
+        "request": {
+          "bodySize": 566,
+          "method": "PATCH",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/projects/20/tasks/45",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Length",
+              "value": "566"
+            },
+            {
+              "name": "Origin",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cookie",
+              "value": "tsp.session=s%3AAyJQrfXdU6WCvj_a_-q8zKQnz-nUA0we.faw98HNNUsdefu3x2QDq8f9hxEieF2uTHP3fADww388"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Priority",
+              "value": "u=0"
+            }
+          ],
+          "cookies": [
+            {
+              "name": "tsp.session",
+              "value": "s:AyJQrfXdU6WCvj_a_-q8zKQnz-nUA0we.faw98HNNUsdefu3x2QDq8f9hxEieF2uTHP3fADww388"
+            }
+          ],
+          "queryString": [],
+          "headersSize": 751,
+          "postData": {
+            "mimeType": "application/json",
+            "params": [],
+            "text": "{\"id\":45,\"projectId\":20,\"title\":\"Test out direct messaging\",\"description\":\"Send a message to someone else on the platform and have them reply to it\",\"status\":\"waiting\",\"priority\":\"medium\",\"assigneeIds\":[\"user_1751072243271_fc8jaxl6u\",\"user_1751493923615_nbcyq3am7\",\"user_1751492211973_0pi1jdl3p\",\"user_1751071509329_mrkw2z95z\"],\"assigneeNames\":[\"Marcy Louza\",\"Christine Cooper Nowicki\",\"Stephanie Luis\",\"Katie Long\"],\"dueDate\":\"2025-06-30\",\"completedAt\":null,\"attachments\":null,\"order\":0,\"createdAt\":\"2025-06-30T22:02:18.138Z\",\"updatedAt\":\"2025-06-30T22:02:18.138Z\"}"
+          }
+        },
+        "response": {
+          "status": 404,
+          "statusText": "Not Found",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Content-Length",
+              "value": "26"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "Date",
+              "value": "Sun, 06 Jul 2025 05:52:06 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"1a-D4dsL3U5Autp3bKNpxD/le70vNM\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "mimeType": "application/json; charset=utf-8",
+            "size": 26,
+            "text": "{\"error\":\"Task not found\"}"
+          },
+          "redirectURL": "",
+          "headersSize": 376,
+          "bodySize": 402
+        },
+        "cache": {},
+        "timings": {
+          "blocked": -1,
+          "dns": 0,
+          "connect": 0,
+          "ssl": 0,
+          "send": 0,
+          "wait": 79,
+          "receive": 0
+        },
+        "time": 79,
+        "_securityState": "secure",
+        "serverIPAddress": "34.82.58.13",
+        "connection": "443",
+        "pageref": "page_1"
+      }
+    ]
+  }
+}

@@ -124,11 +124,19 @@ router.post("/projects/:projectId/tasks", sanitizeMiddleware, async (req, res) =
 router.patch("/projects/:projectId/tasks/:taskId", sanitizeMiddleware, async (req, res) => {
   try {
     const taskId = parseInt(req.params.taskId);
+    const projectId = parseInt(req.params.projectId);
     const updates = req.body;
+    
+    console.log(`PATCH request - Task ID: ${taskId}, Project ID: ${projectId}`);
+    console.log("Updates payload:", updates);
+    
     const task = await storage.updateProjectTask(taskId, updates);
     if (!task) {
+      console.log(`Task ${taskId} not found in database`);
       return res.status(404).json({ error: "Task not found" });
     }
+    
+    console.log(`Task ${taskId} updated successfully`);
     res.json(task);
   } catch (error) {
     console.error("Error updating project task:", error);

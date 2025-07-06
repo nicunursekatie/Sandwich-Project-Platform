@@ -138,19 +138,37 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateProjectTask(id: number, updates: Partial<ProjectTask>): Promise<ProjectTask | undefined> {
-    // Handle timestamp fields properly
+    // Log for debugging
+    console.log(`Updating task ${id} with updates:`, updates);
+    
+    // Handle timestamp fields properly and filter out fields that shouldn't be updated
     const processedUpdates = { ...updates };
+    
+    // Remove fields that shouldn't be updated directly
+    delete processedUpdates.id;
+    delete processedUpdates.projectId;
+    delete processedUpdates.createdAt;
+    
     if (processedUpdates.completedAt && typeof processedUpdates.completedAt === 'string') {
       processedUpdates.completedAt = new Date(processedUpdates.completedAt);
     }
     if (processedUpdates.dueDate && typeof processedUpdates.dueDate === 'string') {
       processedUpdates.dueDate = new Date(processedUpdates.dueDate);
     }
+    
     // Always update the updatedAt timestamp
     processedUpdates.updatedAt = new Date();
     
-    const [task] = await db.update(projectTasks).set(processedUpdates).where(eq(projectTasks.id, id)).returning();
-    return task || undefined;
+    console.log(`Processed updates for task ${id}:`, processedUpdates);
+    
+    try {
+      const [task] = await db.update(projectTasks).set(processedUpdates).where(eq(projectTasks.id, id)).returning();
+      console.log(`Task ${id} updated successfully:`, task);
+      return task || undefined;
+    } catch (error) {
+      console.error(`Error updating task ${id}:`, error);
+      throw error;
+    }
   }
 
   async deleteProjectTask(id: number): Promise<boolean> {
