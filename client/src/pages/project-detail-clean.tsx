@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { CelebrationToast, useCelebration } from "@/components/celebration-toast";
 import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
 import { TaskAssigneeSelector } from "@/components/task-assignee-selector";
+import { MultiUserTaskCompletion } from "@/components/multi-user-task-completion";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";

@@ -203,6 +203,42 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async getTaskById(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getTaskById(id),
+      () => this.fallbackStorage.getTaskById(id)
+    );
+  }
+
+  async updateTaskStatus(id: number, status: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateTaskStatus(id, status),
+      () => this.fallbackStorage.updateTaskStatus(id, status)
+    );
+  }
+
+  // Task completion methods
+  async createTaskCompletion(completion: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createTaskCompletion(completion),
+      () => this.fallbackStorage.createTaskCompletion(completion)
+    );
+  }
+
+  async getTaskCompletions(taskId: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getTaskCompletions(taskId),
+      () => this.fallbackStorage.getTaskCompletions(taskId)
+    );
+  }
+
+  async removeTaskCompletion(taskId: number, userId: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.removeTaskCompletion(taskId, userId),
+      () => this.fallbackStorage.removeTaskCompletion(taskId, userId)
+    );
+  }
+
   // Project Comment methods
   async getProjectComments(projectId: number) {
     return this.executeWithFallback(

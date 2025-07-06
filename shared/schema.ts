@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, varchar, jsonb, index, decimal } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, varchar, jsonb, index, decimal, unique } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -104,6 +104,17 @@ export const projectComments = pgTable("project_comments", {
   commentType: text("comment_type").notNull().default("general"), // 'general', 'update', 'blocker', 'completion'
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export const taskCompletions = pgTable("task_completions", {
+  id: serial("id").primaryKey(),
+  taskId: integer("task_id").notNull(),
+  userId: text("user_id").notNull(),
+  userName: text("user_name").notNull(),
+  completedAt: timestamp("completed_at").notNull().defaultNow(),
+  notes: text("notes"),
+}, (table) => ({
+  uniqueTaskUser: unique().on(table.taskId, table.userId),
+}));
 
 // User-project assignments for visibility control
 export const projectAssignments = pgTable("project_assignments", {
@@ -391,6 +402,7 @@ export const insertProjectDocumentSchema = createInsertSchema(projectDocuments).
 export const insertProjectTaskSchema = createInsertSchema(projectTasks).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertProjectCommentSchema = createInsertSchema(projectComments).omit({ id: true, createdAt: true });
 export const insertProjectAssignmentSchema = createInsertSchema(projectAssignments).omit({ id: true, assignedAt: true });
+export const insertTaskCompletionSchema = createInsertSchema(taskCompletions).omit({ id: true, completedAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -428,6 +440,8 @@ export type ProjectComment = typeof projectComments.$inferSelect;
 export type InsertProjectComment = z.infer<typeof insertProjectCommentSchema>;
 export type ProjectAssignment = typeof projectAssignments.$inferSelect;
 export type InsertProjectAssignment = z.infer<typeof insertProjectAssignmentSchema>;
+export type TaskCompletion = typeof taskCompletions.$inferSelect;
+export type InsertTaskCompletion = z.infer<typeof insertTaskCompletionSchema>;
 
 // Hosted Files table
 export const hostedFiles = pgTable("hosted_files", {

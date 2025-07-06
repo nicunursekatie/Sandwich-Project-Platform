@@ -157,6 +157,41 @@ export class DatabaseStorage implements IStorage {
     return (result.rowCount ?? 0) > 0;
   }
 
+  async getTaskById(id: number): Promise<ProjectTask | undefined> {
+    const result = await db.select().from(projectTasks)
+      .where(eq(projectTasks.id, id))
+      .limit(1);
+    return result[0];
+  }
+
+  async updateTaskStatus(id: number, status: string): Promise<boolean> {
+    const result = await db.update(projectTasks)
+      .set({ status: status })
+      .where(eq(projectTasks.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  // Task completion methods
+  async createTaskCompletion(completion: InsertTaskCompletion): Promise<TaskCompletion> {
+    const [result] = await db.insert(taskCompletions).values(completion).returning();
+    return result;
+  }
+
+  async getTaskCompletions(taskId: number): Promise<TaskCompletion[]> {
+    return await db.select().from(taskCompletions)
+      .where(eq(taskCompletions.taskId, taskId))
+      .orderBy(taskCompletions.completedAt);
+  }
+
+  async removeTaskCompletion(taskId: number, userId: string): Promise<boolean> {
+    const result = await db.delete(taskCompletions)
+      .where(and(
+        eq(taskCompletions.taskId, taskId),
+        eq(taskCompletions.userId, userId)
+      ));
+    return (result.rowCount ?? 0) > 0;
+  }
+
   // Project Comments
   async getProjectComments(projectId: number): Promise<ProjectComment[]> {
     return await db.select().from(projectComments).where(eq(projectComments.projectId, projectId)).orderBy(desc(projectComments.createdAt));

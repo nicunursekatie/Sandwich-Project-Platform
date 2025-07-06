@@ -1,9 +1,10 @@
 import { 
-  users, projects, projectTasks, projectComments, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts, notifications, committees, committeeMemberships, announcements,
+  users, projects, projectTasks, projectComments, taskCompletions, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts, notifications, committees, committeeMemberships, announcements,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
   type ProjectComment, type InsertProjectComment,
+  type TaskCompletion, type InsertTaskCompletion,
   type Message, type InsertMessage,
   type WeeklyReport, type InsertWeeklyReport,
   type SandwichCollection, type InsertSandwichCollection,
@@ -42,9 +43,16 @@ export interface IStorage {
   
   // Project Tasks
   getProjectTasks(projectId: number): Promise<ProjectTask[]>;
+  getTaskById(id: number): Promise<ProjectTask | undefined>;
   createProjectTask(task: InsertProjectTask): Promise<ProjectTask>;
   updateProjectTask(id: number, updates: Partial<ProjectTask>): Promise<ProjectTask | undefined>;
+  updateTaskStatus(id: number, status: string): Promise<boolean>;
   deleteProjectTask(id: number): Promise<boolean>;
+  
+  // Task Completions
+  createTaskCompletion(completion: InsertTaskCompletion): Promise<TaskCompletion>;
+  getTaskCompletions(taskId: number): Promise<TaskCompletion[]>;
+  removeTaskCompletion(taskId: number, userId: string): Promise<boolean>;
   
   // Project Comments
   getProjectComments(projectId: number): Promise<ProjectComment[]>;
