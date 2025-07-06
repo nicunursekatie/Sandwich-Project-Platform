@@ -16,12 +16,10 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface Message {
   id: number;
-  sender: string;
   userId: string;
   content: string;
-  timestamp: string;
-  committee: string;
-  recipientId?: string;
+  createdAt: string;
+  conversationId: number;
 }
 
 interface User {
@@ -66,44 +64,45 @@ export default function DirectMessaging() {
     queryKey: ["/api/users"],
   });
 
-  // Fetch direct messages with selected user - COMPLETELY ISOLATED per conversation
+  // Fetch direct messages with selected user - using new simple conversation API
   const { data: messages = [], error, isLoading } = useQuery<Message[]>({
     queryKey: selectedUser ? ["direct-messages", selectedUser.id, (user as any)?.id] : ["direct-messages", "none"],
     queryFn: async () => {
       if (!selectedUser || !user) return Promise.resolve([]);
 
-      // CRITICAL FIX: Get threadId for this specific conversation first
+      // Find or create direct conversation between these two users
       const userIds = [(user as any)?.id, selectedUser.id].sort();
-      const referenceId = userIds.join('_');
+      const conversationName = `${userIds[0]}_${userIds[1]}`;
       
-      const threadResponse = await apiRequest("POST", "/api/conversation-threads", {
-        type: "direct",
-        referenceId,
-        title: `Direct Messages - ${referenceId}`
-      });
-      const threadData = await threadResponse.json();
-      const threadId = threadData.id;
-
-      const url = `/api/messages?threadId=${threadId}`;
-      console.log(`🔍 DirectMessaging: Fetching conversation ${(user as any)?.firstName} <-> ${selectedUser.firstName} with threadId: ${threadId}`);
-
-      const response = await apiRequest("GET", url);
-      const data = await response.json();
-
-      console.log(`📤 DirectMessaging: API response for ${selectedUser.firstName}:`, data);
-      console.log(`📊 DirectMessaging: Message count: ${Array.isArray(data) ? data.length : 'NOT_ARRAY'}`);
-
-      // ThreadId-based messages are already properly isolated, no filtering needed
-      if (Array.isArray(data)) {
-        console.log(`✅ DirectMessaging: Received ${data.length} messages for threadId ${threadId} (no filtering needed)`);
-        return data;
+      // Get user's conversations to find existing direct conversation
+      const conversationsResponse = await apiRequest("GET", "/api/conversations");
+      const conversations = await conversationsResponse.json();
+      
+      // Find direct conversation with this user
+      let conversation = conversations.find((c: any) => 
+        c.type === 'direct' && 
+        c.name === conversationName
+      );
+      
+      // If no conversation exists, create one
+      if (!conversation) {
+        const createResponse = await apiRequest("POST", "/api/conversations", {
+          type: "direct",
+          name: conversationName,
+          participants: [user.id, selectedUser.id]
+        });
+        conversation = await createResponse.json();
       }
 
-      console.warn(`[DirectMessaging] *** UNEXPECTED RESPONSE TYPE:`, typeof data, data);
-      return [];
+      // Get messages for this conversation
+      const messagesResponse = await apiRequest("GET", `/api/conversations/${conversation.id}/messages`);
+      const messages = await messagesResponse.json();
+
+      console.log(`✅ DirectMessaging: Received ${messages.length} messages for conversation ${conversation.id}`);
+      return messages;
     },
     enabled: !!selectedUser && !!user,
-    refetchInterval: selectedUser ? 5000 : false, // Slower refresh to reduce noise
+    refetchInterval: selectedUser ? 5000 : false,
     gcTime: 0,
     staleTime: 0,
   });
@@ -117,30 +116,41 @@ export default function DirectMessaging() {
 
   // Send message mutation with optimistic updates
   const sendMessageMutation = useMutation({
-    mutationFn: async (newMessage: { sender: string; content: string; committee: string; recipientId: string; userId?: string }) => {
-      // CRITICAL FIX: Get threadId before sending message
-      if (selectedUser && user) {
-        const userIds = [(user as any)?.id, selectedUser.id].sort();
-        const referenceId = userIds.join('_');
-        
-        const threadResponse = await apiRequest("POST", "/api/conversation-threads", {
-          type: "direct",
-          referenceId,
-          title: `Direct Messages - ${referenceId}`
-        });
-        const threadData = await threadResponse.json();
-        const messageWithThread = { ...newMessage, threadId: threadData.id };
-        console.log(`📤 DirectMessaging: Sending message with threadId ${threadData.id}`);
-        
-        return await apiRequest('POST', '/api/messages', messageWithThread);
+    mutationFn: async (newMessage: { content: string; }) => {
+      if (!selectedUser || !user) {
+        throw new Error("No user selected");
       }
+
+      // Find existing conversation or get conversation ID from our query
+      const userIds = [(user as any)?.id, selectedUser.id].sort();
+      const conversationName = `${userIds[0]}_${userIds[1]}`;
       
-      return await apiRequest('POST', '/api/messages', newMessage);
+      const conversationsResponse = await apiRequest("GET", "/api/conversations");
+      const conversations = await conversationsResponse.json();
+      
+      let conversation = conversations.find((c: any) => 
+        c.type === 'direct' && 
+        c.name === conversationName
+      );
+      
+      if (!conversation) {
+        const createResponse = await apiRequest("POST", "/api/conversations", {
+          type: "direct",
+          name: conversationName,
+          participants: [user.id, selectedUser.id]
+        });
+        conversation = await createResponse.json();
+      }
+
+      // Send message to conversation
+      return await apiRequest('POST', `/api/conversations/${conversation.id}/messages`, {
+        content: newMessage.content
+      });
     },
     onMutate: async (newMessage) => {
       if (!selectedUser) return { previousMessages: [], selectedUserId: null };
 
-      const queryKey = ["direct-messages", selectedUser.id];
+      const queryKey = ["direct-messages", selectedUser.id, (user as any)?.id];
 
       // Cancel outgoing refetches to prevent overwrites
       await queryClient.cancelQueries({ queryKey });
@@ -148,39 +158,33 @@ export default function DirectMessaging() {
       // Snapshot the previous value
       const previousMessages = queryClient.getQueryData(queryKey);
 
-      // Optimistically update to the new value - ONLY for this specific conversation
+      // Optimistically update to the new value
       const optimisticMessage = {
         id: Date.now(), // Temporary ID
-        sender: newMessage.sender,
-        userId: newMessage.userId || "",
+        userId: (user as any)?.id,
         content: newMessage.content,
-        timestamp: new Date().toISOString(),
-        committee: "direct",
-        recipientId: selectedUser.id,
+        createdAt: new Date().toISOString(),
       };
 
       queryClient.setQueryData(
         queryKey, 
-        (old: Message[] = []) => [...old, optimisticMessage]
+        (old: any[] = []) => [...old, optimisticMessage]
       );
 
       return { previousMessages, selectedUserId: selectedUser.id };
     },
     onError: (err, newMessage, context) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.selectedUserId) {
-        const queryKey = ["direct-messages", context.selectedUserId];
+        const queryKey = ["direct-messages", context.selectedUserId, (user as any)?.id];
         queryClient.setQueryData(queryKey, context.previousMessages);
       }
       toast({ title: "Failed to send message", variant: "destructive" });
     },
     onSuccess: (data, variables, context) => {
-      // Invalidate and refetch only the specific conversation
       if (context?.selectedUserId) {
-        const queryKey = ["direct-messages", context.selectedUserId];
+        const queryKey = ["direct-messages", context.selectedUserId, (user as any)?.id];
         queryClient.invalidateQueries({ queryKey });
       }
-      setMessage("");
     },
   });
 
@@ -229,25 +233,12 @@ export default function DirectMessaging() {
   const handleSendMessage = () => {
     if (!message.trim() || !selectedUser) return;
 
-    const userName = (user as any)?.firstName && (user as any)?.lastName 
-      ? `${(user as any).firstName} ${(user as any).lastName}` 
-      : (user as any)?.email || "User";
-
     const messageData = {
-      sender: userName,
-      content: message.trim(),
-      committee: "direct",
-      recipientId: selectedUser.id,
-      userId: (user as any)?.id
+      content: message.trim()
     };
 
-    console.log(`[DEBUG] *** SENDING MESSAGE DATA ***`);
-    console.log(`[DEBUG] From: ${(user as any)?.firstName} (${(user as any)?.id})`);
-    console.log(`[DEBUG] To: ${selectedUser.firstName} (${selectedUser.id})`);
-    console.log(`[DEBUG] Message Data:`, messageData);
-    console.log(`[DEBUG] *** END MESSAGE DATA ***`);
-
     sendMessageMutation.mutate(messageData);
+    setMessage("");
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -324,7 +315,7 @@ export default function DirectMessaging() {
 
   // Group messages by date
   const groupedMessages = messages.reduce((groups: { [key: string]: Message[] }, message) => {
-    const date = formatDate(message.timestamp);
+    const date = formatDate(message.createdAt);
     if (!groups[date]) {
       groups[date] = [];
     }
@@ -439,17 +430,20 @@ export default function DirectMessaging() {
                           <div key={msg.id} className={`group flex items-start space-x-3 mb-4 ${isCurrentUser ? 'flex-row-reverse space-x-reverse' : ''}`}>
                             <Avatar className="w-8 h-8">
                               <AvatarFallback className={`text-xs ${isCurrentUser ? 'bg-orange-100 text-orange-700' : 'bg-teal-100 text-teal-700'}`}>
-                                {msg.sender.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                {isCurrentUser 
+                                  ? `${(user as any)?.firstName?.[0] || ''}${(user as any)?.lastName?.[0] || ''}`.toUpperCase()
+                                  : `${selectedUser?.firstName?.[0] || ''}${selectedUser?.lastName?.[0] || ''}`.toUpperCase()
+                                }
                               </AvatarFallback>
                             </Avatar>
 
                             <div className={`flex-1 min-w-0 ${isCurrentUser ? 'text-right' : ''}`}>
                               <div className={`flex items-center space-x-2 mb-1 ${isCurrentUser ? 'justify-end' : ''}`}>
                                 <span className="font-medium text-sm text-slate-900">
-                                  {isCurrentUser ? 'You' : msg.sender}
+                                  {isCurrentUser ? 'You' : `${selectedUser?.firstName} ${selectedUser?.lastName}`}
                                 </span>
                                 <span className="text-xs text-slate-500">
-                                  {formatTime(msg.timestamp)}
+                                  {formatTime(msg.createdAt)}
                                 </span>
 
                                 {/* Edit/Delete buttons - only show for current user's messages */}

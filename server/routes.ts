@@ -5709,6 +5709,156 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Simple conversation API endpoints for the new 3-table messaging system
+  app.get("/api/conversations", async (req, res) => {
+    try {
+      const user = req.user;
+      if (!user?.id) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const userPermissions = getUserPermissions(user);
+      if (!userPermissions.includes('VIEW_MESSAGES')) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const userConversations = await db
+        .select({
+          id: conversations.id,
+          type: conversations.type,
+          name: conversations.name,
+          createdAt: conversations.createdAt,
+          lastReadAt: conversationParticipants.lastReadAt
+        })
+        .from(conversations)
+        .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+        .where(eq(conversationParticipants.userId, user.id))
+        .orderBy(desc(conversations.createdAt));
+
+      res.json(userConversations);
+    } catch (error) {
+      console.error('[API] Error fetching conversations:', error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/conversations", async (req, res) => {
+    try {
+      const user = req.user;
+      if (!user?.id) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const { type, name, participants = [] } = req.body;
+
+      // Create conversation
+      const [conversation] = await db
+        .insert(conversations)
+        .values({
+          type,
+          name: name || null
+        })
+        .returning();
+
+      // Add participants
+      const participantData = participants.map((userId: string) => ({
+        conversationId: conversation.id,
+        userId
+      }));
+
+      if (participantData.length > 0) {
+        await db.insert(conversationParticipants).values(participantData);
+      }
+
+      res.json(conversation);
+    } catch (error) {
+      console.error('[API] Error creating conversation:', error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/conversations/:id/messages", async (req, res) => {
+    try {
+      const user = req.user;
+      if (!user?.id) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const conversationId = parseInt(req.params.id);
+
+      // Check if user is participant in this conversation
+      const [participant] = await db
+        .select()
+        .from(conversationParticipants)
+        .where(
+          and(
+            eq(conversationParticipants.conversationId, conversationId),
+            eq(conversationParticipants.userId, user.id)
+          )
+        );
+
+      if (!participant) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const conversationMessages = await db
+        .select()
+        .from(messagesTable)
+        .where(eq(messagesTable.conversationId, conversationId))
+        .orderBy(asc(messagesTable.createdAt));
+
+      res.json(conversationMessages);
+    } catch (error) {
+      console.error('[API] Error fetching messages:', error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/conversations/:id/messages", async (req, res) => {
+    try {
+      const user = req.user;
+      if (!user?.id) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const conversationId = parseInt(req.params.id);
+      const { content } = req.body;
+
+      if (!content || !content.trim()) {
+        return res.status(400).json({ message: "Message content is required" });
+      }
+
+      // Check if user is participant in this conversation
+      const [participant] = await db
+        .select()
+        .from(conversationParticipants)
+        .where(
+          and(
+            eq(conversationParticipants.conversationId, conversationId),
+            eq(conversationParticipants.userId, user.id)
+          )
+        );
+
+      if (!participant) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const [message] = await db
+        .insert(messagesTable)
+        .values({
+          conversationId,
+          userId: user.id,
+          content: content.trim()
+        })
+        .returning();
+
+      res.json(message);
+    } catch (error) {
+      console.error('[API] Error sending message:', error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Make broadcast functions available globally for use in other routes
   (global as any).broadcastNewMessage = broadcastNewMessage;
   (global as any).broadcastTaskAssignment = broadcastTaskAssignment;
