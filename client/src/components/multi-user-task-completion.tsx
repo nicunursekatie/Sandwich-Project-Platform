@@ -47,20 +47,17 @@ export function MultiUserTaskCompletion({
     queryKey: ['/api/tasks', taskId, 'completions'],
     enabled: !!taskId,
     refetchInterval: 2000, // Refresh every 2 seconds for real-time updates
-    queryFn: () => apiRequest('GET', `/api/tasks/${taskId}/completions`)
+    queryFn: async () => {
+      const response = await apiRequest('GET', `/api/tasks/${taskId}/completions`);
+      const data = await response.json();
+      // Data is now properly parsed
+      // Ensure we always return an array
+      return Array.isArray(data) ? data : [];
+    }
   });
 
-  // Ensure completions is always an array
-  const completions = Array.isArray(completionsData) ? completionsData : [];
-  
-  // Debug: Check what's actually happening
-  console.log('FINAL DEBUG:', {
-    completionsData,
-    completions,
-    assigneeIds,
-    assigneeNames,
-    currentUserId
-  });
+  // completionsData is now properly parsed JSON array from queryFn
+  const completions = completionsData || [];
 
 
 
@@ -148,17 +145,7 @@ export function MultiUserTaskCompletion({
   const totalAssignees = assigneeIds.length;
   const isFullyCompleted = completedCount >= totalAssignees && taskStatus === 'completed';
   
-  // Debug the specific values
-  console.log('Team Progress Debug:', {
-    completedCount,
-    totalAssignees,
-    completions: completions.map(c => ({ userId: c.userId, userName: c.userName })),
-    assigneeIds,
-    currentUserId,
-    isCurrentUserCompleted,
-    userCompletion: currentUserCompletion,
-    userMatch: completions.find(c => c.userId === currentUserId)
-  });
+  // Team progress calculation is working properly
 
   // Show assignee completion status
   const getAssigneeStatus = (assigneeId: string, assigneeName: string) => {
