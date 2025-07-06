@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useMessageReads } from "@/hooks/useMessageReads";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface Message {
@@ -40,6 +41,9 @@ export default function DirectMessaging() {
   const { toast } = useToast();
   const { user } = useAuth();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Initialize read tracking hook
+  const { useAutoMarkAsRead } = useMessageReads();
 
   // Clean up previous queries when user changes selection
   useEffect(() => {
@@ -96,6 +100,13 @@ export default function DirectMessaging() {
     gcTime: 0,
     staleTime: 0,
   });
+
+  // Auto-mark direct messages as read when viewing conversation
+  useAutoMarkAsRead(
+    "direct", 
+    messages, 
+    !!selectedUser && !!user
+  );
 
   // Send message mutation with optimistic updates
   const sendMessageMutation = useMutation({

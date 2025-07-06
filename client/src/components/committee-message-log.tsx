@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useMessageReads } from "@/hooks/useMessageReads";
 import type { Message } from "@shared/schema";
 
 interface CommitteeMessageLogProps {
@@ -18,6 +19,9 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
   const { user } = useAuth();
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Initialize read tracking hook
+  const { useAutoMarkAsRead } = useMessageReads();
 
   // Get user profile for display name
   const { data: userProfile } = useQuery({
@@ -73,6 +77,9 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
     refetchInterval: 3000, // Refetch every 3 seconds
     staleTime: 0, // Always consider data stale for real-time messaging
   });
+
+  // Auto-mark messages as read when viewing committee
+  useAutoMarkAsRead(committee, messages, !!committee);
 
   const sendMessageMutation = useMutation({
     mutationFn: async (data: { content: string; committee: string; sender: string }) => {

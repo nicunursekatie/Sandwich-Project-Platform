@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
+import { useMessageReads } from "@/hooks/useMessageReads";
 import { MessageCircle, Plus, Users, Send, Crown, Trash2, UserPlus, Edit, MoreVertical, Archive, LogOut, VolumeX, Eye, X } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { MessageGroup, InsertMessageGroup, GroupMembership, Message, User } from "@shared/schema";
@@ -50,6 +51,9 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   });
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // Initialize read tracking hook
+  const { useAutoMarkAsRead } = useMessageReads();
 
   // Fetch user's message groups
   const { data: groups = [], isLoading: groupsLoading } = useQuery<GroupWithMembers[]>({
@@ -104,6 +108,13 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     },
     enabled: !!selectedGroup,
   });
+
+  // Auto-mark group messages as read when viewing group
+  useAutoMarkAsRead(
+    "groups", 
+    groupMessages, 
+    !!selectedGroup
+  );
 
   // Create new group mutation
   const createGroupMutation = useMutation({

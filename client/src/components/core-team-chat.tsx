@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useMessageReads } from "@/hooks/useMessageReads";
 import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
@@ -30,6 +31,9 @@ export default function CoreTeamChat() {
   
   // Only allow users with core team chat access
   const hasCoreTeamAccess = hasPermission(user, 'core_team_chat');
+  
+  // Initialize read tracking hook
+  const { useAutoMarkAsRead } = useMessageReads();
   
   if (!hasCoreTeamAccess) {
     return (
@@ -56,6 +60,9 @@ export default function CoreTeamChat() {
     queryFn: () => fetch("/api/messages?committee=core_team").then(res => res.json()),
     refetchInterval: 2000, // Refresh every 2 seconds for real-time feel
   });
+
+  // Auto-mark messages as read when viewing
+  useAutoMarkAsRead("core_team", messages, hasCoreTeamAccess);
 
   // Send message mutation
   const sendMessageMutation = useMutation({

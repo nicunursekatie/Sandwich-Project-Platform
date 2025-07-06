@@ -14,7 +14,7 @@ import path from "path";
 import mammoth from "mammoth";
 import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
-import { messageNotificationRoutes } from "./routes/message-notifications-simple";
+import { messageNotificationRoutes } from "./routes/message-notifications";
 import googleSheetsRoutes from "./routes/google-sheets";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";

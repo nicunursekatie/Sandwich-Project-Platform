@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useMessageReads } from "@/hooks/useMessageReads";
 import type { Host, Message } from "@shared/schema";
 
 interface HostWithContacts extends Host {
@@ -22,6 +23,9 @@ export default function HostChat() {
   const [selectedHost, setSelectedHost] = useState<Host | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Initialize read tracking hook
+  const { useAutoMarkAsRead } = useMessageReads();
 
   // Get user profile for display name
   const { data: userProfile } = useQuery({
@@ -70,6 +74,13 @@ export default function HostChat() {
     },
     enabled: !!selectedHost
   });
+
+  // Auto-mark messages as read when viewing host chat
+  useAutoMarkAsRead(
+    selectedHost ? `host-${selectedHost.id}` : "", 
+    messages, 
+    !!selectedHost
+  );
 
   const sendMessageMutation = useMutation({
     mutationFn: async (data: { content: string; committee: string; sender: string }) => {
