@@ -53,15 +53,7 @@ export function MultiUserTaskCompletion({
   // Ensure completions is always an array
   const completions = Array.isArray(completionsData) ? completionsData : [];
 
-  // Debug logging
-  console.log('Debug info:', {
-    currentUserId,
-    currentUserName,
-    assigneeIds,
-    assigneeNames,
-    completions,
-    completionsData
-  });
+
 
   // Mark task complete mutation
   const markCompleteMutation = useMutation({
@@ -149,39 +141,11 @@ export function MultiUserTaskCompletion({
   // Show assignee completion status
   const getAssigneeStatus = (assigneeId: string, assigneeName: string) => {
     // Check if this is the current user first
-    const isCurrentUser = assigneeId === currentUserId || 
-                         assigneeName === currentUserName || 
-                         assigneeName === "Katie Long"; // Known current user from screenshot
+    const isCurrentUser = assigneeId === currentUserId;
     
-    // Match completion by user ID or name
+    // Match completion by user ID (assigneeId is actually a user ID from the assigneeIds array)
     const completion = completions.find((c: TaskCompletion) => {
-      // Debug this specific matching
-      const userIdMatch = c.userId === currentUserId;
-      const nameMatch = c.userName === assigneeName;
-      const assigneeMatch = c.userId === assigneeId;
-      
-      console.log(`Checking assignee "${assigneeName}" (${assigneeId}):`, {
-        isCurrentUser,
-        userIdMatch,
-        nameMatch, 
-        assigneeMatch,
-        completionUserId: c.userId,
-        completionUserName: c.userName,
-        currentUserId,
-        assigneeId
-      });
-      
-      // First, check if this is the current user completing their own task
-      if (isCurrentUser && c.userId === currentUserId) {
-        console.log('✓ Matched current user by ID');
-        return true;
-      }
-      // For other assignees, try exact name matches or ID matches
-      if (c.userName === assigneeName || c.userName === assigneeId || c.userId === assigneeId) {
-        console.log('✓ Matched by name or assignee ID');
-        return true;
-      }
-      return false;
+      return c.userId === assigneeId;
     });
     const isCompleted = !!completion;
 
