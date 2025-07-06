@@ -52,6 +52,15 @@ export function MultiUserTaskCompletion({
 
   // Ensure completions is always an array
   const completions = Array.isArray(completionsData) ? completionsData : [];
+  
+  // Debug: Check what's actually happening
+  console.log('FINAL DEBUG:', {
+    completionsData,
+    completions,
+    assigneeIds,
+    assigneeNames,
+    currentUserId
+  });
 
 
 
