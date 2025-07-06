@@ -5360,51 +5360,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Only platform super admins can delete message groups" });
       }
 
-      // Start transaction to ensure data consistency
-      await db.transaction(async (tx) => {
-        // 1. Get the conversation thread for this group
-        const [thread] = await tx
-          .select({ threadId: conversationThreads.id })
-          .from(conversationThreads)
-          .where(
-            and(
-              eq(conversationThreads.type, 'group'),
-              eq(conversationThreads.referenceId, groupId.toString()),
-              eq(conversationThreads.isActive, true)
-            )
-          );
+      // Sequential deletion (Neon HTTP doesn't support transactions)
+      
+      // 1. Get the conversation thread for this group
+      const [thread] = await db
+        .select({ threadId: conversationThreads.id })
+        .from(conversationThreads)
+        .where(
+          and(
+            eq(conversationThreads.type, 'group'),
+            eq(conversationThreads.referenceId, groupId.toString()),
+            eq(conversationThreads.isActive, true)
+          )
+        );
 
-        console.log(`[DEBUG] Found thread for group ${groupId}:`, thread);
+      console.log(`[DEBUG] Found thread for group ${groupId}:`, thread);
 
-        if (thread) {
-          // 2. Delete all messages in the thread (use messagesTable alias)
-          const deletedMessages = await tx.delete(messagesTable)
-            .where(eq(messagesTable.threadId, thread.threadId));
-          console.log(`[DEBUG] Deleted messages in thread ${thread.threadId}`);
+      if (thread) {
+        // 2. Delete all messages in the thread (use messagesTable alias)
+        const deletedMessages = await db.delete(messagesTable)
+          .where(eq(messagesTable.threadId, thread.threadId));
+        console.log(`[DEBUG] Deleted messages in thread ${thread.threadId}`);
 
-          // 3. Delete all thread participants
-          const deletedParticipants = await tx.delete(groupMessageParticipants)
-            .where(eq(groupMessageParticipants.threadId, thread.threadId));
-          console.log(`[DEBUG] Deleted participants for thread ${thread.threadId}`);
+        // 3. Delete all thread participants
+        const deletedParticipants = await db.delete(groupMessageParticipants)
+          .where(eq(groupMessageParticipants.threadId, thread.threadId));
+        console.log(`[DEBUG] Deleted participants for thread ${thread.threadId}`);
 
-          // 4. Mark conversation thread as inactive
-          await tx.update(conversationThreads)
-            .set({ isActive: false })
-            .where(eq(conversationThreads.id, thread.threadId));
-          console.log(`[DEBUG] Marked thread ${thread.threadId} as inactive`);
-        }
-
-        // 5. Delete all group memberships
-        const deletedMemberships = await tx.delete(groupMemberships)
-          .where(eq(groupMemberships.groupId, groupId));
-        console.log(`[DEBUG] Deleted memberships for group ${groupId}`);
-
-        // 6. Mark the group as inactive
-        await tx.update(messageGroups)
+        // 4. Mark conversation thread as inactive
+        await db.update(conversationThreads)
           .set({ isActive: false })
-          .where(eq(messageGroups.id, groupId));
-        console.log(`[DEBUG] Marked group ${groupId} as inactive`);
-      });
+          .where(eq(conversationThreads.id, thread.threadId));
+        console.log(`[DEBUG] Marked thread ${thread.threadId} as inactive`);
+      }
+
+      // 5. Delete all group memberships
+      const deletedMemberships = await db.delete(groupMemberships)
+        .where(eq(groupMemberships.groupId, groupId));
+      console.log(`[DEBUG] Deleted memberships for group ${groupId}`);
+
+      // 6. Mark the group as inactive
+      await db.update(messageGroups)
+        .set({ isActive: false })
+        .where(eq(messageGroups.id, groupId));
+      console.log(`[DEBUG] Marked group ${groupId} as inactive`);
 
       console.log(`[DEBUG] Super admin successfully deleted entire group ${groupId}`);
       res.json({ success: true, message: "Group deleted successfully" });
