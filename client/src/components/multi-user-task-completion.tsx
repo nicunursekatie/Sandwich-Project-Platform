@@ -43,10 +43,11 @@ export function MultiUserTaskCompletion({
   const queryClient = useQueryClient();
 
   // Fetch task completions
-  const { data: completions = [], isLoading } = useQuery({
+  const { data: completions = [], isLoading, refetch } = useQuery({
     queryKey: ['/api/tasks', taskId, 'completions'],
     enabled: !!taskId,
-    refetchInterval: 5000 // Refresh every 5 seconds for real-time updates
+    refetchInterval: 2000, // Refresh every 2 seconds for real-time updates
+    queryFn: () => apiRequest('GET', `/api/tasks/${taskId}/completions`)
   });
 
   // Mark task complete mutation
@@ -57,6 +58,8 @@ export function MultiUserTaskCompletion({
       });
     },
     onSuccess: (data) => {
+      // Force refresh completions data immediately
+      refetch();
       queryClient.invalidateQueries({ queryKey: ['/api/tasks', taskId, 'completions'] });
       queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
       setShowCompletionDialog(false);
@@ -68,7 +71,7 @@ export function MultiUserTaskCompletion({
           description: "All team members have completed this task"
         });
       } else {
-        const completedCount = completions.length + 1; // Add 1 for the just-completed task
+        const completedCount = (completions.length || 0) + 1; // Add 1 for the just-completed task
         const totalCount = assigneeIds.length;
         toast({
           title: "Your portion completed",
@@ -148,16 +151,6 @@ export function MultiUserTaskCompletion({
              c.userName === assigneeId;
     });
     const isCompleted = !!completion;
-    
-    // Debug logging
-    console.log(`Checking assignee: ${assigneeName}, isCurrentUser: ${isCurrentUser}, isCompleted: ${isCompleted}`, {
-      assigneeId,
-      assigneeName,
-      currentUserId,
-      currentUserName,
-      completions,
-      completion
-    });
 
     return (
       <div key={assigneeId} className="flex items-center gap-2">
@@ -166,7 +159,7 @@ export function MultiUserTaskCompletion({
         ) : (
           <Circle className="w-4 h-4 text-gray-400" />
         )}
-        <span className={`text-sm ${isCurrentUser ? 'font-medium' : ''}`}>
+        <span className={`text-sm ${isCurrentUser ? 'font-medium' : ''} ${isCompleted ? 'line-through text-gray-500' : ''}`}>
           {assigneeName}
           {isCurrentUser && ' (You)'}
         </span>
@@ -185,7 +178,7 @@ export function MultiUserTaskCompletion({
       <div className="flex items-center gap-2">
         <Users className="w-4 h-4 text-gray-500" />
         <span className="text-sm font-medium">
-          Team Progress: {completedCount}/{totalAssignees}
+          Team Progress: {completions?.length || 0}/{totalAssignees}
         </span>
         {isFullyCompleted && (
           <Badge className="bg-green-600 hover:bg-green-700">
