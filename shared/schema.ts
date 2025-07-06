@@ -84,8 +84,10 @@ export const projectTasks = pgTable("project_tasks", {
   description: text("description"),
   status: text("status").notNull().default("pending"), // 'pending', 'in_progress', 'completed'
   priority: text("priority").notNull().default("medium"), // 'low', 'medium', 'high'
-  assigneeId: text("assignee_id"), // Reference to users table
-  assigneeName: text("assignee_name"), // Keep for backward compatibility and external users
+  assigneeId: text("assignee_id"), // Single assignee - kept for backward compatibility
+  assigneeName: text("assignee_name"), // Single assignee name - kept for backward compatibility
+  assigneeIds: text("assignee_ids").array(), // Multiple assignee IDs as JSON array
+  assigneeNames: text("assignee_names").array(), // Multiple assignee names as JSON array
   dueDate: text("due_date"),
   completedAt: timestamp("completed_at"),
   attachments: text("attachments"), // JSON array of file paths

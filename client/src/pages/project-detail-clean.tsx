@@ -42,6 +42,8 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     priority: "medium",
     assigneeId: undefined as string | undefined,
     assigneeName: undefined as string | undefined,
+    assigneeIds: undefined as string[] | undefined,
+    assigneeNames: undefined as string[] | undefined,
     dueDate: ""
   });
   const [editProject, setEditProject] = useState({
@@ -77,7 +79,17 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "tasks"] });
-      setNewTask({ title: "", description: "", status: "pending", priority: "medium", assigneeId: undefined, assigneeName: undefined, dueDate: "" });
+      setNewTask({ 
+        title: "", 
+        description: "", 
+        status: "pending", 
+        priority: "medium", 
+        assigneeId: undefined, 
+        assigneeName: undefined, 
+        assigneeIds: undefined, 
+        assigneeNames: undefined, 
+        dueDate: "" 
+      });
       setIsAddingTask(false);
       toast({ title: "Task created successfully" });
     },
@@ -620,18 +632,23 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label>Assignee</Label>
+                      <Label>Assignees (Multiple Allowed)</Label>
                       <TaskAssigneeSelector
+                        multiple={true}
                         value={{ 
                           assigneeId: newTask.assigneeId, 
-                          assigneeName: newTask.assigneeName 
+                          assigneeName: newTask.assigneeName,
+                          assigneeIds: newTask.assigneeIds,
+                          assigneeNames: newTask.assigneeNames
                         }}
                         onChange={(value) => setNewTask({ 
                           ...newTask, 
                           assigneeId: value.assigneeId,
-                          assigneeName: value.assigneeName 
+                          assigneeName: value.assigneeName,
+                          assigneeIds: value.assigneeIds,
+                          assigneeNames: value.assigneeNames
                         })}
-                        placeholder="Assign to someone"
+                        placeholder="Assign to multiple people"
                       />
                     </div>
                     <div>
@@ -704,7 +721,27 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                             </p>
                           )}
                           <div className="flex items-center space-x-4 text-sm text-slate-500">
-                            {task.assigneeName && (
+                            {/* Multiple Assignees Display */}
+                            {(task.assigneeIds?.length > 0 || task.assigneeNames?.length > 0) && (
+                              <div className="flex items-center space-x-2">
+                                <div className="flex items-center">
+                                  <User className="w-3 h-3 mr-1" />
+                                  <div className="flex flex-wrap gap-1">
+                                    {/* Show new multi-assignee format */}
+                                    {task.assigneeNames?.map((name, index) => (
+                                      <Badge key={index} variant="outline" className="text-xs">
+                                        {name}
+                                        {task.assigneeIds?.[index] && (
+                                          <span className="ml-1 text-green-600">👤</span>
+                                        )}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            {/* Fallback for single assignee (backward compatibility) */}
+                            {task.assigneeName && (!task.assigneeIds || task.assigneeIds.length === 0) && (
                               <div className="flex items-center space-x-2">
                                 <div className="flex items-center">
                                   <User className="w-3 h-3 mr-1" />
@@ -794,11 +831,23 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                   <div>
-                                    <Label htmlFor="edit-task-assignee">Assignee</Label>
-                                    <Input
-                                      id="edit-task-assignee"
-                                      value={editingTask.assigneeName || ""}
-                                      onChange={(e) => setEditingTask({ ...editingTask, assigneeName: e.target.value })}
+                                    <Label htmlFor="edit-task-assignee">Assignees (Multiple Allowed)</Label>
+                                    <TaskAssigneeSelector
+                                      multiple={true}
+                                      value={{ 
+                                        assigneeId: editingTask.assigneeId, 
+                                        assigneeName: editingTask.assigneeName,
+                                        assigneeIds: editingTask.assigneeIds || [],
+                                        assigneeNames: editingTask.assigneeNames || []
+                                      }}
+                                      onChange={(value) => setEditingTask({ 
+                                        ...editingTask, 
+                                        assigneeId: value.assigneeId,
+                                        assigneeName: value.assigneeName,
+                                        assigneeIds: value.assigneeIds,
+                                        assigneeNames: value.assigneeNames
+                                      })}
+                                      placeholder="Assign to multiple people"
                                     />
                                   </div>
                                   <div>
