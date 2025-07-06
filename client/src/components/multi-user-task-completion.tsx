@@ -75,7 +75,7 @@ export function MultiUserTaskCompletion({
       // Force comprehensive cache invalidation and refresh
       await queryClient.invalidateQueries({ queryKey: ['/api/tasks', taskId, 'completions'] });
       await queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
-      await queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId, 'tasks'] });
+      await queryClient.invalidateQueries({ queryKey: ['/api/projects', 25, 'tasks'] });
       await refetch();
       setShowCompletionDialog(false);
       setNotes("");
@@ -155,7 +155,9 @@ export function MultiUserTaskCompletion({
     completions: completions.map(c => ({ userId: c.userId, userName: c.userName })),
     assigneeIds,
     currentUserId,
-    isCurrentUserCompleted
+    isCurrentUserCompleted,
+    userCompletion: currentUserCompletion,
+    userMatch: completions.find(c => c.userId === currentUserId)
   });
 
   // Show assignee completion status
