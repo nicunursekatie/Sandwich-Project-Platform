@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, Circle, Users, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -52,6 +52,16 @@ export function MultiUserTaskCompletion({
 
   // Ensure completions is always an array
   const completions = Array.isArray(completionsData) ? completionsData : [];
+
+  // Debug logging
+  console.log('Debug info:', {
+    currentUserId,
+    currentUserName,
+    assigneeIds,
+    assigneeNames,
+    completions,
+    completionsData
+  });
 
   // Mark task complete mutation
   const markCompleteMutation = useMutation({
@@ -145,13 +155,33 @@ export function MultiUserTaskCompletion({
     
     // Match completion by user ID or name
     const completion = completions.find((c: TaskCompletion) => {
-      // If this is the current user, match by their actual userId
-      if (isCurrentUser) {
-        return c.userId === currentUserId;
+      // Debug this specific matching
+      const userIdMatch = c.userId === currentUserId;
+      const nameMatch = c.userName === assigneeName;
+      const assigneeMatch = c.userId === assigneeId;
+      
+      console.log(`Checking assignee "${assigneeName}" (${assigneeId}):`, {
+        isCurrentUser,
+        userIdMatch,
+        nameMatch, 
+        assigneeMatch,
+        completionUserId: c.userId,
+        completionUserName: c.userName,
+        currentUserId,
+        assigneeId
+      });
+      
+      // First, check if this is the current user completing their own task
+      if (isCurrentUser && c.userId === currentUserId) {
+        console.log('✓ Matched current user by ID');
+        return true;
       }
-      // For other users, match by name variations
-      return c.userName === assigneeName || 
-             c.userName === assigneeId;
+      // For other assignees, try exact name matches or ID matches
+      if (c.userName === assigneeName || c.userName === assigneeId || c.userId === assigneeId) {
+        console.log('✓ Matched by name or assignee ID');
+        return true;
+      }
+      return false;
     });
     const isCompleted = !!completion;
 
@@ -230,6 +260,9 @@ export function MultiUserTaskCompletion({
               <DialogContent className="w-[95vw] max-w-md">
                 <DialogHeader>
                   <DialogTitle>Complete Your Portion</DialogTitle>
+                  <DialogDescription>
+                    Add notes about your completion of this task portion.
+                  </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
