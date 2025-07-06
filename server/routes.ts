@@ -5353,6 +5353,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const groupId = parseInt(req.params.groupId);
       const currentUser = (req as any).user;
 
+      console.log(`[DEBUG] Attempting to delete group ${groupId} by user ${currentUser?.id} with role ${currentUser?.role}`);
+
       // Only platform super admins can delete entire groups
       if (currentUser?.role !== 'super_admin') {
         return res.status(403).json({ message: "Only platform super admins can delete message groups" });
@@ -5372,36 +5374,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
             )
           );
 
+        console.log(`[DEBUG] Found thread for group ${groupId}:`, thread);
+
         if (thread) {
-          // 2. Delete all messages in the thread
-          await tx.delete(messages)
-            .where(eq(messages.threadId, thread.threadId));
+          // 2. Delete all messages in the thread (use messagesTable alias)
+          const deletedMessages = await tx.delete(messagesTable)
+            .where(eq(messagesTable.threadId, thread.threadId));
+          console.log(`[DEBUG] Deleted messages in thread ${thread.threadId}`);
 
           // 3. Delete all thread participants
-          await tx.delete(groupMessageParticipants)
+          const deletedParticipants = await tx.delete(groupMessageParticipants)
             .where(eq(groupMessageParticipants.threadId, thread.threadId));
+          console.log(`[DEBUG] Deleted participants for thread ${thread.threadId}`);
 
           // 4. Mark conversation thread as inactive
           await tx.update(conversationThreads)
             .set({ isActive: false })
             .where(eq(conversationThreads.id, thread.threadId));
+          console.log(`[DEBUG] Marked thread ${thread.threadId} as inactive`);
         }
 
         // 5. Delete all group memberships
-        await tx.delete(groupMemberships)
+        const deletedMemberships = await tx.delete(groupMemberships)
           .where(eq(groupMemberships.groupId, groupId));
+        console.log(`[DEBUG] Deleted memberships for group ${groupId}`);
 
         // 6. Mark the group as inactive
         await tx.update(messageGroups)
           .set({ isActive: false })
           .where(eq(messageGroups.id, groupId));
+        console.log(`[DEBUG] Marked group ${groupId} as inactive`);
       });
 
-      console.log(`[DEBUG] Super admin deleted entire group ${groupId}`);
+      console.log(`[DEBUG] Super admin successfully deleted entire group ${groupId}`);
       res.json({ success: true, message: "Group deleted successfully" });
     } catch (error) {
       console.error("Error deleting group:", error);
-      res.status(500).json({ message: "Failed to delete group" });
+      console.error("Full error details:", error.message, error.stack);
+      res.status(500).json({ message: `Failed to delete group: ${error.message}` });
     }
   });
 
