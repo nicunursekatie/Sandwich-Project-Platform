@@ -287,6 +287,25 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     },
   });
 
+  // Promote member to admin mutation
+  const promoteMemberMutation = useMutation({
+    mutationFn: async ({ groupId, userId, role }: { groupId: number; userId: string; role: 'admin' | 'member' }) => {
+      const response = await fetch(`/api/message-groups/${groupId}/members/${userId}/role`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: 'include',
+        body: JSON.stringify({ role }),
+      });
+      if (!response.ok) throw new Error("Failed to update member role");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/message-groups"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/message-groups", selectedGroup?.id, "members"] });
+      toast({ title: "Member role updated successfully!" });
+    },
+  });
+
   const handleCreateGroup = () => {
     if (!groupForm.name.trim()) {
       toast({ title: "Group name is required", variant: "destructive" });
@@ -557,7 +576,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                 <div>
                   <h3 className="font-semibold flex items-center gap-2">
                     {selectedGroup.name}
-                    {(selectedGroup.userRole === 'admin' || selectedGroup.userRole === 'moderator') && (
+                    {(selectedGroup.userRole === 'admin' || selectedGroup.userRole === 'moderator' || currentUser?.role === 'super_admin') && (
                       <Crown className="h-4 w-4 text-yellow-500" />
                     )}
                   </h3>
@@ -613,7 +632,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  {(selectedGroup.userRole === 'admin' || selectedGroup.userRole === 'moderator') && (
+                  {(currentUser?.role === 'super_admin' || selectedGroup.userRole === 'admin' || selectedGroup.userRole === 'moderator' || selectedGroup.userRole === 'member') && (
                     <Dialog open={showAddMemberDialog} onOpenChange={setShowAddMemberDialog}>
                       <DialogTrigger asChild>
                         <Button size="sm" variant="outline">
@@ -848,23 +867,68 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                           Admin
                         </Badge>
                       )}
-                      {/* Only show remove button if current user is admin/moderator and target is not admin */}
-                      {(selectedGroup?.userRole === 'admin' || selectedGroup?.userRole === 'moderator') && member.role !== 'admin' && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            if (confirm(`Remove ${member.firstName} ${member.lastName} from this group?`)) {
-                              removeMemberMutation.mutate({
-                                groupId: selectedGroup.id,
-                                userId: member.userId,
-                              });
-                            }
-                          }}
-                          disabled={removeMemberMutation.isPending}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
+                      {/* Platform super admin or group admin can manage members */}
+                      {(currentUser?.role === 'super_admin' || selectedGroup?.userRole === 'admin' || selectedGroup?.userRole === 'moderator') && (
+                        <div className="flex items-center gap-1">
+                          {/* Role Management Dropdown */}
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="outline" size="sm">
+                                <MoreVertical className="h-3 w-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              {member.role === 'member' ? (
+                                <DropdownMenuItem 
+                                  onClick={() => {
+                                    if (confirm(`Promote ${member.firstName} ${member.lastName} to group admin?`)) {
+                                      promoteMemberMutation.mutate({
+                                        groupId: selectedGroup.id,
+                                        userId: member.userId,
+                                        role: 'admin'
+                                      });
+                                    }
+                                  }}
+                                  disabled={promoteMemberMutation.isPending}
+                                >
+                                  <Crown className="h-3 w-3 mr-2" />
+                                  Promote to Admin
+                                </DropdownMenuItem>
+                              ) : (
+                                <DropdownMenuItem 
+                                  onClick={() => {
+                                    if (confirm(`Demote ${member.firstName} ${member.lastName} to regular member?`)) {
+                                      promoteMemberMutation.mutate({
+                                        groupId: selectedGroup.id,
+                                        userId: member.userId,
+                                        role: 'member'
+                                      });
+                                    }
+                                  }}
+                                  disabled={promoteMemberMutation.isPending}
+                                >
+                                  <Crown className="h-3 w-3 mr-2" />
+                                  Demote to Member
+                                </DropdownMenuItem>
+                              )}
+                              <DropdownMenuItem 
+                                onClick={() => {
+                                  if (confirm(`Remove ${member.firstName} ${member.lastName} from this group?`)) {
+                                    removeMemberMutation.mutate({
+                                      groupId: selectedGroup.id,
+                                      userId: member.userId,
+                                    });
+                                  }
+                                }}
+                                disabled={removeMemberMutation.isPending}
+                                className="text-red-600"
+                              >
+                                <X className="h-3 w-3 mr-2" />
+                                Remove Member
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -872,8 +936,8 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
               </div>
             </div>
 
-            {/* Add Members Section (Admin/Moderator Only) */}
-            {(selectedGroup?.userRole === 'admin' || selectedGroup?.userRole === 'moderator') && (
+            {/* Add Members Section (Platform super admin or any group member can add) */}
+            {(currentUser?.role === 'super_admin' || selectedGroup?.userRole === 'admin' || selectedGroup?.userRole === 'moderator' || selectedGroup?.userRole === 'member') && (
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-3 flex items-center gap-2">
                   <UserPlus className="h-4 w-4" />

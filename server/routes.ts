@@ -5209,20 +5209,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const targetUserId = req.params.userId;
       const currentUserId = (req as any).user?.id;
 
-      // Check if current user is admin of this group
-      const membership = await db
-        .select({ role: groupMemberships.role })
-        .from(groupMemberships)
-        .where(
-          and(
-            eq(groupMemberships.groupId, groupId),
-            eq(groupMemberships.userId, currentUserId),
-            eq(groupMemberships.isActive, true)
-          )
-        );
+      // Platform super admin can manage any group, otherwise check group admin permission
+      const currentUser = (req as any).user;
+      const isPlatformSuperAdmin = currentUser?.role === 'super_admin';
+      
+      if (!isPlatformSuperAdmin) {
+        const membership = await db
+          .select({ role: groupMemberships.role })
+          .from(groupMemberships)
+          .where(
+            and(
+              eq(groupMemberships.groupId, groupId),
+              eq(groupMemberships.userId, currentUserId),
+              eq(groupMemberships.isActive, true)
+            )
+          );
 
-      if (membership.length === 0 || membership[0].role !== 'admin') {
-        return res.status(403).json({ message: "Only group admins can remove members" });
+        if (membership.length === 0 || membership[0].role !== 'admin') {
+          return res.status(403).json({ message: "Only group admins can remove members" });
+        }
       }
 
       // Check if target user is also an admin (prevent removing other admins)
@@ -5280,6 +5285,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error removing member from group:", error);
       res.status(500).json({ message: "Failed to remove member" });
+    }
+  });
+
+  // Update member role in group (promote/demote)
+  app.patch("/api/message-groups/:groupId/members/:userId/role", isAuthenticated, async (req, res) => {
+    try {
+      const groupId = parseInt(req.params.groupId);
+      const targetUserId = req.params.userId;
+      const currentUserId = (req as any).user?.id;
+      const { role } = req.body;
+      const currentUser = (req as any).user;
+
+      if (!role || !['admin', 'member'].includes(role)) {
+        return res.status(400).json({ message: "Invalid role. Must be 'admin' or 'member'" });
+      }
+
+      // Platform super admin can manage any group, otherwise check group admin permission
+      const isPlatformSuperAdmin = currentUser?.role === 'super_admin';
+      
+      if (!isPlatformSuperAdmin) {
+        const membership = await db
+          .select({ role: groupMemberships.role })
+          .from(groupMemberships)
+          .where(
+            and(
+              eq(groupMemberships.groupId, groupId),
+              eq(groupMemberships.userId, currentUserId),
+              eq(groupMemberships.isActive, true)
+            )
+          );
+
+        if (membership.length === 0 || membership[0].role !== 'admin') {
+          return res.status(403).json({ message: "Only group admins can manage member roles" });
+        }
+      }
+
+      // Update the member's role
+      await db.update(groupMemberships)
+        .set({ role })
+        .where(
+          and(
+            eq(groupMemberships.groupId, groupId),
+            eq(groupMemberships.userId, targetUserId),
+            eq(groupMemberships.isActive, true)
+          )
+        );
+
+      console.log(`[DEBUG] Updated user ${targetUserId} role to ${role} in group ${groupId}`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating member role:", error);
+      res.status(500).json({ message: "Failed to update member role" });
     }
   });
 
