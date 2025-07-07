@@ -56,6 +56,33 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   // Initialize read tracking hook
   const { useAutoMarkAsRead } = useMessageReads();
 
+  // Helper functions for user display
+  const getUserDisplayName = (userId: string) => {
+    const userFound = allUsers.find((u: any) => u.id === userId);
+    if (userFound) {
+      if (userFound.displayName) return userFound.displayName;
+      if (userFound.firstName) return userFound.firstName;
+      if (userFound.email) return userFound.email.split('@')[0];
+    }
+    return 'Member';
+  };
+
+  const getUserInitials = (userId: string) => {
+    const userFound = allUsers.find((u: any) => u.id === userId);
+    if (userFound) {
+      if (userFound.firstName && userFound.lastName) {
+        return (userFound.firstName[0] + userFound.lastName[0]).toUpperCase();
+      }
+      if (userFound.firstName) {
+        return userFound.firstName[0].toUpperCase();
+      }
+      if (userFound.email) {
+        return userFound.email[0].toUpperCase();
+      }
+    }
+    return 'M';
+  };
+
   // Fetch user's message groups
   const { data: groups = [], isLoading: groupsLoading } = useQuery<GroupWithMembers[]>({
     queryKey: ["/api/message-groups"],
@@ -749,14 +776,14 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                       <div className="flex gap-3">
                         <Avatar className="h-8 w-8">
                           <AvatarFallback className="text-xs">
-                            {message.sender ? message.sender[0]?.toUpperCase() : "?"}
+                            {getUserInitials(message.userId)}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium text-sm">{message.sender || "Anonymous"}</span>
+                            <span className="font-medium text-sm">{getUserDisplayName(message.userId)}</span>
                             <span className="text-xs text-gray-500">
-                              {new Date(message.timestamp).toLocaleTimeString()}
+                              {new Date(message.createdAt).toLocaleTimeString()}
                             </span>
                             {canEditMessage(message) && (
                               <DropdownMenu>

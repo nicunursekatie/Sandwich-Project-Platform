@@ -190,7 +190,7 @@ export default function CoreTeamChat() {
 
   // Group messages by date
   const groupedMessages = messages.reduce((groups: { [key: string]: Message[] }, message) => {
-    const date = formatDate(message.timestamp);
+    const date = formatDate(message.createdAt);
     if (!groups[date]) {
       groups[date] = [];
     }
@@ -251,7 +251,7 @@ export default function CoreTeamChat() {
                             Admin
                           </Badge>
                           <span className="text-xs text-slate-500">
-                            {new Date(msg.createdAt || msg.timestamp).toLocaleTimeString('en-US', { 
+                            {new Date(msg.createdAt).toLocaleTimeString('en-US', { 
                               hour: 'numeric', 
                               minute: '2-digit', 
                               hour12: true 
