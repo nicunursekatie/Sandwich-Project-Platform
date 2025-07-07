@@ -32,7 +32,7 @@ interface MessageNotificationsProps {
 
 export default function MessageNotifications({ user }: MessageNotificationsProps) {
   console.log('🔔 MessageNotifications component mounting...');
-  
+
   const isAuthenticated = !!user;
   const [lastCheck, setLastCheck] = useState(Date.now());
 
@@ -65,12 +65,12 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
     console.log('🔔 Setting up WebSocket for user:', (user as any)?.id);
     // Set up WebSocket connection for real-time notifications
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/notifications`;
+    const wsUrl = `${protocol}//${window.location.host.replace(':80', '').replace(':443', '')}/notifications`;
     console.log('Connecting to WebSocket:', wsUrl);
-    
+
     try {
       const socket = new WebSocket(wsUrl);
-      
+
       socket.onopen = () => {
         console.log('Notification WebSocket connected successfully');
         console.log('User ID:', (user as any)?.id);
@@ -97,7 +97,7 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
             console.log('Processing new_message notification');
             // Refetch unread counts when new message arrives
             refetch();
-            
+
             // Show browser notification if permission granted and available
             if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
               console.log('Showing browser notification');
@@ -217,7 +217,7 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
           )}
         </Button>
       </DropdownMenuTrigger>
-      
+
       <DropdownMenuContent align="end" className="w-80">
         <DropdownMenuLabel className="font-semibold">
           <div className="flex items-center justify-between">
@@ -235,7 +235,7 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
+
         {totalUnread === 0 ? (
           <DropdownMenuItem className="text-muted-foreground">
             No unread messages
