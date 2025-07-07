@@ -118,17 +118,17 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     enabled: !!selectedGroup,
   });
 
-  // Get or create group conversation
+  // Find existing group conversation (don't create new ones)
   const { data: groupConversation } = useQuery({
-    queryKey: ["/api/conversations/group", selectedGroup?.id],
+    queryKey: ["/api/conversations/group", selectedGroup?.name],
     queryFn: async () => {
       if (!selectedGroup) return null;
-      const response = await apiRequest('POST', '/api/conversations', {
-        type: 'group',
-        name: selectedGroup.name,
-        metadata: { groupId: selectedGroup.id }
-      });
-      return response;
+      // Get all conversations and find the one matching this group name
+      const response = await apiRequest('GET', '/api/conversations');
+      const conversations = response;
+      return conversations.find((conv: any) => 
+        conv.type === 'group' && conv.name === selectedGroup.name
+      ) || null;
     },
     enabled: !!selectedGroup,
   });
