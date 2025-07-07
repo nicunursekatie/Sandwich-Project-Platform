@@ -188,7 +188,9 @@ export const messages = pgTable("messages", {
   conversationId: integer("conversation_id").references(() => conversations.id, { onDelete: "cascade" }),
   userId: text("user_id").notNull(),
   content: text("content").notNull(),
+  sender: text("sender"), // Display name of sender
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // All complex messaging tables removed - using simple 3-table system above

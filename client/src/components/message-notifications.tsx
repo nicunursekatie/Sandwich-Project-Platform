@@ -46,11 +46,13 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
   }
 
   // Query for unread message counts - only when authenticated
-  const { data: unreadCounts, refetch } = useQuery<UnreadCounts>({
+  const { data: unreadCounts, refetch, error, isLoading } = useQuery<UnreadCounts>({
     queryKey: ['/api/messages/unread-counts'],
     enabled: !!user && isAuthenticated,
     refetchInterval: isAuthenticated ? 30000 : false, // Check every 30 seconds only when authenticated
   });
+
+  console.log('🔔 MessageNotifications: Query state - isLoading:', isLoading, 'error:', error, 'data:', unreadCounts);
 
   // Listen for WebSocket notifications (to be implemented)
   useEffect(() => {
@@ -131,11 +133,36 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
     }
   }, []);
 
-  if (!unreadCounts) {
-    return null;
+  // Show loading state or empty state instead of returning null
+  if (isLoading) {
+    console.log('🔔 MessageNotifications: Loading unread counts...');
+    return null; // Could show a loading spinner here
   }
 
-  const totalUnread = unreadCounts.total || 0;
+  if (error) {
+    console.error('🔔 MessageNotifications: Error loading unread counts:', error);
+    return null; // Could show error state here
+  }
+
+  if (!unreadCounts) {
+    console.log('🔔 MessageNotifications: No unread counts data, showing empty state');
+    // Show the notification bell even with zero counts for debugging
+    const emptyUnreadCounts = {
+      general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0,
+      core_team: 0, direct: 0, groups: 0, total: 0
+    };
+    console.log('🔔 MessageNotifications: Using empty counts for debugging');
+    // Continue with empty counts instead of returning null
+  }
+
+  const finalUnreadCounts = unreadCounts || {
+    general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0,
+    core_team: 0, direct: 0, groups: 0, total: 0
+  };
+
+  console.log('🔔 MessageNotifications: Rendering with final unread counts:', finalUnreadCounts);
+
+  const totalUnread = finalUnreadCounts.total || 0;
 
   const handleMarkAllRead = async () => {
     try {
@@ -214,7 +241,7 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
             No unread messages
           </DropdownMenuItem>
         ) : (
-          Object.entries(unreadCounts)
+          Object.entries(finalUnreadCounts)
             .filter(([key, count]) => key !== 'total' && count > 0)
             .map(([committee, count]) => (
               <DropdownMenuItem 

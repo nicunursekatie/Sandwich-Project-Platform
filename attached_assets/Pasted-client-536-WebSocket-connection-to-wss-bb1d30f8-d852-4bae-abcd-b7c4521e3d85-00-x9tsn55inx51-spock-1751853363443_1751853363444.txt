@@ -1,0 +1,76 @@
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=ympzkX9H3YhO' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=ympzkX9H3YhO' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= Object
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+message-notifications.tsx:138 🔔 MessageNotifications: Loading unread counts...
+message-notifications.tsx:59 🔔 WebSocket useEffect triggered, user= Object
+message-notifications.tsx:65 🔔 Setting up WebSocket for user: user_1751071509329_mrkw2z95z
+message-notifications.tsx:69 Connecting to WebSocket: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= Object
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+message-notifications.tsx:138 🔔 MessageNotifications: Loading unread counts...
+client.tsx:234 upsell state Object
+message-notifications.tsx:75 Notification WebSocket connected successfully
+message-notifications.tsx:76 User ID: user_1751071509329_mrkw2z95z
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= Object
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: Object
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 2
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= Object
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: Object
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 2
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= Object
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: Object
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 2
+app:1 The resource https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+app:1 The resource https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+/api/messages/1:1 
+            
+            
+           Failed to load resource: the server responded with a status of 404 (Not Found)
+app:1 The resource https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+app:1 The resource https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.

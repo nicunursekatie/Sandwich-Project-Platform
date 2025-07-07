@@ -660,10 +660,18 @@ export function setupTempAuth(app: Express) {
 
 // Middleware to check if user is authenticated
 export const isAuthenticated: RequestHandler = (req: any, res, next) => {
+  console.log('=== AUTHENTICATION MIDDLEWARE ===');
+  console.log('req.session exists:', !!req.session);
+  console.log('req.session.user exists:', !!req.session?.user);
+  console.log('req.session.user:', req.session?.user);
+  
   if (req.session.user) {
     req.user = req.session.user;
+    console.log('Authentication successful, user attached to req.user:', req.user);
     return next();
   }
+  
+  console.log('Authentication failed - no session user');
   res.status(401).json({ message: "Unauthorized" });
 };
 

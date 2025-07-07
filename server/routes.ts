@@ -4698,38 +4698,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let userGroups;
       
       if (canModerateMessages) {
-        // Super admins and moderators see ALL groups
+        // Super admins and moderators see ALL group conversations
         userGroups = await db
           .select({
-            id: messageGroups.id,
-            name: messageGroups.name,
-            description: messageGroups.description,
-            createdBy: messageGroups.createdBy,
-            isActive: messageGroups.isActive,
-            createdAt: messageGroups.createdAt,
+            id: conversations.id,
+            name: conversations.name,
+            description: sql<string>`null`, // No description field in conversations table
+            createdBy: sql<string>`null`, // No createdBy field in conversations table
+            isActive: sql<boolean>`true`, // All conversations are active by default
+            createdAt: conversations.createdAt,
             userRole: sql<string>`'moderator'` // Mark as moderator role for super admins
           })
-          .from(messageGroups)
-          .where(eq(messageGroups.isActive, true));
+          .from(conversations)
+          .where(eq(conversations.type, 'group'));
       } else {
-        // Regular users only see groups where they are members
+        // Regular users only see group conversations where they are participants
         userGroups = await db
           .select({
-            id: messageGroups.id,
-            name: messageGroups.name,
-            description: messageGroups.description,
-            createdBy: messageGroups.createdBy,
-            isActive: messageGroups.isActive,
-            createdAt: messageGroups.createdAt,
-            userRole: groupMemberships.role
+            id: conversations.id,
+            name: conversations.name,
+            description: sql<string>`null`, // No description field in conversations table
+            createdBy: sql<string>`null`, // No createdBy field in conversations table
+            isActive: sql<boolean>`true`, // All conversations are active by default
+            createdAt: conversations.createdAt,
+            userRole: sql<string>`'member'` // Regular participants are members
           })
-          .from(messageGroups)
-          .innerJoin(groupMemberships, eq(messageGroups.id, groupMemberships.groupId))
+          .from(conversations)
+          .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
           .where(
             and(
-              eq(messageGroups.isActive, true),
-              eq(groupMemberships.userId, userId),
-              eq(groupMemberships.isActive, true)
+              eq(conversations.type, 'group'),
+              eq(conversationParticipants.userId, userId)
             )
           );
       }
@@ -4739,13 +4738,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userGroups.map(async (group) => {
           const memberCount = await db
             .select({ count: sql<number>`count(*)` })
-            .from(groupMemberships)
-            .where(
-              and(
-                eq(groupMemberships.groupId, group.id),
-                eq(groupMemberships.isActive, true)
-              )
-            );
+            .from(conversationParticipants)
+            .where(eq(conversationParticipants.conversationId, group.id));
           
           return {
             ...group,
@@ -5695,6 +5689,266 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Legacy message endpoints - redirect to conversation system
+  app.get("/api/messages", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).user;
+      if (!user?.id) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Get or create general team chat conversation
+      let [generalConversation] = await db
+        .select()
+        .from(conversations)
+        .where(and(
+          eq(conversations.type, 'channel'),
+          eq(conversations.name, 'team-chat')
+        ));
+
+      if (!generalConversation) {
+        // Create general team chat conversation
+        [generalConversation] = await db
+          .insert(conversations)
+          .values({
+            type: 'channel',
+            name: 'team-chat'
+          })
+          .returning();
+      }
+
+      // Get messages for general conversation
+      const conversationMessages = await db
+        .select({
+          id: messagesTable.id,
+          content: messagesTable.content,
+          userId: messagesTable.userId,
+          sender: messagesTable.sender,
+          createdAt: messagesTable.createdAt,
+          updatedAt: messagesTable.updatedAt
+        })
+        .from(messagesTable)
+        .where(eq(messagesTable.conversationId, generalConversation.id))
+        .orderBy(asc(messagesTable.createdAt));
+
+      // Transform to match expected format
+      const formattedMessages = conversationMessages.map(msg => ({
+        id: msg.id,
+        content: msg.content,
+        userId: msg.userId,
+        sender: msg.sender || 'Unknown User',
+        timestamp: msg.createdAt,
+        committee: 'general' // For compatibility
+      }));
+
+      res.json(formattedMessages);
+    } catch (error) {
+      console.error('[API] Error fetching messages:', error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/messages", isAuthenticated, async (req, res) => {
+    console.log('=== POST /api/messages START ===');
+    try {
+      const user = (req as any).user;
+      console.log('[STEP 1] User authentication check:');
+      console.log('  - req.user exists:', !!user);
+      console.log('  - user object:', user);
+      console.log('  - user.id:', user?.id);
+      console.log('  - user.firstName:', user?.firstName);
+      console.log('  - user.lastName:', user?.lastName);
+      console.log('  - user.email:', user?.email);
+      
+      console.log('[STEP 2] Request body:');
+      console.log('  - req.body:', req.body);
+      console.log('  - content:', req.body?.content);
+      console.log('  - sender:', req.body?.sender);
+      
+      if (!user?.id) {
+        console.log('[ERROR] No user.id found, returning 401');
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const { content, sender } = req.body;
+
+      if (!content || !content.trim()) {
+        console.log('[ERROR] No content provided, returning 400');
+        return res.status(400).json({ message: "Message content is required" });
+      }
+
+      console.log('[STEP 3] Looking for existing team-chat conversation...');
+      
+      // Get or create general team chat conversation
+      let generalConversation;
+      try {
+        const existingConversations = await db
+          .select()
+          .from(conversations)
+          .where(and(
+            eq(conversations.type, 'channel'),
+            eq(conversations.name, 'team-chat')
+          ));
+        
+        console.log('  - Found existing conversations:', existingConversations.length);
+        generalConversation = existingConversations[0];
+        
+        if (generalConversation) {
+          console.log('  - Using existing conversation:', generalConversation);
+        }
+      } catch (dbError) {
+        console.error('[ERROR] Database query for conversations failed:', dbError);
+        throw dbError;
+      }
+
+      if (!generalConversation) {
+        console.log('[STEP 4] Creating new team-chat conversation...');
+        try {
+          const newConversationData = {
+            type: 'channel',
+            name: 'team-chat'
+          };
+          console.log('  - Conversation data to insert:', newConversationData);
+          
+          const newConversations = await db
+            .insert(conversations)
+            .values(newConversationData)
+            .returning();
+            
+          generalConversation = newConversations[0];
+          console.log('  - Created new conversation:', generalConversation);
+        } catch (dbError) {
+          console.error('[ERROR] Database insert for conversations failed:', dbError);
+          throw dbError;
+        }
+      }
+
+      const userName = sender || `${user.firstName} ${user.lastName}` || user.email || 'Unknown User';
+      console.log('[STEP 5] Preparing message data:');
+      console.log('  - userName:', userName);
+      console.log('  - conversationId:', generalConversation.id);
+      console.log('  - userId:', user.id);
+      console.log('  - content:', content.trim());
+
+      const messageData = {
+        conversationId: generalConversation.id,
+        userId: user.id,
+        content: content.trim(),
+        sender: userName
+      };
+      console.log('  - Complete message data:', messageData);
+
+      console.log('[STEP 6] Inserting message into database...');
+      let message;
+      try {
+        const insertedMessages = await db
+          .insert(messagesTable)
+          .values(messageData)
+          .returning();
+          
+        message = insertedMessages[0];
+        console.log('  - Inserted message successfully:', message);
+      } catch (dbError) {
+        console.error('[ERROR] Database insert for messages failed:', dbError);
+        console.error('  - Error details:', {
+          message: dbError.message,
+          code: dbError.code,
+          detail: dbError.detail,
+          hint: dbError.hint
+        });
+        throw dbError;
+      }
+
+      console.log('[STEP 7] Broadcasting message...');
+      // Broadcast via WebSocket if available
+      if (broadcastNewMessage) {
+        const broadcastData = {
+          type: 'new_message',
+          conversationId: generalConversation.id,
+          message: {
+            id: message.id,
+            content: message.content,
+            userId: message.userId,
+            sender: userName,
+            timestamp: message.createdAt,
+            committee: 'general'
+          }
+        };
+        console.log('  - Broadcasting data:', broadcastData);
+        broadcastNewMessage(broadcastData);
+      } else {
+        console.log('  - No broadcast function available');
+      }
+
+      const responseData = {
+        id: message.id,
+        content: message.content,
+        userId: message.userId,
+        sender: userName,
+        timestamp: message.createdAt,
+        committee: 'general'
+      };
+      console.log('[STEP 8] Sending response:', responseData);
+      console.log('=== POST /api/messages SUCCESS ===');
+      
+      res.json(responseData);
+    } catch (error) {
+      console.error('=== POST /api/messages ERROR ===');
+      console.error('[ERROR] Full error object:', error);
+      console.error('[ERROR] Error name:', error.name);
+      console.error('[ERROR] Error message:', error.message);
+      console.error('[ERROR] Error stack:', error.stack);
+      if (error.code) console.error('[ERROR] Error code:', error.code);
+      if (error.detail) console.error('[ERROR] Error detail:', error.detail);
+      if (error.hint) console.error('[ERROR] Error hint:', error.hint);
+      console.error('=== POST /api/messages ERROR END ===');
+      
+      res.status(500).json({ 
+        message: "Internal server error",
+        error: error.message,
+        details: error.detail || 'No additional details'
+      });
+    }
+  });
+
+  app.delete("/api/messages/:id", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).user;
+      if (!user?.id) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const messageId = parseInt(req.params.id);
+      
+      // Get the message to check ownership
+      const [message] = await db
+        .select()
+        .from(messagesTable)
+        .where(eq(messagesTable.id, messageId));
+
+      if (!message) {
+        return res.status(404).json({ message: "Message not found" });
+      }
+
+      // Check if user can delete (owner, admin, or super admin)
+      const isOwner = message.userId === user.id;
+      const isAdmin = user.role === 'admin' || user.role === 'super_admin';
+      const hasModeratePermission = user.permissions?.includes('moderate_messages');
+
+      if (!isOwner && !isAdmin && !hasModeratePermission) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      // Delete the message
+      await db.delete(messagesTable).where(eq(messagesTable.id, messageId));
+
+      res.status(204).send();
+    } catch (error) {
+      console.error('[API] Error deleting message:', error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Simple conversation API endpoints for the new 3-table messaging system
   app.get("/api/conversations", isAuthenticated, async (req, res) => {
     try {
@@ -5881,9 +6135,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           conversationId,
           userId: user.id,
           content: content.trim(),
-          sender: userName,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          sender: userName
         })
         .returning();
 
@@ -5911,8 +6163,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Create or get direct conversation between two users
   app.post("/api/conversations/direct", isAuthenticated, async (req, res) => {
+    console.log('=== POST /api/conversations/direct START ===');
     try {
       const user = (req as any).user;
+      console.log('User:', user);
+      console.log('Request body:', req.body);
+      
       const { otherUserId } = req.body;
 
       if (!otherUserId) {
@@ -5954,8 +6210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .insert(conversations)
         .values({
           type: 'direct',
-          name: null,
-          createdAt: new Date().toISOString()
+          name: null
         })
         .returning();
 
@@ -5963,20 +6218,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await db.insert(conversationParticipants).values([
         {
           conversationId: newConversation.id,
-          userId: user.id,
-          joinedAt: new Date().toISOString()
+          userId: user.id
         },
         {
           conversationId: newConversation.id,
-          userId: otherUserId,
-          joinedAt: new Date().toISOString()
+          userId: otherUserId
         }
       ]);
 
       res.json(newConversation);
     } catch (error) {
-      console.error('[API] Error creating direct conversation:', error);
-      res.status(500).json({ message: "Failed to create conversation" });
+      console.error('=== POST /api/conversations/direct ERROR ===');
+      console.error('[ERROR] Full error object:', error);
+      console.error('[ERROR] Error name:', error.name);
+      console.error('[ERROR] Error message:', error.message);
+      console.error('[ERROR] Error stack:', error.stack);
+      if (error.code) console.error('[ERROR] Error code:', error.code);
+      if (error.detail) console.error('[ERROR] Error detail:', error.detail);
+      if (error.hint) console.error('[ERROR] Error hint:', error.hint);
+      console.error('=== POST /api/conversations/direct ERROR END ===');
+      
+      res.status(500).json({ 
+        message: "Failed to create conversation",
+        error: error.message,
+        details: error.detail || 'No additional details'
+      });
     }
   });
 

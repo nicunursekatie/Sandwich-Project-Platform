@@ -61,6 +61,18 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
   const { data: committeeConversation } = useQuery({
     queryKey: ["/api/conversations/committee", committee],
     queryFn: async () => {
+      // First try to find existing conversation
+      const conversations = await apiRequest('GET', '/api/conversations');
+      const existingConversation = conversations.find((conv: any) => 
+        conv.type === 'channel' && 
+        conv.name === `${committee.charAt(0).toUpperCase() + committee.slice(1)} Committee`
+      );
+      
+      if (existingConversation) {
+        return existingConversation;
+      }
+      
+      // Create new conversation if not found
       const response = await apiRequest('POST', '/api/conversations', {
         type: 'channel',
         name: `${committee.charAt(0).toUpperCase() + committee.slice(1)} Committee`

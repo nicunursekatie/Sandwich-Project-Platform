@@ -82,9 +82,26 @@ export default function MessageLog() {
 
   const sendMessageMutation = useMutation({
     mutationFn: async (data: MessageFormData) => {
-      return await apiRequest("POST", "/api/messages", data);
+      console.log('=== FRONTEND: Sending message ===');
+      console.log('Message data being sent:', data);
+      console.log('API endpoint: POST /api/messages');
+      
+      try {
+        const result = await apiRequest("POST", "/api/messages", data);
+        console.log('API response received:', result);
+        return result;
+      } catch (error) {
+        console.error('API request failed:', error);
+        console.error('Error details:', {
+          message: error.message,
+          status: error.status,
+          response: error.response
+        });
+        throw error;
+      }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('Message sent successfully:', data);
       queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
       form.reset({
         sender: form.getValues("sender"),
@@ -96,10 +113,11 @@ export default function MessageLog() {
         description: replyingTo ? "Reply added to thread" : "Your message has been added to the team chat."
       });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Message sending failed:', error);
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: `Failed to send message: ${error.message || 'Unknown error'}`,
         variant: "destructive"
       });
     }
@@ -126,9 +144,18 @@ export default function MessageLog() {
   });
 
   const onSubmit = (data: MessageFormData) => {
+    console.log('=== FORM SUBMIT ===');
+    console.log('Form data received:', data);
+    console.log('Current userName:', userName);
+    console.log('Is replying to:', replyingTo);
+    
     const messageData = replyingTo 
       ? { ...data, sender: userName || "Anonymous", parentId: replyingTo.id, threadId: replyingTo.threadId || replyingTo.id }
       : data;
+      
+    console.log('Final message data to send:', messageData);
+    console.log('About to call sendMessageMutation.mutate...');
+    
     sendMessageMutation.mutate(messageData);
   };
 
