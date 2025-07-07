@@ -5281,91 +5281,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Remove member from group endpoint
   app.delete("/api/message-groups/:groupId/members/:userId", isAuthenticated, async (req, res) => {
+    console.log(`[DEBUG] DELETE /api/message-groups/:groupId/members/:userId called with:`, {
+      groupId: req.params.groupId,
+      userIdToRemove: req.params.userId,
+      requestingUser: (req as any).user?.id
+    });
     try {
       const groupId = parseInt(req.params.groupId);
       const targetUserId = req.params.userId;
       const currentUserId = (req as any).user?.id;
-
-      // Platform super admin can manage any group, otherwise check group admin permission
       const currentUser = (req as any).user;
-      const isPlatformSuperAdmin = currentUser?.role === 'super_admin';
       
-      console.log(`[DEBUG] Delete member - Current user:`, JSON.stringify(currentUser, null, 2));
-      console.log(`[DEBUG] Delete member - isPlatformSuperAdmin:`, isPlatformSuperAdmin);
-      console.log(`[DEBUG] Delete member - User role check:`, currentUser?.role);
-      console.log(`[DEBUG] Delete member - User role === 'super_admin':`, currentUser?.role === 'super_admin');
+      console.log(`[DEBUG] Removing user ${targetUserId} from conversation ${groupId}, requested by ${currentUserId} (role: ${currentUser?.role})`);
       
-      if (!isPlatformSuperAdmin) {
-        const membership = await db
-          .select({ role: groupMemberships.role })
-          .from(groupMemberships)
-          .where(
-            and(
-              eq(groupMemberships.groupId, groupId),
-              eq(groupMemberships.userId, currentUserId),
-              eq(groupMemberships.isActive, true)
-            )
-          );
-
-        if (membership.length === 0 || membership[0].role !== 'admin') {
-          return res.status(403).json({ message: "Only group admins can remove members" });
-        }
+      // Check if conversation exists and is a group
+      const [conversation] = await db
+        .select()
+        .from(conversations)
+        .where(and(
+          eq(conversations.id, groupId),
+          eq(conversations.type, 'group')
+        ));
+      
+      if (!conversation) {
+        return res.status(404).json({ message: "Group conversation not found" });
+      }
+      
+      // Allow super_admin, admin, or the user themselves to remove from conversation
+      const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'admin';
+      const isSelfRemoval = currentUserId === targetUserId;
+      
+      let canRemove = isAdmin || isSelfRemoval;
+      if (!canRemove) {
+        // Check if user is a participant (for self-removal or group admins)
+        const [participant] = await db
+          .select()
+          .from(conversationParticipants)
+          .where(and(
+            eq(conversationParticipants.conversationId, groupId),
+            eq(conversationParticipants.userId, currentUserId)
+          ));
+        canRemove = !!participant;
+      }
+      
+      console.log(`[DEBUG] Can remove member: ${canRemove}`);
+      
+      if (!canRemove) {
+        return res.status(403).json({ message: "Not authorized to remove members from this group" });
+      }
+      
+      // Check if target user is actually a member
+      const [targetParticipant] = await db
+        .select()
+        .from(conversationParticipants)
+        .where(and(
+          eq(conversationParticipants.conversationId, groupId),
+          eq(conversationParticipants.userId, targetUserId)
+        ));
+      
+      if (!targetParticipant) {
+        return res.status(404).json({ message: "User is not a member of this group" });
       }
 
-      // Only prevent removing other admins if current user is not a platform super admin
-      if (!isPlatformSuperAdmin) {
-        const targetMembership = await db
-          .select({ role: groupMemberships.role })
-          .from(groupMemberships)
-          .where(
-            and(
-              eq(groupMemberships.groupId, groupId),
-              eq(groupMemberships.userId, targetUserId),
-              eq(groupMemberships.isActive, true)
-            )
-          );
+      // Remove user from conversation participants
+      await db.delete(conversationParticipants)
+        .where(and(
+          eq(conversationParticipants.conversationId, groupId),
+          eq(conversationParticipants.userId, targetUserId)
+        ));
 
-        if (targetMembership.length > 0 && targetMembership[0].role === 'admin') {
-          return res.status(403).json({ message: "Cannot remove group administrators" });
-        }
-      }
-
-      // Get the thread for this group
-      const [thread] = await db
-        .select({ threadId: conversationThreads.id })
-        .from(conversationThreads)
-        .where(
-          and(
-            eq(conversationThreads.type, 'group'),
-            eq(conversationThreads.referenceId, groupId.toString()),
-            eq(conversationThreads.isActive, true)
-          )
-        );
-
-      if (thread) {
-        // Update thread participant status to 'left'
-        await db.update(groupMessageParticipants)
-          .set({ status: 'left' })
-          .where(
-            and(
-              eq(groupMessageParticipants.threadId, thread.threadId),
-              eq(groupMessageParticipants.userId, targetUserId)
-            )
-          );
-      }
-
-      // Remove from group membership
-      await db.update(groupMemberships)
-        .set({ isActive: false })
-        .where(
-          and(
-            eq(groupMemberships.groupId, groupId),
-            eq(groupMemberships.userId, targetUserId)
-          )
-        );
-
-      console.log(`[DEBUG] Removed user ${targetUserId} from group ${groupId}`);
-      res.json({ success: true });
+      console.log(`[DEBUG] Successfully removed user ${targetUserId} from conversation ${groupId}`);
+      res.json({ 
+        message: "Member removed successfully",
+        removedUserId: targetUserId,
+        conversationId: groupId
+      });
     } catch (error) {
       console.error("Error removing member from group:", error);
       res.status(500).json({ message: "Failed to remove member" });
