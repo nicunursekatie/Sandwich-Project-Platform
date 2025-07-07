@@ -288,7 +288,7 @@ export function setupCleanMessagingRoutes(app: Express) {
 
       // Create congratulations message
       let congratsMessage = `🎉 ${title}\n\n${message}`;
-      if (celebrationData?.senderName) {
+      if (celebrationData && celebrationData.senderName) {
         congratsMessage += `\n\n- ${celebrationData.senderName}`;
       }
 

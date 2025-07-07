@@ -799,6 +799,19 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                                 {new Date(task.dueDate).toLocaleDateString()}
                               </div>
                             )}
+                            {/* Show completion info if task is completed */}
+                            {task.status === 'completed' && (
+                              <div className="flex items-center">
+                                <CheckCircle2 className="w-3 h-3 mr-1 text-green-600" />
+                                <span className="text-green-600">Completed</span>
+                                {task.completedBy && (
+                                  <span className="ml-1">by {task.completedBy}</span>
+                                )}
+                                {task.completedAt && (
+                                  <span className="ml-1">on {new Date(task.completedAt).toLocaleDateString()}</span>
+                                )}
+                              </div>
+                            )}
                           </div>
 
                           {/* Multi-user completion system for tasks with multiple assignees */}
