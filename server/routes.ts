@@ -4917,72 +4917,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const groupId = parseInt(req.params.groupId);
       const userId = (req as any).user?.id;
+      
+      console.log(`[DEBUG] Fetching members for conversation ${groupId}, user ${userId}`);
+      
+      // Check if this conversation exists and is a group type
+      const [conversation] = await db
+        .select()
+        .from(conversations)
+        .where(and(
+          eq(conversations.id, groupId),
+          eq(conversations.type, 'group')
+        ));
+      
+      if (!conversation) {
+        return res.status(404).json({ message: "Group conversation not found" });
+      }
+      
+      // Check if user is a participant in this conversation
+      const [participant] = await db
+        .select()
+        .from(conversationParticipants)
+        .where(and(
+          eq(conversationParticipants.conversationId, groupId),
+          eq(conversationParticipants.userId, userId)
+        ));
+      
+      // Allow super_admins or participants to view members
       const user = (req as any).user;
+      const canView = user.role === 'super_admin' || participant;
       
-      console.log(`[DEBUG] Fetching members for group ${groupId}, user ${userId}`);
-      
-      // Check if user has moderation permissions (super_admin or admin with moderate_messages)
-      const canModerateMessages = user.role === 'super_admin' || 
-        (user.permissions && user.permissions.includes('moderate_messages'));
-      
-      console.log(`[DEBUG] User moderation permissions: ${canModerateMessages}`);
-      
-      if (!canModerateMessages) {
-        try {
-          // Regular users need to be members of the group
-          const membership = await db
-            .select()
-            .from(groupMemberships)
-            .where(
-              and(
-                eq(groupMemberships.groupId, groupId),
-                eq(groupMemberships.userId, userId),
-                eq(groupMemberships.isActive, true)
-              )
-            )
-            .limit(1);
-          
-          if (membership.length === 0) {
-            return res.status(403).json({ message: "Not a member of this group" });
-          }
-        } catch (membershipError) {
-          console.error(`[ERROR] Error checking membership:`, membershipError);
-          // If groupMemberships table doesn't exist, allow super admins to proceed
-          if (!canModerateMessages) {
-            return res.status(500).json({ message: "Group membership system not available" });
-          }
-        }
+      if (!canView) {
+        return res.status(403).json({ message: "Not authorized to view group members" });
       }
       
-      try {
-        // Get all group members with user details
-        const members = await db
-          .select({
-            userId: groupMemberships.userId,
-            role: groupMemberships.role,
-            joinedAt: groupMemberships.joinedAt,
-            firstName: users.firstName,
-            lastName: users.lastName,
-            email: users.email
-          })
-          .from(groupMemberships)
-          .leftJoin(users, eq(groupMemberships.userId, users.id))
-          .where(
-            and(
-              eq(groupMemberships.groupId, groupId),
-              eq(groupMemberships.isActive, true)
-            )
-          );
-        
-        console.log(`[DEBUG] Found ${members.length} members for group ${groupId}`);
-        res.json(members);
-      } catch (membersError) {
-        console.error(`[ERROR] Error fetching group members:`, membersError);
-        // If groupMemberships table doesn't exist, return empty array for now
-        res.json([]);
-      }
+      // Get all participants of this group conversation
+      const members = await db
+        .select({
+          userId: conversationParticipants.userId,
+          firstName: users.firstName,
+          lastName: users.lastName,
+          email: users.email,
+          role: users.role
+        })
+        .from(conversationParticipants)
+        .leftJoin(users, eq(conversationParticipants.userId, users.id))
+        .where(eq(conversationParticipants.conversationId, groupId));
+      
+      console.log(`[DEBUG] Found ${members.length} members for conversation ${groupId}`);
+      res.json(members);
     } catch (error) {
-      console.error(`[ERROR] General error in group members endpoint:`, error);
+      console.error(`[ERROR] Error fetching group members:`, error);
       res.status(500).json({ message: "Failed to fetch group members", details: error.message });
     }
   });
