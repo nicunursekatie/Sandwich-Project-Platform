@@ -87,9 +87,8 @@ export default function CommitteeChat() {
     queryFn: async () => {
       if (!selectedCommittee) return null;
       const response = await apiRequest('POST', '/api/conversations', {
-        type: 'committee',
-        name: `${selectedCommittee.name}`,
-        metadata: { committee: selectedCommittee.id }
+        type: 'channel',
+        name: `${selectedCommittee.name}`
       });
       return response;
     },

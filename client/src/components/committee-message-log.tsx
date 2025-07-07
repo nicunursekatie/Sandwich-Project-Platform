@@ -62,9 +62,8 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
     queryKey: ["/api/conversations/committee", committee],
     queryFn: async () => {
       const response = await apiRequest('POST', '/api/conversations', {
-        type: 'committee',
-        name: `${committee.charAt(0).toUpperCase() + committee.slice(1)} Committee`,
-        metadata: { committee }
+        type: 'channel',
+        name: `${committee.charAt(0).toUpperCase() + committee.slice(1)} Committee`
       });
       return response;
     },
