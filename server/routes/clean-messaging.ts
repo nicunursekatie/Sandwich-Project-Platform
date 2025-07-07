@@ -286,11 +286,43 @@ export function setupCleanMessagingRoutes(app: Express) {
         }
       }
 
-      // Create congratulations message
-      let congratsMessage = `🎉 ${title}\n\n${message}`;
-      if (celebrationData?.senderName) {
-        congratsMessage += `\n\n- ${celebrationData.senderName}`;
+      // Check for duplicate messages to prevent spam
+      const recentMessages = await db
+        .select()
+        .from(messages)
+        .where(and(
+          eq(messages.conversationId, conversation.id),
+          eq(messages.userId, userId),
+          sql`${messages.createdAt} > NOW() - INTERVAL '1 minute'`
+        ));
+
+      if (recentMessages.length > 0) {
+        return res.status(429).json({ message: "Please wait before sending another congratulation" });
       }
+
+      // Get real user name for the sender
+      let senderUser = null;
+      try {
+        const userResult = await db
+          .select({
+            firstName: users.firstName,
+            lastName: users.lastName,
+            email: users.email
+          })
+          .from(users)
+          .where(eq(users.id, userId));
+        senderUser = userResult[0] || null;
+      } catch (error) {
+        console.error('Error fetching sender user:', error);
+      }
+      
+      const realSenderName = senderUser 
+        ? `${senderUser.firstName || ''} ${senderUser.lastName || ''}`.trim() || senderUser.email
+        : celebrationData?.senderName || 'Team Member';
+
+      // Create congratulations message with real sender name
+      let congratsMessage = `🎉 ${title}\n\n${message}`;
+      congratsMessage += `\n\n- ${realSenderName}`;
 
       const [newMessage] = await db
         .insert(messages)
@@ -344,18 +376,29 @@ export function setupCleanMessagingRoutes(app: Express) {
         ))
         .orderBy(desc(messages.createdAt));
 
-      // Format for frontend compatibility
-      const formattedMessages = congratsMessages.map(msg => ({
-        id: msg.id,
-        userId: msg.userId || 'anonymous',
-        message: msg.message || '',
-        createdAt: msg.createdAt,
-        celebrationData: {
-          senderName: msg.senderName || 'Team Member',
-          emoji: '🎉',
-          sentAt: msg.createdAt
+      // Format for frontend compatibility with real user data
+      const formattedMessages = congratsMessages.map(msg => {
+        // Extract real sender name from the message content or use database lookup
+        let realSenderName = msg.senderName || 'Team Member';
+        
+        // If senderName is still generic, try to get real user data
+        if (realSenderName === 'Team Member' && msg.userId) {
+          // The senderName should come from the SQL join, but let's ensure it's proper
+          realSenderName = msg.senderName || 'Unknown User';
         }
-      }));
+        
+        return {
+          id: msg.id,
+          userId: msg.userId || 'anonymous',
+          message: msg.message || '',
+          createdAt: msg.createdAt,
+          celebrationData: {
+            senderName: realSenderName,
+            emoji: '🎉',
+            sentAt: msg.createdAt
+          }
+        };
+      });
 
       res.json(formattedMessages);
     } catch (error) {

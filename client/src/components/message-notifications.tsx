@@ -31,17 +31,11 @@ interface MessageNotificationsProps {
 }
 
 export default function MessageNotifications({ user }: MessageNotificationsProps) {
-  console.log('🔔 MessageNotifications component mounting...');
-
   const isAuthenticated = !!user;
   const [lastCheck, setLastCheck] = useState(Date.now());
 
-  console.log('🔔 MessageNotifications: user=', (user as any)?.id, 'isAuthenticated=', isAuthenticated);
-  console.log('🔔 MessageNotifications: user object=', user);
-
   // Early return if user is not authenticated to prevent any queries
   if (!isAuthenticated || !user) {
-    console.log('🔔 MessageNotifications: Early return - not authenticated or no user');
     return null;
   }
 
@@ -52,7 +46,7 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
     refetchInterval: isAuthenticated ? 30000 : false, // Check every 30 seconds only when authenticated
   });
 
-  console.log('🔔 MessageNotifications: Query state - isLoading:', isLoading, 'error:', error, 'data:', unreadCounts);
+
 
   // Listen for WebSocket notifications (to be implemented)
   useEffect(() => {

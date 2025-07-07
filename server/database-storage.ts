@@ -199,6 +199,32 @@ export class DatabaseStorage implements IStorage {
     return result;
   }
 
+  async getSimpleCongratulations(projectId: number): Promise<any[]> {
+    try {
+      const result = await this.db.query(
+        'SELECT * FROM project_congratulations WHERE project_id = $1 ORDER BY created_at DESC',
+        [projectId]
+      );
+      return result.rows;
+    } catch (error) {
+      console.error('Error fetching simple congratulations:', error);
+      return [];
+    }
+  }
+
+  async addSimpleCongratulation(data: { projectId: number; userId: string; userName: string; message: string }): Promise<any> {
+    try {
+      const result = await this.db.query(
+        'INSERT INTO project_congratulations (project_id, user_id, user_name, message) VALUES ($1, $2, $3, $4) RETURNING *',
+        [data.projectId, data.userId, data.userName, data.message]
+      );
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error adding simple congratulation:', error);
+      throw error;
+    }
+  }
+
   async getTaskById(id: number): Promise<ProjectTask | undefined> {
     const result = await db.select().from(projectTasks)
       .where(eq(projectTasks.id, id))

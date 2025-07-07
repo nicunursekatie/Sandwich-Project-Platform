@@ -16,7 +16,7 @@ import { CelebrationToast, useCelebration } from "@/components/celebration-toast
 import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
 import { TaskAssigneeSelector } from "@/components/task-assignee-selector";
 import { MultiUserTaskCompletion } from "@/components/multi-user-task-completion";
-import ProjectCongratulations from "@/components/project-congratulations";
+import SimpleCongratulations from "@/components/simple-congratulations";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -271,9 +271,14 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
     
     // Add completion tracking when marking as completed
     if (newStatus === 'completed') {
-      updateData.completedAt = new Date();
+      updateData.completedAt = new Date().toISOString();
       updateData.completedBy = (user as any)?.id;
-      updateData.completedByName = (user as any)?.firstName || (user as any)?.email || 'Unknown User';
+      updateData.completedByName = (user as any)?.displayName || (user as any)?.email || 'Unknown User';
+      console.log('Task completion tracking:', {
+        completedBy: updateData.completedBy,
+        completedByName: updateData.completedByName,
+        user: user
+      });
     } else {
       // Clear completion data when marking as incomplete
       updateData.completedAt = null;
@@ -604,7 +609,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       </div>
 
       {/* Project Congratulations Section - Only show for completed projects */}
-      <ProjectCongratulations 
+      <SimpleCongratulations 
         projectId={projectId}
         projectTitle={project.title}
         currentUser={user}
@@ -820,8 +825,8 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                               <div className="flex items-center">
                                 <CheckCircle2 className="w-3 h-3 mr-1 text-green-600" />
                                 <span className="text-green-600">Completed</span>
-                                {task.completedByName && (
-                                  <span className="ml-1">by {task.completedByName}</span>
+                                {(task.completedByName || task.completedBy) && (
+                                  <span className="ml-1 font-medium">by {task.completedByName || task.completedBy}</span>
                                 )}
                                 {task.completedAt && (
                                   <span className="ml-1">on {new Date(task.completedAt).toLocaleDateString()}</span>
@@ -857,8 +862,10 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                             variant="outline"
                             size="sm"
                             onClick={() => {
+                              // Local celebration effect
                               triggerCelebration(task.title, task.id);
-                              // Send congratulations to team messaging
+                              
+                              // Send congratulations to team messaging (with duplicate prevention)
                               const notificationData = {
                                 type: 'congratulations',
                                 title: 'Task Celebration! 🎉',
@@ -868,7 +875,8 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                                   senderName: (user as any)?.firstName || (user as any)?.email || 'Team Member',
                                   emoji: '🎉',
                                   taskTitle: task.title,
-                                  projectId: projectId
+                                  projectId: projectId,
+                                  timestamp: Date.now() // Add timestamp to prevent duplicates
                                 }
                               };
                               
@@ -878,11 +886,18 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                                   description: "Congratulations have been shared with the team." 
                                 });
                               }).catch(err => {
-                                console.log('Celebration notification failed:', err);
-                                toast({ 
-                                  title: "Celebration created!", 
-                                  description: "Your celebration has been recorded." 
-                                });
+                                if (err.status === 429) {
+                                  toast({ 
+                                    title: "Already celebrated!", 
+                                    description: "You've already congratulated this recently." 
+                                  });
+                                } else {
+                                  console.log('Celebration notification failed:', err);
+                                  toast({ 
+                                    title: "Celebration created!", 
+                                    description: "Your celebration has been recorded." 
+                                  });
+                                }
                               });
                             }}
                             className="text-yellow-600 border-yellow-200 hover:bg-yellow-50"

@@ -51,6 +51,9 @@ export default function ProjectCongratulations({
   const handleSendCongratulations = async () => {
     if (!congratsMessage.trim()) return;
 
+    // Prevent duplicate sends by checking if already sending
+    if (isSending) return;
+
     setIsSending(true);
     try {
       const randomEmoji = celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)];
@@ -64,7 +67,7 @@ export default function ProjectCongratulations({
         relatedId: projectId,
         celebrationData: {
           projectTitle,
-          senderName: currentUser?.firstName || currentUser?.displayName || 'Team Member',
+          senderName: currentUser?.firstName || currentUser?.email || 'Team Member',
           emoji: randomEmoji,
           sentAt: new Date().toISOString()
         }

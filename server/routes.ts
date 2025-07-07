@@ -6647,6 +6647,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Simple congratulations system (separate from messaging)
+  app.get('/api/projects/:id/simple-congratulations', isAuthenticated, async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const congratulations = await storage.getSimpleCongratulations(projectId);
+      res.json(congratulations);
+    } catch (error) {
+      console.error('Error fetching simple congratulations:', error);
+      res.status(500).json({ message: 'Failed to fetch congratulations' });
+    }
+  });
+
+  app.post('/api/projects/:id/simple-congratulations', isAuthenticated, async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const { message, userId, userName } = req.body;
+      
+      const congratulation = await storage.addSimpleCongratulation({
+        projectId,
+        userId,
+        userName,
+        message
+      });
+      
+      res.json(congratulation);
+    } catch (error) {
+      console.error('Error adding simple congratulation:', error);
+      res.status(500).json({ message: 'Failed to add congratulation' });
+    }
+  });
+
   // Make broadcast functions available globally for use in other routes
   (global as any).broadcastNewMessage = broadcastNewMessage;
   (global as any).broadcastTaskAssignment = broadcastTaskAssignment;
