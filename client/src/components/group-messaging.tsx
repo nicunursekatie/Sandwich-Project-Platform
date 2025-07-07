@@ -299,10 +299,17 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       if (!response.ok) throw new Error("Failed to remove member");
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["/api/message-groups"] });
       queryClient.invalidateQueries({ queryKey: ["/api/message-groups", selectedGroup?.id, "members"] });
-      toast({ title: "Member removed successfully!" });
+      
+      // If user removed themselves, deselect the group
+      if (variables.userId === currentUser?.id) {
+        setSelectedGroup(null);
+        toast({ title: "You have left the group successfully!" });
+      } else {
+        toast({ title: "Member removed successfully!" });
+      }
     },
   });
 
@@ -419,6 +426,15 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     updateThreadStatusMutation.mutate({ threadId, status: 'active' });
   };
 
+  const handleLeaveGroup = (groupId: number) => {
+    if (confirm("Are you sure you want to leave this group? You won't be able to see new messages and can only be re-added by an admin.")) {
+      removeMemberMutation.mutate({ 
+        groupId, 
+        userId: currentUser?.id 
+      });
+    }
+  };
+
   const canEditMessage = (message: Message) => {
     // Message owner can always edit their own messages
     if (message.userId === currentUser?.id) {
@@ -461,7 +477,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   return (
     <div className="h-full max-h-screen flex flex-col lg:flex-row">
       {/* Groups sidebar */}
-      <div className="w-full lg:w-1/3 lg:border-r bg-gray-50 dark:bg-gray-900 flex flex-col lg:min-h-0">
+      <div className={`${selectedGroup ? 'hidden lg:flex' : 'flex'} w-full lg:w-1/3 lg:border-r bg-gray-50 dark:bg-gray-900 flex-col lg:min-h-0`}>
         <div className="p-4 border-b">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold">Message Groups</h3>
@@ -605,19 +621,29 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       </div>
 
       {/* Chat area */}
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className={`${selectedGroup ? 'flex' : 'hidden lg:flex'} flex-1 flex-col min-h-0`}>
         {selectedGroup ? (
           <>
             {/* Group header */}
             <div className="p-4 border-b bg-white dark:bg-gray-800">
               <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold flex items-center gap-2">
-                    {selectedGroup.name}
-                    {(selectedGroup.userRole === 'admin' || selectedGroup.userRole === 'moderator' || currentUser?.role === 'super_admin') && (
-                      <Crown className="h-4 w-4 text-yellow-500" />
-                    )}
-                  </h3>
+                <div className="flex items-center gap-3">
+                  {/* Back button for mobile */}
+                  <Button 
+                    size="sm" 
+                    variant="ghost" 
+                    className="lg:hidden"
+                    onClick={() => setSelectedGroup(null)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                  <div>
+                    <h3 className="font-semibold flex items-center gap-2">
+                      {selectedGroup.name}
+                      {(selectedGroup.userRole === 'admin' || selectedGroup.userRole === 'moderator' || currentUser?.role === 'super_admin') && (
+                        <Crown className="h-4 w-4 text-yellow-500" />
+                      )}
+                    </h3>
                   {selectedGroup.description && (
                     <p className="text-sm text-gray-500">{selectedGroup.description}</p>
                   )}
@@ -629,6 +655,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                       <Users className="h-3 w-3" />
                       {selectedGroup.memberCount} members
                     </button>
+                  </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -658,6 +685,14 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                       >
                         <VolumeX className="h-4 w-4 mr-2" />
                         Mute Notifications
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleLeaveGroup(selectedGroup.id)}
+                        disabled={removeMemberMutation.isPending}
+                        className="text-red-600 dark:text-red-400"
+                      >
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Leave Group
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleLeaveThread(selectedGroup.id)}
