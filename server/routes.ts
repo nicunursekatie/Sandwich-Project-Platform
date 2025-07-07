@@ -5775,28 +5775,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const conversationId = parseInt(req.params.id);
 
-      // Check if user is participant in this conversation
-      const [participant] = await db
-        .select()
-        .from(conversationParticipants)
-        .where(
-          and(
-            eq(conversationParticipants.conversationId, conversationId),
-            eq(conversationParticipants.userId, user.id)
-          )
-        );
+      // Check access: participant in conversation OR channel conversations are public
+      const [conversation] = await db
+        .select({ type: conversations.type })
+        .from(conversations)
+        .where(eq(conversations.id, conversationId));
 
-      if (!participant) {
-        return res.status(403).json({ message: "Access denied" });
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+
+      // Channel conversations are accessible to all users
+      if (conversation.type !== 'channel') {
+        const [participant] = await db
+          .select()
+          .from(conversationParticipants)
+          .where(
+            and(
+              eq(conversationParticipants.conversationId, conversationId),
+              eq(conversationParticipants.userId, user.id)
+            )
+          );
+
+        if (!participant) {
+          return res.status(403).json({ message: "Access denied" });
+        }
       }
 
       const conversationMessages = await db
-        .select()
+        .select({
+          id: messagesTable.id,
+          content: messagesTable.content,
+          userId: messagesTable.userId,
+          sender: messagesTable.sender,
+          createdAt: messagesTable.createdAt,
+          updatedAt: messagesTable.updatedAt
+        })
         .from(messagesTable)
         .where(eq(messagesTable.conversationId, conversationId))
         .orderBy(asc(messagesTable.createdAt));
 
-      res.json(conversationMessages);
+      // Transform to match expected format
+      const formattedMessages = conversationMessages.map(msg => ({
+        id: msg.id,
+        content: msg.content,
+        userId: msg.userId,
+        sender: msg.sender || 'Unknown User',
+        timestamp: msg.createdAt,
+        committee: 'conversation' // For compatibility
+      }));
+
+      res.json(formattedMessages);
     } catch (error) {
       console.error('[API] Error fetching messages:', error);
       res.status(500).json({ message: "Internal server error" });
@@ -5817,34 +5846,137 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Message content is required" });
       }
 
-      // Check if user is participant in this conversation
-      const [participant] = await db
-        .select()
-        .from(conversationParticipants)
-        .where(
-          and(
-            eq(conversationParticipants.conversationId, conversationId),
-            eq(conversationParticipants.userId, user.id)
-          )
-        );
+      // Check access: participant in conversation OR channel conversations are public
+      const [conversation] = await db
+        .select({ type: conversations.type })
+        .from(conversations)
+        .where(eq(conversations.id, conversationId));
 
-      if (!participant) {
-        return res.status(403).json({ message: "Access denied" });
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
       }
+
+      // Channel conversations are accessible to all users
+      if (conversation.type !== 'channel') {
+        const [participant] = await db
+          .select()
+          .from(conversationParticipants)
+          .where(
+            and(
+              eq(conversationParticipants.conversationId, conversationId),
+              eq(conversationParticipants.userId, user.id)
+            )
+          );
+
+        if (!participant) {
+          return res.status(403).json({ message: "Access denied" });
+        }
+      }
+
+      const userName = `${user.firstName} ${user.lastName}` || user.email || 'Unknown User';
 
       const [message] = await db
         .insert(messagesTable)
         .values({
           conversationId,
           userId: user.id,
-          content: content.trim()
+          content: content.trim(),
+          sender: userName,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         })
         .returning();
+
+      // Broadcast via WebSocket if available
+      if (broadcastNewMessage) {
+        broadcastNewMessage({
+          type: 'new_message',
+          conversationId,
+          message: {
+            id: message.id,
+            content: message.content,
+            userId: message.userId,
+            sender: userName,
+            timestamp: message.createdAt
+          }
+        });
+      }
 
       res.json(message);
     } catch (error) {
       console.error('[API] Error sending message:', error);
       res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Create or get direct conversation between two users
+  app.post("/api/conversations/direct", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).user;
+      const { otherUserId } = req.body;
+
+      if (!otherUserId) {
+        return res.status(400).json({ message: "Other user ID is required" });
+      }
+
+      // Check if direct conversation already exists between these users
+      const existingConversation = await db
+        .select({
+          id: conversations.id,
+          type: conversations.type,
+          name: conversations.name,
+          createdAt: conversations.createdAt
+        })
+        .from(conversations)
+        .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+        .where(
+          and(
+            eq(conversations.type, 'direct'),
+            eq(conversationParticipants.userId, user.id)
+          )
+        );
+
+      // Find conversation that includes both users
+      for (const conv of existingConversation) {
+        const participants = await db
+          .select({ userId: conversationParticipants.userId })
+          .from(conversationParticipants)
+          .where(eq(conversationParticipants.conversationId, conv.id));
+        
+        const userIds = participants.map(p => p.userId);
+        if (userIds.includes(otherUserId) && userIds.length === 2) {
+          return res.json(conv);
+        }
+      }
+
+      // Create new direct conversation
+      const [newConversation] = await db
+        .insert(conversations)
+        .values({
+          type: 'direct',
+          name: null,
+          createdAt: new Date().toISOString()
+        })
+        .returning();
+
+      // Add both users as participants
+      await db.insert(conversationParticipants).values([
+        {
+          conversationId: newConversation.id,
+          userId: user.id,
+          joinedAt: new Date().toISOString()
+        },
+        {
+          conversationId: newConversation.id,
+          userId: otherUserId,
+          joinedAt: new Date().toISOString()
+        }
+      ]);
+
+      res.json(newConversation);
+    } catch (error) {
+      console.error('[API] Error creating direct conversation:', error);
+      res.status(500).json({ message: "Failed to create conversation" });
     }
   });
 

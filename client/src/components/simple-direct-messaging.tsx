@@ -81,22 +81,21 @@ export default function SimpleDirectMessaging() {
 
   // Fetch messages for current conversation
   const { data: messages = [] } = useQuery<Message[]>({
-    queryKey: ["conversation-messages", currentConversation?.id],
+    queryKey: ["/api/conversations", currentConversation?.id, "messages"],
     enabled: !!currentConversation,
     refetchInterval: 3000,
   });
 
-  // Create conversation mutation
+  // Create or get direct conversation
   const createConversationMutation = useMutation({
-    mutationFn: async (data: { type: string; name: string; participants: string[] }) => {
-      return await apiRequest("POST", "/api/conversations", data);
+    mutationFn: async (otherUserId: string) => {
+      return await apiRequest('POST', '/api/conversations/direct', { otherUserId });
     },
     onSuccess: (conversation) => {
       setCurrentConversation(conversation);
       queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
     },
-    onError: (error) => {
-      console.error("Failed to create conversation:", error);
+    onError: () => {
       toast({ title: "Failed to create conversation", variant: "destructive" });
     },
   });
@@ -110,7 +109,7 @@ export default function SimpleDirectMessaging() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["conversation-messages", currentConversation?.id] });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", currentConversation?.id, "messages"] });
       setMessage("");
     },
     onError: () => {
@@ -178,7 +177,10 @@ export default function SimpleDirectMessaging() {
               filteredUsers.map((u) => (
                 <div
                   key={u.id}
-                  onClick={() => setSelectedUser(u)}
+                  onClick={() => {
+                    setSelectedUser(u);
+                    createConversationMutation.mutate(u.id);
+                  }}
                   className={`flex items-center p-3 rounded-lg cursor-pointer hover:bg-slate-100 ${
                     selectedUser?.id === u.id ? 'bg-teal-50 border border-teal-200' : ''
                   }`}
