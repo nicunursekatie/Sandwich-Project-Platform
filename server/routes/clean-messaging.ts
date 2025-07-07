@@ -10,8 +10,13 @@ import {
 
 export function setupCleanMessagingRoutes(app: Express) {
   const isAuthenticated = (req: any, res: any, next: any) => {
-    if (!req.user) {
+    console.log('[DEBUG] Clean messaging auth check - user:', !!req.user, 'session:', !!req.session?.user);
+    if (!req.user && !req.session?.user) {
       return res.status(401).json({ message: "Authentication required" });
+    }
+    // Use session user if req.user not set
+    if (!req.user && req.session?.user) {
+      req.user = req.session.user;
     }
     next();
   };
@@ -229,6 +234,133 @@ export function setupCleanMessagingRoutes(app: Express) {
     } catch (error) {
       console.error("Error deleting message:", error);
       res.status(500).json({ message: "Failed to delete message" });
+    }
+  });
+
+  // Send congratulations notification (legacy API compatibility)
+  app.post("/api/notifications", isAuthenticated, async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { type, title, message, targetUserId, celebrationData } = req.body;
+
+      if (type !== 'congratulations') {
+        return res.status(400).json({ message: "Only congratulations notifications supported" });
+      }
+
+      // Get or create "Congratulations" conversation
+      let [conversation] = await db
+        .select()
+        .from(conversations)
+        .where(eq(conversations.name, "Congratulations"));
+
+      if (!conversation) {
+        [conversation] = await db
+          .insert(conversations)
+          .values({
+            type: "group",
+            name: "Congratulations"
+          })
+          .returning();
+      }
+
+      // Ensure both sender and target are participants
+      const participantIds = [userId];
+      if (targetUserId && targetUserId !== userId) {
+        participantIds.push(targetUserId);
+      }
+
+      for (const participantId of participantIds) {
+        const [existingParticipant] = await db
+          .select()
+          .from(conversationParticipants)
+          .where(and(
+            eq(conversationParticipants.conversationId, conversation.id),
+            eq(conversationParticipants.userId, participantId)
+          ));
+
+        if (!existingParticipant) {
+          await db.insert(conversationParticipants).values({
+            conversationId: conversation.id,
+            userId: participantId
+          });
+        }
+      }
+
+      // Create congratulations message
+      let congratsMessage = `🎉 ${title}\n\n${message}`;
+      if (celebrationData?.senderName) {
+        congratsMessage += `\n\n- ${celebrationData.senderName}`;
+      }
+
+      const [newMessage] = await db
+        .insert(messages)
+        .values({
+          conversationId: conversation.id,
+          userId,
+          content: congratsMessage
+        })
+        .returning();
+
+      res.json({ 
+        success: true, 
+        messageId: newMessage.id,
+        conversationId: conversation.id 
+      });
+    } catch (error) {
+      console.error("Error sending congratulations:", error);
+      res.status(500).json({ message: "Failed to send congratulations" });
+    }
+  });
+
+  // Get congratulations for a project (legacy API compatibility)
+  app.get("/api/projects/:id/congratulations", isAuthenticated, async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+
+      // Get congratulations conversation
+      const [conversation] = await db
+        .select()
+        .from(conversations)
+        .where(eq(conversations.name, "Congratulations"));
+
+      if (!conversation) {
+        return res.json([]);
+      }
+
+      // Get messages that mention this project
+      const congratsMessages = await db
+        .select({
+          id: messages.id,
+          userId: messages.userId,
+          message: messages.content,
+          createdAt: messages.createdAt,
+          senderName: sql<string>`COALESCE(${users.firstName} || ' ' || ${users.lastName}, ${users.email})`
+        })
+        .from(messages)
+        .leftJoin(users, eq(messages.userId, users.id))
+        .where(and(
+          eq(messages.conversationId, conversation.id),
+          sql`${messages.content} LIKE '%Project%'`
+        ))
+        .orderBy(desc(messages.createdAt));
+
+      // Format for frontend compatibility
+      const formattedMessages = congratsMessages.map(msg => ({
+        id: msg.id,
+        userId: msg.userId,
+        message: msg.message,
+        createdAt: msg.createdAt,
+        celebrationData: {
+          senderName: msg.senderName,
+          emoji: '🎉',
+          sentAt: msg.createdAt
+        }
+      }));
+
+      res.json(formattedMessages);
+    } catch (error) {
+      console.error("Error fetching congratulations:", error);
+      res.status(500).json({ message: "Failed to fetch congratulations" });
     }
   });
 }
