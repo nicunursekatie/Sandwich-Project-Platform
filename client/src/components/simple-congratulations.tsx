@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -134,6 +134,9 @@ export default function SimpleCongratulations({
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Congratulate the Team</DialogTitle>
+              <DialogDescription>
+                Send a congratulations message to celebrate this completed project.
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>

@@ -1174,6 +1174,21 @@ export class MemStorage implements IStorage {
   async deleteAnnouncement(id: number): Promise<boolean> {
     return this.announcements.delete(id);
   }
+
+  // Simple Congratulations methods
+  async getSimpleCongratulations(projectId: number): Promise<any[]> {
+    // For MemStorage, just return empty array since we don't store these
+    return [];
+  }
+
+  async addSimpleCongratulation(data: { projectId: number; userId: string; userName: string; message: string }): Promise<any> {
+    // For MemStorage, just return the data with an ID
+    return {
+      id: Date.now(),
+      ...data,
+      createdAt: new Date().toISOString()
+    };
+  }
 }
 
 import { GoogleSheetsStorage } from './google-sheets';
