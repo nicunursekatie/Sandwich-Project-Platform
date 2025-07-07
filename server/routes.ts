@@ -340,8 +340,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Import and use the new modular routes
-  const { apiRoutes } = await import("./routes/index");
-  app.use(apiRoutes);
+  const routesModule = await import("./routes/index");
+  if (routesModule.apiRoutes) {
+    app.use(routesModule.apiRoutes);
+  }
 
   // Register performance optimization routes
   registerPerformanceRoutes(app);
@@ -4912,51 +4914,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = (req as any).user?.id;
       const user = (req as any).user;
       
+      console.log(`[DEBUG] Fetching members for group ${groupId}, user ${userId}`);
+      
       // Check if user has moderation permissions (super_admin or admin with moderate_messages)
       const canModerateMessages = user.role === 'super_admin' || 
         (user.permissions && user.permissions.includes('moderate_messages'));
       
+      console.log(`[DEBUG] User moderation permissions: ${canModerateMessages}`);
+      
       if (!canModerateMessages) {
-        // Regular users need to be members of the group
-        const membership = await db
-          .select()
-          .from(groupMemberships)
-          .where(
-            and(
-              eq(groupMemberships.groupId, groupId),
-              eq(groupMemberships.userId, userId),
-              eq(groupMemberships.isActive, true)
+        try {
+          // Regular users need to be members of the group
+          const membership = await db
+            .select()
+            .from(groupMemberships)
+            .where(
+              and(
+                eq(groupMemberships.groupId, groupId),
+                eq(groupMemberships.userId, userId),
+                eq(groupMemberships.isActive, true)
+              )
             )
-          )
-          .limit(1);
-        
-        if (membership.length === 0) {
-          return res.status(403).json({ message: "Not a member of this group" });
+            .limit(1);
+          
+          if (membership.length === 0) {
+            return res.status(403).json({ message: "Not a member of this group" });
+          }
+        } catch (membershipError) {
+          console.error(`[ERROR] Error checking membership:`, membershipError);
+          // If groupMemberships table doesn't exist, allow super admins to proceed
+          if (!canModerateMessages) {
+            return res.status(500).json({ message: "Group membership system not available" });
+          }
         }
       }
       
-      // Get all group members with user details
-      const members = await db
-        .select({
-          userId: groupMemberships.userId,
-          role: groupMemberships.role,
-          joinedAt: groupMemberships.joinedAt,
-          firstName: users.firstName,
-          lastName: users.lastName,
-          email: users.email
-        })
-        .from(groupMemberships)
-        .leftJoin(users, eq(groupMemberships.userId, users.id))
-        .where(
-          and(
-            eq(groupMemberships.groupId, groupId),
-            eq(groupMemberships.isActive, true)
-          )
-        );
-      
-      res.json(members);
+      try {
+        // Get all group members with user details
+        const members = await db
+          .select({
+            userId: groupMemberships.userId,
+            role: groupMemberships.role,
+            joinedAt: groupMemberships.joinedAt,
+            firstName: users.firstName,
+            lastName: users.lastName,
+            email: users.email
+          })
+          .from(groupMemberships)
+          .leftJoin(users, eq(groupMemberships.userId, users.id))
+          .where(
+            and(
+              eq(groupMemberships.groupId, groupId),
+              eq(groupMemberships.isActive, true)
+            )
+          );
+        
+        console.log(`[DEBUG] Found ${members.length} members for group ${groupId}`);
+        res.json(members);
+      } catch (membersError) {
+        console.error(`[ERROR] Error fetching group members:`, membersError);
+        // If groupMemberships table doesn't exist, return empty array for now
+        res.json([]);
+      }
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch group members" });
+      console.error(`[ERROR] General error in group members endpoint:`, error);
+      res.status(500).json({ message: "Failed to fetch group members", details: error.message });
     }
   });
 
@@ -5097,51 +5119,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const groupId = parseInt(req.params.groupId);
       const userId = (req as any).user?.id;
       
-      // Get the thread ID for this group
-      const [thread] = await db
-        .select({ threadId: conversationThreads.id })
-        .from(conversationThreads)
-        .where(
-          and(
-            eq(conversationThreads.type, 'group'),
-            eq(conversationThreads.referenceId, groupId.toString()),
-            eq(conversationThreads.isActive, true)
-          )
-        );
+      console.log(`[DEBUG] Fetching messages for group ${groupId}, user ${userId}`);
       
-      if (!thread) {
-        console.log(`[DEBUG] No thread found for group ${groupId}`);
-        return res.json([]);
+      try {
+        // Get the thread ID for this group
+        const [thread] = await db
+          .select({ threadId: conversationThreads.id })
+          .from(conversationThreads)
+          .where(
+            and(
+              eq(conversationThreads.type, 'group'),
+              eq(conversationThreads.referenceId, groupId.toString()),
+              eq(conversationThreads.isActive, true)
+            )
+          );
+        
+        if (!thread) {
+          console.log(`[DEBUG] No thread found for group ${groupId}`);
+          return res.json([]);
+        }
+        
+        // Check if user has access to this thread (not left)
+        const participantStatus = await db
+          .select({ status: groupMessageParticipants.status })
+          .from(groupMessageParticipants)
+          .where(
+            and(
+              eq(groupMessageParticipants.threadId, thread.threadId),
+              eq(groupMessageParticipants.userId, userId)
+            )
+          );
+        
+        if (participantStatus.length === 0 || participantStatus[0].status === 'left') {
+          console.log(`[DEBUG] User ${userId} has no access to thread ${thread.threadId} for group ${groupId}`);
+          return res.json([]); // Return empty array for users who left
+        }
+        
+        // Get messages from the thread
+        const groupMessages = await db
+          .select()
+          .from(messagesTable)
+          .where(eq(messagesTable.threadId, thread.threadId))
+          .orderBy(messagesTable.timestamp);
+        
+        console.log(`[DEBUG] Found ${groupMessages.length} messages for group ${groupId} thread ${thread.threadId}`);
+        res.json(groupMessages);
+      } catch (threadError) {
+        console.log(`[DEBUG] Thread system not available, falling back to conversation-based messages`);
+        
+        // Fallback: try to get messages from conversations table using the groupId
+        const groupMessages = await db
+          .select({
+            id: messagesTable.id,
+            content: messagesTable.content,
+            userId: messagesTable.userId,
+            sender: messagesTable.sender,
+            timestamp: messagesTable.timestamp || messagesTable.createdAt,
+            createdAt: messagesTable.createdAt
+          })
+          .from(messagesTable)
+          .where(eq(messagesTable.conversationId, groupId))
+          .orderBy(messagesTable.timestamp || messagesTable.createdAt);
+        
+        console.log(`[DEBUG] Fallback: Found ${groupMessages.length} messages for conversation ${groupId}`);
+        res.json(groupMessages);
       }
-      
-      // Check if user has access to this thread (not left)
-      const participantStatus = await db
-        .select({ status: groupMessageParticipants.status })
-        .from(groupMessageParticipants)
-        .where(
-          and(
-            eq(groupMessageParticipants.threadId, thread.threadId),
-            eq(groupMessageParticipants.userId, userId)
-          )
-        );
-      
-      if (participantStatus.length === 0 || participantStatus[0].status === 'left') {
-        console.log(`[DEBUG] User ${userId} has no access to thread ${thread.threadId} for group ${groupId}`);
-        return res.json([]); // Return empty array for users who left
-      }
-      
-      // Get messages from the thread
-      const groupMessages = await db
-        .select()
-        .from(messagesTable)
-        .where(eq(messagesTable.threadId, thread.threadId))
-        .orderBy(messagesTable.timestamp);
-      
-      console.log(`[DEBUG] Found ${groupMessages.length} messages for group ${groupId} thread ${thread.threadId}`);
-      res.json(groupMessages);
     } catch (error) {
       console.error("Error fetching group messages:", error);
-      res.status(500).json({ message: "Failed to fetch group messages" });
+      res.status(500).json({ message: "Failed to fetch group messages", details: error.message });
     }
   });
 
@@ -5203,13 +5248,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log(`[DEBUG] Message sent to group ${groupId} thread ${thread.threadId}`);
       
-      // Broadcast notification via WebSocket
-      broadcastMessage({
-        type: 'group_message',
-        groupId: groupId,
-        threadId: thread.threadId,
-        message: message
-      });
+      // Broadcast notification via WebSocket if available
+      if (typeof (global as any).broadcastNewMessage === 'function') {
+        await (global as any).broadcastNewMessage(message);
+      }
 
       res.json(message);
     } catch (error) {
@@ -5920,11 +5962,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const messageId = parseInt(req.params.id);
       
-      // Get the message to check ownership
-      const [message] = await db
-        .select()
-        .from(messagesTable)
-        .where(eq(messagesTable.id, messageId));
+      // Use storage wrapper instead of direct database access
+      const message = await storage.getMessageById(messageId);
 
       if (!message) {
         return res.status(404).json({ message: "Message not found" });
@@ -5939,8 +5978,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Access denied" });
       }
 
-      // Delete the message
-      await db.delete(messagesTable).where(eq(messagesTable.id, messageId));
+      // Delete the message using storage wrapper
+      const deleted = await storage.deleteMessage(messageId);
+      
+      if (!deleted) {
+        return res.status(404).json({ message: "Message not found" });
+      }
 
       res.status(204).send();
     } catch (error) {
@@ -6063,11 +6106,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           userId: messagesTable.userId,
           sender: messagesTable.sender,
           createdAt: messagesTable.createdAt,
-          updatedAt: messagesTable.updatedAt
+          updatedAt: messagesTable.updatedAt,
+          timestamp: messagesTable.timestamp
         })
         .from(messagesTable)
         .where(eq(messagesTable.conversationId, conversationId))
-        .orderBy(asc(messagesTable.createdAt));
+        .orderBy(messagesTable.timestamp || messagesTable.createdAt);
 
       // Transform to match expected format
       const formattedMessages = conversationMessages.map(msg => ({
@@ -6075,14 +6119,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         content: msg.content,
         userId: msg.userId,
         sender: msg.sender || 'Unknown User',
-        timestamp: msg.createdAt,
+        timestamp: msg.timestamp || msg.createdAt,
         committee: 'conversation' // For compatibility
       }));
 
       res.json(formattedMessages);
     } catch (error) {
       console.error('[API] Error fetching messages:', error);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: "Internal server error", details: error.message });
     }
   });
 

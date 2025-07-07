@@ -10,6 +10,7 @@ router.get("/conversations", async (req, res) => {
   try {
     const userId = (req as any).user?.id;
     if (!userId) {
+      console.log('DEBUG: No user ID found in request, user object:', (req as any).user);
       return res.status(401).json({ error: "User not authenticated" });
     }
     
@@ -25,7 +26,10 @@ router.get("/conversations", async (req, res) => {
 router.post("/conversations", async (req, res) => {
   try {
     const userId = (req as any).user?.id;
+    console.log('DEBUG: POST /conversations - User object:', (req as any).user);
+    console.log('DEBUG: POST /conversations - User ID:', userId);
     if (!userId) {
+      console.log('DEBUG: POST /conversations - No user ID found, rejecting request');
       return res.status(401).json({ error: "User not authenticated" });
     }
     
@@ -49,6 +53,7 @@ router.get("/conversations/:id/messages", async (req, res) => {
   try {
     const userId = (req as any).user?.id;
     if (!userId) {
+      console.log('DEBUG: No user ID found in get messages, user object:', (req as any).user);
       return res.status(401).json({ error: "User not authenticated" });
     }
     
@@ -66,6 +71,7 @@ router.post("/conversations/:id/messages", async (req, res) => {
   try {
     const userId = (req as any).user?.id;
     if (!userId) {
+      console.log('DEBUG: No user ID found in send message, user object:', (req as any).user);
       return res.status(401).json({ error: "User not authenticated" });
     }
     

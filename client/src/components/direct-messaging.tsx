@@ -76,6 +76,7 @@ export default function DirectMessaging() {
       } else {
         // Create new conversation
         try {
+          console.log('Creating conversation with user:', (user as any)?.id, 'for selected user:', selectedUser.id);
           const response = await apiRequest('POST', '/api/conversations', {
             type: "direct",
             name: conversationName,
@@ -86,12 +87,20 @@ export default function DirectMessaging() {
           queryClient.invalidateQueries({ queryKey: ["/api/conversations"] });
         } catch (error) {
           console.error('Failed to create conversation:', error);
-          toast({ title: "Failed to create conversation", variant: "destructive" });
+          if (error.message.includes('401')) {
+            toast({ title: "Authentication error - please refresh the page", variant: "destructive" });
+          } else {
+            toast({ title: "Failed to create conversation", variant: "destructive" });
+          }
+          // Don't retry automatically to prevent infinite loops
+          return;
         }
       }
     };
 
-    findOrCreateConversation();
+    // Add a small delay to prevent rapid-fire requests
+    const timeoutId = setTimeout(findOrCreateConversation, 100);
+    return () => clearTimeout(timeoutId);
   }, [selectedUser, user, conversations]);
 
   // Fetch messages for current conversation
