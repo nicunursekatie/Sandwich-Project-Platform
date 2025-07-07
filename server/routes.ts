@@ -2,11 +2,12 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { z } from "zod";
-import { eq, and, or, sql, desc } from 'drizzle-orm';
+import { eq, and, or, sql, desc } from "drizzle-orm";
 import express from "express";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import multer from "multer";
+import { eq, and, or, sql, desc, asc } from "drizzle-orm";
 import { parse } from "csv-parse/sync";
 import fs from "fs/promises";
 import { createReadStream } from "fs";
@@ -16,6 +17,7 @@ import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
 import { messageNotificationRoutes } from "./routes/message-notifications";
 import googleSheetsRoutes from "./routes/google-sheets";
+import { setupCleanMessagingRoutes } from "./routes/clean-messaging";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
@@ -40,8 +42,6 @@ import {
   drivers,
   projectTasks,
   taskCompletions,
-
-
   conversations,
   conversationParticipants,
   messages as messagesTable,
@@ -232,13 +232,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       secret: process.env.SESSION_SECRET || "temp-secret-key-for-development",
       resave: false,
       saveUninitialized: false,
-      cookie: { 
+      cookie: {
         secure: false, // Should be true in production with HTTPS, false for development
         httpOnly: true, // Prevent XSS attacks
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days for better persistence
-        sameSite: 'lax' // CSRF protection
+        sameSite: "lax", // CSRF protection
       },
-      name: 'tsp.session' // Custom session name
+      name: "tsp.session", // Custom session name
     }),
   );
 
@@ -263,27 +263,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const sessionUser = req.session?.user;
       const reqUser = req.user;
-      
+
       res.json({
         hasSession: !!req.session,
         sessionId: req.sessionID,
         sessionStore: !!sessionStore,
-        sessionUser: sessionUser ? {
-          id: sessionUser.id,
-          email: sessionUser.email,
-          role: sessionUser.role,
-          isActive: sessionUser.isActive
-        } : null,
-        reqUser: reqUser ? {
-          id: reqUser.id,
-          email: reqUser.email,
-          role: reqUser.role,
-          isActive: reqUser.isActive
-        } : null,
+        sessionUser: sessionUser
+          ? {
+              id: sessionUser.id,
+              email: sessionUser.email,
+              role: sessionUser.role,
+              isActive: sessionUser.isActive,
+            }
+          : null,
+        reqUser: reqUser
+          ? {
+              id: reqUser.id,
+              email: reqUser.email,
+              role: reqUser.role,
+              isActive: reqUser.isActive,
+            }
+          : null,
         cookies: req.headers.cookie,
-        userAgent: req.headers['user-agent'],
+        userAgent: req.headers["user-agent"],
         timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV || 'development'
+        environment: process.env.NODE_ENV || "development",
       });
     } catch (error) {
       console.error("Debug session error:", error);
@@ -295,7 +299,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/debug/auth-status", async (req: any, res) => {
     try {
       const user = req.session?.user || req.user;
-      
+
       res.json({
         isAuthenticated: !!user,
         sessionExists: !!req.session,
@@ -305,7 +309,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userEmail: user?.email || null,
         userRole: user?.role || null,
         sessionId: req.sessionID,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     } catch (error) {
       console.error("Debug auth status error:", error);
@@ -318,7 +322,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // Get user from session (temp auth) or req.user (Replit auth)
       const user = req.session?.user || req.user;
-      
+
       if (!user) {
         return res.status(401).json({ message: "No user in session" });
       }
@@ -430,22 +434,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/projects", requirePermission("edit_data"), async (req, res) => {
-    try {
-      console.log("Received project data:", req.body);
-      const projectData = insertProjectSchema.parse(req.body);
-      console.log("Parsed project data:", projectData);
-      const project = await storage.createProject(projectData);
-      res.status(201).json(project);
-    } catch (error) {
-      console.error("Project creation error details:", error);
-      logger.error("Failed to create project", error);
-      res.status(400).json({
-        message: "Invalid project data",
-        error: error instanceof Error ? error.message : "Unknown error",
-      });
-    }
-  });
+  app.post(
+    "/api/projects",
+    requirePermission("edit_data"),
+    async (req, res) => {
+      try {
+        console.log("Received project data:", req.body);
+        const projectData = insertProjectSchema.parse(req.body);
+        console.log("Parsed project data:", projectData);
+        const project = await storage.createProject(projectData);
+        res.status(201).json(project);
+      } catch (error) {
+        console.error("Project creation error details:", error);
+        logger.error("Failed to create project", error);
+        res.status(400).json({
+          message: "Invalid project data",
+          error: error instanceof Error ? error.message : "Unknown error",
+        });
+      }
+    },
+  );
 
   app.post("/api/projects/:id/claim", async (req, res) => {
     try {
@@ -486,7 +494,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const assigneeIds = task.assigneeIds || [];
       if (!assigneeIds.includes(user.id)) {
-        return res.status(403).json({ error: "You are not assigned to this task" });
+        return res
+          .status(403)
+          .json({ error: "You are not assigned to this task" });
       }
 
       // Add completion record
@@ -494,7 +504,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         taskId: taskId,
         userId: user.id,
         userName: user.displayName || user.email,
-        notes: notes
+        notes: notes,
       });
 
       const completion = await storage.createTaskCompletion(completionData);
@@ -504,15 +514,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const isFullyCompleted = allCompletions.length >= assigneeIds.length;
 
       // If all users completed, update task status
-      if (isFullyCompleted && task.status !== 'completed') {
-        await storage.updateTaskStatus(taskId, 'completed');
+      if (isFullyCompleted && task.status !== "completed") {
+        await storage.updateTaskStatus(taskId, "completed");
       }
 
-      res.json({ 
-        completion: completion, 
+      res.json({
+        completion: completion,
         isFullyCompleted,
         totalCompletions: allCompletions.length,
-        totalAssignees: assigneeIds.length
+        totalAssignees: assigneeIds.length,
       });
     } catch (error) {
       console.error("Error completing task:", error);
@@ -538,8 +548,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Update task status back to in_progress if it was completed
       const task = await storage.getTaskById(taskId);
-      if (task?.status === 'completed') {
-        await storage.updateTaskStatus(taskId, 'in_progress');
+      if (task?.status === "completed") {
+        await storage.updateTaskStatus(taskId, "in_progress");
       }
 
       res.json({ success: true });
@@ -561,66 +571,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/projects/:id", requirePermission("edit_data"), async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const updates = req.body;
+  app.put(
+    "/api/projects/:id",
+    requirePermission("edit_data"),
+    async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
+        const updates = req.body;
 
-      // Filter out timestamp fields that shouldn't be updated directly
-      const { createdAt, updatedAt, ...validUpdates } = updates;
+        // Filter out timestamp fields that shouldn't be updated directly
+        const { createdAt, updatedAt, ...validUpdates } = updates;
 
-      const updatedProject = await storage.updateProject(id, validUpdates);
+        const updatedProject = await storage.updateProject(id, validUpdates);
 
-      if (!updatedProject) {
-        return res.status(404).json({ message: "Project not found" });
+        if (!updatedProject) {
+          return res.status(404).json({ message: "Project not found" });
+        }
+
+        res.json(updatedProject);
+      } catch (error) {
+        logger.error("Failed to update project", error);
+        res.status(500).json({ message: "Failed to update project" });
       }
+    },
+  );
 
-      res.json(updatedProject);
-    } catch (error) {
-      logger.error("Failed to update project", error);
-      res.status(500).json({ message: "Failed to update project" });
-    }
-  });
+  app.patch(
+    "/api/projects/:id",
+    requirePermission("edit_data"),
+    async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
+        const updates = req.body;
 
-  app.patch("/api/projects/:id", requirePermission("edit_data"), async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const updates = req.body;
+        // Filter out timestamp fields that shouldn't be updated directly
+        const { createdAt, updatedAt, ...validUpdates } = updates;
 
-      // Filter out timestamp fields that shouldn't be updated directly
-      const { createdAt, updatedAt, ...validUpdates } = updates;
+        const updatedProject = await storage.updateProject(id, validUpdates);
 
-      const updatedProject = await storage.updateProject(id, validUpdates);
+        if (!updatedProject) {
+          return res.status(404).json({ message: "Project not found" });
+        }
 
-      if (!updatedProject) {
-        return res.status(404).json({ message: "Project not found" });
+        res.json(updatedProject);
+      } catch (error) {
+        logger.error("Failed to update project", error);
+        res.status(500).json({ message: "Failed to update project" });
       }
+    },
+  );
 
-      res.json(updatedProject);
-    } catch (error) {
-      logger.error("Failed to update project", error);
-      res.status(500).json({ message: "Failed to update project" });
-    }
-  });
+  app.delete(
+    "/api/projects/:id",
+    requirePermission("edit_data"),
+    async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+          return res.status(400).json({ message: "Invalid project ID" });
+        }
 
-  app.delete("/api/projects/:id", requirePermission("edit_data"), async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid project ID" });
+        const deleted = await storage.deleteProject(id);
+        if (!deleted) {
+          return res.status(404).json({ message: "Project not found" });
+        }
+
+        res.status(204).send();
+      } catch (error) {
+        logger.error("Failed to delete project", error);
+        res.status(500).json({ message: "Failed to delete project" });
       }
-
-      const deleted = await storage.deleteProject(id);
-      if (!deleted) {
-        return res.status(404).json({ message: "Project not found" });
-      }
-
-      res.status(204).send();
-    } catch (error) {
-      logger.error("Failed to delete project", error);
-      res.status(500).json({ message: "Failed to delete project" });
-    }
-  });
+    },
+  );
 
   // Project Files
   app.post(
@@ -675,215 +697,241 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Messages - disable ALL caching middleware for this endpoint
-  app.get("/api/messages", (req, res, next) => {
-    // Completely disable caching at the Express level
-    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.set('Pragma', 'no-cache'); 
-    res.set('Expires', '0');
-    res.set('Last-Modified', new Date().toUTCString()); // Force fresh response
-    next();
-  }, async (req, res) => {
+  // Messages - Fixed to work with actual database schema
+  app.get("/api/messages", async (req, res) => {
     try {
-      
-      console.log(`[DEBUG] FULL URL: ${req.url}`);
-      console.log(`[DEBUG] QUERY OBJECT:`, req.query);
-      console.log(`[DEBUG] USER SESSION:`, (req as any).user);
-      
-      const limit = req.query.limit
-        ? parseInt(req.query.limit as string)
-        : undefined;
+      const conversationId = req.query.conversationId
+        ? parseInt(req.query.conversationId as string)
+        : null;
       const chatType = req.query.chatType as string;
-      const committee = req.query.committee as string; // Keep for backwards compatibility
-      const recipientId = req.query.recipientId as string;
-      const groupId = req.query.groupId ? parseInt(req.query.groupId as string) : undefined;
-      
-      // Use chatType if provided, otherwise fall back to committee for backwards compatibility
-      const messageContext = chatType || committee;
-      console.log(`[DEBUG] API call received - chatType: "${chatType}", committee: "${committee}", recipientId: "${recipientId}", groupId: ${groupId}`);
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
 
-      let messages;
-      if (messageContext === "direct" && recipientId) {
-        // For direct messages, get conversations between current user and recipient
-        const currentUserId = (req as any).user?.id;
-        console.log(`[DEBUG] Direct messages requested - currentUserId: ${currentUserId}, recipientId: ${recipientId}`);
-        if (!currentUserId) {
-          return res.status(401).json({ message: "Authentication required for direct messages" });
-        }
-        messages = await storage.getDirectMessages(currentUserId, recipientId);
-        console.log(`[DEBUG] Direct messages found: ${messages.length} messages`);
-      } else if (groupId) {
-        // For group messages, use proper thread-based filtering
-        const currentUserId = (req as any).user?.id;
-        if (!currentUserId) {
-          console.log(`[DEBUG] No user authentication found for group ${groupId} request`);
-          return res.status(401).json({ message: "Authentication required for group messages" });
-        }
-        
-        console.log(`[DEBUG] Group messages requested - currentUserId: ${currentUserId}, groupId: ${groupId}`);
-        
-        // Verify user is member of this group
-        const membership = await db
-          .select()
-          .from(groupMemberships)
-          .where(
-            and(
-              eq(groupMemberships.groupId, groupId),
-              eq(groupMemberships.userId, currentUserId),
-              eq(groupMemberships.isActive, true)
-            )
-          )
-          .limit(1);
-        
-        if (membership.length === 0) {
-          console.log(`[DEBUG] User ${currentUserId} is not a member of group ${groupId}`);
-          return res.status(403).json({ message: "Not a member of this group" });
-        }
-        
-        console.log(`[DEBUG] User ${currentUserId} verified as member of group ${groupId}`);
-        
-        // Get the conversation thread ID for this group
-        const thread = await db
-          .select()
-          .from(conversationThreads)
-          .where(
-            and(
-              eq(conversationThreads.type, "group"),
-              eq(conversationThreads.referenceId, groupId.toString()),
-              eq(conversationThreads.isActive, true)
-            )
-          )
-          .limit(1);
-          
-        if (thread.length === 0) {
-          console.log(`[DEBUG] No conversation thread found for group ${groupId}`);
-          return res.json([]); // Return empty array if no thread exists
-        }
-        
-        const threadId = thread[0].id;
-        console.log(`[DEBUG] Using thread ID ${threadId} for group ${groupId}`);
-        
-        // Get messages for this specific thread
-        const messageResults = await db
-          .select()
-          .from(messagesTable)
-          .where(eq(messagesTable.threadId, threadId))
-          .orderBy(messagesTable.timestamp);
-        messages = messageResults;
-          
-        console.log(`[DEBUG] Group messages found: ${messages.length} messages for thread ${threadId}`);
-      } else if (messageContext) {
-        // For chat types, use thread-based filtering
-        const thread = await db
-          .select()
-          .from(conversationThreads)
-          .where(
-            and(
-              eq(conversationThreads.type, "chat"),
-              eq(conversationThreads.referenceId, messageContext),
-              eq(conversationThreads.isActive, true)
-            )
-          )
-          .limit(1);
-          
-        if (thread.length > 0) {
-          const threadId = thread[0].id;
-          console.log(`[DEBUG] Using thread ID ${threadId} for chat type ${messageContext}`);
-          
-          const messageResults = await db
-            .select()
-            .from(messagesTable)
-            .where(eq(messagesTable.threadId, threadId))
-            .orderBy(messagesTable.timestamp);
-          messages = messageResults;
-        } else {
-          // FIXED: Use storage layer to create thread instead of legacy committee filtering
-          console.log(`❌ CRITICAL: No thread found for chat type ${messageContext}, creating via storage layer`);
-          const threadId = await storage.getOrCreateThreadId(messageContext);
-          console.log(`✅ Created threadId ${threadId} for ${messageContext} via storage layer`);
-          messages = await storage.getMessagesByThreadId(threadId);
-        }
-      } else {
-        messages = limit
-          ? await storage.getRecentMessages(limit)
-          : await storage.getAllMessages();
-      }
-
-      // Filter out empty or blank messages
-      const filteredMessages = messages.filter(msg => 
-        msg && msg.content && msg.content.trim() !== ''
+      console.log(
+        `[DEBUG] Getting messages - conversationId: ${conversationId}, chatType: ${chatType}`,
       );
 
-      res.json(filteredMessages);
+      let messages;
+
+      if (conversationId) {
+        // Get messages for specific conversation
+        const result = await db
+          .select({
+            id: messagesTable.id,
+            content: messagesTable.content,
+            userId: messagesTable.userId,
+            conversationId: messagesTable.conversationId,
+            createdAt: messagesTable.createdAt,
+            // Join with users to get sender info
+            userFirstName: users.firstName,
+            userLastName: users.lastName,
+            userEmail: users.email,
+            userDisplayName: users.displayName,
+          })
+          .from(messagesTable)
+          .leftJoin(users, eq(messagesTable.userId, users.id))
+          .where(eq(messagesTable.conversationId, conversationId))
+          .orderBy(messagesTable.createdAt)
+          .limit(limit);
+
+        // Transform to match expected format
+        messages = result.map((msg) => ({
+          id: msg.id,
+          content: msg.content,
+          userId: msg.userId,
+          conversationId: msg.conversationId,
+          createdAt: msg.createdAt,
+          // Create sender field from user data
+          sender:
+            msg.userDisplayName ||
+            `${msg.userFirstName || ""} ${msg.userLastName || ""}`.trim() ||
+            msg.userEmail?.split("@")[0] ||
+            "Unknown User",
+          // Legacy compatibility fields
+          timestamp: msg.createdAt,
+          committee: chatType || "general",
+        }));
+      } else if (chatType) {
+        // Handle chat types by finding/creating appropriate conversation
+        let conversation;
+
+        // Try to find existing conversation for this chat type
+        const existingConversations = await db
+          .select()
+          .from(conversations)
+          .where(
+            and(
+              eq(conversations.type, "channel"),
+              eq(conversations.name, chatType),
+            ),
+          );
+
+        if (existingConversations.length > 0) {
+          conversation = existingConversations[0];
+        } else {
+          // Create new conversation for this chat type
+          const newConversations = await db
+            .insert(conversations)
+            .values({
+              type: "channel",
+              name: chatType,
+            })
+            .returning();
+          conversation = newConversations[0];
+        }
+
+        // Get messages for this conversation
+        const result = await db
+          .select({
+            id: messagesTable.id,
+            content: messagesTable.content,
+            userId: messagesTable.userId,
+            conversationId: messagesTable.conversationId,
+            createdAt: messagesTable.createdAt,
+            userFirstName: users.firstName,
+            userLastName: users.lastName,
+            userEmail: users.email,
+            userDisplayName: users.displayName,
+          })
+          .from(messagesTable)
+          .leftJoin(users, eq(messagesTable.userId, users.id))
+          .where(eq(messagesTable.conversationId, conversation.id))
+          .orderBy(messagesTable.createdAt)
+          .limit(limit);
+
+        messages = result.map((msg) => ({
+          id: msg.id,
+          content: msg.content,
+          userId: msg.userId,
+          conversationId: msg.conversationId,
+          createdAt: msg.createdAt,
+          sender:
+            msg.userDisplayName ||
+            `${msg.userFirstName || ""} ${msg.userLastName || ""}`.trim() ||
+            msg.userEmail?.split("@")[0] ||
+            "Unknown User",
+          timestamp: msg.createdAt,
+          committee: chatType,
+        }));
+      } else {
+        // Get recent messages from all conversations
+        const result = await db
+          .select({
+            id: messagesTable.id,
+            content: messagesTable.content,
+            userId: messagesTable.userId,
+            conversationId: messagesTable.conversationId,
+            createdAt: messagesTable.createdAt,
+            userFirstName: users.firstName,
+            userLastName: users.lastName,
+            userEmail: users.email,
+            userDisplayName: users.displayName,
+          })
+          .from(messagesTable)
+          .leftJoin(users, eq(messagesTable.userId, users.id))
+          .orderBy(desc(messagesTable.createdAt))
+          .limit(limit);
+
+        messages = result.map((msg) => ({
+          id: msg.id,
+          content: msg.content,
+          userId: msg.userId,
+          conversationId: msg.conversationId,
+          createdAt: msg.createdAt,
+          sender:
+            msg.userDisplayName ||
+            `${msg.userFirstName || ""} ${msg.userLastName || ""}`.trim() ||
+            msg.userEmail?.split("@")[0] ||
+            "Unknown User",
+          timestamp: msg.createdAt,
+          committee: "general",
+        }));
+      }
+
+      console.log(`[DEBUG] Returning ${messages.length} messages`);
+      res.json(messages);
     } catch (error) {
       console.error("Error fetching messages:", error);
       res.status(500).json({ message: "Failed to fetch messages" });
     }
   });
 
-  app.post("/api/messages", requirePermission("send_messages"), async (req, res) => {
-    try {
-      const messageData = insertMessageSchema.parse(req.body);
-      // Add user ID to message data if user is authenticated
-      // ENHANCED: Add debug logging for message creation
-      const messageWithUser = {
-        ...messageData,
-        userId: req.user?.id || null,
-      };
-      console.log(`📤 CREATING MESSAGE: committee=${messageData.committee}, threadId=${messageData.threadId}, userId=${req.user?.id}`);
-      const message = await storage.createMessage(messageWithUser);
-      console.log(`✅ MESSAGE CREATED: id=${message.id}, threadId=${message.threadId}`);
-      
-      // Broadcast new message notification to connected clients  
-      if (typeof (global as any).broadcastNewMessage === 'function') {
-        await (global as any).broadcastNewMessage(message);
+  app.post(
+    "/api/messages",
+    requirePermission("send_messages"),
+    async (req, res) => {
+      try {
+        const messageData = insertMessageSchema.parse(req.body);
+        // Add user ID to message data if user is authenticated
+        // ENHANCED: Add debug logging for message creation
+        const messageWithUser = {
+          ...messageData,
+          userId: req.user?.id || null,
+        };
+        console.log(
+          `📤 CREATING MESSAGE: committee=${messageData.committee}, threadId=${messageData.threadId}, userId=${req.user?.id}`,
+        );
+        const message = await storage.createMessage(messageWithUser);
+        console.log(
+          `✅ MESSAGE CREATED: id=${message.id}, threadId=${message.threadId}`,
+        );
+
+        // Broadcast new message notification to connected clients
+        if (typeof (global as any).broadcastNewMessage === "function") {
+          await (global as any).broadcastNewMessage(message);
+        }
+
+        res.status(201).json(message);
+      } catch (error) {
+        res.status(400).json({ message: "Invalid message data" });
       }
-      
-      res.status(201).json(message);
-    } catch (error) {
-      res.status(400).json({ message: "Invalid message data" });
-    }
-  });
+    },
+  );
 
   // REMOVED OLD ENDPOINT - using new conversation system instead
 
-  app.delete("/api/messages/:id", requirePermission("send_messages"), async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
+  app.delete(
+    "/api/messages/:id",
+    requirePermission("send_messages"),
+    async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
 
-      // Check if user is authenticated
-      if (!req.user?.id) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
+        // Check if user is authenticated
+        if (!req.user?.id) {
+          return res.status(401).json({ message: "Authentication required" });
+        }
 
-      // Get message to check ownership
-      const message = await storage.getMessageById(id);
-      if (!message) {
-        return res.status(404).json({ message: "Message not found" });
-      }
+        // Get message to check ownership
+        const message = await storage.getMessageById(id);
+        if (!message) {
+          return res.status(404).json({ message: "Message not found" });
+        }
 
-      // Check if user owns the message or has admin privileges
-      const user = req.user as any;
-      const isOwner = message.userId === user.id;
-      const isSuperAdmin = user.role === "super_admin";
-      const isAdmin = user.role === "admin";
-      const hasModeratePermission = user.permissions?.includes("moderate_messages");
-      
-      if (!isOwner && !isSuperAdmin && !isAdmin && !hasModeratePermission) {
-        return res
-          .status(403)
-          .json({ message: "You can only delete your own messages" });
-      }
+        // Check if user owns the message or has admin privileges
+        const user = req.user as any;
+        const isOwner = message.userId === user.id;
+        const isSuperAdmin = user.role === "super_admin";
+        const isAdmin = user.role === "admin";
+        const hasModeratePermission =
+          user.permissions?.includes("moderate_messages");
 
-      const deleted = await storage.deleteMessage(id);
-      if (!deleted) {
-        return res.status(404).json({ message: "Message not found" });
+        if (!isOwner && !isSuperAdmin && !isAdmin && !hasModeratePermission) {
+          return res
+            .status(403)
+            .json({ message: "You can only delete your own messages" });
+        }
+
+        const deleted = await storage.deleteMessage(id);
+        if (!deleted) {
+          return res.status(404).json({ message: "Message not found" });
+        }
+        res.status(204).send();
+      } catch (error) {
+        logger.error("Failed to delete message", error);
+        res.status(500).json({ message: "Failed to delete message" });
       }
-      res.status(204).send();
-    } catch (error) {
-      logger.error("Failed to delete message", error);
-      res.status(500).json({ message: "Failed to delete message" });
-    }
-  });
+    },
+  );
 
   // Notifications & Celebrations
   app.get("/api/notifications/:userId", async (req, res) => {
@@ -1018,7 +1066,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             completeTotalSandwiches: individualTotal + groupTotal,
           };
         },
-        60000 // Cache for 1 minute since this data doesn't change frequently
+        60000, // Cache for 1 minute since this data doesn't change frequently
       );
 
       res.json(stats);
@@ -1063,10 +1111,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const collectionData = insertSandwichCollectionSchema.parse(req.body);
         const collection =
           await storage.createSandwichCollection(collectionData);
-        
+
         // Invalidate cache when new collection is created
         QueryOptimizer.invalidateCache("sandwich-collections");
-        
+
         res.status(201).json(collection);
       } catch (error) {
         if (error instanceof z.ZodError) {
@@ -1096,10 +1144,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (!collection) {
           return res.status(404).json({ message: "Collection not found" });
         }
-        
+
         // Invalidate cache when collection is updated
         QueryOptimizer.invalidateCache("sandwich-collections");
-        
+
         res.json(collection);
       } catch (error) {
         logger.error("Failed to update sandwich collection", error);
@@ -1123,10 +1171,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (!collection) {
           return res.status(404).json({ message: "Collection not found" });
         }
-        
+
         // Invalidate cache when collection is updated
         QueryOptimizer.invalidateCache("sandwich-collections");
-        
+
         res.json(collection);
       } catch (error) {
         logger.error("Failed to patch sandwich collection", error);
@@ -1354,15 +1402,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (isNaN(id)) {
           return res.status(400).json({ message: "Invalid collection ID" });
         }
-        
+
         const deleted = await storage.deleteSandwichCollection(id);
         if (!deleted) {
           return res.status(404).json({ message: "Collection not found" });
         }
-        
+
         // Invalidate cache when collection is deleted
         QueryOptimizer.invalidateCache("sandwich-collections");
-        
+
         res.status(204).send();
       } catch (error) {
         logger.error("Failed to delete sandwich collection", error);
@@ -2576,21 +2624,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
-      
+
       // Log the update data for debugging
-      console.log(`Updating driver ${id} with data:`, JSON.stringify(updates, null, 2));
-      
+      console.log(
+        `Updating driver ${id} with data:`,
+        JSON.stringify(updates, null, 2),
+      );
+
       // Validate that we have some updates to apply
       if (!updates || Object.keys(updates).length === 0) {
         return res.status(400).json({ message: "No updates provided" });
       }
-      
+
       const driver = await storage.updateDriver(id, updates);
       if (!driver) {
         return res.status(404).json({ message: "Driver not found" });
       }
-      
-      console.log(`Driver ${id} updated successfully:`, JSON.stringify(driver, null, 2));
+
+      console.log(
+        `Driver ${id} updated successfully:`,
+        JSON.stringify(driver, null, 2),
+      );
       res.json(driver);
     } catch (error) {
       logger.error("Failed to update driver", error);
@@ -2603,12 +2657,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       console.log(`Deleting driver ${id}`);
-      
+
       const success = await storage.deleteDriver(id);
       if (!success) {
         return res.status(404).json({ message: "Driver not found" });
       }
-      
+
       console.log(`Driver ${id} deleted successfully`);
       res.json({ message: "Driver deleted successfully" });
     } catch (error) {
@@ -2788,91 +2842,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/hosts/:id", requirePermission("edit_data"), async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const updates = req.body;
+  app.put(
+    "/api/hosts/:id",
+    requirePermission("edit_data"),
+    async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
+        const updates = req.body;
 
-      // Get current host info
-      const currentHost = await storage.getHost(id);
-      if (!currentHost) {
-        return res.status(404).json({ message: "Host not found" });
-      }
-
-      console.log("Host update request:", {
-        currentHostName: currentHost.name,
-        newName: updates.name,
-      });
-
-      // Check if this is a location reassignment (when the host name matches an existing host)
-      const allHosts = await storage.getAllHosts();
-      const targetHost = allHosts.find(
-        (h) =>
-          h.id !== id &&
-          h.name.toLowerCase().trim() === updates.name.toLowerCase().trim(),
-      );
-
-      if (targetHost) {
-        console.log(
-          "Reassignment detected: moving contacts from",
-          currentHost.name,
-          "to",
-          targetHost.name,
-        );
-
-        // This is a location reassignment - merge contacts to the target host
-        const contactsToMove = await storage.getHostContacts(id);
-        console.log("Moving", contactsToMove.length, "contacts");
-
-        // Update all contacts to point to the target host
-        for (const contact of contactsToMove) {
-          console.log(
-            "Moving contact:",
-            contact.name,
-            "from host",
-            id,
-            "to host",
-            targetHost.id,
-          );
-          await storage.updateHostContact(contact.id, {
-            hostId: targetHost.id,
-          });
-        }
-
-        // Update any sandwich collections that reference the old host name
-        const collectionsUpdated = await storage.updateCollectionHostNames(
-          currentHost.name,
-          targetHost.name,
-        );
-        console.log(
-          "Updated",
-          collectionsUpdated,
-          "sandwich collection records",
-        );
-
-        // Delete the original host since its contacts have been moved
-        await storage.deleteHost(id);
-        console.log("Deleted original host:", currentHost.name);
-
-        // Return the target host with success message
-        res.json({
-          ...targetHost,
-          message: `Host reassigned successfully. ${contactsToMove.length} contacts moved from "${currentHost.name}" to "${targetHost.name}".`,
-        });
-      } else {
-        // Normal host update
-        console.log("Normal host update for:", currentHost.name);
-        const host = await storage.updateHost(id, updates);
-        if (!host) {
+        // Get current host info
+        const currentHost = await storage.getHost(id);
+        if (!currentHost) {
           return res.status(404).json({ message: "Host not found" });
         }
-        res.json(host);
+
+        console.log("Host update request:", {
+          currentHostName: currentHost.name,
+          newName: updates.name,
+        });
+
+        // Check if this is a location reassignment (when the host name matches an existing host)
+        const allHosts = await storage.getAllHosts();
+        const targetHost = allHosts.find(
+          (h) =>
+            h.id !== id &&
+            h.name.toLowerCase().trim() === updates.name.toLowerCase().trim(),
+        );
+
+        if (targetHost) {
+          console.log(
+            "Reassignment detected: moving contacts from",
+            currentHost.name,
+            "to",
+            targetHost.name,
+          );
+
+          // This is a location reassignment - merge contacts to the target host
+          const contactsToMove = await storage.getHostContacts(id);
+          console.log("Moving", contactsToMove.length, "contacts");
+
+          // Update all contacts to point to the target host
+          for (const contact of contactsToMove) {
+            console.log(
+              "Moving contact:",
+              contact.name,
+              "from host",
+              id,
+              "to host",
+              targetHost.id,
+            );
+            await storage.updateHostContact(contact.id, {
+              hostId: targetHost.id,
+            });
+          }
+
+          // Update any sandwich collections that reference the old host name
+          const collectionsUpdated = await storage.updateCollectionHostNames(
+            currentHost.name,
+            targetHost.name,
+          );
+          console.log(
+            "Updated",
+            collectionsUpdated,
+            "sandwich collection records",
+          );
+
+          // Delete the original host since its contacts have been moved
+          await storage.deleteHost(id);
+          console.log("Deleted original host:", currentHost.name);
+
+          // Return the target host with success message
+          res.json({
+            ...targetHost,
+            message: `Host reassigned successfully. ${contactsToMove.length} contacts moved from "${currentHost.name}" to "${targetHost.name}".`,
+          });
+        } else {
+          // Normal host update
+          console.log("Normal host update for:", currentHost.name);
+          const host = await storage.updateHost(id, updates);
+          if (!host) {
+            return res.status(404).json({ message: "Host not found" });
+          }
+          res.json(host);
+        }
+      } catch (error) {
+        logger.error("Failed to update host", error);
+        res.status(500).json({ message: "Failed to update host" });
       }
-    } catch (error) {
-      logger.error("Failed to update host", error);
-      res.status(500).json({ message: "Failed to update host" });
-    }
-  });
+    },
+  );
 
   app.patch("/api/hosts/:id", async (req, res) => {
     console.log(`🔥 PATCH route hit for host ${req.params.id}`);
@@ -3728,17 +3786,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       } else if (format === "pdf") {
         try {
-          // Import PDFDocument from pdfkit using dynamic import  
-          const PDFKit = await import('pdfkit');
+          // Import PDFDocument from pdfkit using dynamic import
+          const PDFKit = await import("pdfkit");
           const PDFDocument = PDFKit.default;
-          
+
           // Verify PDFDocument is a constructor
-          if (typeof PDFDocument !== 'function') {
-            throw new Error('PDFDocument is not a constructor');
+          if (typeof PDFDocument !== "function") {
+            throw new Error("PDFDocument is not a constructor");
           }
-          
+
           const doc = new PDFDocument();
-          
+
           // Set response headers for PDF
           res.setHeader("Content-Type", "application/pdf");
           res.setHeader(
@@ -3753,63 +3811,102 @@ export async function registerRoutes(app: Express): Promise<Server> {
           let yPosition = 50;
 
           // Title
-          doc.fontSize(20).font('Helvetica-Bold');
+          doc.fontSize(20).font("Helvetica-Bold");
           doc.text(reportData.metadata.title, 50, yPosition);
           yPosition += 40;
 
           // Metadata
-          doc.fontSize(10).font('Helvetica');
-          doc.text(`Generated: ${new Date(reportData.metadata.generatedAt).toLocaleString()}`, 50, yPosition);
+          doc.fontSize(10).font("Helvetica");
+          doc.text(
+            `Generated: ${new Date(reportData.metadata.generatedAt).toLocaleString()}`,
+            50,
+            yPosition,
+          );
           yPosition += 15;
-          doc.text(`Date Range: ${reportData.metadata.dateRange}`, 50, yPosition);
+          doc.text(
+            `Date Range: ${reportData.metadata.dateRange}`,
+            50,
+            yPosition,
+          );
           yPosition += 15;
-          doc.text(`Total Records: ${reportData.metadata.totalRecords}`, 50, yPosition);
+          doc.text(
+            `Total Records: ${reportData.metadata.totalRecords}`,
+            50,
+            yPosition,
+          );
           yPosition += 30;
 
           // Executive Summary
-          doc.fontSize(16).font('Helvetica-Bold');
-          doc.text('Executive Summary', 50, yPosition);
+          doc.fontSize(16).font("Helvetica-Bold");
+          doc.text("Executive Summary", 50, yPosition);
           yPosition += 25;
 
-          doc.fontSize(12).font('Helvetica');
-          doc.text(`Total Sandwiches: ${reportData.summary.totalSandwiches?.toLocaleString() || 0}`, 50, yPosition);
+          doc.fontSize(12).font("Helvetica");
+          doc.text(
+            `Total Sandwiches: ${reportData.summary.totalSandwiches?.toLocaleString() || 0}`,
+            50,
+            yPosition,
+          );
           yPosition += 18;
-          doc.text(`Total Collection Entries: ${reportData.metadata.totalRecords}`, 50, yPosition);
+          doc.text(
+            `Total Collection Entries: ${reportData.metadata.totalRecords}`,
+            50,
+            yPosition,
+          );
           yPosition += 18;
           // Calculate unique hosts from the data
-          const uniqueHosts = Array.isArray(reportData.data) 
-            ? new Set(reportData.data.map(item => item.hostName).filter(Boolean)).size 
+          const uniqueHosts = Array.isArray(reportData.data)
+            ? new Set(
+                reportData.data.map((item) => item.hostName).filter(Boolean),
+              ).size
             : reportData.summary.totalHosts || 0;
           doc.text(`Unique Host Locations: ${uniqueHosts}`, 50, yPosition);
           yPosition += 18;
-          doc.text(`Date Range Covered: ${reportData.metadata.dateRange}`, 50, yPosition);
+          doc.text(
+            `Date Range Covered: ${reportData.metadata.dateRange}`,
+            50,
+            yPosition,
+          );
           yPosition += 18;
-          
+
           // Calculate averages if we have data
           if (Array.isArray(reportData.data) && reportData.data.length > 0) {
             const totalSandwiches = reportData.data.reduce((sum, record) => {
               const individual = record.individualSandwiches || 0;
-              const group = record.groupSandwiches || record.groupCollections || 0;
+              const group =
+                record.groupSandwiches || record.groupCollections || 0;
               return sum + individual + group;
             }, 0);
-            const avgPerCollection = Math.round(totalSandwiches / reportData.data.length);
-            doc.text(`Average Sandwiches per Collection: ${avgPerCollection}`, 50, yPosition);
+            const avgPerCollection = Math.round(
+              totalSandwiches / reportData.data.length,
+            );
+            doc.text(
+              `Average Sandwiches per Collection: ${avgPerCollection}`,
+              50,
+              yPosition,
+            );
             yPosition += 18;
           }
-          
+
           yPosition += 15;
 
           // Top Performers
           if (reportData.summary.topPerformers?.length > 0) {
-            doc.fontSize(16).font('Helvetica-Bold');
-            doc.text('Top Performers', 50, yPosition);
+            doc.fontSize(16).font("Helvetica-Bold");
+            doc.text("Top Performers", 50, yPosition);
             yPosition += 25;
 
-            doc.fontSize(10).font('Helvetica');
-            reportData.summary.topPerformers.slice(0, 10).forEach((performer) => {
-              doc.text(`${performer.name}: ${performer.value?.toLocaleString() || '0'} sandwiches`, 50, yPosition);
-              yPosition += 15;
-            });
+            doc.fontSize(10).font("Helvetica");
+            reportData.summary.topPerformers
+              .slice(0, 10)
+              .forEach((performer) => {
+                doc.text(
+                  `${performer.name}: ${performer.value?.toLocaleString() || "0"} sandwiches`,
+                  50,
+                  yPosition,
+                );
+                yPosition += 15;
+              });
             yPosition += 20;
           }
 
@@ -3821,21 +3918,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
               yPosition = 50;
             }
 
-            doc.fontSize(16).font('Helvetica-Bold');
-            doc.text('Sample Data Records', 50, yPosition);
+            doc.fontSize(16).font("Helvetica-Bold");
+            doc.text("Sample Data Records", 50, yPosition);
             yPosition += 25;
 
-            doc.fontSize(9).font('Helvetica');
+            doc.fontSize(9).font("Helvetica");
             const sampleData = reportData.data.slice(0, 20);
-            
+
             sampleData.forEach((record, index) => {
               if (yPosition > 720) {
                 doc.addPage();
                 yPosition = 50;
               }
-              
+
               // Handle date conversion properly
-              let date = 'Invalid Date';
+              let date = "Invalid Date";
               try {
                 if (record.collectionDate || record.date) {
                   const dateStr = record.collectionDate || record.date;
@@ -3845,80 +3942,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   }
                 }
               } catch (e) {
-                console.warn('Date parsing error for record:', record);
+                console.warn("Date parsing error for record:", record);
               }
-              
+
               const individual = record.individualSandwiches || 0;
-              const group = record.groupSandwiches || record.groupCollections || 0;
+              const group =
+                record.groupSandwiches || record.groupCollections || 0;
               const total = individual + group;
-              
-              let recordText = `${index + 1}. ${date} | ${record.hostName || 'Group Collection'} | `;
+
+              let recordText = `${index + 1}. ${date} | ${record.hostName || "Group Collection"} | `;
               recordText += `Individual: ${individual}, Group: ${group}, Total: ${total}`;
-              if (record.notes) recordText += ` | Notes: ${record.notes.substring(0, 50)}${record.notes.length > 50 ? '...' : ''}`;
-              
+              if (record.notes)
+                recordText += ` | Notes: ${record.notes.substring(0, 50)}${record.notes.length > 50 ? "..." : ""}`;
+
               doc.text(recordText, 50, yPosition);
               yPosition += 12;
             });
 
             if (reportData.data.length > 20) {
               yPosition += 10;
-              doc.fontSize(10).font('Helvetica-Oblique');
-              doc.text(`Note: Showing first 20 of ${reportData.data.length} total records. Download CSV format for complete data.`, 50, yPosition);
+              doc.fontSize(10).font("Helvetica-Oblique");
+              doc.text(
+                `Note: Showing first 20 of ${reportData.data.length} total records. Download CSV format for complete data.`,
+                50,
+                yPosition,
+              );
             }
-            
+
             yPosition += 30;
           }
-          
+
           // Add a comprehensive data table if we have space
-          if (Array.isArray(reportData.data) && reportData.data.length > 0 && yPosition < 600) {
+          if (
+            Array.isArray(reportData.data) &&
+            reportData.data.length > 0 &&
+            yPosition < 600
+          ) {
             if (yPosition > 650) {
               doc.addPage();
               yPosition = 50;
             }
-            
-            doc.fontSize(14).font('Helvetica-Bold');
-            doc.text('Collection Summary Table', 50, yPosition);
+
+            doc.fontSize(14).font("Helvetica-Bold");
+            doc.text("Collection Summary Table", 50, yPosition);
             yPosition += 25;
-            
+
             // Table headers
-            doc.fontSize(9).font('Helvetica-Bold');
-            doc.text('Date', 50, yPosition);
-            doc.text('Host/Group', 120, yPosition);
-            doc.text('Individual', 280, yPosition);
-            doc.text('Group', 340, yPosition);
-            doc.text('Total', 400, yPosition);
-            doc.text('Notes', 450, yPosition);
+            doc.fontSize(9).font("Helvetica-Bold");
+            doc.text("Date", 50, yPosition);
+            doc.text("Host/Group", 120, yPosition);
+            doc.text("Individual", 280, yPosition);
+            doc.text("Group", 340, yPosition);
+            doc.text("Total", 400, yPosition);
+            doc.text("Notes", 450, yPosition);
             yPosition += 15;
-            
+
             // Line under headers
             doc.moveTo(50, yPosition).lineTo(550, yPosition).stroke();
             yPosition += 10;
-            
+
             // Table data (first 15 records for space)
-            doc.fontSize(8).font('Helvetica');
+            doc.fontSize(8).font("Helvetica");
             const tableData = reportData.data.slice(0, 15);
-            
+
             tableData.forEach((record, index) => {
               if (yPosition > 720) {
                 doc.addPage();
                 yPosition = 50;
-                
+
                 // Reprint headers on new page
-                doc.fontSize(9).font('Helvetica-Bold');
-                doc.text('Date', 50, yPosition);
-                doc.text('Host/Group', 120, yPosition);
-                doc.text('Individual', 280, yPosition);
-                doc.text('Group', 340, yPosition);
-                doc.text('Total', 400, yPosition);
-                doc.text('Notes', 450, yPosition);
+                doc.fontSize(9).font("Helvetica-Bold");
+                doc.text("Date", 50, yPosition);
+                doc.text("Host/Group", 120, yPosition);
+                doc.text("Individual", 280, yPosition);
+                doc.text("Group", 340, yPosition);
+                doc.text("Total", 400, yPosition);
+                doc.text("Notes", 450, yPosition);
                 yPosition += 15;
                 doc.moveTo(50, yPosition).lineTo(550, yPosition).stroke();
                 yPosition += 10;
-                doc.fontSize(8).font('Helvetica');
+                doc.fontSize(8).font("Helvetica");
               }
-              
+
               // Handle date conversion properly
-              let date = 'Invalid Date';
+              let date = "Invalid Date";
               try {
                 if (record.collectionDate || record.date) {
                   const dateStr = record.collectionDate || record.date;
@@ -3928,15 +4035,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   }
                 }
               } catch (e) {
-                console.warn('Date parsing error for record:', record);
+                console.warn("Date parsing error for record:", record);
               }
-              
+
               const individual = record.individualSandwiches || 0;
-              const group = record.groupSandwiches || record.groupCollections || 0;
+              const group =
+                record.groupSandwiches || record.groupCollections || 0;
               const total = individual + group;
-              const hostName = (record.hostName || 'Group Collection').substring(0, 20);
-              const notes = (record.notes || '').substring(0, 15);
-              
+              const hostName = (
+                record.hostName || "Group Collection"
+              ).substring(0, 20);
+              const notes = (record.notes || "").substring(0, 15);
+
               doc.text(date, 50, yPosition);
               doc.text(hostName, 120, yPosition);
               doc.text(individual.toString(), 290, yPosition);
@@ -3951,16 +4061,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const pages = doc.bufferedPageRange();
           for (let i = 0; i < pages.count; i++) {
             doc.switchToPage(i);
-            doc.fontSize(8).font('Helvetica');
-            doc.text(`Page ${i + 1} of ${pages.count}`, 50, doc.page.height - 30);
-            doc.text('The Sandwich Project - Report', doc.page.width - 200, doc.page.height - 30);
+            doc.fontSize(8).font("Helvetica");
+            doc.text(
+              `Page ${i + 1} of ${pages.count}`,
+              50,
+              doc.page.height - 30,
+            );
+            doc.text(
+              "The Sandwich Project - Report",
+              doc.page.width - 200,
+              doc.page.height - 30,
+            );
           }
 
           // Finalize the PDF
           doc.end();
-
         } catch (error) {
-          console.error('PDF generation error:', error);
+          console.error("PDF generation error:", error);
           // Fallback to enhanced CSV if PDF fails
           res.setHeader("Content-Type", "text/csv");
           res.setHeader(
@@ -3975,10 +4092,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           if (Array.isArray(reportData.data) && reportData.data.length > 0) {
             const headers = Object.keys(reportData.data[0]);
-            csvContent += headers.join(',') + '\n';
-            reportData.data.forEach(row => {
-              const values = headers.map(h => `"${row[h] || ''}"`);
-              csvContent += values.join(',') + '\n';
+            csvContent += headers.join(",") + "\n";
+            reportData.data.forEach((row) => {
+              const values = headers.map((h) => `"${row[h] || ""}"`);
+              csvContent += values.join(",") + "\n";
             });
           }
 
@@ -4588,9 +4705,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // Message notification routes
-  app.get("/api/messages/unread-counts", isAuthenticated, messageNotificationRoutes.getUnreadCounts);
-  app.post("/api/messages/mark-read", isAuthenticated, messageNotificationRoutes.markMessagesRead);
-  app.post("/api/messages/mark-all-read", isAuthenticated, messageNotificationRoutes.markAllRead);
+  app.get(
+    "/api/messages/unread-counts",
+    isAuthenticated,
+    messageNotificationRoutes.getUnreadCounts,
+  );
+  app.post(
+    "/api/messages/mark-read",
+    isAuthenticated,
+    messageNotificationRoutes.markMessagesRead,
+  );
+  app.post(
+    "/api/messages/mark-all-read",
+    isAuthenticated,
+    messageNotificationRoutes.markAllRead,
+  );
 
   // Announcement routes
   app.get("/api/announcements", async (req, res) => {
@@ -4610,14 +4739,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     async (req: any, res) => {
       try {
         console.log("Received announcement data:", req.body);
-        
+
         // Convert ISO strings to Date objects for validation
         const processedData = {
           ...req.body,
           startDate: new Date(req.body.startDate),
-          endDate: new Date(req.body.endDate)
+          endDate: new Date(req.body.endDate),
         };
-        
+
         const result = insertAnnouncementSchema.safeParse(processedData);
         if (!result.success) {
           console.log("Validation errors:", result.error.errors);
@@ -4644,7 +4773,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const id = parseInt(req.params.id);
         const updates = { ...req.body };
-        
+
         // Convert ISO strings to Date objects if present
         if (updates.startDate) {
           updates.startDate = new Date(updates.startDate);
@@ -4688,22 +4817,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // Message notification routes
-  app.get("/api/messages/unread-counts", isAuthenticated, messageNotificationRoutes.getUnreadCounts);
-  app.post("/api/messages/mark-read", isAuthenticated, messageNotificationRoutes.markMessagesRead);
-  app.post("/api/messages/mark-all-read", isAuthenticated, messageNotificationRoutes.markAllRead);
+  app.get(
+    "/api/messages/unread-counts",
+    isAuthenticated,
+    messageNotificationRoutes.getUnreadCounts,
+  );
+  app.post(
+    "/api/messages/mark-read",
+    isAuthenticated,
+    messageNotificationRoutes.markMessagesRead,
+  );
+  app.post(
+    "/api/messages/mark-all-read",
+    isAuthenticated,
+    messageNotificationRoutes.markAllRead,
+  );
 
   // Custom Message Groups API
   app.get("/api/message-groups", isAuthenticated, async (req, res) => {
     try {
       const userId = (req as any).user?.id;
       const user = (req as any).user;
-      
+
       // Check if user has moderation permissions (super_admin or admin with moderate_messages)
-      const canModerateMessages = user.role === 'super_admin' || 
-        (user.permissions && user.permissions.includes('moderate_messages'));
-      
+      const canModerateMessages =
+        user.role === "super_admin" ||
+        (user.permissions && user.permissions.includes("moderate_messages"));
+
       let userGroups;
-      
+
       if (canModerateMessages) {
         // Super admins and moderators see ALL group conversations
         userGroups = await db
@@ -4714,10 +4856,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             createdBy: sql<string>`null`, // No createdBy field in conversations table
             isActive: sql<boolean>`true`, // All conversations are active by default
             createdAt: conversations.createdAt,
-            userRole: sql<string>`'moderator'` // Mark as moderator role for super admins
+            userRole: sql<string>`'moderator'`, // Mark as moderator role for super admins
           })
           .from(conversations)
-          .where(eq(conversations.type, 'group'));
+          .where(eq(conversations.type, "group"));
       } else {
         // Regular users only see group conversations where they are participants
         userGroups = await db
@@ -4728,15 +4870,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
             createdBy: sql<string>`null`, // No createdBy field in conversations table
             isActive: sql<boolean>`true`, // All conversations are active by default
             createdAt: conversations.createdAt,
-            userRole: sql<string>`'member'` // Regular participants are members
+            userRole: sql<string>`'member'`, // Regular participants are members
           })
           .from(conversations)
-          .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+          .innerJoin(
+            conversationParticipants,
+            eq(conversations.id, conversationParticipants.conversationId),
+          )
           .where(
             and(
-              eq(conversations.type, 'group'),
-              eq(conversationParticipants.userId, userId)
-            )
+              eq(conversations.type, "group"),
+              eq(conversationParticipants.userId, userId),
+            ),
           );
       }
 
@@ -4747,14 +4892,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .select({ count: sql<number>`count(*)` })
             .from(conversationParticipants)
             .where(eq(conversationParticipants.conversationId, group.id));
-          
+
           return {
             ...group,
-            memberCount: memberCount[0]?.count || 0
+            memberCount: memberCount[0]?.count || 0,
           };
-        })
+        }),
       );
-      
+
       res.json(groupsWithCounts);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch message groups" });
@@ -4765,79 +4910,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { name, description, memberIds } = req.body;
       const userId = (req as any).user?.id;
-      
+
       if (!name?.trim()) {
         return res.status(400).json({ message: "Group name is required" });
       }
-      
+
       // Create the group
-      const [group] = await db.insert(messageGroups).values({
-        name: name.trim(),
-        description: description?.trim() || null,
-        createdBy: userId,
-      }).returning();
-      
+      const [group] = await db
+        .insert(messageGroups)
+        .values({
+          name: name.trim(),
+          description: description?.trim() || null,
+          createdBy: userId,
+        })
+        .returning();
+
       // Create a conversation thread for this group
-      const [thread] = await db.insert(conversationThreads).values({
-        type: 'group',
-        referenceId: group.id.toString(),
-        title: name.trim(),
-        isActive: true,
-        createdBy: userId
-      }).returning();
-      
-      console.log(`[DEBUG] Created thread ${thread.id} for group ${group.id} (${name})`);
-      
+      const [thread] = await db
+        .insert(conversationThreads)
+        .values({
+          type: "group",
+          referenceId: group.id.toString(),
+          title: name.trim(),
+          isActive: true,
+          createdBy: userId,
+        })
+        .returning();
+
+      console.log(
+        `[DEBUG] Created thread ${thread.id} for group ${group.id} (${name})`,
+      );
+
       // Add creator as admin to group membership
       await db.insert(groupMemberships).values({
         groupId: group.id,
         userId: userId,
-        role: 'admin'
+        role: "admin",
       });
-      
+
       // Add creator as participant to thread
       await db.insert(groupMessageParticipants).values({
         threadId: thread.id,
         userId: userId,
-        status: 'active',
-        joinedAt: new Date()
+        status: "active",
+        joinedAt: new Date(),
       });
-      
+
       // Add other members to both group and thread
       if (memberIds && Array.isArray(memberIds)) {
         const memberships = memberIds
-          .filter(id => id !== userId) // Don't duplicate creator
-          .map(memberId => ({
+          .filter((id) => id !== userId) // Don't duplicate creator
+          .map((memberId) => ({
             groupId: group.id,
             userId: memberId,
-            role: 'member' as const
+            role: "member" as const,
           }));
-        
+
         const participants = memberIds
-          .filter(id => id !== userId) // Don't duplicate creator
-          .map(memberId => ({
+          .filter((id) => id !== userId) // Don't duplicate creator
+          .map((memberId) => ({
             threadId: thread.id,
             userId: memberId,
-            status: 'active' as const,
-            joinedAt: new Date()
+            status: "active" as const,
+            joinedAt: new Date(),
           }));
-        
+
         if (memberships.length > 0) {
           await db.insert(groupMemberships).values(memberships);
           await db.insert(groupMessageParticipants).values(participants);
         }
       }
-      
+
       // Send welcome message notification
       if ((global as any).broadcastNewMessage) {
         (global as any).broadcastNewMessage({
           content: `Welcome to ${name}! This group has been created for team collaboration.`,
-          sender: 'System',
+          sender: "System",
           threadId: thread.id,
-          timestamp: new Date()
+          timestamp: new Date(),
         });
       }
-      
+
       res.status(201).json({ ...group, threadId: thread.id });
     } catch (error) {
       console.error("Error creating message group:", error);
@@ -4846,659 +4999,821 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Add members to existing group
-  app.post("/api/message-groups/:groupId/members", isAuthenticated, async (req, res) => {
-    console.log(`[DEBUG] POST /api/message-groups/:groupId/members called with:`, {
-      groupId: req.params.groupId,
-      body: req.body,
-      user: (req as any).user?.id
-    });
-    try {
-      const groupId = parseInt(req.params.groupId);
-      const { memberIds } = req.body;
-      const currentUser = (req as any).user;
-      const userId = currentUser?.id;
-      
-      console.log(`[DEBUG] Processing request: groupId=${groupId}, memberIds=`, memberIds, `user=${userId}, role=${currentUser?.role}`);
-      
-      // Check if conversation exists and is a group
-      const [conversation] = await db
-        .select()
-        .from(conversations)
-        .where(and(
-          eq(conversations.id, groupId),
-          eq(conversations.type, 'group')
-        ));
-      
-      if (!conversation) {
-        return res.status(404).json({ message: "Group conversation not found" });
+  app.post(
+    "/api/message-groups/:groupId/members",
+    isAuthenticated,
+    async (req, res) => {
+      console.log(
+        `[DEBUG] POST /api/message-groups/:groupId/members called with:`,
+        {
+          groupId: req.params.groupId,
+          body: req.body,
+          user: (req as any).user?.id,
+        },
+      );
+      try {
+        const groupId = parseInt(req.params.groupId);
+        const { memberIds } = req.body;
+        const currentUser = (req as any).user;
+        const userId = currentUser?.id;
+
+        console.log(
+          `[DEBUG] Processing request: groupId=${groupId}, memberIds=`,
+          memberIds,
+          `user=${userId}, role=${currentUser?.role}`,
+        );
+
+        // Check if conversation exists and is a group
+        const [conversation] = await db
+          .select()
+          .from(conversations)
+          .where(
+            and(eq(conversations.id, groupId), eq(conversations.type, "group")),
+          );
+
+        if (!conversation) {
+          return res
+            .status(404)
+            .json({ message: "Group conversation not found" });
+        }
+
+        // Allow super_admin, admin, or existing participants to add members
+        const isAdmin =
+          currentUser?.role === "super_admin" || currentUser?.role === "admin";
+
+        let canAddMembers = isAdmin;
+        if (!isAdmin) {
+          // Check if user is a participant in this conversation
+          const [participant] = await db
+            .select()
+            .from(conversationParticipants)
+            .where(
+              and(
+                eq(conversationParticipants.conversationId, groupId),
+                eq(conversationParticipants.userId, userId),
+              ),
+            );
+          canAddMembers = !!participant;
+        }
+
+        console.log(`[DEBUG] Can add members: ${canAddMembers}`);
+
+        if (!canAddMembers) {
+          return res
+            .status(403)
+            .json({ message: "Not authorized to add members to this group" });
+        }
+
+        if (!memberIds || !Array.isArray(memberIds) || memberIds.length === 0) {
+          return res.status(400).json({ message: "Member IDs are required" });
+        }
+
+        // Get existing members to avoid duplicates
+        const existingMembers = await db
+          .select({ userId: conversationParticipants.userId })
+          .from(conversationParticipants)
+          .where(eq(conversationParticipants.conversationId, groupId));
+
+        const existingMemberIds = existingMembers.map((m) => m.userId);
+        const newMemberIds = memberIds.filter(
+          (id) => !existingMemberIds.includes(id),
+        );
+
+        console.log(
+          `[DEBUG] Existing members: ${existingMemberIds.length}, New members to add: ${newMemberIds.length}`,
+        );
+
+        if (newMemberIds.length === 0) {
+          return res
+            .status(400)
+            .json({ message: "All selected users are already members" });
+        }
+
+        // Add new members to conversation
+        const newParticipants = newMemberIds.map((memberId) => ({
+          conversationId: groupId,
+          userId: memberId,
+        }));
+
+        await db.insert(conversationParticipants).values(newParticipants);
+
+        console.log(
+          `[DEBUG] Successfully added ${newMemberIds.length} new members to conversation ${groupId}`,
+        );
+
+        res.json({
+          message: "Members added successfully",
+          addedCount: newMemberIds.length,
+          addedMembers: newMemberIds,
+        });
+      } catch (error) {
+        console.error(`[ERROR] Failed to add members to group:`, error);
+        res.status(500).json({
+          message: "Failed to add members to group",
+          details: error.message,
+        });
       }
-      
-      // Allow super_admin, admin, or existing participants to add members
-      const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'admin';
-      
-      let canAddMembers = isAdmin;
-      if (!isAdmin) {
+    },
+  );
+
+  app.get(
+    "/api/message-groups/:groupId/members",
+    isAuthenticated,
+    async (req, res) => {
+      try {
+        const groupId = parseInt(req.params.groupId);
+        const userId = (req as any).user?.id;
+        const user = (req as any).user;
+
+        console.log(
+          `[DEBUG] Fetching members for conversation ${groupId}, user ${userId}, role: ${user.role}`,
+        );
+
+        // Check if this conversation exists and is a group type
+        const [conversation] = await db
+          .select()
+          .from(conversations)
+          .where(
+            and(eq(conversations.id, groupId), eq(conversations.type, "group")),
+          );
+
+        console.log(`[DEBUG] Found conversation:`, conversation);
+
+        if (!conversation) {
+          return res
+            .status(404)
+            .json({ message: "Group conversation not found" });
+        }
+
         // Check if user is a participant in this conversation
         const [participant] = await db
           .select()
           .from(conversationParticipants)
-          .where(and(
-            eq(conversationParticipants.conversationId, groupId),
-            eq(conversationParticipants.userId, userId)
-          ));
-        canAddMembers = !!participant;
-      }
-      
-      console.log(`[DEBUG] Can add members: ${canAddMembers}`);
-      
-      if (!canAddMembers) {
-        return res.status(403).json({ message: "Not authorized to add members to this group" });
-      }
-      
-      if (!memberIds || !Array.isArray(memberIds) || memberIds.length === 0) {
-        return res.status(400).json({ message: "Member IDs are required" });
-      }
-      
-      // Get existing members to avoid duplicates
-      const existingMembers = await db
-        .select({ userId: conversationParticipants.userId })
-        .from(conversationParticipants)
-        .where(eq(conversationParticipants.conversationId, groupId));
-      
-      const existingMemberIds = existingMembers.map(m => m.userId);
-      const newMemberIds = memberIds.filter(id => !existingMemberIds.includes(id));
-      
-      console.log(`[DEBUG] Existing members: ${existingMemberIds.length}, New members to add: ${newMemberIds.length}`);
-      
-      if (newMemberIds.length === 0) {
-        return res.status(400).json({ message: "All selected users are already members" });
-      }
-      
-      // Add new members to conversation
-      const newParticipants = newMemberIds.map(memberId => ({
-        conversationId: groupId,
-        userId: memberId
-      }));
-      
-      await db.insert(conversationParticipants).values(newParticipants);
-      
-      console.log(`[DEBUG] Successfully added ${newMemberIds.length} new members to conversation ${groupId}`);
-      
-      res.json({ 
-        message: "Members added successfully", 
-        addedCount: newMemberIds.length,
-        addedMembers: newMemberIds
-      });
-    } catch (error) {
-      console.error(`[ERROR] Failed to add members to group:`, error);
-      res.status(500).json({ message: "Failed to add members to group", details: error.message });
-    }
-  });
+          .where(
+            and(
+              eq(conversationParticipants.conversationId, groupId),
+              eq(conversationParticipants.userId, userId),
+            ),
+          );
 
-  app.get("/api/message-groups/:groupId/members", isAuthenticated, async (req, res) => {
-    try {
-      const groupId = parseInt(req.params.groupId);
-      const userId = (req as any).user?.id;
-      const user = (req as any).user;
-      
-      console.log(`[DEBUG] Fetching members for conversation ${groupId}, user ${userId}, role: ${user.role}`);
-      
-      // Check if this conversation exists and is a group type
-      const [conversation] = await db
-        .select()
-        .from(conversations)
-        .where(and(
-          eq(conversations.id, groupId),
-          eq(conversations.type, 'group')
-        ));
-      
-      console.log(`[DEBUG] Found conversation:`, conversation);
-      
-      if (!conversation) {
-        return res.status(404).json({ message: "Group conversation not found" });
+        console.log(`[DEBUG] Found participant:`, participant);
+
+        // Allow super_admins, admins, or participants to view members
+        const canView =
+          user.role === "super_admin" || user.role === "admin" || participant;
+
+        console.log(`[DEBUG] Can view members:`, canView);
+
+        if (!canView) {
+          return res
+            .status(403)
+            .json({ message: "Not authorized to view group members" });
+        }
+
+        // Get all participants of this group conversation
+        const members = await db
+          .select({
+            userId: conversationParticipants.userId,
+            firstName: users.firstName,
+            lastName: users.lastName,
+            email: users.email,
+            role: users.role,
+          })
+          .from(conversationParticipants)
+          .leftJoin(users, eq(conversationParticipants.userId, users.id))
+          .where(eq(conversationParticipants.conversationId, groupId));
+
+        console.log(
+          `[DEBUG] Found ${members.length} members for conversation ${groupId}:`,
+          members,
+        );
+        res.json(members);
+      } catch (error) {
+        console.error(`[ERROR] Error fetching group members:`, error);
+        res.status(500).json({
+          message: "Failed to fetch group members",
+          details: error.message,
+        });
       }
-      
-      // Check if user is a participant in this conversation
-      const [participant] = await db
-        .select()
-        .from(conversationParticipants)
-        .where(and(
-          eq(conversationParticipants.conversationId, groupId),
-          eq(conversationParticipants.userId, userId)
-        ));
-      
-      console.log(`[DEBUG] Found participant:`, participant);
-      
-      // Allow super_admins, admins, or participants to view members
-      const canView = user.role === 'super_admin' || user.role === 'admin' || participant;
-      
-      console.log(`[DEBUG] Can view members:`, canView);
-      
-      if (!canView) {
-        return res.status(403).json({ message: "Not authorized to view group members" });
-      }
-      
-      // Get all participants of this group conversation
-      const members = await db
-        .select({
-          userId: conversationParticipants.userId,
-          firstName: users.firstName,
-          lastName: users.lastName,
-          email: users.email,
-          role: users.role
-        })
-        .from(conversationParticipants)
-        .leftJoin(users, eq(conversationParticipants.userId, users.id))
-        .where(eq(conversationParticipants.conversationId, groupId));
-      
-      console.log(`[DEBUG] Found ${members.length} members for conversation ${groupId}:`, members);
-      res.json(members);
-    } catch (error) {
-      console.error(`[ERROR] Error fetching group members:`, error);
-      res.status(500).json({ message: "Failed to fetch group members", details: error.message });
-    }
-  });
+    },
+  );
 
   // Thread Participant Management API - Individual user control over group threads
-  app.get("/api/threads/:threadId/participants", isAuthenticated, async (req, res) => {
-    try {
-      const threadId = parseInt(req.params.threadId);
-      const userId = (req as any).user?.id;
-      
-      // Verify user has access to this thread
-      const userStatus = await db
-        .select({ status: groupMessageParticipants.status })
-        .from(groupMessageParticipants)
-        .where(
-          and(
-            eq(groupMessageParticipants.threadId, threadId),
-            eq(groupMessageParticipants.userId, userId)
-          )
-        );
-      
-      if (userStatus.length === 0 || userStatus[0].status === 'left') {
-        return res.status(403).json({ message: "No access to this thread" });
-      }
-      
-      const participants = await db
-        .select({
-          userId: groupMessageParticipants.userId,
-          status: groupMessageParticipants.status,
-          joinedAt: groupMessageParticipants.joinedAt,
-          lastReadAt: groupMessageParticipants.lastReadAt,
-          firstName: users.firstName,
-          lastName: users.lastName,
-          email: users.email
-        })
-        .from(groupMessageParticipants)
-        .leftJoin(users, eq(groupMessageParticipants.userId, users.id))
-        .where(eq(groupMessageParticipants.threadId, threadId));
-      
-      res.json(participants);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch thread participants" });
-    }
-  });
+  app.get(
+    "/api/threads/:threadId/participants",
+    isAuthenticated,
+    async (req, res) => {
+      try {
+        const threadId = parseInt(req.params.threadId);
+        const userId = (req as any).user?.id;
 
-  app.patch("/api/threads/:threadId/my-status", isAuthenticated, async (req, res) => {
-    try {
-      const threadId = parseInt(req.params.threadId);
-      const userId = (req as any).user?.id;
-      const { status } = req.body;
-      
-      if (!['active', 'archived', 'left', 'muted'].includes(status)) {
-        return res.status(400).json({ message: "Invalid status" });
-      }
-      
-      // Update participant status with timestamp
-      const timestampField = status === 'left' ? 'left_at' : 
-                            status === 'archived' ? 'archived_at' : 
-                            status === 'muted' ? 'muted_at' : null;
-      
-      const updates: any = { status };
-      if (timestampField) {
-        updates[timestampField] = new Date();
-      }
-      
-      const result = await db
-        .update(groupMessageParticipants)
-        .set(updates)
-        .where(
-          and(
-            eq(groupMessageParticipants.threadId, threadId),
-            eq(groupMessageParticipants.userId, userId)
-          )
-        );
-      
-      if (result.rowCount === 0) {
-        return res.status(404).json({ message: "Participant record not found" });
-      }
-      
-      res.json({ message: `Thread status updated to ${status}`, status });
-    } catch (error) {
-      res.status(500).json({ message: "Failed to update thread status" });
-    }
-  });
+        // Verify user has access to this thread
+        const userStatus = await db
+          .select({ status: groupMessageParticipants.status })
+          .from(groupMessageParticipants)
+          .where(
+            and(
+              eq(groupMessageParticipants.threadId, threadId),
+              eq(groupMessageParticipants.userId, userId),
+            ),
+          );
 
-  app.patch("/api/threads/:threadId/mark-read", isAuthenticated, async (req, res) => {
-    try {
-      const threadId = parseInt(req.params.threadId);
-      const userId = (req as any).user?.id;
-      
-      const result = await db
-        .update(groupMessageParticipants)
-        .set({ lastReadAt: new Date() })
-        .where(
-          and(
-            eq(groupMessageParticipants.threadId, threadId),
-            eq(groupMessageParticipants.userId, userId)
-          )
-        );
-      
-      res.json({ message: "Thread marked as read" });
-    } catch (error) {
-      res.status(500).json({ message: "Failed to mark thread as read" });
-    }
-  });
+        if (userStatus.length === 0 || userStatus[0].status === "left") {
+          return res.status(403).json({ message: "No access to this thread" });
+        }
 
-  app.get("/api/threads/:threadId/my-status", isAuthenticated, async (req, res) => {
-    try {
-      const threadId = parseInt(req.params.threadId);
-      const userId = (req as any).user?.id;
-      
-      const [participant] = await db
-        .select({
-          status: groupMessageParticipants.status,
-          lastReadAt: groupMessageParticipants.lastReadAt,
-          joinedAt: groupMessageParticipants.joinedAt
-        })
-        .from(groupMessageParticipants)
-        .where(
-          and(
-            eq(groupMessageParticipants.threadId, threadId),
-            eq(groupMessageParticipants.userId, userId)
-          )
-        );
-      
-      if (!participant) {
-        return res.status(404).json({ message: "Not a participant in this thread" });
+        const participants = await db
+          .select({
+            userId: groupMessageParticipants.userId,
+            status: groupMessageParticipants.status,
+            joinedAt: groupMessageParticipants.joinedAt,
+            lastReadAt: groupMessageParticipants.lastReadAt,
+            firstName: users.firstName,
+            lastName: users.lastName,
+            email: users.email,
+          })
+          .from(groupMessageParticipants)
+          .leftJoin(users, eq(groupMessageParticipants.userId, users.id))
+          .where(eq(groupMessageParticipants.threadId, threadId));
+
+        res.json(participants);
+      } catch (error) {
+        res
+          .status(500)
+          .json({ message: "Failed to fetch thread participants" });
       }
-      
-      res.json(participant);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch thread status" });
-    }
-  });
+    },
+  );
+
+  app.patch(
+    "/api/threads/:threadId/my-status",
+    isAuthenticated,
+    async (req, res) => {
+      try {
+        const threadId = parseInt(req.params.threadId);
+        const userId = (req as any).user?.id;
+        const { status } = req.body;
+
+        if (!["active", "archived", "left", "muted"].includes(status)) {
+          return res.status(400).json({ message: "Invalid status" });
+        }
+
+        // Update participant status with timestamp
+        const timestampField =
+          status === "left"
+            ? "left_at"
+            : status === "archived"
+              ? "archived_at"
+              : status === "muted"
+                ? "muted_at"
+                : null;
+
+        const updates: any = { status };
+        if (timestampField) {
+          updates[timestampField] = new Date();
+        }
+
+        const result = await db
+          .update(groupMessageParticipants)
+          .set(updates)
+          .where(
+            and(
+              eq(groupMessageParticipants.threadId, threadId),
+              eq(groupMessageParticipants.userId, userId),
+            ),
+          );
+
+        if (result.rowCount === 0) {
+          return res
+            .status(404)
+            .json({ message: "Participant record not found" });
+        }
+
+        res.json({ message: `Thread status updated to ${status}`, status });
+      } catch (error) {
+        res.status(500).json({ message: "Failed to update thread status" });
+      }
+    },
+  );
+
+  app.patch(
+    "/api/threads/:threadId/mark-read",
+    isAuthenticated,
+    async (req, res) => {
+      try {
+        const threadId = parseInt(req.params.threadId);
+        const userId = (req as any).user?.id;
+
+        const result = await db
+          .update(groupMessageParticipants)
+          .set({ lastReadAt: new Date() })
+          .where(
+            and(
+              eq(groupMessageParticipants.threadId, threadId),
+              eq(groupMessageParticipants.userId, userId),
+            ),
+          );
+
+        res.json({ message: "Thread marked as read" });
+      } catch (error) {
+        res.status(500).json({ message: "Failed to mark thread as read" });
+      }
+    },
+  );
+
+  app.get(
+    "/api/threads/:threadId/my-status",
+    isAuthenticated,
+    async (req, res) => {
+      try {
+        const threadId = parseInt(req.params.threadId);
+        const userId = (req as any).user?.id;
+
+        const [participant] = await db
+          .select({
+            status: groupMessageParticipants.status,
+            lastReadAt: groupMessageParticipants.lastReadAt,
+            joinedAt: groupMessageParticipants.joinedAt,
+          })
+          .from(groupMessageParticipants)
+          .where(
+            and(
+              eq(groupMessageParticipants.threadId, threadId),
+              eq(groupMessageParticipants.userId, userId),
+            ),
+          );
+
+        if (!participant) {
+          return res
+            .status(404)
+            .json({ message: "Not a participant in this thread" });
+        }
+
+        res.json(participant);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch thread status" });
+      }
+    },
+  );
 
   // Updated group messages endpoint to respect individual participant status
-  app.get("/api/message-groups/:groupId/messages", isAuthenticated, async (req, res) => {
-    try {
-      const groupId = parseInt(req.params.groupId);
-      const userId = (req as any).user?.id;
-      
-      console.log(`[DEBUG] Fetching messages for group ${groupId}, user ${userId}`);
-      
+  app.get(
+    "/api/message-groups/:groupId/messages",
+    isAuthenticated,
+    async (req, res) => {
       try {
+        const groupId = parseInt(req.params.groupId);
+        const userId = (req as any).user?.id;
+
+        console.log(
+          `[DEBUG] Fetching messages for group ${groupId}, user ${userId}`,
+        );
+
+        try {
+          // Get the thread ID for this group
+          const [thread] = await db
+            .select({ threadId: conversationThreads.id })
+            .from(conversationThreads)
+            .where(
+              and(
+                eq(conversationThreads.type, "group"),
+                eq(conversationThreads.referenceId, groupId.toString()),
+                eq(conversationThreads.isActive, true),
+              ),
+            );
+
+          if (!thread) {
+            console.log(`[DEBUG] No thread found for group ${groupId}`);
+            return res.json([]);
+          }
+
+          // Check if user has access to this thread (not left)
+          const participantStatus = await db
+            .select({ status: groupMessageParticipants.status })
+            .from(groupMessageParticipants)
+            .where(
+              and(
+                eq(groupMessageParticipants.threadId, thread.threadId),
+                eq(groupMessageParticipants.userId, userId),
+              ),
+            );
+
+          if (
+            participantStatus.length === 0 ||
+            participantStatus[0].status === "left"
+          ) {
+            console.log(
+              `[DEBUG] User ${userId} has no access to thread ${thread.threadId} for group ${groupId}`,
+            );
+            return res.json([]); // Return empty array for users who left
+          }
+
+          // Get messages from the thread
+          const groupMessages = await db
+            .select()
+            .from(messagesTable)
+            .where(eq(messagesTable.threadId, thread.threadId))
+            .orderBy(messagesTable.timestamp);
+
+          console.log(
+            `[DEBUG] Found ${groupMessages.length} messages for group ${groupId} thread ${thread.threadId}`,
+          );
+          res.json(groupMessages);
+        } catch (threadError) {
+          console.log(
+            `[DEBUG] Thread system not available, falling back to conversation-based messages`,
+          );
+
+          // Fallback: try to get messages from conversations table using the groupId
+          const groupMessages = await db
+            .select({
+              id: messagesTable.id,
+              content: messagesTable.content,
+              userId: messagesTable.userId,
+              sender: messagesTable.sender,
+              timestamp: messagesTable.timestamp || messagesTable.createdAt,
+              createdAt: messagesTable.createdAt,
+            })
+            .from(messagesTable)
+            .where(eq(messagesTable.conversationId, groupId))
+            .orderBy(messagesTable.timestamp || messagesTable.createdAt);
+
+          console.log(
+            `[DEBUG] Fallback: Found ${groupMessages.length} messages for conversation ${groupId}`,
+          );
+          res.json(groupMessages);
+        }
+      } catch (error) {
+        console.error("Error fetching group messages:", error);
+        res.status(500).json({
+          message: "Failed to fetch group messages",
+          details: error.message,
+        });
+      }
+    },
+  );
+
+  // POST endpoint for sending messages to group threads
+  app.post(
+    "/api/message-groups/:groupId/messages",
+    isAuthenticated,
+    async (req, res) => {
+      try {
+        const groupId = parseInt(req.params.groupId);
+        const userId = (req as any).user?.id;
+        const { content, sender } = req.body;
+
+        if (!content?.trim()) {
+          return res
+            .status(400)
+            .json({ message: "Message content is required" });
+        }
+
         // Get the thread ID for this group
         const [thread] = await db
           .select({ threadId: conversationThreads.id })
           .from(conversationThreads)
           .where(
             and(
-              eq(conversationThreads.type, 'group'),
+              eq(conversationThreads.type, "group"),
               eq(conversationThreads.referenceId, groupId.toString()),
-              eq(conversationThreads.isActive, true)
-            )
+              eq(conversationThreads.isActive, true),
+            ),
           );
-        
+
         if (!thread) {
-          console.log(`[DEBUG] No thread found for group ${groupId}`);
-          return res.json([]);
+          return res.status(404).json({ message: "Group thread not found" });
         }
-        
-        // Check if user has access to this thread (not left)
+
+        // Check if user has access to this thread
         const participantStatus = await db
           .select({ status: groupMessageParticipants.status })
           .from(groupMessageParticipants)
           .where(
             and(
               eq(groupMessageParticipants.threadId, thread.threadId),
-              eq(groupMessageParticipants.userId, userId)
-            )
+              eq(groupMessageParticipants.userId, userId),
+            ),
           );
-        
-        if (participantStatus.length === 0 || participantStatus[0].status === 'left') {
-          console.log(`[DEBUG] User ${userId} has no access to thread ${thread.threadId} for group ${groupId}`);
-          return res.json([]); // Return empty array for users who left
+
+        if (
+          participantStatus.length === 0 ||
+          participantStatus[0].status === "left"
+        ) {
+          return res
+            .status(403)
+            .json({ message: "Not authorized to send messages to this group" });
         }
-        
-        // Get messages from the thread
-        const groupMessages = await db
-          .select()
-          .from(messagesTable)
-          .where(eq(messagesTable.threadId, thread.threadId))
-          .orderBy(messagesTable.timestamp);
-        
-        console.log(`[DEBUG] Found ${groupMessages.length} messages for group ${groupId} thread ${thread.threadId}`);
-        res.json(groupMessages);
-      } catch (threadError) {
-        console.log(`[DEBUG] Thread system not available, falling back to conversation-based messages`);
-        
-        // Fallback: try to get messages from conversations table using the groupId
-        const groupMessages = await db
-          .select({
-            id: messagesTable.id,
-            content: messagesTable.content,
-            userId: messagesTable.userId,
-            sender: messagesTable.sender,
-            timestamp: messagesTable.timestamp || messagesTable.createdAt,
-            createdAt: messagesTable.createdAt
+
+        // Insert the message
+        const [message] = await db
+          .insert(messagesTable)
+          .values({
+            content: content.trim(),
+            sender: sender || "Anonymous",
+            userId: userId,
+            threadId: thread.threadId,
+            timestamp: new Date(),
           })
-          .from(messagesTable)
-          .where(eq(messagesTable.conversationId, groupId))
-          .orderBy(messagesTable.timestamp || messagesTable.createdAt);
-        
-        console.log(`[DEBUG] Fallback: Found ${groupMessages.length} messages for conversation ${groupId}`);
-        res.json(groupMessages);
-      }
-    } catch (error) {
-      console.error("Error fetching group messages:", error);
-      res.status(500).json({ message: "Failed to fetch group messages", details: error.message });
-    }
-  });
+          .returning();
 
-  // POST endpoint for sending messages to group threads
-  app.post("/api/message-groups/:groupId/messages", isAuthenticated, async (req, res) => {
-    try {
-      const groupId = parseInt(req.params.groupId);
-      const userId = (req as any).user?.id;
-      const { content, sender } = req.body;
+        // Update thread's last message timestamp
+        await db
+          .update(conversationThreads)
+          .set({ lastMessageAt: new Date() })
+          .where(eq(conversationThreads.id, thread.threadId));
 
-      if (!content?.trim()) {
-        return res.status(400).json({ message: "Message content is required" });
-      }
-
-      // Get the thread ID for this group
-      const [thread] = await db
-        .select({ threadId: conversationThreads.id })
-        .from(conversationThreads)
-        .where(
-          and(
-            eq(conversationThreads.type, 'group'),
-            eq(conversationThreads.referenceId, groupId.toString()),
-            eq(conversationThreads.isActive, true)
-          )
+        console.log(
+          `[DEBUG] Message sent to group ${groupId} thread ${thread.threadId}`,
         );
 
-      if (!thread) {
-        return res.status(404).json({ message: "Group thread not found" });
+        // Broadcast notification via WebSocket if available
+        if (typeof (global as any).broadcastNewMessage === "function") {
+          await (global as any).broadcastNewMessage(message);
+        }
+
+        res.json(message);
+      } catch (error) {
+        console.error("Error sending group message:", error);
+        res.status(500).json({ message: "Failed to send message" });
       }
-
-      // Check if user has access to this thread
-      const participantStatus = await db
-        .select({ status: groupMessageParticipants.status })
-        .from(groupMessageParticipants)
-        .where(
-          and(
-            eq(groupMessageParticipants.threadId, thread.threadId),
-            eq(groupMessageParticipants.userId, userId)
-          )
-        );
-
-      if (participantStatus.length === 0 || participantStatus[0].status === 'left') {
-        return res.status(403).json({ message: "Not authorized to send messages to this group" });
-      }
-
-      // Insert the message
-      const [message] = await db.insert(messagesTable).values({
-        content: content.trim(),
-        sender: sender || "Anonymous",
-        userId: userId,
-        threadId: thread.threadId,
-        timestamp: new Date()
-      }).returning();
-
-      // Update thread's last message timestamp
-      await db.update(conversationThreads)
-        .set({ lastMessageAt: new Date() })
-        .where(eq(conversationThreads.id, thread.threadId));
-
-      console.log(`[DEBUG] Message sent to group ${groupId} thread ${thread.threadId}`);
-      
-      // Broadcast notification via WebSocket if available
-      if (typeof (global as any).broadcastNewMessage === 'function') {
-        await (global as any).broadcastNewMessage(message);
-      }
-
-      res.json(message);
-    } catch (error) {
-      console.error("Error sending group message:", error);
-      res.status(500).json({ message: "Failed to send message" });
-    }
-  });
-
-
+    },
+  );
 
   // Remove member from group endpoint
-  app.delete("/api/message-groups/:groupId/members/:userId", isAuthenticated, async (req, res) => {
-    console.log(`[DEBUG] DELETE /api/message-groups/:groupId/members/:userId called with:`, {
-      groupId: req.params.groupId,
-      userIdToRemove: req.params.userId,
-      requestingUser: (req as any).user?.id
-    });
-    try {
-      const groupId = parseInt(req.params.groupId);
-      const targetUserId = req.params.userId;
-      const currentUserId = (req as any).user?.id;
-      const currentUser = (req as any).user;
-      
-      console.log(`[DEBUG] Removing user ${targetUserId} from conversation ${groupId}, requested by ${currentUserId} (role: ${currentUser?.role})`);
-      
-      // Check if conversation exists and is a group
-      const [conversation] = await db
-        .select()
-        .from(conversations)
-        .where(and(
-          eq(conversations.id, groupId),
-          eq(conversations.type, 'group')
-        ));
-      
-      if (!conversation) {
-        return res.status(404).json({ message: "Group conversation not found" });
-      }
-      
-      // Allow super_admin, admin, or the user themselves to remove from conversation
-      const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'admin';
-      const isSelfRemoval = currentUserId === targetUserId;
-      
-      let canRemove = isAdmin || isSelfRemoval;
-      if (!canRemove) {
-        // Check if user is a participant (for self-removal or group admins)
-        const [participant] = await db
+  app.delete(
+    "/api/message-groups/:groupId/members/:userId",
+    isAuthenticated,
+    async (req, res) => {
+      console.log(
+        `[DEBUG] DELETE /api/message-groups/:groupId/members/:userId called with:`,
+        {
+          groupId: req.params.groupId,
+          userIdToRemove: req.params.userId,
+          requestingUser: (req as any).user?.id,
+        },
+      );
+      try {
+        const groupId = parseInt(req.params.groupId);
+        const targetUserId = req.params.userId;
+        const currentUserId = (req as any).user?.id;
+        const currentUser = (req as any).user;
+
+        console.log(
+          `[DEBUG] Removing user ${targetUserId} from conversation ${groupId}, requested by ${currentUserId} (role: ${currentUser?.role})`,
+        );
+
+        // Check if conversation exists and is a group
+        const [conversation] = await db
+          .select()
+          .from(conversations)
+          .where(
+            and(eq(conversations.id, groupId), eq(conversations.type, "group")),
+          );
+
+        if (!conversation) {
+          return res
+            .status(404)
+            .json({ message: "Group conversation not found" });
+        }
+
+        // Allow super_admin, admin, or the user themselves to remove from conversation
+        const isAdmin =
+          currentUser?.role === "super_admin" || currentUser?.role === "admin";
+        const isSelfRemoval = currentUserId === targetUserId;
+
+        let canRemove = isAdmin || isSelfRemoval;
+        if (!canRemove) {
+          // Check if user is a participant (for self-removal or group admins)
+          const [participant] = await db
+            .select()
+            .from(conversationParticipants)
+            .where(
+              and(
+                eq(conversationParticipants.conversationId, groupId),
+                eq(conversationParticipants.userId, currentUserId),
+              ),
+            );
+          canRemove = !!participant;
+        }
+
+        console.log(`[DEBUG] Can remove member: ${canRemove}`);
+
+        if (!canRemove) {
+          return res.status(403).json({
+            message: "Not authorized to remove members from this group",
+          });
+        }
+
+        // Check if target user is actually a member
+        const [targetParticipant] = await db
           .select()
           .from(conversationParticipants)
-          .where(and(
-            eq(conversationParticipants.conversationId, groupId),
-            eq(conversationParticipants.userId, currentUserId)
-          ));
-        canRemove = !!participant;
-      }
-      
-      console.log(`[DEBUG] Can remove member: ${canRemove}`);
-      
-      if (!canRemove) {
-        return res.status(403).json({ message: "Not authorized to remove members from this group" });
-      }
-      
-      // Check if target user is actually a member
-      const [targetParticipant] = await db
-        .select()
-        .from(conversationParticipants)
-        .where(and(
-          eq(conversationParticipants.conversationId, groupId),
-          eq(conversationParticipants.userId, targetUserId)
-        ));
-      
-      if (!targetParticipant) {
-        return res.status(404).json({ message: "User is not a member of this group" });
-      }
+          .where(
+            and(
+              eq(conversationParticipants.conversationId, groupId),
+              eq(conversationParticipants.userId, targetUserId),
+            ),
+          );
 
-      // Remove user from conversation participants
-      await db.delete(conversationParticipants)
-        .where(and(
-          eq(conversationParticipants.conversationId, groupId),
-          eq(conversationParticipants.userId, targetUserId)
-        ));
+        if (!targetParticipant) {
+          return res
+            .status(404)
+            .json({ message: "User is not a member of this group" });
+        }
 
-      console.log(`[DEBUG] Successfully removed user ${targetUserId} from conversation ${groupId}`);
-      res.json({ 
-        message: "Member removed successfully",
-        removedUserId: targetUserId,
-        conversationId: groupId
-      });
-    } catch (error) {
-      console.error("Error removing member from group:", error);
-      res.status(500).json({ message: "Failed to remove member" });
-    }
-  });
+        // Remove user from conversation participants
+        await db
+          .delete(conversationParticipants)
+          .where(
+            and(
+              eq(conversationParticipants.conversationId, groupId),
+              eq(conversationParticipants.userId, targetUserId),
+            ),
+          );
+
+        console.log(
+          `[DEBUG] Successfully removed user ${targetUserId} from conversation ${groupId}`,
+        );
+        res.json({
+          message: "Member removed successfully",
+          removedUserId: targetUserId,
+          conversationId: groupId,
+        });
+      } catch (error) {
+        console.error("Error removing member from group:", error);
+        res.status(500).json({ message: "Failed to remove member" });
+      }
+    },
+  );
 
   // Update member role in group (promote/demote)
-  app.patch("/api/message-groups/:groupId/members/:userId/role", isAuthenticated, async (req, res) => {
-    try {
-      const groupId = parseInt(req.params.groupId);
-      const targetUserId = req.params.userId;
-      const currentUserId = (req as any).user?.id;
-      const { role } = req.body;
-      const currentUser = (req as any).user;
+  app.patch(
+    "/api/message-groups/:groupId/members/:userId/role",
+    isAuthenticated,
+    async (req, res) => {
+      try {
+        const groupId = parseInt(req.params.groupId);
+        const targetUserId = req.params.userId;
+        const currentUserId = (req as any).user?.id;
+        const { role } = req.body;
+        const currentUser = (req as any).user;
 
-      if (!role || !['admin', 'member'].includes(role)) {
-        return res.status(400).json({ message: "Invalid role. Must be 'admin' or 'member'" });
-      }
+        if (!role || !["admin", "member"].includes(role)) {
+          return res
+            .status(400)
+            .json({ message: "Invalid role. Must be 'admin' or 'member'" });
+        }
 
-      // Platform super admin can manage any group, otherwise check group admin permission
-      const isPlatformSuperAdmin = currentUser?.role === 'super_admin';
-      
-      if (!isPlatformSuperAdmin) {
-        const membership = await db
-          .select({ role: groupMemberships.role })
-          .from(groupMemberships)
+        // Platform super admin can manage any group, otherwise check group admin permission
+        const isPlatformSuperAdmin = currentUser?.role === "super_admin";
+
+        if (!isPlatformSuperAdmin) {
+          const membership = await db
+            .select({ role: groupMemberships.role })
+            .from(groupMemberships)
+            .where(
+              and(
+                eq(groupMemberships.groupId, groupId),
+                eq(groupMemberships.userId, currentUserId),
+                eq(groupMemberships.isActive, true),
+              ),
+            );
+
+          if (membership.length === 0 || membership[0].role !== "admin") {
+            return res
+              .status(403)
+              .json({ message: "Only group admins can manage member roles" });
+          }
+        }
+
+        // Update the member's role
+        await db
+          .update(groupMemberships)
+          .set({ role })
           .where(
             and(
               eq(groupMemberships.groupId, groupId),
-              eq(groupMemberships.userId, currentUserId),
-              eq(groupMemberships.isActive, true)
-            )
+              eq(groupMemberships.userId, targetUserId),
+              eq(groupMemberships.isActive, true),
+            ),
           );
 
-        if (membership.length === 0 || membership[0].role !== 'admin') {
-          return res.status(403).json({ message: "Only group admins can manage member roles" });
-        }
-      }
-
-      // Update the member's role
-      await db.update(groupMemberships)
-        .set({ role })
-        .where(
-          and(
-            eq(groupMemberships.groupId, groupId),
-            eq(groupMemberships.userId, targetUserId),
-            eq(groupMemberships.isActive, true)
-          )
+        console.log(
+          `[DEBUG] Updated user ${targetUserId} role to ${role} in group ${groupId}`,
         );
-
-      console.log(`[DEBUG] Updated user ${targetUserId} role to ${role} in group ${groupId}`);
-      res.json({ success: true });
-    } catch (error) {
-      console.error("Error updating member role:", error);
-      res.status(500).json({ message: "Failed to update member role" });
-    }
-  });
+        res.json({ success: true });
+      } catch (error) {
+        console.error("Error updating member role:", error);
+        res.status(500).json({ message: "Failed to update member role" });
+      }
+    },
+  );
 
   // Delete entire group message thread (super admin only)
-  app.delete("/api/message-groups/:groupId", isAuthenticated, async (req, res) => {
-    try {
-      const groupId = parseInt(req.params.groupId);
-      const currentUser = (req as any).user;
+  app.delete(
+    "/api/message-groups/:groupId",
+    isAuthenticated,
+    async (req, res) => {
+      try {
+        const groupId = parseInt(req.params.groupId);
+        const currentUser = (req as any).user;
 
-      console.log(`[DEBUG] Attempting to delete group ${groupId} by user ${currentUser?.id} with role ${currentUser?.role}`);
-
-      // Only platform super admins can delete entire groups
-      if (currentUser?.role !== 'super_admin') {
-        return res.status(403).json({ message: "Only platform super admins can delete message groups" });
-      }
-
-      // Sequential deletion (Neon HTTP doesn't support transactions)
-      
-      // 1. Get the conversation thread for this group
-      const [thread] = await db
-        .select({ threadId: conversationThreads.id })
-        .from(conversationThreads)
-        .where(
-          and(
-            eq(conversationThreads.type, 'group'),
-            eq(conversationThreads.referenceId, groupId.toString()),
-            eq(conversationThreads.isActive, true)
-          )
+        console.log(
+          `[DEBUG] Attempting to delete group ${groupId} by user ${currentUser?.id} with role ${currentUser?.role}`,
         );
 
-      console.log(`[DEBUG] Found thread for group ${groupId}:`, thread);
+        // Only platform super admins can delete entire groups
+        if (currentUser?.role !== "super_admin") {
+          return res.status(403).json({
+            message: "Only platform super admins can delete message groups",
+          });
+        }
 
-      if (thread) {
-        // 2. Delete all messages in the thread (use messagesTable alias)
-        const deletedMessages = await db.delete(messagesTable)
-          .where(eq(messagesTable.threadId, thread.threadId));
-        console.log(`[DEBUG] Deleted messages in thread ${thread.threadId}`);
+        // Sequential deletion (Neon HTTP doesn't support transactions)
 
-        // 3. Delete all thread participants
-        const deletedParticipants = await db.delete(groupMessageParticipants)
-          .where(eq(groupMessageParticipants.threadId, thread.threadId));
-        console.log(`[DEBUG] Deleted participants for thread ${thread.threadId}`);
+        // 1. Get the conversation thread for this group
+        const [thread] = await db
+          .select({ threadId: conversationThreads.id })
+          .from(conversationThreads)
+          .where(
+            and(
+              eq(conversationThreads.type, "group"),
+              eq(conversationThreads.referenceId, groupId.toString()),
+              eq(conversationThreads.isActive, true),
+            ),
+          );
 
-        // 4. Mark conversation thread as inactive
-        await db.update(conversationThreads)
+        console.log(`[DEBUG] Found thread for group ${groupId}:`, thread);
+
+        if (thread) {
+          // 2. Delete all messages in the thread (use messagesTable alias)
+          const deletedMessages = await db
+            .delete(messagesTable)
+            .where(eq(messagesTable.threadId, thread.threadId));
+          console.log(`[DEBUG] Deleted messages in thread ${thread.threadId}`);
+
+          // 3. Delete all thread participants
+          const deletedParticipants = await db
+            .delete(groupMessageParticipants)
+            .where(eq(groupMessageParticipants.threadId, thread.threadId));
+          console.log(
+            `[DEBUG] Deleted participants for thread ${thread.threadId}`,
+          );
+
+          // 4. Mark conversation thread as inactive
+          await db
+            .update(conversationThreads)
+            .set({ isActive: false })
+            .where(eq(conversationThreads.id, thread.threadId));
+          console.log(`[DEBUG] Marked thread ${thread.threadId} as inactive`);
+        }
+
+        // 5. Delete all group memberships
+        const deletedMemberships = await db
+          .delete(groupMemberships)
+          .where(eq(groupMemberships.groupId, groupId));
+        console.log(`[DEBUG] Deleted memberships for group ${groupId}`);
+
+        // 6. Mark the group as inactive
+        await db
+          .update(messageGroups)
           .set({ isActive: false })
-          .where(eq(conversationThreads.id, thread.threadId));
-        console.log(`[DEBUG] Marked thread ${thread.threadId} as inactive`);
+          .where(eq(messageGroups.id, groupId));
+        console.log(`[DEBUG] Marked group ${groupId} as inactive`);
+
+        console.log(
+          `[DEBUG] Super admin successfully deleted entire group ${groupId}`,
+        );
+        res.json({ success: true, message: "Group deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting group:", error);
+        console.error("Full error details:", error.message, error.stack);
+        res
+          .status(500)
+          .json({ message: `Failed to delete group: ${error.message}` });
       }
-
-      // 5. Delete all group memberships
-      const deletedMemberships = await db.delete(groupMemberships)
-        .where(eq(groupMemberships.groupId, groupId));
-      console.log(`[DEBUG] Deleted memberships for group ${groupId}`);
-
-      // 6. Mark the group as inactive
-      await db.update(messageGroups)
-        .set({ isActive: false })
-        .where(eq(messageGroups.id, groupId));
-      console.log(`[DEBUG] Marked group ${groupId} as inactive`);
-
-      console.log(`[DEBUG] Super admin successfully deleted entire group ${groupId}`);
-      res.json({ success: true, message: "Group deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting group:", error);
-      console.error("Full error details:", error.message, error.stack);
-      res.status(500).json({ message: `Failed to delete group: ${error.message}` });
-    }
-  });
+    },
+  );
 
   // System performance monitoring endpoint
   app.get("/api/system/health", isAuthenticated, (req, res) => {
     try {
       const stats = QueryOptimizer.getCacheStats();
       const memoryUsage = process.memoryUsage();
-      
+
       res.json({
         status: "healthy",
         timestamp: new Date().toISOString(),
         cache: {
           size: stats.size,
-          activeKeys: stats.keys.length
+          activeKeys: stats.keys.length,
         },
         memory: {
           used: Math.round(memoryUsage.heapUsed / 1024 / 1024) + "MB",
-          total: Math.round(memoryUsage.heapTotal / 1024 / 1024) + "MB"
+          total: Math.round(memoryUsage.heapTotal / 1024 / 1024) + "MB",
         },
-        uptime: Math.round(process.uptime()) + "s"
+        uptime: Math.round(process.uptime()) + "s",
       });
     } catch (error) {
       res.status(500).json({ status: "error", message: "Health check failed" });
@@ -5506,57 +5821,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Register Google Sheets routes
-  app.use('/api/google-sheets', googleSheetsRoutes);
+  app.use("/api/google-sheets", googleSheetsRoutes);
+
+  // Clean messaging routes
+  setupCleanMessagingRoutes(app);
+
+  // Redirect old messaging endpoints to new clean system
+  app.get("/api/messages/:conversationId", (req, res) => {
+    res.redirect(`/api/conversations/${req.params.conversationId}/messages`);
+  });
 
   // Google Sheets sync endpoint for individual collection entries
-  app.post('/api/google-sheets/sync-entry', async (req, res) => {
+  app.post("/api/google-sheets/sync-entry", async (req, res) => {
     try {
       const { collectionData } = req.body;
-      
+
       if (!collectionData) {
-        return res.status(400).json({ error: 'Collection data is required' });
+        return res.status(400).json({ error: "Collection data is required" });
       }
 
       // Import the sync service dynamically to avoid dependency issues
-      const { GoogleSheetsSyncService } = await import('./google-sheets-sync');
-      
+      const { GoogleSheetsSyncService } = await import("./google-sheets-sync");
+
       // Create minimal storage interface for the sync
       const mockStorage = {
         getAllSandwichCollections: async () => [],
-        createSandwichCollection: async (data: any) => data
+        createSandwichCollection: async (data: any) => data,
       };
 
       const syncService = new GoogleSheetsSyncService(mockStorage);
-      
+
       // Add the entry to the ReplitDatabase sheet
       await syncService.addEntryToSheet(collectionData);
 
-      res.json({ 
-        success: true, 
-        message: 'Entry synced to Google Sheets successfully' 
+      res.json({
+        success: true,
+        message: "Entry synced to Google Sheets successfully",
       });
-
     } catch (error: any) {
-      console.error('Error syncing entry to Google Sheets:', error);
-      res.status(500).json({ 
-        error: 'Failed to sync to Google Sheets',
-        details: error.message 
+      console.error("Error syncing entry to Google Sheets:", error);
+      res.status(500).json({
+        error: "Failed to sync to Google Sheets",
+        details: error.message,
       });
     }
   });
 
   // Set up WebSocket server for real-time notifications
-  const wss = new WebSocketServer({ server: httpServer, path: '/notifications' });
+  const wss = new WebSocketServer({
+    server: httpServer,
+    path: "/notifications",
+  });
   const connectedClients = new Map<string, WebSocket[]>();
 
-  wss.on('connection', (ws: WebSocket, request) => {
-    console.log('WebSocket client connected');
-    
-    ws.on('message', (message: string) => {
+  wss.on("connection", (ws: WebSocket, request) => {
+    console.log("WebSocket client connected");
+
+    ws.on("message", (message: string) => {
       try {
         const data = JSON.parse(message);
-        
-        if (data.type === 'identify' && data.userId) {
+
+        if (data.type === "identify" && data.userId) {
           // Associate WebSocket with user ID
           if (!connectedClients.has(data.userId)) {
             connectedClients.set(data.userId, []);
@@ -5565,11 +5890,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.log(`User ${data.userId} connected via WebSocket`);
         }
       } catch (error) {
-        console.error('Error parsing WebSocket message:', error);
+        console.error("Error parsing WebSocket message:", error);
       }
     });
 
-    ws.on('close', () => {
+    ws.on("close", () => {
       // Remove WebSocket from all user associations
       for (const [userId, clients] of connectedClients.entries()) {
         const index = clients.indexOf(ws);
@@ -5584,18 +5909,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     });
 
-    ws.on('error', (error) => {
-      console.error('WebSocket error:', error);
+    ws.on("error", (error) => {
+      console.error("WebSocket error:", error);
     });
   });
 
   // Helper function to get users with access to a specific chat
-  const getUsersWithChatAccess = async (chatName: string): Promise<string[]> => {
+  const getUsersWithChatAccess = async (
+    chatName: string,
+  ): Promise<string[]> => {
     try {
       // Import chat permissions from shared utilities
-      const { CHAT_PERMISSIONS } = await import('../shared/auth-utils.js');
-      const requiredPermission = CHAT_PERMISSIONS[chatName as keyof typeof CHAT_PERMISSIONS];
-      
+      const { CHAT_PERMISSIONS } = await import("../shared/auth-utils.js");
+      const requiredPermission =
+        CHAT_PERMISSIONS[chatName as keyof typeof CHAT_PERMISSIONS];
+
       if (!requiredPermission) {
         console.log(`No permission mapping found for chat: ${chatName}`);
         return [];
@@ -5604,13 +5932,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get all users with the required permission
       const users = await storage.getAllUsers();
       const usersWithAccess = users
-        .filter(user => user.permissions && user.permissions.includes(requiredPermission))
-        .map(user => user.id);
-      
+        .filter(
+          (user) =>
+            user.permissions && user.permissions.includes(requiredPermission),
+        )
+        .map((user) => user.id);
+
       console.log(`Users with access to ${chatName} chat:`, usersWithAccess);
       return usersWithAccess;
     } catch (error) {
-      console.error('Error getting users with chat access:', error);
+      console.error("Error getting users with chat access:", error);
       return [];
     }
   };
@@ -5618,86 +5949,104 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Function to broadcast new message notifications
   const broadcastNewMessage = async (message: any) => {
     try {
-      console.log('broadcastNewMessage called with:', message);
-      console.log('Connected clients count:', connectedClients.size);
-      
+      console.log("broadcastNewMessage called with:", message);
+      console.log("Connected clients count:", connectedClients.size);
+
       const notificationData = {
-        type: 'new_message',
+        type: "new_message",
         messageId: message.id,
         sender: message.sender,
         content: message.content,
         committee: message.committee,
         timestamp: message.timestamp,
-        recipientId: message.recipientId
+        recipientId: message.recipientId,
       };
 
       // Determine who should receive this notification based on chat permissions
       let targetUsers = new Set<string>();
 
-      if (message.committee === 'direct' && message.recipientId) {
+      if (message.committee === "direct" && message.recipientId) {
         // Direct message - notify recipient only
         targetUsers.add(message.recipientId);
-        console.log('Direct message, notifying recipient:', message.recipientId);
+        console.log(
+          "Direct message, notifying recipient:",
+          message.recipientId,
+        );
       } else {
         // Committee/chat room message - notify only users with access to that specific chat
         const usersWithAccess = await getUsersWithChatAccess(message.committee);
-        
+
         for (const userId of usersWithAccess) {
           // Don't notify the sender
           if (userId !== message.userId) {
             targetUsers.add(userId);
           }
         }
-        console.log(`${message.committee} chat message, target users:`, Array.from(targetUsers));
+        console.log(
+          `${message.committee} chat message, target users:`,
+          Array.from(targetUsers),
+        );
       }
 
       // Send notifications to target users
       let sentCount = 0;
       for (const userId of targetUsers) {
         const userClients = connectedClients.get(userId);
-        console.log(`Checking user ${userId}, clients:`, userClients?.length || 0);
+        console.log(
+          `Checking user ${userId}, clients:`,
+          userClients?.length || 0,
+        );
         if (userClients) {
-          userClients.forEach(client => {
+          userClients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
-              console.log('Sending notification to client:', notificationData);
+              console.log("Sending notification to client:", notificationData);
               client.send(JSON.stringify(notificationData));
               sentCount++;
             } else {
-              console.log('Client not ready, readyState:', client.readyState);
+              console.log("Client not ready, readyState:", client.readyState);
             }
           });
         }
       }
       console.log(`Sent ${sentCount} notifications total`);
     } catch (error) {
-      console.error('Error broadcasting message notification:', error);
+      console.error("Error broadcasting message notification:", error);
     }
   };
 
   // Task assignment notification broadcasting function
   const broadcastTaskAssignment = (userId: string, notificationData: any) => {
     try {
-      console.log(`Broadcasting task assignment notification to user: ${userId}`);
+      console.log(
+        `Broadcasting task assignment notification to user: ${userId}`,
+      );
       const userClients = connectedClients.get(userId);
-      
+
       if (userClients) {
         let sentCount = 0;
-        userClients.forEach(client => {
+        userClients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
-            console.log('Sending task assignment notification to client:', notificationData);
-            client.send(JSON.stringify({
-              type: 'notification',
-              data: notificationData
-            }));
+            console.log(
+              "Sending task assignment notification to client:",
+              notificationData,
+            );
+            client.send(
+              JSON.stringify({
+                type: "notification",
+                data: notificationData,
+              }),
+            );
             sentCount++;
           }
         });
-        console.log(`Sent task assignment notification to ${sentCount} clients for user ${userId}`);
+        console.log(
+          `Sent task assignment notification to ${sentCount} clients for user ${userId}`,
+        );
       } else {
         console.log(`No connected clients found for user ${userId}`);
       }
     } catch (error) {
-      console.error('Error broadcasting task assignment notification:', error);
+      console.error("Error broadcasting task assignment notification:", error);
     }
   };
 
@@ -5713,30 +6062,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/notifications/:id/read", isAuthenticated, async (req: any, res) => {
-    try {
-      const notificationId = parseInt(req.params.id);
-      const success = await storage.markNotificationAsRead(notificationId);
-      if (!success) {
-        return res.status(404).json({ error: "Notification not found" });
+  app.patch(
+    "/api/notifications/:id/read",
+    isAuthenticated,
+    async (req: any, res) => {
+      try {
+        const notificationId = parseInt(req.params.id);
+        const success = await storage.markNotificationAsRead(notificationId);
+        if (!success) {
+          return res.status(404).json({ error: "Notification not found" });
+        }
+        res.json({ success: true });
+      } catch (error) {
+        console.error("Error marking notification as read:", error);
+        res.status(500).json({ error: "Failed to mark notification as read" });
       }
-      res.json({ success: true });
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
-      res.status(500).json({ error: "Failed to mark notification as read" });
-    }
-  });
+    },
+  );
 
-  app.patch("/api/notifications/mark-all-read", isAuthenticated, async (req: any, res) => {
-    try {
-      const user = (req as any).user; // Standardized authentication
-      const success = await storage.markAllNotificationsAsRead(user.id);
-      res.json({ success });
-    } catch (error) {
-      console.error("Error marking all notifications as read:", error);
-      res.status(500).json({ error: "Failed to mark all notifications as read" });
-    }
-  });
+  app.patch(
+    "/api/notifications/mark-all-read",
+    isAuthenticated,
+    async (req: any, res) => {
+      try {
+        const user = (req as any).user; // Standardized authentication
+        const success = await storage.markAllNotificationsAsRead(user.id);
+        res.json({ success });
+      } catch (error) {
+        console.error("Error marking all notifications as read:", error);
+        res
+          .status(500)
+          .json({ error: "Failed to mark all notifications as read" });
+      }
+    },
+  );
 
   // Legacy message endpoints - redirect to conversation system
   app.get("/api/messages", isAuthenticated, async (req, res) => {
@@ -5750,18 +6109,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let [generalConversation] = await db
         .select()
         .from(conversations)
-        .where(and(
-          eq(conversations.type, 'channel'),
-          eq(conversations.name, 'team-chat')
-        ));
+        .where(
+          and(
+            eq(conversations.type, "channel"),
+            eq(conversations.name, "team-chat"),
+          ),
+        );
 
       if (!generalConversation) {
         // Create general team chat conversation
         [generalConversation] = await db
           .insert(conversations)
           .values({
-            type: 'channel',
-            name: 'team-chat'
+            type: "channel",
+            name: "team-chat",
           })
           .returning();
       }
@@ -5774,188 +6135,135 @@ export async function registerRoutes(app: Express): Promise<Server> {
           userId: messagesTable.userId,
           sender: messagesTable.sender,
           createdAt: messagesTable.createdAt,
-          updatedAt: messagesTable.updatedAt
+          updatedAt: messagesTable.updatedAt,
         })
         .from(messagesTable)
         .where(eq(messagesTable.conversationId, generalConversation.id))
         .orderBy(asc(messagesTable.createdAt));
 
       // Transform to match expected format
-      const formattedMessages = conversationMessages.map(msg => ({
+      const formattedMessages = conversationMessages.map((msg) => ({
         id: msg.id,
         content: msg.content,
         userId: msg.userId,
-        sender: msg.sender || 'Unknown User',
+        sender: msg.sender || "Unknown User",
         timestamp: msg.createdAt,
-        committee: 'general' // For compatibility
+        committee: "general", // For compatibility
       }));
 
       res.json(formattedMessages);
     } catch (error) {
-      console.error('[API] Error fetching messages:', error);
+      console.error("[API] Error fetching messages:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
 
   app.post("/api/messages", isAuthenticated, async (req, res) => {
-    console.log('=== POST /api/messages START ===');
+    console.log("=== POST /api/messages START ===");
     try {
-      const user = (req as any).user;
-      console.log('[STEP 1] User authentication check:');
-      console.log('  - req.user exists:', !!user);
-      console.log('  - user object:', user);
-      console.log('  - user.id:', user?.id);
-      console.log('  - user.firstName:', user?.firstName);
-      console.log('  - user.lastName:', user?.lastName);
-      console.log('  - user.email:', user?.email);
-      
-      console.log('[STEP 2] Request body:');
-      console.log('  - req.body:', req.body);
-      console.log('  - content:', req.body?.content);
-      console.log('  - sender:', req.body?.sender);
-      
+      const user = req.user || req.session?.user;
+      console.log("[STEP 1] User:", user?.id, user?.firstName, user?.email);
+
       if (!user?.id) {
-        console.log('[ERROR] No user.id found, returning 401');
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      const { content, sender } = req.body;
+      const { content, chatType, conversationId } = req.body;
+      console.log("[STEP 2] Body:", { content, chatType, conversationId });
 
       if (!content || !content.trim()) {
-        console.log('[ERROR] No content provided, returning 400');
         return res.status(400).json({ message: "Message content is required" });
       }
 
-      console.log('[STEP 3] Looking for existing team-chat conversation...');
-      
-      // Get or create general team chat conversation
-      let generalConversation;
-      try {
-        const existingConversations = await db
+      // ---------- figure out the right conversation ----------
+      let targetConversationId = conversationId as number | undefined;
+
+      if (!targetConversationId && chatType) {
+        const [existing] = await db
           .select()
           .from(conversations)
-          .where(and(
-            eq(conversations.type, 'channel'),
-            eq(conversations.name, 'team-chat')
-          ));
-        
-        console.log('  - Found existing conversations:', existingConversations.length);
-        generalConversation = existingConversations[0];
-        
-        if (generalConversation) {
-          console.log('  - Using existing conversation:', generalConversation);
-        }
-      } catch (dbError) {
-        console.error('[ERROR] Database query for conversations failed:', dbError);
-        throw dbError;
+          .where(
+            and(
+              eq(conversations.type, "channel"),
+              eq(conversations.name, chatType),
+            ),
+          );
+
+        targetConversationId = existing
+          ? existing.id
+          : (
+              await db
+                .insert(conversations)
+                .values({ type: "channel", name: chatType })
+                .returning()
+            )[0].id;
       }
 
-      if (!generalConversation) {
-        console.log('[STEP 4] Creating new team-chat conversation...');
-        try {
-          const newConversationData = {
-            type: 'channel',
-            name: 'team-chat'
-          };
-          console.log('  - Conversation data to insert:', newConversationData);
-          
-          const newConversations = await db
-            .insert(conversations)
-            .values(newConversationData)
-            .returning();
-            
-          generalConversation = newConversations[0];
-          console.log('  - Created new conversation:', generalConversation);
-        } catch (dbError) {
-          console.error('[ERROR] Database insert for conversations failed:', dbError);
-          throw dbError;
-        }
+      if (!targetConversationId) {
+        const [general] = await db
+          .select()
+          .from(conversations)
+          .where(
+            and(
+              eq(conversations.type, "channel"),
+              eq(conversations.name, "general"),
+            ),
+          );
+
+        targetConversationId = general
+          ? general.id
+          : (
+              await db
+                .insert(conversations)
+                .values({ type: "channel", name: "general" })
+                .returning()
+            )[0].id;
       }
 
-      const userName = sender || `${user.firstName} ${user.lastName}` || user.email || 'Unknown User';
-      console.log('[STEP 5] Preparing message data:');
-      console.log('  - userName:', userName);
-      console.log('  - conversationId:', generalConversation.id);
-      console.log('  - userId:', user.id);
-      console.log('  - content:', content.trim());
+      // ---------- write the message ----------
+      const [inserted] = await db
+        .insert(messagesTable)
+        .values({
+          conversationId: targetConversationId,
+          userId: user.id,
+          content: content.trim(),
+        })
+        .returning();
 
-      const messageData = {
-        conversationId: generalConversation.id,
-        userId: user.id,
-        content: content.trim(),
-        sender: userName
+      const [userRow] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, user.id))
+        .limit(1);
+
+      const sender =
+        userRow?.displayName ||
+        `${userRow?.firstName || ""} ${userRow?.lastName || ""}`.trim() ||
+        userRow?.email?.split("@")[0] ||
+        "Unknown User";
+
+      const responseMessage = {
+        id: inserted.id,
+        content: inserted.content,
+        userId: inserted.userId,
+        conversationId: inserted.conversationId,
+        createdAt: inserted.createdAt,
+        sender,
+        timestamp: inserted.createdAt,
+        committee: chatType || "general",
       };
-      console.log('  - Complete message data:', messageData);
 
-      console.log('[STEP 6] Inserting message into database...');
-      let message;
-      try {
-        const insertedMessages = await db
-          .insert(messagesTable)
-          .values(messageData)
-          .returning();
-          
-        message = insertedMessages[0];
-        console.log('  - Inserted message successfully:', message);
-      } catch (dbError) {
-        console.error('[ERROR] Database insert for messages failed:', dbError);
-        console.error('  - Error details:', {
-          message: dbError.message,
-          code: dbError.code,
-          detail: dbError.detail,
-          hint: dbError.hint
-        });
-        throw dbError;
+      if (typeof (global as any).broadcastNewMessage === "function") {
+        (global as any).broadcastNewMessage(responseMessage);
       }
 
-      console.log('[STEP 7] Broadcasting message...');
-      // Broadcast via WebSocket if available
-      if (broadcastNewMessage) {
-        const broadcastData = {
-          type: 'new_message',
-          conversationId: generalConversation.id,
-          message: {
-            id: message.id,
-            content: message.content,
-            userId: message.userId,
-            sender: userName,
-            timestamp: message.createdAt,
-            committee: 'general'
-          }
-        };
-        console.log('  - Broadcasting data:', broadcastData);
-        broadcastNewMessage(broadcastData);
-      } else {
-        console.log('  - No broadcast function available');
-      }
-
-      const responseData = {
-        id: message.id,
-        content: message.content,
-        userId: message.userId,
-        sender: userName,
-        timestamp: message.createdAt,
-        committee: 'general'
-      };
-      console.log('[STEP 8] Sending response:', responseData);
-      console.log('=== POST /api/messages SUCCESS ===');
-      
-      res.json(responseData);
-    } catch (error) {
-      console.error('=== POST /api/messages ERROR ===');
-      console.error('[ERROR] Full error object:', error);
-      console.error('[ERROR] Error name:', error.name);
-      console.error('[ERROR] Error message:', error.message);
-      console.error('[ERROR] Error stack:', error.stack);
-      if (error.code) console.error('[ERROR] Error code:', error.code);
-      if (error.detail) console.error('[ERROR] Error detail:', error.detail);
-      if (error.hint) console.error('[ERROR] Error hint:', error.hint);
-      console.error('=== POST /api/messages ERROR END ===');
-      
-      res.status(500).json({ 
-        message: "Internal server error",
+      console.log("=== POST /api/messages SUCCESS ===");
+      res.json(responseMessage);
+    } catch (error: any) {
+      console.error("=== POST /api/messages ERROR ===", error);
+      res.status(500).json({
+        message: "Failed to create message",
         error: error.message,
-        details: error.detail || 'No additional details'
       });
     }
   });
@@ -5968,7 +6276,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const messageId = parseInt(req.params.id);
-      
+
       // Use storage wrapper instead of direct database access
       const message = await storage.getMessageById(messageId);
 
@@ -5978,8 +6286,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check if user can delete (owner, admin, or super admin)
       const isOwner = message.userId === user.id;
-      const isAdmin = user.role === 'admin' || user.role === 'super_admin';
-      const hasModeratePermission = user.permissions?.includes('moderate_messages');
+      const isAdmin = user.role === "admin" || user.role === "super_admin";
+      const hasModeratePermission =
+        user.permissions?.includes("moderate_messages");
 
       if (!isOwner && !isAdmin && !hasModeratePermission) {
         return res.status(403).json({ message: "Access denied" });
@@ -5987,14 +6296,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Delete the message using storage wrapper
       const deleted = await storage.deleteMessage(messageId);
-      
+
       if (!deleted) {
         return res.status(404).json({ message: "Message not found" });
       }
 
       res.status(204).send();
     } catch (error) {
-      console.error('[API] Error deleting message:', error);
+      console.error("[API] Error deleting message:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
@@ -6015,22 +6324,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: conversations.id,
           type: conversations.type,
           name: conversations.name,
-          createdAt: conversations.createdAt
+          createdAt: conversations.createdAt,
         })
         .from(conversations)
-        .leftJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+        .leftJoin(
+          conversationParticipants,
+          eq(conversations.id, conversationParticipants.conversationId),
+        )
         .where(
           or(
-            eq(conversations.type, 'channel'), // All channel conversations are accessible
-            eq(conversationParticipants.userId, user.id) // User's private conversations
-          )
+            eq(conversations.type, "channel"), // All channel conversations are accessible
+            eq(conversationParticipants.userId, user.id), // User's private conversations
+          ),
         )
-        .groupBy(conversations.id, conversations.type, conversations.name, conversations.createdAt)
+        .groupBy(
+          conversations.id,
+          conversations.type,
+          conversations.name,
+          conversations.createdAt,
+        )
         .orderBy(desc(conversations.createdAt));
 
       res.json(userConversations);
     } catch (error) {
-      console.error('[API] Error fetching conversations:', error);
+      console.error("[API] Error fetching conversations:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
@@ -6049,14 +6366,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .insert(conversations)
         .values({
           type,
-          name: name || null
+          name: name || null,
         })
         .returning();
 
       // Add participants
       const participantData = participants.map((userId: string) => ({
         conversationId: conversation.id,
-        userId
+        userId,
       }));
 
       if (participantData.length > 0) {
@@ -6065,174 +6382,191 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(conversation);
     } catch (error) {
-      console.error('[API] Error creating conversation:', error);
+      console.error("[API] Error creating conversation:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
 
-  app.get("/api/conversations/:id/messages", isAuthenticated, async (req, res) => {
-    try {
-      const user = (req as any).user;
-      if (!user?.id) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-
-      const conversationId = parseInt(req.params.id);
-
-      // Check access: participant in conversation OR channel conversations are public
-      const [conversation] = await db
-        .select({ type: conversations.type })
-        .from(conversations)
-        .where(eq(conversations.id, conversationId));
-
-      if (!conversation) {
-        return res.status(404).json({ message: "Conversation not found" });
-      }
-
-      // Channel conversations are accessible to all users
-      if (conversation.type !== 'channel') {
-        const [participant] = await db
-          .select()
-          .from(conversationParticipants)
-          .where(
-            and(
-              eq(conversationParticipants.conversationId, conversationId),
-              eq(conversationParticipants.userId, user.id)
-            )
-          );
-
-        if (!participant) {
-          return res.status(403).json({ message: "Access denied" });
+  app.get(
+    "/api/conversations/:id/messages",
+    isAuthenticated,
+    async (req, res) => {
+      try {
+        const user = (req as any).user;
+        if (!user?.id) {
+          return res.status(401).json({ message: "Unauthorized" });
         }
-      }
 
-      const conversationMessages = await db
-        .select({
-          id: messagesTable.id,
-          content: messagesTable.content,
-          userId: messagesTable.userId,
-          sender: messagesTable.sender,
-          createdAt: messagesTable.createdAt,
-          updatedAt: messagesTable.updatedAt,
-          timestamp: messagesTable.timestamp,
-          // Include user data for proper display
-          userFirstName: users.firstName,
-          userLastName: users.lastName,
-          userEmail: users.email,
-          userDisplayName: users.displayName
-        })
-        .from(messagesTable)
-        .leftJoin(users, eq(messagesTable.userId, users.id))
-        .where(eq(messagesTable.conversationId, conversationId))
-        .orderBy(messagesTable.createdAt);
+        const conversationId = parseInt(req.params.id);
 
-      // Transform to match expected format
-      const formattedMessages = conversationMessages.map(msg => ({
-        id: msg.id,
-        content: msg.content,
-        userId: msg.userId,
-        createdAt: msg.createdAt,
-        // Include user info for frontend display
-        userFirstName: msg.userFirstName,
-        userLastName: msg.userLastName,
-        userEmail: msg.userEmail,
-        userDisplayName: msg.userDisplayName,
-        // Legacy fields for compatibility
-        sender: msg.userDisplayName || msg.userFirstName || msg.userEmail?.split('@')[0] || 'Unknown User',
-        timestamp: msg.timestamp || msg.createdAt,
-        committee: 'conversation'
-      }));
+        // Check access: participant in conversation OR channel conversations are public
+        const [conversation] = await db
+          .select({ type: conversations.type })
+          .from(conversations)
+          .where(eq(conversations.id, conversationId));
 
-      res.json(formattedMessages);
-    } catch (error) {
-      console.error('[API] Error fetching messages:', error);
-      res.status(500).json({ message: "Internal server error", details: error.message });
-    }
-  });
-
-  app.post("/api/conversations/:id/messages", isAuthenticated, async (req, res) => {
-    try {
-      const user = (req as any).user;
-      if (!user?.id) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-
-      const conversationId = parseInt(req.params.id);
-      const { content } = req.body;
-
-      if (!content || !content.trim()) {
-        return res.status(400).json({ message: "Message content is required" });
-      }
-
-      // Check access: participant in conversation OR channel conversations are public
-      const [conversation] = await db
-        .select({ type: conversations.type })
-        .from(conversations)
-        .where(eq(conversations.id, conversationId));
-
-      if (!conversation) {
-        return res.status(404).json({ message: "Conversation not found" });
-      }
-
-      // Channel conversations are accessible to all users
-      if (conversation.type !== 'channel') {
-        const [participant] = await db
-          .select()
-          .from(conversationParticipants)
-          .where(
-            and(
-              eq(conversationParticipants.conversationId, conversationId),
-              eq(conversationParticipants.userId, user.id)
-            )
-          );
-
-        if (!participant) {
-          return res.status(403).json({ message: "Access denied" });
+        if (!conversation) {
+          return res.status(404).json({ message: "Conversation not found" });
         }
-      }
 
-      const userName = `${user.firstName} ${user.lastName}` || user.email || 'Unknown User';
+        // Channel conversations are accessible to all users
+        if (conversation.type !== "channel") {
+          const [participant] = await db
+            .select()
+            .from(conversationParticipants)
+            .where(
+              and(
+                eq(conversationParticipants.conversationId, conversationId),
+                eq(conversationParticipants.userId, user.id),
+              ),
+            );
 
-      const [message] = await db
-        .insert(messagesTable)
-        .values({
-          conversationId,
-          userId: user.id,
-          content: content.trim(),
-          sender: userName
-        })
-        .returning();
-
-      // Broadcast via WebSocket if available
-      if (broadcastNewMessage) {
-        broadcastNewMessage({
-          type: 'new_message',
-          conversationId,
-          message: {
-            id: message.id,
-            content: message.content,
-            userId: message.userId,
-            sender: userName,
-            timestamp: message.createdAt
+          if (!participant) {
+            return res.status(403).json({ message: "Access denied" });
           }
-        });
-      }
+        }
 
-      res.json(message);
-    } catch (error) {
-      console.error('[API] Error sending message:', error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
+        const conversationMessages = await db
+          .select({
+            id: messagesTable.id,
+            content: messagesTable.content,
+            userId: messagesTable.userId,
+            sender: messagesTable.sender,
+            createdAt: messagesTable.createdAt,
+            updatedAt: messagesTable.updatedAt,
+            timestamp: messagesTable.timestamp,
+            // Include user data for proper display
+            userFirstName: users.firstName,
+            userLastName: users.lastName,
+            userEmail: users.email,
+            userDisplayName: users.displayName,
+          })
+          .from(messagesTable)
+          .leftJoin(users, eq(messagesTable.userId, users.id))
+          .where(eq(messagesTable.conversationId, conversationId))
+          .orderBy(messagesTable.createdAt);
+
+        // Transform to match expected format
+        const formattedMessages = conversationMessages.map((msg) => ({
+          id: msg.id,
+          content: msg.content,
+          userId: msg.userId,
+          createdAt: msg.createdAt,
+          // Include user info for frontend display
+          userFirstName: msg.userFirstName,
+          userLastName: msg.userLastName,
+          userEmail: msg.userEmail,
+          userDisplayName: msg.userDisplayName,
+          // Legacy fields for compatibility
+          sender:
+            msg.userDisplayName ||
+            msg.userFirstName ||
+            msg.userEmail?.split("@")[0] ||
+            "Unknown User",
+          timestamp: msg.timestamp || msg.createdAt,
+          committee: "conversation",
+        }));
+
+        res.json(formattedMessages);
+      } catch (error) {
+        console.error("[API] Error fetching messages:", error);
+        res
+          .status(500)
+          .json({ message: "Internal server error", details: error.message });
+      }
+    },
+  );
+
+  app.post(
+    "/api/conversations/:id/messages",
+    isAuthenticated,
+    async (req, res) => {
+      try {
+        const user = (req as any).user;
+        if (!user?.id) {
+          return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        const conversationId = parseInt(req.params.id);
+        const { content } = req.body;
+
+        if (!content || !content.trim()) {
+          return res
+            .status(400)
+            .json({ message: "Message content is required" });
+        }
+
+        // Check access: participant in conversation OR channel conversations are public
+        const [conversation] = await db
+          .select({ type: conversations.type })
+          .from(conversations)
+          .where(eq(conversations.id, conversationId));
+
+        if (!conversation) {
+          return res.status(404).json({ message: "Conversation not found" });
+        }
+
+        // Channel conversations are accessible to all users
+        if (conversation.type !== "channel") {
+          const [participant] = await db
+            .select()
+            .from(conversationParticipants)
+            .where(
+              and(
+                eq(conversationParticipants.conversationId, conversationId),
+                eq(conversationParticipants.userId, user.id),
+              ),
+            );
+
+          if (!participant) {
+            return res.status(403).json({ message: "Access denied" });
+          }
+        }
+
+        const userName =
+          `${user.firstName} ${user.lastName}` || user.email || "Unknown User";
+
+        const [message] = await db
+          .insert(messagesTable)
+          .values({
+            conversationId,
+            userId: user.id,
+            content: content.trim(),
+            sender: userName,
+          })
+          .returning();
+
+        // Broadcast via WebSocket if available
+        if (broadcastNewMessage) {
+          broadcastNewMessage({
+            type: "new_message",
+            conversationId,
+            message: {
+              id: message.id,
+              content: message.content,
+              userId: message.userId,
+              sender: userName,
+              timestamp: message.createdAt,
+            },
+          });
+        }
+
+        res.json(message);
+      } catch (error) {
+        console.error("[API] Error sending message:", error);
+        res.status(500).json({ message: "Internal server error" });
+      }
+    },
+  );
 
   // Create or get direct conversation between two users
   app.post("/api/conversations/direct", isAuthenticated, async (req, res) => {
-    console.log('=== POST /api/conversations/direct START ===');
+    console.log("=== POST /api/conversations/direct START ===");
     try {
       const user = (req as any).user;
-      console.log('User:', user);
-      console.log('Request body:', req.body);
-      
+      console.log("User:", user);
+      console.log("Request body:", req.body);
+
       const { otherUserId } = req.body;
 
       if (!otherUserId) {
@@ -6245,15 +6579,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: conversations.id,
           type: conversations.type,
           name: conversations.name,
-          createdAt: conversations.createdAt
+          createdAt: conversations.createdAt,
         })
         .from(conversations)
-        .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+        .innerJoin(
+          conversationParticipants,
+          eq(conversations.id, conversationParticipants.conversationId),
+        )
         .where(
           and(
-            eq(conversations.type, 'direct'),
-            eq(conversationParticipants.userId, user.id)
-          )
+            eq(conversations.type, "direct"),
+            eq(conversationParticipants.userId, user.id),
+          ),
         );
 
       // Find conversation that includes both users
@@ -6262,8 +6599,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .select({ userId: conversationParticipants.userId })
           .from(conversationParticipants)
           .where(eq(conversationParticipants.conversationId, conv.id));
-        
-        const userIds = participants.map(p => p.userId);
+
+        const userIds = participants.map((p) => p.userId);
         if (userIds.includes(otherUserId) && userIds.length === 2) {
           return res.json(conv);
         }
@@ -6273,8 +6610,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const [newConversation] = await db
         .insert(conversations)
         .values({
-          type: 'direct',
-          name: null
+          type: "direct",
+          name: null,
         })
         .returning();
 
@@ -6282,30 +6619,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await db.insert(conversationParticipants).values([
         {
           conversationId: newConversation.id,
-          userId: user.id
+          userId: user.id,
         },
         {
           conversationId: newConversation.id,
-          userId: otherUserId
-        }
+          userId: otherUserId,
+        },
       ]);
 
       res.json(newConversation);
     } catch (error) {
-      console.error('=== POST /api/conversations/direct ERROR ===');
-      console.error('[ERROR] Full error object:', error);
-      console.error('[ERROR] Error name:', error.name);
-      console.error('[ERROR] Error message:', error.message);
-      console.error('[ERROR] Error stack:', error.stack);
-      if (error.code) console.error('[ERROR] Error code:', error.code);
-      if (error.detail) console.error('[ERROR] Error detail:', error.detail);
-      if (error.hint) console.error('[ERROR] Error hint:', error.hint);
-      console.error('=== POST /api/conversations/direct ERROR END ===');
-      
-      res.status(500).json({ 
+      console.error("=== POST /api/conversations/direct ERROR ===");
+      console.error("[ERROR] Full error object:", error);
+      console.error("[ERROR] Error name:", error.name);
+      console.error("[ERROR] Error message:", error.message);
+      console.error("[ERROR] Error stack:", error.stack);
+      if (error.code) console.error("[ERROR] Error code:", error.code);
+      if (error.detail) console.error("[ERROR] Error detail:", error.detail);
+      if (error.hint) console.error("[ERROR] Error hint:", error.hint);
+      console.error("=== POST /api/conversations/direct ERROR END ===");
+
+      res.status(500).json({
         message: "Failed to create conversation",
         error: error.message,
-        details: error.detail || 'No additional details'
+        details: error.detail || "No additional details",
       });
     }
   });
