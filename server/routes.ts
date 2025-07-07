@@ -808,7 +808,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           : await storage.getAllMessages();
       }
 
-      res.json(messages);
+      // Filter out empty or blank messages
+      const filteredMessages = messages.filter(msg => 
+        msg && msg.content && msg.content.trim() !== ''
+      );
+
+      res.json(filteredMessages);
     } catch (error) {
       console.error("Error fetching messages:", error);
       res.status(500).json({ message: "Failed to fetch messages" });
@@ -6107,20 +6112,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
           sender: messagesTable.sender,
           createdAt: messagesTable.createdAt,
           updatedAt: messagesTable.updatedAt,
-          timestamp: messagesTable.timestamp
+          timestamp: messagesTable.timestamp,
+          // Include user data for proper display
+          userFirstName: users.firstName,
+          userLastName: users.lastName,
+          userEmail: users.email,
+          userDisplayName: users.displayName
         })
         .from(messagesTable)
+        .leftJoin(users, eq(messagesTable.userId, users.id))
         .where(eq(messagesTable.conversationId, conversationId))
-        .orderBy(messagesTable.timestamp || messagesTable.createdAt);
+        .orderBy(messagesTable.createdAt);
 
       // Transform to match expected format
       const formattedMessages = conversationMessages.map(msg => ({
         id: msg.id,
         content: msg.content,
         userId: msg.userId,
-        sender: msg.sender || 'Unknown User',
+        createdAt: msg.createdAt,
+        // Include user info for frontend display
+        userFirstName: msg.userFirstName,
+        userLastName: msg.userLastName,
+        userEmail: msg.userEmail,
+        userDisplayName: msg.userDisplayName,
+        // Legacy fields for compatibility
+        sender: msg.userDisplayName || msg.userFirstName || msg.userEmail?.split('@')[0] || 'Unknown User',
         timestamp: msg.timestamp || msg.createdAt,
-        committee: 'conversation' // For compatibility
+        committee: 'conversation'
       }));
 
       res.json(formattedMessages);

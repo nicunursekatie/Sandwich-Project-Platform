@@ -190,11 +190,11 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
   const navigateToChat = (chatType: string) => {
     // Navigate to the appropriate chat page
     if (chatType === 'direct') {
-      window.location.href = '/messages';
+      window.location.href = '/directory';
     } else if (chatType === 'groups') {
-      window.location.href = '/messages?tab=groups';
+      window.location.href = '/messages';
     } else {
-      window.location.href = `/messages?tab=${chatType}`;
+      window.location.href = '/messages';
     }
   };
 

@@ -108,7 +108,7 @@ export class DatabaseStorage implements IStorage {
 
     // Auto-update status based on assignee changes
     const updateData = { ...updates, updatedAt: new Date() };
-    
+
     // If assigneeName is being set and project is currently available, change to in_progress
     if (updateData.assigneeName && updateData.assigneeName.trim() && currentProject.status === "available") {
       updateData.status = "in_progress";
@@ -145,27 +145,27 @@ export class DatabaseStorage implements IStorage {
   async updateProjectTask(id: number, updates: Partial<ProjectTask>): Promise<ProjectTask | undefined> {
     // Log for debugging
     console.log(`Updating task ${id} with updates:`, updates);
-    
+
     // Handle timestamp fields properly and filter out fields that shouldn't be updated
     const processedUpdates = { ...updates };
-    
+
     // Remove fields that shouldn't be updated directly
     delete processedUpdates.id;
     delete processedUpdates.projectId;
     delete processedUpdates.createdAt;
-    
+
     if (processedUpdates.completedAt && typeof processedUpdates.completedAt === 'string') {
       processedUpdates.completedAt = new Date(processedUpdates.completedAt);
     }
     if (processedUpdates.dueDate && typeof processedUpdates.dueDate === 'string') {
       processedUpdates.dueDate = new Date(processedUpdates.dueDate);
     }
-    
+
     // Always update the updatedAt timestamp
     processedUpdates.updatedAt = new Date();
-    
+
     console.log(`Processed updates for task ${id}:`, processedUpdates);
-    
+
     try {
       const [task] = await db.update(projectTasks).set(processedUpdates).where(eq(projectTasks.id, id)).returning();
       console.log(`Task ${id} updated successfully:`, task);
@@ -246,7 +246,46 @@ export class DatabaseStorage implements IStorage {
 
   // Messages
   async getAllMessages(): Promise<Message[]> {
-    return await db.select().from(messages).orderBy(messages.id);
+    try {
+      const result = await db
+        .select({
+          id: messages.id,
+          content: messages.content,
+          sender: messages.sender,
+          timestamp: messages.timestamp || messages.createdAt,
+          userId: messages.userId,
+          committee: messages.committee,
+          recipientId: messages.recipientId,
+          conversationId: messages.conversationId,
+          threadId: messages.threadId
+        })
+        .from(messages)
+        .orderBy(messages.timestamp || messages.createdAt);
+
+      return result;
+    } catch (error) {
+      // If sender column doesn't exist, query without it and add default sender
+      console.log('Sender column not found, using fallback query');
+      const result = await db
+        .select({
+          id: messages.id,
+          content: messages.content,
+          timestamp: messages.timestamp || messages.createdAt,
+          userId: messages.userId,
+          committee: messages.committee,
+          recipientId: messages.recipientId,
+          conversationId: messages.conversationId,
+          threadId: messages.threadId
+        })
+        .from(messages)
+        .orderBy(messages.timestamp || messages.createdAt);
+
+      // Add default sender for compatibility
+      return result.map(msg => ({
+        ...msg,
+        sender: 'Unknown User'
+      }));
+    }
   }
 
   async getRecentMessages(limit: number): Promise<Message[]> {
@@ -263,10 +302,10 @@ export class DatabaseStorage implements IStorage {
     } else {
       // Legacy fallback with migration support for messages without threadId
       console.warn(`⚠️  getMessagesByCommittee called without threadId for committee: ${committee} - checking for orphaned messages`);
-      
+
       // First, try to migrate any orphaned messages for this committee
       await this.migrateOrphanedMessages(committee);
-      
+
       // Then return all messages for this committee (including newly migrated ones)
       return await db.select().from(messages).where(eq(messages.committee, committee)).orderBy(messages.id);
     }
@@ -276,10 +315,10 @@ export class DatabaseStorage implements IStorage {
   async migrateOrphanedMessages(committee: string): Promise<void> {
     try {
       console.log(`🔧 Checking for orphaned ${committee} messages without threadId...`);
-      
+
       // Get or create thread for this committee
       const threadId = await this.getOrCreateThreadId(committee);
-      
+
       // Update messages without threadId for this committee
       const result = await db.update(messages)
         .set({ threadId })
@@ -287,7 +326,7 @@ export class DatabaseStorage implements IStorage {
           eq(messages.committee, committee),
           isNull(messages.threadId)
         ));
-      
+
       const updatedCount = result.rowCount || 0;
       if (updatedCount > 0) {
         console.log(`✅ Migrated ${updatedCount} orphaned ${committee} messages to threadId ${threadId}`);
@@ -357,13 +396,13 @@ export class DatabaseStorage implements IStorage {
     const userIds = [userId1, userId2].sort();
     const referenceId = userIds.join('_');
     const threadId = await this.getOrCreateThreadId('direct', referenceId);
-    
+
     console.log(`🔍 QUERY: getDirectMessages - threadId: ${threadId}, users: ${userId1} <-> ${userId2}, referenceId: ${referenceId}`);
-    
+
     const messages = await db.select().from(messages)
       .where(eq(messages.threadId, threadId))
       .orderBy(messages.timestamp);
-      
+
     console.log(`🔍 RESULT: Found ${messages.length} direct messages for threadId ${threadId}`);
     return messages;
   }
@@ -378,7 +417,7 @@ export class DatabaseStorage implements IStorage {
     if (!insertMessage.threadId) {
       // Auto-assign threadId based on committee type and reference
       let referenceId: string | undefined;
-      
+
       if (insertMessage.committee === 'direct' && insertMessage.recipientId) {
         // For direct messages, create unique reference combining both user IDs
         const userIds = [insertMessage.userId, insertMessage.recipientId].filter(Boolean).sort();
@@ -391,13 +430,13 @@ export class DatabaseStorage implements IStorage {
       } else {
         console.log(`🔍 ${insertMessage.committee.toUpperCase()} MESSAGE: Creating thread for committee ${insertMessage.committee}`);
       }
-      
+
       insertMessage.threadId = await this.getOrCreateThreadId(insertMessage.committee, referenceId);
       console.log(`✅ SEND: threadId ${insertMessage.threadId} assigned for ${insertMessage.committee} message from ${insertMessage.userId}`);
     } else {
       console.log(`🔄 SEND: Using existing threadId ${insertMessage.threadId} for ${insertMessage.committee} message from ${insertMessage.userId}`);
     }
-    
+
     const [message] = await db.insert(messages).values(insertMessage).returning();
     console.log(`📤 MESSAGE SENT: id=${message.id}, threadId=${message.threadId}, committee=${message.committee}, sender=${message.userId}`);
     return message;
@@ -456,7 +495,7 @@ export class DatabaseStorage implements IStorage {
 
   async getMessageGroupMessages(groupId: number, userId: string): Promise<Message[]> {
     console.log(`🔍 QUERY: getMessageGroupMessages - groupId: ${groupId}, userId: ${userId}`);
-    
+
     // Only return messages if user has active or muted participation
     const participantStatus = await this.getParticipantStatus(groupId, userId);
     if (!participantStatus || participantStatus === 'left') {
@@ -467,7 +506,7 @@ export class DatabaseStorage implements IStorage {
     const messages = await db.select().from(messages)
       .where(eq(messages.threadId, groupId))
       .orderBy(messages.timestamp);
-      
+
     console.log(`🔍 RESULT: Found ${messages.length} group messages for groupId ${groupId}, user ${userId}`);
     return messages;
   }
@@ -508,7 +547,7 @@ export class DatabaseStorage implements IStorage {
     const timestampField = status === 'left' ? 'leftAt' : 
                           status === 'archived' ? 'archivedAt' : 
                           status === 'muted' ? 'mutedAt' : null;
-    
+
     const updates: any = { status };
     if (timestampField) {
       updates[timestampField] = new Date();
@@ -584,7 +623,7 @@ export class DatabaseStorage implements IStorage {
       totalEntries: sql<number>`count(*)::int`,
       totalSandwiches: sql<number>`coalesce(sum(individual_sandwiches), 0)::int`
     }).from(sandwichCollections);
-    
+
     return {
       totalEntries: Number(result[0].totalEntries),
       totalSandwiches: Number(result[0].totalSandwiches)
@@ -767,7 +806,7 @@ export class DatabaseStorage implements IStorage {
 
     // Also delete any host contacts first
     await db.delete(hostContacts).where(eq(hostContacts.hostId, id));
-    
+
     // Now delete the host
     const result = await db.delete(hosts).where(eq(hosts.id, id));
     return (result.rowCount ?? 0) > 0;
@@ -858,7 +897,7 @@ export class DatabaseStorage implements IStorage {
   async getAllHostsWithContacts(): Promise<Array<Host & { contacts: HostContact[] }>> {
     const hostsData = await db.select().from(hosts).orderBy(hosts.name);
     const contactsData = await db.select().from(hostContacts);
-    
+
     return hostsData.map(host => ({
       ...host,
       contacts: contactsData.filter(contact => contact.hostId === host.id)
@@ -896,14 +935,14 @@ export class DatabaseStorage implements IStorage {
       .from(projects)
       .innerJoin(projectAssignments, eq(projects.id, projectAssignments.projectId))
       .where(eq(projectAssignments.userId, userId));
-    
+
     return assignedProjects.map(result => result.projects);
   }
 
   async getAllProjectsWithAssignments(): Promise<Array<Project & { assignments: ProjectAssignment[] }>> {
     const projectsData = await db.select().from(projects).orderBy(projects.createdAt);
     const assignmentsData = await db.select().from(projectAssignments);
-    
+
     return projectsData.map(project => ({
       ...project,
       assignments: assignmentsData.filter(assignment => assignment.projectId === project.id)
@@ -946,7 +985,7 @@ export class DatabaseStorage implements IStorage {
       .from(committeeMemberships)
       .innerJoin(committees, eq(committeeMemberships.committeeId, committees.id))
       .where(eq(committeeMemberships.userId, userId));
-    
+
     return userCommittees.map(result => ({
       ...result.committees,
       membership: result.committee_memberships
@@ -959,7 +998,7 @@ export class DatabaseStorage implements IStorage {
       .from(committeeMemberships)
       .innerJoin(users, eq(committeeMemberships.userId, users.id))
       .where(eq(committeeMemberships.committeeId, committeeId));
-    
+
     return members.map(result => ({
       ...result.users,
       membership: result.committee_memberships
@@ -1089,6 +1128,34 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
       return false;
+    }
+  }
+
+  async initialize(): Promise<void> {
+    try {
+      console.log('Initializing database storage...');
+
+      // Test database connection
+      await this.testConnection();
+
+      // Check and add missing sender column if needed
+      try {
+        await db.execute(sql`SELECT sender FROM messages LIMIT 1`);
+        console.log('Sender column exists');
+      } catch (error) {
+        console.log('Adding missing sender column to messages table...');
+        try {
+          await db.execute(sql`ALTER TABLE messages ADD COLUMN sender TEXT DEFAULT 'Unknown User'`);
+          console.log('Sender column added successfully');
+        } catch (alterError) {
+          console.log('Could not add sender column, will use fallback queries');
+        }
+      }
+
+      console.log('Database storage initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize database storage:', error);
+      throw error;
     }
   }
 }
