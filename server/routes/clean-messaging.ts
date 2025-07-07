@@ -138,7 +138,8 @@ export function setupCleanMessagingRoutes(app: Express) {
         .values({
           conversationId,
           userId,
-          content: content.trim()
+          content: content.trim(),
+          createdAt: new Date()
         })
         .returning();
 

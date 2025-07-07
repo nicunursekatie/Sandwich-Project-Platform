@@ -182,13 +182,21 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
   };
 
   const navigateToChat = (chatType: string) => {
-    // Navigate to the appropriate chat page
+    // Navigate to the appropriate chat page within the dashboard
     if (chatType === 'direct') {
-      window.location.href = '/directory';
-    } else if (chatType === 'groups') {
-      window.location.href = '/messages';
+      // Use global setActiveSection if available, otherwise fallback to directory
+      if ((window as any).dashboardSetActiveSection) {
+        (window as any).dashboardSetActiveSection('phone-directory');
+      } else {
+        window.location.hash = '#phone-directory';
+      }
     } else {
-      window.location.href = '/messages';
+      // Navigate to messages section in dashboard
+      if ((window as any).dashboardSetActiveSection) {
+        (window as any).dashboardSetActiveSection('messages');
+      } else {
+        window.location.hash = '#messages';
+      }
     }
   };
 
