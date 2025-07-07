@@ -5703,22 +5703,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      const userPermissions = getUserPermissions(user);
-      if (!userPermissions.includes('VIEW_MESSAGES')) {
-        return res.status(403).json({ message: "Access denied" });
-      }
-
-      const userConversations = await db
+      // Get conversations the user is a participant in
+      let userConversations;
+      // Get all channel conversations (these are public) and user's private conversations
+      userConversations = await db
         .select({
           id: conversations.id,
           type: conversations.type,
           name: conversations.name,
-          createdAt: conversations.createdAt,
-          lastReadAt: conversationParticipants.lastReadAt
+          createdAt: conversations.createdAt
         })
         .from(conversations)
-        .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
-        .where(eq(conversationParticipants.userId, user.id))
+        .leftJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+        .where(
+          or(
+            eq(conversations.type, 'channel'), // All channel conversations are accessible
+            eq(conversationParticipants.userId, user.id) // User's private conversations
+          )
+        )
+        .groupBy(conversations.id, conversations.type, conversations.name, conversations.createdAt)
         .orderBy(desc(conversations.createdAt));
 
       res.json(userConversations);

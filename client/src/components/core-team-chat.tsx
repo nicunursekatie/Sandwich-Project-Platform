@@ -54,23 +54,41 @@ export default function CoreTeamChat() {
     );
   }
 
-  // Fetch core team messages
+  // Get Core Team conversation ID  
+  const { data: conversations = [] } = useQuery({
+    queryKey: ["/api/conversations"],
+    enabled: !!user,
+  });
+  
+  const coreTeamConversation = conversations.find(c => c.type === 'channel' && c.name === 'Core Team');
+
+  // Fetch core team messages from the new conversation system
   const { data: messages = [] } = useQuery<Message[]>({
-    queryKey: ["/api/messages", "core_team"],
-    queryFn: () => fetch("/api/messages?committee=core_team").then(res => res.json()),
-    refetchInterval: 2000, // Refresh every 2 seconds for real-time feel
+    queryKey: ["/api/conversations", coreTeamConversation?.id, "messages"],
+    enabled: !!coreTeamConversation,
+    refetchInterval: 3000,
   });
 
   // Auto-mark messages as read when viewing
   useAutoMarkAsRead("core_team", messages, hasCoreTeamAccess);
+  
+  // Mark messages as read when conversation is selected
+  useEffect(() => {
+    if (coreTeamConversation && messages.length > 0) {
+      queryClient.invalidateQueries({ queryKey: ["/api/messages/unread-counts"] });
+    }
+  }, [coreTeamConversation, messages.length, queryClient]);
 
   // Send message mutation
   const sendMessageMutation = useMutation({
-    mutationFn: async (newMessage: { sender: string; content: string; committee: string; userId?: string }) => {
-      return await apiRequest('POST', '/api/messages', newMessage);
+    mutationFn: async (content: string) => {
+      if (!coreTeamConversation) throw new Error("Core Team conversation not found");
+      return await apiRequest('POST', `/api/conversations/${coreTeamConversation.id}/messages`, {
+        content
+      });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages", "core_team"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", coreTeamConversation?.id, "messages"] });
       setMessage("");
     },
     onError: () => {
@@ -105,18 +123,9 @@ export default function CoreTeamChat() {
   }, [messages]);
 
   const handleSendMessage = () => {
-    if (!message.trim()) return;
-
-    const userName = (user as any)?.firstName && (user as any)?.lastName 
-      ? `${(user as any).firstName} ${(user as any).lastName}` 
-      : (user as any)?.email || "Core Team Member";
-
-    sendMessageMutation.mutate({
-      sender: userName,
-      content: message.trim(),
-      committee: "core_team",
-      userId: (user as any)?.id
-    });
+    if (!message.trim() || !coreTeamConversation) return;
+    
+    sendMessageMutation.mutate(message.trim());
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
