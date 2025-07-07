@@ -4847,33 +4847,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Add members to existing group
   app.post("/api/message-groups/:groupId/members", isAuthenticated, async (req, res) => {
+    console.log(`[DEBUG] POST /api/message-groups/:groupId/members called with:`, {
+      groupId: req.params.groupId,
+      body: req.body,
+      user: (req as any).user?.id
+    });
     try {
-      const { groupId } = req.params;
+      const groupId = parseInt(req.params.groupId);
       const { memberIds } = req.body;
       const currentUser = (req as any).user;
       const userId = currentUser?.id;
       
-      // Platform super admins can add members to any group
-      const isPlatformSuperAdmin = currentUser?.role === 'super_admin';
+      console.log(`[DEBUG] Processing request: groupId=${groupId}, memberIds=`, memberIds, `user=${userId}, role=${currentUser?.role}`);
       
-      if (!isPlatformSuperAdmin) {
-        // Check if user is admin of the group
-        const userMembership = await db
+      // Check if conversation exists and is a group
+      const [conversation] = await db
+        .select()
+        .from(conversations)
+        .where(and(
+          eq(conversations.id, groupId),
+          eq(conversations.type, 'group')
+        ));
+      
+      if (!conversation) {
+        return res.status(404).json({ message: "Group conversation not found" });
+      }
+      
+      // Allow super_admin, admin, or existing participants to add members
+      const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'admin';
+      
+      let canAddMembers = isAdmin;
+      if (!isAdmin) {
+        // Check if user is a participant in this conversation
+        const [participant] = await db
           .select()
-          .from(groupMemberships)
-          .where(
-            and(
-              eq(groupMemberships.groupId, parseInt(groupId)),
-              eq(groupMemberships.userId, userId),
-              eq(groupMemberships.role, 'admin'),
-              eq(groupMemberships.isActive, true)
-            )
-          )
-          .limit(1);
-        
-        if (userMembership.length === 0) {
-          return res.status(403).json({ message: "Only group admins can add members" });
-        }
+          .from(conversationParticipants)
+          .where(and(
+            eq(conversationParticipants.conversationId, groupId),
+            eq(conversationParticipants.userId, userId)
+          ));
+        canAddMembers = !!participant;
+      }
+      
+      console.log(`[DEBUG] Can add members: ${canAddMembers}`);
+      
+      if (!canAddMembers) {
+        return res.status(403).json({ message: "Not authorized to add members to this group" });
       }
       
       if (!memberIds || !Array.isArray(memberIds) || memberIds.length === 0) {
@@ -4882,34 +4901,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Get existing members to avoid duplicates
       const existingMembers = await db
-        .select({ userId: groupMemberships.userId })
-        .from(groupMemberships)
-        .where(
-          and(
-            eq(groupMemberships.groupId, parseInt(groupId)),
-            eq(groupMemberships.isActive, true)
-          )
-        );
+        .select({ userId: conversationParticipants.userId })
+        .from(conversationParticipants)
+        .where(eq(conversationParticipants.conversationId, groupId));
       
       const existingMemberIds = existingMembers.map(m => m.userId);
       const newMemberIds = memberIds.filter(id => !existingMemberIds.includes(id));
+      
+      console.log(`[DEBUG] Existing members: ${existingMemberIds.length}, New members to add: ${newMemberIds.length}`);
       
       if (newMemberIds.length === 0) {
         return res.status(400).json({ message: "All selected users are already members" });
       }
       
-      // Add new members
-      const memberships = newMemberIds.map(memberId => ({
-        groupId: parseInt(groupId),
-        userId: memberId,
-        role: 'member' as const
+      // Add new members to conversation
+      const newParticipants = newMemberIds.map(memberId => ({
+        conversationId: groupId,
+        userId: memberId
       }));
       
-      await db.insert(groupMemberships).values(memberships);
+      await db.insert(conversationParticipants).values(newParticipants);
       
-      res.json({ message: "Members added successfully", addedCount: newMemberIds.length });
+      console.log(`[DEBUG] Successfully added ${newMemberIds.length} new members to conversation ${groupId}`);
+      
+      res.json({ 
+        message: "Members added successfully", 
+        addedCount: newMemberIds.length,
+        addedMembers: newMemberIds
+      });
     } catch (error) {
-      res.status(500).json({ message: "Failed to add members to group" });
+      console.error(`[ERROR] Failed to add members to group:`, error);
+      res.status(500).json({ message: "Failed to add members to group", details: error.message });
     }
   });
 
