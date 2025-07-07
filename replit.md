@@ -117,6 +117,8 @@ This is a full-stack sandwich collection management application built for The Sa
 
 Preferred communication style: Simple, everyday language.
 
+**CRITICAL DATA PROTECTION RULE**: NEVER modify, clear, or update existing user data during troubleshooting without explicit permission. Always preserve existing database records and user-created content. Diagnose issues first, then ask permission before making any destructive changes.
+
 ## Recent Changes
 
 - June 24, 2025: Fixed Reports section 404 error: replaced redirect with direct ReportingDashboard component rendering, reports now load properly within dashboard navigation
