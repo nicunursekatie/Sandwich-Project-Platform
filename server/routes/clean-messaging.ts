@@ -288,7 +288,7 @@ export function setupCleanMessagingRoutes(app: Express) {
 
       // Create congratulations message
       let congratsMessage = `🎉 ${title}\n\n${message}`;
-      if (celebrationData && celebrationData.senderName) {
+      if (celebrationData?.senderName) {
         congratsMessage += `\n\n- ${celebrationData.senderName}`;
       }
 
@@ -347,11 +347,11 @@ export function setupCleanMessagingRoutes(app: Express) {
       // Format for frontend compatibility
       const formattedMessages = congratsMessages.map(msg => ({
         id: msg.id,
-        userId: msg.userId,
-        message: msg.message,
+        userId: msg.userId || 'anonymous',
+        message: msg.message || '',
         createdAt: msg.createdAt,
         celebrationData: {
-          senderName: msg.senderName,
+          senderName: msg.senderName || 'Team Member',
           emoji: '🎉',
           sentAt: msg.createdAt
         }

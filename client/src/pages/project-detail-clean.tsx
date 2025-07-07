@@ -820,8 +820,8 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                               <div className="flex items-center">
                                 <CheckCircle2 className="w-3 h-3 mr-1 text-green-600" />
                                 <span className="text-green-600">Completed</span>
-                                {task.completedBy && (
-                                  <span className="ml-1">by {task.completedBy}</span>
+                                {task.completedByName && (
+                                  <span className="ml-1">by {task.completedByName}</span>
                                 )}
                                 {task.completedAt && (
                                   <span className="ml-1">on {new Date(task.completedAt).toLocaleDateString()}</span>

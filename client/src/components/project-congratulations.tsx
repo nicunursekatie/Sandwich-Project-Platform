@@ -21,10 +21,10 @@ interface CongratulationsMessage {
   id: number;
   userId: string;
   message: string;
-  celebrationData: {
-    senderName: string;
-    emoji: string;
-    sentAt: string;
+  celebrationData?: {
+    senderName?: string;
+    emoji?: string;
+    sentAt?: string;
   };
   createdAt: string;
 }
@@ -117,27 +117,32 @@ export default function ProjectCongratulations({
         {/* Display existing congratulations */}
         {congratulations && congratulations.length > 0 && (
           <div className="space-y-3 max-h-48 overflow-y-auto">
-            {congratulations.map((congrats) => (
-              <div key={congrats.id} className="flex items-start gap-3 p-3 bg-white rounded-lg border">
-                <Avatar className="w-8 h-8">
-                  <AvatarFallback className="bg-teal-100 text-teal-700 text-sm">
-                    {congrats.celebrationData.senderName.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium text-sm text-gray-900">
-                      {congrats.celebrationData.senderName}
-                    </span>
-                    <span className="text-lg">{congrats.celebrationData.emoji}</span>
-                    <span className="text-xs text-gray-500">
-                      {new Date(congrats.createdAt).toLocaleDateString()}
-                    </span>
+            {congratulations.map((congrats) => {
+              const senderName = congrats.celebrationData?.senderName || 'Team Member';
+              const emoji = congrats.celebrationData?.emoji || '🎉';
+              
+              return (
+                <div key={congrats.id} className="flex items-start gap-3 p-3 bg-white rounded-lg border">
+                  <Avatar className="w-8 h-8">
+                    <AvatarFallback className="bg-teal-100 text-teal-700 text-sm">
+                      {senderName.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium text-sm text-gray-900">
+                        {senderName}
+                      </span>
+                      <span className="text-lg">{emoji}</span>
+                      <span className="text-xs text-gray-500">
+                        {new Date(congrats.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-700">{congrats.message}</p>
                   </div>
-                  <p className="text-sm text-gray-700">{congrats.message}</p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
