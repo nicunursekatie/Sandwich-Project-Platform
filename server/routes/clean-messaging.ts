@@ -112,9 +112,11 @@ export function setupCleanMessagingRoutes(app: Express) {
   app.post("/api/conversations/:id/messages", isAuthenticated, async (req, res) => {
     try {
       console.log(`[DEBUG] POST /api/conversations/${req.params.id}/messages - body:`, req.body);
+      console.log(`[DEBUG] User authenticated:`, req.user);
       const conversationId = parseInt(req.params.id);
       const userId = req.user.id;
       const { content } = req.body;
+      console.log(`[DEBUG] Attempting to send message - conversationId: ${conversationId}, userId: ${userId}, content: "${content}"`);
 
       if (!content || content.trim().length === 0) {
         return res.status(400).json({ message: "Message content is required" });
@@ -135,6 +137,7 @@ export function setupCleanMessagingRoutes(app: Express) {
       }
 
       // Get user info first for sender name
+      console.log(`[DEBUG] Looking up user info for userId: ${userId}`);
       const [senderUser] = await db
         .select({
           firstName: users.firstName,
@@ -144,8 +147,17 @@ export function setupCleanMessagingRoutes(app: Express) {
         .from(users)
         .where(eq(users.id, userId));
 
+      console.log(`[DEBUG] Found senderUser:`, senderUser);
       const senderName = senderUser ? `${senderUser.firstName} ${senderUser.lastName}`.trim() : senderUser?.email || 'Unknown User';
+      console.log(`[DEBUG] Sender name resolved to: "${senderName}"`);
 
+      console.log(`[DEBUG] About to insert message with values:`, {
+        conversationId,
+        userId,
+        content: content.trim(),
+        sender: senderName
+      });
+      
       const [newMessage] = await db
         .insert(messages)
         .values({
@@ -155,6 +167,8 @@ export function setupCleanMessagingRoutes(app: Express) {
           sender: senderName
         })
         .returning();
+        
+      console.log(`[DEBUG] Message inserted successfully:`, newMessage);
 
       const messageWithUser = {
         ...newMessage,
