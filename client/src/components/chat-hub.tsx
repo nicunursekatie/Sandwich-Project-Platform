@@ -8,6 +8,7 @@ import HostChat from "@/components/host-chat";
 import CommitteeMessageLog from "@/components/committee-message-log";
 import CoreTeamChat from "@/components/core-team-chat";
 import { GroupMessaging } from "@/components/group-messaging";
+import DirectMessaging from "@/components/direct-messaging";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, USER_ROLES } from "@/lib/authUtils";
 import { PERMISSIONS } from "@/lib/authUtils";
@@ -118,7 +119,7 @@ export default function ChatHub() {
       label: "Direct Messages", 
       description: "One-on-one conversations",
       icon: <Mail className="h-4 w-4" />,
-      component: <GroupMessaging currentUser={user} />, // Replaced SimpleDirectMessaging with GroupMessaging
+      component: <DirectMessaging />,
       color: "bg-primary/10 text-primary"
     });
   }
@@ -254,4 +255,3 @@ export default function ChatHub() {
     </div>
   );
 }
-```This code removes the `SimpleDirectMessaging` component and updates the direct message channel to use `GroupMessaging`.
