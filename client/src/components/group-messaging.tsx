@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -90,23 +91,26 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     enabled: !!selectedGroup,
   });
 
-  // Fetch messages for selected group with proper API call
-  const { data: groupMessages = [] } = useQuery<Message[]>({
-    queryKey: ["/api/message-groups", selectedGroup?.id, "messages"],
+  // Get or create group conversation
+  const { data: groupConversation } = useQuery({
+    queryKey: ["/api/conversations/group", selectedGroup?.id],
     queryFn: async () => {
-      if (!selectedGroup) return [];
-      const response = await fetch(`/api/message-groups/${selectedGroup.id}/messages`, {
-        credentials: 'include'
+      if (!selectedGroup) return null;
+      const response = await apiRequest('POST', '/api/conversations', {
+        type: 'group',
+        name: selectedGroup.name,
+        metadata: { groupId: selectedGroup.id }
       });
-      if (!response.ok) {
-        if (response.status === 403) {
-          throw new Error("Not authorized to view messages in this group");
-        }
-        throw new Error("Failed to fetch group messages");
-      }
-      return response.json();
+      return response;
     },
     enabled: !!selectedGroup,
+  });
+
+  // Fetch messages for group conversation
+  const { data: groupMessages = [] } = useQuery<Message[]>({
+    queryKey: ["/api/conversations", groupConversation?.id, "messages"],
+    enabled: !!groupConversation,
+    refetchInterval: 3000,
   });
 
   // Auto-mark group messages as read when viewing group
@@ -183,25 +187,14 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
 
   // Send message mutation  
   const sendMessageMutation = useMutation({
-    mutationFn: async (data: { content: string; groupId: number }) => {
-      const messageData = {
-        content: data.content,
-        sender: currentUser?.firstName && currentUser?.lastName 
-          ? `${currentUser.firstName} ${currentUser.lastName}`
-          : currentUser?.email || "Anonymous",
-        userId: currentUser?.id
-      };
-      const response = await fetch(`/api/message-groups/${data.groupId}/messages`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: 'include',
-        body: JSON.stringify(messageData),
+    mutationFn: async (data: { content: string }) => {
+      if (!groupConversation) throw new Error("No conversation available");
+      return await apiRequest('POST', `/api/conversations/${groupConversation.id}/messages`, {
+        content: data.content
       });
-      if (!response.ok) throw new Error("Failed to send message");
-      return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/message-groups", selectedGroup?.id, "messages"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", groupConversation?.id, "messages"] });
       setNewMessage("");
     },
   });
@@ -209,17 +202,10 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   // Edit message mutation
   const editMessageMutation = useMutation({
     mutationFn: async ({ messageId, content }: { messageId: number; content: string }) => {
-      const response = await fetch(`/api/messages/${messageId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: 'include',
-        body: JSON.stringify({ content }),
-      });
-      if (!response.ok) throw new Error("Failed to edit message");
-      return response.json();
+      return await apiRequest('PATCH', `/api/messages/${messageId}`, { content });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages", "group", selectedGroup?.id] });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", groupConversation?.id, "messages"] });
       setEditingMessage(null);
       setEditedContent("");
       toast({ title: "Message updated successfully!" });
@@ -229,15 +215,10 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   // Delete message mutation
   const deleteMessageMutation = useMutation({
     mutationFn: async (messageId: number) => {
-      const response = await fetch(`/api/messages/${messageId}`, {
-        method: "DELETE",
-        credentials: 'include',
-      });
-      if (!response.ok) throw new Error("Failed to delete message");
-      return response.json();
+      return await apiRequest('DELETE', `/api/messages/${messageId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages", "group", selectedGroup?.id] });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", groupConversation?.id, "messages"] });
       toast({ title: "Message deleted successfully!" });
     },
   });
@@ -360,11 +341,10 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   };
 
   const handleSendMessage = () => {
-    if (!newMessage.trim() || !selectedGroup) return;
+    if (!newMessage.trim()) return;
     
     sendMessageMutation.mutate({
       content: newMessage,
-      groupId: selectedGroup.id,
     });
   };
 

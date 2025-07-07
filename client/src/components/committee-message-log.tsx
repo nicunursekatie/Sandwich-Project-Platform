@@ -57,56 +57,39 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
     return isOwner || isSuperAdmin || isAdmin || hasModeratePermission;
   };
 
-  const { data: messages = [], error, isLoading } = useQuery<Message[]>({
-    queryKey: [`committee-messages`, committee],
+  // Get or create committee conversation
+  const { data: committeeConversation } = useQuery({
+    queryKey: ["/api/conversations/committee", committee],
     queryFn: async () => {
-      console.log(`🔍 CommitteeMessageLog: Fetching messages for committee: ${committee}`);
-      
-      // CRITICAL FIX: Get threadId for this committee first
-      const threadResponse = await apiRequest("POST", "/api/conversation-threads", {
-        type: committee,
-        referenceId: null,
-        title: `${committee.charAt(0).toUpperCase() + committee.slice(1)} Chat`
+      const response = await apiRequest('POST', '/api/conversations', {
+        type: 'committee',
+        name: `${committee.charAt(0).toUpperCase() + committee.slice(1)} Committee`,
+        metadata: { committee }
       });
-      const threadData = await threadResponse.json();
-      const threadId = threadData.id;
-
-      const response = await apiRequest("GET", `/api/messages?threadId=${threadId}`);
-      const data = await response.json();
-      console.log(`📤 CommitteeMessageLog: Received ${data.length} messages for ${committee} (threadId: ${threadId})`);
-      console.log(`[CommitteeMessageLog] Response type:`, typeof data, Array.isArray(data));
-      
-      // Ensure we always return an array
-      if (!Array.isArray(data)) {
-        console.warn(`[CommitteeMessageLog] Expected array but got:`, typeof data, data);
-        return [];
-      }
-      
-      return data;
+      return response;
     },
-    refetchInterval: 3000, // Refetch every 3 seconds
-    staleTime: 0, // Always consider data stale for real-time messaging
+    enabled: !!committee,
+  });
+
+  // Fetch messages for committee conversation
+  const { data: messages = [], error, isLoading } = useQuery<Message[]>({
+    queryKey: ["/api/conversations", committeeConversation?.id, "messages"],
+    enabled: !!committeeConversation,
+    refetchInterval: 3000,
   });
 
   // Auto-mark messages as read when viewing committee
   useAutoMarkAsRead(committee, messages, !!committee);
 
   const sendMessageMutation = useMutation({
-    mutationFn: async (data: { content: string; committee: string; sender: string }) => {
-      // CRITICAL FIX: Get threadId before sending message
-      const threadResponse = await apiRequest("POST", "/api/conversation-threads", {
-        type: committee,
-        referenceId: null,
-        title: `${committee.charAt(0).toUpperCase() + committee.slice(1)} Chat`
+    mutationFn: async (data: { content: string }) => {
+      if (!committeeConversation) throw new Error("No conversation available");
+      return await apiRequest('POST', `/api/conversations/${committeeConversation.id}/messages`, {
+        content: data.content
       });
-      const threadData = await threadResponse.json();
-      const messageWithThread = { ...data, threadId: threadData.id };
-      console.log(`📤 CommitteeMessageLog: Sending message with threadId ${threadData.id}`);
-      
-      return await apiRequest('POST', '/api/messages', messageWithThread);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`committee-messages`, committee] });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", committeeConversation?.id, "messages"] });
       setNewMessage("");
     },
     onError: () => {
@@ -123,7 +106,7 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
       return await apiRequest('DELETE', `/api/messages/${messageId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/messages', committee] });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", committeeConversation?.id, "messages"] });
       toast({
         title: "Message deleted",
         description: "The message has been removed",
@@ -142,9 +125,7 @@ export default function CommitteeMessageLog({ committee }: CommitteeMessageLogPr
     if (!newMessage.trim()) return;
 
     sendMessageMutation.mutate({
-      content: newMessage.trim(),
-      committee: committee,
-      sender: getUserName()
+      content: newMessage.trim()
     });
   };
 

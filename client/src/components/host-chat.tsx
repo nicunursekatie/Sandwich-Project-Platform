@@ -64,15 +64,26 @@ export default function HostChat() {
     queryKey: ['/api/hosts-with-contacts'],
   });
 
-  const { data: messages = [] } = useQuery<Message[]>({
-    queryKey: ['/api/messages', 'host', selectedHost?.id],
+  // Get or create host conversation
+  const { data: hostConversation } = useQuery({
+    queryKey: ["/api/conversations/host", selectedHost?.id],
     queryFn: async () => {
-      if (!selectedHost) return [];
-      const response = await fetch(`/api/messages?committee=host-${selectedHost.id}`);
-      if (!response.ok) return [];
-      return response.json();
+      if (!selectedHost) return null;
+      const response = await apiRequest('POST', '/api/conversations', {
+        type: 'host',
+        name: `${selectedHost.name} Host Chat`,
+        metadata: { hostId: selectedHost.id }
+      });
+      return response;
     },
-    enabled: !!selectedHost
+    enabled: !!selectedHost,
+  });
+
+  // Fetch messages for host conversation
+  const { data: messages = [] } = useQuery<Message[]>({
+    queryKey: ["/api/conversations", hostConversation?.id, "messages"],
+    enabled: !!hostConversation,
+    refetchInterval: 3000,
   });
 
   // Auto-mark messages as read when viewing host chat
@@ -83,11 +94,14 @@ export default function HostChat() {
   );
 
   const sendMessageMutation = useMutation({
-    mutationFn: async (data: { content: string; committee: string; sender: string }) => {
-      return await apiRequest('POST', '/api/messages', data);
+    mutationFn: async (data: { content: string }) => {
+      if (!hostConversation) throw new Error("No conversation available");
+      return await apiRequest('POST', `/api/conversations/${hostConversation.id}/messages`, {
+        content: data.content
+      });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/messages', 'host', selectedHost?.id] });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", hostConversation?.id, "messages"] });
       setNewMessage("");
     },
     onError: () => {
@@ -104,7 +118,7 @@ export default function HostChat() {
       return await apiRequest('DELETE', `/api/messages/${messageId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/messages', 'host', selectedHost?.id] });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", hostConversation?.id, "messages"] });
       toast({
         title: "Message deleted",
         description: "The message has been removed",
@@ -120,12 +134,10 @@ export default function HostChat() {
   });
 
   const handleSendMessage = () => {
-    if (!newMessage.trim() || !selectedHost) return;
+    if (!newMessage.trim()) return;
 
     sendMessageMutation.mutate({
-      content: newMessage.trim(),
-      committee: `host-${selectedHost.id}`,
-      sender: getUserName()
+      content: newMessage.trim()
     });
   };
 
