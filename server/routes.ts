@@ -4917,8 +4917,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const groupId = parseInt(req.params.groupId);
       const userId = (req as any).user?.id;
+      const user = (req as any).user;
       
-      console.log(`[DEBUG] Fetching members for conversation ${groupId}, user ${userId}`);
+      console.log(`[DEBUG] Fetching members for conversation ${groupId}, user ${userId}, role: ${user.role}`);
       
       // Check if this conversation exists and is a group type
       const [conversation] = await db
@@ -4928,6 +4929,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           eq(conversations.id, groupId),
           eq(conversations.type, 'group')
         ));
+      
+      console.log(`[DEBUG] Found conversation:`, conversation);
       
       if (!conversation) {
         return res.status(404).json({ message: "Group conversation not found" });
@@ -4942,9 +4945,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           eq(conversationParticipants.userId, userId)
         ));
       
-      // Allow super_admins or participants to view members
-      const user = (req as any).user;
-      const canView = user.role === 'super_admin' || participant;
+      console.log(`[DEBUG] Found participant:`, participant);
+      
+      // Allow super_admins, admins, or participants to view members
+      const canView = user.role === 'super_admin' || user.role === 'admin' || participant;
+      
+      console.log(`[DEBUG] Can view members:`, canView);
       
       if (!canView) {
         return res.status(403).json({ message: "Not authorized to view group members" });
@@ -4963,7 +4969,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .leftJoin(users, eq(conversationParticipants.userId, users.id))
         .where(eq(conversationParticipants.conversationId, groupId));
       
-      console.log(`[DEBUG] Found ${members.length} members for conversation ${groupId}`);
+      console.log(`[DEBUG] Found ${members.length} members for conversation ${groupId}:`, members);
       res.json(members);
     } catch (error) {
       console.error(`[ERROR] Error fetching group members:`, error);

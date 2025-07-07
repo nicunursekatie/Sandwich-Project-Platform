@@ -1,0 +1,982 @@
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=WGQ3PT8YMi0b' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=WGQ3PT8YMi0b' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1 
+            
+            
+           Failed to load resource: net::ERR_FAILED
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= Object
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+message-notifications.tsx:138 🔔 MessageNotifications: Loading unread counts...
+message-notifications.tsx:59 🔔 WebSocket useEffect triggered, user= Object
+message-notifications.tsx:65 🔔 Setting up WebSocket for user: user_1751071509329_mrkw2z95z
+message-notifications.tsx:69 Connecting to WebSocket: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= Object
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+message-notifications.tsx:138 🔔 MessageNotifications: Loading unread counts...
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= Object
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: Object
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 4
+message-notifications.tsx:75 Notification WebSocket connected successfully
+message-notifications.tsx:76 User ID: user_1751071509329_mrkw2z95z
+client.480aa7c5.js:2 upsell state Object
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= Object
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: Object
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 4
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= Object
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: Object
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 4
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+/api/message-groups/10/members:1 
+            
+            
+           Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+/api/message-groups/11/members:1 
+            
+            
+           Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+/api/message-groups/11/members:1 
+            
+            
+           Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+/api/message-groups/11/members:1 
+            
+            
+           Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+message-notifications.tsx:118 Notification WebSocket disconnected
+t.js:1 
+            
+            
+           GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user 401 (Unauthorized)
+apply @ t.js:1
+(anonymous) @ queryClient.ts:34
+fetchFn @ @tanstack_react-query.js?v=cb28a80d:840
+run @ @tanstack_react-query.js?v=cb28a80d:494
+start @ @tanstack_react-query.js?v=cb28a80d:536
+fetch @ @tanstack_react-query.js?v=cb28a80d:926
+executeFetch_fn @ @tanstack_react-query.js?v=cb28a80d:2211
+fetch @ @tanstack_react-query.js?v=cb28a80d:2011
+refetch @ @tanstack_react-query.js?v=cb28a80d:2001
+onFocus @ @tanstack_react-query.js?v=cb28a80d:749
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:1112
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:1111
+batch @ @tanstack_react-query.js?v=cb28a80d:583
+onFocus @ @tanstack_react-query.js?v=cb28a80d:1110
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:1601
+await in (anonymous)
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:313
+onFocus @ @tanstack_react-query.js?v=cb28a80d:312
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:299
+listener @ @tanstack_react-query.js?v=cb28a80d:270
+Navigated to https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/login
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+client.480aa7c5.js:2 upsell state {state: 'inactive', canUpsell: false}
+Navigated to https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=1o_JExj7rSCI' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=1o_JExj7rSCI' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+message-notifications.tsx:138 🔔 MessageNotifications: Loading unread counts...
+message-notifications.tsx:59 🔔 WebSocket useEffect triggered, user= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:65 🔔 Setting up WebSocket for user: user_1751071509329_mrkw2z95z
+message-notifications.tsx:69 Connecting to WebSocket: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+message-notifications.tsx:138 🔔 MessageNotifications: Loading unread counts...
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+client.480aa7c5.js:2 upsell state {state: 'inactive', canUpsell: false}
+message-notifications.tsx:75 Notification WebSocket connected successfully
+message-notifications.tsx:76 User ID: user_1751071509329_mrkw2z95z
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 4
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 4
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 4
+t.js:1 
+            
+            
+           GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/message-groups/11/members 500 (Internal Server Error)
+apply @ t.js:1
+queryFn @ group-messaging.tsx:107
+fetchFn @ @tanstack_react-query.js?v=cb28a80d:840
+run @ @tanstack_react-query.js?v=cb28a80d:494
+start @ @tanstack_react-query.js?v=cb28a80d:536
+fetch @ @tanstack_react-query.js?v=cb28a80d:926
+executeFetch_fn @ @tanstack_react-query.js?v=cb28a80d:2211
+setOptions @ @tanstack_react-query.js?v=cb28a80d:1955
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:3032
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=cb28a80d:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=cb28a80d:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=cb28a80d:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=cb28a80d:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=cb28a80d:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=cb28a80d:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=cb28a80d:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=cb28a80d:19416
+commitRoot @ chunk-RPCDYKBN.js?v=cb28a80d:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=cb28a80d:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=cb28a80d:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=cb28a80d:18627
+t.js:1 
+            
+            
+           GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/message-groups/10/members 500 (Internal Server Error)
+apply @ t.js:1
+queryFn @ group-messaging.tsx:107
+fetchFn @ @tanstack_react-query.js?v=cb28a80d:840
+run @ @tanstack_react-query.js?v=cb28a80d:494
+start @ @tanstack_react-query.js?v=cb28a80d:536
+fetch @ @tanstack_react-query.js?v=cb28a80d:926
+executeFetch_fn @ @tanstack_react-query.js?v=cb28a80d:2211
+setOptions @ @tanstack_react-query.js?v=cb28a80d:1955
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:3032
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=cb28a80d:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=cb28a80d:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=cb28a80d:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=cb28a80d:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=cb28a80d:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=cb28a80d:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=cb28a80d:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=cb28a80d:19416
+commitRoot @ chunk-RPCDYKBN.js?v=cb28a80d:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=cb28a80d:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=cb28a80d:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=cb28a80d:18627
+t.js:1 
+            
+            
+           POST https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/message-groups/10/members 500 (Internal Server Error)
+apply @ t.js:1
+mutationFn @ group-messaging.tsx:197
+fn @ @tanstack_react-query.js?v=cb28a80d:1189
+run @ @tanstack_react-query.js?v=cb28a80d:494
+start @ @tanstack_react-query.js?v=cb28a80d:536
+execute @ @tanstack_react-query.js?v=cb28a80d:1225
+await in execute
+mutate @ @tanstack_react-query.js?v=cb28a80d:2630
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:3295
+handleAddMembers @ group-messaging.tsx:364
+callCallback2 @ chunk-RPCDYKBN.js?v=cb28a80d:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=cb28a80d:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=cb28a80d:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=cb28a80d:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=cb28a80d:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=cb28a80d:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=cb28a80d:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=cb28a80d:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=cb28a80d:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=cb28a80d:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=cb28a80d:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=cb28a80d:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=cb28a80d:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=cb28a80d:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=cb28a80d:5449
+message-notifications.tsx:118 Notification WebSocket disconnected
+t.js:1 
+            
+            
+           GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user 401 (Unauthorized)
+apply @ t.js:1
+(anonymous) @ queryClient.ts:34
+fetchFn @ @tanstack_react-query.js?v=cb28a80d:840
+run @ @tanstack_react-query.js?v=cb28a80d:494
+start @ @tanstack_react-query.js?v=cb28a80d:536
+fetch @ @tanstack_react-query.js?v=cb28a80d:926
+executeFetch_fn @ @tanstack_react-query.js?v=cb28a80d:2211
+fetch @ @tanstack_react-query.js?v=cb28a80d:2011
+refetch @ @tanstack_react-query.js?v=cb28a80d:2001
+onFocus @ @tanstack_react-query.js?v=cb28a80d:749
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:1112
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:1111
+batch @ @tanstack_react-query.js?v=cb28a80d:583
+onFocus @ @tanstack_react-query.js?v=cb28a80d:1110
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:1601
+await in (anonymous)
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:313
+onFocus @ @tanstack_react-query.js?v=cb28a80d:312
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:299
+listener @ @tanstack_react-query.js?v=cb28a80d:270
+t.js:1 
+            
+            
+           GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/auth/user 401 (Unauthorized)
+apply @ t.js:1
+(anonymous) @ queryClient.ts:34
+fetchFn @ @tanstack_react-query.js?v=cb28a80d:840
+run @ @tanstack_react-query.js?v=cb28a80d:494
+start @ @tanstack_react-query.js?v=cb28a80d:536
+fetch @ @tanstack_react-query.js?v=cb28a80d:926
+executeFetch_fn @ @tanstack_react-query.js?v=cb28a80d:2211
+fetch @ @tanstack_react-query.js?v=cb28a80d:2011
+refetch @ @tanstack_react-query.js?v=cb28a80d:2001
+onFocus @ @tanstack_react-query.js?v=cb28a80d:749
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:1112
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:1111
+batch @ @tanstack_react-query.js?v=cb28a80d:583
+onFocus @ @tanstack_react-query.js?v=cb28a80d:1110
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:1601
+await in (anonymous)
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:313
+onFocus @ @tanstack_react-query.js?v=cb28a80d:312
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:299
+listener @ @tanstack_react-query.js?v=cb28a80d:270
+Navigated to https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/login
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+client.480aa7c5.js:2 upsell state {state: 'inactive', canUpsell: false}
+Navigated to https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=DYZrW1r6j-Np' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=DYZrW1r6j-Np' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+message-notifications.tsx:138 🔔 MessageNotifications: Loading unread counts...
+message-notifications.tsx:59 🔔 WebSocket useEffect triggered, user= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:65 🔔 Setting up WebSocket for user: user_1751071509329_mrkw2z95z
+message-notifications.tsx:69 Connecting to WebSocket: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+message-notifications.tsx:138 🔔 MessageNotifications: Loading unread counts...
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1 
+            
+            
+           GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 4
+client.tsx:234 upsell state {state: 'inactive', canUpsell: false}
+message-notifications.tsx:75 Notification WebSocket connected successfully
+message-notifications.tsx:76 User ID: user_1751071509329_mrkw2z95z
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 4
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie', lastName: 'Long', profileImageUrl: null, …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:163 🔔 MessageNotifications: Rendering with final unread counts: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:201 🔔 MessageNotifications rendering with totalUnread: 4
+t.js:1 
+            
+            
+           POST https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/api/message-groups/11/members 500 (Internal Server Error)
+apply @ t.js:1
+mutationFn @ group-messaging.tsx:197
+fn @ @tanstack_react-query.js?v=cb28a80d:1189
+run @ @tanstack_react-query.js?v=cb28a80d:494
+start @ @tanstack_react-query.js?v=cb28a80d:536
+execute @ @tanstack_react-query.js?v=cb28a80d:1225
+await in execute
+mutate @ @tanstack_react-query.js?v=cb28a80d:2630
+(anonymous) @ @tanstack_react-query.js?v=cb28a80d:3295
+handleAddMembers @ group-messaging.tsx:364
+callCallback2 @ chunk-RPCDYKBN.js?v=cb28a80d:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=cb28a80d:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=cb28a80d:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=cb28a80d:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=cb28a80d:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=cb28a80d:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=cb28a80d:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=cb28a80d:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=cb28a80d:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=cb28a80d:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=cb28a80d:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=cb28a80d:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=cb28a80d:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=cb28a80d:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=cb28a80d:5449
