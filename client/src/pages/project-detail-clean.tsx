@@ -245,27 +245,43 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       
       // Create notification for task completion
       const notificationData = {
-        userId: (user as any)?.id || 'anonymous',
-        type: 'task_completion',
-        title: 'Task Completed!',
-        message: `You completed: ${task.title}`,
-        relatedType: 'project_task',
-        relatedId: task.id,
+        type: 'congratulations',
+        title: 'Task Completed! 🎉',
+        message: `Great work completing "${task.title}"!`,
+        targetUserId: task.assigneeId || (user as any)?.id,
         celebrationData: {
+          senderName: (user as any)?.firstName || (user as any)?.email || 'Team Member',
+          emoji: '🎉',
           taskTitle: task.title,
-          projectId: projectId,
-          completedAt: new Date().toISOString()
+          projectId: projectId
         }
       };
       
-      // Send notification to backend
-      apiRequest('POST', '/api/notifications', notificationData).catch(err => console.log('Notification storage failed:', err));
+      // Send congratulations to messaging system
+      apiRequest('POST', '/api/notifications', notificationData).catch(err => {
+        console.log('Celebration notification failed:', err);
+      });
     }
     
-    updateTaskMutation.mutate({
-      id: task.id,
-      updates: { status: newStatus }
-    });
+    // Update task status with completion tracking
+    const updateData: any = {
+      ...task,
+      status: newStatus,
+    };
+    
+    // Add completion tracking when marking as completed
+    if (newStatus === 'completed') {
+      updateData.completedAt = new Date();
+      updateData.completedBy = (user as any)?.id;
+      updateData.completedByName = (user as any)?.firstName || (user as any)?.email || 'Unknown User';
+    } else {
+      // Clear completion data when marking as incomplete
+      updateData.completedAt = null;
+      updateData.completedBy = null;
+      updateData.completedByName = null;
+    }
+    
+    updateTaskMutation.mutate(updateData);
   };
 
   // Calculate project progress based on completed tasks
@@ -835,6 +851,46 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                         </div>
                       </div>
                       <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1 ml-2 sm:ml-4 shrink-0">
+                        {/* Celebrate button for completed tasks */}
+                        {task.status === 'completed' && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              triggerCelebration(task.title, task.id);
+                              // Send congratulations to team messaging
+                              const notificationData = {
+                                type: 'congratulations',
+                                title: 'Task Celebration! 🎉',
+                                message: `Celebrating the completion of "${task.title}"!`,
+                                targetUserId: task.assigneeId || (user as any)?.id,
+                                celebrationData: {
+                                  senderName: (user as any)?.firstName || (user as any)?.email || 'Team Member',
+                                  emoji: '🎉',
+                                  taskTitle: task.title,
+                                  projectId: projectId
+                                }
+                              };
+                              
+                              apiRequest('POST', '/api/notifications', notificationData).then(() => {
+                                toast({ 
+                                  title: "Celebration sent!", 
+                                  description: "Congratulations have been shared with the team." 
+                                });
+                              }).catch(err => {
+                                console.log('Celebration notification failed:', err);
+                                toast({ 
+                                  title: "Celebration created!", 
+                                  description: "Your celebration has been recorded." 
+                                });
+                              });
+                            }}
+                            className="text-yellow-600 border-yellow-200 hover:bg-yellow-50"
+                          >
+                            <Award className="w-3 h-3 mr-1" />
+                            Celebrate
+                          </Button>
+                        )}
                         <Dialog open={editingTask?.id === task.id} onOpenChange={(open) => !open && setEditingTask(null)}>
                           <DialogTrigger asChild>
                             <Button 

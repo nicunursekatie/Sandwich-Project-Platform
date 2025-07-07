@@ -161,6 +161,11 @@ export class DatabaseStorage implements IStorage {
       processedUpdates.dueDate = new Date(processedUpdates.dueDate);
     }
 
+    // If marking as completed and no completion time set, add it
+    if (processedUpdates.status === 'completed' && !processedUpdates.completedAt) {
+      processedUpdates.completedAt = new Date();
+    }
+
     // Always update the updatedAt timestamp
     processedUpdates.updatedAt = new Date();
 
