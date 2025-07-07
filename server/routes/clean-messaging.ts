@@ -111,6 +111,7 @@ export function setupCleanMessagingRoutes(app: Express) {
   // Send a message
   app.post("/api/conversations/:id/messages", isAuthenticated, async (req, res) => {
     try {
+      console.log(`[DEBUG] POST /api/conversations/${req.params.id}/messages - body:`, req.body);
       const conversationId = parseInt(req.params.id);
       const userId = req.user.id;
       const { content } = req.body;
@@ -151,8 +152,7 @@ export function setupCleanMessagingRoutes(app: Express) {
           conversationId,
           userId,
           content: content.trim(),
-          sender: senderName,
-          createdAt: new Date()
+          sender: senderName
         })
         .returning();
 
@@ -165,7 +165,9 @@ export function setupCleanMessagingRoutes(app: Express) {
       res.json(messageWithUser);
     } catch (error) {
       console.error("Error sending message:", error);
-      res.status(500).json({ message: "Failed to send message" });
+      console.error("Error details:", error.message);
+      console.error("Error stack:", error.stack);
+      res.status(500).json({ message: "Failed to send message", error: error.message });
     }
   });
 
