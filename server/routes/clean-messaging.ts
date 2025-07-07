@@ -133,18 +133,8 @@ export function setupCleanMessagingRoutes(app: Express) {
         return res.status(403).json({ message: "Not authorized to post to this conversation" });
       }
 
-      const [newMessage] = await db
-        .insert(messages)
-        .values({
-          conversationId,
-          userId,
-          content: content.trim(),
-          createdAt: new Date()
-        })
-        .returning();
-
-      // Get user info for response
-      const [user] = await db
+      // Get user info first for sender name
+      const [senderUser] = await db
         .select({
           firstName: users.firstName,
           lastName: users.lastName,
@@ -153,10 +143,23 @@ export function setupCleanMessagingRoutes(app: Express) {
         .from(users)
         .where(eq(users.id, userId));
 
+      const senderName = senderUser ? `${senderUser.firstName} ${senderUser.lastName}`.trim() : senderUser?.email || 'Unknown User';
+
+      const [newMessage] = await db
+        .insert(messages)
+        .values({
+          conversationId,
+          userId,
+          content: content.trim(),
+          sender: senderName,
+          createdAt: new Date()
+        })
+        .returning();
+
       const messageWithUser = {
         ...newMessage,
-        userName: user ? `${user.firstName} ${user.lastName}` : user?.email || 'Unknown User',
-        userEmail: user?.email
+        userName: senderName,
+        userEmail: senderUser?.email
       };
 
       res.json(messageWithUser);
