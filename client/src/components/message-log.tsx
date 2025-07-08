@@ -22,7 +22,11 @@ const messageFormSchema = z.object({
 
 type MessageFormData = z.infer<typeof messageFormSchema>;
 
-export default function MessageLog() {
+interface MessageLogProps {
+  chatType?: string;
+}
+
+export default function MessageLog({ chatType }: MessageLogProps = {}) {
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [replyingTo, setReplyingTo] = useState<Message | null>(null);
@@ -54,7 +58,14 @@ export default function MessageLog() {
   };
   
   const { data: messages = [], isLoading } = useQuery<Message[]>({
-    queryKey: ["/api/messages"]
+    queryKey: chatType ? ["/api/messages", { chatType }] : ["/api/messages"],
+    queryFn: chatType ? async () => {
+      const response = await fetch(`/api/messages?chatType=${chatType}`, {
+        credentials: 'include'
+      });
+      if (!response.ok) throw new Error('Failed to fetch messages');
+      return response.json();
+    } : undefined
   });
   const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
 

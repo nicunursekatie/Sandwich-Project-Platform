@@ -5816,22 +5816,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      // Get the existing General Chat conversation
+      // Determine which conversation to fetch based on chatType
+      let conversationName = 'General Chat';
+      if (chatType === 'driver') conversationName = 'Driver Chat';
+      else if (chatType === 'recipient') conversationName = 'Recipient Chat';
+      else if (chatType === 'host') conversationName = 'Host Chat';
+      
+      // Get the existing conversation
       let [generalConversation] = await db
         .select()
         .from(conversations)
         .where(and(
           eq(conversations.type, 'channel'),
-          eq(conversations.name, 'General Chat')
+          eq(conversations.name, conversationName)
         ));
 
       if (!generalConversation) {
-        // Create General Chat conversation if it doesn't exist
+        // Create conversation if it doesn't exist
         [generalConversation] = await db
           .insert(conversations)
           .values({
             type: 'channel',
-            name: 'General Chat'
+            name: conversationName
           })
           .returning();
       }
@@ -6276,7 +6282,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const formattedMessages = conversationMessages.map(msg => ({
         id: msg.id,
         content: msg.content,
-        userId: msg.userId,
+        userId: msg.userId || msg.user_id,
         sender: msg.sender || 'Unknown User',
         timestamp: msg.createdAt,
         committee: 'conversation' // For compatibility
