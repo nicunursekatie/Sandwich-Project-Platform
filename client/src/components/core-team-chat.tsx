@@ -107,6 +107,19 @@ export default function CoreTeamChat() {
   // Fetch core team messages from the new conversation system
   const { data: messages = [], isLoading: messagesLoading, error: messagesError } = useQuery<Message[]>({
     queryKey: ["/api/conversations", coreTeamConversation?.id, "messages"],
+    queryFn: async () => {
+      if (!coreTeamConversation) return [];
+      const response = await fetch(`/api/conversations/${coreTeamConversation.id}/messages`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        console.error('Failed to fetch Core Team messages:', response.status);
+        throw new Error(`Failed to fetch messages: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log('Core Team messages response:', data);
+      return Array.isArray(data) ? data : [];
+    },
     enabled: !!coreTeamConversation,
     refetchInterval: 3000,
   });
@@ -199,6 +212,7 @@ export default function CoreTeamChat() {
   useEffect(() => {
     setOptimisticMessages(null);
     if (coreTeamConversation?.id) {
+      console.log('🔥 INVALIDATING Core Team messages cache for conversation:', coreTeamConversation.id);
       queryClient.invalidateQueries({ queryKey: ["/api/conversations", coreTeamConversation.id, "messages"] });
     }
   }, [coreTeamConversation?.id]);
