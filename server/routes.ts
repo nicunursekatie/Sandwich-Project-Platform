@@ -6219,13 +6219,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           content: messagesTable.content,
           userId: messagesTable.userId,
           sender: messagesTable.sender,
-          createdAt: messagesTable.createdAt,
-          updatedAt: messagesTable.updatedAt,
-          timestamp: messagesTable.timestamp
+          createdAt: messagesTable.createdAt
         })
         .from(messagesTable)
         .where(eq(messagesTable.conversationId, conversationId))
-        .orderBy(messagesTable.timestamp || messagesTable.createdAt);
+        .orderBy(messagesTable.createdAt);
 
       // Transform to match expected format
       const formattedMessages = conversationMessages.map(msg => ({
@@ -6233,7 +6231,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         content: msg.content,
         userId: msg.userId,
         sender: msg.sender || 'Unknown User',
-        timestamp: msg.timestamp || msg.createdAt,
+        timestamp: msg.createdAt,
         committee: 'conversation' // For compatibility
       }));
 
