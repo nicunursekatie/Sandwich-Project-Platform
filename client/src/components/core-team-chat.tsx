@@ -114,6 +114,7 @@ export default function CoreTeamChat() {
   console.log('Messages error:', messagesError);
   console.log('Messages data:', messages);
   console.log('Messages count:', messages?.length || 0);
+  console.log('First few messages:', messages?.slice(0, 3));
   const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
   const rawMessages = optimisticMessages || messages;
   
@@ -122,9 +123,14 @@ export default function CoreTeamChat() {
     msg && 
     msg.content && 
     msg.content.trim() !== "" &&
-    msg.id &&
-    msg.userId
+    msg.id
   );
+  
+  console.log('🔧 DEBUG Filtering:');
+  console.log('Raw messages count:', rawMessages?.length);
+  console.log('Displayed messages count:', displayedMessages?.length);
+  console.log('Sample raw message:', rawMessages?.[0]);
+  console.log('Sample displayed message:', displayedMessages?.[0]);
 
   // Auto-mark messages as read when viewing
   useAutoMarkAsRead("core_team", messages, hasCoreTeamAccess);
