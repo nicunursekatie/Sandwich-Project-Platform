@@ -91,6 +91,18 @@ export default function CoreTeamChat() {
   // Get Core Team conversation ID  
   const { data: conversations = [] } = useQuery({
     queryKey: ["/api/conversations"],
+    queryFn: async () => {
+      const response = await fetch('/api/conversations', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        console.error('Failed to fetch conversations:', response.status);
+        throw new Error(`Failed to fetch conversations: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log('Conversations API response:', data);
+      return Array.isArray(data) ? data : [];
+    },
     enabled: !!user,
   });
   

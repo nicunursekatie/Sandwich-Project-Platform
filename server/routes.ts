@@ -6270,11 +6270,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           userId: messagesTable.user_id,
           user_id: messagesTable.user_id,
           sender: messagesTable.sender,
-          createdAt: messagesTable.createdAt
+          createdAt: messagesTable.created_at
         })
         .from(messagesTable)
         .where(eq(messagesTable.conversation_id, conversationId))
-        .orderBy(messagesTable.createdAt);
+        .orderBy(messagesTable.created_at);
         
       console.log('[DEBUG] Found messages:', conversationMessages.length);
       console.log('[DEBUG] Sample message:', conversationMessages[0]);
