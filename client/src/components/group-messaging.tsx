@@ -83,9 +83,22 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     return 'M';
   };
 
-  // Fetch user's message groups
+  // Fetch user's message groups from conversations table
   const { data: groups = [], isLoading: groupsLoading } = useQuery<GroupWithMembers[]>({
-    queryKey: ["/api/message-groups"],
+    queryKey: ["/api/conversations/groups"],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/conversations?type=group');
+      return response.map((conv: any) => ({
+        id: conv.id,
+        name: conv.name,
+        description: conv.description || "",
+        memberCount: conv.memberCount || 0,
+        userRole: "member",
+        isActive: true,
+        createdAt: conv.createdAt,
+        createdBy: conv.createdBy || "system"
+      }));
+    }
   });
 
   // Fetch all users for member selection
@@ -101,41 +114,30 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     lastName: string;
     email: string;
   }>>({
-    queryKey: ["/api/message-groups", selectedGroup?.id, "members"],
+    queryKey: ["/api/conversations", selectedGroup?.id, "participants"],
     queryFn: async () => {
       if (!selectedGroup) return [];
-      const response = await fetch(`/api/message-groups/${selectedGroup.id}/members`, {
-        credentials: 'include'
-      });
-      if (!response.ok) {
-        if (response.status === 403) {
-          throw new Error("Not authorized to view members in this group");
-        }
-        throw new Error("Failed to fetch group members");
-      }
-      return response.json();
-    },
-    enabled: !!selectedGroup,
-  });
-
-  // Get or create group conversation
-  const { data: groupConversation } = useQuery({
-    queryKey: ["/api/conversations/group", selectedGroup?.id],
-    queryFn: async () => {
-      if (!selectedGroup) return null;
-      const response = await apiRequest('POST', '/api/conversations', {
-        type: 'group',
-        name: selectedGroup.name,
-        metadata: { groupId: selectedGroup.id }
-      });
+      const response = await apiRequest('GET', `/api/conversations/${selectedGroup.id}/participants`);
       return response;
     },
     enabled: !!selectedGroup,
   });
 
+  // Use the selected group as the conversation directly
+  const groupConversation = selectedGroup ? {
+    id: selectedGroup.id,
+    name: selectedGroup.name,
+    type: 'group'
+  } : null;
+
   // Fetch messages for group conversation
   const { data: messages = [], isLoading: messagesLoading } = useQuery<Message[]>({
     queryKey: ["/api/conversations", groupConversation?.id, "messages"],
+    queryFn: async () => {
+      if (!groupConversation) return [];
+      const response = await apiRequest('GET', `/api/conversations/${groupConversation.id}/messages`);
+      return response;
+    },
     enabled: !!groupConversation,
     refetchInterval: 3000,
   });
