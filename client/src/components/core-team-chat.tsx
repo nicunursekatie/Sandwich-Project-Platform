@@ -100,7 +100,16 @@ export default function CoreTeamChat() {
     refetchInterval: 3000,
   });
   const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
-  const displayedMessages = optimisticMessages || messages;
+  const rawMessages = optimisticMessages || messages;
+  
+  // Filter out empty, null, or undefined messages
+  const displayedMessages = rawMessages.filter(msg => 
+    msg && 
+    msg.content && 
+    msg.content.trim() !== "" &&
+    msg.id &&
+    msg.userId
+  );
 
   // Auto-mark messages as read when viewing
   useAutoMarkAsRead("core_team", messages, hasCoreTeamAccess);
@@ -206,8 +215,8 @@ export default function CoreTeamChat() {
     }
   };
 
-  // Group messages by date
-  const groupedMessages = messages.reduce((groups: { [key: string]: Message[] }, message) => {
+  // Group messages by date using filtered displayedMessages
+  const groupedMessages = displayedMessages.reduce((groups: { [key: string]: Message[] }, message) => {
     const date = formatDate(message.createdAt);
     if (!groups[date]) {
       groups[date] = [];
