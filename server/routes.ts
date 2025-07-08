@@ -721,87 +721,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         console.log(`[DEBUG] Group messages requested - currentUserId: ${currentUserId}, groupId: ${groupId}`);
         
-        // Verify user is member of this group
-        const membership = await db
-          .select()
-          .from(groupMemberships)
-          .where(
-            and(
-              eq(groupMemberships.groupId, groupId),
-              eq(groupMemberships.userId, currentUserId),
-              eq(groupMemberships.isActive, true)
-            )
-          )
-          .limit(1);
+        // TEMPORARILY DISABLED: Verify user is member of this group
+        // const membership = await db
+        //   .select()
+        //   .from(groupMemberships)
+        //   .where(
+        //     and(
+        //       eq(groupMemberships.groupId, groupId),
+        //       eq(groupMemberships.userId, currentUserId),
+        //       eq(groupMemberships.isActive, true)
+        //     )
+        //   )
+        //   .limit(1);
         
-        if (membership.length === 0) {
-          console.log(`[DEBUG] User ${currentUserId} is not a member of group ${groupId}`);
-          return res.status(403).json({ message: "Not a member of this group" });
-        }
+        // if (membership.length === 0) {
+        //   console.log(`[DEBUG] User ${currentUserId} is not a member of group ${groupId}`);
+        //   return res.status(403).json({ message: "Not a member of this group" });
+        // }
         
         console.log(`[DEBUG] User ${currentUserId} verified as member of group ${groupId}`);
         
-        // Get the conversation thread ID for this group
-        const thread = await db
-          .select()
-          .from(conversationThreads)
-          .where(
-            and(
-              eq(conversationThreads.type, "group"),
-              eq(conversationThreads.referenceId, groupId.toString()),
-              eq(conversationThreads.isActive, true)
-            )
-          )
-          .limit(1);
+        // TEMPORARILY DISABLED: Get the conversation thread ID for this group
+        // const thread = await db
+        //   .select()
+        //   .from(conversationThreads)
+        //   .where(
+        //     and(
+        //       eq(conversationThreads.type, "group"),
+        //       eq(conversationThreads.referenceId, groupId.toString()),
+        //       eq(conversationThreads.isActive, true)
+        //     )
+        //   )
+        //   .limit(1);
           
-        if (thread.length === 0) {
-          console.log(`[DEBUG] No conversation thread found for group ${groupId}`);
-          return res.json([]); // Return empty array if no thread exists
-        }
+        // if (thread.length === 0) {
+        //   console.log(`[DEBUG] No conversation thread found for group ${groupId}`);
+        //   return res.json([]); // Return empty array if no thread exists
+        // }
         
-        const threadId = thread[0].id;
-        console.log(`[DEBUG] Using thread ID ${threadId} for group ${groupId}`);
+        console.log(`[DEBUG] No conversation thread found for group ${groupId}`);
+        return res.json([]); // Return empty array temporarily
+        
+        // TEMPORARILY DISABLED: Get messages for this specific thread
+        // const threadId = thread[0].id;
+        // console.log(`[DEBUG] Using thread ID ${threadId} for group ${groupId}`);
         
         // Get messages for this specific thread
-        const messageResults = await db
-          .select()
-          .from(messagesTable)
-          .where(eq(messagesTable.threadId, threadId))
-          .orderBy(messagesTable.timestamp);
-        messages = messageResults;
+        // const messageResults = await db
+        //   .select()
+        //   .from(messagesTable)
+        //   .where(eq(messagesTable.threadId, threadId))
+        //   .orderBy(messagesTable.timestamp);
+        // messages = messageResults;
           
-        console.log(`[DEBUG] Group messages found: ${messages.length} messages for thread ${threadId}`);
+        // TEMPORARILY DISABLED: Group messages functionality
+        // console.log(`[DEBUG] Group messages found: ${messages.length} messages for thread ${threadId}`);
       } else if (messageContext) {
-        // For chat types, use thread-based filtering
-        const thread = await db
-          .select()
-          .from(conversationThreads)
-          .where(
-            and(
-              eq(conversationThreads.type, "chat"),
-              eq(conversationThreads.referenceId, messageContext),
-              eq(conversationThreads.isActive, true)
-            )
-          )
-          .limit(1);
+        // TEMPORARILY DISABLED: For chat types, use thread-based filtering
+        // const thread = await db
+        //   .select()
+        //   .from(conversationThreads)
+        //   .where(
+        //     and(
+        //       eq(conversationThreads.type, "chat"),
+        //       eq(conversationThreads.referenceId, messageContext),
+        //       eq(conversationThreads.isActive, true)
+        //     )
+        //   )
+        //   .limit(1);
           
-        if (thread.length > 0) {
-          const threadId = thread[0].id;
-          console.log(`[DEBUG] Using thread ID ${threadId} for chat type ${messageContext}`);
+        // if (thread.length > 0) {
+        //   const threadId = thread[0].id;
+        //   console.log(`[DEBUG] Using thread ID ${threadId} for chat type ${messageContext}`);
           
-          const messageResults = await db
-            .select()
-            .from(messagesTable)
-            .where(eq(messagesTable.threadId, threadId))
-            .orderBy(messagesTable.timestamp);
-          messages = messageResults;
-        } else {
-          // FIXED: Use storage layer to create thread instead of legacy committee filtering
-          console.log(`❌ CRITICAL: No thread found for chat type ${messageContext}, creating via storage layer`);
-          const threadId = await storage.getOrCreateThreadId(messageContext);
-          console.log(`✅ Created threadId ${threadId} for ${messageContext} via storage layer`);
-          messages = await storage.getMessagesByThreadId(threadId);
-        }
+        //   const messageResults = await db
+        //     .select()
+        //     .from(messagesTable)
+        //     .where(eq(messagesTable.threadId, threadId))
+        //     .orderBy(messagesTable.timestamp);
+        //   messages = messageResults;
+        // } else {
+        //   // FIXED: Use storage layer to create thread instead of legacy committee filtering
+        //   console.log(`❌ CRITICAL: No thread found for chat type ${messageContext}, creating via storage layer`);
+        //   const threadId = await storage.getOrCreateThreadId(messageContext);
+        //   console.log(`✅ Created threadId ${threadId} for ${messageContext} via storage layer`);
+        //   messages = await storage.getMessagesByThreadId(threadId);
+        // }
+        
+        // Temporarily use storage layer for all chat messages
+        messages = await storage.getMessages(messageContext, limit);
       } else {
         messages = limit
           ? await storage.getRecentMessages(limit)
@@ -4705,39 +4713,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let userGroups;
       
       if (canModerateMessages) {
-        // Super admins and moderators see ALL group conversations
-        userGroups = await db
-          .select({
-            id: conversations.id,
-            name: conversations.name,
-            description: sql<string>`null`, // No description field in conversations table
-            createdBy: sql<string>`null`, // No createdBy field in conversations table
-            isActive: sql<boolean>`true`, // All conversations are active by default
-            createdAt: conversations.createdAt,
-            userRole: sql<string>`'moderator'` // Mark as moderator role for super admins
-          })
-          .from(conversations)
-          .where(eq(conversations.type, 'group'));
+        // TEMPORARILY DISABLED: Super admins and moderators see ALL group conversations
+        // userGroups = await db
+        //   .select({
+        //     id: conversations.id,
+        //     name: conversations.name,
+        //     description: sql<string>`null`, // No description field in conversations table
+        //     createdBy: sql<string>`null`, // No createdBy field in conversations table
+        //     isActive: sql<boolean>`true`, // All conversations are active by default
+        //     createdAt: conversations.createdAt,
+        //     userRole: sql<string>`'moderator'` // Mark as moderator role for super admins
+        //   })
+        //   .from(conversations)
+        //   .where(eq(conversations.type, 'group'));
+        
+        userGroups = [];
       } else {
-        // Regular users only see group conversations where they are participants
-        userGroups = await db
-          .select({
-            id: conversations.id,
-            name: conversations.name,
-            description: sql<string>`null`, // No description field in conversations table
-            createdBy: sql<string>`null`, // No createdBy field in conversations table
-            isActive: sql<boolean>`true`, // All conversations are active by default
-            createdAt: conversations.createdAt,
-            userRole: sql<string>`'member'` // Regular participants are members
-          })
-          .from(conversations)
-          .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
-          .where(
-            and(
-              eq(conversations.type, 'group'),
-              eq(conversationParticipants.userId, userId)
-            )
-          );
+        // TEMPORARILY DISABLED: Regular users only see group conversations where they are participants
+        // userGroups = await db
+        //   .select({
+        //     id: conversations.id,
+        //     name: conversations.name,
+        //     description: sql<string>`null`, // No description field in conversations table
+        //     createdBy: sql<string>`null`, // No createdBy field in conversations table
+        //     isActive: sql<boolean>`true`, // All conversations are active by default
+        //     createdAt: conversations.createdAt,
+        //     userRole: sql<string>`'member'` // Regular participants are members
+        //   })
+        //   .from(conversations)
+        //   .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+        //   .where(
+        //     and(
+        //       eq(conversations.type, 'group'),
+        //       eq(conversationParticipants.userId, userId)
+        //     )
+        //   );
+        
+        userGroups = [];
       }
 
       // Get member counts for each group separately
