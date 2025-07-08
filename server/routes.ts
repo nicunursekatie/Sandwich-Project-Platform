@@ -5814,15 +5814,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get messages for general conversation
       const conversationMessages = await db
         .select({
-          id: messages.id,
-          content: messages.content,
-          userId: messages.userId,
-          sender: messages.sender,
-          createdAt: messages.createdAt
+          id: messagesTable.id,
+          content: messagesTable.content,
+          userId: messagesTable.userId,
+          sender: messagesTable.sender,
+          createdAt: messagesTable.createdAt
         })
-        .from(messages)
-        .where(eq(messages.conversationId, generalConversation.id))
-        .orderBy(messages.createdAt);
+        .from(messagesTable)
+        .where(eq(messagesTable.conversationId, generalConversation.id))
+        .orderBy(messagesTable.createdAt);
 
       // Transform to match expected format
       const formattedMessages = conversationMessages.map(msg => ({
@@ -6219,15 +6219,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const conversationMessages = await db
         .select({
-          id: messages.id,
-          content: messages.content,
-          userId: messages.userId,
-          sender: messages.sender,
-          createdAt: messages.createdAt
+          id: messagesTable.id,
+          content: messagesTable.content,
+          userId: messagesTable.userId,
+          sender: messagesTable.sender,
+          createdAt: messagesTable.createdAt
         })
-        .from(messages)
-        .where(eq(messages.conversationId, conversationId))
-        .orderBy(messages.createdAt);
+        .from(messagesTable)
+        .where(eq(messagesTable.conversationId, conversationId))
+        .orderBy(messagesTable.createdAt);
 
       // Transform to match expected format
       const formattedMessages = conversationMessages.map(msg => ({
