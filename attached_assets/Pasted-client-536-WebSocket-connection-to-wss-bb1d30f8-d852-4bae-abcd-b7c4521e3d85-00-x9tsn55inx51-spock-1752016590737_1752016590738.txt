@@ -1,0 +1,190 @@
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=eR2JOGVCo1Ye' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=eR2JOGVCo1Ye' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+message-notifications.tsx:151 🔔 MessageNotifications: Loading unread counts...
+message-notifications.tsx:59 🔔 WebSocket useEffect triggered, user= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+message-notifications.tsx:65 🔔 Setting up WebSocket for user: user_1751071509329_mrkw2z95z
+message-notifications.tsx:71 🔔 Debug - window.location.host: bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+message-notifications.tsx:72 🔔 Debug - window.location.hostname: bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+message-notifications.tsx:73 🔔 Debug - window.location.port: 
+message-notifications.tsx:82 Connecting to WebSocket: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+message-notifications.tsx:151 🔔 MessageNotifications: Loading unread counts...
+message-notifications.tsx:88 Notification WebSocket connected successfully
+message-notifications.tsx:89 User ID: user_1751071509329_mrkw2z95z
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:176 🔔 MessageNotifications: Rendering with final unread counts: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:214 🔔 MessageNotifications rendering with totalUnread: 1
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:176 🔔 MessageNotifications: Rendering with final unread counts: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:214 🔔 MessageNotifications rendering with totalUnread: 1
+message-notifications.tsx:34 🔔 MessageNotifications component mounting...
+message-notifications.tsx:39 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+message-notifications.tsx:40 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+message-notifications.tsx:55 🔔 MessageNotifications: Query state - isLoading: false error: null data: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:176 🔔 MessageNotifications: Rendering with final unread counts: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+message-notifications.tsx:214 🔔 MessageNotifications rendering with totalUnread: 1
+core-team-chat.tsx:99 🔧 DEBUG Core Team Chat:
+core-team-chat.tsx:100 Available conversations: []
+core-team-chat.tsx:101 Looking for Core Team conversation...
+core-team-chat.tsx:102 Found Core Team conversation: undefined
+core-team-chat.tsx:111 🔧 DEBUG Messages Query:
+core-team-chat.tsx:112 Core Team conversation ID: undefined
+core-team-chat.tsx:113 Messages loading: false
+core-team-chat.tsx:114 Messages error: null
+core-team-chat.tsx:115 Messages data: []
+core-team-chat.tsx:116 Messages count: 0
+core-team-chat.tsx:117 First few messages: []
+core-team-chat.tsx:129 🔧 DEBUG Filtering:
+core-team-chat.tsx:130 Raw messages count: 0
+core-team-chat.tsx:131 Displayed messages count: 0
+core-team-chat.tsx:132 Sample raw message: undefined
+core-team-chat.tsx:133 Sample displayed message: undefined
+core-team-chat.tsx:99 🔧 DEBUG Core Team Chat:
+core-team-chat.tsx:100 Available conversations: []
+core-team-chat.tsx:101 Looking for Core Team conversation...
+core-team-chat.tsx:102 Found Core Team conversation: undefined
+core-team-chat.tsx:111 🔧 DEBUG Messages Query:
+core-team-chat.tsx:112 Core Team conversation ID: undefined
+core-team-chat.tsx:113 Messages loading: false
+core-team-chat.tsx:114 Messages error: null
+core-team-chat.tsx:115 Messages data: []
+core-team-chat.tsx:116 Messages count: 0
+core-team-chat.tsx:117 First few messages: []
+core-team-chat.tsx:129 🔧 DEBUG Filtering:
+core-team-chat.tsx:130 Raw messages count: 0
+core-team-chat.tsx:131 Displayed messages count: 0
+core-team-chat.tsx:132 Sample raw message: undefined
+core-team-chat.tsx:133 Sample displayed message: undefined
+core-team-chat.tsx:99 🔧 DEBUG Core Team Chat:
+core-team-chat.tsx:100 Available conversations: []
+core-team-chat.tsx:101 Looking for Core Team conversation...
+core-team-chat.tsx:102 Found Core Team conversation: undefined
+core-team-chat.tsx:111 🔧 DEBUG Messages Query:
+core-team-chat.tsx:112 Core Team conversation ID: undefined
+core-team-chat.tsx:113 Messages loading: false
+core-team-chat.tsx:114 Messages error: null
+core-team-chat.tsx:115 Messages data: []
+core-team-chat.tsx:116 Messages count: 0
+core-team-chat.tsx:117 First few messages: []
+core-team-chat.tsx:129 🔧 DEBUG Filtering:
+core-team-chat.tsx:130 Raw messages count: 0
+core-team-chat.tsx:131 Displayed messages count: 0
+core-team-chat.tsx:132 Sample raw message: undefined
+core-team-chat.tsx:133 Sample displayed message: undefined
+core-team-chat.tsx:99 🔧 DEBUG Core Team Chat:
+core-team-chat.tsx:100 Available conversations: []
+core-team-chat.tsx:101 Looking for Core Team conversation...
+core-team-chat.tsx:102 Found Core Team conversation: undefined
+core-team-chat.tsx:111 🔧 DEBUG Messages Query:
+core-team-chat.tsx:112 Core Team conversation ID: undefined
+core-team-chat.tsx:113 Messages loading: false
+core-team-chat.tsx:114 Messages error: null
+core-team-chat.tsx:115 Messages data: []
+core-team-chat.tsx:116 Messages count: 0
+core-team-chat.tsx:117 First few messages: []
+core-team-chat.tsx:129 🔧 DEBUG Filtering:
+core-team-chat.tsx:130 Raw messages count: 0
+core-team-chat.tsx:131 Displayed messages count: 0
+core-team-chat.tsx:132 Sample raw message: undefined
+core-team-chat.tsx:133 Sample displayed message: undefined
+core-team-chat.tsx:99 🔧 DEBUG Core Team Chat:
+core-team-chat.tsx:100 Available conversations: (17) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+core-team-chat.tsx:101 Looking for Core Team conversation...
+core-team-chat.tsx:102 Found Core Team conversation: {id: 2, type: 'channel', name: 'Core Team', createdAt: '2025-07-06T17:04:29.074Z'}
+core-team-chat.tsx:111 🔧 DEBUG Messages Query:
+core-team-chat.tsx:112 Core Team conversation ID: 2
+core-team-chat.tsx:113 Messages loading: true
+core-team-chat.tsx:114 Messages error: null
+core-team-chat.tsx:115 Messages data: []
+core-team-chat.tsx:116 Messages count: 0
+core-team-chat.tsx:117 First few messages: []
+core-team-chat.tsx:129 🔧 DEBUG Filtering:
+core-team-chat.tsx:130 Raw messages count: 0
+core-team-chat.tsx:131 Displayed messages count: 0
+core-team-chat.tsx:132 Sample raw message: undefined
+core-team-chat.tsx:133 Sample displayed message: undefined
+core-team-chat.tsx:99 🔧 DEBUG Core Team Chat:
+core-team-chat.tsx:100 Available conversations: (17) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+core-team-chat.tsx:101 Looking for Core Team conversation...
+core-team-chat.tsx:102 Found Core Team conversation: {id: 2, type: 'channel', name: 'Core Team', createdAt: '2025-07-06T17:04:29.074Z'}
+core-team-chat.tsx:111 🔧 DEBUG Messages Query:
+core-team-chat.tsx:112 Core Team conversation ID: 2
+core-team-chat.tsx:113 Messages loading: true
+core-team-chat.tsx:114 Messages error: null
+core-team-chat.tsx:115 Messages data: []
+core-team-chat.tsx:116 Messages count: 0
+core-team-chat.tsx:117 First few messages: []
+core-team-chat.tsx:129 🔧 DEBUG Filtering:
+core-team-chat.tsx:130 Raw messages count: 0
+core-team-chat.tsx:131 Displayed messages count: 0
+core-team-chat.tsx:132 Sample raw message: undefined
+core-team-chat.tsx:133 Sample displayed message: undefined
+core-team-chat.tsx:99 🔧 DEBUG Core Team Chat:
+core-team-chat.tsx:100 Available conversations: (17) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+core-team-chat.tsx:101 Looking for Core Team conversation...
+core-team-chat.tsx:102 Found Core Team conversation: {id: 2, type: 'channel', name: 'Core Team', createdAt: '2025-07-06T17:04:29.074Z'}
+core-team-chat.tsx:111 🔧 DEBUG Messages Query:
+core-team-chat.tsx:112 Core Team conversation ID: 2
+core-team-chat.tsx:113 Messages loading: false
+core-team-chat.tsx:114 Messages error: null
+core-team-chat.tsx:115 Messages data: (17) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+core-team-chat.tsx:116 Messages count: 17
+core-team-chat.tsx:117 First few messages: (3) [{…}, {…}, {…}]
+core-team-chat.tsx:129 🔧 DEBUG Filtering:
+core-team-chat.tsx:130 Raw messages count: 17
+core-team-chat.tsx:131 Displayed messages count: 0
+core-team-chat.tsx:132 Sample raw message: {id: 1, type: 'channel', name: 'General Chat', createdAt: '2025-07-06T17:04:29.074Z'}
+core-team-chat.tsx:133 Sample displayed message: undefined
+core-team-chat.tsx:99 🔧 DEBUG Core Team Chat:
+core-team-chat.tsx:100 Available conversations: (17) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+core-team-chat.tsx:101 Looking for Core Team conversation...
+core-team-chat.tsx:102 Found Core Team conversation: {id: 2, type: 'channel', name: 'Core Team', createdAt: '2025-07-06T17:04:29.074Z'}
+core-team-chat.tsx:111 🔧 DEBUG Messages Query:
+core-team-chat.tsx:112 Core Team conversation ID: 2
+core-team-chat.tsx:113 Messages loading: false
+core-team-chat.tsx:114 Messages error: null
+core-team-chat.tsx:115 Messages data: (17) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+core-team-chat.tsx:116 Messages count: 17
+core-team-chat.tsx:117 First few messages: (3) [{…}, {…}, {…}]
+core-team-chat.tsx:129 🔧 DEBUG Filtering:
+core-team-chat.tsx:130 Raw messages count: 17
+core-team-chat.tsx:131 Displayed messages count: 0
+core-team-chat.tsx:132 Sample raw message: {id: 1, type: 'channel', name: 'General Chat', createdAt: '2025-07-06T17:04:29.074Z'}
+core-team-chat.tsx:133 Sample displayed message: undefined
+core-team-chat.tsx:99 🔧 DEBUG Core Team Chat:
+core-team-chat.tsx:100 Available conversations: (17) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+core-team-chat.tsx:101 Looking for Core Team conversation...
+core-team-chat.tsx:102 Found Core Team conversation: {id: 2, type: 'channel', name: 'Core Team', createdAt: '2025-07-06T17:04:29.074Z'}
+core-team-chat.tsx:111 🔧 DEBUG Messages Query:
+core-team-chat.tsx:112 Core Team conversation ID: 2
+core-team-chat.tsx:113 Messages loading: false
+core-team-chat.tsx:114 Messages error: null
+core-team-chat.tsx:115 Messages data: (17) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+core-team-chat.tsx:116 Messages count: 17
+core-team-chat.tsx:117 First few messages: (3) [{…}, {…}, {…}]
+core-team-chat.tsx:129 🔧 DEBUG Filtering:
+core-team-chat.tsx:130 Raw messages count: 17
+core-team-chat.tsx:131 Displayed messages count: 0
+core-team-chat.tsx:132 Sample raw message: {id: 1, type: 'channel', name: 'General Chat', createdAt: '2025-07-06T17:04:29.074Z'}
+core-team-chat.tsx:133 Sample displayed message: undefined

@@ -6255,17 +6255,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
+      console.log('[DEBUG] Fetching messages for conversation ID:', conversationId);
+      
       const conversationMessages = await db
         .select({
           id: messagesTable.id,
           content: messagesTable.content,
-          userId: messagesTable.userId,
+          userId: messagesTable.user_id,
           sender: messagesTable.sender,
           createdAt: messagesTable.createdAt
         })
         .from(messagesTable)
-        .where(eq(messagesTable.conversationId, conversationId))
+        .where(eq(messagesTable.conversation_id, conversationId))
         .orderBy(messagesTable.createdAt);
+        
+      console.log('[DEBUG] Found messages:', conversationMessages.length);
+      console.log('[DEBUG] Sample message:', conversationMessages[0]);
 
       // Transform to match expected format
       const formattedMessages = conversationMessages.map(msg => ({
