@@ -102,11 +102,18 @@ export default function CoreTeamChat() {
   console.log('Found Core Team conversation:', coreTeamConversation);
 
   // Fetch core team messages from the new conversation system
-  const { data: messages = [] } = useQuery<Message[]>({
+  const { data: messages = [], isLoading: messagesLoading, error: messagesError } = useQuery<Message[]>({
     queryKey: ["/api/conversations", coreTeamConversation?.id, "messages"],
     enabled: !!coreTeamConversation,
     refetchInterval: 3000,
   });
+  
+  console.log('🔧 DEBUG Messages Query:');
+  console.log('Core Team conversation ID:', coreTeamConversation?.id);
+  console.log('Messages loading:', messagesLoading);
+  console.log('Messages error:', messagesError);
+  console.log('Messages data:', messages);
+  console.log('Messages count:', messages?.length || 0);
   const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
   const rawMessages = optimisticMessages || messages;
   
