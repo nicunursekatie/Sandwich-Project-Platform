@@ -91,7 +91,15 @@ export default function CoreTeamChat() {
     enabled: !!user,
   });
   
-  const coreTeamConversation = conversations.find(c => c.type === 'channel' && c.name === 'Core Team');
+  const coreTeamConversation = conversations.find(c => 
+    c.type === 'channel' && 
+    (c.name === 'Core Team' || c.name === 'Core Team Chat')
+  );
+  
+  console.log('🔧 DEBUG Core Team Chat:');
+  console.log('Available conversations:', conversations);
+  console.log('Looking for Core Team conversation...');
+  console.log('Found Core Team conversation:', coreTeamConversation);
 
   // Fetch core team messages from the new conversation system
   const { data: messages = [] } = useQuery<Message[]>({
