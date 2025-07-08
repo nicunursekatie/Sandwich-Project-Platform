@@ -88,9 +88,18 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     queryKey: ["/api/conversations/groups"],
     queryFn: async () => {
       console.log("🔍 Fetching groups from API...");
-      const response = await apiRequest('GET', '/api/conversations?type=group');
-      console.log("🔍 Raw API response:", response);
-      const mappedGroups = response.map((conv: any) => ({
+      const response = await fetch('/api/conversations?type=group', {
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch groups: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log("🔍 Raw API response:", data);
+      
+      const mappedGroups = data.map((conv: any) => ({
         id: conv.id,
         name: conv.name,
         description: conv.description || "",
@@ -483,7 +492,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     return user.email[0].toUpperCase();
   };
 
-  console.log("🔍 GroupMessaging render - groups:", groups, "loading:", groupsLoading, "error:", groupsError);
+
 
   if (groupsLoading) {
     return (
@@ -597,13 +606,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                 <Users className="h-8 w-8 mx-auto mb-2" />
                 <p className="text-sm">No groups yet</p>
                 <p className="text-xs">Create your first group to get started</p>
-                <div className="mt-4 text-xs text-red-500 bg-red-50 p-2 rounded">
-                  <div>🔍 Debug Info:</div>
-                  <div>groups.length = {groups.length}</div>
-                  <div>groupsLoading = {groupsLoading.toString()}</div>
-                  <div>groupsError = {groupsError ? groupsError.message : 'none'}</div>
-                  <div>groups data = {JSON.stringify(groups, null, 2)}</div>
-                </div>
+
               </div>
             ) : (
               groups.map((group) => (
