@@ -370,8 +370,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getMessageById(id: number): Promise<Message | undefined> {
-    const [message] = await db.select().from(messages).where(eq(messages.id, id));
-    return message || undefined;
+    console.log(`[DEBUG] getMessageById called with id: ${id}`);
+    try {
+      const [message] = await db.select().from(messages).where(eq(messages.id, id));
+      console.log(`[DEBUG] getMessageById result:`, message);
+      return message || undefined;
+    } catch (error) {
+      console.error(`[ERROR] getMessageById failed for id ${id}:`, error);
+      return undefined;
+    }
   }
 
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
@@ -438,8 +445,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteMessage(id: number): Promise<boolean> {
-    const result = await db.delete(messages).where(eq(messages.id, id));
-    return (result.rowCount ?? 0) > 0;
+    console.log(`[DEBUG] deleteMessage called with id: ${id}`);
+    try {
+      const result = await db.delete(messages).where(eq(messages.id, id));
+      console.log(`[DEBUG] deleteMessage result:`, result);
+      const success = (result.rowCount ?? 0) > 0;
+      console.log(`[DEBUG] deleteMessage success: ${success}`);
+      return success;
+    } catch (error) {
+      console.error(`[ERROR] deleteMessage failed for id ${id}:`, error);
+      return false;
+    }
   }
 
   // REMOVED: Old group messaging methods - replaced with simple conversation system
