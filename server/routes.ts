@@ -5847,13 +5847,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .select({
           id: messagesTable.id,
           content: messagesTable.content,
-          userId: messagesTable.userId,
+          userId: messagesTable.user_id,
           sender: messagesTable.sender,
-          createdAt: messagesTable.createdAt
+          createdAt: messagesTable.created_at
         })
         .from(messagesTable)
-        .where(eq(messagesTable.conversationId, generalConversation.id))
-        .orderBy(messagesTable.createdAt);
+        .where(eq(messagesTable.conversation_id, generalConversation.id))
+        .orderBy(messagesTable.created_at);
 
       // Transform to match expected format
       const formattedMessages = conversationMessages.map(msg => ({
