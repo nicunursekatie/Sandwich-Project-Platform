@@ -11,47 +11,50 @@ export const USER_ROLES = {
 
 export const PERMISSIONS = {
   // Management permissions
-  MANAGE_USERS: 'MANAGE_USERS',
-  MANAGE_HOSTS: 'MANAGE_HOSTS',
-  MANAGE_RECIPIENTS: 'MANAGE_RECIPIENTS',
-  MANAGE_DRIVERS: 'MANAGE_DRIVERS',
-  MANAGE_COLLECTIONS: 'MANAGE_COLLECTIONS',
-  MANAGE_ANNOUNCEMENTS: 'MANAGE_ANNOUNCEMENTS',
-  MANAGE_COMMITTEES: 'MANAGE_COMMITTEES',
-  MANAGE_PROJECTS: 'MANAGE_PROJECTS',
+  MANAGE_USERS: 'manage_users',
+  MANAGE_HOSTS: 'manage_hosts',
+  MANAGE_RECIPIENTS: 'manage_recipients',
+  MANAGE_DRIVERS: 'manage_drivers',
+  MANAGE_COLLECTIONS: 'manage_collections',
+  MANAGE_ANNOUNCEMENTS: 'manage_announcements',
+  MANAGE_COMMITTEES: 'manage_committees',
+  MANAGE_PROJECTS: 'manage_projects',
   
   // View permissions
-  VIEW_PHONE_DIRECTORY: 'VIEW_PHONE_DIRECTORY',
-  VIEW_HOSTS: 'VIEW_HOSTS',
-  VIEW_RECIPIENTS: 'VIEW_RECIPIENTS',
-  VIEW_DRIVERS: 'VIEW_DRIVERS',
-  VIEW_COMMITTEE: 'VIEW_COMMITTEE',
-  VIEW_USERS: 'VIEW_USERS',
-  VIEW_COLLECTIONS: 'VIEW_COLLECTIONS',
-  VIEW_REPORTS: 'VIEW_REPORTS',
-  VIEW_MEETINGS: 'VIEW_MEETINGS',
-  VIEW_ANALYTICS: 'VIEW_ANALYTICS',
-  VIEW_PROJECTS: 'VIEW_PROJECTS',
-  VIEW_ROLE_DEMO: 'VIEW_ROLE_DEMO',
+  VIEW_PHONE_DIRECTORY: 'view_phone_directory',
+  VIEW_HOSTS: 'view_hosts',
+  VIEW_RECIPIENTS: 'view_recipients',
+  VIEW_DRIVERS: 'view_drivers',
+  VIEW_COMMITTEE: 'view_committee',
+  VIEW_USERS: 'view_users',
+  VIEW_COLLECTIONS: 'view_collections',
+  VIEW_REPORTS: 'view_reports',
+  VIEW_MEETINGS: 'view_meetings',
+  VIEW_ANALYTICS: 'view_analytics',
+  VIEW_PROJECTS: 'view_projects',
+  VIEW_ROLE_DEMO: 'view_role_demo',
   
   // Edit permissions
-  EDIT_COLLECTIONS: 'EDIT_COLLECTIONS',
-  EDIT_MEETINGS: 'EDIT_MEETINGS',
-  DELETE_COLLECTIONS: 'DELETE_COLLECTIONS',
-  SCHEDULE_REPORTS: 'SCHEDULE_REPORTS',
+  EDIT_COLLECTIONS: 'edit_data',
+  EDIT_MEETINGS: 'edit_meetings',
+  DELETE_COLLECTIONS: 'delete_data',
+  SCHEDULE_REPORTS: 'schedule_reports',
   
   // Chat permissions
-  GENERAL_CHAT: 'GENERAL_CHAT',
-  COMMITTEE_CHAT: 'COMMITTEE_CHAT',
-  HOST_CHAT: 'HOST_CHAT',
-  DRIVER_CHAT: 'DRIVER_CHAT',
-  CORE_TEAM_CHAT: 'CORE_TEAM_CHAT',
-  DIRECT_MESSAGES: 'DIRECT_MESSAGES',
-  GROUP_MESSAGES: 'GROUP_MESSAGES',
-  SEND_MESSAGES: 'SEND_MESSAGES',
+  GENERAL_CHAT: 'general_chat',
+  COMMITTEE_CHAT: 'committee_chat',
+  HOST_CHAT: 'host_chat',
+  DRIVER_CHAT: 'driver_chat',
+  CORE_TEAM_CHAT: 'core_team_chat',
+  DIRECT_MESSAGES: 'direct_messages',
+  GROUP_MESSAGES: 'group_messages',
+  SEND_MESSAGES: 'send_messages',
+  MODERATE_MESSAGES: 'moderate_messages',
+  EXPORT_DATA: 'export_data',
+  IMPORT_DATA: 'import_data',
   
   // Toolkit access
-  TOOLKIT_ACCESS: 'TOOLKIT_ACCESS'
+  TOOLKIT_ACCESS: 'toolkit_access'
 } as const;
 
 export function getDefaultPermissionsForRole(role: string): string[] {
