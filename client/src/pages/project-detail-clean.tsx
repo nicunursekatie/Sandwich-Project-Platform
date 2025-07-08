@@ -16,7 +16,7 @@ import { CelebrationToast, useCelebration } from "@/components/celebration-toast
 import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
 import { TaskAssigneeSelector } from "@/components/task-assignee-selector";
 import { MultiUserTaskCompletion } from "@/components/multi-user-task-completion";
-import SimpleCongratulations from "@/components/simple-congratulations";
+import ProjectCongratulations from "@/components/project-congratulations";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -245,48 +245,27 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       
       // Create notification for task completion
       const notificationData = {
-        type: 'congratulations',
-        title: 'Task Completed! 🎉',
-        message: `Great work completing "${task.title}"!`,
-        targetUserId: task.assigneeId || (user as any)?.id,
+        userId: (user as any)?.id || 'anonymous',
+        type: 'task_completion',
+        title: 'Task Completed!',
+        message: `You completed: ${task.title}`,
+        relatedType: 'project_task',
+        relatedId: task.id,
         celebrationData: {
-          senderName: (user as any)?.firstName || (user as any)?.email || 'Team Member',
-          emoji: '🎉',
           taskTitle: task.title,
-          projectId: projectId
+          projectId: projectId,
+          completedAt: new Date().toISOString()
         }
       };
       
-      // Send congratulations to messaging system
-      apiRequest('POST', '/api/notifications', notificationData).catch(err => {
-        console.log('Celebration notification failed:', err);
-      });
+      // Send notification to backend
+      apiRequest('POST', '/api/notifications', notificationData).catch(err => console.log('Notification storage failed:', err));
     }
     
-    // Update task status with completion tracking
-    const updateData: any = {
-      ...task,
-      status: newStatus,
-    };
-    
-    // Add completion tracking when marking as completed
-    if (newStatus === 'completed') {
-      updateData.completedAt = new Date().toISOString();
-      updateData.completedBy = (user as any)?.id;
-      updateData.completedByName = (user as any)?.displayName || (user as any)?.email || 'Unknown User';
-      console.log('Task completion tracking:', {
-        completedBy: updateData.completedBy,
-        completedByName: updateData.completedByName,
-        user: user
-      });
-    } else {
-      // Clear completion data when marking as incomplete
-      updateData.completedAt = null;
-      updateData.completedBy = null;
-      updateData.completedByName = null;
-    }
-    
-    updateTaskMutation.mutate(updateData);
+    updateTaskMutation.mutate({
+      id: task.id,
+      updates: { status: newStatus }
+    });
   };
 
   // Calculate project progress based on completed tasks
@@ -609,7 +588,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       </div>
 
       {/* Project Congratulations Section - Only show for completed projects */}
-      <SimpleCongratulations 
+      <ProjectCongratulations 
         projectId={projectId}
         projectTitle={project.title}
         currentUser={user}
@@ -820,19 +799,6 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                                 {new Date(task.dueDate).toLocaleDateString()}
                               </div>
                             )}
-                            {/* Show completion info if task is completed */}
-                            {task.status === 'completed' && (
-                              <div className="flex items-center">
-                                <CheckCircle2 className="w-3 h-3 mr-1 text-green-600" />
-                                <span className="text-green-600">Completed</span>
-                                {(task.completedByName || task.completedBy) && (
-                                  <span className="ml-1 font-medium">by {task.completedByName || task.completedBy}</span>
-                                )}
-                                {task.completedAt && (
-                                  <span className="ml-1">on {new Date(task.completedAt).toLocaleDateString()}</span>
-                                )}
-                              </div>
-                            )}
                           </div>
 
                           {/* Multi-user completion system for tasks with multiple assignees */}
@@ -856,56 +822,6 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                         </div>
                       </div>
                       <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1 ml-2 sm:ml-4 shrink-0">
-                        {/* Celebrate button for completed tasks */}
-                        {task.status === 'completed' && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              // Local celebration effect
-                              triggerCelebration(task.title, task.id);
-                              
-                              // Send congratulations to team messaging (with duplicate prevention)
-                              const notificationData = {
-                                type: 'congratulations',
-                                title: 'Task Celebration! 🎉',
-                                message: `Celebrating the completion of "${task.title}"!`,
-                                targetUserId: task.assigneeId || (user as any)?.id,
-                                celebrationData: {
-                                  senderName: (user as any)?.firstName || (user as any)?.email || 'Team Member',
-                                  emoji: '🎉',
-                                  taskTitle: task.title,
-                                  projectId: projectId,
-                                  timestamp: Date.now() // Add timestamp to prevent duplicates
-                                }
-                              };
-                              
-                              apiRequest('POST', '/api/notifications', notificationData).then(() => {
-                                toast({ 
-                                  title: "Celebration sent!", 
-                                  description: "Congratulations have been shared with the team." 
-                                });
-                              }).catch(err => {
-                                if (err.status === 429) {
-                                  toast({ 
-                                    title: "Already celebrated!", 
-                                    description: "You've already congratulated this recently." 
-                                  });
-                                } else {
-                                  console.log('Celebration notification failed:', err);
-                                  toast({ 
-                                    title: "Celebration created!", 
-                                    description: "Your celebration has been recorded." 
-                                  });
-                                }
-                              });
-                            }}
-                            className="text-yellow-600 border-yellow-200 hover:bg-yellow-50"
-                          >
-                            <Award className="w-3 h-3 mr-1" />
-                            Celebrate
-                          </Button>
-                        )}
                         <Dialog open={editingTask?.id === task.id} onOpenChange={(open) => !open && setEditingTask(null)}>
                           <DialogTrigger asChild>
                             <Button 

@@ -49,8 +49,6 @@ export interface IStorage {
   updateTaskStatus(id: number, status: string): Promise<boolean>;
   deleteProjectTask(id: number): Promise<boolean>;
   getProjectCongratulations(projectId: number): Promise<any[]>;
-  getSimpleCongratulations(projectId: number): Promise<any[]>;
-  addSimpleCongratulation(data: { projectId: number; userId: string; userName: string; message: string }): Promise<any>;
   
   // Task Completions
   createTaskCompletion(completion: InsertTaskCompletion): Promise<TaskCompletion>;
@@ -1173,21 +1171,6 @@ export class MemStorage implements IStorage {
 
   async deleteAnnouncement(id: number): Promise<boolean> {
     return this.announcements.delete(id);
-  }
-
-  // Simple Congratulations methods
-  async getSimpleCongratulations(projectId: number): Promise<any[]> {
-    // For MemStorage, just return empty array since we don't store these
-    return [];
-  }
-
-  async addSimpleCongratulation(data: { projectId: number; userId: string; userName: string; message: string }): Promise<any> {
-    // For MemStorage, just return the data with an ID
-    return {
-      id: Date.now(),
-      ...data,
-      createdAt: new Date().toISOString()
-    };
   }
 }
 

@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications,
+  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, messageGroups, groupMemberships, groupMessageParticipants, conversationThreads,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -161,11 +161,6 @@ export class DatabaseStorage implements IStorage {
       processedUpdates.dueDate = new Date(processedUpdates.dueDate);
     }
 
-    // If marking as completed and no completion time set, add it
-    if (processedUpdates.status === 'completed' && !processedUpdates.completedAt) {
-      processedUpdates.completedAt = new Date();
-    }
-
     // Always update the updatedAt timestamp
     processedUpdates.updatedAt = new Date();
 
@@ -197,35 +192,6 @@ export class DatabaseStorage implements IStorage {
       )
       .orderBy(desc(notifications.createdAt));
     return result;
-  }
-
-  async getSimpleCongratulations(projectId: number): Promise<any[]> {
-    try {
-      // Simple fallback - return empty array for now since table structure is unclear
-      console.log('Getting congratulations for project:', projectId);
-      return [];
-    } catch (error) {
-      console.error('Error fetching simple congratulations:', error);
-      return [];
-    }
-  }
-
-  async addSimpleCongratulation(data: { projectId: number; userId: string; userName: string; message: string }): Promise<any> {
-    try {
-      // Simple fallback - just return the data back for now
-      console.log('Adding congratulation:', data);
-      return {
-        id: Date.now(),
-        projectId: data.projectId,
-        userId: data.userId,
-        userName: data.userName,
-        message: data.message,
-        createdAt: new Date().toISOString()
-      };
-    } catch (error) {
-      console.error('Error adding simple congratulation:', error);
-      throw error;
-    }
   }
 
   async getTaskById(id: number): Promise<ProjectTask | undefined> {

@@ -90,8 +90,6 @@ export const projectTasks = pgTable("project_tasks", {
   assigneeNames: text("assignee_names").array(), // Multiple assignee names as JSON array
   dueDate: text("due_date"),
   completedAt: timestamp("completed_at"),
-  completedBy: text("completed_by"), // User ID who completed the task
-  completedByName: text("completed_by_name"), // User name who completed the task
   attachments: text("attachments"), // JSON array of file paths
   order: integer("order").notNull().default(0), // for task ordering
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -569,5 +567,48 @@ export const insertGoogleSheetSchema = createInsertSchema(googleSheets).omit({
 export type GoogleSheet = typeof googleSheets.$inferSelect;
 export type InsertGoogleSheet = z.infer<typeof insertGoogleSheetSchema>;
 
-// OLD MESSAGING TABLES REMOVED - Using simple 3-table system above
-// The messaging system now uses only: conversations, conversationParticipants, messages
+export const conversationThreads = pgTable("conversation_threads", {
+  id: serial("id").primaryKey(),
+  type: varchar("type", { length: 50 }).notNull(), // 'general', 'committee', 'direct', 'group', etc.
+  referenceId: varchar("reference_id", { length: 100 }), // Optional reference (user IDs for direct, group ID for groups)
+  title: varchar("title", { length: 200 }),
+  createdBy: varchar("created_by", { length: 50 }),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  lastMessageAt: timestamp("last_message_at")
+});
+
+// Message Groups table for organized group conversations
+export const messageGroups = pgTable("message_groups", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  createdBy: varchar("created_by", { length: 50 }).notNull(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow()
+});
+
+// Group memberships for message groups
+export const groupMemberships = pgTable("group_memberships", {
+  id: serial("id").primaryKey(),
+  groupId: integer("group_id").notNull().references(() => messageGroups.id),
+  userId: varchar("user_id", { length: 50 }).notNull(),
+  role: varchar("role", { length: 20 }).default("member"), // 'admin', 'member'
+  isActive: boolean("is_active").default(true),
+  joinedAt: timestamp("joined_at").defaultNow()
+});
+
+// Individual thread participation tracking
+export const groupMessageParticipants = pgTable("group_message_participants", {
+  id: serial("id").primaryKey(),
+  threadId: integer("thread_id").notNull(),
+  userId: varchar("user_id", { length: 50 }).notNull(),
+  status: varchar("status", { length: 20 }).default("active"), // 'active', 'muted', 'left', 'archived'
+  joinedAt: timestamp("joined_at").defaultNow(),
+  lastReadAt: timestamp("last_read_at"),
+  leftAt: timestamp("left_at"),
+  mutedAt: timestamp("muted_at"),
+  archivedAt: timestamp("archived_at")
+});
