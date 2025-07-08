@@ -39,8 +39,8 @@ import SimpleNav from "@/components/simple-nav";
 import AnnouncementBanner from "@/components/announcement-banner";
 import MessageNotifications from "@/components/message-notifications";
 
-export default function Dashboard() {
-  const [activeSection, setActiveSection] = useState("dashboard");
+export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
+  const [activeSection, setActiveSection] = useState(initialSection);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
