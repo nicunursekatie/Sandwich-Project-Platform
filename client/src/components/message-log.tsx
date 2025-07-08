@@ -233,6 +233,23 @@ export default function MessageLog() {
     return colors[index % colors.length];
   };
 
+  const getDisplayName = (message: any) => {
+    if (message.sender && message.sender.trim()) {
+      return message.sender;
+    }
+    if (message.userId) {
+      // Create a friendly fallback name from userId
+      if (message.userId.includes('backup_restored')) {
+        return 'Admin User';
+      }
+      if (message.userId.includes('user_')) {
+        return 'Team Member';
+      }
+      return message.userId.substring(0, 12) + '...';
+    }
+    return 'Anonymous';
+  };
+
 
 
   if (isLoading) {
@@ -327,7 +344,7 @@ export default function MessageLog() {
         
         {rootMessages.map((message, index) => {
           const prevMessage = index > 0 ? rootMessages[index - 1] : null;
-          const isSameSender = prevMessage?.sender === message.sender;
+          const isSameSender = prevMessage?.sender === message.sender && getDisplayName(prevMessage) === getDisplayName(message);
           const timeDiff = prevMessage ? 
             new Date(message.timestamp).getTime() - new Date(prevMessage.timestamp).getTime() : 
             Number.MAX_SAFE_INTEGER;
@@ -341,9 +358,9 @@ export default function MessageLog() {
             <div key={message.id} className={`group hover:bg-slate-50 px-2 py-1 rounded ${shouldShowAvatar ? 'mt-4' : 'mt-0.5'}`}>
               <div className="flex items-start">
                 {shouldShowAvatar ? (
-                  <Avatar className={`w-9 h-9 mr-3 ${getAvatarColor(message.sender)}`}>
+                  <Avatar className={`w-9 h-9 mr-3 ${getAvatarColor(getDisplayName(message))}`}>
                     <AvatarFallback className="text-white text-sm font-medium">
-                      {getInitials(message.sender)}
+                      {getInitials(getDisplayName(message))}
                     </AvatarFallback>
                   </Avatar>
                 ) : (
@@ -358,7 +375,7 @@ export default function MessageLog() {
                   {shouldShowAvatar && (
                     <div className="flex items-baseline mb-1">
                       <span className="font-bold text-slate-900 text-sm mr-2">
-                        {message.sender}
+                        {getDisplayName(message)}
                       </span>
                       <span className="text-xs text-slate-500">
                         {formatMessageTime(message.timestamp)}
