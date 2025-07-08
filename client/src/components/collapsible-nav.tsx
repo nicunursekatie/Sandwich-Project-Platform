@@ -161,9 +161,6 @@ export function CollapsibleNav({ onSectionChange }: { onSectionChange?: (section
                               onClick={() => {
                                 setActiveSection(subItem.id);
                                 onSectionChange?.(subItem.id);
-                                if (subItem.href) {
-                                  setLocation(subItem.href);
-                                }
                               }}
                               className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
                                 isSubActive
@@ -189,9 +186,6 @@ export function CollapsibleNav({ onSectionChange }: { onSectionChange?: (section
                     onClick={() => {
                       setActiveSection(item.id);
                       onSectionChange?.(item.id);
-                      if (item.href) {
-                        setLocation(item.href);
-                      }
                     }}
                     className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
                       isActive
