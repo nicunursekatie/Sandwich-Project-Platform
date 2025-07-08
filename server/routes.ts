@@ -6215,15 +6215,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const conversationMessages = await db
         .select({
-          id: messagesTable.id,
-          content: messagesTable.content,
-          userId: messagesTable.userId,
-          sender: messagesTable.sender,
-          createdAt: messagesTable.createdAt
+          id: messages.id,
+          content: messages.content,
+          userId: messages.userId,
+          sender: messages.sender,
+          createdAt: messages.createdAt
         })
-        .from(messagesTable)
-        .where(eq(messagesTable.conversationId, conversationId))
-        .orderBy(messagesTable.createdAt);
+        .from(messages)
+        .where(eq(messages.conversationId, conversationId))
+        .orderBy(messages.createdAt);
 
       // Transform to match expected format
       const formattedMessages = conversationMessages.map(msg => ({
