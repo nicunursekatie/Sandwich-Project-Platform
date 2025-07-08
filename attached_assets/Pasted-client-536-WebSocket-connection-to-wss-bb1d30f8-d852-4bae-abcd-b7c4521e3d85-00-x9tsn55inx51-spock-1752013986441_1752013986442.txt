@@ -1,0 +1,43 @@
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/?token=IlgoSmizjyKg' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=IlgoSmizjyKg' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= admin_1751065261945 isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+ 🔔 MessageNotifications: Loading unread counts...
+ 🔔 WebSocket useEffect triggered, user= Object
+ 🔔 Setting up WebSocket for user: admin_1751065261945
+ 🔔 Debug - window.location.host: bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+ 🔔 Debug - window.location.hostname: bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev
+ 🔔 Debug - window.location.port: 
+ Connecting to WebSocket: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= admin_1751065261945 isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+ 🔔 MessageNotifications: Loading unread counts...
+ Notification WebSocket connected successfully
+ User ID: admin_1751065261945
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= admin_1751065261945 isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+ 🔔 MessageNotifications: Rendering with final unread counts: Object
+ 🔔 MessageNotifications rendering with totalUnread: 2
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= admin_1751065261945 isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+ 🔔 MessageNotifications: Rendering with final unread counts: Object
+ 🔔 MessageNotifications rendering with totalUnread: 2
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= admin_1751065261945 isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+ 🔔 MessageNotifications: Rendering with final unread counts: Object
+ 🔔 MessageNotifications rendering with totalUnread: 2
+ Notification WebSocket disconnected
