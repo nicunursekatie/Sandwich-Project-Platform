@@ -118,12 +118,11 @@ export default function CoreTeamChat() {
   const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
   const rawMessages = optimisticMessages || messages;
   
-  // Filter out empty, null, or undefined messages
+  // Display all messages that have content
   const displayedMessages = rawMessages.filter(msg => 
     msg && 
     msg.content && 
-    msg.content.trim() !== "" &&
-    msg.id
+    msg.content.trim() !== ""
   );
   
   console.log('🔧 DEBUG Filtering:');

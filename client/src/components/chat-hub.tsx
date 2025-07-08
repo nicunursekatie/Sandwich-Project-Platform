@@ -70,7 +70,7 @@ export default function ChatHub() {
       label: "Host Chat", 
       description: "Coordination with sandwich collection hosts",
       icon: <Building2 className="h-4 w-4" />,
-      component: <MessageLog />,
+      component: <MessageLog chatType="host" />,
       color: "bg-primary/10 text-primary"
     });
   }
@@ -81,7 +81,7 @@ export default function ChatHub() {
       label: "Driver Chat", 
       description: "Delivery and transportation coordination",
       icon: <Truck className="h-4 w-4" />,
-      component: <MessageLog />,
+      component: <MessageLog chatType="driver" />,
       color: "bg-orange-100 text-orange-800"
     });
   }
@@ -92,7 +92,7 @@ export default function ChatHub() {
       label: "Recipient Chat", 
       description: "Communication with receiving organizations",
       icon: <Heart className="h-4 w-4" />,
-      component: <MessageLog />,
+      component: <MessageLog chatType="recipient" />,
       color: "bg-primary/10 text-primary"
     });
   }
