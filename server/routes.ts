@@ -76,8 +76,8 @@ import { db } from "./db";
 const requirePermission = (permission: string) => {
   return async (req: any, res: any, next: any) => {
     try {
-      // Get user from session (assuming temp auth sets user in session)
-      const user = req.session?.user || req.user;
+      // Get user from session or req.user (temp auth sets req.user)
+      const user = req.user || req.session?.user;
 
       if (!user) {
         return res.status(401).json({ message: "Authentication required" });

@@ -6,29 +6,15 @@ import { insertMessageSchema } from "@shared/schema";
 
 const router = Router();
 
-// FIXED: Message management routes with threadId isolation
+// UPDATED: Unified message management routes using new conversation system
 router.get("/messages", async (req, res) => {
   try {
-    const committee = req.query.committee as string;
-    const threadId = req.query.threadId ? parseInt(req.query.threadId as string) : undefined;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
 
-    console.log(`🔍 API QUERY: /messages - committee: ${committee}, threadId: ${threadId}, limit: ${limit}`);
+    console.log(`🔍 API QUERY: /messages - limit: ${limit}`);
 
     let messages;
-    if (threadId) {
-      // Preferred: Query by specific threadId for proper isolation
-      messages = await storage.getMessagesByThreadId(threadId);
-      console.log(`✅ Using threadId-based query: ${threadId}`);
-    } else if (committee && threadId !== undefined) {
-      // Legacy support with threadId filtering
-      messages = await storage.getMessagesByCommittee(committee, threadId);
-      console.log(`⚠️  Using legacy committee query with threadId: ${committee}, ${threadId}`);
-    } else if (committee) {
-      // Legacy fallback - should be avoided
-      messages = await storage.getMessagesByCommittee(committee);
-      console.log(`❌ LEGACY: Using committee-only query (potential cross-chat contamination): ${committee}`);
-    } else if (limit) {
+    if (limit) {
       messages = await storage.getRecentMessages(limit);
     } else {
       messages = await storage.getAllMessages();

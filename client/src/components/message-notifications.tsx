@@ -65,7 +65,20 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
     console.log('🔔 Setting up WebSocket for user:', (user as any)?.id);
     // Set up WebSocket connection for real-time notifications
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host.replace(':80', '').replace(':443', '')}/notifications`;
+    
+    // Fix for Replit environment - use the current hostname and port
+    let host = window.location.host;
+    console.log('🔔 Debug - window.location.host:', window.location.host);
+    console.log('🔔 Debug - window.location.hostname:', window.location.hostname);
+    console.log('🔔 Debug - window.location.port:', window.location.port);
+    
+    if (!host || host === 'localhost:undefined') {
+      // Fallback for Replit environment
+      host = window.location.hostname + (window.location.port ? `:${window.location.port}` : '');
+      console.log('🔔 Debug - Using fallback host:', host);
+    }
+    
+    const wsUrl = `${protocol}//${host}/notifications`;
     console.log('Connecting to WebSocket:', wsUrl);
 
     try {

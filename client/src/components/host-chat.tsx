@@ -85,6 +85,8 @@ export default function HostChat() {
     enabled: !!hostConversation,
     refetchInterval: 3000,
   });
+  const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
+  const displayedMessages = optimisticMessages || messages;
 
   // Auto-mark messages as read when viewing host chat
   useAutoMarkAsRead(
@@ -92,6 +94,13 @@ export default function HostChat() {
     messages, 
     !!selectedHost
   );
+
+  useEffect(() => {
+    setOptimisticMessages(null);
+    if (hostConversation?.id) {
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", hostConversation.id, "messages"] });
+    }
+  }, [hostConversation?.id]);
 
   const sendMessageMutation = useMutation({
     mutationFn: async (data: { content: string }) => {
@@ -117,14 +126,23 @@ export default function HostChat() {
     mutationFn: async (messageId: number) => {
       return await apiRequest('DELETE', `/api/messages/${messageId}`);
     },
+    onMutate: async (messageId: number) => {
+      setOptimisticMessages((prev) => {
+        const base = prev || messages;
+        return base.filter((m) => m.id !== messageId);
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/conversations", hostConversation?.id, "messages"] });
+      setOptimisticMessages(null);
       toast({
         title: "Message deleted",
         description: "The message has been removed",
       });
     },
     onError: () => {
+      setOptimisticMessages(null);
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", hostConversation?.id, "messages"] });
       toast({
         title: "Error",
         description: "Failed to delete message",
@@ -226,13 +244,13 @@ export default function HostChat() {
       {/* Messages */}
       <div className="flex-1 p-4 overflow-y-auto">
         <div className="space-y-4">
-          {messages.length === 0 ? (
+          {displayedMessages.length === 0 ? (
             <div className="text-center text-gray-500 py-8">
               <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>No messages yet. Start the conversation!</p>
             </div>
           ) : (
-            messages.map((message) => (
+            displayedMessages.map((message) => (
               <div key={message.id} className="flex space-x-3 group">
                 <Avatar className="w-8 h-8">
                   <AvatarFallback className="bg-gray-500 text-white text-xs">

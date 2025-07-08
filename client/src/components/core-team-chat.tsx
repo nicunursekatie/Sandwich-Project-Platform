@@ -99,6 +99,8 @@ export default function CoreTeamChat() {
     enabled: !!coreTeamConversation,
     refetchInterval: 3000,
   });
+  const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
+  const displayedMessages = optimisticMessages || messages;
 
   // Auto-mark messages as read when viewing
   useAutoMarkAsRead("core_team", messages, hasCoreTeamAccess);
@@ -132,26 +134,42 @@ export default function CoreTeamChat() {
     mutationFn: async (messageId: number) => {
       return await apiRequest('DELETE', `/api/messages/${messageId}`);
     },
+    onMutate: async (messageId: number) => {
+      setOptimisticMessages((prev) => {
+        const base = prev || messages;
+        return base.filter((m) => m.id !== messageId);
+      });
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages", "core_team"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", coreTeamConversation?.id, "messages"] });
+      setOptimisticMessages(null);
       toast({
         title: "Message deleted",
-        description: "The message has been removed.",
+        description: "The message has been removed",
       });
     },
     onError: () => {
+      setOptimisticMessages(null);
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", coreTeamConversation?.id, "messages"] });
       toast({
         title: "Error",
-        description: "Failed to delete message. Please try again.",
+        description: "Failed to delete message",
         variant: "destructive",
       });
-    },
+    }
   });
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    setOptimisticMessages(null);
+    if (coreTeamConversation?.id) {
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", coreTeamConversation.id, "messages"] });
+    }
+  }, [coreTeamConversation?.id]);
 
   const handleSendMessage = () => {
     if (!message.trim() || !coreTeamConversation) return;

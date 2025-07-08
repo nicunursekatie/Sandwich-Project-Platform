@@ -134,16 +134,25 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   });
 
   // Fetch messages for group conversation
-  const { data: groupMessages = [] } = useQuery<Message[]>({
+  const { data: messages = [], isLoading: messagesLoading } = useQuery<Message[]>({
     queryKey: ["/api/conversations", groupConversation?.id, "messages"],
     enabled: !!groupConversation,
     refetchInterval: 3000,
   });
+  const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
+  const displayedMessages = optimisticMessages || messages;
+
+  useEffect(() => {
+    setOptimisticMessages(null);
+    if (groupConversation?.id) {
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", groupConversation.id, "messages"] });
+    }
+  }, [groupConversation?.id]);
 
   // Auto-mark group messages as read when viewing group
   useAutoMarkAsRead(
     "groups", 
-    groupMessages, 
+    displayedMessages, 
     !!selectedGroup
   );
 
@@ -244,10 +253,29 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     mutationFn: async (messageId: number) => {
       return await apiRequest('DELETE', `/api/messages/${messageId}`);
     },
+    onMutate: async (messageId: number) => {
+      setOptimisticMessages((prev) => {
+        const base = prev || messages;
+        return base.filter((m) => m.id !== messageId);
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/conversations", groupConversation?.id, "messages"] });
-      toast({ title: "Message deleted successfully!" });
+      setOptimisticMessages(null);
+      toast({
+        title: "Message deleted",
+        description: "The message has been removed",
+      });
     },
+    onError: () => {
+      setOptimisticMessages(null);
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", groupConversation?.id, "messages"] });
+      toast({
+        title: "Error",
+        description: "Failed to delete message",
+        variant: "destructive",
+      });
+    }
   });
 
   // Thread status management mutations
@@ -764,14 +792,14 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
             {/* Messages */}
             <ScrollArea className="flex-1 p-4">
               <div className="space-y-3">
-                {groupMessages.length === 0 ? (
+                {displayedMessages.length === 0 ? (
                   <div className="text-center py-8 text-gray-500">
                     <MessageCircle className="h-8 w-8 mx-auto mb-2" />
                     <p className="text-sm">No messages yet</p>
                     <p className="text-xs">Start the conversation!</p>
                   </div>
                 ) : (
-                  groupMessages.map((message) => (
+                  displayedMessages.map((message) => (
                     <div key={message.id} className="group relative">
                       <div className="flex gap-3">
                         <Avatar className="h-8 w-8">

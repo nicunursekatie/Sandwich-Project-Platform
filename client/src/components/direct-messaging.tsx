@@ -114,6 +114,15 @@ export default function DirectMessaging() {
     enabled: !!currentConversation,
     refetchInterval: 3000,
   });
+  const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
+  const displayedMessages = optimisticMessages || messages;
+
+  useEffect(() => {
+    setOptimisticMessages(null);
+    if (currentConversation?.id) {
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", currentConversation.id, "messages"] });
+    }
+  }, [currentConversation?.id]);
 
   // Send message mutation
   const sendMessageMutation = useMutation({
@@ -155,18 +164,31 @@ export default function DirectMessaging() {
   // Delete message mutation
   const deleteMessageMutation = useMutation({
     mutationFn: async (messageId: number) => {
-      const response = await apiRequest('DELETE', `/api/messages/${messageId}`);
-      return response;
+      return await apiRequest('DELETE', `/api/messages/${messageId}`);
+    },
+    onMutate: async (messageId: number) => {
+      setOptimisticMessages((prev) => {
+        const base = prev || messages;
+        return base.filter((m) => m.id !== messageId);
+      });
     },
     onSuccess: () => {
-      if (currentConversation) {
-        queryClient.invalidateQueries({ queryKey: ["/api/conversations", currentConversation.id, "messages"] });
-      }
-      toast({ title: "Message deleted successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", currentConversation?.id, "messages"] });
+      setOptimisticMessages(null);
+      toast({
+        title: "Message deleted",
+        description: "The message has been removed",
+      });
     },
     onError: () => {
-      toast({ title: "Failed to delete message", variant: "destructive" });
-    },
+      setOptimisticMessages(null);
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", currentConversation?.id, "messages"] });
+      toast({
+        title: "Error",
+        description: "Failed to delete message",
+        variant: "destructive",
+      });
+    }
   });
 
   // Auto-scroll to bottom when new messages arrive

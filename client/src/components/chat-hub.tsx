@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import MessageLog from "@/components/message-log";
 import CommitteeChat from "@/components/committee-chat";
 import HostChat from "@/components/host-chat";
-import CommitteeMessageLog from "@/components/committee-message-log";
 import CoreTeamChat from "@/components/core-team-chat";
 import { GroupMessaging } from "@/components/group-messaging";
 import DirectMessaging from "@/components/direct-messaging";
@@ -49,7 +48,7 @@ export default function ChatHub() {
       label: "General Chat", 
       description: "Open discussion for all team members",
       icon: <MessageSquare className="h-4 w-4" />,
-      component: <CommitteeMessageLog committee="general" />,
+      component: <MessageLog />,
       color: "bg-primary/10 text-primary"
     });
   }
@@ -71,7 +70,7 @@ export default function ChatHub() {
       label: "Host Chat", 
       description: "Coordination with sandwich collection hosts",
       icon: <Building2 className="h-4 w-4" />,
-      component: <HostChat />,
+      component: <MessageLog />,
       color: "bg-primary/10 text-primary"
     });
   }
@@ -82,7 +81,7 @@ export default function ChatHub() {
       label: "Driver Chat", 
       description: "Delivery and transportation coordination",
       icon: <Truck className="h-4 w-4" />,
-      component: <CommitteeMessageLog committee="drivers" />,
+      component: <MessageLog />,
       color: "bg-orange-100 text-orange-800"
     });
   }
@@ -93,7 +92,7 @@ export default function ChatHub() {
       label: "Recipient Chat", 
       description: "Communication with receiving organizations",
       icon: <Heart className="h-4 w-4" />,
-      component: <CommitteeMessageLog committee="recipients" />,
+      component: <MessageLog />,
       color: "bg-primary/10 text-primary"
     });
   }
@@ -198,20 +197,20 @@ export default function ChatHub() {
                 onClick={() => setActiveChannel(channel.value)}
               >
                 <div className="flex items-start gap-3 w-full">
-                  <div className={`p-2 rounded-md ${channel.color} flex-shrink-0 mt-0.5`}>
+                  <div className={`p-2 rounded-md ${channel.color}`}>
                     {channel.icon}
                   </div>
                   {!sidebarCollapsed && (
-                    <div className="flex-1 text-left min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-sub-heading text-sm truncate font-medium">{channel.label}</span>
+                    <div className="flex-1 text-left">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-sm">{channel.label}</span>
                         {channel.badge && (
-                          <Badge variant="secondary" className="text-xs flex-shrink-0">
+                          <Badge variant="secondary" className="text-xs">
                             {channel.badge}
                           </Badge>
                         )}
                       </div>
-                      <p className="text-xs font-body text-muted-foreground leading-tight break-words">
+                      <p className="text-xs text-muted-foreground line-clamp-2">
                         {channel.description}
                       </p>
                     </div>
@@ -224,30 +223,15 @@ export default function ChatHub() {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1">
         <Card className="h-full">
-          <CardHeader className="pb-3 border-b">
-            {activeChannel && (
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-md ${availableChannels.find(ch => ch.value === activeChannel)?.color}`}>
-                  {availableChannels.find(ch => ch.value === activeChannel)?.icon}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <CardTitle className="text-lg font-sub-heading flex items-center gap-2">
-                    <Hash className="h-4 w-4 text-muted-foreground" />
-                    <span className="truncate">{availableChannels.find(ch => ch.value === activeChannel)?.label}</span>
-                  </CardTitle>
-                  <p className="text-sm font-body text-muted-foreground truncate">
-                    {availableChannels.find(ch => ch.value === activeChannel)?.description}
-                  </p>
-                </div>
-              </div>
-            )}
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg font-sub-heading">
+              {availableChannels.find(ch => ch.value === activeChannel)?.label || "Chat"}
+            </CardTitle>
           </CardHeader>
-          <CardContent className="p-0 h-[calc(100%-90px)]">
-            <div className="h-full w-full overflow-auto">
-              {renderActiveChannel()}
-            </div>
+          <CardContent className="p-0 h-[calc(100%-80px)]">
+            {renderActiveChannel()}
           </CardContent>
         </Card>
       </div>

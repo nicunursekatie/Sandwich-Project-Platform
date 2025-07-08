@@ -251,15 +251,12 @@ export class DatabaseStorage implements IStorage {
           id: messages.id,
           content: messages.content,
           sender: messages.sender,
-          timestamp: messages.timestamp || messages.createdAt,
+          timestamp: messages.createdAt,
           userId: messages.userId,
-          committee: messages.committee,
-          recipientId: messages.recipientId,
-          conversationId: messages.conversationId,
-          threadId: messages.threadId
+          conversationId: messages.conversationId
         })
         .from(messages)
-        .orderBy(messages.timestamp || messages.createdAt);
+        .orderBy(messages.createdAt);
 
       return result;
     } catch (error) {
@@ -269,15 +266,12 @@ export class DatabaseStorage implements IStorage {
         .select({
           id: messages.id,
           content: messages.content,
-          timestamp: messages.timestamp || messages.createdAt,
+          timestamp: messages.createdAt,
           userId: messages.userId,
-          committee: messages.committee,
-          recipientId: messages.recipientId,
-          conversationId: messages.conversationId,
-          threadId: messages.threadId
+          conversationId: messages.conversationId
         })
         .from(messages)
-        .orderBy(messages.timestamp || messages.createdAt);
+        .orderBy(messages.createdAt);
 
       // Add default sender for compatibility
       return result.map(msg => ({
@@ -291,55 +285,28 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(messages).orderBy(messages.id).limit(limit);
   }
 
-  // FIXED: Messages must be filtered by threadId to prevent cross-chat contamination
-  async getMessagesByCommittee(committee: string, threadId?: number): Promise<Message[]> {
-    if (threadId) {
-      // Filter by specific threadId for proper conversation isolation
-      return await db.select().from(messages)
-        .where(and(eq(messages.committee, committee), eq(messages.threadId, threadId)))
-        .orderBy(messages.id);
-    } else {
-      // Legacy fallback with migration support for messages without threadId
-      console.warn(`⚠️  getMessagesByCommittee called without threadId for committee: ${committee} - checking for orphaned messages`);
+  // REMOVED: getMessagesByCommittee - no longer needed with new conversation system
 
-      // First, try to migrate any orphaned messages for this committee
-      await this.migrateOrphanedMessages(committee);
-
-      // Then return all messages for this committee (including newly migrated ones)
-      return await db.select().from(messages).where(eq(messages.committee, committee)).orderBy(messages.id);
-    }
-  }
-
-  // NEW: Migrate orphaned messages that don't have threadId
-  async migrateOrphanedMessages(committee: string): Promise<void> {
-    try {
-      console.log(`🔧 Checking for orphaned ${committee} messages without threadId...`);
-
-      // Get or create thread for this committee
-      const threadId = await this.getOrCreateThreadId(committee);
-
-      // Update messages without threadId for this committee
-      const result = await db.update(messages)
-        .set({ threadId })
-        .where(and(
-          eq(messages.committee, committee),
-          isNull(messages.threadId)
-        ));
-
-      const updatedCount = result.rowCount || 0;
-      if (updatedCount > 0) {
-        console.log(`✅ Migrated ${updatedCount} orphaned ${committee} messages to threadId ${threadId}`);
-      }
-    } catch (error) {
-      console.error(`❌ Failed to migrate orphaned messages for ${committee}:`, error);
-    }
-  }
-
-  // NEW: Get messages by threadId only (preferred method)
-  async getMessagesByThreadId(threadId: number): Promise<Message[]> {
+  // UPDATED: Get messages by conversationId (preferred method)
+  async getMessagesByConversationId(conversationId: number): Promise<Message[]> {
     return await db.select().from(messages)
-      .where(eq(messages.threadId, threadId))
-      .orderBy(messages.id);
+      .where(eq(messages.conversationId, conversationId))
+      .orderBy(messages.createdAt);
+  }
+
+  // ALIAS: getMessagesByThreadId for backwards compatibility
+  async getMessagesByThreadId(threadId: number): Promise<Message[]> {
+    return await this.getMessagesByConversationId(threadId);
+  }
+
+  // ALIAS: getMessages for backwards compatibility
+  async getMessages(messageContext: string, limit?: number): Promise<Message[]> {
+    if (limit) {
+      return await this.getRecentMessages(limit);
+    } else {
+      // For backwards compatibility, return all messages since committee filtering is removed
+      return await this.getAllMessages();
+    }
   }
 
   // NEW: Get or create conversation for specific conversation types
@@ -385,63 +352,84 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  // FIXED: Direct messages must use threadId for proper isolation
+  // FIXED: Direct messages must use conversationId for proper isolation
   async getDirectMessages(userId1: string, userId2: string): Promise<Message[]> {
-    // Create consistent reference ID for direct message thread
+    // Create consistent reference ID for direct message conversation
     const userIds = [userId1, userId2].sort();
     const referenceId = userIds.join('_');
-    const threadId = await this.getOrCreateThreadId('direct', referenceId);
+    const conversationId = await this.getOrCreateThreadId('direct', referenceId);
 
-    console.log(`🔍 QUERY: getDirectMessages - threadId: ${threadId}, users: ${userId1} <-> ${userId2}, referenceId: ${referenceId}`);
+    console.log(`🔍 QUERY: getDirectMessages - conversationId: ${conversationId}, users: ${userId1} <-> ${userId2}, referenceId: ${referenceId}`);
 
-    const messages = await db.select().from(messages)
-      .where(eq(messages.threadId, threadId))
-      .orderBy(messages.timestamp);
+    const messageResults = await db.select().from(messages)
+      .where(eq(messages.conversationId, conversationId))
+      .orderBy(messages.createdAt);
 
-    console.log(`🔍 RESULT: Found ${messages.length} direct messages for threadId ${threadId}`);
-    return messages;
+    console.log(`🔍 RESULT: Found ${messageResults.length} direct messages for conversationId ${conversationId}`);
+    return messageResults;
   }
 
   async getMessageById(id: number): Promise<Message | undefined> {
-    const [message] = await db.select().from(messages).where(eq(messages.id, id));
-    return message || undefined;
+    console.log(`[DEBUG] getMessageById called with id: ${id}`);
+    try {
+      const [message] = await db.select().from(messages).where(eq(messages.id, id));
+      console.log(`[DEBUG] getMessageById result:`, message);
+      return message || undefined;
+    } catch (error) {
+      console.error(`[ERROR] getMessageById failed for id ${id}:`, error);
+      return undefined;
+    }
   }
 
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
-    // Ensure threadId is set for proper conversation isolation
-    if (!insertMessage.threadId) {
-      // Auto-assign threadId based on committee type and reference
-      let referenceId: string | undefined;
+    // Ensure conversationId is set for proper conversation isolation
+    if (!insertMessage.conversationId) {
+      // Auto-assign conversationId based on message type
+      let conversationType = 'channel';
+      let conversationName = 'general'; // Default to general chat
 
-      if (insertMessage.committee === 'direct' && insertMessage.recipientId) {
-        // For direct messages, create unique reference combining both user IDs
-        const userIds = [insertMessage.userId, insertMessage.recipientId].filter(Boolean).sort();
-        referenceId = userIds.join('_');
-        console.log(`🔍 DIRECT MESSAGE: Creating thread for users ${insertMessage.userId} <-> ${insertMessage.recipientId}, referenceId: ${referenceId}`);
-      } else if (insertMessage.committee === 'group') {
-        // For group messages, use a specific group identifier (to be implemented)
-        referenceId = 'group_' + Date.now(); // Temporary fallback
-        console.log(`🔍 GROUP MESSAGE: Creating thread with referenceId: ${referenceId}`);
+      // For now, create a general conversation if none exists
+      const [conversation] = await db
+        .select()
+        .from(conversations)
+        .where(
+          and(
+            eq(conversations.type, 'channel'),
+            eq(conversations.name, 'general')
+          )
+        )
+        .limit(1);
+
+      if (conversation) {
+        insertMessage.conversationId = conversation.id;
+        console.log(`✅ SEND: Using existing conversationId ${conversation.id} for general message from ${insertMessage.userId}`);
       } else {
-        console.log(`🔍 ${insertMessage.committee.toUpperCase()} MESSAGE: Creating thread for committee ${insertMessage.committee}`);
+        // Create new general conversation
+        const [newConversation] = await db
+          .insert(conversations)
+          .values({
+            type: 'channel',
+            name: 'general'
+          })
+          .returning();
+        
+        insertMessage.conversationId = newConversation.id;
+        console.log(`✅ SEND: Created new conversationId ${newConversation.id} for general message from ${insertMessage.userId}`);
       }
-
-      insertMessage.threadId = await this.getOrCreateThreadId(insertMessage.committee, referenceId);
-      console.log(`✅ SEND: threadId ${insertMessage.threadId} assigned for ${insertMessage.committee} message from ${insertMessage.userId}`);
     } else {
-      console.log(`🔄 SEND: Using existing threadId ${insertMessage.threadId} for ${insertMessage.committee} message from ${insertMessage.userId}`);
+      console.log(`🔄 SEND: Using existing conversationId ${insertMessage.conversationId} for message from ${insertMessage.userId}`);
     }
 
     const [message] = await db.insert(messages).values(insertMessage).returning();
-    console.log(`📤 MESSAGE SENT: id=${message.id}, threadId=${message.threadId}, committee=${message.committee}, sender=${message.userId}`);
+    console.log(`📤 MESSAGE SENT: id=${message.id}, conversationId=${message.conversationId}, sender=${message.userId}`);
     return message;
   }
 
   async getThreadMessages(threadId: number): Promise<Message[]> {
     console.log(`🔍 QUERY: getThreadMessages - threadId: ${threadId}`);
-    const messages = await db.select().from(messages).where(eq(messages.threadId, threadId)).orderBy(messages.timestamp);
-    console.log(`🔍 RESULT: Found ${messages.length} messages for threadId ${threadId}`);
-    return messages;
+    const messageResults = await db.select().from(messages).where(eq(messages.conversationId, threadId)).orderBy(messages.createdAt);
+    console.log(`🔍 RESULT: Found ${messageResults.length} messages for threadId ${threadId}`);
+    return messageResults;
   }
 
   async createReply(insertMessage: InsertMessage, parentId: number): Promise<Message> {
@@ -457,133 +445,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteMessage(id: number): Promise<boolean> {
-    const result = await db.delete(messages).where(eq(messages.id, id));
-    return (result.rowCount ?? 0) > 0;
-  }
-
-  // Group messaging with individual thread management
-  async getUserMessageGroups(userId: string): Promise<any[]> {
-    // Return groups where user has active or muted participation
-    const groups = await db
-      .select({
-        id: messageGroups.id,
-        name: messageGroups.name,
-        description: messageGroups.description,
-        createdBy: messageGroups.createdBy,
-        isActive: messageGroups.isActive,
-        createdAt: messageGroups.createdAt,
-        userStatus: groupMessageParticipants.status
-      })
-      .from(messageGroups)
-      .innerJoin(groupMessageParticipants, eq(messageGroups.id, groupMessageParticipants.threadId))
-      .where(
-        and(
-          eq(groupMessageParticipants.userId, userId),
-          or(
-            eq(groupMessageParticipants.status, 'active'),
-            eq(groupMessageParticipants.status, 'muted')
-          )
-        )
-      );
-    return groups;
-  }
-
-  async getMessageGroupMessages(groupId: number, userId: string): Promise<Message[]> {
-    console.log(`🔍 QUERY: getMessageGroupMessages - groupId: ${groupId}, userId: ${userId}`);
-
-    // Only return messages if user has active or muted participation
-    const participantStatus = await this.getParticipantStatus(groupId, userId);
-    if (!participantStatus || participantStatus === 'left') {
-      console.log(`❌ ACCESS DENIED: User ${userId} has no access to group ${groupId} (status: ${participantStatus})`);
-      return [];
+    console.log(`[DEBUG] deleteMessage called with id: ${id}`);
+    try {
+      const result = await db.delete(messages).where(eq(messages.id, id));
+      console.log(`[DEBUG] deleteMessage result:`, result);
+      const success = (result.rowCount ?? 0) > 0;
+      console.log(`[DEBUG] deleteMessage success: ${success}`);
+      return success;
+    } catch (error) {
+      console.error(`[ERROR] deleteMessage failed for id ${id}:`, error);
+      return false;
     }
-
-    const messages = await db.select().from(messages)
-      .where(eq(messages.threadId, groupId))
-      .orderBy(messages.timestamp);
-
-    console.log(`🔍 RESULT: Found ${messages.length} group messages for groupId ${groupId}, user ${userId}`);
-    return messages;
   }
 
-  async createMessageGroup(group: any): Promise<any> {
-    // This will be implemented with proper types later
-    return {};
-  }
-
-  async addUserToMessageGroup(groupId: number, userId: string, role: string = 'member'): Promise<any> {
-    // Add user as active participant
-    return await this.createThreadParticipant(groupId, userId);
-  }
-
-  // Thread participant management - individual user control over group threads
-  async getThreadParticipants(threadId: number): Promise<any[]> {
-    const participants = await db
-      .select()
-      .from(groupMessageParticipants)
-      .where(eq(groupMessageParticipants.threadId, threadId));
-    return participants;
-  }
-
-  async getParticipantStatus(threadId: number, userId: string): Promise<string | null> {
-    const [participant] = await db
-      .select({ status: groupMessageParticipants.status })
-      .from(groupMessageParticipants)
-      .where(
-        and(
-          eq(groupMessageParticipants.threadId, threadId),
-          eq(groupMessageParticipants.userId, userId)
-        )
-      );
-    return participant?.status || null;
-  }
-
-  async updateParticipantStatus(threadId: number, userId: string, status: 'active' | 'archived' | 'left' | 'muted'): Promise<boolean> {
-    const timestampField = status === 'left' ? 'leftAt' : 
-                          status === 'archived' ? 'archivedAt' : 
-                          status === 'muted' ? 'mutedAt' : null;
-
-    const updates: any = { status };
-    if (timestampField) {
-      updates[timestampField] = new Date();
-    }
-
-    const result = await db
-      .update(groupMessageParticipants)
-      .set(updates)
-      .where(
-        and(
-          eq(groupMessageParticipants.threadId, threadId),
-          eq(groupMessageParticipants.userId, userId)
-        )
-      );
-    return (result.rowCount ?? 0) > 0;
-  }
-
-  async createThreadParticipant(threadId: number, userId: string): Promise<any> {
-    const [participant] = await db
-      .insert(groupMessageParticipants)
-      .values({
-        threadId,
-        userId,
-        status: 'active'
-      })
-      .returning();
-    return participant;
-  }
-
-  async updateParticipantLastRead(threadId: number, userId: string): Promise<boolean> {
-    const result = await db
-      .update(groupMessageParticipants)
-      .set({ lastReadAt: new Date() })
-      .where(
-        and(
-          eq(groupMessageParticipants.threadId, threadId),
-          eq(groupMessageParticipants.userId, userId)
-        )
-      );
-    return (result.rowCount ?? 0) > 0;
-  }
+  // REMOVED: Old group messaging methods - replaced with simple conversation system
+  // These methods referenced non-existent tables (messageGroups, groupMessageParticipants)
+  // The new system uses conversations, conversationParticipants, and messages tables
 
   // Weekly Reports
   async getAllWeeklyReports(): Promise<WeeklyReport[]> {

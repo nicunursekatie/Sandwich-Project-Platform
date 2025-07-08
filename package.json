@@ -63,6 +63,7 @@
     "ipaddr.js": "^2.2.0",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
+    "lint": "^0.8.19",
     "lru-cache": "^11.1.0",
     "lucide-react": "^0.453.0",
     "mammoth": "^1.9.1",

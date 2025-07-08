@@ -12,10 +12,12 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { insertMessageSchema, type Message } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import type { z } from "zod";
+import { z } from "zod";
+import { useAuth } from "@/hooks/useAuth";
 
-const messageFormSchema = insertMessageSchema.extend({
-  sender: insertMessageSchema.shape.sender.default("Team Member")
+const messageFormSchema = z.object({
+  content: z.string().min(1, "Message content is required"),
+  sender: z.string().optional() // Optional since we'll use userName
 });
 
 type MessageFormData = z.infer<typeof messageFormSchema>;
@@ -27,6 +29,7 @@ export default function MessageLog() {
   const [userName, setUserName] = useState("");
   const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
   const [tempUserName, setTempUserName] = useState("");
+  const { user } = useAuth();
 
   // Load user name from localStorage on component mount
   useEffect(() => {
@@ -53,6 +56,9 @@ export default function MessageLog() {
   const { data: messages = [], isLoading } = useQuery<Message[]>({
     queryKey: ["/api/messages"]
   });
+  const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
+
+  const displayedMessages = optimisticMessages || messages;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -63,9 +69,9 @@ export default function MessageLog() {
   }, [messages]);
 
   // Group messages into threads - only show root messages, not replies
-  const rootMessages = messages.filter(m => !m.parentId);
+  const rootMessages = displayedMessages.filter(m => !m.parentId);
   const getThreadReplies = (threadId: number) => 
-    messages.filter(m => m.threadId === threadId && m.parentId);
+    displayedMessages.filter(m => m.threadId === threadId && m.parentId);
   
   const getLatestReply = (threadId: number) => {
     const replies = getThreadReplies(threadId);
@@ -75,7 +81,6 @@ export default function MessageLog() {
   const form = useForm<MessageFormData>({
     resolver: zodResolver(messageFormSchema),
     defaultValues: {
-      sender: "Team Member",
       content: ""
     }
   });
@@ -104,13 +109,12 @@ export default function MessageLog() {
       console.log('Message sent successfully:', data);
       queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
       form.reset({
-        sender: form.getValues("sender"),
         content: ""
       });
       setReplyingTo(null);
       toast({
         title: "Message sent",
-        description: replyingTo ? "Reply added to thread" : "Your message has been added to the team chat."
+        description: "Your message has been added to the team chat."
       });
     },
     onError: (error) => {
@@ -127,14 +131,25 @@ export default function MessageLog() {
     mutationFn: async (messageId: number) => {
       return apiRequest('DELETE', `/api/messages/${messageId}`);
     },
+    onMutate: async (messageId: number) => {
+      // Optimistically remove the message from the UI
+      setOptimisticMessages((prev) => {
+        const base = prev || messages;
+        return base.filter((m) => m.id !== messageId);
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/messages'] });
+      setOptimisticMessages(null);
       toast({
         title: "Message deleted",
         description: "The message has been removed from the chat.",
       });
     },
-    onError: () => {
+    onError: (error, messageId, context) => {
+      // Roll back optimistic update
+      setOptimisticMessages(null);
+      queryClient.invalidateQueries({ queryKey: ['/api/messages'] });
       toast({
         title: "Delete failed",
         description: "Could not delete the message. Please try again.",
@@ -148,14 +163,36 @@ export default function MessageLog() {
     console.log('Form data received:', data);
     console.log('Current userName:', userName);
     console.log('Is replying to:', replyingTo);
-    
-    const messageData = replyingTo 
-      ? { ...data, sender: userName || "Anonymous", parentId: replyingTo.id, threadId: replyingTo.threadId || replyingTo.id }
-      : data;
-      
-    console.log('Final message data to send:', messageData);
+
+    if (!user?.id) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to send messages.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const messageData = {
+      content: data.content,
+      sender: userName || data.sender || "Anonymous",
+      userId: user.id, // Add userId to payload
+    };
+
+    if (replyingTo) {
+      // For replies, we need to handle this differently since we're using the new system
+      console.log('Reply functionality needs to be updated for new messaging system');
+      toast({
+        title: "Reply not supported yet",
+        description: "Reply functionality is being updated for the new messaging system.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    console.log('Final message data to send:', JSON.stringify(messageData));
     console.log('About to call sendMessageMutation.mutate...');
-    
+
     sendMessageMutation.mutate(messageData);
   };
 
@@ -269,14 +306,14 @@ export default function MessageLog() {
             </DialogContent>
           </Dialog>
           <div className="text-xs text-slate-500">
-            {messages.length} {messages.length === 1 ? 'message' : 'messages'}
+            {displayedMessages.length} {displayedMessages.length === 1 ? 'message' : 'messages'}
           </div>
         </div>
       </div>
 
       {/* Chat Messages - Slack style */}
       <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-2 min-h-0">
-        {messages.length === 0 && (
+        {displayedMessages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <MessageCircle className="w-12 h-12 text-slate-300 mb-4" />
             <div className="text-xl font-bold text-slate-900 mb-2">Welcome to #team-chat</div>
@@ -472,21 +509,6 @@ export default function MessageLog() {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <FormField
-              control={form.control}
-              name="sender"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="Display name"
-                      {...field}
-                      className="text-sm"
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
             <div className="flex items-end gap-2">
               <FormField
                 control={form.control}
