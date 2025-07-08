@@ -6052,28 +6052,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      // Get conversations the user is a participant in
-      let userConversations;
-      // Get all channel conversations (these are public) and user's private conversations
-      userConversations = await db
-        .select({
-          id: conversations.id,
-          type: conversations.type,
-          name: conversations.name,
-          createdAt: conversations.createdAt
-        })
-        .from(conversations)
-        .leftJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
-        .where(
-          or(
-            eq(conversations.type, 'channel'), // All channel conversations are accessible
-            eq(conversationParticipants.userId, user.id) // User's private conversations
-          )
-        )
-        .groupBy(conversations.id, conversations.type, conversations.name, conversations.createdAt)
-        .orderBy(desc(conversations.createdAt));
+      // Check for type filter in query params
+      const typeFilter = req.query.type as string;
+      
+      // Super admins with moderate_messages permission can see all conversations
+      const canModerateMessages = user.role === 'super_admin' || 
+        (user.permissions && user.permissions.includes('moderate_messages'));
 
-      res.json(userConversations);
+      let userConversations;
+      
+      if (typeFilter === 'group') {
+        if (canModerateMessages) {
+          // Super admins see ALL group conversations
+          userConversations = await db
+            .select({
+              id: conversations.id,
+              type: conversations.type,
+              name: conversations.name,
+              createdAt: conversations.createdAt
+            })
+            .from(conversations)
+            .where(eq(conversations.type, 'group'));
+        } else {
+          // Regular users see only group conversations they participate in
+          userConversations = await db
+            .select({
+              id: conversations.id,
+              type: conversations.type,
+              name: conversations.name,
+              createdAt: conversations.createdAt
+            })
+            .from(conversations)
+            .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+            .where(
+              and(
+                eq(conversations.type, 'group'),
+                eq(conversationParticipants.userId, user.id)
+              )
+            );
+        }
+      } else {
+        // Get all channel conversations (these are public) and user's private conversations
+        userConversations = await db
+          .select({
+            id: conversations.id,
+            type: conversations.type,
+            name: conversations.name,
+            createdAt: conversations.createdAt
+          })
+          .from(conversations)
+          .leftJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+          .where(
+            or(
+              eq(conversations.type, 'channel'), // All channel conversations are accessible
+              eq(conversationParticipants.userId, user.id) // User's private conversations
+            )
+          )
+          .groupBy(conversations.id, conversations.type, conversations.name, conversations.createdAt)
+      }
+
+      // Add member counts for group conversations
+      if (typeFilter === 'group') {
+        const conversationsWithCounts = await Promise.all(
+          userConversations.map(async (conv) => {
+            const memberCount = await db
+              .select({ count: sql<number>`count(*)` })
+              .from(conversationParticipants)
+              .where(eq(conversationParticipants.conversationId, conv.id));
+            
+            return {
+              id: conv.id,
+              name: conv.name,
+              description: "", // No description field in current schema
+              memberCount: memberCount[0]?.count || 0,
+              userRole: "member",
+              isActive: true,
+              createdAt: conv.createdAt,
+              createdBy: "system"
+            };
+          })
+        );
+        res.json(conversationsWithCounts);
+      } else {
+        res.json(userConversations);
+      }
     } catch (error) {
       console.error('[API] Error fetching conversations:', error);
       res.status(500).json({ message: "Internal server error" });
