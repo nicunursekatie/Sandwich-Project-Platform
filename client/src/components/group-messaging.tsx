@@ -84,11 +84,13 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
   };
 
   // Fetch user's message groups from conversations table
-  const { data: groups = [], isLoading: groupsLoading } = useQuery<GroupWithMembers[]>({
+  const { data: groups = [], isLoading: groupsLoading, error: groupsError } = useQuery<GroupWithMembers[]>({
     queryKey: ["/api/conversations/groups"],
     queryFn: async () => {
+      console.log("🔍 Fetching groups from API...");
       const response = await apiRequest('GET', '/api/conversations?type=group');
-      return response.map((conv: any) => ({
+      console.log("🔍 Raw API response:", response);
+      const mappedGroups = response.map((conv: any) => ({
         id: conv.id,
         name: conv.name,
         description: conv.description || "",
@@ -98,7 +100,11 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
         createdAt: conv.createdAt,
         createdBy: conv.createdBy || "system"
       }));
-    }
+      console.log("🔍 Mapped groups:", mappedGroups);
+      return mappedGroups;
+    },
+    refetchOnMount: true,
+    refetchOnWindowFocus: false
   });
 
   // Fetch all users for member selection
@@ -477,6 +483,8 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     return user.email[0].toUpperCase();
   };
 
+  console.log("🔍 GroupMessaging render - groups:", groups, "loading:", groupsLoading, "error:", groupsError);
+
   if (groupsLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -589,6 +597,13 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
                 <Users className="h-8 w-8 mx-auto mb-2" />
                 <p className="text-sm">No groups yet</p>
                 <p className="text-xs">Create your first group to get started</p>
+                <div className="mt-4 text-xs text-red-500 bg-red-50 p-2 rounded">
+                  <div>🔍 Debug Info:</div>
+                  <div>groups.length = {groups.length}</div>
+                  <div>groupsLoading = {groupsLoading.toString()}</div>
+                  <div>groupsError = {groupsError ? groupsError.message : 'none'}</div>
+                  <div>groups data = {JSON.stringify(groups, null, 2)}</div>
+                </div>
               </div>
             ) : (
               groups.map((group) => (
