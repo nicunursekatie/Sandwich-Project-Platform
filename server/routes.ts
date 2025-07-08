@@ -5791,22 +5791,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      // Get or create general team chat conversation
+      // Get the existing General Chat conversation
       let [generalConversation] = await db
         .select()
         .from(conversations)
         .where(and(
           eq(conversations.type, 'channel'),
-          eq(conversations.name, 'team-chat')
+          eq(conversations.name, 'General Chat')
         ));
 
       if (!generalConversation) {
-        // Create general team chat conversation
+        // Create General Chat conversation if it doesn't exist
         [generalConversation] = await db
           .insert(conversations)
           .values({
             type: 'channel',
-            name: 'team-chat'
+            name: 'General Chat'
           })
           .returning();
       }
@@ -5814,16 +5814,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get messages for general conversation
       const conversationMessages = await db
         .select({
-          id: messagesTable.id,
-          content: messagesTable.content,
-          userId: messagesTable.userId,
-          sender: messagesTable.sender,
-          createdAt: messagesTable.createdAt,
-          updatedAt: messagesTable.updatedAt
+          id: messages.id,
+          content: messages.content,
+          userId: messages.userId,
+          sender: messages.sender,
+          createdAt: messages.createdAt
         })
-        .from(messagesTable)
-        .where(eq(messagesTable.conversationId, generalConversation.id))
-        .orderBy(asc(messagesTable.createdAt));
+        .from(messages)
+        .where(eq(messages.conversationId, generalConversation.id))
+        .orderBy(messages.createdAt);
 
       // Transform to match expected format
       const formattedMessages = conversationMessages.map(msg => ({
@@ -6198,18 +6197,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Channel conversations are accessible to all users
       if (conversation.type !== 'channel') {
-        const [participant] = await db
-          .select()
-          .from(conversationParticipants)
-          .where(
-            and(
-              eq(conversationParticipants.conversationId, conversationId),
-              eq(conversationParticipants.userId, user.id)
-            )
-          );
+        // Super admins with moderate_messages permission can access all conversations
+        const isSuperAdmin = user.role === 'super_admin' && user.permissions?.includes('moderate_messages');
+        
+        if (!isSuperAdmin) {
+          const [participant] = await db
+            .select()
+            .from(conversationParticipants)
+            .where(
+              and(
+                eq(conversationParticipants.conversationId, conversationId),
+                eq(conversationParticipants.userId, user.id)
+              )
+            );
 
-        if (!participant) {
-          return res.status(403).json({ message: "Access denied" });
+          if (!participant) {
+            return res.status(403).json({ message: "Access denied" });
+          }
         }
       }
 
@@ -6268,18 +6272,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Channel conversations are accessible to all users
       if (conversation.type !== 'channel') {
-        const [participant] = await db
-          .select()
-          .from(conversationParticipants)
-          .where(
-            and(
-              eq(conversationParticipants.conversationId, conversationId),
-              eq(conversationParticipants.userId, user.id)
-            )
-          );
+        // Super admins with moderate_messages permission can access all conversations
+        const isSuperAdmin = user.role === 'super_admin' && user.permissions?.includes('moderate_messages');
+        
+        if (!isSuperAdmin) {
+          const [participant] = await db
+            .select()
+            .from(conversationParticipants)
+            .where(
+              and(
+                eq(conversationParticipants.conversationId, conversationId),
+                eq(conversationParticipants.userId, user.id)
+              )
+            );
 
-        if (!participant) {
-          return res.status(403).json({ message: "Access denied" });
+          if (!participant) {
+            return res.status(403).json({ message: "Access denied" });
+          }
         }
       }
 
