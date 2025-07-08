@@ -45,6 +45,7 @@ export const PERMISSIONS = {
   COMMITTEE_CHAT: 'committee_chat',
   HOST_CHAT: 'host_chat',
   DRIVER_CHAT: 'driver_chat',
+  RECIPIENT_CHAT: 'recipient_chat',
   CORE_TEAM_CHAT: 'core_team_chat',
   DIRECT_MESSAGES: 'direct_messages',
   GROUP_MESSAGES: 'group_messages',
