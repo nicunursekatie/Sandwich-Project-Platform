@@ -132,8 +132,14 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     queryKey: ["/api/conversations", selectedGroup?.id, "participants"],
     queryFn: async () => {
       if (!selectedGroup) return [];
-      const response = await apiRequest('GET', `/api/conversations/${selectedGroup.id}/participants`);
-      return response;
+      const response = await fetch(`/api/conversations/${selectedGroup.id}/participants`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch participants: ${response.status}`);
+      }
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
     },
     enabled: !!selectedGroup,
   });
@@ -150,8 +156,14 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
     queryKey: ["/api/conversations", groupConversation?.id, "messages"],
     queryFn: async () => {
       if (!groupConversation) return [];
-      const response = await apiRequest('GET', `/api/conversations/${groupConversation.id}/messages`);
-      return response;
+      const response = await fetch(`/api/conversations/${groupConversation.id}/messages`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch messages: ${response.status}`);
+      }
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
     },
     enabled: !!groupConversation,
     refetchInterval: 3000,
