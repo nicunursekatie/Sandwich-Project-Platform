@@ -16,10 +16,13 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface Message {
   id: number;
-  userId: string;
+  userId?: string;
+  user_id?: string;
   content: string;
-  createdAt: string;
-  conversationId: number;
+  createdAt?: string;
+  timestamp?: string;
+  conversationId?: number;
+  sender?: string;
 }
 
 export default function CoreTeamChat() {
@@ -237,7 +240,8 @@ export default function CoreTeamChat() {
 
   // Group messages by date using filtered displayedMessages
   const groupedMessages = displayedMessages.reduce((groups: { [key: string]: Message[] }, message) => {
-    const date = formatDate(message.createdAt);
+    const timestamp = message.timestamp || message.createdAt || new Date().toISOString();
+    const date = formatDate(timestamp);
     if (!groups[date]) {
       groups[date] = [];
     }
@@ -283,7 +287,7 @@ export default function CoreTeamChat() {
                   <div key={msg.id} className="flex items-start space-x-3 mb-4">
                     <Avatar className="w-8 h-8">
                       <AvatarFallback className="bg-orange-100 text-orange-700 text-xs">
-                        {getUserInitials(msg.userId)}
+                        {getUserInitials(msg.userId || msg.user_id || '')}
                       </AvatarFallback>
                     </Avatar>
                     
@@ -291,14 +295,14 @@ export default function CoreTeamChat() {
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center space-x-2">
                           <span className="font-medium text-sm text-slate-900">
-                            {getUserDisplayName(msg.userId)}
+                            {msg.sender || getUserDisplayName(msg.userId || msg.user_id || '')}
                           </span>
                           <Badge variant="secondary" className="text-xs">
                             <Crown className="w-3 h-3 mr-1" />
                             Admin
                           </Badge>
                           <span className="text-xs text-slate-500">
-                            {new Date(msg.createdAt).toLocaleTimeString('en-US', { 
+                            {new Date(msg.timestamp || msg.createdAt || new Date()).toLocaleTimeString('en-US', { 
                               hour: 'numeric', 
                               minute: '2-digit', 
                               hour12: true 
@@ -307,7 +311,7 @@ export default function CoreTeamChat() {
                         </div>
                         
                         {/* Show dropdown only for message owner or moderators */}
-                        {(msg.userId === user?.id || hasPermission(user, 'moderate_messages')) && (
+                        {((msg.userId || msg.user_id) === user?.id || hasPermission(user, 'moderate_messages')) && (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button

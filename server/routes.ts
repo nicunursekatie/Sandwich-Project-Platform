@@ -6268,6 +6268,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: messagesTable.id,
           content: messagesTable.content,
           userId: messagesTable.user_id,
+          user_id: messagesTable.user_id,
           sender: messagesTable.sender,
           createdAt: messagesTable.createdAt
         })
@@ -6283,6 +6284,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         id: msg.id,
         content: msg.content,
         userId: msg.userId || msg.user_id,
+        user_id: msg.user_id, // Include both forms
         sender: msg.sender || 'Unknown User',
         timestamp: msg.createdAt,
         committee: 'conversation' // For compatibility
