@@ -48,7 +48,7 @@ interface NavigationPlainItem {
 
 type NavigationStructureItem = NavigationSection | NavigationPlainItem;
 
-export function CollapsibleNav() {
+export function CollapsibleNav({ onSectionChange }: { onSectionChange?: (section: string) => void }) {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [expandedSections, setExpandedSections] = useState<string[]>(["operations"]);
   const [location, setLocation] = useLocation();
@@ -100,12 +100,12 @@ export function CollapsibleNav() {
       items: [
         { id: "committee", label: "Committee", icon: Users, href: "/committee", permission: PERMISSIONS.VIEW_COMMITTEE },
         { id: "messages-comm", label: "Messages", icon: MessageCircle, href: "/messages" },
-        { id: "directory", label: "Directory", icon: Phone, href: "/directory", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY }
+        { id: "phone-directory", label: "Directory", icon: Phone, href: "/phone-directory", permission: PERMISSIONS.VIEW_PHONE_DIRECTORY }
       ]
     },
     { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", href: "/toolkit" },
     { id: "development", label: "Development", icon: FolderOpen, type: "item", href: "/development" },
-    { id: "admin", label: "Admin", icon: Users, type: "item", href: "/admin", permission: PERMISSIONS.MANAGE_USERS },
+    { id: "user-management", label: "Admin", icon: Users, type: "item", href: "/user-management", permission: PERMISSIONS.MANAGE_USERS },
   ];
 
   // Simplified navigation filtering - force Operations to always show for committee members
@@ -159,11 +159,10 @@ export function CollapsibleNav() {
                           <li key={subItem.id}>
                             <button
                               onClick={() => {
-
+                                setActiveSection(subItem.id);
+                                onSectionChange?.(subItem.id);
                                 if (subItem.href) {
                                   setLocation(subItem.href);
-                                } else {
-                                  setActiveSection(subItem.id);
                                 }
                               }}
                               className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
@@ -188,11 +187,10 @@ export function CollapsibleNav() {
                 <li key={item.id}>
                   <button
                     onClick={() => {
-
+                      setActiveSection(item.id);
+                      onSectionChange?.(item.id);
                       if (item.href) {
                         setLocation(item.href);
-                      } else {
-                        setActiveSection(item.id);
                       }
                     }}
                     className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${

@@ -35,7 +35,7 @@ import * as React from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { queryClient } from "@/lib/queryClient";
-import SimpleNav from "@/components/simple-nav";
+import { CollapsibleNav } from "@/components/collapsible-nav";
 import AnnouncementBanner from "@/components/announcement-banner";
 import MessageNotifications from "@/components/message-notifications";
 
@@ -389,7 +389,7 @@ export default function Dashboard() {
         } md:translate-x-0 fixed md:relative z-50 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out h-screen max-h-screen`}>
           {/* Simple Navigation with enhanced mobile scrolling */}
           <div className="flex-1 overflow-y-auto pb-6 touch-pan-y">
-            <SimpleNav onSectionChange={setActiveSection} />
+            <CollapsibleNav onSectionChange={setActiveSection} />
           </div>
         </div>
 
