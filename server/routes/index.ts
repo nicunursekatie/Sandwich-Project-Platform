@@ -1,16 +1,15 @@
 
 import { Router } from "express";
 import { z } from "zod";
-import { storage } from "../storage-wrapper";
 import { isAuthenticated } from "../replitAuth";
 
 const router = Router();
 
 // Example route, needs to be replaced with actual routes
-router.get("/conversations", isAuthenticated, async (req, res) => {
+router.get("/conversations", isAuthenticated, async (_req, res) => {
   try {
     // Placeholder logic, replace with actual data fetching
-    const conversations = await storage.list("conversations");
+    const conversations: any[] = [];
     res.json({ conversations });
   } catch (error) {
     console.error("Error fetching conversations:", error);
@@ -31,9 +30,9 @@ router.post("/conversations", isAuthenticated, async (req, res) => {
       return;
     }
 
-    const { participantIds } = result.data;
     const conversationId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    await storage.store(`conversations/${conversationId}`, JSON.stringify({participantIds:participantIds}));
+    // Placeholder: Store conversation data when conversation functionality is implemented
+    // const { participantIds } = result.data;
 
     res.status(201).json({ message: "Conversation created", conversationId: conversationId });
 
@@ -43,9 +42,7 @@ router.post("/conversations", isAuthenticated, async (req, res) => {
   }
 });
 
-// Define apiRoutes as the router
-const apiRoutes = router;
-
+// Export the router directly
 export { router as conversationsRoutes };
-export { apiRoutes };
-export default { apiRoutes };
+export { router as apiRoutes };
+export default router;

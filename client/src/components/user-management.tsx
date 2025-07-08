@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useCelebration, CelebrationToast } from "@/components/celebration-toast";
-import { hasPermission, USER_ROLES, PERMISSIONS, getRoleDisplayName, getDefaultPermissionsForRole } from "@/lib/authUtils";
+import { hasPermission, USER_ROLES, PERMISSIONS, getDefaultPermissionsForRole, getRoleDisplayName } from "@shared/auth-utils";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Users, Shield, Settings, Key, Award, Megaphone, Trash2, Bug } from "lucide-react";
 import AnnouncementManager from "@/components/announcement-manager";
@@ -368,7 +368,7 @@ export default function UserManagement() {
                             Edit
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-2xl">
+                        <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
                           <DialogHeader>
                             <DialogTitle>Edit User Permissions</DialogTitle>
                             <DialogDescription>
@@ -376,7 +376,7 @@ export default function UserManagement() {
                             </DialogDescription>
                           </DialogHeader>
                           
-                          <div className="space-y-6">
+                          <div className="space-y-6 overflow-y-auto flex-1 pr-2">
                             <div>
                               <Label htmlFor="role">Role</Label>
                               <Select
@@ -457,14 +457,15 @@ export default function UserManagement() {
                               </div>
                             </div>
 
-                            <div className="flex justify-end gap-2">
-                              <Button variant="outline" onClick={() => setSelectedUser(null)}>
-                                Cancel
-                              </Button>
-                              <Button onClick={handleSaveChanges}>
-                                Save Changes
-                              </Button>
-                            </div>
+                          </div>
+                          
+                          <div className="flex justify-end gap-2 pt-4 border-t mt-4">
+                            <Button variant="outline" onClick={() => setSelectedUser(null)}>
+                              Cancel
+                            </Button>
+                            <Button onClick={handleSaveChanges}>
+                              Save Changes
+                            </Button>
                           </div>
                         </DialogContent>
                       </Dialog>

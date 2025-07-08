@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, Users, Truck, Home, Heart, Eye, UserCheck, MessageCircle, Edit, Trash2, Phone, FileText, BarChart3 } from "lucide-react";
-import { USER_ROLES, PERMISSIONS, hasPermission, getDefaultPermissionsForRole } from "@/lib/authUtils";
+import { USER_ROLES, PERMISSIONS, hasPermission, getDefaultPermissionsForRole, getRoleDisplayName } from "@shared/auth-utils";
 
 // Sample user objects for each role
 const sampleUsers = {

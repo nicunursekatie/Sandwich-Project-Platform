@@ -18,7 +18,7 @@ import { insertHostSchema, insertHostContactSchema, insertRecipientSchema, inser
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
+import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { Phone, Mail, MapPin, Search, Download, User, Users, Star, Building2, Plus, Edit, Trash2, Upload, FileSpreadsheet, Crown, Settings, ChevronDown } from "lucide-react";
 
 interface Host {

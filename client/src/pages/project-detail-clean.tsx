@@ -20,7 +20,7 @@ import ProjectCongratulations from "@/components/project-congratulations";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
+import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import type { Project, ProjectTask } from "@shared/schema";
 
 interface ProjectDetailCleanProps {
@@ -735,8 +735,6 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                             checked={task.status === 'completed'}
                             onCheckedChange={() => handleToggleTaskCompletion(task)}
                             disabled={!canEdit}
-                            className="w-5 h-5"
-                            title={task.assigneeIds?.length > 1 ? "All team members must complete their portions first" : "Mark task complete"}
                             className="w-5 h-5"
                             title={task.assigneeIds?.length > 1 ? "All team members must complete their portions first" : "Mark task complete"}
                           />

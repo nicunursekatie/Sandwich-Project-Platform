@@ -10,8 +10,7 @@ import CoreTeamChat from "@/components/core-team-chat";
 import { GroupMessaging } from "@/components/group-messaging";
 import DirectMessaging from "@/components/direct-messaging";
 import { useAuth } from "@/hooks/useAuth";
-import { hasPermission, USER_ROLES } from "@/lib/authUtils";
-import { PERMISSIONS } from "@/lib/authUtils";
+import { hasPermission, USER_ROLES, PERMISSIONS } from "@shared/auth-utils";
 import { 
   MessageSquare, 
   Users, 

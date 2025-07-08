@@ -32,7 +32,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useCelebration, CelebrationToast } from "@/components/celebration-toast";
 import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
-import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
+import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import type { Project, InsertProject } from "@shared/schema";
 
 export default function ProjectsClean() {

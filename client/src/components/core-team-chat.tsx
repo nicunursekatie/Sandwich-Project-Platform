@@ -11,7 +11,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useMessageReads } from "@/hooks/useMessageReads";
-import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
+import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface Message {

@@ -659,20 +659,47 @@ export function setupTempAuth(app: Express) {
 }
 
 // Middleware to check if user is authenticated
-export const isAuthenticated: RequestHandler = (req: any, res, next) => {
+export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
   console.log('=== AUTHENTICATION MIDDLEWARE ===');
   console.log('req.session exists:', !!req.session);
   console.log('req.session.user exists:', !!req.session?.user);
-  console.log('req.session.user:', req.session?.user);
 
-  if (req.session.user) {
-    req.user = req.session.user;
-    console.log('Authentication successful, user attached to req.user:', req.user);
-    return next();
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
-  console.log('Authentication failed - no session user');
-  res.status(401).json({ message: "Unauthorized" });
+  // Always fetch fresh user data from database to ensure permissions are current
+  try {
+    const freshUser = await storage.getUserByEmail(req.session.user.email);
+    if (freshUser) {
+      // Update session with fresh user data if permissions are missing or changed
+      if (!req.session.user.permissions || req.session.user.permissions.length === 0 || 
+          JSON.stringify(req.session.user.permissions) !== JSON.stringify(freshUser.permissions)) {
+        req.session.user = {
+          id: freshUser.id,
+          email: freshUser.email,
+          firstName: freshUser.firstName,
+          lastName: freshUser.lastName,
+          profileImageUrl: freshUser.profileImageUrl,
+          role: freshUser.role,
+          permissions: freshUser.permissions,
+          isActive: freshUser.isActive
+        };
+      }
+      // Set req.user to the fresh database user data
+      req.user = freshUser;
+      console.log('Authentication successful, user attached to req.user with permissions:', freshUser.permissions?.length || 0);
+    } else {
+      // User not found in database
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+  } catch (error) {
+    console.error("Error fetching fresh user data in isAuthenticated:", error);
+    // Fallback to session user if database fetch fails
+    req.user = req.session.user;
+  }
+  
+  next();
 };
 
 // Permission checking middleware
@@ -697,14 +724,15 @@ export const requirePermission = (permission: string): RequestHandler => {
       return next();
     }
 
-    // If session user doesn't have permissions array, fetch fresh user data
+    // Always fetch fresh user data from database to ensure permissions are current
     let user = sessionUser;
-    if (!user.permissions) {
-      try {
-        const freshUser = await storage.getUserByEmail(sessionUser.email);
-        if (freshUser) {
-          user = freshUser;
-          // Update session with fresh user data
+    try {
+      const freshUser = await storage.getUserByEmail(sessionUser.email);
+      if (freshUser) {
+        user = freshUser;
+        // Update session with fresh user data if permissions changed
+        if (!user.permissions || user.permissions.length === 0 || 
+            JSON.stringify(req.session.user?.permissions) !== JSON.stringify(freshUser.permissions)) {
           req.session.user = {
             id: freshUser.id,
             email: freshUser.email,
@@ -715,22 +743,12 @@ export const requirePermission = (permission: string): RequestHandler => {
             permissions: freshUser.permissions,
             isActive: freshUser.isActive
           };
-          // Standardize authentication - Always use (req as any).user and attach dbUser to request
-          (req as any).user = freshUser;
         }
-      } catch (error) {
-        console.error("Error fetching fresh user data:", error);
+        // Standardize authentication - Always use (req as any).user and attach dbUser to request
+        (req as any).user = freshUser;
       }
-    } else {
-      // Standardize authentication - Always use (req as any).user and attach dbUser to request
-      try {
-        const dbUser = await storage.getUserByEmail(sessionUser.email);
-        if (dbUser) {
-          (req as any).user = dbUser;
-        }
-      } catch (error) {
-        console.error("Error fetching dbUser in requirePermission:", error);
-      }
+    } catch (error) {
+      console.error("Error fetching fresh user data:", error);
     }
 
     // Check if user has the specific permission
@@ -763,7 +781,7 @@ export async function initializeTempAuth() {
         firstName: "Admin",
         lastName: "User",
         role: "admin",
-        permissions: [],
+        permissions: getDefaultPermissionsForRole("admin"),
         isActive: true,
         profileImageUrl: null,
         metadata: { password: "admin123" } // Default password for convenience

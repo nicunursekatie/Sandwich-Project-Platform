@@ -10,53 +10,48 @@ export const USER_ROLES = {
 } as const;
 
 export const PERMISSIONS = {
-  // Core access
-  VIEW_PHONE_DIRECTORY: 'view_phone_directory',
+  // Management permissions
+  MANAGE_USERS: 'MANAGE_USERS',
+  MANAGE_HOSTS: 'MANAGE_HOSTS',
+  MANAGE_RECIPIENTS: 'MANAGE_RECIPIENTS',
+  MANAGE_DRIVERS: 'MANAGE_DRIVERS',
+  MANAGE_COLLECTIONS: 'MANAGE_COLLECTIONS',
+  MANAGE_ANNOUNCEMENTS: 'MANAGE_ANNOUNCEMENTS',
+  MANAGE_COMMITTEES: 'MANAGE_COMMITTEES',
+  MANAGE_PROJECTS: 'MANAGE_PROJECTS',
   
-  // Editing permissions (admin only)
-  EDIT_DATA: 'edit_data',
-  DELETE_DATA: 'delete_data',
+  // View permissions
+  VIEW_PHONE_DIRECTORY: 'VIEW_PHONE_DIRECTORY',
+  VIEW_HOSTS: 'VIEW_HOSTS',
+  VIEW_RECIPIENTS: 'VIEW_RECIPIENTS',
+  VIEW_DRIVERS: 'VIEW_DRIVERS',
+  VIEW_COMMITTEE: 'VIEW_COMMITTEE',
+  VIEW_USERS: 'VIEW_USERS',
+  VIEW_COLLECTIONS: 'VIEW_COLLECTIONS',
+  VIEW_REPORTS: 'VIEW_REPORTS',
+  VIEW_MEETINGS: 'VIEW_MEETINGS',
+  VIEW_ANALYTICS: 'VIEW_ANALYTICS',
+  VIEW_PROJECTS: 'VIEW_PROJECTS',
+  VIEW_ROLE_DEMO: 'VIEW_ROLE_DEMO',
   
-  // Message moderation (super admin only)
-  MODERATE_MESSAGES: 'moderate_messages',
+  // Edit permissions
+  EDIT_COLLECTIONS: 'EDIT_COLLECTIONS',
+  EDIT_MEETINGS: 'EDIT_MEETINGS',
+  DELETE_COLLECTIONS: 'DELETE_COLLECTIONS',
+  SCHEDULE_REPORTS: 'SCHEDULE_REPORTS',
   
-  // Chat access - specific chat room permissions
-  GENERAL_CHAT: 'general_chat',
-  COMMITTEE_CHAT: 'committee_chat',
-  HOST_CHAT: 'host_chat',
-  DRIVER_CHAT: 'driver_chat',
-  RECIPIENT_CHAT: 'recipient_chat',
-  CORE_TEAM_CHAT: 'core_team_chat',
-  DIRECT_MESSAGES: 'direct_messages',
-  GROUP_MESSAGES: 'group_messages',
+  // Chat permissions
+  GENERAL_CHAT: 'GENERAL_CHAT',
+  COMMITTEE_CHAT: 'COMMITTEE_CHAT',
+  HOST_CHAT: 'HOST_CHAT',
+  DRIVER_CHAT: 'DRIVER_CHAT',
+  CORE_TEAM_CHAT: 'CORE_TEAM_CHAT',
+  DIRECT_MESSAGES: 'DIRECT_MESSAGES',
+  GROUP_MESSAGES: 'GROUP_MESSAGES',
+  SEND_MESSAGES: 'SEND_MESSAGES',
   
-  // Toolkit access (public but tracked)
-  TOOLKIT_ACCESS: 'toolkit_access',
-  
-  // Data viewing (most users)
-  VIEW_COLLECTIONS: 'view_collections',
-  VIEW_REPORTS: 'view_reports',
-  VIEW_PROJECTS: 'view_projects',
-  VIEW_MEETINGS: 'view_meetings',
-  VIEW_ANALYTICS: 'view_analytics',
-  VIEW_ROLE_DEMO: 'view_role_demo',
-  
-  // Individual tab access
-  VIEW_HOSTS: 'view_hosts',
-  VIEW_RECIPIENTS: 'view_recipients', 
-  VIEW_DRIVERS: 'view_drivers',
-  VIEW_COMMITTEE: 'view_committee',
-  
-  // User management
-  VIEW_USERS: 'view_users',
-  MANAGE_USERS: 'manage_users',
-  
-  // Data export (admin only)
-  EXPORT_DATA: 'export_data',
-  IMPORT_DATA: 'import_data',
-  
-  // Message sending
-  SEND_MESSAGES: 'send_messages'
+  // Toolkit access
+  TOOLKIT_ACCESS: 'TOOLKIT_ACCESS'
 } as const;
 
 export function getDefaultPermissionsForRole(role: string): string[] {
@@ -176,4 +171,34 @@ export function hasAccessToChat(user: any, chatRoom: string): boolean {
   if (!requiredPermission) return false;
   
   return user.permissions.includes(requiredPermission);
+}
+
+// Function to check if user has a specific permission
+export function hasPermission(user: any, permission: string): boolean {
+  if (!user || !user.permissions) return false;
+  return user.permissions.includes(permission);
+}
+
+// Function to get human-readable role display name
+export function getRoleDisplayName(role: string): string {
+  switch (role) {
+    case USER_ROLES.SUPER_ADMIN:
+      return 'Super Administrator';
+    case USER_ROLES.ADMIN:
+      return 'Administrator';
+    case USER_ROLES.COMMITTEE_MEMBER:
+      return 'Committee Member';
+    case USER_ROLES.HOST:
+      return 'Host Organization';
+    case USER_ROLES.DRIVER:
+      return 'Delivery Driver';
+    case USER_ROLES.VOLUNTEER:
+      return 'Volunteer';
+    case USER_ROLES.RECIPIENT:
+      return 'Recipient Organization';
+    case USER_ROLES.VIEWER:
+      return 'Viewer';
+    default:
+      return role.charAt(0).toUpperCase() + role.slice(1).replace('_', ' ');
+  }
 }

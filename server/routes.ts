@@ -221,9 +221,22 @@ const projectFilesUpload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup memory session store as fallback since PostgreSQL sessions have conflicts
-  // We'll use PostgreSQL for data persistence but memory for sessions to avoid table conflicts
-  const sessionStore = new session.MemoryStore();
+  // Setup PostgreSQL session store for production-ready session persistence
+  // This replaces the previous MemoryStore which was causing:
+  // - Memory leaks and server crashes every ~5 minutes
+  // - Session loss on server restarts
+  // - "MemoryStore is not designed for a production environment" warnings
+  const pgStore = connectPg(session);
+  const sessionStore = new pgStore({
+    conString: process.env.DATABASE_URL,
+    createTableIfMissing: true, // Auto-create sessions table if it doesn't exist
+    ttl: 7 * 24 * 60 * 60, // 7 days TTL (in seconds for pg-simple)
+    tableName: "sessions",
+    pruneSessionInterval: 60 * 15, // Prune expired sessions every 15 minutes
+    errorLog: (error) => {
+      console.error('Session store error:', error);
+    }
+  });
 
   // Add session middleware with PostgreSQL storage
   app.use(
@@ -721,23 +734,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         console.log(`[DEBUG] Group messages requested - currentUserId: ${currentUserId}, groupId: ${groupId}`);
         
-        // TEMPORARILY DISABLED: Verify user is member of this group
-        // const membership = await db
-        //   .select()
-        //   .from(groupMemberships)
-        //   .where(
-        //     and(
-        //       eq(groupMemberships.groupId, groupId),
-        //       eq(groupMemberships.userId, currentUserId),
-        //       eq(groupMemberships.isActive, true)
-        //     )
-        //   )
-        //   .limit(1);
+        // Verify user is member of this group
+        const membership = await db
+          .select()
+          .from(groupMemberships)
+          .where(
+            and(
+              eq(groupMemberships.groupId, groupId),
+              eq(groupMemberships.userId, currentUserId),
+              eq(groupMemberships.isActive, true)
+            )
+          )
+          .limit(1);
         
-        // if (membership.length === 0) {
-        //   console.log(`[DEBUG] User ${currentUserId} is not a member of group ${groupId}`);
-        //   return res.status(403).json({ message: "Not a member of this group" });
-        // }
+        if (membership.length === 0) {
+          console.log(`[DEBUG] User ${currentUserId} is not a member of group ${groupId}`);
+          return res.status(403).json({ message: "Not a member of this group" });
+        }
         
         console.log(`[DEBUG] User ${currentUserId} verified as member of group ${groupId}`);
         
@@ -759,8 +772,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
         //   return res.json([]); // Return empty array if no thread exists
         // }
         
-        console.log(`[DEBUG] No conversation thread found for group ${groupId}`);
-        return res.json([]); // Return empty array temporarily
+        // Get the conversation thread ID for this group
+        const thread = await db
+          .select()
+          .from(conversationThreads)
+          .where(
+            and(
+              eq(conversationThreads.type, "group"),
+              eq(conversationThreads.referenceId, groupId.toString()),
+              eq(conversationThreads.isActive, true)
+            )
+          )
+          .limit(1);
+          
+        if (thread.length === 0) {
+          console.log(`[DEBUG] No conversation thread found for group ${groupId}`);
+          return res.json([]); // Return empty array if no thread exists
+        }
+        
+        const threadId = thread[0].id;
+        console.log(`[DEBUG] Using thread ID ${threadId} for group ${groupId}`);
+        
+        // Get messages for this specific thread
+        const messageResults = await db
+          .select()
+          .from(messagesTable)
+          .where(eq(messagesTable.threadId, threadId))
+          .orderBy(messagesTable.timestamp);
+        messages = messageResults;
+          
+        console.log(`[DEBUG] Group messages found: ${messages.length} messages for thread ${threadId}`);
         
         // TEMPORARILY DISABLED: Get messages for this specific thread
         // const threadId = thread[0].id;
@@ -5562,11 +5603,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   wss.on('connection', (ws: WebSocket, request) => {
     console.log('WebSocket client connected');
     
+    // Add connection state tracking
+    let isAlive = true;
+    let userId: string | null = null;
+    
+    // Setup heartbeat to detect disconnected clients
+    const heartbeatInterval = setInterval(() => {
+      if (!isAlive) {
+        // Connection is dead, clean up
+        clearInterval(heartbeatInterval);
+        ws.terminate();
+        return;
+      }
+      isAlive = false;
+      ws.ping();
+    }, 30000); // Ping every 30 seconds
+    
+    ws.on('pong', () => {
+      isAlive = true;
+    });
+    
     ws.on('message', (message: string) => {
       try {
         const data = JSON.parse(message);
         
         if (data.type === 'identify' && data.userId) {
+          userId = data.userId;
           // Associate WebSocket with user ID
           if (!connectedClients.has(data.userId)) {
             connectedClients.set(data.userId, []);
@@ -5580,22 +5642,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
 
     ws.on('close', () => {
+      // Clean up heartbeat
+      clearInterval(heartbeatInterval);
+      
       // Remove WebSocket from all user associations
-      for (const [userId, clients] of connectedClients.entries()) {
-        const index = clients.indexOf(ws);
-        if (index > -1) {
-          clients.splice(index, 1);
-          if (clients.length === 0) {
-            connectedClients.delete(userId);
+      if (userId) {
+        const clients = connectedClients.get(userId);
+        if (clients) {
+          const index = clients.indexOf(ws);
+          if (index > -1) {
+            clients.splice(index, 1);
+            if (clients.length === 0) {
+              connectedClients.delete(userId);
+            }
+            console.log(`User ${userId} disconnected from WebSocket`);
           }
-          console.log(`User ${userId} disconnected from WebSocket`);
-          break;
         }
       }
     });
 
     ws.on('error', (error) => {
       console.error('WebSocket error:', error);
+      // Clean up on error
+      clearInterval(heartbeatInterval);
+      ws.terminate();
     });
   });
 

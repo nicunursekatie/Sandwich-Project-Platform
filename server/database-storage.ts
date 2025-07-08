@@ -954,7 +954,7 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(committees).orderBy(committees.createdAt);
   }
 
-  async getCommittee(id: string): Promise<Committee | undefined> {
+  async getCommittee(id: number): Promise<Committee | undefined> {
     const [committee] = await db.select().from(committees).where(eq(committees.id, id));
     return committee || undefined;
   }
@@ -964,7 +964,7 @@ export class DatabaseStorage implements IStorage {
     return newCommittee;
   }
 
-  async updateCommittee(id: string, updates: Partial<Committee>): Promise<Committee | undefined> {
+  async updateCommittee(id: number, updates: Partial<Committee>): Promise<Committee | undefined> {
     const [committee] = await db
       .update(committees)
       .set({ ...updates, updatedAt: new Date() })
@@ -973,7 +973,7 @@ export class DatabaseStorage implements IStorage {
     return committee || undefined;
   }
 
-  async deleteCommittee(id: string): Promise<boolean> {
+  async deleteCommittee(id: number): Promise<boolean> {
     const result = await db.delete(committees).where(eq(committees.id, id));
     return (result.rowCount ?? 0) > 0;
   }
@@ -992,7 +992,7 @@ export class DatabaseStorage implements IStorage {
     }));
   }
 
-  async getCommitteeMembers(committeeId: string): Promise<Array<User & { membership: CommitteeMembership }>> {
+  async getCommitteeMembers(committeeId: number): Promise<Array<User & { membership: CommitteeMembership }>> {
     const members = await db
       .select()
       .from(committeeMemberships)
@@ -1019,14 +1019,14 @@ export class DatabaseStorage implements IStorage {
     return membership || undefined;
   }
 
-  async removeUserFromCommittee(userId: string, committeeId: string): Promise<boolean> {
+  async removeUserFromCommittee(userId: string, committeeId: number): Promise<boolean> {
     const result = await db
       .delete(committeeMemberships)
       .where(and(eq(committeeMemberships.userId, userId), eq(committeeMemberships.committeeId, committeeId)));
     return (result.rowCount ?? 0) > 0;
   }
 
-  async isUserCommitteeMember(userId: string, committeeId: string): Promise<boolean> {
+  async isUserCommitteeMember(userId: string, committeeId: number): Promise<boolean> {
     const [membership] = await db
       .select()
       .from(committeeMemberships)

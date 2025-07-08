@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
-import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
+import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 
 interface NavigationItem {
   id: string;

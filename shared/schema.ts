@@ -127,7 +127,7 @@ export const projectAssignments = pgTable("project_assignments", {
 
 // Committees table for organizing committee information
 export const committees = pgTable("committees", {
-  id: varchar("id").primaryKey(), // 'marketing_committee', 'grant_committee', etc.
+  id: serial("id").primaryKey(), // Auto-incrementing numeric ID
   name: varchar("name").notNull(), // 'Marketing Committee', 'Grant Committee', etc.
   description: text("description"),
   isActive: boolean("is_active").notNull().default(true),
@@ -139,7 +139,7 @@ export const committees = pgTable("committees", {
 export const committeeMemberships = pgTable("committee_memberships", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull(),
-  committeeId: varchar("committee_id").notNull(),
+  committeeId: integer("committee_id").notNull(), // References committees.id
   role: varchar("role").notNull().default("member"), // 'chair', 'co-chair', 'member'
   permissions: jsonb("permissions").default('[]'), // Specific committee permissions
   joinedAt: timestamp("joined_at").defaultNow(),
@@ -345,7 +345,7 @@ export const projectDocuments = pgTable("project_documents", {
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertProjectSchema = createInsertSchema(projects).omit({ id: true, createdAt: true, updatedAt: true });
-export const insertMessageSchema = createInsertSchema(messages).omit({ id: true, createdAt: true });
+export const insertMessageSchema = createInsertSchema(messages).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertWeeklyReportSchema = createInsertSchema(weeklyReports).omit({ id: true, submittedAt: true });
 export const insertSandwichCollectionSchema = createInsertSchema(sandwichCollections).omit({ id: true, submittedAt: true });
 export const insertMeetingMinutesSchema = createInsertSchema(meetingMinutes).omit({ id: true });

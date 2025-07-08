@@ -10,7 +10,7 @@ import { Calendar, Clock, ListTodo, Plus, Edit, Trash2, CheckCircle2, Circle, Ar
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { hasPermission, PERMISSIONS } from "@/lib/authUtils";
+import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { useLocation } from "wouter";
 
 interface AgendaItem {
