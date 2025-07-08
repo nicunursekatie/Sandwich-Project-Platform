@@ -6117,7 +6117,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       } else {
         // Get all channel conversations (these are public) and user's private conversations
-        userConversations = await db
+        const channelConversations = await db
           .select({
             id: conversations.id,
             type: conversations.type,
@@ -6125,14 +6125,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
             createdAt: conversations.createdAt
           })
           .from(conversations)
-          .leftJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+          .where(eq(conversations.type, 'channel'))
+          .orderBy(conversations.id);
+        
+        const privateConversations = await db
+          .select({
+            id: conversations.id,
+            type: conversations.type,
+            name: conversations.name,
+            createdAt: conversations.createdAt
+          })
+          .from(conversations)
+          .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
           .where(
-            or(
-              eq(conversations.type, 'channel'), // All channel conversations are accessible
-              eq(conversationParticipants.userId, user.id) // User's private conversations
+            and(
+              eq(conversations.type, 'direct'),
+              eq(conversationParticipants.userId, user.id)
             )
           )
-          .groupBy(conversations.id, conversations.type, conversations.name, conversations.createdAt)
+          .groupBy(conversations.id, conversations.type, conversations.name, conversations.createdAt);
+        
+        userConversations = [...channelConversations, ...privateConversations];
       }
 
       // Add member counts for group conversations
