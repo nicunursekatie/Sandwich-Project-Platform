@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, messageGroups, groupMemberships, groupMessageParticipants, conversationThreads,
+  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -19,7 +19,6 @@ import {
   type HostContact, type InsertHostContact,
   type Recipient, type InsertRecipient,
   type Contact, type InsertContact,
-  type GroupMessageParticipant, type InsertGroupMessageParticipant,
   type Committee, type InsertCommittee,
   type CommitteeMembership, type InsertCommitteeMembership
 } from "@shared/schema";
@@ -343,35 +342,31 @@ export class DatabaseStorage implements IStorage {
       .orderBy(messages.id);
   }
 
-  // NEW: Get or create threadId for specific conversation types
+  // NEW: Get or create conversation for specific conversation types
   async getOrCreateThreadId(type: string, referenceId?: string): Promise<number> {
     try {
-      // Check if thread already exists
+      // For the new simple system, we'll use conversation IDs as thread IDs
+      // Check if conversation already exists
       const [existing] = await db.select()
-        .from(conversationThreads)
+        .from(conversations)
         .where(and(
-          eq(conversationThreads.type, type),
-          referenceId ? eq(conversationThreads.referenceId, referenceId) : isNull(conversationThreads.referenceId)
+          eq(conversations.type, type),
+          referenceId ? eq(conversations.name, referenceId) : isNull(conversations.name)
         ));
 
       if (existing) {
         return existing.id;
       }
 
-      // Create new thread
-      const [newThread] = await db.insert(conversationThreads).values({
+      // Create new conversation
+      const [newConversation] = await db.insert(conversations).values({
         type,
-        referenceId: referenceId || null,
-        title: this.generateThreadTitle(type, referenceId),
-        createdBy: 'system', // System-generated thread
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        name: referenceId || this.generateThreadTitle(type, referenceId),
       }).returning();
 
-      return newThread.id;
+      return newConversation.id;
     } catch (error) {
-      console.error("Error getting/creating threadId:", error);
+      console.error("Error getting/creating conversation:", error);
       throw error;
     }
   }

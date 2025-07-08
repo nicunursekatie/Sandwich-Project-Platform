@@ -772,32 +772,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         //   return res.json([]); // Return empty array if no thread exists
         // }
         
-        // Get the conversation thread ID for this group
-        const thread = await db
+        // Get the conversation for this group using the new simple system
+        const conversation = await db
           .select()
-          .from(conversationThreads)
+          .from(conversations)
           .where(
             and(
-              eq(conversationThreads.type, "group"),
-              eq(conversationThreads.referenceId, groupId.toString()),
-              eq(conversationThreads.isActive, true)
+              eq(conversations.type, "group"),
+              eq(conversations.referenceId, groupId.toString()),
+              eq(conversations.isActive, true)
             )
           )
           .limit(1);
           
-        if (thread.length === 0) {
-          console.log(`[DEBUG] No conversation thread found for group ${groupId}`);
-          return res.json([]); // Return empty array if no thread exists
+        if (conversation.length === 0) {
+          console.log(`[DEBUG] No conversation found for group ${groupId}`);
+          return res.json([]); // Return empty array if no conversation exists
         }
         
-        const threadId = thread[0].id;
-        console.log(`[DEBUG] Using thread ID ${threadId} for group ${groupId}`);
+        const conversationId = conversation[0].id;
+        console.log(`[DEBUG] Using conversation ID ${conversationId} for group ${groupId}`);
         
-        // Get messages for this specific thread
+        // Get messages for this specific conversation
         const messageResults = await db
           .select()
           .from(messagesTable)
-          .where(eq(messagesTable.threadId, threadId))
+          .where(eq(messagesTable.conversationId, conversationId))
           .orderBy(messagesTable.timestamp);
         messages = messageResults;
           
@@ -878,9 +878,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...messageData,
         userId: req.user?.id || null,
       };
-      console.log(`📤 CREATING MESSAGE: committee=${messageData.committee}, threadId=${messageData.threadId}, userId=${req.user?.id}`);
+      console.log(`📤 CREATING MESSAGE: committee=${messageData.committee}, conversationId=${messageData.conversationId}, userId=${req.user?.id}`);
       const message = await storage.createMessage(messageWithUser);
-      console.log(`✅ MESSAGE CREATED: id=${message.id}, threadId=${message.threadId}`);
+      console.log(`✅ MESSAGE CREATED: id=${message.id}, conversationId=${message.conversationId}`);
       
       // Broadcast new message notification to connected clients  
       if (typeof (global as any).broadcastNewMessage === 'function') {
@@ -5040,46 +5040,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Thread Participant Management API - Individual user control over group threads
-  app.get("/api/threads/:threadId/participants", isAuthenticated, async (req, res) => {
-    try {
-      const threadId = parseInt(req.params.threadId);
-      const userId = (req as any).user?.id;
-      
-      // Verify user has access to this thread
-      const userStatus = await db
-        .select({ status: groupMessageParticipants.status })
-        .from(groupMessageParticipants)
-        .where(
-          and(
-            eq(groupMessageParticipants.threadId, threadId),
-            eq(groupMessageParticipants.userId, userId)
-          )
-        );
-      
-      if (userStatus.length === 0 || userStatus[0].status === 'left') {
-        return res.status(403).json({ message: "No access to this thread" });
-      }
-      
-      const participants = await db
-        .select({
-          userId: groupMessageParticipants.userId,
-          status: groupMessageParticipants.status,
-          joinedAt: groupMessageParticipants.joinedAt,
-          lastReadAt: groupMessageParticipants.lastReadAt,
-          firstName: users.firstName,
-          lastName: users.lastName,
-          email: users.email
-        })
-        .from(groupMessageParticipants)
-        .leftJoin(users, eq(groupMessageParticipants.userId, users.id))
-        .where(eq(groupMessageParticipants.threadId, threadId));
-      
-      res.json(participants);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch thread participants" });
-    }
-  });
+  // TEMPORARILY DISABLED: Thread Participant Management API - Using new conversation system instead
+  // app.get("/api/threads/:threadId/participants", isAuthenticated, async (req, res) => {
+  //   // This endpoint is disabled - use /api/conversations/:conversationId/participants instead
+  //   res.status(404).json({ message: "Endpoint disabled - use conversation system" });
+  // });
 
   app.patch("/api/threads/:threadId/my-status", isAuthenticated, async (req, res) => {
     try {
