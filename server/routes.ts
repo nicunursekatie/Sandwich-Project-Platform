@@ -852,9 +852,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Temporarily use storage layer for all chat messages
         messages = await storage.getMessages(messageContext, limit);
       } else {
-        messages = limit
-          ? await storage.getRecentMessages(limit)
-          : await storage.getAllMessages();
+        // Default to General Chat when no parameters are provided
+        const [generalConversation] = await db
+          .select()
+          .from(conversations)
+          .where(and(
+            eq(conversations.type, 'channel'),
+            eq(conversations.name, 'General Chat')
+          ))
+          .limit(1);
+          
+        if (generalConversation) {
+          const conversationMessages = await db
+            .select({
+              id: messagesTable.id,
+              content: messagesTable.content,
+              userId: messagesTable.userId,
+              sender: messagesTable.sender,
+              timestamp: messagesTable.createdAt,
+              conversationId: messagesTable.conversationId
+            })
+            .from(messagesTable)
+            .where(eq(messagesTable.conversationId, generalConversation.id))
+            .orderBy(messagesTable.createdAt);
+          
+          messages = conversationMessages;
+        } else {
+          messages = [];
+        }
       }
 
       // Filter out empty or blank messages
