@@ -13,7 +13,7 @@ import { Calendar, FileText, Mail, Download, Settings, BarChart3, LineChart, Pie
 import { format, subDays, subWeeks, subMonths } from "date-fns";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { CollapsibleNav } from "@/components/collapsible-nav";
+import SimpleNav from "@/components/simple-nav";
 
 interface ReportConfig {
   type: 'collections' | 'hosts' | 'impact' | 'comprehensive';
@@ -666,7 +666,9 @@ export default function ReportingDashboard({ isEmbedded = false }: { isEmbedded?
 
       <div className="flex flex-1">
         {/* Sidebar */}
-        <CollapsibleNav />
+        <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+          <SimpleNav onSectionChange={() => {}} />
+        </div>
 
         {/* Main Content */}
         <div className="flex-1 p-6">

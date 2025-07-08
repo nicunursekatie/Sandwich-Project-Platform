@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { CollapsibleNav } from "@/components/collapsible-nav";
+import SimpleNav from "@/components/simple-nav";
 
 interface PerformanceMetrics {
   database: {
@@ -163,7 +163,9 @@ export default function PerformanceDashboard() {
         </div>
 
         <div className="flex flex-1">
-          <CollapsibleNav />
+          <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+            <SimpleNav onSectionChange={() => {}} />
+          </div>
           <div className="flex-1 p-6">
             <div className="flex items-center gap-2 mb-6">
               <Activity className="h-6 w-6" />
@@ -205,7 +207,9 @@ export default function PerformanceDashboard() {
 
       <div className="flex flex-1">
         {/* Sidebar */}
-        <CollapsibleNav />
+        <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+          <SimpleNav onSectionChange={() => {}} />
+        </div>
 
         {/* Main Content */}
         <div className="flex-1 p-6">

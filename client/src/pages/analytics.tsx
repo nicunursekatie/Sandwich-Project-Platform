@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
-import { CollapsibleNav } from "@/components/collapsible-nav";
+import SimpleNav from "@/components/simple-nav";
 import AnalyticsDashboard from "@/components/analytics-dashboard";
 
 export default function AnalyticsPage() {
@@ -22,7 +22,9 @@ export default function AnalyticsPage() {
 
       <div className="flex flex-1">
         {/* Sidebar */}
-        <CollapsibleNav />
+        <div className="w-64 bg-white border-r border-slate-200 flex flex-col">
+          <SimpleNav onSectionChange={() => {}} />
+        </div>
 
         {/* Main Content */}
         <div className="flex-1 p-6">
