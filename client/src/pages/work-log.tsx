@@ -15,9 +15,12 @@ export default function WorkLogPage() {
 
   const { data: logs = [], refetch, isLoading, error } = useQuery({
     queryKey: ["/api/work-logs"],
-    queryFn: () => {
+    queryFn: async () => {
       console.log("🚀 Work logs query function called");
-      return apiRequest("GET", "/api/work-logs");
+      const response = await apiRequest("GET", "/api/work-logs");
+      const data = await response.json();
+      console.log("🚀 Work logs API response data:", data);
+      return data;
     },
     enabled: !!user, // Only fetch when user is authenticated
     staleTime: 0, // Always fetch fresh data
@@ -31,11 +34,12 @@ export default function WorkLogPage() {
 
   const createLog = useMutation({
     mutationFn: async () => {
-      return apiRequest("POST", "/api/work-logs", { 
+      const response = await apiRequest("POST", "/api/work-logs", { 
         description, 
         hours, 
         minutes
       });
+      return await response.json();
     },
     onSuccess: () => {
       setDescription("");
@@ -48,10 +52,16 @@ export default function WorkLogPage() {
 
   const deleteLog = useMutation({
     mutationFn: async (id: number) => {
-      return apiRequest("DELETE", `/api/work-logs/${id}`);
+      const response = await apiRequest("DELETE", `/api/work-logs/${id}`);
+      // DELETE requests typically return empty responses, so handle accordingly
+      if (response.status === 204) {
+        return null; // 204 No Content
+      }
+      return await response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/work-logs"] });
+      refetch(); // Force refetch to update the list immediately
     },
   });
 
