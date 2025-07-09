@@ -1,0 +1,2931 @@
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+sendSession @ _app-1bf307fb1f799f7a.js:36
+captureSession @ _app-1bf307fb1f799f7a.js:36
+E @ _app-1bf307fb1f799f7a.js:26
+S @ _app-1bf307fb1f799f7a.js:26
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ main-f5eb02c370c5c221.js:1
+b @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+eO @ main-f5eb02c370c5c221.js:1
+eE @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+Promise.then
+56387 @ main-f5eb02c370c5c221.js:1
+c @ webpack-d56bd7629ff8706c.js:1
+t @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ webpack-d56bd7629ff8706c.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+a @ webpack-d56bd7629ff8706c.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+_app-1bf307fb1f799f7a.js:38 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+load-script.ts:58  GET https://cdn.segment.com/next-integrations/actions/tiktok-pixel/920266289e7b08bf066b.js net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ load-script.ts:58
+i @ load-script.ts:32
+(anonymous) @ index.ts:247
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+Vt @ index.ts:227
+(anonymous) @ index.ts:281
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+(anonymous) @ index.ts:274
+(anonymous) @ index.ts:274
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+Gt @ index.ts:268
+(anonymous) @ index.ts:171
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+ne @ index.ts:116
+(anonymous) @ index.ts:304
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+re @ index.ts:239
+(anonymous) @ index.ts:338
+Promise.then
+(anonymous) @ index.ts:339
+t @ index.ts:307
+n @ index.ts:337
+n.load @ index.ts:389
+n.standalone @ index.ts:393
+(anonymous) @ standalone-analytics.ts:53
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+se @ standalone-analytics.ts:49
+(anonymous) @ standalone.ts:69
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+de @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+_app-1bf307fb1f799f7a.js:38 Failed to create PluginFactory {name: 'TikTok Pixel', creationName: 'TikTok Pixel', libraryName: 'tiktok-pixelDestination', url: 'https://cdn.segment.com/next-integrations/actions/tiktok-pixel/920266289e7b08bf066b.js', settings: {…}}
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ index.ts:256
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+u @ tslib.es6.js:74
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+Vt @ index.ts:227
+(anonymous) @ index.ts:281
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+(anonymous) @ index.ts:274
+(anonymous) @ index.ts:274
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+Gt @ index.ts:268
+(anonymous) @ index.ts:171
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+ne @ index.ts:116
+(anonymous) @ index.ts:304
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+re @ index.ts:239
+(anonymous) @ index.ts:338
+Promise.then
+(anonymous) @ index.ts:339
+t @ index.ts:307
+n @ index.ts:337
+n.load @ index.ts:389
+n.standalone @ index.ts:393
+(anonymous) @ standalone-analytics.ts:53
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+se @ standalone-analytics.ts:49
+(anonymous) @ standalone.ts:69
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+de @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+_app-1bf307fb1f799f7a.js:38 Failed to load Remote Plugin Error: Failed to load https://cdn.segment.com/next-integrations/actions/tiktok-pixel/920266289e7b08bf066b.js
+    at o.onerror (load-script.ts:53:24)
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ index.ts:311
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+u @ tslib.es6.js:74
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+(anonymous) @ index.ts:274
+(anonymous) @ index.ts:274
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+Gt @ index.ts:268
+(anonymous) @ index.ts:171
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+ne @ index.ts:116
+(anonymous) @ index.ts:304
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+re @ index.ts:239
+(anonymous) @ index.ts:338
+Promise.then
+(anonymous) @ index.ts:339
+t @ index.ts:307
+n @ index.ts:337
+n.load @ index.ts:389
+n.standalone @ index.ts:393
+(anonymous) @ standalone-analytics.ts:53
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+se @ standalone-analytics.ts:49
+(anonymous) @ standalone.ts:69
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+de @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+_app-1bf307fb1f799f7a.js:38 [LaunchDarkly] LaunchDarkly client initialized
+~:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+_app-1bf307fb1f799f7a.js:38  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+t @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+start @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:38  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+t @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+Promise.catch
+t @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+start @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+sendSession @ _app-1bf307fb1f799f7a.js:36
+captureSession @ _app-1bf307fb1f799f7a.js:36
+E @ _app-1bf307fb1f799f7a.js:26
+y @ _app-1bf307fb1f799f7a.js:26
+v @ _app-1bf307fb1f799f7a.js:26
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+ey @ _app-1bf307fb1f799f7a.js:33
+(anonymous) @ _app-1bf307fb1f799f7a.js:36
+history.<computed> @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+value @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+value @ main-f5eb02c370c5c221.js:1
+value @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+onClick @ _app-1bf307fb1f799f7a.js:6
+eB @ framework-b972b0b798d4a606.js:1
+eH @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+re @ framework-b972b0b798d4a606.js:1
+rt @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uT @ framework-b972b0b798d4a606.js:1
+eM @ framework-b972b0b798d4a606.js:1
+ru @ framework-b972b0b798d4a606.js:1
+tB @ framework-b972b0b798d4a606.js:1
+tD @ framework-b972b0b798d4a606.js:1
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+sendSession @ _app-1bf307fb1f799f7a.js:36
+captureSession @ _app-1bf307fb1f799f7a.js:36
+E @ _app-1bf307fb1f799f7a.js:26
+S @ _app-1bf307fb1f799f7a.js:26
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+ey @ _app-1bf307fb1f799f7a.js:33
+(anonymous) @ _app-1bf307fb1f799f7a.js:36
+history.<computed> @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+value @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+value @ main-f5eb02c370c5c221.js:1
+value @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+onClick @ _app-1bf307fb1f799f7a.js:6
+eB @ framework-b972b0b798d4a606.js:1
+eH @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+re @ framework-b972b0b798d4a606.js:1
+rt @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uT @ framework-b972b0b798d4a606.js:1
+eM @ framework-b972b0b798d4a606.js:1
+ru @ framework-b972b0b798d4a606.js:1
+tB @ framework-b972b0b798d4a606.js:1
+tD @ framework-b972b0b798d4a606.js:1
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:38 Adding extension: Javascript Commands {extensionArgs: {…}, local: false, logLevel: 'info'}
+framework-b972b0b798d4a606.js:1 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'battery'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'layout-animations'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'navigation-override'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'oversized-images'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'publickey-credentials'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'speaker-selection'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'unoptimized-images'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'unsized-media'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+framework-b972b0b798d4a606.js:1 Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 Command: javascript-root-command has unrecognized contributions: commandbar. Valid contributions are commandbar,filetree-context-menu,sidebar-search,editor-context-menu {logLevel: 'warn'}
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+s @ 9303-46fb307f2afd7f3b.js:1
+warn @ 9303-46fb307f2afd7f3b.js:1
+(anonymous) @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+(anonymous) @ main-f5eb02c370c5c221.js:1
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+r @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:38 Adding extension: ReplDB Export and Import {extensionArgs: {…}, local: false, logLevel: 'info'}
+Screenshot%202025-07-08%20at%209.37.00%E2%80%AFPM_1752025022723.png:1  GET https://replit.com/@katielong2316/attached_assets/Screenshot%202025-07-08%20at%209.37.00%E2%80%AFPM_1752025022723.png 404 (Not Found)
+Image
+_ @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+@katielong2316/attached_assets/image_1752028461751.png:1  GET https://replit.com/@katielong2316/attached_assets/image_1752028461751.png 404 (Not Found)
+Image
+_ @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+@katielong2316/attached_assets/image_1752028490257.png:1  GET https://replit.com/@katielong2316/attached_assets/image_1752028490257.png 404 (Not Found)
+Image
+_ @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+image_1752028477753.png:1  GET https://replit.com/@katielong2316/attached_assets/image_1752028477753.png 404 (Not Found)
+Image
+_ @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 Adding extension: repl.tv {extensionArgs: {…}, local: false, logLevel: 'info'}
+_app-1bf307fb1f799f7a.js:38 Adding extension: AI Playground {extensionArgs: {…}, local: false, logLevel: 'info'}
+stallwart.build.js:1 stallwart: failed ping 1
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+sendSession @ _app-1bf307fb1f799f7a.js:36
+captureSession @ _app-1bf307fb1f799f7a.js:36
+E @ _app-1bf307fb1f799f7a.js:26
+y @ _app-1bf307fb1f799f7a.js:26
+v @ _app-1bf307fb1f799f7a.js:26
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+ey @ _app-1bf307fb1f799f7a.js:33
+(anonymous) @ _app-1bf307fb1f799f7a.js:36
+history.<computed> @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+o @ _app-1bf307fb1f799f7a.js:11
+value @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+value @ main-f5eb02c370c5c221.js:1
+value @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+onClick @ _app-1bf307fb1f799f7a.js:6
+eB @ framework-b972b0b798d4a606.js:1
+eH @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+re @ framework-b972b0b798d4a606.js:1
+rt @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uT @ framework-b972b0b798d4a606.js:1
+eM @ framework-b972b0b798d4a606.js:1
+ru @ framework-b972b0b798d4a606.js:1
+tB @ framework-b972b0b798d4a606.js:1
+tD @ framework-b972b0b798d4a606.js:1
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+sendSession @ _app-1bf307fb1f799f7a.js:36
+captureSession @ _app-1bf307fb1f799f7a.js:36
+E @ _app-1bf307fb1f799f7a.js:26
+S @ _app-1bf307fb1f799f7a.js:26
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+ey @ _app-1bf307fb1f799f7a.js:33
+(anonymous) @ _app-1bf307fb1f799f7a.js:36
+history.<computed> @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+o @ _app-1bf307fb1f799f7a.js:11
+value @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+value @ main-f5eb02c370c5c221.js:1
+value @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+onClick @ _app-1bf307fb1f799f7a.js:6
+eB @ framework-b972b0b798d4a606.js:1
+eH @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+re @ framework-b972b0b798d4a606.js:1
+rt @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uT @ framework-b972b0b798d4a606.js:1
+eM @ framework-b972b0b798d4a606.js:1
+ru @ framework-b972b0b798d4a606.js:1
+tB @ framework-b972b0b798d4a606.js:1
+tD @ framework-b972b0b798d4a606.js:1
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+sendSession @ _app-1bf307fb1f799f7a.js:36
+captureSession @ _app-1bf307fb1f799f7a.js:36
+E @ _app-1bf307fb1f799f7a.js:26
+y @ _app-1bf307fb1f799f7a.js:26
+v @ _app-1bf307fb1f799f7a.js:26
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+ey @ _app-1bf307fb1f799f7a.js:33
+(anonymous) @ _app-1bf307fb1f799f7a.js:36
+history.<computed> @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+o @ _app-1bf307fb1f799f7a.js:11
+value @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+value @ main-f5eb02c370c5c221.js:1
+onPopState @ main-f5eb02c370c5c221.js:1
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+sendSession @ _app-1bf307fb1f799f7a.js:36
+captureSession @ _app-1bf307fb1f799f7a.js:36
+E @ _app-1bf307fb1f799f7a.js:26
+S @ _app-1bf307fb1f799f7a.js:26
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+ey @ _app-1bf307fb1f799f7a.js:33
+(anonymous) @ _app-1bf307fb1f799f7a.js:36
+history.<computed> @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+o @ _app-1bf307fb1f799f7a.js:11
+value @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+Promise.then
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+value @ main-f5eb02c370c5c221.js:1
+onPopState @ main-f5eb02c370c5c221.js:1
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+sendSession @ _app-1bf307fb1f799f7a.js:36
+captureSession @ _app-1bf307fb1f799f7a.js:36
+E @ _app-1bf307fb1f799f7a.js:26
+y @ _app-1bf307fb1f799f7a.js:26
+v @ _app-1bf307fb1f799f7a.js:26
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+ey @ _app-1bf307fb1f799f7a.js:33
+push.97886.eE.onpopstate @ _app-1bf307fb1f799f7a.js:36
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+sendSession @ _app-1bf307fb1f799f7a.js:36
+captureSession @ _app-1bf307fb1f799f7a.js:36
+E @ _app-1bf307fb1f799f7a.js:26
+S @ _app-1bf307fb1f799f7a.js:26
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+ey @ _app-1bf307fb1f799f7a.js:33
+push.97886.eE.onpopstate @ _app-1bf307fb1f799f7a.js:36
+@katielong2316/Sandwich-Project-Platform:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+_app-1bf307fb1f799f7a.js:38 Adding extension: Javascript Commands {extensionArgs: {…}, local: false, logLevel: 'info'}
+framework-b972b0b798d4a606.js:1 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+_ @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uD @ framework-b972b0b798d4a606.js:1
+uI @ framework-b972b0b798d4a606.js:1
+uM @ framework-b972b0b798d4a606.js:1
+uS @ framework-b972b0b798d4a606.js:1
+C @ framework-b972b0b798d4a606.js:1
+z @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 Command: javascript-root-command has unrecognized contributions: commandbar. Valid contributions are commandbar,filetree-context-menu,sidebar-search,editor-context-menu {logLevel: 'warn'}
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+s @ 9303-46fb307f2afd7f3b.js:1
+warn @ 9303-46fb307f2afd7f3b.js:1
+(anonymous) @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+(anonymous) @ main-f5eb02c370c5c221.js:1
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+(anonymous) @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+r @ replEnvironmentDesktop-5f38dd869d39bcf6.js:2
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:38 Adding extension: ReplDB Export and Import {extensionArgs: {…}, local: false, logLevel: 'info'}
+_app-1bf307fb1f799f7a.js:38 Adding extension: repl.tv {extensionArgs: {…}, local: false, logLevel: 'info'}
+Screenshot%202025-07-08%20at%209.37.00%E2%80%AFPM_1752025022723.png:1  GET https://replit.com/@katielong2316/attached_assets/Screenshot%202025-07-08%20at%209.37.00%E2%80%AFPM_1752025022723.png 404 (Not Found)
+Image
+_ @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+oq @ framework-b972b0b798d4a606.js:1
+oQ @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 Adding extension: AI Playground {extensionArgs: {…}, local: false, logLevel: 'info'}
+_app-1bf307fb1f799f7a.js:26  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A8120b152&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=35a82313-a726-4037-adcf-ba786a4a1b2b net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:26
+sendOnExit @ _app-1bf307fb1f799f7a.js:26
+e.flush @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+e.notify @ _app-1bf307fb1f799f7a.js:11
+f @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+e.notify @ _app-1bf307fb1f799f7a.js:11
+push.41248.i.c.r.capture @ _app-1bf307fb1f799f7a.js:11
+d @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+_flushOutcomes @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:26  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A8120b152&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=a47b7223-9095-4745-be7f-76aa119f9499 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:26
+sendOnExit @ _app-1bf307fb1f799f7a.js:26
+e.flush @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+e.notify @ _app-1bf307fb1f799f7a.js:11
+f @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+e.notify @ _app-1bf307fb1f799f7a.js:11
+push.41248.i.c.r.capture @ _app-1bf307fb1f799f7a.js:11
+d @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+_flushOutcomes @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:38  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+o @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+t @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:38  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+o @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+t @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+Promise.catch
+t @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:26  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A8120b152&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=45e46447-fd2c-4899-a735-c8859df6227f net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:26
+sendOnExit @ _app-1bf307fb1f799f7a.js:26
+e.flush @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+e.notify @ _app-1bf307fb1f799f7a.js:11
+f @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+e.notify @ _app-1bf307fb1f799f7a.js:11
+push.41248.i.c.r.capture @ _app-1bf307fb1f799f7a.js:11
+d @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+_flushOutcomes @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:26  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A8120b152&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=5265d62c-69a7-4a86-a970-e23cc3d3b491 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:26
+sendOnExit @ _app-1bf307fb1f799f7a.js:26
+e.flush @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+e.notify @ _app-1bf307fb1f799f7a.js:11
+f @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+e.notify @ _app-1bf307fb1f799f7a.js:11
+push.41248.i.c.r.capture @ _app-1bf307fb1f799f7a.js:11
+d @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+_app-1bf307fb1f799f7a.js:40  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:40
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+add @ _app-1bf307fb1f799f7a.js:38
+i @ _app-1bf307fb1f799f7a.js:38
+_sendEnvelope @ _app-1bf307fb1f799f7a.js:38
+_flushOutcomes @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitComplete listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:44833)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileDirty listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:44953)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileClean listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:45068)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitStart listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:45185)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 promptUserReconnect listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:46478)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitComplete listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:44833)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileDirty listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:44953)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileClean listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:45068)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitStart listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:45185)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 promptUserReconnect listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:46478)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitComplete listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:44833)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileDirty listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:44953)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileClean listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:45068)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitStart listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:45185)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 promptUserReconnect listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:46478)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitComplete listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:44833)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileDirty listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:44953)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileClean listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:45068)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitStart listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:45185)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 promptUserReconnect listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:68549)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/2656-c2c77e5f14534a7d.js:1:71435)
+    at h (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:46478)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-2dc9dc4b95a76bde.js:1:50703)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334082
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/5228-eaefe361319a8c4c.js:1:1334057
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-b972b0b798d4a606.js:1:134884
+overrideMethod @ hook.js:608
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+a @ 2656-c2c77e5f14534a7d.js:1
+d @ 2656-c2c77e5f14534a7d.js:1
+(anonymous) @ 2656-c2c77e5f14534a7d.js:1
+h @ 692-2dc9dc4b95a76bde.js:1
+watchTextFile @ 692-2dc9dc4b95a76bde.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+oO @ framework-b972b0b798d4a606.js:1
+uB @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+uO @ framework-b972b0b798d4a606.js:1
+u_ @ framework-b972b0b798d4a606.js:1
+r6 @ framework-b972b0b798d4a606.js:1
+(anonymous) @ framework-b972b0b798d4a606.js:1
+_app-1bf307fb1f799f7a.js:38  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+o @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+t @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:38  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:11
+o @ _app-1bf307fb1f799f7a.js:11
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+t @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+Promise.catch
+t @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+e @ _app-1bf307fb1f799f7a.js:6
+n @ _app-1bf307fb1f799f7a.js:38
+_app-1bf307fb1f799f7a.js:38  POST https://sp.replit.com/v1/t 400 (Bad Request)
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ _app-1bf307fb1f799f7a.js:6
+o @ _app-1bf307fb1f799f7a.js:11
+o @ sdk.min.js:1
+dispatch @ fetch-dispatcher.ts:11
+(anonymous) @ index.ts:122
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+g @ index.ts:93
+(anonymous) @ delivery.js:28
+(anonymous) @ delivery.js:11
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+(anonymous) @ delivery.js:4
+o @ delivery.js:27
+(anonymous) @ event-queue.js:325
+(anonymous) @ event-queue.js:323
+n @ _app-1bf307fb1f799f7a.js:38
+setTimeout
+(anonymous) @ _app-1bf307fb1f799f7a.js:38
+(anonymous) @ event-queue.js:321
+(anonymous) @ event-queue.js:320
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+n.flushOne @ event-queue.js:273
+(anonymous) @ event-queue.js:181
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+n.deliver @ event-queue.js:169
+(anonymous) @ event-queue.js:135
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+n.dispatchSingle @ event-queue.js:128
+(anonymous) @ dispatch.js:25
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+p @ dispatch.js:18
+(anonymous) @ index.ts:460
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+n._dispatch @ index.ts:454
+(anonymous) @ index.ts:253
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+n.track @ index.ts:241
+A @ _app-1bf307fb1f799f7a.js:6
+u @ 5228-eaefe361319a8c4c.js:1
+f @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ 5228-eaefe361319a8c4c.js:1
+(anonymous) @ main-f5eb02c370c5c221.js:1
+n @ main-f5eb02c370c5c221.js:1
+u @ main-f5eb02c370c5c221.js:1

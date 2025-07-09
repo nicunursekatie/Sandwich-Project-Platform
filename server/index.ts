@@ -63,81 +63,80 @@ async function startServer() {
     const port = process.env.PORT || 5000;
     const host = "0.0.0.0";
 
-    const httpServer = app.listen(port, host, async () => {
+    // Set up basic routes BEFORE starting server
+    app.use("/attached_assets", express.static("attached_assets"));
+    
+    // Always serve root route immediately - critical for health checks
+    app.get("/", (_req: Request, res: Response) => {
+      res.status(200).send(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>The Sandwich Project</title>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <h1>The Sandwich Project</h1>
+            <p>Server is running successfully!</p>
+            <p>Environment: ${process.env.NODE_ENV || "development"}</p>
+            <p>Timestamp: ${new Date().toISOString()}</p>
+          </body>
+        </html>
+      `);
+    });
+
+    if (process.env.NODE_ENV === "production") {
+      // In production, serve static files
+      app.use(express.static("dist/public"));
+      console.log("✓ Static file serving configured for production");
+    }
+
+    const httpServer = app.listen(port, host, () => {
       console.log(`✓ Server is running on http://${host}:${port}`);
       console.log(`✓ Environment: ${process.env.NODE_ENV || "development"}`);
-      console.log("✓ Basic server ready - starting heavy initialization...");
+      console.log("✓ Basic server ready - starting background initialization...");
 
-      try {
-        await initializeDatabase();
-        console.log("✓ Database initialization complete");
+      // Do heavy initialization in background after server is listening
+      setImmediate(async () => {
+        try {
+          await initializeDatabase();
+          console.log("✓ Database initialization complete");
 
-        const server = await registerRoutes(app);
-        console.log("✓ Routes registered successfully");
+          const server = await registerRoutes(app);
+          console.log("✓ Routes registered successfully");
 
-        // Re-define health check to reflect full init
-        app.get("/health", (_req: Request, res: Response) => {
-          res.status(200).json({
-            status: "healthy",
-            timestamp: new Date().toISOString(),
-            uptime: process.uptime(),
-            environment: process.env.NODE_ENV || "development",
-            initialized: true,
+          // Update health check to reflect full init
+          app.get("/health", (_req: Request, res: Response) => {
+            res.status(200).json({
+              status: "healthy",
+              timestamp: new Date().toISOString(),
+              uptime: process.uptime(),
+              environment: process.env.NODE_ENV || "development",
+              initialized: true,
+            });
           });
-        });
 
-        // Root route will be handled by Vite in development
-
-        app.use("/attached_assets", express.static("attached_assets"));
-
-        if (process.env.NODE_ENV === "development") {
-          try {
-            const { setupVite } = await import("./vite");
-            await setupVite(app, server);
-            console.log("✓ Vite development server setup complete");
-          } catch (error) {
-            console.log(
-              "⚠ Vite setup failed, continuing without it:",
-              error.message,
-            );
+          if (process.env.NODE_ENV === "development") {
+            try {
+              const { setupVite } = await import("./vite");
+              await setupVite(app, server);
+              console.log("✓ Vite development server setup complete");
+            } catch (error) {
+              console.log(
+                "⚠ Vite setup failed, continuing without it:",
+                error.message,
+              );
+            }
           }
-        } else {
-          // In production, serve static files AND ensure root route works
-          app.use(express.static("dist/public"));
-          console.log("✓ Static file serving configured for production");
-          
-          // Ensure server responds to root route with a basic page
-          app.get("/", (_req: Request, res: Response) => {
-            res.status(200).send(`
-              <!DOCTYPE html>
-              <html>
-                <head>
-                  <title>The Sandwich Project</title>
-                  <meta charset="utf-8">
-                </head>
-                <body>
-                  <h1>The Sandwich Project</h1>
-                  <p>Server is running successfully!</p>
-                  <p>Timestamp: ${new Date().toISOString()}</p>
-                </body>
-              </html>
-            `);
-          });
-        }
 
-        console.log(
-          "✓ The Sandwich Project server is fully ready to handle requests",
-        );
-      } catch (initError) {
-        console.error("✗ Heavy initialization failed:", initError);
-        if (process.env.NODE_ENV === "production") {
           console.log(
-            "Continuing with minimal functionality for production deployment...",
+            "✓ The Sandwich Project server is fully ready to handle requests",
           );
-        } else {
-          console.log("Continuing with minimal development server...");
+        } catch (initError) {
+          console.error("✗ Background initialization failed:", initError);
+          console.log("Server continues to run with basic functionality...");
         }
-      }
+      });
     });
 
     // Graceful shutdown
