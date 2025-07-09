@@ -32,12 +32,13 @@ interface ProjectDetailCleanProps {
 export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailCleanProps) {
   const { toast } = useToast();
   const { user } = useAuth();
-  const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
+  const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
   
   // Debug logging
   console.log('Project Detail - User:', user);
   console.log('Project Detail - Can Edit:', canEdit);
   console.log('Project Detail - User Permissions:', user?.permissions);
+  console.log('Project Detail - PERMISSIONS.EDIT_COLLECTIONS:', PERMISSIONS.EDIT_COLLECTIONS);
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
 
   const [isAddingTask, setIsAddingTask] = useState(false);
@@ -627,7 +628,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
             <h3 className="text-lg font-semibold">Project Tasks</h3>
             <Dialog open={isAddingTask} onOpenChange={setIsAddingTask}>
               <DialogTrigger asChild>
-                <Button disabled={!canEdit}>
+                <Button>
                   <Plus className="w-4 h-4 mr-2" />
                   Add Task
                 </Button>
