@@ -17,7 +17,9 @@ export default function WorkLogPage() {
     queryKey: ["/api/work-logs"],
     enabled: !!user, // Only fetch when user is authenticated
     staleTime: 0, // Always fetch fresh data
-    cacheTime: 0, // Don't cache results
+    gcTime: 0, // Don't cache results (TanStack Query v5 uses gcTime instead of cacheTime)
+    refetchOnMount: true, // Always refetch when component mounts
+    refetchOnWindowFocus: true, // Refetch when window gains focus
   });
 
   // Ensure logs is always an array
@@ -110,8 +112,11 @@ export default function WorkLogPage() {
             {isLoading && <div className="py-4 text-gray-500">Loading work logs...</div>}
             {error && <div className="py-4 text-red-500">Error loading logs: {error.message}</div>}
             <div className="py-2 text-xs text-gray-400">
-              Debug: User ID: {user?.id}, Logs count: {safelogs.length}, Loading: {isLoading ? 'yes' : 'no'}
+              Debug: User ID: {user?.id}, Logs count: {safelogs.length}, Loading: {isLoading ? 'yes' : 'no'}, Error: {error?.message || 'none'}
             </div>
+            <Button onClick={() => refetch()} variant="outline" size="sm" className="mb-2">
+              Refresh Logs
+            </Button>
             {!isLoading && !error && (
               <ul className="divide-y">
                 {safelogs.length === 0 && <li className="py-4 text-gray-500">No logs yet.</li>}

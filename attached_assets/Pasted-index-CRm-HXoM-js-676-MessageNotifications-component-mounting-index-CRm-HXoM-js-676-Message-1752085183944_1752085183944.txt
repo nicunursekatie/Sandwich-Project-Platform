@@ -1,0 +1,41 @@
+index-CRm-HXoM.js:676 🔔 MessageNotifications component mounting...
+index-CRm-HXoM.js:676 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-CRm-HXoM.js:676 🔔 MessageNotifications: user object= Object
+index-CRm-HXoM.js:676 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-CRm-HXoM.js:676 🔔 MessageNotifications: Loading unread counts...
+index-CRm-HXoM.js:676 🔔 WebSocket useEffect triggered, user= Object
+index-CRm-HXoM.js:676 🔔 Setting up WebSocket for user: user_1751071509329_mrkw2z95z
+index-CRm-HXoM.js:676 🔔 Debug - window.location.host: sandwich-project-platform-katielong2316.replit.app
+index-CRm-HXoM.js:676 🔔 Debug - window.location.hostname: sandwich-project-platform-katielong2316.replit.app
+index-CRm-HXoM.js:676 🔔 Debug - window.location.port: 
+index-CRm-HXoM.js:676 Connecting to WebSocket: wss://sandwich-project-platform-katielong2316.replit.app/notifications
+index-CRm-HXoM.js:676 🔔 MessageNotifications component mounting...
+index-CRm-HXoM.js:676 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-CRm-HXoM.js:676 🔔 MessageNotifications: user object= Object
+index-CRm-HXoM.js:676 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-CRm-HXoM.js:676 🔔 MessageNotifications: Loading unread counts...
+/favicon.ico:1  Failed to load resource: the server responded with a status of 500 ()
+index-CRm-HXoM.js:676 WebSocket connection to 'wss://sandwich-project-platform-katielong2316.replit.app/notifications' failed: 
+(anonymous) @ index-CRm-HXoM.js:676
+hook.js:608 WebSocket error: Event
+overrideMethod @ hook.js:608
+index-CRm-HXoM.js:676 Notification WebSocket disconnected
+index-CRm-HXoM.js:676 🔔 MessageNotifications component mounting...
+index-CRm-HXoM.js:676 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-CRm-HXoM.js:676 🔔 MessageNotifications: user object= Object
+index-CRm-HXoM.js:676 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+index-CRm-HXoM.js:676 🔔 MessageNotifications: Rendering with final unread counts: Object
+index-CRm-HXoM.js:676 🔔 MessageNotifications rendering with totalUnread: 1
+index-CRm-HXoM.js:676 🔔 MessageNotifications component mounting...
+index-CRm-HXoM.js:676 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-CRm-HXoM.js:676 🔔 MessageNotifications: user object= Object
+index-CRm-HXoM.js:676 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+index-CRm-HXoM.js:676 🔔 MessageNotifications: Rendering with final unread counts: Object
+index-CRm-HXoM.js:676 🔔 MessageNotifications rendering with totalUnread: 1
+index-CRm-HXoM.js:676 🔔 MessageNotifications component mounting...
+index-CRm-HXoM.js:676 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-CRm-HXoM.js:676 🔔 MessageNotifications: user object= Object
+index-CRm-HXoM.js:676 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+index-CRm-HXoM.js:676 🔔 MessageNotifications: Rendering with final unread counts: Object
+index-CRm-HXoM.js:676 🔔 MessageNotifications rendering with totalUnread: 1
+sandwich-project-platform-katielong2316.replit.app/:1  Failed to load resource: the server responded with a status of 500 ()
