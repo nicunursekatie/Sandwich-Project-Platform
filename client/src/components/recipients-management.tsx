@@ -25,7 +25,7 @@ interface Recipient {
 export default function RecipientsManagement() {
   const { toast } = useToast();
   const { user } = useAuth();
-  const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
+  const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingRecipient, setEditingRecipient] = useState<Recipient | null>(null);

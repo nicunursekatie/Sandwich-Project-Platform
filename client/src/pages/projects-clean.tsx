@@ -40,7 +40,7 @@ export default function ProjectsClean() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
-  const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
+  const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [activeTab, setActiveTab] = useState("active");
   const [newProject, setNewProject] = useState<Partial<InsertProject>>({

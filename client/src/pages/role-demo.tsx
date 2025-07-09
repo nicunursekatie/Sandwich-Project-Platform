@@ -88,7 +88,7 @@ const roleColors = {
 
 const permissionCategories = {
   "Core Access": [PERMISSIONS.VIEW_PHONE_DIRECTORY],
-  "Data Management": [PERMISSIONS.EDIT_DATA, PERMISSIONS.DELETE_DATA, PERMISSIONS.MANAGE_USERS],
+  "Data Management": [PERMISSIONS.EDIT_COLLECTIONS, PERMISSIONS.DELETE_COLLECTIONS, PERMISSIONS.MANAGE_USERS],
   "Communication": [PERMISSIONS.GENERAL_CHAT, PERMISSIONS.COMMITTEE_CHAT, PERMISSIONS.HOST_CHAT, PERMISSIONS.DRIVER_CHAT, PERMISSIONS.RECIPIENT_CHAT],
   "Data Viewing": [PERMISSIONS.VIEW_COLLECTIONS, PERMISSIONS.VIEW_REPORTS, PERMISSIONS.VIEW_PROJECTS],
   "Tools": [PERMISSIONS.TOOLKIT_ACCESS]
@@ -96,8 +96,8 @@ const permissionCategories = {
 
 const permissionIcons = {
   [PERMISSIONS.VIEW_PHONE_DIRECTORY]: Phone,
-  [PERMISSIONS.EDIT_DATA]: Edit,
-  [PERMISSIONS.DELETE_DATA]: Trash2,
+  [PERMISSIONS.EDIT_COLLECTIONS]: Edit,
+  [PERMISSIONS.DELETE_COLLECTIONS]: Trash2,
   [PERMISSIONS.MANAGE_USERS]: Users,
   [PERMISSIONS.GENERAL_CHAT]: MessageCircle,
   [PERMISSIONS.COMMITTEE_CHAT]: MessageCircle,
@@ -150,11 +150,11 @@ function RoleView({ user }: { user: any }) {
             </div>
 
             {/* Data Editing */}
-            <div className={`p-4 rounded-lg border ${hasPermission(user, PERMISSIONS.EDIT_DATA) ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200 opacity-50'}`}>
+            <div className={`p-4 rounded-lg border ${hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS) ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200 opacity-50'}`}>
               <Edit className="w-6 h-6 mb-2" />
               <div className="font-medium">Edit Data</div>
               <div className="text-sm text-gray-600">
-                {hasPermission(user, PERMISSIONS.EDIT_DATA) ? 'Can Edit' : 'Read Only'}
+                {hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS) ? 'Can Edit' : 'Read Only'}
               </div>
             </div>
 
@@ -327,7 +327,7 @@ export default function RoleDemo() {
                           {hasPermission(user, PERMISSIONS.VIEW_PHONE_DIRECTORY) ? '✅' : '❌'}
                         </td>
                         <td className="text-center p-2">
-                          {hasPermission(user, PERMISSIONS.EDIT_DATA) ? '✅' : '❌'}
+                          {hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS) ? '✅' : '❌'}
                         </td>
                         <td className="text-center p-2">
                           {hasPermission(user, PERMISSIONS.COMMITTEE_CHAT) ? '✅' : '❌'}

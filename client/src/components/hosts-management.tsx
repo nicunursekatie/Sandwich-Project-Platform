@@ -35,7 +35,7 @@ interface HostWithContacts extends Host {
 export default function HostsManagement() {
   const { toast } = useToast();
   const { user } = useAuth();
-  const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
+  const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingHost, setEditingHost] = useState<Host | null>(null);

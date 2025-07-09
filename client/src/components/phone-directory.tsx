@@ -102,7 +102,7 @@ function PhoneDirectory() {
   
   // Auth and permissions
   const { user } = useAuth();
-  const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
+  const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
 
   // Optimized: Fetch hosts with contacts in single query
   const { data: hosts = [], isLoading, refetch: refetchHostsWithContacts } = useQuery<HostWithContacts[]>({

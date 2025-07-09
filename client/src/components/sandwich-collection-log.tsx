@@ -51,8 +51,8 @@ export default function SandwichCollectionLog() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Check user permissions for editing data
-  const canEditData = hasPermission(user, PERMISSIONS.EDIT_DATA);
-  const canDeleteData = hasPermission(user, PERMISSIONS.DELETE_DATA);
+  const canEditData = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
+  const canDeleteData = hasPermission(user, PERMISSIONS.DELETE_COLLECTIONS);
   const [editingCollection, setEditingCollection] = useState<SandwichCollection | null>(null);
   const [showDuplicateAnalysis, setShowDuplicateAnalysis] = useState(false);
   const [duplicateAnalysis, setDuplicateAnalysis] = useState<DuplicateAnalysis | null>(null);
