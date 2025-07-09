@@ -4708,32 +4708,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
   
-  // Add health check endpoint for deployment monitoring
+  // Enhanced health check endpoint for deployment monitoring
   app.get("/health", async (req, res) => {
     try {
       // Test database connection
       const { testDatabaseConnection } = await import("./db");
       const dbStatus = await testDatabaseConnection();
       
+      // Test basic storage operations
+      let storageStatus = true;
+      try {
+        // Quick storage test - get collection count
+        const stats = await storage.getCollectionStats();
+        storageStatus = stats !== null && stats !== undefined;
+      } catch (error) {
+        console.error("Storage health check failed:", error);
+        storageStatus = false;
+      }
+      
+      const overallHealthy = dbStatus && storageStatus;
+      
       const health = {
-        status: dbStatus ? "healthy" : "unhealthy",
+        status: overallHealthy ? "healthy" : "unhealthy",
         timestamp: new Date().toISOString(),
+        version: "1.0.0",
+        uptime: Math.floor(process.uptime()),
         checks: {
           database: dbStatus ? "connected" : "disconnected",
+          storage: storageStatus ? "operational" : "error", 
           server: "running",
-          port: 5000
+          port: 5000,
+          memory: {
+            used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+            total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024)
+          }
         }
       };
       
-      res.status(dbStatus ? 200 : 503).json(health);
+      res.status(overallHealthy ? 200 : 503).json(health);
     } catch (error) {
+      console.error("Health check endpoint error:", error);
       res.status(503).json({
         status: "unhealthy",
         timestamp: new Date().toISOString(),
         error: error.message,
         checks: {
           database: "error",
-          server: "running",
+          storage: "error",
+          server: "running", 
           port: 5000
         }
       });

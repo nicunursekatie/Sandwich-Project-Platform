@@ -29,6 +29,7 @@ export interface IStorage {
   upsertUser(user: UpsertUser): Promise<User>;
   getAllUsers(): Promise<User[]>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
+  deleteUser(id: string): Promise<boolean>;
   
   // Legacy user methods (for backwards compatibility)
   getUserByUsername(username: string): Promise<User | undefined>;
@@ -362,22 +363,6 @@ export class MemStorage implements IStorage {
   // Legacy user methods (for backwards compatibility)
   async getUserByUsername(username: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(user => user.email === username);
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentIds.user++;
-    const user: User = { 
-      ...insertUser, 
-      id: id.toString(),
-      role: insertUser.role || 'volunteer', // Use provided role or default
-      permissions: insertUser.permissions || {},
-      metadata: insertUser.metadata || {},
-      isActive: insertUser.isActive !== false, // Default to true unless explicitly false
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.users.set(id, user);
-    return user;
   }
 
   // Project methods
