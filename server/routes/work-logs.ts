@@ -133,6 +133,7 @@ router.delete("/work-logs/:id", isAuthenticated, async (req, res) => {
     res.status(204).send();
   } catch (error) {
     console.error("[WORK LOGS DELETE] Error:", error);
+    console.error("[WORK LOGS DELETE] Stack trace:", error.stack);
     res.status(500).json({ error: "Failed to delete work log" });
   }
 });
