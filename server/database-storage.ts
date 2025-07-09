@@ -953,30 +953,7 @@ export class DatabaseStorage implements IStorage {
     return true;
   }
 
-  // Notifications for task assignments
-  async createNotification(notification: any): Promise<any> {
-    try {
-      const [result] = await db.insert(notifications).values(notification).returning();
-      return result;
-    } catch (error) {
-      console.error("Error creating notification:", error);
-      throw error;
-    }
-  }
-
-  async getUserNotifications(userId: string): Promise<any[]> {
-    try {
-      return await db
-        .select()
-        .from(notifications)
-        .where(eq(notifications.userId, userId))
-        .orderBy(desc(notifications.createdAt));
-    } catch (error) {
-      console.error("Error fetching user notifications:", error);
-      return [];
-    }
-  }
-
+  // Consolidated notification methods (removing duplicates)
   async markNotificationAsRead(notificationId: number): Promise<boolean> {
     try {
       const result = await db
