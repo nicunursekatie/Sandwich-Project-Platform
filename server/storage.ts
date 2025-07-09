@@ -185,6 +185,12 @@ export interface IStorage {
   createAnnouncement(announcement: any): Promise<any>;
   updateAnnouncement(id: number, updates: any): Promise<any | undefined>;
   deleteAnnouncement(id: number): Promise<boolean>;
+
+  // Project assignments
+  getProjectAssignments(projectId: number): Promise<any[]>;
+  addProjectAssignment(assignment: { projectId: number; userId: string; role: string }): Promise<any>;
+  removeProjectAssignment(projectId: number, userId: string): Promise<boolean>;
+  updateProjectAssignment(projectId: number, userId: string, updates: { role: string }): Promise<any>;
 }
 
 export class MemStorage implements IStorage {
@@ -1176,6 +1182,39 @@ export class MemStorage implements IStorage {
 
   async deleteAnnouncement(id: number): Promise<boolean> {
     return this.announcements.delete(id);
+  }
+
+  // Project assignments
+  async getProjectAssignments(projectId: number): Promise<any[]> {
+    // For MemStorage, return empty array for now
+    return [];
+  }
+
+  async addProjectAssignment(assignment: { projectId: number; userId: string; role: string }): Promise<any> {
+    // For MemStorage, return basic assignment object
+    return {
+      id: Date.now(),
+      projectId: assignment.projectId,
+      userId: assignment.userId,
+      role: assignment.role,
+      assignedAt: new Date()
+    };
+  }
+
+  async removeProjectAssignment(projectId: number, userId: string): Promise<boolean> {
+    // For MemStorage, return true
+    return true;
+  }
+
+  async updateProjectAssignment(projectId: number, userId: string, updates: { role: string }): Promise<any> {
+    // For MemStorage, return updated assignment
+    return {
+      id: Date.now(),
+      projectId,
+      userId,
+      role: updates.role,
+      assignedAt: new Date()
+    };
   }
 }
 

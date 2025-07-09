@@ -17,6 +17,7 @@ import { ProjectAssigneeSelector } from "@/components/project-assignee-selector"
 import { TaskAssigneeSelector } from "@/components/task-assignee-selector";
 import { MultiUserTaskCompletion } from "@/components/multi-user-task-completion";
 import ProjectCongratulations from "@/components/project-congratulations";
+import ProjectUserManager from "@/components/project-user-manager";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -427,7 +428,12 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
           )}
           
           {canEdit && (
-            <Button variant="outline" size="sm" onClick={handleEditProject} className="btn-tsp-primary text-white border-[var(--tsp-teal)]">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleEditProject} 
+              className="bg-[#236383] hover:bg-[#1e5570] text-white border-[#236383] hover:border-[#1e5570]"
+            >
               <Edit className="w-4 h-4 mr-2" />
               <span className="hidden xs:inline">Edit Project</span>
               <span className="xs:hidden">Edit</span>
@@ -593,6 +599,16 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
         projectTitle={project.title}
         currentUser={user}
         isCompleted={project.status === 'completed'}
+      />
+
+      {/* Project Team Management */}
+      <ProjectUserManager 
+        project={project}
+        onUpdate={() => {
+          // Refresh project data when assignments change
+          queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId] });
+          queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+        }}
       />
 
       {/* Tasks Section */}

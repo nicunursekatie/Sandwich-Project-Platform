@@ -345,4 +345,93 @@ router.delete("/projects/:projectId/comments/:commentId", async (req, res) => {
   }
 });
 
+// Project assignments endpoints
+router.get("/projects/:id/assignments", async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.id);
+    const assignments = await storage.getProjectAssignments(projectId);
+    res.json(assignments);
+  } catch (error) {
+    console.error('Error fetching project assignments:', error);
+    res.status(500).json({ error: 'Failed to fetch project assignments' });
+  }
+});
+
+router.post("/projects/:id/assignments", async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.id);
+    const { userId, role, sendNotification } = req.body;
+    
+    const assignment = await storage.addProjectAssignment({
+      projectId,
+      userId,
+      role: role || 'member'
+    });
+
+    // Send notification if requested
+    if (sendNotification && assignment) {
+      const project = await storage.getProject(projectId);
+      const assignedUser = await storage.getUser(userId);
+      
+      if (project && assignedUser && assignedUser.email) {
+        const { NotificationService } = await import('../notification-service');
+        const { NotificationTypes } = await import('../../shared/notification-types');
+        
+        await NotificationService.sendProjectNotification(
+          NotificationTypes.PROJECT_ASSIGNED,
+          {
+            projectId: project.id,
+            projectTitle: project.title,
+            assignedBy: 'Admin User', // TODO: Get from auth context
+            assignedTo: [assignedUser.email]
+          },
+          [assignedUser.email]
+        );
+      }
+    }
+
+    res.json(assignment);
+  } catch (error) {
+    console.error('Error adding project assignment:', error);
+    res.status(500).json({ error: 'Failed to add project assignment' });
+  }
+});
+
+router.delete("/projects/:id/assignments/:userId", async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.id);
+    const userId = req.params.userId;
+    
+    const success = await storage.removeProjectAssignment(projectId, userId);
+    
+    if (success) {
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ error: 'Assignment not found' });
+    }
+  } catch (error) {
+    console.error('Error removing project assignment:', error);
+    res.status(500).json({ error: 'Failed to remove project assignment' });
+  }
+});
+
+router.patch("/projects/:id/assignments/:userId", async (req, res) => {
+  try {
+    const projectId = parseInt(req.params.id);
+    const userId = req.params.userId;
+    const { role } = req.body;
+    
+    const assignment = await storage.updateProjectAssignment(projectId, userId, { role });
+    
+    if (assignment) {
+      res.json(assignment);
+    } else {
+      res.status(404).json({ error: 'Assignment not found' });
+    }
+  } catch (error) {
+    console.error('Error updating project assignment:', error);
+    res.status(500).json({ error: 'Failed to update project assignment' });
+  }
+});
+
 export { router as projectsRoutes };

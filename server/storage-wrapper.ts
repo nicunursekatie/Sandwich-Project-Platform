@@ -878,6 +878,35 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.deleteAnnouncement(id)
     );
   }
+
+  // Project assignments
+  async getProjectAssignments(projectId: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getProjectAssignments(projectId),
+      () => this.fallbackStorage.getProjectAssignments(projectId)
+    );
+  }
+
+  async addProjectAssignment(assignment: { projectId: number; userId: string; role: string }) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.addProjectAssignment(assignment),
+      () => this.fallbackStorage.addProjectAssignment(assignment)
+    );
+  }
+
+  async removeProjectAssignment(projectId: number, userId: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.removeProjectAssignment(projectId, userId),
+      () => this.fallbackStorage.removeProjectAssignment(projectId, userId)
+    );
+  }
+
+  async updateProjectAssignment(projectId: number, userId: string, updates: { role: string }) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateProjectAssignment(projectId, userId, updates),
+      () => this.fallbackStorage.updateProjectAssignment(projectId, userId, updates)
+    );
+  }
 }
 
 export const storage = new StorageWrapper();

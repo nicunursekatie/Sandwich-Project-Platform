@@ -980,6 +980,89 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
+  // Project assignments
+  async getProjectAssignments(projectId: number): Promise<any[]> {
+    try {
+      const assignments = await db
+        .select({
+          id: projectAssignments.id,
+          projectId: projectAssignments.projectId,
+          userId: projectAssignments.userId,
+          role: projectAssignments.role,
+          assignedAt: projectAssignments.assignedAt,
+          user: {
+            id: users.id,
+            email: users.email,
+            firstName: users.firstName,
+            lastName: users.lastName,
+            role: users.role
+          }
+        })
+        .from(projectAssignments)
+        .leftJoin(users, eq(projectAssignments.userId, users.id))
+        .where(eq(projectAssignments.projectId, projectId))
+        .orderBy(projectAssignments.assignedAt);
+      
+      return assignments;
+    } catch (error) {
+      console.error('Error fetching project assignments:', error);
+      return [];
+    }
+  }
+
+  async addProjectAssignment(assignment: { projectId: number; userId: string; role: string }): Promise<any> {
+    try {
+      const [newAssignment] = await db
+        .insert(projectAssignments)
+        .values({
+          projectId: assignment.projectId,
+          userId: assignment.userId,
+          role: assignment.role,
+          assignedAt: new Date()
+        })
+        .returning();
+      
+      return newAssignment;
+    } catch (error) {
+      console.error('Error adding project assignment:', error);
+      return null;
+    }
+  }
+
+  async removeProjectAssignment(projectId: number, userId: string): Promise<boolean> {
+    try {
+      const result = await db
+        .delete(projectAssignments)
+        .where(and(
+          eq(projectAssignments.projectId, projectId),
+          eq(projectAssignments.userId, userId)
+        ));
+      
+      return (result.rowCount ?? 0) > 0;
+    } catch (error) {
+      console.error('Error removing project assignment:', error);
+      return false;
+    }
+  }
+
+  async updateProjectAssignment(projectId: number, userId: string, updates: { role: string }): Promise<any> {
+    try {
+      const [updatedAssignment] = await db
+        .update(projectAssignments)
+        .set({ role: updates.role })
+        .where(and(
+          eq(projectAssignments.projectId, projectId),
+          eq(projectAssignments.userId, userId)
+        ))
+        .returning();
+      
+      return updatedAssignment;
+    } catch (error) {
+      console.error('Error updating project assignment:', error);
+      return null;
+    }
+  }
+
   async initialize(): Promise<void> {
     try {
       console.log('Initializing database storage...');
