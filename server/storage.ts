@@ -44,6 +44,7 @@ export interface IStorage {
   // Project Tasks
   getProjectTasks(projectId: number): Promise<ProjectTask[]>;
   getTaskById(id: number): Promise<ProjectTask | undefined>;
+  getProjectTask(taskId: number): Promise<ProjectTask | undefined>;
   createProjectTask(task: InsertProjectTask): Promise<ProjectTask>;
   updateProjectTask(id: number, updates: Partial<ProjectTask>): Promise<ProjectTask | undefined>;
   updateTaskStatus(id: number, status: string): Promise<boolean>;
@@ -443,6 +444,10 @@ export class MemStorage implements IStorage {
 
   async getTaskById(id: number): Promise<ProjectTask | undefined> {
     return this.projectTasks.get(id);
+  }
+
+  async getProjectTask(taskId: number): Promise<ProjectTask | undefined> {
+    return this.projectTasks.get(taskId);
   }
 
   async updateTaskStatus(id: number, status: string): Promise<boolean> {

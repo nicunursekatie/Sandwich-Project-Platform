@@ -75,10 +75,24 @@ const requirePermission = (permission: string) => {
   return async (req: any, res: any, next: any) => {
     try {
       // Get user from session or req.user (temp auth sets req.user)
-      const user = req.user || req.session?.user;
+      let user = req.user || req.session?.user;
 
       if (!user) {
         return res.status(401).json({ message: "Authentication required" });
+      }
+
+      // Always fetch fresh user data from database to ensure permissions are current
+      if (user.email) {
+        try {
+          const freshUser = await storage.getUserByEmail(user.email);
+          if (freshUser) {
+            user = freshUser;
+            req.user = freshUser;
+          }
+        } catch (dbError) {
+          console.error("Database error in requirePermission:", dbError);
+          // Continue with session user if database fails
+        }
       }
 
       // Check if user has the required permission
@@ -97,22 +111,25 @@ const requirePermission = (permission: string) => {
 
 // Helper function to check permissions
 const checkUserPermission = (user: any, permission: string): boolean => {
-  // Admin has all permissions
-  if (user.role === "admin") return true;
+  // Admin and super_admin have all permissions
+  if (user.role === "admin" || user.role === "super_admin") return true;
 
-  // Coordinator has most permissions including data editing
+  // Check if user has specific permission in permissions array
+  if (user.permissions && Array.isArray(user.permissions)) {
+    return user.permissions.includes(permission);
+  }
+
+  // Fallback role-based permission check
   if (user.role === "coordinator") {
     return !["manage_users", "system_admin"].includes(permission);
   }
 
-  // Volunteer has very limited permissions - only read access
   if (user.role === "volunteer") {
     return ["read_collections", "general_chat", "volunteer_chat"].includes(
       permission,
     );
   }
 
-  // Viewer has read-only access
   if (user.role === "viewer") {
     return ["read_collections", "read_reports"].includes(permission);
   }

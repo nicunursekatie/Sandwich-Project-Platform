@@ -146,7 +146,7 @@ async function startServer() {
           if (process.env.NODE_ENV === "development") {
             try {
               const { setupVite } = await import("./vite");
-              await setupVite(app, server);
+              await setupVite(app, httpServer);
               console.log("✓ Vite development server setup complete");
             } catch (error) {
               console.log(
