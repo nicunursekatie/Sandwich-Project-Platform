@@ -139,8 +139,12 @@ async function startServer() {
       });
     });
 
-    // Graceful shutdown
+    // Graceful shutdown - disabled in production to prevent exit
     const shutdown = async (signal: string) => {
+      if (process.env.NODE_ENV === "production") {
+        console.log(`⚠ Ignoring ${signal} in production mode - server will continue running`);
+        return;
+      }
       console.log(`Received ${signal}, starting graceful shutdown...`);
       httpServer.close(() => {
         console.log("HTTP server closed gracefully");
@@ -160,6 +164,8 @@ async function startServer() {
       // Don't shutdown in production to keep deployment stable
       if (process.env.NODE_ENV !== "production") {
         shutdown("uncaughtException");
+      } else {
+        console.log("Production mode: continuing operation despite uncaught exception...");
       }
     });
 
