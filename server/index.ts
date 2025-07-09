@@ -60,7 +60,7 @@ async function startServer() {
       res.status(status).json({ message });
     });
 
-    const port = process.env.PORT || 5000;
+    const port = process.env.PORT || (process.env.NODE_ENV === "production" ? 8080 : 5000);
     const host = "0.0.0.0";
 
     // Set up basic routes BEFORE starting server
