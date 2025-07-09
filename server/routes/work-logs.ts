@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { sql } from "drizzle-orm";
+import { sql, eq } from "drizzle-orm";
 import { workLogs } from "@shared/schema";
 import { db } from "../db";
 // Import the actual authentication middleware being used in the app
@@ -52,7 +52,7 @@ router.get("/work-logs", isAuthenticated, async (req, res) => {
     } else {
       // Regular users can only see their own logs
       console.log(`[WORK LOGS] Regular user access - fetching logs for ${userId}`);
-      const logs = await db.select().from(workLogs).where(workLogs.userId.eq(userId));
+      const logs = await db.select().from(workLogs).where(eq(workLogs.userId, userId));
       console.log(`[WORK LOGS] Found ${logs.length} logs for user ${userId}:`, logs.map(l => `${l.id}: ${l.description.substring(0, 30)}`));
       return res.json(logs);
     }
@@ -89,7 +89,7 @@ router.put("/work-logs/:id", isAuthenticated, async (req, res) => {
   if (!result.success) return res.status(400).json({ error: result.error.message });
   try {
     // Only allow editing own log unless super admin or Marcy
-    const log = await db.select().from(workLogs).where(workLogs.id.eq(logId));
+    const log = await db.select().from(workLogs).where(eq(workLogs.id, logId));
     if (!log[0]) return res.status(404).json({ error: "Work log not found" });
     if (!isSuperAdmin(req) && req.user.email !== 'mdlouza@gmail.com' && log[0].userId !== req.user.id) {
       return res.status(403).json({ error: "Insufficient permissions" });
@@ -98,7 +98,7 @@ router.put("/work-logs/:id", isAuthenticated, async (req, res) => {
       description: result.data.description,
       hours: result.data.hours,
       minutes: result.data.minutes
-    }).where(workLogs.id.eq(logId)).returning();
+    }).where(eq(workLogs.id, logId)).returning();
     res.json(updated[0]);
   } catch (error) {
     res.status(500).json({ error: "Failed to update work log" });
@@ -108,16 +108,31 @@ router.put("/work-logs/:id", isAuthenticated, async (req, res) => {
 // Delete a work log (own or any if super admin)
 router.delete("/work-logs/:id", isAuthenticated, async (req, res) => {
   const logId = parseInt(req.params.id);
+  console.log("[WORK LOGS DELETE] Attempting to delete log ID:", logId);
+  
   if (isNaN(logId)) return res.status(400).json({ error: "Invalid log ID" });
+  
   try {
-    const log = await db.select().from(workLogs).where(workLogs.id.eq(logId));
+    console.log("[WORK LOGS DELETE] Fetching log for permission check...");
+    const log = await db.select().from(workLogs).where(eq(workLogs.id, logId));
+    console.log("[WORK LOGS DELETE] Found log:", log[0] ? `ID ${log[0].id}, User ${log[0].userId}` : "None");
+    
     if (!log[0]) return res.status(404).json({ error: "Work log not found" });
-    if (!isSuperAdmin(req) && req.user.email !== 'mdlouza@gmail.com' && log[0].userId !== req.user.id) {
+    
+    const hasPermission = isSuperAdmin(req) || req.user.email === 'mdlouza@gmail.com' || log[0].userId === req.user.id;
+    console.log("[WORK LOGS DELETE] Permission check:", { hasPermission, userRole: req.user.role, userEmail: req.user.email, logUserId: log[0].userId });
+    
+    if (!hasPermission) {
       return res.status(403).json({ error: "Insufficient permissions" });
     }
-    await db.delete(workLogs).where(workLogs.id.eq(logId));
+    
+    console.log("[WORK LOGS DELETE] Deleting log...");
+    await db.delete(workLogs).where(eq(workLogs.id, logId));
+    console.log("[WORK LOGS DELETE] Successfully deleted log ID:", logId);
+    
     res.status(204).send();
   } catch (error) {
+    console.error("[WORK LOGS DELETE] Error:", error);
     res.status(500).json({ error: "Failed to delete work log" });
   }
 });
