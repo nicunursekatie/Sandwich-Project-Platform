@@ -66,24 +66,30 @@ export default function WorkLogPage() {
               placeholder="Describe your work..."
               required
             />
-            <div className="flex gap-2">
-              <Input
-                type="number"
-                min={0}
-                value={hours}
-                onChange={e => setHours(Number(e.target.value))}
-                placeholder="Hours"
-                required
-              />
-              <Input
-                type="number"
-                min={0}
-                max={59}
-                value={minutes}
-                onChange={e => setMinutes(Number(e.target.value))}
-                placeholder="Minutes"
-                required
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Hours</label>
+                <Input
+                  type="number"
+                  min={0}
+                  value={hours}
+                  onChange={e => setHours(Number(e.target.value))}
+                  placeholder="0"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Minutes</label>
+                <Input
+                  type="number"
+                  min={0}
+                  max={59}
+                  value={minutes}
+                  onChange={e => setMinutes(Number(e.target.value))}
+                  placeholder="0"
+                  required
+                />
+              </div>
             </div>
             <Button type="submit" disabled={createLog.isPending}>
               {createLog.isPending ? "Logging..." : "Log Work"}
