@@ -6267,15 +6267,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log('[DEBUG] Fetching messages for conversation ID:', conversationId);
       
+      // Use simple select all to avoid field mapping issues
       const conversationMessages = await db
-        .select({
-          id: messagesTable.id,
-          content: messagesTable.content,
-          userId: messagesTable.user_id,
-          user_id: messagesTable.user_id,
-          sender: messagesTable.sender,
-          createdAt: messagesTable.created_at
-        })
+        .select()
         .from(messagesTable)
         .where(eq(messagesTable.conversation_id, conversationId))
         .orderBy(messagesTable.created_at);
@@ -6287,10 +6281,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const formattedMessages = conversationMessages.map(msg => ({
         id: msg.id,
         content: msg.content,
-        userId: msg.userId || msg.user_id,
-        user_id: msg.user_id, // Include both forms
+        userId: msg.user_id,
+        user_id: msg.user_id,
         sender: msg.sender || 'Unknown User',
-        timestamp: msg.createdAt,
+        createdAt: msg.created_at,
+        created_at: msg.created_at,
+        timestamp: msg.created_at,
         committee: 'conversation' // For compatibility
       }));
 
