@@ -55,12 +55,12 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
     ...(hasPermission(user, PERMISSIONS.VIEW_COMMITTEE) ? [{ id: "committee-chat", label: "Committee", icon: MessageCircle, href: "committee-chat", group: "comm" }] : []),
     { id: "messages", label: "Messages", icon: MessageCircle, href: "messages", group: "comm" },
     { id: "phone-directory", label: "Directory", icon: Phone, href: "phone-directory", group: "comm" },
+    ...(hasPermission(user, PERMISSIONS.VIEW_SUGGESTIONS) ? [{ id: "suggestions", label: "Suggestions", icon: Lightbulb, href: "suggestions", group: "comm" }] : []),
     
     // Resources section
     { id: "toolkit", label: "Toolkit", icon: FolderOpen, href: "toolkit", group: "resources" },
     { id: "development", label: "Development", icon: FileText, href: "development", group: "resources" },
     ...(hasPermission(user, 'log_work') ? [{ id: "work-log", label: "Work Log", icon: ListTodo, href: "work-log", group: "resources" }] : []),
-    ...(hasPermission(user, PERMISSIONS.VIEW_SUGGESTIONS) ? [{ id: "suggestions", label: "Suggestions", icon: Lightbulb, href: "suggestions", group: "resources" }] : []),
     
     // Admin section (filtered by permissions)
     ...(hasPermission(user, PERMISSIONS.MANAGE_USERS) ? [{ id: "user-management", label: "Admin", icon: Settings, href: "user-management", group: "admin" }] : [])

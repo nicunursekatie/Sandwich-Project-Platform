@@ -101,12 +101,12 @@ export function CollapsibleNav({ onSectionChange }: { onSectionChange?: (section
       items: [
         { id: "committee", label: "Committee", icon: Users, href: "/committee", permission: "view_committee" },
         { id: "messages-comm", label: "Messages", icon: MessageCircle, href: "/messages" },
-        { id: "phone-directory", label: "Directory", icon: Phone, href: "/phone-directory", permission: "view_phone_directory" }
+        { id: "phone-directory", label: "Directory", icon: Phone, href: "/phone-directory", permission: "view_phone_directory" },
+        { id: "suggestions", label: "Suggestions", icon: Lightbulb, href: "/suggestions", permission: "view_suggestions" }
       ]
     },
     { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", href: "/toolkit" },
     { id: "development", label: "Development", icon: FolderOpen, type: "item", href: "/development" },
-    { id: "suggestions", label: "Suggestions", icon: Lightbulb, type: "item", href: "/suggestions", permission: "view_suggestions" },
     { id: "user-management", label: "Admin", icon: Users, type: "item", href: "/user-management", permission: "manage_users" },
   ];
 
