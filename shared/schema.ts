@@ -578,3 +578,18 @@ export type InsertGoogleSheet = z.infer<typeof insertGoogleSheetSchema>;
 // - conversations
 // - conversationParticipants  
 // - messages
+
+export const workLogs = pgTable("work_logs", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  description: text("description").notNull(),
+  hours: integer("hours").notNull().default(0),
+  minutes: integer("minutes").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  status: varchar("status", { length: 20 }).default("pending"), // for future approval
+  approvedBy: varchar("approved_by"), // for future approval
+  approvedAt: timestamp("approved_at", { withTimezone: true }) // for future approval
+});
+
+export type WorkLog = typeof workLogs.$inferSelect;
+export type InsertWorkLog = typeof workLogs.$inferInsert;

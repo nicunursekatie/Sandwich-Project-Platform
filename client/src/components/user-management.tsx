@@ -394,6 +394,7 @@ export default function UserManagement() {
                                   <SelectItem value={USER_ROLES.RECIPIENT}>Recipient</SelectItem>
                                   <SelectItem value={USER_ROLES.VOLUNTEER}>Volunteer</SelectItem>
                                   <SelectItem value={USER_ROLES.VIEWER}>Viewer</SelectItem>
+                                  <SelectItem value={USER_ROLES.WORK_LOGGER}>Work Logger</SelectItem>
                                 </SelectContent>
                               </Select>
                             </div>

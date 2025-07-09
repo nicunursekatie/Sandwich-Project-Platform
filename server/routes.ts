@@ -358,6 +358,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     app.use(routesModule.apiRoutes);
   }
 
+  // Register work log routes
+  const workLogsRoutes = (await import("./routes/work-logs")).default;
+  app.use("/api", workLogsRoutes);
+
   // Register performance optimization routes
   registerPerformanceRoutes(app);
   // Apply global middleware

@@ -6,7 +6,8 @@ export const USER_ROLES = {
   DRIVER: 'driver',
   VOLUNTEER: 'volunteer',
   RECIPIENT: 'recipient',
-  VIEWER: 'viewer'
+  VIEWER: 'viewer',
+  WORK_LOGGER: 'work_logger'
 } as const;
 
 export const PERMISSIONS = {
@@ -124,7 +125,7 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_COLLECTIONS,
         PERMISSIONS.VIEW_REPORTS,
         PERMISSIONS.VIEW_PROJECTS,
-        PERMISSIONS.EDIT_DATA,  // For development tab access
+        PERMISSIONS.EDIT_COLLECTIONS,  // For development tab access
         PERMISSIONS.SEND_MESSAGES
       ];
     
@@ -148,6 +149,20 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_REPORTS,
         PERMISSIONS.VIEW_PROJECTS,
         PERMISSIONS.SEND_MESSAGES
+      ];
+    
+    case USER_ROLES.WORK_LOGGER:
+      return [
+        PERMISSIONS.VIEW_PHONE_DIRECTORY,
+        PERMISSIONS.GENERAL_CHAT,
+        PERMISSIONS.DIRECT_MESSAGES,
+        PERMISSIONS.GROUP_MESSAGES,
+        PERMISSIONS.TOOLKIT_ACCESS,
+        PERMISSIONS.VIEW_COLLECTIONS,
+        PERMISSIONS.VIEW_REPORTS,
+        PERMISSIONS.VIEW_PROJECTS,
+        PERMISSIONS.SEND_MESSAGES,
+        'log_work' // Custom permission for work logging
       ];
     
     default:
@@ -202,6 +217,8 @@ export function getRoleDisplayName(role: string): string {
       return 'Recipient Organization';
     case USER_ROLES.VIEWER:
       return 'Viewer';
+    case USER_ROLES.WORK_LOGGER:
+      return 'Work Logger';
     default:
       return role.charAt(0).toUpperCase() + role.slice(1).replace('_', ' ');
   }
