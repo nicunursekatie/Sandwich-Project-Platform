@@ -6620,8 +6620,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     isAuthenticated,
     async (req, res) => {
       try {
+        console.log("[CONVERSATION MESSAGES] Request received for conversation:", req.params.id);
         const user = (req as any).user;
+        console.log("[CONVERSATION MESSAGES] User object:", user ? "exists" : "missing");
         if (!user?.id) {
+          console.log("[CONVERSATION MESSAGES] No user.id found, returning 401");
           return res.status(401).json({ message: "Unauthorized" });
         }
 
@@ -6691,7 +6694,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         res.json(formattedMessages);
       } catch (error) {
-        console.error("[API] Error fetching messages:", error);
+        console.error("[CONVERSATION MESSAGES] Full error details:", error);
+        console.error("[CONVERSATION MESSAGES] Error message:", error.message);
+        console.error("[CONVERSATION MESSAGES] Error stack:", error.stack);
         res
           .status(500)
           .json({ message: "Internal server error", details: error.message });
