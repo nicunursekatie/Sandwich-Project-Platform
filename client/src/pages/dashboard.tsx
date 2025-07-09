@@ -1,4 +1,4 @@
-import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone, ChevronDown, ChevronRight, Menu, X, UserCog } from "lucide-react";
+import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone, ChevronDown, ChevronRight, Menu, X, UserCog, Lightbulb } from "lucide-react";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectList from "@/components/project-list";
@@ -92,6 +92,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
     // Communication section
     ...(hasPermission(user, PERMISSIONS.VIEW_COMMITTEE) ? [{ id: "committee", label: "Committee", icon: MessageCircle }] : []),
     { id: "directory", label: "Directory", icon: Phone },
+    ...(hasPermission(user, PERMISSIONS.VIEW_SUGGESTIONS) ? [{ id: "suggestions", label: "Suggestions", icon: Lightbulb }] : []),
     
     // Resources section
     { id: "toolkit", label: "Toolkit", icon: FolderOpen },
