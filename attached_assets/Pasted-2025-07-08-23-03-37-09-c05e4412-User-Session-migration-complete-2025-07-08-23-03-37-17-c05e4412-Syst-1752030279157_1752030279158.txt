@@ -1,0 +1,136 @@
+2025-07-08 23:03:37.09
+c05e4412
+User
+Session migration complete
+2025-07-08 23:03:37.17
+c05e4412
+System
+command finished successfully with exit code 0
+2025-07-08 23:03:37.17
+c05e4412
+System
+main done, exiting
+2025-07-08 23:03:49.38
+873230eb
+System
+starting up user application
+2025-07-08 23:03:49.85
+873230eb
+System
+forwarding local port 5000 to external port 80 (mapped as 1104)
+2025-07-08 23:03:50.67
+873230eb
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 23:03:51.77
+c05e4412
+System
+starting up user application
+2025-07-08 23:03:51.92
+c05e4412
+System
+forwarding local port 5000 to external port 80 (mapped as 1104)
+2025-07-08 23:03:53.24
+c05e4412
+System
+system: received signal terminated
+2025-07-08 23:03:53.32
+c05e4412
+System
+command finished with error [npm run start]: signal: terminated
+2025-07-08 23:03:53.41
+c05e4412
+System
+main done, exiting
+2025-07-08 23:04:00.67
+873230eb
+User
+> rest-express@1.0.0 start
+2025-07-08 23:04:00.67
+873230eb
+User
+> NODE_ENV=production node dist/index.js
+2025-07-08 23:04:15.25
+873230eb
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 23:04:15.36
+873230eb
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 23:04:20.45
+873230eb
+User
+Using database storage for data persistence...
+2025-07-08 23:04:20.45
+873230eb
+User
+Database storage initialized
+2025-07-08 23:04:20.50
+873230eb
+User
+Checking sessions table...
+2025-07-08 23:04:20.50
+873230eb
+User
+🚀 Starting The Sandwich Project server...
+2025-07-08 23:04:20.50
+873230eb
+User
+✓ Static file serving configured for production
+2025-07-08 23:04:20.51
+873230eb
+User
+✓ Server startup sequence completed successfully
+2025-07-08 23:04:20.51
+873230eb
+User
+✓ Server object: EXISTS
+2025-07-08 23:04:20.60
+873230eb
+User
+✓ Server is running on http://0.0.0.0:5000
+2025-07-08 23:04:20.60
+873230eb
+User
+✓ Environment: production
+2025-07-08 23:04:20.60
+873230eb
+User
+✓ Basic server ready - starting background initialization...
+2025-07-08 23:04:20.60
+873230eb
+User
+Checking database initialization...
+2025-07-08 23:04:20.60
+873230eb
+User
+DATABASE_URL exists: true
+2025-07-08 23:04:20.60
+873230eb
+User
+DATABASE_URL preview: postgresql://neondb_...
+2025-07-08 23:04:20.60
+873230eb
+User
+Checking sessions table...
+2025-07-08 23:04:20.80
+873230eb
+User
+Sessions table ready
+2025-07-08 23:04:20.89
+873230eb
+User
+Sessions table ready
+2025-07-08 23:04:20.89
+873230eb
+User
+Session migration complete
+2025-07-08 23:04:21.15
+873230eb
+System
+command finished successfully with exit code 0
+2025-07-08 23:04:21.15
+873230eb
+System
+main done, exiting
