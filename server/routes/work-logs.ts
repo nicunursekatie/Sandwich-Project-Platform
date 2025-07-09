@@ -19,11 +19,7 @@ const router = Router();
 const insertWorkLogSchema = z.object({
   description: z.string().min(1),
   hours: z.number().int().min(0),
-  minutes: z.number().int().min(0).max(59),
-  visibility: z.enum(["private", "team", "department", "public"]).default("private"),
-  sharedWith: z.array(z.string()).default([]),
-  department: z.string().optional(),
-  teamId: z.string().optional()
+  minutes: z.number().int().min(0).max(59)
 });
 
 // Middleware to check if user is super admin or admin
@@ -37,31 +33,19 @@ function canLogWork(req) {
   return req.user?.role === "admin" || req.user?.role === "super_admin" || req.user?.role === "work_logger";
 }
 
-// Get logs based on visibility permissions
+// Get work logs - Admins see ALL, users see only their own
 router.get("/work-logs", isAuthenticated, async (req, res) => {
   try {
-    if (isSuperAdmin(req)) {
-      // Admins see ALL logs
+    const userId = req.user.id;
+    const userEmail = req.user.email;
+    
+    // Super admin and Marcy can see ALL work logs
+    if (isSuperAdmin(req) || userEmail === 'mdlouza@gmail.com') {
       const logs = await db.select().from(workLogs);
       return res.json(logs);
     } else {
-      // Regular users see logs based on visibility rules
-      const userId = req.user.id;
-      const userDepartment = req.user.department;
-      const userTeamId = req.user.teamId;
-      
-      const logs = await db.select().from(workLogs).where(
-        // Own logs
-        workLogs.userId.eq(userId)
-        // OR public logs
-        .or(workLogs.visibility.eq("public"))
-        // OR department logs if same department
-        .or(workLogs.visibility.eq("department").and(workLogs.department.eq(userDepartment)))
-        // OR team logs if same team
-        .or(workLogs.visibility.eq("team").and(workLogs.teamId.eq(userTeamId)))
-        // OR specifically shared with this user (check if userId exists in sharedWith JSON array)
-        .or(sql`${workLogs.sharedWith} @> ${JSON.stringify([userId])}`)
-      );
+      // Regular users can only see their own logs
+      const logs = await db.select().from(workLogs).where(workLogs.userId.eq(userId));
       return res.json(logs);
     }
   } catch (error) {
@@ -80,11 +64,7 @@ router.post("/work-logs", isAuthenticated, async (req, res) => {
       userId: req.user.id,
       description: result.data.description,
       hours: result.data.hours,
-      minutes: result.data.minutes,
-      visibility: result.data.visibility,
-      sharedWith: result.data.sharedWith,
-      department: result.data.department || req.user.department,
-      teamId: result.data.teamId || req.user.teamId
+      minutes: result.data.minutes
     }).returning();
     res.status(201).json(log[0]);
   } catch (error) {
@@ -100,10 +80,10 @@ router.put("/work-logs/:id", isAuthenticated, async (req, res) => {
   const result = insertWorkLogSchema.safeParse(req.body);
   if (!result.success) return res.status(400).json({ error: result.error.message });
   try {
-    // Only allow editing own log unless super admin
+    // Only allow editing own log unless super admin or Marcy
     const log = await db.select().from(workLogs).where(workLogs.id.eq(logId));
     if (!log[0]) return res.status(404).json({ error: "Work log not found" });
-    if (!isSuperAdmin(req) && log[0].userId !== req.user.id) {
+    if (!isSuperAdmin(req) && req.user.email !== 'mdlouza@gmail.com' && log[0].userId !== req.user.id) {
       return res.status(403).json({ error: "Insufficient permissions" });
     }
     const updated = await db.update(workLogs).set({
@@ -124,7 +104,7 @@ router.delete("/work-logs/:id", isAuthenticated, async (req, res) => {
   try {
     const log = await db.select().from(workLogs).where(workLogs.id.eq(logId));
     if (!log[0]) return res.status(404).json({ error: "Work log not found" });
-    if (!isSuperAdmin(req) && log[0].userId !== req.user.id) {
+    if (!isSuperAdmin(req) && req.user.email !== 'mdlouza@gmail.com' && log[0].userId !== req.user.id) {
       return res.status(403).json({ error: "Insufficient permissions" });
     }
     await db.delete(workLogs).where(workLogs.id.eq(logId));

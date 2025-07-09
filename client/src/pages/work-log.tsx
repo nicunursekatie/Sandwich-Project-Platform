@@ -4,19 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Users, Lock, Eye, Globe } from "lucide-react";
 
 export default function WorkLogPage() {
   const { user } = useAuth();
   const [description, setDescription] = useState("");
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
-  const [visibility, setVisibility] = useState("private");
-  const [sharedWith, setSharedWith] = useState<string[]>([]);
 
   const { data: logs = [], refetch, isLoading, error } = useQuery({
     queryKey: ["/api/work-logs"],
@@ -31,17 +26,13 @@ export default function WorkLogPage() {
       return apiRequest("POST", "/api/work-logs", { 
         description, 
         hours, 
-        minutes, 
-        visibility, 
-        sharedWith 
+        minutes
       });
     },
     onSuccess: () => {
       setDescription("");
       setHours(0);
       setMinutes(0);
-      setVisibility("private");
-      setSharedWith([]);
       queryClient.invalidateQueries({ queryKey: ["/api/work-logs"] });
     },
   });
@@ -94,50 +85,6 @@ export default function WorkLogPage() {
                 required
               />
             </div>
-            
-            <div className="space-y-3">
-              <label className="text-sm font-medium text-gray-700">Who can see this work log?</label>
-              <Select value={visibility} onValueChange={setVisibility}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose visibility" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="private">
-                    <div className="flex items-center gap-2">
-                      <Lock className="w-4 h-4" />
-                      <span>Private (Only me)</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="team">
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4" />
-                      <span>Team (My team members)</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="department">
-                    <div className="flex items-center gap-2">
-                      <Eye className="w-4 h-4" />
-                      <span>Department (Same department)</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="public">
-                    <div className="flex items-center gap-2">
-                      <Globe className="w-4 h-4" />
-                      <span>Public (Everyone)</span>
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              
-              {visibility !== "private" && (
-                <div className="text-xs text-gray-500 flex items-center gap-1">
-                  {visibility === "team" && <><Users className="w-3 h-3" /> Visible to your team members</>}
-                  {visibility === "department" && <><Eye className="w-3 h-3" /> Visible to your department</>}
-                  {visibility === "public" && <><Globe className="w-3 h-3" /> Visible to all users</>}
-                </div>
-              )}
-            </div>
-
             <Button type="submit" disabled={createLog.isPending}>
               {createLog.isPending ? "Logging..." : "Log Work"}
             </Button>
@@ -159,21 +106,13 @@ export default function WorkLogPage() {
                 {safelogs.map((log: any) => (
                 <li key={log.id} className="py-4 flex justify-between items-center">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="font-medium">{log.description}</div>
-                      <div className="flex items-center gap-1">
-                        {log.visibility === "private" && <Badge variant="secondary" className="text-xs"><Lock className="w-3 h-3 mr-1" />Private</Badge>}
-                        {log.visibility === "team" && <Badge variant="outline" className="text-xs"><Users className="w-3 h-3 mr-1" />Team</Badge>}
-                        {log.visibility === "department" && <Badge variant="outline" className="text-xs"><Eye className="w-3 h-3 mr-1" />Department</Badge>}
-                        {log.visibility === "public" && <Badge variant="default" className="text-xs"><Globe className="w-3 h-3 mr-1" />Public</Badge>}
-                      </div>
-                    </div>
+                    <div className="font-medium">{log.description}</div>
                     <div className="text-sm text-gray-500">
                       {log.hours}h {log.minutes}m &middot; {new Date(log.createdAt).toLocaleString()}
                       {log.userId !== user?.id && <span className="ml-2 text-blue-600">(by other user)</span>}
                     </div>
                   </div>
-                  {(user?.role === "super_admin" || log.userId === user?.id) && (
+                  {(user?.role === "super_admin" || user?.email === 'mdlouza@gmail.com' || log.userId === user?.id) && (
                     <Button
                       variant="destructive"
                       size="sm"
