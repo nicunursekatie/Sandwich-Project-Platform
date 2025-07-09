@@ -93,57 +93,20 @@ async function startServer() {
     // Set up basic routes BEFORE starting server
     app.use("/attached_assets", express.static("attached_assets"));
     
-    // Root route handling - serve React app in production, basic page in development
-    app.get("/", (_req: Request, res: Response) => {
-      if (process.env.NODE_ENV === "production") {
-        try {
-          res.sendFile(require("path").join(process.cwd(), "dist/public/index.html"));
-        } catch (err) {
-          res.status(200).send(`
-            <!DOCTYPE html>
-            <html>
-              <head>
-                <title>The Sandwich Project</title>
-                <meta charset="utf-8">
-              </head>
-              <body>
-                <h1>The Sandwich Project</h1>
-                <p>Server is running successfully!</p>
-                <p>Environment: production</p>
-                <p>Timestamp: ${new Date().toISOString()}</p>
-                <p>Note: Frontend build not found, serving basic page</p>
-              </body>
-            </html>
-          `);
-        }
-      } else {
-        res.status(200).send(`
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <title>The Sandwich Project</title>
-              <meta charset="utf-8">
-            </head>
-            <body>
-              <h1>The Sandwich Project</h1>
-              <p>Server is running successfully!</p>
-              <p>Environment: ${process.env.NODE_ENV || "development"}</p>
-              <p>Timestamp: ${new Date().toISOString()}</p>
-            </body>
-          </html>
-        `);
-      }
+    // Health check route - available before full initialization
+    app.get("/health", (_req: Request, res: Response) => {
+      res.status(200).json({
+        status: "healthy",
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || "development",
+      });
     });
 
     if (process.env.NODE_ENV === "production") {
       // In production, serve static files from the built frontend
       app.use(express.static("dist/public"));
       console.log("✓ Static file serving configured for production");
-      
-      // Serve React app for all routes that don't match API or static assets
-      app.get("*", (_req: Request, res: Response) => {
-        res.sendFile(require("path").join(process.cwd(), "dist/public/index.html"));
-      });
     }
 
     // Use smart port selection in production
@@ -191,6 +154,12 @@ async function startServer() {
                 error.message,
               );
             }
+          } else {
+            // In production, serve React app for all routes that don't match API or static assets
+            app.get("*", (_req: Request, res: Response) => {
+              res.sendFile(require("path").join(process.cwd(), "dist/public/index.html"));
+            });
+            console.log("✓ Production SPA routing configured");
           }
 
           console.log(
