@@ -6673,8 +6673,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const conversationMessages = await db
           .select()
           .from(messagesTable)
-          .where(eq(messagesTable.conversation_id, conversationId))
-          .orderBy(messagesTable.created_at);
+          .where(eq(messagesTable.conversationId, conversationId))
+          .orderBy(messagesTable.createdAt);
 
         console.log("[DEBUG] Found messages:", conversationMessages.length);
         console.log("[DEBUG] Sample message:", conversationMessages[0]);
@@ -6683,12 +6683,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const formattedMessages = conversationMessages.map((msg) => ({
           id: msg.id,
           content: msg.content,
-          userId: msg.user_id,
-          user_id: msg.user_id,
+          userId: msg.userId,
+          user_id: msg.userId,
           sender: msg.sender || "Unknown User",
-          createdAt: msg.created_at,
-          created_at: msg.created_at,
-          timestamp: msg.created_at,
+          createdAt: msg.createdAt,
+          created_at: msg.createdAt,
+          timestamp: msg.createdAt,
           committee: "conversation", // For compatibility
         }));
 
