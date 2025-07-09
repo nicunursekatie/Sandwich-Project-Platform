@@ -15,6 +15,10 @@ export default function WorkLogPage() {
 
   const { data: logs = [], refetch, isLoading, error } = useQuery({
     queryKey: ["/api/work-logs"],
+    queryFn: () => {
+      console.log("🚀 Work logs query function called");
+      return apiRequest("GET", "/api/work-logs");
+    },
     enabled: !!user, // Only fetch when user is authenticated
     staleTime: 0, // Always fetch fresh data
     gcTime: 0, // Don't cache results (TanStack Query v5 uses gcTime instead of cacheTime)
