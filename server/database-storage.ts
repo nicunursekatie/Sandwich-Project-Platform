@@ -906,6 +906,27 @@ export class DatabaseStorage implements IStorage {
     return !!membership;
   }
 
+  // Notifications & Celebrations
+  async getUserNotifications(userId: string): Promise<any[]> {
+    // For now return empty array - notifications can be implemented later
+    return [];
+  }
+
+  async createNotification(notification: any): Promise<any> {
+    // Basic notification creation - can be enhanced later
+    return notification;
+  }
+
+  async markNotificationRead(id: number): Promise<boolean> {
+    // For now return true - can be implemented later
+    return true;
+  }
+
+  async deleteNotification(id: number): Promise<boolean> {
+    // For now return true - can be implemented later
+    return true;
+  }
+
   async createCelebration(userId: string, taskId: number, message: string): Promise<any> {
     // For now return basic celebration object - can be implemented later
     return { userId, taskId, message, type: 'celebration' };

@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
-import { CheckCircle2, Building2, User, Trash2, MoreVertical, Edit } from "lucide-react";
+import { CheckCircle2, Heart, User, Trash2, MoreVertical, Edit } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -203,11 +203,11 @@ export default function RecipientChat() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Building2 className="h-5 w-5" />
+            <Heart className="h-5 w-5" />
             Recipient Chat
           </CardTitle>
           <CardDescription>
-            Access restricted to recipient coordinators and administrators
+            Access restricted to recipients and coordinators
           </CardDescription>
         </CardHeader>
       </Card>
@@ -218,7 +218,7 @@ export default function RecipientChat() {
     <Card className="h-[600px] flex flex-col">
       <CardHeader className="flex-shrink-0">
         <CardTitle className="flex items-center gap-2">
-          <Building2 className="h-5 w-5" />
+          <Heart className="h-5 w-5" />
           Recipient Chat
         </CardTitle>
         <CardDescription>
@@ -247,18 +247,18 @@ export default function RecipientChat() {
               <div key={msg.id} className={`flex gap-3 ${isOwnMessage ? 'justify-end' : ''}`}>
                 <div className={`flex gap-3 max-w-[80%] ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
                   <div className="flex-shrink-0">
-                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center">
                       {isOwnMessage ? (
-                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                        <CheckCircle2 className="h-4 w-4 text-pink-600" />
                       ) : (
-                        <Building2 className="h-4 w-4 text-green-600" />
+                        <Heart className="h-4 w-4 text-pink-600" />
                       )}
                     </div>
                   </div>
                   <div className={`space-y-1 ${isOwnMessage ? 'items-end' : ''}`}>
                     <div className={`flex items-center gap-2 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
                       <span className="text-sm font-medium">
-                        {msg.sender || "Recipient Coordinator"}
+                        {msg.sender || "Recipient"}
                       </span>
                       <span className="text-xs text-muted-foreground">
                         {msgCreatedAt ? formatDistanceToNow(new Date(msgCreatedAt), { addSuffix: true }) : 'just now'}
@@ -313,7 +313,7 @@ export default function RecipientChat() {
                     ) : (
                       <div className={`rounded-lg px-3 py-2 ${
                         isOwnMessage 
-                          ? 'bg-green-500 text-white' 
+                          ? 'bg-pink-500 text-white' 
                           : 'bg-muted'
                       }`}>
                         <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
@@ -338,7 +338,7 @@ export default function RecipientChat() {
           <Button
             onClick={handleSendMessage}
             disabled={!message.trim() || postMessageMutation.isPending}
-            className="self-end bg-green-500 hover:bg-green-600"
+            className="self-end bg-pink-500 hover:bg-pink-600"
           >
             Send
           </Button>

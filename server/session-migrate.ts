@@ -5,14 +5,6 @@ export async function ensureSessionsTable() {
   try {
     console.log("Checking sessions table...");
     
-    // Test database connection first
-    const { testDatabaseConnection } = await import("./db");
-    const isConnected = await testDatabaseConnection();
-    
-    if (!isConnected) {
-      throw new Error("Database connection failed - cannot create sessions table");
-    }
-    
     // Create sessions table if it doesn't exist
     // This matches the schema expected by connect-pg-simple
     await db.execute(sql`
@@ -29,20 +21,10 @@ export async function ensureSessionsTable() {
       CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON sessions (expire);
     `);
     
-    console.log("✓ Sessions table ready");
+    console.log("Sessions table ready");
   } catch (error) {
-    console.error("✗ Failed to create sessions table:", error);
-    
-    // Provide more specific error messages
-    if (error.message?.includes('endpoint is disabled')) {
-      throw new Error("Sessions table creation failed: Database endpoint is disabled");
-    }
-    
-    if (error.message?.includes('connection')) {
-      throw new Error("Sessions table creation failed: Database connection error");
-    }
-    
-    throw new Error(`Sessions table creation failed: ${error.message}`);
+    console.error("Failed to create sessions table:", error);
+    throw error;
   }
 }
 

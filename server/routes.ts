@@ -219,41 +219,22 @@ const projectFilesUpload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Validate environment variables (warn but don't crash)
-  const requiredEnvVars = ['DATABASE_URL'];
-  const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
-  
-  if (missingVars.length > 0) {
-    console.warn(`⚠️  Missing environment variables: ${missingVars.join(', ')}`);
-    console.warn('⚠️  Server may not function properly without these variables');
-    // Don't throw error - let server start for debugging
-  }
-
   // Setup PostgreSQL session store for production-ready session persistence
   // This replaces the previous MemoryStore which was causing:
   // - Memory leaks and server crashes every ~5 minutes
   // - Session loss on server restarts
   // - "MemoryStore is not designed for a production environment" warnings
   const pgStore = connectPg(session);
-  
-  let sessionStore;
-  try {
-    sessionStore = new pgStore({
-      conString: process.env.DATABASE_URL,
-      createTableIfMissing: true, // Auto-create sessions table if it doesn't exist
-      ttl: 7 * 24 * 60 * 60, // 7 days TTL (in seconds for pg-simple)
-      tableName: "sessions",
-      pruneSessionInterval: 60 * 15, // Prune expired sessions every 15 minutes
-      errorLog: (error) => {
-        console.error("Session store error:", error);
-      },
-    });
-    
-    console.log("✓ PostgreSQL session store configured");
-  } catch (sessionStoreError) {
-    console.error("✗ Failed to configure PostgreSQL session store:", sessionStoreError);
-    throw new Error(`Sessions table creation failed during initialization: ${sessionStoreError.message}`);
-  }
+  const sessionStore = new pgStore({
+    conString: process.env.DATABASE_URL,
+    createTableIfMissing: true, // Auto-create sessions table if it doesn't exist
+    ttl: 7 * 24 * 60 * 60, // 7 days TTL (in seconds for pg-simple)
+    tableName: "sessions",
+    pruneSessionInterval: 60 * 15, // Prune expired sessions every 15 minutes
+    errorLog: (error) => {
+      console.error("Session store error:", error);
+    },
+  });
 
   // Add session middleware with PostgreSQL storage
   app.use(
@@ -4709,61 +4690,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
-  
-  // Enhanced health check endpoint for deployment monitoring
-  app.get("/health", async (req, res) => {
-    try {
-      // Test database connection
-      const { testDatabaseConnection } = await import("./db");
-      const dbStatus = await testDatabaseConnection();
-      
-      // Test basic storage operations
-      let storageStatus = true;
-      try {
-        // Quick storage test - get collection count
-        const stats = await storage.getCollectionStats();
-        storageStatus = stats !== null && stats !== undefined;
-      } catch (error) {
-        console.error("Storage health check failed:", error);
-        storageStatus = false;
-      }
-      
-      const overallHealthy = dbStatus && storageStatus;
-      
-      const health = {
-        status: overallHealthy ? "healthy" : "unhealthy",
-        timestamp: new Date().toISOString(),
-        version: "1.0.0",
-        uptime: Math.floor(process.uptime()),
-        checks: {
-          database: dbStatus ? "connected" : "disconnected",
-          storage: storageStatus ? "operational" : "error", 
-          server: "running",
-          port: 5000,
-          memory: {
-            used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
-            total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024)
-          }
-        }
-      };
-      
-      res.status(overallHealthy ? 200 : 503).json(health);
-    } catch (error) {
-      console.error("Health check endpoint error:", error);
-      res.status(503).json({
-        status: "unhealthy",
-        timestamp: new Date().toISOString(),
-        error: error.message,
-        checks: {
-          database: "error",
-          storage: "error",
-          server: "running", 
-          port: 5000
-        }
-      });
-    }
-  });
-
   // Committee management routes
   app.get("/api/committees", isAuthenticated, async (req: any, res) => {
     try {
@@ -5992,14 +5918,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const wss = new WebSocketServer({
     server: httpServer,
     path: "/notifications",
-    perMessageDeflate: false,
-    clientTracking: true,
-    maxPayload: 1024 * 1024, // 1MB max payload
   });
   const connectedClients = new Map<string, WebSocket[]>();
 
   wss.on("connection", (ws: WebSocket, request) => {
-    console.log("WebSocket client connected from", request.socket.remoteAddress);
+    console.log("WebSocket client connected");
 
     // Add connection state tracking
     let isAlive = true;
@@ -6100,28 +6023,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   };
 
   // Function to broadcast new message notifications
-  // Add heartbeat to keep WebSocket connections alive
-  const heartbeat = setInterval(() => {
-    wss.clients.forEach((ws) => {
-      if (ws.isAlive === false) {
-        ws.terminate();
-        return;
-      }
-      ws.isAlive = false;
-      try {
-        ws.ping();
-      } catch (error) {
-        console.error("Error pinging WebSocket client:", error);
-        ws.terminate();
-      }
-    });
-  }, 30000); // 30 second heartbeat
-
-  // Clean up heartbeat on server shutdown
-  httpServer.on('close', () => {
-    clearInterval(heartbeat);
-  });
-
   const broadcastNewMessage = async (message: any) => {
     try {
       console.log("broadcastNewMessage called with:", message);
