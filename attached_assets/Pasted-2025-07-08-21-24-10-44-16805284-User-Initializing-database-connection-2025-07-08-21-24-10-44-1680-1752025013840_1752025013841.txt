@@ -1,0 +1,156 @@
+2025-07-08 21:24:10.44
+16805284
+User
+Initializing database connection...
+2025-07-08 21:24:10.44
+16805284
+User
+DATABASE_URL exists: true
+2025-07-08 21:24:10.44
+16805284
+User
+DATABASE_URL preview: postgresql://neondb_...
+2025-07-08 21:24:10.61
+16805284
+User
+✓ Database connection successful
+2025-07-08 21:24:10.61
+16805284
+User
+Checking sessions table...
+2025-07-08 21:24:10.62
+16805284
+User
+✓ Database connection successful
+2025-07-08 21:24:10.69
+16805284
+User
+✓ Sessions table ready
+2025-07-08 21:24:10.69
+16805284
+User
+Session migration complete
+2025-07-08 21:24:10.77
+16805284
+System
+command finished successfully with exit code 0
+2025-07-08 21:24:10.77
+16805284
+System
+main done, exiting
+2025-07-08 21:34:45.30
+c23adb9f
+System
+starting up user application
+2025-07-08 21:34:45.55
+c23adb9f
+System
+forwarding local port 5000 to external port 80 (mapped as 1104)
+2025-07-08 21:34:45.57
+c23adb9f
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 21:34:45.58
+c23adb9f
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 21:34:45.60
+c23adb9f
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 21:34:45.62
+c23adb9f
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 21:34:45.68
+c23adb9f
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 21:34:45.99
+c23adb9f
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 21:34:46.08
+c23adb9f
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 21:34:46.68
+c23adb9f
+User
+> rest-express@1.0.0 start
+2025-07-08 21:34:46.68
+c23adb9f
+User
+> NODE_ENV=production node dist/index.js
+2025-07-08 21:34:46.95
+c23adb9f
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 21:34:47.14
+c23adb9f
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 21:34:49.07
+c23adb9f
+System
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+2025-07-08 21:34:50.06
+c23adb9f
+User
+Using database storage for data persistence...
+2025-07-08 21:34:50.06
+c23adb9f
+User
+Database storage initialized
+2025-07-08 21:34:50.07
+c23adb9f
+User
+Checking sessions table...
+2025-07-08 21:34:50.07
+c23adb9f
+User
+🚀 Starting server in production mode
+2025-07-08 21:34:50.07
+c23adb9f
+User
+Starting database initialization...
+2025-07-08 21:34:50.07
+c23adb9f
+User
+Initializing database connection...
+2025-07-08 21:34:50.07
+c23adb9f
+User
+DATABASE_URL exists: true
+2025-07-08 21:34:50.07
+c23adb9f
+User
+DATABASE_URL preview: postgresql://neondb_...
+2025-07-08 21:34:50.23
+c23adb9f
+User
+✓ Database connection successful
+2025-07-08 21:34:50.23
+c23adb9f
+User
+Checking sessions table...
+2025-07-08 21:34:50.23
+c23adb9f
+User
+✓ Database connection successful
+2025-07-08 21:34:50.30
+c23adb9f
+User
+✓ Sessions table ready
+2025-07-08 21:34:50.30
+c23adb9f
+User
+Session migration complete
+2025-07-08 21:34:50.36
+c23adb9f
+System
+command finished successfully with exit code 0
+2025-07-08 21:34:50.36
+c23adb9f
+System
+main don
