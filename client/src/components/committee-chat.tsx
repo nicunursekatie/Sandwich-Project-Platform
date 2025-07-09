@@ -250,7 +250,10 @@ export default function CommitteeChat() {
                     <div className="flex items-center space-x-2">
                       <span className="font-medium text-sm">{message.sender}</span>
                       <span className="text-xs text-gray-500">
-                        {new Date(message.timestamp).toLocaleTimeString()}
+                        {message.timestamp && !isNaN(new Date(message.timestamp).getTime()) 
+                          ? new Date(message.timestamp).toLocaleTimeString()
+                          : 'Just now'
+                        }
                       </span>
                     </div>
                     {/* Only show delete button for user's own messages */}
