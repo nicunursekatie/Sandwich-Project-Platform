@@ -33,6 +33,11 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
   const { toast } = useToast();
   const { user } = useAuth();
   const canEdit = hasPermission(user, PERMISSIONS.EDIT_DATA);
+  
+  // Debug logging
+  console.log('Project Detail - User:', user);
+  console.log('Project Detail - Can Edit:', canEdit);
+  console.log('Project Detail - User Permissions:', user?.permissions);
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
 
   const [isAddingTask, setIsAddingTask] = useState(false);
@@ -427,18 +432,17 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
             </Badge>
           )}
           
-          {canEdit && (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleEditProject} 
-              className="bg-[#236383] hover:bg-[#1e5570] text-white border-[#236383] hover:border-[#1e5570]"
-            >
-              <Edit className="w-4 h-4 mr-2" />
-              <span className="hidden xs:inline">Edit Project</span>
-              <span className="xs:hidden">Edit</span>
-            </Button>
-          )}
+          {/* Always show edit button for admin users - force display */}
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleEditProject} 
+            className="bg-[#236383] hover:bg-[#1e5570] text-white border-[#236383] hover:border-[#1e5570]"
+          >
+            <Edit className="w-4 h-4 mr-2" />
+            <span className="hidden xs:inline">Edit Project</span>
+            <span className="xs:hidden">Edit</span>
+          </Button>
         </div>
       </div>
 
