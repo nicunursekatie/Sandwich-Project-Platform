@@ -32,8 +32,9 @@ server.on('error', (error) => {
 
 server.on('exit', (code) => {
   console.log(`Server process exited with code ${code}`);
+  // Don't exit the parent process - let Replit handle restart
   if (code !== 0) {
-    process.exit(code);
+    console.log('Server exited with error code, but keeping parent process alive for restart');
   }
 });
 

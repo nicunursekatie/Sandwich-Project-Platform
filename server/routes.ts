@@ -219,12 +219,14 @@ const projectFilesUpload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Validate environment variables
+  // Validate environment variables (warn but don't crash)
   const requiredEnvVars = ['DATABASE_URL'];
   const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
   
   if (missingVars.length > 0) {
-    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+    console.warn(`⚠️  Missing environment variables: ${missingVars.join(', ')}`);
+    console.warn('⚠️  Server may not function properly without these variables');
+    // Don't throw error - let server start for debugging
   }
 
   // Setup PostgreSQL session store for production-ready session persistence

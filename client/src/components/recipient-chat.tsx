@@ -1,349 +1,371 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { MessageCircle, Send, User, Building2, ChevronLeft, Trash2, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useAuth } from "@/hooks/useAuth";
-import { queryClient, apiRequest } from "@/lib/queryClient";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { formatDistanceToNow } from "date-fns";
-import { CheckCircle2, Heart, User, Trash2, MoreVertical, Edit } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-interface Message {
-  id: number;
-  content: string;
-  sender?: string;
-  userId?: string;
-  user_id?: string;
-  createdAt?: string;
-  created_at?: string;
-}
+import { useAuth } from "@/hooks/useAuth";
+import { useMessageReads } from "@/hooks/useMessageReads";
+import type { Message } from "@shared/schema";
 
 export default function RecipientChat() {
-  const { user } = useAuth();
   const { toast } = useToast();
-  const [message, setMessage] = useState("");
-  const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
+  const { user } = useAuth();
+  const [newMessage, setNewMessage] = useState("");
+  const [editingMessage, setEditingMessage] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Initialize read tracking hook
+  const { useAutoMarkAsRead } = useMessageReads();
 
-  // Check if user has Recipient Chat access
-  const hasRecipientChatAccess = user?.permissions?.includes('recipient_chat') ||
-    user?.role === 'admin' || 
-    user?.role === 'admin_coordinator' ||
-    user?.role === 'super_admin';
-
-  // Get all conversations to find Recipient Chat
-  const { data: conversations = [] } = useQuery({
-    queryKey: ["/api/conversations"],
-    queryFn: async () => {
-      const response = await fetch("/api/conversations");
-      if (!response.ok) {
-        throw new Error("Failed to fetch conversations");
-      }
-      const data = await response.json();
-      return data;
-    },
-    enabled: !!user && hasRecipientChatAccess,
+  // Get user profile for display name
+  const { data: userProfile } = useQuery({
+    queryKey: ["/api/auth/profile"],
+    enabled: !!user,
   });
 
-  // Find Recipient Chat conversation from the list
-  const recipientConversation = conversations.find((c: any) => 
-    c.type === 'channel' && c.name === 'Recipient Chat'
-  );
+  // Get user name from profile or fallback to email prefix
+  const getUserName = () => {
+    if (userProfile && typeof userProfile === 'object') {
+      const profile = userProfile as any;
+      if (profile.displayName) {
+        return profile.displayName;
+      }
+      if (profile.firstName) {
+        return profile.firstName;
+      }
+    }
+    if (user && typeof user === 'object' && 'email' in user && user.email) {
+      return String(user.email).split('@')[0];
+    }
+    return 'Team Member';
+  };
 
-  // Fetch recipient messages from the conversation system
-  const { data: messages = [], isLoading: messagesLoading, error: messagesError } = useQuery<Message[]>({
+  const canDeleteMessage = (message: Message) => {
+    const currentUser = user as any;
+    const isOwner = message.sender === getUserName() || message.userId === currentUser?.id;
+    const isSuperAdmin = currentUser?.role === "super_admin";
+    const isAdmin = currentUser?.role === "admin";
+    const hasModeratePermission = currentUser?.permissions?.includes("moderate_messages");
+    
+    return isOwner || isSuperAdmin || isAdmin || hasModeratePermission;
+  };
+
+  const canEditMessage = (message: Message) => {
+    const currentUser = user as any;
+    return message.sender === getUserName() || message.userId === currentUser?.id;
+  };
+
+  // Get or create recipient conversation
+  const { data: recipientConversation } = useQuery({
+    queryKey: ["/api/conversations/recipient"],
+    queryFn: async () => {
+      const response = await apiRequest('POST', '/api/conversations', {
+        type: 'channel',
+        name: 'Recipient Chat'
+      });
+      return response;
+    },
+  });
+
+  // Fetch messages for recipient conversation
+  const { data: messages = [] } = useQuery<Message[]>({
     queryKey: ["/api/conversations", recipientConversation?.id, "messages"],
-    queryFn: async () => {
-      if (!recipientConversation?.id) {
-        return [];
-      }
-      
-      const response = await fetch(`/api/conversations/${recipientConversation.id}/messages`);
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Failed to fetch Recipient messages:', errorText);
-        throw new Error(`Failed to fetch messages: ${response.statusText}`);
-      }
-      const data = await response.json();
-      return data;
-    },
-    enabled: !!recipientConversation?.id && hasRecipientChatAccess,
-    refetchInterval: 5000,
+    enabled: !!recipientConversation,
+    refetchInterval: 3000,
   });
 
-  // Post a message to Recipient Chat
-  const postMessageMutation = useMutation({
-    mutationFn: async (content: string) => {
-      if (!recipientConversation?.id) {
-        throw new Error("Recipient conversation not found");
-      }
-      
-      const response = await apiRequest("POST", `/api/conversations/${recipientConversation.id}/messages`, {
-        content
-      });
-      
-      return response;
-    },
-    onSuccess: () => {
-      setMessage("");
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations", recipientConversation?.id, "messages"] });
-    },
-    onError: (error) => {
-      console.error("Failed to post message:", error);
-      toast({
-        title: "Failed to send message",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive",
-      });
-    },
-  });
+  const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
+  const displayedMessages = optimisticMessages || messages;
 
-  // Edit message mutation
-  const editMessageMutation = useMutation({
-    mutationFn: async ({ messageId, content }: { messageId: number; content: string }) => {
-      const response = await apiRequest("PATCH", `/api/messages/${messageId}`, { content });
-      return response;
-    },
-    onSuccess: () => {
-      setEditingMessageId(null);
-      setEditContent("");
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations", recipientConversation?.id, "messages"] });
-      toast({
-        title: "Message updated",
-        description: "Your message has been edited successfully.",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Failed to edit message",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive",
-      });
-    },
-  });
+  // Auto-mark messages as read when viewing recipient chat
+  useAutoMarkAsRead("recipient", messages, true);
 
-  // Delete message mutation
-  const deleteMessageMutation = useMutation({
-    mutationFn: async (messageId: number) => {
-      const response = await apiRequest("DELETE", `/api/messages/${messageId}`);
-      return response;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/conversations", recipientConversation?.id, "messages"] });
-      toast({
-        title: "Message deleted",
-        description: "Your message has been removed.",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Failed to delete message",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Filter out null/undefined messages and ensure we have valid data
-  const displayedMessages = (messages || []).filter((msg): msg is Message => {
-    return msg && typeof msg === 'object' && 'content' in msg;
-  });
-
-  // Scroll to bottom when messages change
   useEffect(() => {
+    setOptimisticMessages(null);
+    if (recipientConversation?.id) {
+      queryClient.invalidateQueries({ 
+        queryKey: ["/api/conversations", recipientConversation.id, "messages"] 
+      });
+    }
+  }, [recipientConversation?.id]);
+
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
   }, [displayedMessages]);
 
-  const handleSendMessage = () => {
-    if (message.trim() && !postMessageMutation.isPending) {
-      postMessageMutation.mutate(message.trim());
-    }
+  const sendMessageMutation = useMutation({
+    mutationFn: async (content: string) => {
+      if (!recipientConversation) throw new Error('No conversation found');
+      
+      const response = await apiRequest('POST', `/api/conversations/${recipientConversation.id}/messages`, {
+        content,
+        sender: getUserName(),
+      });
+      return response;
+    },
+    onMutate: async (content: string) => {
+      const optimisticMessage: Message = {
+        id: Date.now().toString(),
+        conversationId: recipientConversation?.id || '',
+        userId: (user as any)?.id || '',
+        content,
+        sender: getUserName(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      
+      setOptimisticMessages([...displayedMessages, optimisticMessage]);
+      return { optimisticMessage };
+    },
+    onSuccess: () => {
+      setNewMessage("");
+      queryClient.invalidateQueries({ 
+        queryKey: ["/api/conversations", recipientConversation?.id, "messages"] 
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/messages/unread-counts"] });
+    },
+    onError: (error) => {
+      console.error('Failed to send message:', error);
+      setOptimisticMessages(null);
+      toast({
+        title: "Error",
+        description: "Failed to send message",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteMessageMutation = useMutation({
+    mutationFn: async (messageId: string) => {
+      await apiRequest('DELETE', `/api/messages/${messageId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ 
+        queryKey: ["/api/conversations", recipientConversation?.id, "messages"] 
+      });
+      toast({
+        title: "Message deleted",
+        description: "The message has been removed.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete message",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const editMessageMutation = useMutation({
+    mutationFn: async ({ messageId, content }: { messageId: string; content: string }) => {
+      await apiRequest('PATCH', `/api/messages/${messageId}`, { content });
+    },
+    onSuccess: () => {
+      setEditingMessage(null);
+      setEditContent("");
+      queryClient.invalidateQueries({ 
+        queryKey: ["/api/conversations", recipientConversation?.id, "messages"] 
+      });
+      toast({
+        title: "Message updated",
+        description: "Your message has been updated.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update message",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newMessage.trim()) return;
+    sendMessageMutation.mutate(newMessage.trim());
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
+  const handleEdit = (message: Message) => {
+    setEditingMessage(message.id);
+    setEditContent(message.content);
   };
 
-  const startEdit = (msg: Message) => {
-    setEditingMessageId(msg.id);
-    setEditContent(msg.content);
+  const handleSaveEdit = () => {
+    if (!editContent.trim() || !editingMessage) return;
+    editMessageMutation.mutate({ messageId: editingMessage, content: editContent.trim() });
   };
 
-  const cancelEdit = () => {
-    setEditingMessageId(null);
+  const handleCancelEdit = () => {
+    setEditingMessage(null);
     setEditContent("");
   };
 
-  const saveEdit = (messageId: number) => {
-    if (editContent.trim()) {
-      editMessageMutation.mutate({ messageId, content: editContent.trim() });
+  const getInitials = (name: string | null | undefined) => {
+    if (!name || typeof name !== 'string') {
+      return 'TM';
     }
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
-  const handleDelete = (messageId: number) => {
-    if (window.confirm("Are you sure you want to delete this message?")) {
-      deleteMessageMutation.mutate(messageId);
+  const getAvatarColor = (name: string | null | undefined) => {
+    if (!name || typeof name !== 'string') {
+      return 'bg-gray-500';
     }
+    const colors = [
+      'bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500',
+      'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-teal-500'
+    ];
+    const hash = name.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+    return colors[hash % colors.length];
   };
 
-  if (!user || !hasRecipientChatAccess) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Heart className="h-5 w-5" />
-            Recipient Chat
-          </CardTitle>
-          <CardDescription>
-            Access restricted to recipients and coordinators
-          </CardDescription>
-        </CardHeader>
-      </Card>
-    );
-  }
+  const formatTimestamp = (timestamp: string) => {
+    try {
+      const date = new Date(timestamp);
+      if (isNaN(date.getTime())) {
+        return "Invalid Date";
+      }
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return "Invalid Date";
+    }
+  };
 
   return (
-    <Card className="h-[600px] flex flex-col">
-      <CardHeader className="flex-shrink-0">
-        <CardTitle className="flex items-center gap-2">
-          <Heart className="h-5 w-5" />
-          Recipient Chat
-        </CardTitle>
-        <CardDescription>
-          Communication channel for receiving organizations
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-          {messagesLoading && <div className="text-center text-muted-foreground">Loading messages...</div>}
-          {messagesError && (
-            <div className="text-center text-destructive">
-              Error loading messages: {messagesError instanceof Error ? messagesError.message : 'Unknown error'}
-            </div>
-          )}
-          {!messagesLoading && !messagesError && displayedMessages.length === 0 && (
-            <div className="text-center text-muted-foreground">
-              No messages yet. Start the conversation!
-            </div>
-          )}
-          {displayedMessages.map((msg) => {
-            const msgUserId = msg.userId || msg.user_id;
-            const msgCreatedAt = msg.createdAt || msg.created_at;
-            const isOwnMessage = msgUserId === user?.id;
-            
-            return (
-              <div key={msg.id} className={`flex gap-3 ${isOwnMessage ? 'justify-end' : ''}`}>
-                <div className={`flex gap-3 max-w-[80%] ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center">
-                      {isOwnMessage ? (
-                        <CheckCircle2 className="h-4 w-4 text-pink-600" />
-                      ) : (
-                        <Heart className="h-4 w-4 text-pink-600" />
-                      )}
+    <div className="h-full flex flex-col bg-white dark:bg-gray-900">
+      {/* Header */}
+      <div className="border-b bg-white dark:bg-gray-800 px-6 py-4">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full">
+            <Building2 className="w-5 h-5 text-green-600 dark:text-green-400" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recipient Chat</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Communication channel for receiving organizations
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Messages Area */}
+      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        {displayedMessages.length === 0 ? (
+          <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+            <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>No messages yet. Start the conversation with recipient organizations!</p>
+          </div>
+        ) : (
+          displayedMessages.map((message) => (
+            <div key={message.id} className="flex gap-3">
+              <Avatar className="w-8 h-8 flex-shrink-0">
+                <AvatarFallback className={`${getAvatarColor(message.sender)} text-white text-xs`}>
+                  {getInitials(message.sender)}
+                </AvatarFallback>
+              </Avatar>
+              
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-medium text-sm text-gray-900 dark:text-white">
+                    {message.sender || 'Team Member'}
+                  </span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {formatTimestamp(message.createdAt)}
+                  </span>
+                </div>
+                
+                <div className="group relative">
+                  {editingMessage === message.id ? (
+                    <div className="space-y-2">
+                      <Input
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        className="w-full"
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSaveEdit();
+                          }
+                        }}
+                      />
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={handleSaveEdit}>Save</Button>
+                        <Button size="sm" variant="outline" onClick={handleCancelEdit}>Cancel</Button>
+                      </div>
                     </div>
-                  </div>
-                  <div className={`space-y-1 ${isOwnMessage ? 'items-end' : ''}`}>
-                    <div className={`flex items-center gap-2 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
-                      <span className="text-sm font-medium">
-                        {msg.sender || "Recipient"}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {msgCreatedAt ? formatDistanceToNow(new Date(msgCreatedAt), { addSuffix: true }) : 'just now'}
-                      </span>
-                      {isOwnMessage && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                              <MoreVertical className="h-3 w-3" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => startEdit(msg)}>
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(msg.id)}
-                              className="text-destructive"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
-                    </div>
-                    {editingMessageId === msg.id ? (
-                      <div className="space-y-2">
-                        <Textarea
-                          value={editContent}
-                          onChange={(e) => setEditContent(e.target.value)}
-                          className="min-h-[60px]"
-                        />
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            onClick={() => saveEdit(msg.id)}
-                            disabled={editMessageMutation.isPending}
-                          >
-                            Save
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={cancelEdit}
-                          >
-                            Cancel
-                          </Button>
+                  ) : (
+                    <>
+                      <div className="bg-gray-100 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white">
+                        {message.content}
+                      </div>
+                      
+                      {canDeleteMessage(message) && (
+                        <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-6 w-6 p-0 bg-white dark:bg-gray-800 shadow-sm border">
+                                <MoreVertical className="w-3 h-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              {canEditMessage(message) && (
+                                <DropdownMenuItem onClick={() => handleEdit(message)}>
+                                  Edit
+                                </DropdownMenuItem>
+                              )}
+                              <DropdownMenuItem 
+                                onClick={() => deleteMessageMutation.mutate(message.id)}
+                                className="text-red-600 dark:text-red-400"
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
-                      </div>
-                    ) : (
-                      <div className={`rounded-lg px-3 py-2 ${
-                        isOwnMessage 
-                          ? 'bg-pink-500 text-white' 
-                          : 'bg-muted'
-                      }`}>
-                        <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
-            );
-          })}
-          <div ref={messagesEndRef} />
-        </div>
-        <div className="flex gap-2">
-          <Textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Type your message..."
-            className="min-h-[60px]"
-            disabled={postMessageMutation.isPending}
+            </div>
+          ))
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Message Input */}
+      <div className="border-t bg-gray-50 dark:bg-gray-800 px-6 py-4">
+        <form onSubmit={handleSubmit} className="flex gap-3">
+          <Input
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type a message to recipient organizations..."
+            className="flex-1"
+            disabled={sendMessageMutation.isPending}
           />
-          <Button
-            onClick={handleSendMessage}
-            disabled={!message.trim() || postMessageMutation.isPending}
-            className="self-end bg-pink-500 hover:bg-pink-600"
+          <Button 
+            type="submit" 
+            disabled={!newMessage.trim() || sendMessageMutation.isPending}
+            className="px-6"
           >
-            Send
+            <Send className="w-4 h-4" />
           </Button>
-        </div>
-      </CardContent>
-    </Card>
+        </form>
+      </div>
+    </div>
   );
 }
