@@ -95,6 +95,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
     // Resources section
     { id: "toolkit", label: "Toolkit", icon: FolderOpen },
     { id: "development", label: "Development", icon: FileText },
+    { id: "work-log", label: "Work Log", icon: ClipboardList },
     
     // Admin section
     ...(hasPermission(user, PERMISSIONS.MANAGE_USERS) ? [{ id: "user-management", label: "Admin", icon: UserCog }] : []),

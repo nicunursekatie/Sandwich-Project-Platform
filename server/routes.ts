@@ -361,8 +361,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }
 
   // Register work log routes
-  const workLogsRoutes = (await import("./routes/work-logs")).default;
-  app.use("/api", workLogsRoutes);
+
 
   // Register performance optimization routes
   registerPerformanceRoutes(app);
@@ -3747,6 +3746,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register project routes
   const { projectsRoutes } = await import("./routes/projects");
   app.use("/api", projectsRoutes);
+
+  // Register work logs routes
+  const workLogsModule = await import("./routes/work-logs");
+  app.use("/api", workLogsModule.default);
 
   // Static file serving for documents
   app.use("/documents", express.static("public/documents"));

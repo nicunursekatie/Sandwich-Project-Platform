@@ -1,0 +1,39 @@
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+✓ Server startup sequence completed successfully
+Checking sessions table...
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+Database storage initialized
+Sessions table ready
+starting up user application
+✓ Server is running on http://0.0.0.0:5000
+> NODE_ENV=production node dist/index.js
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+✓ Environment: production
+forwarding local port 5000 to external port 80 (mapped as 1104)
+✓ Environment: production
+DATABASE_URL preview: postgresql://neondb_...
+✓ Server startup sequence completed successfully
+Checking database initialization...
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+main done, exiting
+Checking sessions table...
+starting up user application
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+Database storage initialized
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+> rest-express@1.0.0 start
+🚀 Starting The Sandwich Project server...
+command finished successfully with exit code 0
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+forwarding local port 5000 to external port 80 (mapped as 1104)
+Checking sessions table...
+error proxying request error=dial tcp 127.0.0.1:5000: connect: connection refused
+> NODE_ENV=production node dist/index.js
+2025-07-09T02:39:58Z error: The deployment is failing health checks. This can happen if the application isn't responding, responds with an error, or doesn't respond in time. Health checks are sent to the / endpoint by default and must respond as soon as possible. Make sure that the / endpoint is implemented and returns a 200 status code in a timely manner. Avoid doing expensive or long running operations on the / endpoint, prefer deferring them to a different route. Check the logs for more information.

@@ -2,7 +2,15 @@ import { Router } from "express";
 import { z } from "zod";
 import { workLogs } from "@shared/schema";
 import { db } from "../db";
-import { isAuthenticated } from "../replitAuth";
+// Import the actual authentication middleware being used in the app
+const isAuthenticated = (req: any, res: any, next: any) => {
+  const user = req.user || req.session?.user;
+  if (!user) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
+  req.user = user; // Ensure req.user is set
+  next();
+};
 
 const router = Router();
 
@@ -13,14 +21,15 @@ const insertWorkLogSchema = z.object({
   minutes: z.number().int().min(0).max(59)
 });
 
-// Middleware to check if user is super admin
+// Middleware to check if user is super admin or admin
 function isSuperAdmin(req) {
-  return req.user?.role === "super_admin";
+  return req.user?.role === "super_admin" || req.user?.role === "admin";
 }
 
 // Middleware to check if user can log work
 function canLogWork(req) {
-  return req.user?.role === "work_logger" || isSuperAdmin(req);
+  // Allow admin, super_admin, or users with general permissions
+  return req.user?.role === "admin" || req.user?.role === "super_admin" || req.user?.role === "work_logger";
 }
 
 // Get all logs (super admin) or own logs (regular user)
