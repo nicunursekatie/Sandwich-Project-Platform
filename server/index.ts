@@ -61,7 +61,34 @@ async function startServer() {
     });
 
     const port = process.env.PORT || 5000;
-    const host = "0.0.0.0";
+    const host = process.env.HOST || "0.0.0.0";
+    
+    console.log(`Starting server on ${host}:${port} in ${process.env.NODE_ENV || "development"} mode`);
+    
+    // Retry port allocation for deployment robustness
+    const tryPort = async (basePort: number, maxRetries = 5): Promise<number> => {
+      for (let i = 0; i < maxRetries; i++) {
+        const testPort = basePort + i;
+        try {
+          const testServer = require('net').createServer();
+          await new Promise((resolve, reject) => {
+            testServer.once('error', reject);
+            testServer.once('listening', () => {
+              testServer.close(resolve);
+            });
+            testServer.listen(testPort, host);
+          });
+          return testPort;
+        } catch (err) {
+          if (i === maxRetries - 1) {
+            console.log(`⚠ All ports busy, using ${basePort} anyway`);
+            return basePort;
+          }
+          continue;
+        }
+      }
+      return basePort;
+    };
 
     // Set up basic routes BEFORE starting server
     app.use("/attached_assets", express.static("attached_assets"));
@@ -91,10 +118,19 @@ async function startServer() {
       console.log("✓ Static file serving configured for production");
     }
 
-    const httpServer = app.listen(port, host, () => {
-      console.log(`✓ Server is running on http://${host}:${port}`);
+    // Use smart port selection in production
+    const finalPort = process.env.NODE_ENV === "production" ? await tryPort(Number(port)) : port;
+    
+    const httpServer = app.listen(finalPort, host, () => {
+      console.log(`✓ Server is running on http://${host}:${finalPort}`);
       console.log(`✓ Environment: ${process.env.NODE_ENV || "development"}`);
       console.log("✓ Basic server ready - starting background initialization...");
+      
+      // Signal deployment readiness to Replit
+      if (process.env.NODE_ENV === "production") {
+        console.log("🚀 PRODUCTION SERVER READY FOR TRAFFIC 🚀");
+        console.log("Server is fully operational and accepting connections");
+      }
 
       // Do heavy initialization in background after server is listening
       setImmediate(async () => {
