@@ -16,6 +16,7 @@ import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
 import { messageNotificationRoutes } from "./routes/message-notifications";
 import googleSheetsRoutes from "./routes/google-sheets";
+import suggestionsRoutes from "./suggestions-routes";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
@@ -5897,6 +5898,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register Google Sheets routes
   app.use("/api/google-sheets", googleSheetsRoutes);
+  
+  // Register Suggestions Portal routes
+  app.use("/api/suggestions", suggestionsRoutes);
 
   // Google Sheets sync endpoint for individual collection entries
   app.post("/api/google-sheets/sync-entry", async (req, res) => {

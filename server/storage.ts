@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, taskCompletions, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts, notifications, committees, committeeMemberships, announcements,
+  users, projects, projectTasks, projectComments, taskCompletions, messages, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, hosts, hostContacts, recipients, contacts, notifications, committees, committeeMemberships, announcements, suggestions, suggestionResponses,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -19,7 +19,9 @@ import {
   type Contact, type InsertContact,
   type Notification, type InsertNotification,
   type Committee, type InsertCommittee,
-  type CommitteeMembership, type InsertCommitteeMembership
+  type CommitteeMembership, type InsertCommitteeMembership,
+  type Suggestion, type InsertSuggestion,
+  type SuggestionResponse, type InsertSuggestionResponse
 } from "@shared/schema";
 
 export interface IStorage {
@@ -185,6 +187,19 @@ export interface IStorage {
   createAnnouncement(announcement: any): Promise<any>;
   updateAnnouncement(id: number, updates: any): Promise<any | undefined>;
   deleteAnnouncement(id: number): Promise<boolean>;
+  
+  // Suggestions Portal
+  getAllSuggestions(): Promise<Suggestion[]>;
+  getSuggestion(id: number): Promise<Suggestion | undefined>;
+  createSuggestion(suggestion: InsertSuggestion): Promise<Suggestion>;
+  updateSuggestion(id: number, updates: Partial<Suggestion>): Promise<Suggestion | undefined>;
+  deleteSuggestion(id: number): Promise<boolean>;
+  upvoteSuggestion(id: number): Promise<boolean>;
+  
+  // Suggestion Responses
+  getSuggestionResponses(suggestionId: number): Promise<SuggestionResponse[]>;
+  createSuggestionResponse(response: InsertSuggestionResponse): Promise<SuggestionResponse>;
+  deleteSuggestionResponse(id: number): Promise<boolean>;
 
   // Project assignments
   getProjectAssignments(projectId: number): Promise<any[]>;
@@ -214,6 +229,8 @@ export class MemStorage implements IStorage {
   private committees: Map<string, Committee>;
   private committeeMemberships: Map<number, CommitteeMembership>;
   private announcements: Map<number, any>;
+  private suggestions: Map<number, Suggestion>;
+  private suggestionResponses: Map<number, SuggestionResponse>;
   private currentIds: {
     user: number;
     project: number;
@@ -234,6 +251,8 @@ export class MemStorage implements IStorage {
     notification: number;
     committeeMembership: number;
     announcement: number;
+    suggestion: number;
+    suggestionResponse: number;
   };
 
   constructor() {
@@ -257,6 +276,8 @@ export class MemStorage implements IStorage {
     this.committees = new Map();
     this.committeeMemberships = new Map();
     this.announcements = new Map();
+    this.suggestions = new Map();
+    this.suggestionResponses = new Map();
     this.taskCompletions = new Map();
     this.currentIds = {
       user: 1,
@@ -278,6 +299,8 @@ export class MemStorage implements IStorage {
       notification: 1,
       committeeMembership: 1,
       announcement: 1,
+      suggestion: 1,
+      suggestionResponse: 1
     };
     
     // No sample data - start with clean storage
@@ -1216,6 +1239,85 @@ export class MemStorage implements IStorage {
       assignedAt: new Date()
     };
   }
+
+  // Suggestions Portal methods
+  async getAllSuggestions(): Promise<Suggestion[]> {
+    return Array.from(this.suggestions.values()).sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  async getSuggestion(id: number): Promise<Suggestion | undefined> {
+    return this.suggestions.get(id);
+  }
+
+  async createSuggestion(suggestion: InsertSuggestion): Promise<Suggestion> {
+    const id = this.currentIds.suggestion++;
+    const now = new Date();
+    const newSuggestion: Suggestion = {
+      id,
+      ...suggestion,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.suggestions.set(id, newSuggestion);
+    return newSuggestion;
+  }
+
+  async updateSuggestion(id: number, updates: Partial<Suggestion>): Promise<Suggestion | undefined> {
+    const suggestion = this.suggestions.get(id);
+    if (!suggestion) return undefined;
+    
+    const updatedSuggestion: Suggestion = { 
+      ...suggestion, 
+      ...updates, 
+      updatedAt: new Date()
+    };
+    this.suggestions.set(id, updatedSuggestion);
+    return updatedSuggestion;
+  }
+
+  async deleteSuggestion(id: number): Promise<boolean> {
+    // First delete all responses
+    for (const [responseId, response] of this.suggestionResponses) {
+      if (response.suggestionId === id) {
+        this.suggestionResponses.delete(responseId);
+      }
+    }
+    // Then delete the suggestion
+    return this.suggestions.delete(id);
+  }
+
+  async upvoteSuggestion(id: number): Promise<boolean> {
+    const suggestion = this.suggestions.get(id);
+    if (suggestion) {
+      suggestion.upvotes = (suggestion.upvotes || 0) + 1;
+      this.suggestions.set(id, suggestion);
+      return true;
+    }
+    return false;
+  }
+
+  async getSuggestionResponses(suggestionId: number): Promise<SuggestionResponse[]> {
+    return Array.from(this.suggestionResponses.values())
+      .filter(response => response.suggestionId === suggestionId)
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  }
+
+  async createSuggestionResponse(response: InsertSuggestionResponse): Promise<SuggestionResponse> {
+    const id = this.currentIds.suggestionResponse++;
+    const newResponse: SuggestionResponse = {
+      id,
+      ...response,
+      createdAt: new Date()
+    };
+    this.suggestionResponses.set(id, newResponse);
+    return newResponse;
+  }
+
+  async deleteSuggestionResponse(id: number): Promise<boolean> {
+    return this.suggestionResponses.delete(id);
+  }
 }
 
 import { GoogleSheetsStorage } from './google-sheets';
@@ -1545,6 +1647,107 @@ export class DatabaseStorage implements IStorage {
       return result.rowCount > 0;
     } catch (error) {
       console.warn('Failed to delete announcement:', error);
+      return false;
+    }
+  }
+
+  // Suggestions Portal methods
+  async getAllSuggestions(): Promise<Suggestion[]> {
+    try {
+      const result = await this.db.select().from(suggestions).orderBy(suggestions.createdAt);
+      return result as Suggestion[];
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+      return [];
+    }
+  }
+
+  async getSuggestion(id: number): Promise<Suggestion | undefined> {
+    try {
+      const result = await this.db.select().from(suggestions).where(eq(suggestions.id, id)).limit(1);
+      return result[0] as Suggestion | undefined;
+    } catch (error) {
+      console.error('Error fetching suggestion:', error);
+      return undefined;
+    }
+  }
+
+  async createSuggestion(suggestion: InsertSuggestion): Promise<Suggestion> {
+    try {
+      const result = await this.db.insert(suggestions).values(suggestion).returning();
+      return result[0] as Suggestion;
+    } catch (error) {
+      console.error('Error creating suggestion:', error);
+      throw error;
+    }
+  }
+
+  async updateSuggestion(id: number, updates: Partial<Suggestion>): Promise<Suggestion | undefined> {
+    try {
+      const result = await this.db.update(suggestions)
+        .set({ ...updates, updatedAt: new Date() })
+        .where(eq(suggestions.id, id))
+        .returning();
+      return result[0] as Suggestion | undefined;
+    } catch (error) {
+      console.error('Error updating suggestion:', error);
+      return undefined;
+    }
+  }
+
+  async deleteSuggestion(id: number): Promise<boolean> {
+    try {
+      // First delete all responses
+      await this.db.delete(suggestionResponses).where(eq(suggestionResponses.suggestionId, id));
+      // Then delete the suggestion
+      const result = await this.db.delete(suggestions).where(eq(suggestions.id, id));
+      return true;
+    } catch (error) {
+      console.error('Error deleting suggestion:', error);
+      return false;
+    }
+  }
+
+  async upvoteSuggestion(id: number): Promise<boolean> {
+    try {
+      await this.db.update(suggestions)
+        .set({ upvotes: sql`${suggestions.upvotes} + 1` })
+        .where(eq(suggestions.id, id));
+      return true;
+    } catch (error) {
+      console.error('Error upvoting suggestion:', error);
+      return false;
+    }
+  }
+
+  async getSuggestionResponses(suggestionId: number): Promise<SuggestionResponse[]> {
+    try {
+      const result = await this.db.select().from(suggestionResponses)
+        .where(eq(suggestionResponses.suggestionId, suggestionId))
+        .orderBy(suggestionResponses.createdAt);
+      return result as SuggestionResponse[];
+    } catch (error) {
+      console.error('Error fetching suggestion responses:', error);
+      return [];
+    }
+  }
+
+  async createSuggestionResponse(response: InsertSuggestionResponse): Promise<SuggestionResponse> {
+    try {
+      const result = await this.db.insert(suggestionResponses).values(response).returning();
+      return result[0] as SuggestionResponse;
+    } catch (error) {
+      console.error('Error creating suggestion response:', error);
+      throw error;
+    }
+  }
+
+  async deleteSuggestionResponse(id: number): Promise<boolean> {
+    try {
+      await this.db.delete(suggestionResponses).where(eq(suggestionResponses.id, id));
+      return true;
+    } catch (error) {
+      console.error('Error deleting suggestion response:', error);
       return false;
     }
   }

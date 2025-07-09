@@ -56,7 +56,13 @@ export const PERMISSIONS = {
   IMPORT_DATA: 'import_data',
   
   // Toolkit access
-  TOOLKIT_ACCESS: 'toolkit_access'
+  TOOLKIT_ACCESS: 'toolkit_access',
+  
+  // Suggestions portal permissions
+  VIEW_SUGGESTIONS: 'view_suggestions',
+  SUBMIT_SUGGESTIONS: 'submit_suggestions',
+  MANAGE_SUGGESTIONS: 'manage_suggestions',
+  RESPOND_TO_SUGGESTIONS: 'respond_to_suggestions'
 } as const;
 
 export function getDefaultPermissionsForRole(role: string): string[] {
@@ -126,7 +132,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_REPORTS,
         PERMISSIONS.VIEW_PROJECTS,
         PERMISSIONS.EDIT_COLLECTIONS,  // For development tab access
-        PERMISSIONS.SEND_MESSAGES
+        PERMISSIONS.SEND_MESSAGES,
+        PERMISSIONS.SUBMIT_SUGGESTIONS
       ];
     
     case USER_ROLES.RECIPIENT:

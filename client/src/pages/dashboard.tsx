@@ -39,6 +39,7 @@ import SimpleNav from "@/components/simple-nav";
 import AnnouncementBanner from "@/components/announcement-banner";
 import MessageNotifications from "@/components/message-notifications";
 import WorkLogPage from "@/pages/work-log";
+import SuggestionsPortal from "@/pages/suggestions";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -271,6 +272,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <RoleDemo />;
       case "work-log":
         return <WorkLogPage />;
+      case "suggestions":
+        return <SuggestionsPortal />;
 
       case "committee":
       case "committee-chat":

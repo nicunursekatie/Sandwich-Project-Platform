@@ -593,3 +593,56 @@ export const workLogs = pgTable("work_logs", {
 
 export type WorkLog = typeof workLogs.$inferSelect;
 export type InsertWorkLog = typeof workLogs.$inferInsert;
+
+// Suggestions portal for user feedback and feature requests
+export const suggestions = pgTable("suggestions", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull().default("general"), // 'general', 'feature', 'bug', 'improvement', 'ui_ux'
+  priority: text("priority").notNull().default("medium"), // 'low', 'medium', 'high', 'urgent'
+  status: text("status").notNull().default("submitted"), // 'submitted', 'under_review', 'in_progress', 'completed', 'rejected', 'needs_clarification'
+  submittedBy: varchar("submitted_by").notNull(),
+  submitterEmail: varchar("submitter_email"),
+  submitterName: text("submitter_name"),
+  isAnonymous: boolean("is_anonymous").notNull().default(false),
+  upvotes: integer("upvotes").notNull().default(0),
+  tags: text("tags").array().default([]),
+  implementationNotes: text("implementation_notes"), // Admin notes on how this was/will be implemented
+  estimatedEffort: text("estimated_effort"), // 'small', 'medium', 'large', 'epic'
+  assignedTo: varchar("assigned_to"), // Admin user who is handling this suggestion
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Communication thread between admins and suggestion submitters
+export const suggestionResponses = pgTable("suggestion_responses", {
+  id: serial("id").primaryKey(),
+  suggestionId: integer("suggestion_id").notNull(),
+  message: text("message").notNull(),
+  isAdminResponse: boolean("is_admin_response").notNull().default(false),
+  respondedBy: varchar("responded_by").notNull(),
+  respondentName: text("respondent_name"),
+  isInternal: boolean("is_internal").notNull().default(false), // Internal admin notes not visible to submitter
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Schema types for suggestions
+export const insertSuggestionSchema = createInsertSchema(suggestions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  upvotes: true,
+  completedAt: true
+});
+
+export const insertSuggestionResponseSchema = createInsertSchema(suggestionResponses).omit({
+  id: true,
+  createdAt: true
+});
+
+export type Suggestion = typeof suggestions.$inferSelect;
+export type InsertSuggestion = z.infer<typeof insertSuggestionSchema>;
+export type SuggestionResponse = typeof suggestionResponses.$inferSelect;
+export type InsertSuggestionResponse = z.infer<typeof insertSuggestionResponseSchema>;

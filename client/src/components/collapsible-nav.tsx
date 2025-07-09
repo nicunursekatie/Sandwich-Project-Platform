@@ -15,7 +15,8 @@ import {
   FileText, 
   Phone, 
   ChevronDown, 
-  ChevronRight 
+  ChevronRight,
+  Lightbulb
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
@@ -105,6 +106,7 @@ export function CollapsibleNav({ onSectionChange }: { onSectionChange?: (section
     },
     { id: "toolkit", label: "Toolkit", icon: FileText, type: "item", href: "/toolkit" },
     { id: "development", label: "Development", icon: FolderOpen, type: "item", href: "/development" },
+    { id: "suggestions", label: "Suggestions", icon: Lightbulb, type: "item", href: "/suggestions", permission: "view_suggestions" },
     { id: "user-management", label: "Admin", icon: Users, type: "item", href: "/user-management", permission: "manage_users" },
   ];
 
