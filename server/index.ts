@@ -1,6 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+// Remove this line: import { setupVite, serveStatic, log } from "./vite";
 import { initializeDatabase } from "./db-init";
 
 const app = express();
@@ -30,7 +30,7 @@ app.use((req, res, next) => {
         logLine = logLine.slice(0, 79) + "…";
       }
 
-      log(logLine);
+      console.log(logLine); // Changed from log() to console.log()
     }
   });
 
@@ -97,11 +97,13 @@ async function startServer() {
         // Serve static files after routes but before Vite
         app.use("/attached_assets", express.static("attached_assets"));
 
-        // Setup Vite or static serving
+        // Setup Vite or static serving - CHANGED TO DYNAMIC IMPORTS
         if (app.get("env") === "development") {
+          const { setupVite } = await import("./vite.js");
           await setupVite(app, server);
           console.log("✓ Vite development server setup complete");
         } else {
+          const { serveStatic } = await import("./vite.js");
           serveStatic(app);
           console.log("✓ Static file serving configured for production");
         }
