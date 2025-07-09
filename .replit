@@ -7,7 +7,7 @@ channel = "stable-24_05"
 packages = ["glibcLocales", "jq", "chromium", "glib", "gtk3", "nss"]
 
 [deployment]
-deploymentTarget = "gce"
+deploymentTarget = "autoscale"
 build = ["npm", "run", "build"]
 run = ["npm", "run", "start"]
 
