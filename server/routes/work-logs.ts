@@ -38,14 +38,21 @@ router.get("/work-logs", isAuthenticated, async (req, res) => {
   try {
     const userId = req.user.id;
     const userEmail = req.user.email;
+    const userRole = req.user.role;
+    
+    console.log(`[WORK LOGS] User: ${userId}, Email: ${userEmail}, Role: ${userRole}`);
     
     // Super admin and Marcy can see ALL work logs
     if (isSuperAdmin(req) || userEmail === 'mdlouza@gmail.com') {
+      console.log(`[WORK LOGS] Admin access - fetching ALL logs`);
       const logs = await db.select().from(workLogs);
+      console.log(`[WORK LOGS] Found ${logs.length} total logs`);
       return res.json(logs);
     } else {
       // Regular users can only see their own logs
+      console.log(`[WORK LOGS] Regular user access - fetching logs for ${userId}`);
       const logs = await db.select().from(workLogs).where(workLogs.userId.eq(userId));
+      console.log(`[WORK LOGS] Found ${logs.length} logs for user ${userId}`);
       return res.json(logs);
     }
   } catch (error) {

@@ -15,7 +15,9 @@ export default function WorkLogPage() {
 
   const { data: logs = [], refetch, isLoading, error } = useQuery({
     queryKey: ["/api/work-logs"],
-    queryFn: () => apiRequest("GET", "/api/work-logs"),
+    enabled: !!user, // Only fetch when user is authenticated
+    staleTime: 0, // Always fetch fresh data
+    cacheTime: 0, // Don't cache results
   });
 
   // Ensure logs is always an array
@@ -34,6 +36,7 @@ export default function WorkLogPage() {
       setHours(0);
       setMinutes(0);
       queryClient.invalidateQueries({ queryKey: ["/api/work-logs"] });
+      refetch(); // Force refetch to update the list immediately
     },
   });
 
@@ -106,6 +109,9 @@ export default function WorkLogPage() {
           <CardContent>
             {isLoading && <div className="py-4 text-gray-500">Loading work logs...</div>}
             {error && <div className="py-4 text-red-500">Error loading logs: {error.message}</div>}
+            <div className="py-2 text-xs text-gray-400">
+              Debug: User ID: {user?.id}, Logs count: {safelogs.length}, Loading: {isLoading ? 'yes' : 'no'}
+            </div>
             {!isLoading && !error && (
               <ul className="divide-y">
                 {safelogs.length === 0 && <li className="py-4 text-gray-500">No logs yet.</li>}
