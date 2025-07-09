@@ -588,7 +588,11 @@ export const workLogs = pgTable("work_logs", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   status: varchar("status", { length: 20 }).default("pending"), // for future approval
   approvedBy: varchar("approved_by"), // for future approval
-  approvedAt: timestamp("approved_at", { withTimezone: true }) // for future approval
+  approvedAt: timestamp("approved_at", { withTimezone: true }), // for future approval
+  visibility: varchar("visibility", { length: 20 }).default("private"), // "private", "team", "department", "public"
+  sharedWith: jsonb("shared_with").$type<string[]>().default([]), // specific user IDs who can view
+  department: varchar("department", { length: 50 }), // for department-based visibility
+  teamId: varchar("team_id") // for team-based visibility
 });
 
 export type WorkLog = typeof workLogs.$inferSelect;

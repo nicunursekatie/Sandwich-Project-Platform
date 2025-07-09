@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { sql } from "drizzle-orm";
 import { workLogs } from "@shared/schema";
 import { db } from "../db";
 // Import the actual authentication middleware being used in the app
@@ -18,7 +19,11 @@ const router = Router();
 const insertWorkLogSchema = z.object({
   description: z.string().min(1),
   hours: z.number().int().min(0),
-  minutes: z.number().int().min(0).max(59)
+  minutes: z.number().int().min(0).max(59),
+  visibility: z.enum(["private", "team", "department", "public"]).default("private"),
+  sharedWith: z.array(z.string()).default([]),
+  department: z.string().optional(),
+  teamId: z.string().optional()
 });
 
 // Middleware to check if user is super admin or admin
@@ -32,17 +37,35 @@ function canLogWork(req) {
   return req.user?.role === "admin" || req.user?.role === "super_admin" || req.user?.role === "work_logger";
 }
 
-// Get all logs (super admin) or own logs (regular user)
+// Get logs based on visibility permissions
 router.get("/work-logs", isAuthenticated, async (req, res) => {
   try {
     if (isSuperAdmin(req)) {
+      // Admins see ALL logs
       const logs = await db.select().from(workLogs);
       return res.json(logs);
     } else {
-      const logs = await db.select().from(workLogs).where(workLogs.userId.eq(req.user.id));
+      // Regular users see logs based on visibility rules
+      const userId = req.user.id;
+      const userDepartment = req.user.department;
+      const userTeamId = req.user.teamId;
+      
+      const logs = await db.select().from(workLogs).where(
+        // Own logs
+        workLogs.userId.eq(userId)
+        // OR public logs
+        .or(workLogs.visibility.eq("public"))
+        // OR department logs if same department
+        .or(workLogs.visibility.eq("department").and(workLogs.department.eq(userDepartment)))
+        // OR team logs if same team
+        .or(workLogs.visibility.eq("team").and(workLogs.teamId.eq(userTeamId)))
+        // OR specifically shared with this user (check if userId exists in sharedWith JSON array)
+        .or(sql`${workLogs.sharedWith} @> ${JSON.stringify([userId])}`)
+      );
       return res.json(logs);
     }
   } catch (error) {
+    console.error("Error fetching work logs:", error);
     res.status(500).json({ error: "Failed to fetch work logs" });
   }
 });
@@ -57,10 +80,15 @@ router.post("/work-logs", isAuthenticated, async (req, res) => {
       userId: req.user.id,
       description: result.data.description,
       hours: result.data.hours,
-      minutes: result.data.minutes
+      minutes: result.data.minutes,
+      visibility: result.data.visibility,
+      sharedWith: result.data.sharedWith,
+      department: result.data.department || req.user.department,
+      teamId: result.data.teamId || req.user.teamId
     }).returning();
     res.status(201).json(log[0]);
   } catch (error) {
+    console.error("Error creating work log:", error);
     res.status(500).json({ error: "Failed to create work log" });
   }
 });
