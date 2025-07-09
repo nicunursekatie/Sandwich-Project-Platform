@@ -13,10 +13,13 @@ export default function WorkLogPage() {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
 
-  const { data: logs = [], refetch } = useQuery({
+  const { data: logs = [], refetch, isLoading, error } = useQuery({
     queryKey: ["/api/work-logs"],
     queryFn: () => apiRequest("GET", "/api/work-logs"),
   });
+
+  // Ensure logs is always an array
+  const safelogs = Array.isArray(logs) ? logs : [];
 
   const createLog = useMutation({
     mutationFn: async () => {
@@ -91,9 +94,12 @@ export default function WorkLogPage() {
             <CardTitle>My Work Logs</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="divide-y">
-              {logs.length === 0 && <li className="py-4 text-gray-500">No logs yet.</li>}
-              {logs.map((log: any) => (
+            {isLoading && <div className="py-4 text-gray-500">Loading work logs...</div>}
+            {error && <div className="py-4 text-red-500">Error loading logs: {error.message}</div>}
+            {!isLoading && !error && (
+              <ul className="divide-y">
+                {safelogs.length === 0 && <li className="py-4 text-gray-500">No logs yet.</li>}
+                {safelogs.map((log: any) => (
                 <li key={log.id} className="py-4 flex justify-between items-center">
                   <div>
                     <div className="font-medium">{log.description}</div>
@@ -112,8 +118,9 @@ export default function WorkLogPage() {
                     </Button>
                   )}
                 </li>
-              ))}
-            </ul>
+                ))}
+              </ul>
+            )}
           </CardContent>
         </Card>
       </div>
