@@ -1,248 +1,352 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { MessageCircle, Send, User, Building2, ChevronLeft, Trash2, MoreVertical } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { useMessageReads } from "@/hooks/useMessageReads";
-import type { Message } from "@shared/schema";
+import { queryClient, apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { formatDistanceToNow } from "date-fns";
+import { CheckCircle2, Building2, User, Trash2, MoreVertical, Edit } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+interface Message {
+  id: number;
+  content: string;
+  sender?: string;
+  userId?: string;
+  user_id?: string;
+  createdAt?: string;
+  created_at?: string;
+}
 
 export default function RecipientChat() {
-  const { toast } = useToast();
   const { user } = useAuth();
-  const [newMessage, setNewMessage] = useState("");
-  const [editingMessage, setEditingMessage] = useState<string | null>(null);
+  const { toast } = useToast();
+  const [message, setMessage] = useState("");
+  const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  // Initialize read tracking hook
-  const { useAutoMarkAsRead } = useMessageReads();
 
-  // Get user profile for display name
-  const { data: userProfile } = useQuery({
-    queryKey: ["/api/auth/profile"],
-    enabled: !!user,
-  });
+  // Check if user has Recipient Chat access
+  const hasRecipientChatAccess = user?.permissions?.includes('recipient_chat') ||
+    user?.role === 'admin' || 
+    user?.role === 'admin_coordinator' ||
+    user?.role === 'super_admin';
 
-  // Get user name from profile or fallback to email prefix
-  const getUserName = () => {
-    if (userProfile && typeof userProfile === 'object') {
-      const profile = userProfile as any;
-      if (profile.displayName) {
-        return profile.displayName;
-      }
-      if (profile.firstName) {
-        return profile.firstName;
-      }
-    }
-    if (user && typeof user === 'object' && 'email' in user && user.email) {
-      return String(user.email).split('@')[0];
-    }
-    return 'Team Member';
-  };
-
-  const canDeleteMessage = (message: Message) => {
-    const currentUser = user as any;
-    const isOwner = message.sender === getUserName() || message.userId === currentUser?.id;
-    const isSuperAdmin = currentUser?.role === "super_admin";
-    const isAdmin = currentUser?.role === "admin";
-    const hasModeratePermission = currentUser?.permissions?.includes("moderate_messages");
-    
-    return isOwner || isSuperAdmin || isAdmin || hasModeratePermission;
-  };
-
-  const canEditMessage = (message: Message) => {
-    const currentUser = user as any;
-    return message.sender === getUserName() || message.userId === currentUser?.id;
-  };
-
-  // Get or create recipient conversation
-  const { data: recipientConversation } = useQuery({
-    queryKey: ["/api/conversations/recipient"],
+  // Get all conversations to find Recipient Chat
+  const { data: conversations = [] } = useQuery({
+    queryKey: ["/api/conversations"],
     queryFn: async () => {
-      const response = await apiRequest('POST', '/api/conversations', {
-        type: 'channel',
-        name: 'Recipient Chat'
-      });
-      return response;
+      const response = await fetch("/api/conversations");
+      if (!response.ok) {
+        throw new Error("Failed to fetch conversations");
+      }
+      const data = await response.json();
+      return data;
     },
+    enabled: !!user && hasRecipientChatAccess,
   });
 
-  // Fetch messages for recipient conversation
-  const { data: messages = [] } = useQuery<Message[]>({
+  // Find Recipient Chat conversation from the list
+  const recipientConversation = conversations.find((c: any) => 
+    c.type === 'channel' && c.name === 'Recipient Chat'
+  );
+
+  // Fetch recipient messages from the conversation system
+  const { data: messages = [], isLoading: messagesLoading, error: messagesError } = useQuery<Message[]>({
     queryKey: ["/api/conversations", recipientConversation?.id, "messages"],
-    enabled: !!recipientConversation,
-    refetchInterval: 3000,
+    queryFn: async () => {
+      if (!recipientConversation?.id) {
+        return [];
+      }
+      
+      const response = await fetch(`/api/conversations/${recipientConversation.id}/messages`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Failed to fetch Recipient messages:', errorText);
+        throw new Error(`Failed to fetch messages: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data;
+    },
+    enabled: !!recipientConversation?.id && hasRecipientChatAccess,
+    refetchInterval: 5000,
   });
 
-  const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
-  const displayedMessages = optimisticMessages || messages;
-
-  // Auto-mark messages as read when viewing recipient chat
-  useAutoMarkAsRead("recipient", messages, true);
-
-  useEffect(() => {
-    setOptimisticMessages(null);
-    if (recipientConversation?.id) {
-      queryClient.invalidateQueries({ 
-        queryKey: ["/api/conversations", recipientConversation.id, "messages"] 
-      });
-    }
-  }, [recipientConversation?.id]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [displayedMessages]);
-
-  const sendMessageMutation = useMutation({
+  // Post a message to Recipient Chat
+  const postMessageMutation = useMutation({
     mutationFn: async (content: string) => {
-      if (!recipientConversation) throw new Error('No conversation found');
+      if (!recipientConversation?.id) {
+        throw new Error("Recipient conversation not found");
+      }
       
-      const response = await apiRequest('POST', `/api/conversations/${recipientConversation.id}/messages`, {
-        content,
-        sender: getUserName(),
+      const response = await apiRequest("POST", `/api/conversations/${recipientConversation.id}/messages`, {
+        content
       });
-      return response;
-    },
-    onMutate: async (content: string) => {
-      const optimisticMessage: Message = {
-        id: Date.now().toString(),
-        conversationId: recipientConversation?.id || '',
-        userId: (user as any)?.id || '',
-        content,
-        sender: getUserName(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
       
-      setOptimisticMessages([...displayedMessages, optimisticMessage]);
-      return { optimisticMessage };
+      return response;
     },
     onSuccess: () => {
-      setNewMessage("");
-      queryClient.invalidateQueries({ 
-        queryKey: ["/api/conversations", recipientConversation?.id, "messages"] 
-      });
-      queryClient.invalidateQueries({ queryKey: ["/api/messages/unread-counts"] });
+      setMessage("");
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", recipientConversation?.id, "messages"] });
     },
     onError: (error) => {
-      console.error('Failed to send message:', error);
-      setOptimisticMessages(null);
+      console.error("Failed to post message:", error);
       toast({
-        title: "Error",
-        description: "Failed to send message",
+        title: "Failed to send message",
+        description: error instanceof Error ? error.message : "An error occurred",
         variant: "destructive",
       });
     },
   });
 
-  const deleteMessageMutation = useMutation({
-    mutationFn: async (messageId: string) => {
-      await apiRequest('DELETE', `/api/messages/${messageId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ 
-        queryKey: ["/api/conversations", recipientConversation?.id, "messages"] 
-      });
-      toast({
-        title: "Message deleted",
-        description: "The message has been removed.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to delete message",
-        variant: "destructive",
-      });
-    },
-  });
-
+  // Edit message mutation
   const editMessageMutation = useMutation({
-    mutationFn: async ({ messageId, content }: { messageId: string; content: string }) => {
-      await apiRequest('PATCH', `/api/messages/${messageId}`, { content });
+    mutationFn: async ({ messageId, content }: { messageId: number; content: string }) => {
+      const response = await apiRequest("PATCH", `/api/messages/${messageId}`, { content });
+      return response;
     },
     onSuccess: () => {
-      setEditingMessage(null);
+      setEditingMessageId(null);
       setEditContent("");
-      queryClient.invalidateQueries({ 
-        queryKey: ["/api/conversations", recipientConversation?.id, "messages"] 
-      });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", recipientConversation?.id, "messages"] });
       toast({
         title: "Message updated",
-        description: "Your message has been updated.",
+        description: "Your message has been edited successfully.",
       });
     },
-    onError: () => {
+    onError: (error) => {
       toast({
-        title: "Error",
-        description: "Failed to update message",
+        title: "Failed to edit message",
+        description: error instanceof Error ? error.message : "An error occurred",
         variant: "destructive",
       });
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
-    sendMessageMutation.mutate(newMessage.trim());
+  // Delete message mutation
+  const deleteMessageMutation = useMutation({
+    mutationFn: async (messageId: number) => {
+      const response = await apiRequest("DELETE", `/api/messages/${messageId}`);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", recipientConversation?.id, "messages"] });
+      toast({
+        title: "Message deleted",
+        description: "Your message has been removed.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to delete message",
+        description: error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Filter out null/undefined messages and ensure we have valid data
+  const displayedMessages = (messages || []).filter((msg): msg is Message => {
+    return msg && typeof msg === 'object' && 'content' in msg;
+  });
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [displayedMessages]);
+
+  const handleSendMessage = () => {
+    if (message.trim() && !postMessageMutation.isPending) {
+      postMessageMutation.mutate(message.trim());
+    }
   };
 
-  const handleEdit = (message: Message) => {
-    setEditingMessage(message.id);
-    setEditContent(message.content);
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
-  const handleSaveEdit = () => {
-    if (!editContent.trim() || !editingMessage) return;
-    editMessageMutation.mutate({ messageId: editingMessage, content: editContent.trim() });
+  const startEdit = (msg: Message) => {
+    setEditingMessageId(msg.id);
+    setEditContent(msg.content);
   };
 
-  const handleCancelEdit = () => {
-    setEditingMessage(null);
+  const cancelEdit = () => {
+    setEditingMessageId(null);
     setEditContent("");
   };
 
-  const getInitials = (name: string | null | undefined) => {
-    if (!name || typeof name !== 'string') {
-      return 'TM';
+  const saveEdit = (messageId: number) => {
+    if (editContent.trim()) {
+      editMessageMutation.mutate({ messageId, content: editContent.trim() });
     }
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
-  const getAvatarColor = (name: string | null | undefined) => {
-    if (!name || typeof name !== 'string') {
-      return 'bg-gray-500';
+  const handleDelete = (messageId: number) => {
+    if (window.confirm("Are you sure you want to delete this message?")) {
+      deleteMessageMutation.mutate(messageId);
     }
-    const colors = [
-      'bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500',
-      'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-teal-500'
-    ];
-    const hash = name.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
-    return colors[hash % colors.length];
   };
 
-  const formatTimestamp = (timestamp: string) => {
-    try {
-      const date = new Date(timestamp);
-      if (isNaN(date.getTime())) {
-        return "Invalid Date";
-      }
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    } catch {
-      return "Invalid Date";
-    }
-  };
+  if (!user || !hasRecipientChatAccess) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Building2 className="h-5 w-5" />
+            Recipient Chat
+          </CardTitle>
+          <CardDescription>
+            Access restricted to recipient coordinators and administrators
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="h-[600px] flex flex-col">
+      <CardHeader className="flex-shrink-0">
+        <CardTitle className="flex items-center gap-2">
+          <Building2 className="h-5 w-5" />
+          Recipient Chat
+        </CardTitle>
+        <CardDescription>
+          Communication channel for receiving organizations
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+          {messagesLoading && <div className="text-center text-muted-foreground">Loading messages...</div>}
+          {messagesError && (
+            <div className="text-center text-destructive">
+              Error loading messages: {messagesError instanceof Error ? messagesError.message : 'Unknown error'}
+            </div>
+          )}
+          {!messagesLoading && !messagesError && displayedMessages.length === 0 && (
+            <div className="text-center text-muted-foreground">
+              No messages yet. Start the conversation!
+            </div>
+          )}
+          {displayedMessages.map((msg) => {
+            const msgUserId = msg.userId || msg.user_id;
+            const msgCreatedAt = msg.createdAt || msg.created_at;
+            const isOwnMessage = msgUserId === user?.id;
+            
+            return (
+              <div key={msg.id} className={`flex gap-3 ${isOwnMessage ? 'justify-end' : ''}`}>
+                <div className={`flex gap-3 max-w-[80%] ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                      {isOwnMessage ? (
+                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Building2 className="h-4 w-4 text-green-600" />
+                      )}
+                    </div>
+                  </div>
+                  <div className={`space-y-1 ${isOwnMessage ? 'items-end' : ''}`}>
+                    <div className={`flex items-center gap-2 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
+                      <span className="text-sm font-medium">
+                        {msg.sender || "Recipient Coordinator"}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {msgCreatedAt ? formatDistanceToNow(new Date(msgCreatedAt), { addSuffix: true }) : 'just now'}
+                      </span>
+                      {isOwnMessage && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <MoreVertical className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => startEdit(msg)}>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleDelete(msg.id)}
+                              className="text-destructive"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </div>
+                    {editingMessageId === msg.id ? (
+                      <div className="space-y-2">
+                        <Textarea
+                          value={editContent}
+                          onChange={(e) => setEditContent(e.target.value)}
+                          className="min-h-[60px]"
+                        />
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            onClick={() => saveEdit(msg.id)}
+                            disabled={editMessageMutation.isPending}
+                          >
+                            Save
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={cancelEdit}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className={`rounded-lg px-3 py-2 ${
+                        isOwnMessage 
+                          ? 'bg-green-500 text-white' 
+                          : 'bg-muted'
+                      }`}>
+                        <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          <div ref={messagesEndRef} />
+        </div>
+        <div className="flex gap-2">
+          <Textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Type your message..."
+            className="min-h-[60px]"
+            disabled={postMessageMutation.isPending}
+          />
+          <Button
+            onClick={handleSendMessage}
+            disabled={!message.trim() || postMessageMutation.isPending}
+            className="self-end bg-green-500 hover:bg-green-600"
+          >
+            Send
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
   return (
     <div className="h-full flex flex-col bg-white dark:bg-gray-900">
