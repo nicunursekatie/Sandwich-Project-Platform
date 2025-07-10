@@ -24,7 +24,9 @@ import {
   ArrowRight,
   BarChart3,
   AlertCircle,
-  Award
+  Award,
+  Trash2,
+  Edit
 } from "lucide-react";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -123,6 +125,28 @@ export default function ProjectsClean() {
     },
   });
 
+  // Delete project mutation
+  const deleteProjectMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return await apiRequest('DELETE', `/api/projects/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      toast({ 
+        title: "Project deleted successfully!", 
+        description: "The project has been removed from your list." 
+      });
+    },
+    onError: (error: any) => {
+      console.error('Project deletion failed:', error);
+      toast({ 
+        title: "Error", 
+        description: "Failed to delete project.",
+        variant: "destructive" 
+      });
+    },
+  });
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "urgent": return "bg-red-500 text-white";
@@ -169,6 +193,13 @@ export default function ProjectsClean() {
   const handleStatusChange = (projectId: number, newStatus: string) => {
     if (canEdit) {
       updateProjectMutation.mutate({ id: projectId, status: newStatus });
+    }
+  };
+
+  const handleDeleteProject = (projectId: number, projectTitle: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click navigation
+    if (canEdit && confirm(`Are you sure you want to delete "${projectTitle}"? This action cannot be undone.`)) {
+      deleteProjectMutation.mutate(projectId);
     }
   };
 
@@ -224,14 +255,41 @@ export default function ProjectsClean() {
               {project.description}
             </p>
           </div>
-          <div className="flex flex-col gap-1 shrink-0">
-            <Badge className={`${getPriorityColor(project.priority)} text-xs px-2 py-1 badge`}>
-              {project.priority}
-            </Badge>
-            <Badge variant="outline" className={`${getStatusColor(project.status)} text-xs px-2 py-1 badge`}>
-              {getStatusIcon(project.status)}
-              <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
-            </Badge>
+          <div className="flex items-start gap-2">
+            <div className="flex flex-col gap-1 shrink-0">
+              <Badge className={`${getPriorityColor(project.priority)} text-xs px-2 py-1 badge`}>
+                {project.priority}
+              </Badge>
+              <Badge variant="outline" className={`${getStatusColor(project.status)} text-xs px-2 py-1 badge`}>
+                {getStatusIcon(project.status)}
+                <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
+              </Badge>
+            </div>
+            {canEdit && (
+              <div className="flex gap-1 ml-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleProjectClick(project.id);
+                  }}
+                  className="h-8 w-8 p-0 hover:bg-blue-50"
+                  title="Edit project"
+                >
+                  <Edit className="h-4 w-4 text-blue-600" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => handleDeleteProject(project.id, project.title, e)}
+                  className="h-8 w-8 p-0 hover:bg-red-50"
+                  title="Delete project"
+                >
+                  <Trash2 className="h-4 w-4 text-red-600" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 
