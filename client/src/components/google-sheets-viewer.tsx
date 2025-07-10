@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ExternalLink, Eye, FileSpreadsheet, AlertCircle, RefreshCw, Upload, Download } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission } from "@shared/auth-utils";
 
 interface GoogleSheetsViewerProps {
   initialUrl?: string;
@@ -23,6 +25,8 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
   const [showFallback, setShowFallback] = useState(false);
   const [fallbackFileStatus, setFallbackFileStatus] = useState<any>(null);
   const [uploading, setUploading] = useState(false);
+  const [sheetLoadError, setSheetLoadError] = useState(false);
+  const { user } = useAuth();
 
   // Check fallback file status on component mount
   useEffect(() => {
@@ -73,8 +77,13 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
   };
 
   const handleSheetError = () => {
-    setError("Unable to load Google Sheet. This may be due to access restrictions.");
-    setShowFallback(true);
+    setSheetLoadError(true);
+    if (fallbackFileStatus?.hasFile) {
+      setShowFallback(true);
+      setError("Google Sheets access restricted. Showing static version instead.");
+    } else {
+      setError("Unable to load Google Sheet and no fallback file is available.");
+    }
   };
 
   return (
@@ -117,11 +126,11 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
           </div>
 
           {error && (
-            <Alert variant="destructive">
+            <Alert variant={sheetLoadError && fallbackFileStatus?.hasFile ? "default" : "destructive"}>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
                 {error}
-                {showFallback && fallbackFileStatus?.hasFile && (
+                {!showFallback && fallbackFileStatus?.hasFile && sheetLoadError && (
                   <div className="mt-2">
                     <Button
                       variant="outline"
@@ -129,7 +138,7 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
                       onClick={() => setShowFallback(true)}
                       className="mr-2"
                     >
-                      View Fallback File
+                      View Static Version
                     </Button>
                   </div>
                 )}
@@ -137,55 +146,57 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
             </Alert>
           )}
 
-          {/* File upload section for admins */}
-          <div className="border-t pt-4">
-            <div className="flex items-center justify-between mb-2">
-              <div>
-                <p className="text-sm font-medium">Fallback File Management</p>
-                <p className="text-xs text-gray-500">Upload a backup file for when Google Sheets is inaccessible</p>
+          {/* File upload section - only for admins */}
+          {hasPermission(user, 'manage_files') && (
+            <div className="border-t pt-4">
+              <div className="flex items-center justify-between mb-2">
+                <div>
+                  <p className="text-sm font-medium">Fallback File Management</p>
+                  <p className="text-xs text-gray-500">Upload updated files for users without Google access</p>
+                </div>
+                {fallbackFileStatus?.hasFile && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={downloadFallbackFile}
+                    className="flex items-center gap-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    Download
+                  </Button>
+                )}
               </div>
-              {fallbackFileStatus?.hasFile && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={downloadFallbackFile}
-                  className="flex items-center gap-2"
-                >
-                  <Download className="h-4 w-4" />
-                  Download
-                </Button>
-              )}
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Label htmlFor="file-upload" className="cursor-pointer">
-                <Button
-                  variant="outline" 
-                  size="sm"
-                  disabled={uploading}
-                  className="flex items-center gap-2"
-                  asChild
-                >
-                  <span>
-                    <Upload className="h-4 w-4" />
-                    {uploading ? 'Uploading...' : 'Upload File'}
+              
+              <div className="flex items-center gap-2">
+                <Label htmlFor="file-upload" className="cursor-pointer">
+                  <Button
+                    variant="outline" 
+                    size="sm"
+                    disabled={uploading}
+                    className="flex items-center gap-2"
+                    asChild
+                  >
+                    <span>
+                      <Upload className="h-4 w-4" />
+                      {uploading ? 'Uploading...' : 'Upload New Version'}
+                    </span>
+                  </Button>
+                </Label>
+                <Input
+                  id="file-upload"
+                  type="file"
+                  accept=".xlsx,.xls,.csv,.pdf"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                {fallbackFileStatus?.hasFile && (
+                  <span className="text-xs text-green-600">
+                    Current: {fallbackFileStatus.fileName}
                   </span>
-                </Button>
-              </Label>
-              <Input
-                id="file-upload"
-                type="file"
-                accept=".xlsx,.xls,.csv,.pdf"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-              {fallbackFileStatus?.hasFile && (
-                <span className="text-xs text-green-600">
-                  Latest: {fallbackFileStatus.fileName}
-                </span>
-              )}
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
 
@@ -225,16 +236,20 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
           
           {showFallback && fallbackFileStatus?.hasFile && (
             <div className="mt-2 text-center">
-              <p className="text-sm text-amber-600">
-                Showing fallback file: {fallbackFileStatus.fileName}
+              <p className="text-sm text-blue-600">
+                Displaying static version: {fallbackFileStatus.fileName}
               </p>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setShowFallback(false)}
+                onClick={() => {
+                  setShowFallback(false);
+                  setSheetLoadError(false);
+                  setError("");
+                }}
                 className="mt-1"
               >
-                Try Google Sheets Again
+                Try Live Google Sheet
               </Button>
             </div>
           )}

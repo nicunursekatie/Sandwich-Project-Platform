@@ -35,6 +35,7 @@ export default function GoogleSheetsPage() {
         <h3 className="font-semibold text-blue-900 mb-2">About This Data Sheet:</h3>
         <ul className="text-sm text-blue-800 space-y-1">
           <li>• This displays the official project data spreadsheet in real-time</li>
+          <li>• If you can't access Google Sheets, the system automatically shows a static version</li>
           <li>• Use the refresh button to get the latest data updates</li>
           <li>• Click the "Open" button to view the sheet in a new tab</li>
           <li>• The data is read-only - to make changes, you'll need proper permissions on the original sheet</li>
