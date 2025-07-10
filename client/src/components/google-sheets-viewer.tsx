@@ -203,7 +203,7 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>Project Data Sheet</span>
+            <span>Sandwich Totals Data Sheet</span>
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span>Read-only view</span>
               {isLoading && <RefreshCw className="h-4 w-4 animate-spin" />}

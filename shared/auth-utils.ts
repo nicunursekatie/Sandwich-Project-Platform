@@ -62,7 +62,10 @@ export const PERMISSIONS = {
   VIEW_SUGGESTIONS: 'view_suggestions',
   SUBMIT_SUGGESTIONS: 'submit_suggestions',
   MANAGE_SUGGESTIONS: 'manage_suggestions',
-  RESPOND_TO_SUGGESTIONS: 'respond_to_suggestions'
+  RESPOND_TO_SUGGESTIONS: 'respond_to_suggestions',
+  
+  // Data sheet access
+  VIEW_SANDWICH_DATA: 'view_sandwich_data'
 } as const;
 
 export function getDefaultPermissionsForRole(role: string): string[] {
@@ -90,6 +93,7 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_MEETINGS,
         PERMISSIONS.VIEW_ANALYTICS,
         PERMISSIONS.VIEW_ROLE_DEMO,
+        PERMISSIONS.VIEW_SANDWICH_DATA,
         PERMISSIONS.SEND_MESSAGES
       ];
     
@@ -104,6 +108,7 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_COLLECTIONS,
         PERMISSIONS.VIEW_REPORTS,
         PERMISSIONS.VIEW_PROJECTS,
+        PERMISSIONS.VIEW_SANDWICH_DATA,
         PERMISSIONS.SEND_MESSAGES
       ];
     
@@ -118,6 +123,7 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_COLLECTIONS,
         PERMISSIONS.VIEW_REPORTS,
         PERMISSIONS.VIEW_PROJECTS,
+        PERMISSIONS.VIEW_SANDWICH_DATA,
         PERMISSIONS.SEND_MESSAGES
       ];
     
@@ -155,6 +161,7 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_COLLECTIONS,
         PERMISSIONS.VIEW_REPORTS,
         PERMISSIONS.VIEW_PROJECTS,
+        PERMISSIONS.VIEW_SANDWICH_DATA,
         PERMISSIONS.SEND_MESSAGES
       ];
     
