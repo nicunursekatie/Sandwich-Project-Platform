@@ -95,28 +95,27 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
             {title}
           </CardTitle>
           <CardDescription>
-            Enter a Google Sheets URL to view it in read-only mode. The sheet must be publicly accessible or shared with view permissions.
+            Displays the most recent copy of our sandwich totals spreadsheet. This is a static file that shows our complete collection data.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex justify-between items-center">
             <div className="flex-1">
-              <p className="text-sm font-medium text-gray-700">Live Data Sheet</p>
-              <p className="text-xs text-gray-500">Displaying the official project data spreadsheet</p>
+              <p className="text-sm font-medium text-gray-700">Sandwich Totals Spreadsheet</p>
+              <p className="text-xs text-gray-500">Complete collection data from 2023-2025</p>
             </div>
             <div className="flex items-center gap-2">
               <Button 
                 variant="outline"
-                onClick={handleRefresh}
-                disabled={isLoading}
-                title="Refresh sheet data"
+                onClick={downloadFallbackFile}
+                title="Download spreadsheet"
               >
-                <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                Refresh
+                <Download className="h-4 w-4" />
+                Download
               </Button>
               <Button 
                 variant="outline"
-                onClick={openInNewTab}
+                onClick={downloadFallbackFile}
                 title="Open in new tab"
               >
                 <ExternalLink className="h-4 w-4" />
@@ -125,23 +124,11 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
             </div>
           </div>
 
-          {error && (
-            <Alert variant={sheetLoadError && fallbackFileStatus?.hasFile ? "default" : "destructive"}>
+          {!fallbackFileStatus?.hasFile && (
+            <Alert variant="default">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                {error}
-                {!showFallback && fallbackFileStatus?.hasFile && sheetLoadError && (
-                  <div className="mt-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowFallback(true)}
-                      className="mr-2"
-                    >
-                      View Static Version
-                    </Button>
-                  </div>
-                )}
+                No sandwich data file is currently available. Please contact an administrator to upload the latest spreadsheet.
               </AlertDescription>
             </Alert>
           )}
@@ -151,20 +138,9 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
             <div className="border-t pt-4">
               <div className="flex items-center justify-between mb-2">
                 <div>
-                  <p className="text-sm font-medium">Fallback File Management</p>
-                  <p className="text-xs text-gray-500">Upload updated files for users without Google access</p>
+                  <p className="text-sm font-medium">Update Sandwich Data</p>
+                  <p className="text-xs text-gray-500">Upload the latest sandwich totals spreadsheet</p>
                 </div>
-                {fallbackFileStatus?.hasFile && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={downloadFallbackFile}
-                    className="flex items-center gap-2"
-                  >
-                    <Download className="h-4 w-4" />
-                    Download
-                  </Button>
-                )}
               </div>
               
               <div className="flex items-center gap-2">
@@ -178,7 +154,7 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
                   >
                     <span>
                       <Upload className="h-4 w-4" />
-                      {uploading ? 'Uploading...' : 'Upload New Version'}
+                      {uploading ? 'Uploading...' : 'Upload New File'}
                     </span>
                   </Button>
                 </Label>
@@ -195,6 +171,13 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
                   </span>
                 )}
               </div>
+              
+              {error && uploading && (
+                <Alert variant="destructive" className="mt-3">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
             </div>
           )}
         </CardContent>
@@ -211,46 +194,32 @@ export function GoogleSheetsViewer({ initialUrl = "", title = "Google Sheets Vie
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="border rounded-lg overflow-hidden">
-            {showFallback && fallbackFileStatus?.hasFile ? (
-              <iframe
-                src="/api/project-data/current"
-                width="100%"
-                height={height}
-                style={{ border: 'none' }}
-                title="Project Data Sheet (Fallback)"
-                onLoad={() => setIsLoading(false)}
-              />
-            ) : (
-              <iframe
-                src={FIXED_VIEWER_URL}
-                width="100%"
-                height={height}
-                style={{ border: 'none' }}
-                title="Project Data Sheet"
-                onLoad={() => setIsLoading(false)}
-                onError={handleSheetError}
-              />
-            )}
-          </div>
-          
-          {showFallback && fallbackFileStatus?.hasFile && (
-            <div className="mt-2 text-center">
-              <p className="text-sm text-blue-600">
-                Displaying static version: {fallbackFileStatus.fileName}
-              </p>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setShowFallback(false);
-                  setSheetLoadError(false);
-                  setError("");
-                }}
-                className="mt-1"
-              >
-                Try Live Google Sheet
-              </Button>
+          {fallbackFileStatus?.hasFile ? (
+            <>
+              <div className="border rounded-lg overflow-hidden">
+                <iframe
+                  src="/api/project-data/current"
+                  width="100%"
+                  height={height}
+                  style={{ border: 'none' }}
+                  title="Sandwich Totals Data Sheet"
+                  onLoad={() => setIsLoading(false)}
+                />
+              </div>
+              
+              <div className="mt-2 text-center">
+                <p className="text-sm text-blue-600">
+                  File: {fallbackFileStatus.fileName}
+                </p>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-lg">
+              <div className="text-center">
+                <FileSpreadsheet className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-500">No sandwich data file available</p>
+                <p className="text-sm text-gray-400 mt-1">Contact an administrator to upload the spreadsheet</p>
+              </div>
             </div>
           )}
         </CardContent>
