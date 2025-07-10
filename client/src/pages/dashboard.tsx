@@ -40,6 +40,7 @@ import AnnouncementBanner from "@/components/announcement-banner";
 import MessageNotifications from "@/components/message-notifications";
 import WorkLogPage from "@/pages/work-log";
 import SuggestionsPortal from "@/pages/suggestions";
+import GoogleSheetsPage from "@/pages/google-sheets";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -275,6 +276,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <WorkLogPage />;
       case "suggestions":
         return <SuggestionsPortal />;
+      case "google-sheets":
+        return <GoogleSheetsPage />;
 
       case "committee":
       case "committee-chat":

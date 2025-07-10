@@ -61,6 +61,7 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
     { id: "toolkit", label: "Toolkit", icon: FolderOpen, href: "toolkit", group: "resources" },
     { id: "development", label: "Development", icon: FileText, href: "development", group: "resources" },
     { id: "work-log", label: "Work Log", icon: ListTodo, href: "work-log", group: "resources" },
+    ...(hasPermission(user, PERMISSIONS.VIEW_REPORTS) ? [{ id: "google-sheets", label: "Google Sheets", icon: Sheet, href: "google-sheets", group: "resources" }] : []),
     
     // Admin section (filtered by permissions)
     ...(hasPermission(user, PERMISSIONS.MANAGE_USERS) ? [{ id: "user-management", label: "Admin", icon: Settings, href: "user-management", group: "admin" }] : [])
