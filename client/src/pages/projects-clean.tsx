@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { 
   Plus, 
   Calendar, 
@@ -26,7 +27,8 @@ import {
   AlertCircle,
   Award,
   Trash2,
-  Edit
+  Edit,
+  Settings
 } from "lucide-react";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -203,6 +205,28 @@ export default function ProjectsClean() {
     }
   };
 
+  const handleMarkComplete = (projectId: number, projectTitle: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click navigation
+    if (canEdit && confirm(`Mark "${projectTitle}" as completed?`)) {
+      updateProjectMutation.mutate({ id: projectId, status: 'completed' });
+      toast({
+        title: "Project completed!",
+        description: `"${projectTitle}" has been marked as completed.`
+      });
+    }
+  };
+
+  const handleStatusQuickChange = (projectId: number, newStatus: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click navigation
+    if (canEdit) {
+      updateProjectMutation.mutate({ id: projectId, status: newStatus });
+      toast({
+        title: "Status updated",
+        description: `Project status changed to ${newStatus.replace('_', ' ')}`
+      });
+    }
+  };
+
   const handleCreateProject = (e: React.FormEvent) => {
     e.preventDefault();
     if (newProject.title?.trim()) {
@@ -267,27 +291,76 @@ export default function ProjectsClean() {
             </div>
             {canEdit && (
               <div className="flex gap-1 ml-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleProjectClick(project.id);
-                  }}
-                  className="h-8 w-8 p-0 hover:bg-blue-50"
-                  title="Edit project"
-                >
-                  <Edit className="h-4 w-4 text-blue-600" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => handleDeleteProject(project.id, project.title, e)}
-                  className="h-8 w-8 p-0 hover:bg-red-50"
-                  title="Delete project"
-                >
-                  <Trash2 className="h-4 w-4 text-red-600" />
-                </Button>
+                {/* Quick Complete Button for non-completed projects */}
+                {project.status !== 'completed' && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => handleMarkComplete(project.id, project.title, e)}
+                    className="h-8 w-8 p-0 hover:bg-green-50"
+                    title="Mark as completed"
+                  >
+                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  </Button>
+                )}
+                
+                {/* Status Change Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => e.stopPropagation()}
+                      className="h-8 w-8 p-0 hover:bg-gray-50"
+                      title="Change status"
+                    >
+                      <Settings className="h-4 w-4 text-gray-600" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                    <DropdownMenuItem 
+                      onClick={(e) => handleStatusQuickChange(project.id, 'available', e)}
+                    >
+                      <Circle className="w-4 h-4 mr-2 text-purple-600" />
+                      Available
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={(e) => handleStatusQuickChange(project.id, 'in_progress', e)}
+                    >
+                      <Play className="w-4 h-4 mr-2 text-blue-600" />
+                      In Progress
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={(e) => handleStatusQuickChange(project.id, 'waiting', e)}
+                    >
+                      <Pause className="w-4 h-4 mr-2 text-gray-600" />
+                      Waiting
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={(e) => handleStatusQuickChange(project.id, 'completed', e)}
+                    >
+                      <CheckCircle2 className="w-4 h-4 mr-2 text-green-600" />
+                      Completed
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleProjectClick(project.id);
+                      }}
+                    >
+                      <Edit className="w-4 h-4 mr-2 text-blue-600" />
+                      Edit Details
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={(e) => handleDeleteProject(project.id, project.title, e)}
+                      className="text-red-600 focus:text-red-600"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete Project
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             )}
           </div>
