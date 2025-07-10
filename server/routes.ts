@@ -236,6 +236,26 @@ const projectFilesUpload = multer({
   },
 });
 
+// Configure multer for project data sheet uploads (fallback files)
+const projectDataUpload = multer({
+  dest: "uploads/project-data/",
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (req, file, cb) => {
+    // Allow Excel files, CSV files, and PDFs
+    const allowedTypes = [
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+      'application/vnd.ms-excel', // .xls
+      'text/csv', // .csv
+      'application/pdf' // .pdf
+    ];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only Excel, CSV, and PDF files are allowed for project data uploads'), false);
+    }
+  }
+});
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup PostgreSQL session store for production-ready session persistence
   // This replaces the previous MemoryStore which was causing:
@@ -6902,6 +6922,138 @@ export async function registerRoutes(app: Express): Promise<Server> {
         error: error.message,
         details: error.detail || "No additional details",
       });
+    }
+  });
+
+  // Upload project data sheet (fallback file)
+  app.post('/api/project-data/upload', 
+    requirePermission('manage_files'), 
+    projectDataUpload.single('file'),
+    async (req: any, res) => {
+      try {
+        if (!req.file) {
+          return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        const originalName = req.file.originalname;
+        const filePath = req.file.path;
+        const fileSize = req.file.size;
+        const mimeType = req.file.mimetype;
+
+        // Store file metadata (you could add to database if needed)
+        const fileInfo = {
+          originalName,
+          filePath,
+          fileSize,
+          mimeType,
+          uploadedAt: new Date().toISOString(),
+          uploadedBy: req.user?.email || 'unknown'
+        };
+
+        res.json({
+          success: true,
+          message: 'Project data file uploaded successfully',
+          file: fileInfo
+        });
+      } catch (error) {
+        console.error('Project data upload error:', error);
+        res.status(500).json({ message: 'Failed to upload project data file' });
+      }
+    }
+  );
+
+  // Serve project data sheet files
+  app.get('/api/project-data/current', async (req, res) => {
+    try {
+      const projectDataDir = path.join(process.cwd(), 'uploads', 'project-data');
+      
+      // Check if directory exists
+      try {
+        await fs.access(projectDataDir);
+      } catch {
+        return res.status(404).json({ message: 'No project data files available' });
+      }
+
+      // Find the most recent file
+      const files = await fs.readdir(projectDataDir);
+      if (files.length === 0) {
+        return res.status(404).json({ message: 'No project data files found' });
+      }
+
+      // Sort files by modification time and get the newest
+      const filesWithStats = await Promise.all(
+        files.map(async (file) => {
+          const filePath = path.join(projectDataDir, file);
+          const stats = await fs.stat(filePath);
+          return { file, stats, filePath };
+        })
+      );
+
+      const newestFile = filesWithStats.sort(
+        (a, b) => b.stats.mtime.getTime() - a.stats.mtime.getTime()
+      )[0];
+
+      // Determine content type
+      const ext = path.extname(newestFile.file).toLowerCase();
+      let contentType = 'application/octet-stream';
+      
+      if (ext === '.pdf') contentType = 'application/pdf';
+      else if (ext === '.xlsx') contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      else if (ext === '.xls') contentType = 'application/vnd.ms-excel';
+      else if (ext === '.csv') contentType = 'text/csv';
+
+      // Set headers
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Length', newestFile.stats.size);
+      res.setHeader('Content-Disposition', `inline; filename="${newestFile.file}"`);
+
+      // Stream the file
+      const fileStream = createReadStream(newestFile.filePath);
+      fileStream.pipe(res);
+    } catch (error) {
+      console.error('Project data serving error:', error);
+      res.status(500).json({ message: 'Failed to serve project data file' });
+    }
+  });
+
+  // Check if fallback file is available
+  app.get('/api/project-data/status', async (req, res) => {
+    try {
+      const projectDataDir = path.join(process.cwd(), 'uploads', 'project-data');
+      
+      try {
+        await fs.access(projectDataDir);
+        const files = await fs.readdir(projectDataDir);
+        
+        if (files.length > 0) {
+          // Get info about the newest file
+          const filesWithStats = await Promise.all(
+            files.map(async (file) => {
+              const filePath = path.join(projectDataDir, file);
+              const stats = await fs.stat(filePath);
+              return { file, stats, filePath };
+            })
+          );
+
+          const newestFile = filesWithStats.sort(
+            (a, b) => b.stats.mtime.getTime() - a.stats.mtime.getTime()
+          )[0];
+
+          res.json({
+            hasFile: true,
+            fileName: newestFile.file,
+            uploadedAt: newestFile.stats.mtime.toISOString(),
+            fileSize: newestFile.stats.size
+          });
+        } else {
+          res.json({ hasFile: false });
+        }
+      } catch {
+        res.json({ hasFile: false });
+      }
+    } catch (error) {
+      console.error('Project data status error:', error);
+      res.status(500).json({ message: 'Failed to check project data status' });
     }
   });
 
