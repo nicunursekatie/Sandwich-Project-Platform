@@ -17,6 +17,7 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Users, Shield, Settings, Key, Award, Megaphone, Trash2, Bug } from "lucide-react";
 import AnnouncementManager from "@/components/announcement-manager";
 import AuthDebug from "@/components/auth-debug";
+import { UserPermissionsDialog } from "@/components/user-permissions-dialog";
 
 interface User {
   id: string;
@@ -36,8 +37,6 @@ export default function UserManagement() {
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
   const [activeTab, setActiveTab] = useState<"users" | "announcements" | "auth-debug">("users");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [editingRole, setEditingRole] = useState<string>("");
-  const [editingPermissions, setEditingPermissions] = useState<string[]>([]);
   const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null);
   const [newPassword, setNewPassword] = useState<string>("");
 
@@ -150,31 +149,6 @@ export default function UserManagement() {
 
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
-    setEditingRole(user.role);
-    setEditingPermissions(user.permissions || []);
-  };
-
-  const handleRoleChange = (role: string) => {
-    setEditingRole(role);
-    setEditingPermissions(getDefaultPermissionsForRole(role));
-  };
-
-  const handlePermissionToggle = (permission: string) => {
-    setEditingPermissions(prev => 
-      prev.includes(permission)
-        ? prev.filter(p => p !== permission)
-        : [...prev, permission]
-    );
-  };
-
-  const handleSaveChanges = () => {
-    if (!selectedUser) return;
-    
-    updateUserMutation.mutate({
-      userId: selectedUser.id,
-      role: editingRole,
-      permissions: editingPermissions,
-    });
   };
 
   const handleResetPassword = () => {
@@ -350,126 +324,14 @@ export default function UserManagement() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Dialog 
-                        open={selectedUser?.id === user.id} 
-                        onOpenChange={(open) => {
-                          if (!open) {
-                            setSelectedUser(null);
-                          }
-                        }}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditUser(user)}
                       >
-                        <DialogTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleEditUser(user)}
-                          >
-                            <Settings className="h-4 w-4 mr-1" />
-                            Edit
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
-                          <DialogHeader>
-                            <DialogTitle>Edit User Permissions</DialogTitle>
-                            <DialogDescription>
-                              Modify role and permissions for {user.firstName} {user.lastName}
-                            </DialogDescription>
-                          </DialogHeader>
-                          
-                          <div className="space-y-6 overflow-y-auto flex-1 pr-2">
-                            <div>
-                              <Label htmlFor="role">Role</Label>
-                              <Select
-                                value={editingRole}
-                                onValueChange={handleRoleChange}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value={USER_ROLES.ADMIN}>Administrator</SelectItem>
-                                  <SelectItem value={USER_ROLES.COMMITTEE_MEMBER}>Committee Member</SelectItem>
-                                  <SelectItem value={USER_ROLES.HOST}>Host</SelectItem>
-                                  <SelectItem value={USER_ROLES.DRIVER}>Driver</SelectItem>
-                                  <SelectItem value={USER_ROLES.RECIPIENT}>Recipient</SelectItem>
-                                  <SelectItem value={USER_ROLES.VOLUNTEER}>Volunteer</SelectItem>
-                                  <SelectItem value={USER_ROLES.VIEWER}>Viewer</SelectItem>
-                                  <SelectItem value={USER_ROLES.WORK_LOGGER}>Work Logger</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-
-                            <div className="space-y-6">
-                              {/* Chat Access Permissions */}
-                              <div>
-                                <Label className="text-base font-semibold">Chat Access</Label>
-                                <div className="grid grid-cols-2 gap-4 mt-3 p-4 bg-gray-50 rounded-lg">
-                                  {[
-                                    { key: 'GENERAL_CHAT', label: 'General Chat', permission: PERMISSIONS.GENERAL_CHAT },
-                                    { key: 'COMMITTEE_CHAT', label: 'Committee Chat', permission: PERMISSIONS.COMMITTEE_CHAT },
-                                    { key: 'HOST_CHAT', label: 'Host Chat', permission: PERMISSIONS.HOST_CHAT },
-                                    { key: 'DRIVER_CHAT', label: 'Driver Chat', permission: PERMISSIONS.DRIVER_CHAT },
-                                    { key: 'RECIPIENT_CHAT', label: 'Recipient Chat', permission: PERMISSIONS.RECIPIENT_CHAT },
-                                    { key: 'CORE_TEAM_CHAT', label: 'Core Team Chat', permission: 'core_team_chat' },
-                                    { key: 'DIRECT_MESSAGES', label: 'Direct Messages', permission: 'direct_messages' },
-                                    { key: 'GROUP_MESSAGES', label: 'Group Messages', permission: 'group_messages' }
-                                  ].map(({ key, label, permission }) => (
-                                    <div key={permission} className="flex items-center space-x-2">
-                                      <Checkbox
-                                        id={permission}
-                                        checked={editingPermissions.includes(permission)}
-                                        onCheckedChange={() => handlePermissionToggle(permission)}
-                                      />
-                                      <Label
-                                        htmlFor={permission}
-                                        className="text-sm font-normal"
-                                      >
-                                        {label}
-                                      </Label>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-
-                              {/* Other Permissions */}
-                              <div>
-                                <Label className="text-base font-semibold">Other Permissions</Label>
-                                <div className="grid grid-cols-2 gap-4 mt-3">
-                                  {Object.entries(PERMISSIONS)
-                                    .filter(([key, permission]) => 
-                                      !['GENERAL_CHAT', 'COMMITTEE_CHAT', 'HOST_CHAT', 'DRIVER_CHAT', 'RECIPIENT_CHAT', 'DIRECT_MESSAGES', 'GROUP_MESSAGES'].includes(key)
-                                    )
-                                    .map(([key, permission]) => (
-                                      <div key={permission} className="flex items-center space-x-2">
-                                        <Checkbox
-                                          id={permission}
-                                          checked={editingPermissions.includes(permission)}
-                                          onCheckedChange={() => handlePermissionToggle(permission)}
-                                        />
-                                        <Label
-                                          htmlFor={permission}
-                                          className="text-sm font-normal"
-                                        >
-                                          {key.replace(/_/g, ' ').toLowerCase()}
-                                        </Label>
-                                      </div>
-                                    ))}
-                                </div>
-                              </div>
-                            </div>
-
-                          </div>
-                          
-                          <div className="flex justify-end gap-2 pt-4 border-t mt-4">
-                            <Button variant="outline" onClick={() => setSelectedUser(null)}>
-                              Cancel
-                            </Button>
-                            <Button onClick={handleSaveChanges}>
-                              Save Changes
-                            </Button>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
+                        <Settings className="h-4 w-4 mr-1" />
+                        Edit
+                      </Button>
                       
                       {/* Password Reset Dialog */}
                       <Dialog open={resetPasswordUser?.id === user.id} onOpenChange={(open) => {
@@ -581,6 +443,20 @@ export default function UserManagement() {
             title: "Thank you sent!",
             description: "Your appreciation message has been recorded.",
           });
+        }}
+      />
+      
+      {/* User Permissions Dialog */}
+      <UserPermissionsDialog
+        user={selectedUser}
+        open={!!selectedUser}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedUser(null);
+          }
+        }}
+        onSave={(userId, role, permissions) => {
+          updateUserMutation.mutate({ userId, role, permissions });
         }}
       />
     </div>

@@ -155,9 +155,12 @@ async function startServer() {
               );
             }
           } else {
-            // In production, serve React app for all routes that don't match API or static assets
+            // In production, serve React app for all non-API routes
             app.get("*", (_req: Request, res: Response) => {
-              res.sendFile(require("path").join(process.cwd(), "dist/public/index.html"));
+              const path = require("path");
+              const indexPath = path.join(process.cwd(), "dist/public/index.html");
+              console.log(`Serving SPA for route: ${_req.path}, file: ${indexPath}`);
+              res.sendFile(indexPath);
             });
             console.log("✓ Production SPA routing configured");
           }

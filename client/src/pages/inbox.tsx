@@ -27,7 +27,8 @@ import {
   MoreVertical,
   Reply,
   Trash2,
-  Edit2
+  Edit2,
+  Plus
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -36,6 +37,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { MessageComposer } from "@/components/message-composer";
 
 interface Message {
   id: number;
@@ -68,6 +70,7 @@ export default function InboxPage() {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [replyContent, setReplyContent] = useState("");
+  const [showComposer, setShowComposer] = useState(false);
 
   // Fetch all messages
   const { data: allMessages = [], refetch: refetchMessages } = useQuery({
@@ -95,6 +98,7 @@ export default function InboxPage() {
   // Handle message selection and mark as read
   const handleSelectMessage = async (message: Message) => {
     setSelectedMessage(message);
+    setShowComposer(false); // Close composer when selecting a message
     if (!message.read) {
       await markAsRead(message.id);
       refetchMessages();
@@ -165,16 +169,26 @@ export default function InboxPage() {
               <InboxIcon className="h-5 w-5" />
               Inbox
             </h2>
-            {unreadMessages.length > 0 && (
+            <div className="flex items-center gap-2">
               <Button
-                variant="ghost"
+                variant="default"
                 size="sm"
-                onClick={() => markAllAsRead()}
+                onClick={() => setShowComposer(true)}
               >
-                <CheckCheck className="h-4 w-4 mr-2" />
-                Mark all read
+                <Plus className="h-4 w-4 mr-2" />
+                Compose
               </Button>
-            )}
+              {unreadMessages.length > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => markAllAsRead()}
+                >
+                  <CheckCheck className="h-4 w-4 mr-2" />
+                  Mark all read
+                </Button>
+              )}
+            </div>
           </div>
           
           <div className="relative">
@@ -291,7 +305,18 @@ export default function InboxPage() {
 
       {/* Message Detail */}
       <div className="flex-1 flex flex-col">
-        {selectedMessage ? (
+        {showComposer ? (
+          <div className="p-4">
+            <MessageComposer
+              contextType="direct"
+              onSent={() => {
+                setShowComposer(false);
+                refetchMessages();
+              }}
+              onCancel={() => setShowComposer(false)}
+            />
+          </div>
+        ) : selectedMessage ? (
           <>
             {/* Message Header */}
             <div className="p-4 border-b">
@@ -356,11 +381,11 @@ export default function InboxPage() {
                 </div>
 
                 {/* Thread Replies */}
-                {threadMessages.filter(m => m.id !== selectedMessage.id).map((message: Message) => (
+                {threadMessages.filter((m: Message) => m.id !== selectedMessage.id).map((message: Message) => (
                   <div 
                     key={message.id} 
                     className={`rounded-lg p-4 ${
-                      message.senderId === user?.id 
+                      message.senderId === (user as any)?.id 
                         ? 'bg-blue-50 ml-auto max-w-[80%]' 
                         : 'bg-gray-50 mr-auto max-w-[80%]'
                     }`}
@@ -402,6 +427,14 @@ export default function InboxPage() {
             <div className="text-center">
               <InboxIcon className="h-12 w-12 mx-auto mb-4 text-gray-300" />
               <p>Select a message to view</p>
+              <Button 
+                variant="outline" 
+                className="mt-4"
+                onClick={() => setShowComposer(true)}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Compose New Message
+              </Button>
             </div>
           </div>
         )}
