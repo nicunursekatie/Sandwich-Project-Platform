@@ -16,7 +16,26 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { apiRequest } from "@/lib/queryClient";
-import { Lightbulb, Plus, MessageSquare, ThumbsUp, Eye, EyeOff, Star, Clock, CheckCircle, XCircle, Pause } from "lucide-react";
+import { 
+  Lightbulb, 
+  Plus, 
+  MessageSquare, 
+  ThumbsUp, 
+  Eye, 
+  EyeOff, 
+  Star, 
+  Clock, 
+  CheckCircle, 
+  XCircle, 
+  Pause, 
+  Filter,
+  Search,
+  ArrowUpRight,
+  User,
+  Calendar,
+  AlertTriangle,
+  Trash2
+} from "lucide-react";
 import { hasPermission } from "@shared/auth-utils";
 
 // Schema for suggestion form
@@ -73,6 +92,10 @@ export default function SuggestionsPortal() {
   const [selectedSuggestion, setSelectedSuggestion] = useState<Suggestion | null>(null);
   const [showSubmissionForm, setShowSubmissionForm] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedPriority, setSelectedPriority] = useState("all");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -87,20 +110,11 @@ export default function SuggestionsPortal() {
   const canManage = hasPermission(currentUser, 'manage_suggestions');
   const canRespond = hasPermission(currentUser, 'respond_to_suggestions');
 
-  // Debug permissions
-  console.log('🔍 User permissions debug:', {
-    currentUser: currentUser,
-    canSubmit,
-    canManage,
-    canRespond,
-    userPermissions: currentUser?.permissions
-  });
-
   // Fetch suggestions
   const { data: suggestions = [], isLoading } = useQuery({
     queryKey: ['/api/suggestions'],
     enabled: hasPermission(currentUser, 'view_suggestions'),
-    staleTime: 0 // Always fetch fresh data
+    staleTime: 0
   });
 
   // Update selected suggestion when suggestions data changes
@@ -108,7 +122,6 @@ export default function SuggestionsPortal() {
     if (selectedSuggestion && suggestions.length > 0) {
       const updatedSuggestion = suggestions.find((s: Suggestion) => s.id === selectedSuggestion.id);
       if (updatedSuggestion) {
-        console.log('🔄 Updating selected suggestion from fresh data:', updatedSuggestion);
         setSelectedSuggestion(updatedSuggestion);
       }
     }
@@ -123,7 +136,6 @@ export default function SuggestionsPortal() {
   // Submit suggestion mutation
   const submitSuggestionMutation = useMutation({
     mutationFn: (data: SuggestionFormData) => {
-      console.log('🔍 Frontend form data being submitted:', data);
       return apiRequest('POST', '/api/suggestions', data);
     },
     onSuccess: () => {
@@ -136,7 +148,6 @@ export default function SuggestionsPortal() {
       });
     },
     onError: (error: any) => {
-      console.error('🚨 Suggestion submission error:', error);
       toast({
         title: "Error",
         description: error?.message || "Failed to submit suggestion",
@@ -170,40 +181,6 @@ export default function SuggestionsPortal() {
     }
   });
 
-  // Update suggestion mutation (admin only)
-  const updateSuggestionMutation = useMutation({
-    mutationFn: ({ id, updates }: { id: number; updates: Partial<Suggestion> }) => 
-      apiRequest('PATCH', `/api/suggestions/${id}`, updates),
-    onSuccess: (updatedSuggestion) => {
-      console.log('🔄 Update successful, updated suggestion:', updatedSuggestion);
-      
-      // Update the selected suggestion in local state immediately
-      if (selectedSuggestion && updatedSuggestion) {
-        console.log('🔄 Updating selected suggestion state');
-        setSelectedSuggestion({ ...selectedSuggestion, ...updatedSuggestion });
-      }
-      
-      // Force refresh the main suggestions list
-      queryClient.invalidateQueries({ queryKey: ['/api/suggestions'] });
-      
-      // Force refetch to ensure UI updates immediately
-      queryClient.refetchQueries({ queryKey: ['/api/suggestions'] });
-      
-      toast({
-        title: "Success",
-        description: "Suggestion updated successfully!"
-      });
-    },
-    onError: (error) => {
-      console.error('🚨 Update failed:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update suggestion",
-        variant: "destructive"
-      });
-    }
-  });
-
   // Delete suggestion mutation (admin only)
   const deleteSuggestionMutation = useMutation({
     mutationFn: (id: number) => apiRequest('DELETE', `/api/suggestions/${id}`),
@@ -220,6 +197,29 @@ export default function SuggestionsPortal() {
       toast({
         title: "Error",
         description: "Failed to delete suggestion. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
+  // Update suggestion mutation (admin only)
+  const updateSuggestionMutation = useMutation({
+    mutationFn: ({ id, updates }: { id: number; updates: Partial<Suggestion> }) => 
+      apiRequest('PATCH', `/api/suggestions/${id}`, updates),
+    onSuccess: (updatedSuggestion) => {
+      if (selectedSuggestion && updatedSuggestion) {
+        setSelectedSuggestion({ ...selectedSuggestion, ...updatedSuggestion });
+      }
+      queryClient.invalidateQueries({ queryKey: ['/api/suggestions'] });
+      queryClient.refetchQueries({ queryKey: ['/api/suggestions'] });
+      toast({
+        title: "Success",
+        description: "Suggestion updated successfully!"
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to update suggestion",
         variant: "destructive"
       });
     }
@@ -243,20 +243,40 @@ export default function SuggestionsPortal() {
     }
   });
 
-  // Filter suggestions based on active tab
+  // Enhanced filtering logic
   const filteredSuggestions = suggestions.filter((suggestion: Suggestion) => {
+    // Tab filter
+    let tabMatch = true;
     switch (activeTab) {
       case "pending":
-        return suggestion.status === "submitted" || suggestion.status === "under_review" || suggestion.status === "needs_clarification";
+        tabMatch = suggestion.status === "submitted" || suggestion.status === "under_review" || suggestion.status === "needs_clarification";
+        break;
       case "in-progress":
-        return suggestion.status === "in_progress";
+        tabMatch = suggestion.status === "in_progress";
+        break;
       case "completed":
-        return suggestion.status === "completed";
+        tabMatch = suggestion.status === "completed";
+        break;
       case "mine":
-        return suggestion.submittedBy === currentUser?.id;
+        tabMatch = suggestion.submittedBy === currentUser?.id;
+        break;
       default:
-        return true;
+        tabMatch = true;
     }
+
+    // Search filter
+    const searchMatch = searchQuery === "" || 
+      suggestion.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      suggestion.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      suggestion.category.toLowerCase().includes(searchQuery.toLowerCase());
+
+    // Category filter
+    const categoryMatch = selectedCategory === "all" || suggestion.category === selectedCategory;
+
+    // Priority filter
+    const priorityMatch = selectedPriority === "all" || suggestion.priority === selectedPriority;
+
+    return tabMatch && searchMatch && categoryMatch && priorityMatch;
   });
 
   const onSubmitSuggestion = (data: SuggestionFormData) => {
@@ -272,23 +292,75 @@ export default function SuggestionsPortal() {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "high": return "bg-red-100 text-red-800";
-      case "medium": return "bg-yellow-100 text-yellow-800";
-      case "low": return "bg-green-100 text-green-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "high": return "bg-red-50 text-red-700 border-red-200";
+      case "medium": return "bg-amber-50 text-amber-700 border-amber-200";
+      case "low": return "bg-green-50 text-green-700 border-green-200";
+      default: return "bg-gray-50 text-gray-700 border-gray-200";
     }
   };
 
-  const getStatusIcon = (status: string) => {
+  const getStatusConfig = (status: string) => {
     switch (status) {
-      case "completed": return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case "in_progress": return <Clock className="h-4 w-4 text-blue-600" />;
-      case "under_review": return <Eye className="h-4 w-4 text-purple-600" />;
-      case "needs_clarification": return <MessageSquare className="h-4 w-4 text-orange-600" />;
-      case "on_hold": return <Pause className="h-4 w-4 text-yellow-600" />;
-      case "rejected": return <XCircle className="h-4 w-4 text-red-600" />;
-      default: return <Star className="h-4 w-4 text-gray-600" />;
+      case "completed": 
+        return { 
+          icon: <CheckCircle className="h-4 w-4" />, 
+          color: "text-green-600",
+          bg: "bg-green-50",
+          label: "Completed"
+        };
+      case "in_progress": 
+        return { 
+          icon: <Clock className="h-4 w-4" />, 
+          color: "text-blue-600",
+          bg: "bg-blue-50",
+          label: "In Progress"
+        };
+      case "under_review": 
+        return { 
+          icon: <Eye className="h-4 w-4" />, 
+          color: "text-purple-600",
+          bg: "bg-purple-50",
+          label: "Under Review"
+        };
+      case "needs_clarification": 
+        return { 
+          icon: <MessageSquare className="h-4 w-4" />, 
+          color: "text-orange-600",
+          bg: "bg-orange-50",
+          label: "Needs Clarification"
+        };
+      case "on_hold": 
+        return { 
+          icon: <Pause className="h-4 w-4" />, 
+          color: "text-yellow-600",
+          bg: "bg-yellow-50",
+          label: "On Hold"
+        };
+      case "rejected": 
+        return { 
+          icon: <XCircle className="h-4 w-4" />, 
+          color: "text-red-600",
+          bg: "bg-red-50",
+          label: "Rejected"
+        };
+      default: 
+        return { 
+          icon: <Star className="h-4 w-4" />, 
+          color: "text-gray-600",
+          bg: "bg-gray-50",
+          label: "Submitted"
+        };
     }
+  };
+
+  const getTabCounts = () => {
+    return {
+      all: suggestions.length,
+      pending: suggestions.filter(s => ["submitted", "under_review", "needs_clarification"].includes(s.status)).length,
+      inProgress: suggestions.filter(s => s.status === "in_progress").length,
+      completed: suggestions.filter(s => s.status === "completed").length,
+      mine: suggestions.filter(s => s.submittedBy === currentUser?.id).length
+    };
   };
 
   if (!hasPermission(currentUser, 'view_suggestions')) {
@@ -307,12 +379,18 @@ export default function SuggestionsPortal() {
     );
   }
 
+  const tabCounts = getTabCounts();
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Suggestions Portal</h1>
-          <p className="text-gray-600">Share ideas and feedback to improve our operations</p>
+          <h1 className="text-3xl font-bold flex items-center gap-2">
+            <Lightbulb className="h-8 w-8 text-blue-600" />
+            Suggestions Portal
+          </h1>
+          <p className="text-gray-600 mt-1">Share ideas and feedback to improve our operations</p>
           <p className="text-gray-700 mt-2 max-w-4xl leading-relaxed">
             If you need something to work differently, if something is confusing to you, you have tips on how we could better arrange this whole site, or if you run into a bug, please submit your feedback here so we can get this where it serves your needs the best it possibly can!
           </p>
@@ -320,7 +398,7 @@ export default function SuggestionsPortal() {
         {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (
           <Dialog open={showSubmissionForm} onOpenChange={setShowSubmissionForm}>
             <DialogTrigger asChild>
-              <Button>
+              <Button size="lg" className="shadow-sm">
                 <Plus className="h-4 w-4 mr-2" />
                 Submit Suggestion
               </Button>
@@ -449,42 +527,147 @@ export default function SuggestionsPortal() {
         )}
       </div>
 
+      {/* Search and Filter Section */}
+      <Card className="border-0 shadow-sm">
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search suggestions..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2"
+            >
+              <Filter className="h-4 w-4" />
+              Filters
+              {(selectedCategory !== "all" || selectedPriority !== "all") && (
+                <Badge variant="secondary" className="ml-1">
+                  {[selectedCategory !== "all" ? 1 : 0, selectedPriority !== "all" ? 1 : 0].reduce((a, b) => a + b)}
+                </Badge>
+              )}
+            </Button>
+          </div>
+
+          {showFilters && (
+            <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t">
+              <div className="min-w-[200px]">
+                <Label className="text-sm font-medium">Category</Label>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="general">General</SelectItem>
+                    <SelectItem value="operations">Operations</SelectItem>
+                    <SelectItem value="technology">Technology</SelectItem>
+                    <SelectItem value="volunteer_experience">Volunteer Experience</SelectItem>
+                    <SelectItem value="communication">Communication</SelectItem>
+                    <SelectItem value="training">Training</SelectItem>
+                    <SelectItem value="logistics">Logistics</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="min-w-[150px]">
+                <Label className="text-sm font-medium">Priority</Label>
+                <Select value={selectedPriority} onValueChange={setSelectedPriority}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Priorities</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {(selectedCategory !== "all" || selectedPriority !== "all") && (
+                <div className="flex items-end">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedCategory("all");
+                      setSelectedPriority("all");
+                    }}
+                    className="text-sm"
+                  >
+                    Clear Filters
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Tabs with Counts */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className={`grid w-full ${canSubmit && hasPermission(currentUser, 'submit_suggestions') ? 'grid-cols-5' : 'grid-cols-4'}`}>
-          <TabsTrigger value="all">All Suggestions</TabsTrigger>
-          <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="in-progress">In Progress</TabsTrigger>
-          <TabsTrigger value="completed">Completed</TabsTrigger>
+          <TabsTrigger value="all" className="flex items-center gap-2">
+            All <Badge variant="secondary">{tabCounts.all}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="pending" className="flex items-center gap-2">
+            Pending <Badge variant="secondary">{tabCounts.pending}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="in-progress" className="flex items-center gap-2">
+            Active <Badge variant="secondary">{tabCounts.inProgress}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="completed" className="flex items-center gap-2">
+            Done <Badge variant="secondary">{tabCounts.completed}</Badge>
+          </TabsTrigger>
           {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (
-            <TabsTrigger value="mine">My Suggestions</TabsTrigger>
+            <TabsTrigger value="mine" className="flex items-center gap-2">
+              Mine <Badge variant="secondary">{tabCounts.mine}</Badge>
+            </TabsTrigger>
           )}
         </TabsList>
 
-        <TabsContent value={activeTab} className="space-y-4">
+        <TabsContent value={activeTab} className="space-y-4 mt-6">
           {isLoading ? (
             <div className="grid gap-4">
               {[1, 2, 3].map((i) => (
                 <Card key={i} className="animate-pulse">
                   <CardHeader>
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                    <div className="h-5 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2 mt-2"></div>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      <div className="h-3 bg-gray-200 rounded"></div>
-                      <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                      <div className="h-4 bg-gray-200 rounded"></div>
+                      <div className="h-4 bg-gray-200 rounded w-5/6"></div>
                     </div>
                   </CardContent>
                 </Card>
               ))}
             </div>
           ) : filteredSuggestions.length === 0 ? (
-            <Card>
-              <CardContent className="text-center py-8">
-                <Lightbulb className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                <p className="text-gray-600">No suggestions found in this category.</p>
-                {canSubmit && hasPermission(currentUser, 'submit_suggestions') && activeTab === "mine" && (
-                  <Button className="mt-4" onClick={() => setShowSubmissionForm(true)}>
+            <Card className="border-dashed border-2">
+              <CardContent className="text-center py-12">
+                <Lightbulb className="h-16 w-16 mx-auto text-gray-300 mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  {searchQuery || selectedCategory !== "all" || selectedPriority !== "all" 
+                    ? "No suggestions match your filters" 
+                    : "No suggestions found"}
+                </h3>
+                <p className="text-gray-500 mb-6">
+                  {activeTab === "mine" && canSubmit && hasPermission(currentUser, 'submit_suggestions')
+                    ? "You haven't submitted any suggestions yet." 
+                    : searchQuery || selectedCategory !== "all" || selectedPriority !== "all"
+                    ? "Try adjusting your search or filter criteria."
+                    : "Be the first to share an idea for improvement."}
+                </p>
+                {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (activeTab === "mine" || (!searchQuery && selectedCategory === "all" && selectedPriority === "all")) && (
+                  <Button onClick={() => setShowSubmissionForm(true)}>
+                    <Plus className="h-4 w-4 mr-2" />
                     Submit Your First Suggestion
                   </Button>
                 )}
@@ -492,146 +675,176 @@ export default function SuggestionsPortal() {
             </Card>
           ) : (
             <div className="grid gap-4">
-              {filteredSuggestions.map((suggestion: Suggestion) => (
-                <Card key={suggestion.id} className="hover:shadow-lg transition-all duration-200 border-l-4 border-l-teal-500">
-                  <CardHeader className="pb-3">
-                    <div className="flex justify-between items-start">
-                      <div 
-                        className="flex-1 cursor-pointer"
-                        onClick={() => setSelectedSuggestion(suggestion)}
-                      >
-                        <CardTitle className="text-lg hover:text-teal-600 transition-colors">
-                          {suggestion.title}
-                        </CardTitle>
-                        <CardDescription className="mt-2 text-gray-600">
-                          {suggestion.description.length > 120 
-                            ? `${suggestion.description.substring(0, 120)}...` 
-                            : suggestion.description}
-                        </CardDescription>
-                      </div>
-                      <div className="flex items-center space-x-2 ml-4">
-                        <div className="flex items-center space-x-1">
-                          {getStatusIcon(suggestion.status)}
-                          <span className="text-xs text-gray-600 capitalize">
-                            {suggestion.status.replace('_', ' ')}
-                          </span>
+              {filteredSuggestions.map((suggestion: Suggestion) => {
+                const statusConfig = getStatusConfig(suggestion.status);
+                return (
+                  <Card 
+                    key={suggestion.id} 
+                    className="cursor-pointer hover:shadow-md transition-all duration-200 hover:border-blue-200 group border-l-4 border-l-teal-500" 
+                    onClick={() => setSelectedSuggestion(suggestion)}
+                  >
+                    <CardHeader className="pb-3">
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Badge 
+                              variant="outline" 
+                              className={`${statusConfig.bg} ${statusConfig.color} border-0 text-xs font-medium`}
+                            >
+                              {statusConfig.icon}
+                              <span className="ml-1">{statusConfig.label}</span>
+                            </Badge>
+                            <Badge 
+                              variant="outline" 
+                              className={`${getPriorityColor(suggestion.priority)} border text-xs`}
+                            >
+                              {suggestion.priority.charAt(0).toUpperCase() + suggestion.priority.slice(1)}
+                            </Badge>
+                          </div>
+                          <CardTitle className="text-lg group-hover:text-blue-600 transition-colors line-clamp-2">
+                            {suggestion.title}
+                          </CardTitle>
+                          <CardDescription className="mt-2 line-clamp-2">
+                            {suggestion.description.length > 120 
+                              ? `${suggestion.description.substring(0, 120)}...` 
+                              : suggestion.description}
+                          </CardDescription>
                         </div>
-                        <Badge className={getPriorityColor(suggestion.priority)}>
-                          {suggestion.priority}
-                        </Badge>
+                        <ArrowUpRight className="h-5 w-5 text-gray-400 group-hover:text-blue-500 transition-colors flex-shrink-0" />
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="flex justify-between items-center text-sm text-gray-500 mb-3">
-                      <div className="flex items-center space-x-3">
-                        <span className="flex items-center">
-                          {suggestion.isAnonymous ? <EyeOff className="h-4 w-4 mr-1" /> : <Eye className="h-4 w-4 mr-1" />}
-                          {suggestion.isAnonymous ? "Anonymous" : suggestion.submitterName || "Unknown"}
-                        </span>
-                        <Badge variant="outline" className="text-xs">{suggestion.category}</Badge>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="flex justify-between items-center mb-3">
+                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                          <div className="flex items-center gap-1">
+                            {suggestion.isAnonymous ? (
+                              <>
+                                <EyeOff className="h-4 w-4" />
+                                <span>Anonymous</span>
+                              </>
+                            ) : (
+                              <>
+                                <User className="h-4 w-4" />
+                                <span>{suggestion.submitterName || "Unknown"}</span>
+                              </>
+                            )}
+                          </div>
+                          <Badge variant="outline" className="text-xs">
+                            {suggestion.category.replace('_', ' ')}
+                          </Badge>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-4 w-4" />
+                            <span>{new Date(suggestion.createdAt).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              upvoteMutation.mutate(suggestion.id);
+                            }}
+                            className="flex items-center gap-1 h-8 px-2 hover:bg-blue-50 hover:text-blue-600"
+                          >
+                            <ThumbsUp className="h-4 w-4" />
+                            <span className="font-medium">{suggestion.upvotes || 0}</span>
+                          </Button>
+                          {responses.length > 0 && (
+                            <div className="flex items-center gap-1 text-gray-500">
+                              <MessageSquare className="h-4 w-4" />
+                              <span className="text-sm">{responses.length}</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            upvoteMutation.mutate(suggestion.id);
-                          }}
-                          className="flex items-center space-x-1 h-7 px-2"
-                        >
-                          <ThumbsUp className="h-3 w-3" />
-                          <span>{suggestion.upvotes || 0}</span>
-                        </Button>
-                        <span className="text-xs">{new Date(suggestion.createdAt).toLocaleDateString()}</span>
-                      </div>
-                    </div>
-                    
-                    {/* Quick Action Buttons - Only for users with MANAGE_SUGGESTIONS permission */}
-                    {hasPermission(currentUser, 'manage_suggestions') && (
-                      <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            updateSuggestionMutation.mutate({ 
-                              id: suggestion.id, 
-                              updates: { status: 'under_review', assignedTo: currentUser?.id } 
-                            });
-                          }}
-                          disabled={suggestion.status === 'under_review'}
-                          className="h-7 px-3 text-xs bg-blue-50 hover:bg-blue-100 border-blue-200"
-                        >
-                          📋 Going to Work
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            updateSuggestionMutation.mutate({ 
-                              id: suggestion.id, 
-                              updates: { status: 'in_progress', assignedTo: currentUser?.id } 
-                            });
-                          }}
-                          disabled={suggestion.status === 'in_progress'}
-                          className="h-7 px-3 text-xs bg-orange-50 hover:bg-orange-100 border-orange-200"
-                        >
-                          🔄 Working On It
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            updateSuggestionMutation.mutate({ 
-                              id: suggestion.id, 
-                              updates: { status: 'completed', assignedTo: currentUser?.id } 
-                            });
-                          }}
-                          disabled={suggestion.status === 'completed'}
-                          className="h-7 px-3 text-xs bg-green-50 hover:bg-green-100 border-green-200"
-                        >
-                          ✅ Implemented
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedSuggestion(suggestion);
-                            setTimeout(() => {
+
+                      {/* Quick Action Buttons - Only for users with MANAGE_SUGGESTIONS permission */}
+                      {hasPermission(currentUser, 'manage_suggestions') && (
+                        <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
                               updateSuggestionMutation.mutate({ 
                                 id: suggestion.id, 
-                                updates: { status: 'needs_clarification', assignedTo: currentUser?.id } 
+                                updates: { status: 'under_review', assignedTo: currentUser?.id } 
                               });
-                              responseForm.setValue('message', 'I need more clarification on this suggestion. Could you please provide more details about what you\'d like to see implemented?');
-                            }, 100);
-                          }}
-                          className="h-7 px-3 text-xs bg-yellow-50 hover:bg-yellow-100 border-yellow-200"
-                        >
-                          ❓ Ask Details
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (confirm('Are you sure you want to delete this suggestion? This action cannot be undone.')) {
-                              deleteSuggestionMutation.mutate(suggestion.id);
-                            }
-                          }}
-                          className="h-7 px-3 text-xs bg-red-50 hover:bg-red-100 border-red-200 text-red-700"
-                        >
-                          🗑️ Delete
-                        </Button>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
+                            }}
+                            disabled={suggestion.status === 'under_review'}
+                            className="h-7 px-3 text-xs bg-blue-50 hover:bg-blue-100 border-blue-200"
+                          >
+                            📋 Going to Work
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateSuggestionMutation.mutate({ 
+                                id: suggestion.id, 
+                                updates: { status: 'in_progress', assignedTo: currentUser?.id } 
+                              });
+                            }}
+                            disabled={suggestion.status === 'in_progress'}
+                            className="h-7 px-3 text-xs bg-orange-50 hover:bg-orange-100 border-orange-200"
+                          >
+                            🔄 Working On It
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateSuggestionMutation.mutate({ 
+                                id: suggestion.id, 
+                                updates: { status: 'completed', assignedTo: currentUser?.id } 
+                              });
+                            }}
+                            disabled={suggestion.status === 'completed'}
+                            className="h-7 px-3 text-xs bg-green-50 hover:bg-green-100 border-green-200"
+                          >
+                            ✅ Implemented
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedSuggestion(suggestion);
+                              setTimeout(() => {
+                                updateSuggestionMutation.mutate({ 
+                                  id: suggestion.id, 
+                                  updates: { status: 'needs_clarification', assignedTo: currentUser?.id } 
+                                });
+                                responseForm.setValue('message', 'I need more clarification on this suggestion. Could you please provide more details about what you\'d like to see implemented?');
+                              }, 100);
+                            }}
+                            className="h-7 px-3 text-xs bg-yellow-50 hover:bg-yellow-100 border-yellow-200"
+                          >
+                            ❓ Ask Details
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (confirm('Are you sure you want to delete this suggestion? This action cannot be undone.')) {
+                                deleteSuggestionMutation.mutate(suggestion.id);
+                              }
+                            }}
+                            className="h-7 px-3 text-xs bg-red-50 hover:bg-red-100 border-red-200 text-red-700"
+                          >
+                            <Trash2 className="h-3 w-3 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </TabsContent>
@@ -650,7 +863,7 @@ export default function SuggestionsPortal() {
                     </DialogTitle>
                     <div className="flex items-center space-x-3">
                       <div className="flex items-center space-x-2">
-                        {getStatusIcon(selectedSuggestion.status)}
+                        {getStatusConfig(selectedSuggestion.status).icon}
                         <span className="text-sm font-medium text-gray-700 capitalize">
                           {selectedSuggestion.status.replace('_', ' ')}
                         </span>
@@ -677,7 +890,7 @@ export default function SuggestionsPortal() {
                   </div>
                 </div>
               </DialogHeader>
-              
+
               <div className="space-y-6 pt-6">
                 <div className="bg-gray-50 p-6 rounded-lg">
                   <h3 className="font-semibold mb-3 text-lg">Description</h3>
@@ -740,10 +953,11 @@ export default function SuggestionsPortal() {
                         }}
                         className="h-10 px-4 bg-red-100 hover:bg-red-200 border-red-300 text-red-800 font-medium"
                       >
-                        🗑️ Delete Suggestion
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete Suggestion
                       </Button>
                     </div>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="grid grid-cols-2 gap-4 text-sm mt-4 pt-4 border-t border-blue-300">
                       <div>
                         <span className="font-medium">Current Status:</span> {selectedSuggestion.status}
                       </div>
@@ -772,7 +986,7 @@ export default function SuggestionsPortal() {
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Discussion ({responses.length})
                   </h3>
-                  
+
                   <div className="space-y-4 max-h-60 overflow-y-auto">
                     {responses.map((response: SuggestionResponse) => (
                       <div key={response.id} className={`p-3 rounded-lg ${response.isAdminResponse ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'}`}>
