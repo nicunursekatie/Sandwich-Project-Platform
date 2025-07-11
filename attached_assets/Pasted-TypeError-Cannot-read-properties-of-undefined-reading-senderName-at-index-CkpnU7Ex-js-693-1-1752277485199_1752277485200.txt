@@ -1,0 +1,142 @@
+TypeError: Cannot read properties of undefined (reading 'senderName')
+    at index-CkpnU7Ex.js:693:174209
+    at Array.map (<anonymous>)
+    at k6e (index-CkpnU7Ex.js:693:173990)
+    at bP (index-CkpnU7Ex.js:38:17018)
+    at BN (index-CkpnU7Ex.js:40:3139)
+    at p6 (index-CkpnU7Ex.js:40:44833)
+    at f6 (index-CkpnU7Ex.js:40:39790)
+    at BZ (index-CkpnU7Ex.js:40:39718)
+    at Nv (index-CkpnU7Ex.js:40:39570)
+    at ZN (index-CkpnU7Ex.js:40:35934)
+overrideMethod @ hook.js:608
+VN @ index-CkpnU7Ex.js:40
+G5.a.componentDidCatch.n.callback @ index-CkpnU7Ex.js:40
+__ @ index-CkpnU7Ex.js:38
+q_ @ index-CkpnU7Ex.js:40
+l6 @ index-CkpnU7Ex.js:40
+LZ @ index-CkpnU7Ex.js:40
+UZ @ index-CkpnU7Ex.js:40
+Kl @ index-CkpnU7Ex.js:40
+Y_ @ index-CkpnU7Ex.js:40
+Pl @ index-CkpnU7Ex.js:38
+(anonymous) @ index-CkpnU7Ex.js:40
+setTimeout
+$J @ index-CkpnU7Ex.js:48
+o @ index-CkpnU7Ex.js:48
+batch @ index-CkpnU7Ex.js:48
+Ea @ index-CkpnU7Ex.js:48
+setData @ index-CkpnU7Ex.js:48
+onSuccess @ index-CkpnU7Ex.js:48
+f @ index-CkpnU7Ex.js:48
+Promise.then
+b @ index-CkpnU7Ex.js:48
+start @ index-CkpnU7Ex.js:48
+fetch @ index-CkpnU7Ex.js:48
+Lh @ index-CkpnU7Ex.js:48
+onSubscribe @ index-CkpnU7Ex.js:48
+subscribe @ index-CkpnU7Ex.js:48
+(anonymous) @ index-CkpnU7Ex.js:48
+k5 @ index-CkpnU7Ex.js:38
+N0 @ index-CkpnU7Ex.js:40
+ud @ index-CkpnU7Ex.js:40
+UZ @ index-CkpnU7Ex.js:40
+Kl @ index-CkpnU7Ex.js:40
+Y_ @ index-CkpnU7Ex.js:40
+Pl @ index-CkpnU7Ex.js:38
+(anonymous) @ index-CkpnU7Ex.js:40
+setTimeout
+$J @ index-CkpnU7Ex.js:48
+o @ index-CkpnU7Ex.js:48
+batch @ index-CkpnU7Ex.js:48
+Ea @ index-CkpnU7Ex.js:48
+setData @ index-CkpnU7Ex.js:48
+onSuccess @ index-CkpnU7Ex.js:48
+f @ index-CkpnU7Ex.js:48
+Promise.then
+b @ index-CkpnU7Ex.js:48
+start @ index-CkpnU7Ex.js:48
+fetch @ index-CkpnU7Ex.js:48
+Lh @ index-CkpnU7Ex.js:48
+onSubscribe @ index-CkpnU7Ex.js:48
+subscribe @ index-CkpnU7Ex.js:48
+(anonymous) @ index-CkpnU7Ex.js:48
+k5 @ index-CkpnU7Ex.js:38
+N0 @ index-CkpnU7Ex.js:40
+ud @ index-CkpnU7Ex.js:40
+UZ @ index-CkpnU7Ex.js:40
+Kl @ index-CkpnU7Ex.js:40
+Y_ @ index-CkpnU7Ex.js:40
+Pl @ index-CkpnU7Ex.js:38
+(anonymous) @ index-CkpnU7Ex.js:40
+index-CkpnU7Ex.js:548 Error caught by boundary: TypeError: Cannot read properties of undefined (reading 'senderName')
+    at index-CkpnU7Ex.js:693:174209
+    at Array.map (<anonymous>)
+    at k6e (index-CkpnU7Ex.js:693:173990)
+    at bP (index-CkpnU7Ex.js:38:17018)
+    at BN (index-CkpnU7Ex.js:40:3139)
+    at p6 (index-CkpnU7Ex.js:40:44833)
+    at f6 (index-CkpnU7Ex.js:40:39790)
+    at BZ (index-CkpnU7Ex.js:40:39718)
+    at Nv (index-CkpnU7Ex.js:40:39570)
+    at ZN (index-CkpnU7Ex.js:40:35934) {componentStack: '\n    at k6e (https://bb1d30f8-d852-4bae-abcd-b7c45…00/assets/index-CkpnU7Ex.js:548:59608)\n    at DVe'}
+overrideMethod @ hook.js:608
+componentDidCatch @ index-CkpnU7Ex.js:548
+G5.a.componentDidCatch.n.callback @ index-CkpnU7Ex.js:40
+__ @ index-CkpnU7Ex.js:38
+q_ @ index-CkpnU7Ex.js:40
+l6 @ index-CkpnU7Ex.js:40
+LZ @ index-CkpnU7Ex.js:40
+UZ @ index-CkpnU7Ex.js:40
+Kl @ index-CkpnU7Ex.js:40
+Y_ @ index-CkpnU7Ex.js:40
+Pl @ index-CkpnU7Ex.js:38
+(anonymous) @ index-CkpnU7Ex.js:40
+setTimeout
+$J @ index-CkpnU7Ex.js:48
+o @ index-CkpnU7Ex.js:48
+batch @ index-CkpnU7Ex.js:48
+Ea @ index-CkpnU7Ex.js:48
+setData @ index-CkpnU7Ex.js:48
+onSuccess @ index-CkpnU7Ex.js:48
+f @ index-CkpnU7Ex.js:48
+Promise.then
+b @ index-CkpnU7Ex.js:48
+start @ index-CkpnU7Ex.js:48
+fetch @ index-CkpnU7Ex.js:48
+Lh @ index-CkpnU7Ex.js:48
+onSubscribe @ index-CkpnU7Ex.js:48
+subscribe @ index-CkpnU7Ex.js:48
+(anonymous) @ index-CkpnU7Ex.js:48
+k5 @ index-CkpnU7Ex.js:38
+N0 @ index-CkpnU7Ex.js:40
+ud @ index-CkpnU7Ex.js:40
+UZ @ index-CkpnU7Ex.js:40
+Kl @ index-CkpnU7Ex.js:40
+Y_ @ index-CkpnU7Ex.js:40
+Pl @ index-CkpnU7Ex.js:38
+(anonymous) @ index-CkpnU7Ex.js:40
+setTimeout
+$J @ index-CkpnU7Ex.js:48
+o @ index-CkpnU7Ex.js:48
+batch @ index-CkpnU7Ex.js:48
+Ea @ index-CkpnU7Ex.js:48
+setData @ index-CkpnU7Ex.js:48
+onSuccess @ index-CkpnU7Ex.js:48
+f @ index-CkpnU7Ex.js:48
+Promise.then
+b @ index-CkpnU7Ex.js:48
+start @ index-CkpnU7Ex.js:48
+fetch @ index-CkpnU7Ex.js:48
+Lh @ index-CkpnU7Ex.js:48
+onSubscribe @ index-CkpnU7Ex.js:48
+subscribe @ index-CkpnU7Ex.js:48
+(anonymous) @ index-CkpnU7Ex.js:48
+k5 @ index-CkpnU7Ex.js:38
+N0 @ index-CkpnU7Ex.js:40
+ud @ index-CkpnU7Ex.js:40
+UZ @ index-CkpnU7Ex.js:40
+Kl @ index-CkpnU7Ex.js:40
+Y_ @ index-CkpnU7Ex.js:40
+Pl @ index-CkpnU7Ex.js:38
+(anonymous) @ index-CkpnU7Ex.js:40
