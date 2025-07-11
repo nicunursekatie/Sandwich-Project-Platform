@@ -63,6 +63,11 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
     }
 
     console.log('🔔 Setting up WebSocket for user:', (user as any)?.id);
+    
+    // Declare variables in outer scope for cleanup
+    let socket: WebSocket | null = null;
+    let reconnectTimeoutId: NodeJS.Timeout | null = null;
+    
     // Set up WebSocket connection for real-time notifications
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     
@@ -82,16 +87,18 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
     console.log('Connecting to WebSocket:', wsUrl);
 
     try {
-      const socket = new WebSocket(wsUrl);
+      socket = new WebSocket(wsUrl);
 
       socket.onopen = () => {
         console.log('Notification WebSocket connected successfully');
         console.log('User ID:', (user as any)?.id);
         // Send user identification
-        socket.send(JSON.stringify({
-          type: 'identify',
-          userId: (user as any)?.id
-        }));
+        if (socket) {
+          socket.send(JSON.stringify({
+            type: 'identify',
+            userId: (user as any)?.id
+          }));
+        }
       };
 
       socket.onerror = (error) => {

@@ -2,12 +2,26 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useMessaging } from "@/hooks/useMessaging";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Lightbulb, FolderOpen, ListTodo, MessageCircle, X, Loader2 } from "lucide-react";
+import {
+  Send,
+  Lightbulb,
+  FolderOpen,
+  ListTodo,
+  MessageCircle,
+  X,
+  Loader2,
+} from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -31,7 +45,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
 interface MessageComposerProps {
-  contextType?: 'suggestion' | 'project' | 'task' | 'direct';
+  contextType?: "suggestion" | "project" | "task" | "direct";
   contextId?: string;
   contextTitle?: string;
   defaultRecipients?: Array<{ id: string; name: string; email?: string }>;
@@ -47,21 +61,25 @@ export function MessageComposer({
   defaultRecipients = [],
   onSent,
   onCancel,
-  compact = false
+  compact = false,
 }: MessageComposerProps) {
   const { sendMessage, isSending } = useMessaging();
   const { toast } = useToast();
   const [content, setContent] = useState("");
-  const [selectedRecipients, setSelectedRecipients] = useState<Array<{ id: string; name: string }>>(defaultRecipients);
+  const [selectedRecipients, setSelectedRecipients] =
+    useState<Array<{ id: string; name: string }>>(defaultRecipients);
   const [recipientSearchOpen, setRecipientSearchOpen] = useState(false);
   const [recipientSearch, setRecipientSearch] = useState("");
 
   // Fetch users for recipient selection
   const { data: users = [] } = useQuery({
-    queryKey: ['/api/users/search', recipientSearch],
+    queryKey: ["/api/users/search", recipientSearch],
     queryFn: async () => {
       if (!recipientSearch) return [];
-      const response = await apiRequest('GET', `/api/users/search?q=${encodeURIComponent(recipientSearch)}`);
+      const response = await apiRequest(
+        "GET",
+        `/api/users/search?q=${encodeURIComponent(recipientSearch)}`,
+      );
       return response.users || [];
     },
     enabled: recipientSearch.length > 1,
@@ -86,21 +104,21 @@ export function MessageComposer({
 
     try {
       await sendMessage({
-        recipientIds: selectedRecipients.map(r => r.id),
+        recipientIds: selectedRecipients.map((r) => r.id),
         content: content.trim(),
         contextType,
         contextId,
       });
-      
+
       setContent("");
       setSelectedRecipients(defaultRecipients);
       onSent?.();
-      
+
       toast({
         description: "Message sent successfully",
       });
     } catch (error) {
-      console.error('Failed to send message:', error);
+      console.error("Failed to send message:", error);
       toast({
         description: "Failed to send message",
         variant: "destructive",
@@ -109,12 +127,12 @@ export function MessageComposer({
   };
 
   const removeRecipient = (id: string) => {
-    setSelectedRecipients(prev => prev.filter(r => r.id !== id));
+    setSelectedRecipients((prev) => prev.filter((r) => r.id !== id));
   };
 
   const addRecipient = (user: { id: string; name: string }) => {
-    if (!selectedRecipients.find(r => r.id === user.id)) {
-      setSelectedRecipients(prev => [...prev, user]);
+    if (!selectedRecipients.find((r) => r.id === user.id)) {
+      setSelectedRecipients((prev) => [...prev, user]);
     }
     setRecipientSearchOpen(false);
     setRecipientSearch("");
@@ -122,10 +140,14 @@ export function MessageComposer({
 
   const getContextIcon = () => {
     switch (contextType) {
-      case 'suggestion': return <Lightbulb className="h-4 w-4" />;
-      case 'project': return <FolderOpen className="h-4 w-4" />;
-      case 'task': return <ListTodo className="h-4 w-4" />;
-      default: return <MessageCircle className="h-4 w-4" />;
+      case "suggestion":
+        return <Lightbulb className="h-4 w-4" />;
+      case "project":
+        return <FolderOpen className="h-4 w-4" />;
+      case "task":
+        return <ListTodo className="h-4 w-4" />;
+      default:
+        return <MessageCircle className="h-4 w-4" />;
     }
   };
 
@@ -134,16 +156,19 @@ export function MessageComposer({
       <div className="space-y-3">
         <div className="flex flex-wrap gap-2 items-center">
           <Label className="text-sm">To:</Label>
-          {selectedRecipients.map(recipient => (
+          {selectedRecipients.map((recipient) => (
             <Badge key={recipient.id} variant="secondary" className="gap-1">
               {recipient.name}
-              <X 
-                className="h-3 w-3 cursor-pointer hover:text-destructive" 
+              <X
+                className="h-3 w-3 cursor-pointer hover:text-destructive"
                 onClick={() => removeRecipient(recipient.id)}
               />
             </Badge>
           ))}
-          <Popover open={recipientSearchOpen} onOpenChange={setRecipientSearchOpen}>
+          <Popover
+            open={recipientSearchOpen}
+            onOpenChange={setRecipientSearchOpen}
+          >
             <PopoverTrigger asChild>
               <Button variant="outline" size="sm">
                 Add recipient
@@ -151,8 +176,8 @@ export function MessageComposer({
             </PopoverTrigger>
             <PopoverContent className="w-80 p-0" align="start">
               <Command>
-                <CommandInput 
-                  placeholder="Search users..." 
+                <CommandInput
+                  placeholder="Search users..."
                   value={recipientSearch}
                   onValueChange={setRecipientSearch}
                 />
@@ -161,14 +186,20 @@ export function MessageComposer({
                   {users.map((user: any) => (
                     <CommandItem
                       key={user.id}
-                      onSelect={() => addRecipient({ id: user.id, name: user.name })}
+                      onSelect={() =>
+                        addRecipient({ id: user.id, name: user.name })
+                      }
                     >
                       <Avatar className="h-6 w-6 mr-2">
-                        <AvatarFallback>{user.name?.charAt(0) || '?'}</AvatarFallback>
+                        <AvatarFallback>
+                          {user.name?.charAt(0) || "?"}
+                        </AvatarFallback>
                       </Avatar>
                       <span>{user.name}</span>
                       {user.email && (
-                        <span className="text-xs text-muted-foreground ml-2">({user.email})</span>
+                        <span className="text-xs text-muted-foreground ml-2">
+                          ({user.email})
+                        </span>
                       )}
                     </CommandItem>
                   ))}
@@ -177,7 +208,7 @@ export function MessageComposer({
             </PopoverContent>
           </Popover>
         </div>
-        
+
         <Textarea
           placeholder="Type your message..."
           value={content}
@@ -185,7 +216,7 @@ export function MessageComposer({
           rows={3}
           className="resize-none"
         />
-        
+
         <div className="flex justify-between items-center">
           {contextType && contextTitle && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -199,10 +230,12 @@ export function MessageComposer({
                 Cancel
               </Button>
             )}
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               onClick={handleSend}
-              disabled={isSending || !content.trim() || selectedRecipients.length === 0}
+              disabled={
+                isSending || !content.trim() || selectedRecipients.length === 0
+              }
             >
               {isSending ? (
                 <>
@@ -239,22 +272,25 @@ export function MessageComposer({
         <div className="space-y-2">
           <Label>Recipients</Label>
           <div className="flex flex-wrap gap-2 mb-2">
-            {selectedRecipients.map(recipient => (
+            {selectedRecipients.map((recipient) => (
               <Badge key={recipient.id} variant="secondary" className="gap-1">
                 <Avatar className="h-4 w-4">
                   <AvatarFallback className="text-xs">
-                    {recipient.name?.charAt(0) || '?'}
+                    {recipient.name?.charAt(0) || "?"}
                   </AvatarFallback>
                 </Avatar>
                 {recipient.name}
-                <X 
-                  className="h-3 w-3 cursor-pointer hover:text-destructive" 
+                <X
+                  className="h-3 w-3 cursor-pointer hover:text-destructive"
                   onClick={() => removeRecipient(recipient.id)}
                 />
               </Badge>
             ))}
           </div>
-          <Popover open={recipientSearchOpen} onOpenChange={setRecipientSearchOpen}>
+          <Popover
+            open={recipientSearchOpen}
+            onOpenChange={setRecipientSearchOpen}
+          >
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full justify-start">
                 <Send className="h-4 w-4 mr-2" />
@@ -263,8 +299,8 @@ export function MessageComposer({
             </PopoverTrigger>
             <PopoverContent className="w-[400px] p-0" align="start">
               <Command>
-                <CommandInput 
-                  placeholder="Search users by name or email..." 
+                <CommandInput
+                  placeholder="Search users by name or email..."
                   value={recipientSearch}
                   onValueChange={setRecipientSearch}
                 />
@@ -273,16 +309,22 @@ export function MessageComposer({
                   {users.map((user: any) => (
                     <CommandItem
                       key={user.id}
-                      onSelect={() => addRecipient({ id: user.id, name: user.name })}
+                      onSelect={() =>
+                        addRecipient({ id: user.id, name: user.name })
+                      }
                       className="cursor-pointer"
                     >
                       <Avatar className="h-8 w-8 mr-3">
-                        <AvatarFallback>{user.name?.charAt(0) || '?'}</AvatarFallback>
+                        <AvatarFallback>
+                          {user.name?.charAt(0) || "?"}
+                        </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
                         <p className="font-medium">{user.name}</p>
                         {user.email && (
-                          <p className="text-sm text-muted-foreground">{user.email}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.email}
+                          </p>
                         )}
                       </div>
                     </CommandItem>
@@ -310,9 +352,11 @@ export function MessageComposer({
             Cancel
           </Button>
         )}
-        <Button 
+        <Button
           onClick={handleSend}
-          disabled={isSending || !content.trim() || selectedRecipients.length === 0}
+          disabled={
+            isSending || !content.trim() || selectedRecipients.length === 0
+          }
         >
           {isSending ? (
             <>
