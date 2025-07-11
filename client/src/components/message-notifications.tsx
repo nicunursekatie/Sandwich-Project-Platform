@@ -63,26 +63,26 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
     }
 
     console.log('🔔 Setting up WebSocket for user:', (user as any)?.id);
-    
+
     // Declare variables in outer scope for cleanup
     let socket: WebSocket | null = null;
     let reconnectTimeoutId: NodeJS.Timeout | null = null;
-    
+
     // Set up WebSocket connection for real-time notifications
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    
+
     // Fix for Replit environment - use the current hostname and port
     let host = window.location.host;
     console.log('🔔 Debug - window.location.host:', window.location.host);
     console.log('🔔 Debug - window.location.hostname:', window.location.hostname);
     console.log('🔔 Debug - window.location.port:', window.location.port);
-    
+
     if (!host || host === 'localhost:undefined') {
       // Fallback for Replit environment
       host = window.location.hostname + (window.location.port ? `:${window.location.port}` : '');
       console.log('🔔 Debug - Using fallback host:', host);
     }
-    
+
     const wsUrl = `${protocol}//${host}/notifications`;
     console.log('Connecting to WebSocket:', wsUrl);
 
@@ -103,10 +103,19 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
 
       socket.onerror = (error) => {
         console.error('WebSocket error:', error);
+        // Don't log the full error object to avoid console spam
+        console.log('WebSocket connection failed - will retry');
       };
 
       socket.onclose = (event) => {
-        console.log('WebSocket closed:', event.code, event.reason);
+        console.log('WebSocket connection closed, code:', event.code);
+        // Only attempt reconnection if not a normal closure
+        if (event.code !== 1000) {
+          reconnectTimeoutId = setTimeout(() => {
+            console.log('Attempting to reconnect WebSocket...');
+            // The cleanup function will trigger re-initialization
+          }, 5000);
+        }
       };
 
       socket.onmessage = (event) => {

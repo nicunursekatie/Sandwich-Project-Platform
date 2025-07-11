@@ -1,4 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
+import { createServer } from "http";
+import { WebSocketServer } from "ws";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { initializeDatabase } from "./db-init";
@@ -119,8 +121,50 @@ async function startServer() {
     // Use smart port selection in production
     const finalPort = process.env.NODE_ENV === "production" ? await tryPort(Number(port)) : port;
 
-    const httpServer = app.listen(finalPort, host, () => {
+    const httpServer = createServer(app);
+    
+    // Set up WebSocket server for real-time notifications
+    const wss = new WebSocketServer({ 
+      server: httpServer,
+      path: '/notifications'
+    });
+    
+    const clients = new Map<string, any>();
+    
+    wss.on('connection', (ws, request) => {
+      console.log('WebSocket client connected from:', request.socket.remoteAddress);
+      
+      ws.on('message', (data) => {
+        try {
+          const message = JSON.parse(data.toString());
+          if (message.type === 'identify' && message.userId) {
+            clients.set(message.userId, ws);
+            console.log(`User ${message.userId} identified for notifications`);
+          }
+        } catch (error) {
+          console.error('WebSocket message parse error:', error);
+        }
+      });
+      
+      ws.on('close', () => {
+        // Remove client from map when disconnected
+        for (const [userId, client] of clients.entries()) {
+          if (client === ws) {
+            clients.delete(userId);
+            console.log(`User ${userId} disconnected from notifications`);
+            break;
+          }
+        }
+      });
+      
+      ws.on('error', (error) => {
+        console.error('WebSocket error:', error);
+      });
+    });
+
+    httpServer.listen(finalPort, host, () => {
       console.log(`✓ Server is running on http://${host}:${finalPort}`);
+      console.log(`✓ WebSocket server ready on ws://${host}:${finalPort}/notifications`);
       console.log(`✓ Environment: ${process.env.NODE_ENV || "development"}`);
       console.log("✓ Basic server ready - starting background initialization...");
 
