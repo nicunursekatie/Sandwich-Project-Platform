@@ -188,14 +188,48 @@ export default function InboxPage() {
           </div>
         </div>
 
-        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="flex-1 flex flex-col">
-          <TabsList className="grid grid-cols-5 mx-4">
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="direct">Direct</TabsTrigger>
-            <TabsTrigger value="suggestion">Suggestions</TabsTrigger>
-            <TabsTrigger value="project">Projects</TabsTrigger>
-            <TabsTrigger value="task">Tasks</TabsTrigger>
-          </TabsList>
+        <div className="flex-1 flex flex-col">
+          {/* Custom Tab Navigation */}
+          <div className="px-4 py-3 border-b bg-slate-50">
+            <div className="flex gap-2 overflow-x-auto">
+              {[
+                { id: 'all', label: 'All Messages', icon: InboxIcon, count: allMessages.length },
+                { id: 'direct', label: 'Direct', icon: MessageCircle, count: allMessages.filter((m: Message) => m.contextType === 'direct' || !m.contextType).length },
+                { id: 'suggestion', label: 'Suggestions', icon: Lightbulb, count: allMessages.filter((m: Message) => m.contextType === 'suggestion').length },
+                { id: 'project', label: 'Projects', icon: FolderOpen, count: allMessages.filter((m: Message) => m.contextType === 'project').length },
+                { id: 'task', label: 'Tasks', icon: ListTodo, count: allMessages.filter((m: Message) => m.contextType === 'task').length },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setSelectedTab(tab.id)}
+                  className={`
+                    flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap
+                    ${selectedTab === tab.id 
+                      ? 'bg-white text-[#236383] shadow-sm border border-slate-200' 
+                      : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'
+                    }
+                  `}
+                >
+                  <tab.icon className="h-4 w-4" />
+                  <span>{tab.label}</span>
+                  {tab.count > 0 && (
+                    <Badge 
+                      variant={selectedTab === tab.id ? "default" : "secondary"}
+                      className={`
+                        h-5 px-2 text-xs
+                        ${selectedTab === tab.id 
+                          ? 'bg-[#236383] text-white' 
+                          : 'bg-slate-200 text-slate-700'
+                        }
+                      `}
+                    >
+                      {tab.count}
+                    </Badge>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
 
           <ScrollArea className="flex-1">
             <div className="p-2">

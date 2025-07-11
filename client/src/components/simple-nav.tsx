@@ -43,7 +43,7 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "dashboard" },
     { id: "inbox", label: "Inbox", icon: Inbox, href: "inbox" },
     { id: "collections", label: "Collections", icon: Sandwich, href: "collections" },
-    { id: "messages", label: "Chat", icon: MessageCircle, href: "messages" },
+    { id: "chat", label: "Chat", icon: MessageCircle, href: "messages" },
     
     // Data section (filtered by permissions)
     ...(hasPermission(user, PERMISSIONS.VIEW_HOSTS) ? [{ id: "hosts", label: "Hosts", icon: Building2, href: "hosts", group: "data" }] : []),
@@ -121,7 +121,7 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
         let unreadCount = 0;
         if (item.id === 'inbox') {
           unreadCount = totalUnread;
-        } else if (item.id === 'messages') {
+        } else if (item.id === 'chat' || item.id === 'messages') {
           unreadCount = unreadCounts.general;
         } else if (item.id === 'committee-chat') {
           unreadCount = unreadCounts.committee;
