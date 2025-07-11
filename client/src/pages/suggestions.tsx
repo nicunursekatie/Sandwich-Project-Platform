@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -90,8 +90,20 @@ export default function SuggestionsPortal() {
   // Fetch suggestions
   const { data: suggestions = [], isLoading } = useQuery({
     queryKey: ['/api/suggestions'],
-    enabled: hasPermission(currentUser, 'view_suggestions')
+    enabled: hasPermission(currentUser, 'view_suggestions'),
+    staleTime: 0 // Always fetch fresh data
   });
+
+  // Update selected suggestion when suggestions data changes
+  useEffect(() => {
+    if (selectedSuggestion && suggestions.length > 0) {
+      const updatedSuggestion = suggestions.find((s: Suggestion) => s.id === selectedSuggestion.id);
+      if (updatedSuggestion) {
+        console.log('🔄 Updating selected suggestion from fresh data:', updatedSuggestion);
+        setSelectedSuggestion(updatedSuggestion);
+      }
+    }
+  }, [suggestions, selectedSuggestion]);
 
   // Fetch responses for selected suggestion
   const { data: responses = [] } = useQuery({
@@ -153,11 +165,32 @@ export default function SuggestionsPortal() {
   const updateSuggestionMutation = useMutation({
     mutationFn: ({ id, updates }: { id: number; updates: Partial<Suggestion> }) => 
       apiRequest('PATCH', `/api/suggestions/${id}`, updates),
-    onSuccess: () => {
+    onSuccess: (updatedSuggestion) => {
+      console.log('🔄 Update successful, updated suggestion:', updatedSuggestion);
+      
+      // Update the selected suggestion in local state immediately
+      if (selectedSuggestion && updatedSuggestion) {
+        console.log('🔄 Updating selected suggestion state');
+        setSelectedSuggestion({ ...selectedSuggestion, ...updatedSuggestion });
+      }
+      
+      // Force refresh the main suggestions list
       queryClient.invalidateQueries({ queryKey: ['/api/suggestions'] });
+      
+      // Force refetch to ensure UI updates immediately
+      queryClient.refetchQueries({ queryKey: ['/api/suggestions'] });
+      
       toast({
         title: "Success",
         description: "Suggestion updated successfully!"
+      });
+    },
+    onError: (error) => {
+      console.error('🚨 Update failed:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update suggestion",
+        variant: "destructive"
       });
     }
   });
