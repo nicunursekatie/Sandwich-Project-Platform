@@ -201,14 +201,8 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
   };
 
   const navigateToChat = (chatType: string) => {
-    // Navigate to the appropriate chat page
-    if (chatType === 'direct') {
-      window.location.href = '/directory';
-    } else if (chatType === 'groups') {
-      window.location.href = '/messages';
-    } else {
-      window.location.href = '/messages';
-    }
+    // Navigate to the appropriate chat page - all chat types go to messages
+    window.location.href = '/messages';
   };
 
   console.log('🔔 MessageNotifications rendering with totalUnread:', totalUnread);
