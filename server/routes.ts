@@ -6842,6 +6842,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .values({
             conversationId,
             userId: user.id,
+            senderId: user.id,
             content: content.trim(),
             sender: userName,
           })

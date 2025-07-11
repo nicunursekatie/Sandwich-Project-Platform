@@ -57,8 +57,6 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
     ...(hasPermission(user, PERMISSIONS.VIEW_PROJECTS) ? [{ id: "projects", label: "Projects", icon: ClipboardList, href: "projects", group: "ops" }] : []),
     
     // Communication section  
-    ...(hasPermission(user, PERMISSIONS.VIEW_COMMITTEE) ? [{ id: "committee-chat", label: "Committee", icon: MessageCircle, href: "committee-chat", group: "comm" }] : []),
-    { id: "messages", label: "Messages", icon: MessageCircle, href: "messages", group: "comm" },
     { id: "phone-directory", label: "Directory", icon: Phone, href: "phone-directory", group: "comm" },
     ...(hasPermission(user, PERMISSIONS.VIEW_SUGGESTIONS) ? [{ id: "suggestions", label: "Suggestions", icon: Lightbulb, href: "suggestions", group: "comm" }] : []),
     
