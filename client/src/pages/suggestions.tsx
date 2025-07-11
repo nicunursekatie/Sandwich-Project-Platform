@@ -313,6 +313,9 @@ export default function SuggestionsPortal() {
         <div>
           <h1 className="text-3xl font-bold">Suggestions Portal</h1>
           <p className="text-gray-600">Share ideas and feedback to improve our operations</p>
+          <p className="text-gray-700 mt-2 max-w-4xl leading-relaxed">
+            If you need something to work differently, if something is confusing to you, you have tips on how we could better arrange this whole site, or if you run into a bug, please submit your feedback here so we can get this where it serves your needs the best it possibly can!
+          </p>
         </div>
         {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (
           <Dialog open={showSubmissionForm} onOpenChange={setShowSubmissionForm}>
@@ -546,7 +549,7 @@ export default function SuggestionsPortal() {
                     </div>
                     
                     {/* Quick Action Buttons */}
-                    {canManage && hasPermission(currentUser, 'manage_suggestions') && (
+                    {(canManage || currentUser?.role === 'admin' || currentUser?.role === 'super_admin') && (
                       <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
                         <Button
                           variant="outline"
@@ -681,7 +684,7 @@ export default function SuggestionsPortal() {
                   <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{selectedSuggestion.description}</p>
                 </div>
 
-                {canManage && hasPermission(currentUser, 'manage_suggestions') && (
+                {(canManage || currentUser?.role === 'admin' || currentUser?.role === 'super_admin') && (
                   <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
                     <h3 className="font-semibold mb-4 text-lg flex items-center">
                       ⚡ Workflow Actions
@@ -788,7 +791,7 @@ export default function SuggestionsPortal() {
                     ))}
                   </div>
 
-                  {canRespond && hasPermission(currentUser, 'respond_to_suggestions') && (
+                  {(canRespond || currentUser?.role === 'admin' || currentUser?.role === 'super_admin') && (
                     <Form {...responseForm}>
                       <form onSubmit={responseForm.handleSubmit(onSubmitResponse)} className="mt-4 space-y-3">
                         <FormField
