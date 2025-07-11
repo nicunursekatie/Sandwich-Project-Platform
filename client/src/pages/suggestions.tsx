@@ -184,7 +184,7 @@ export default function SuggestionsPortal() {
   const filteredSuggestions = suggestions.filter((suggestion: Suggestion) => {
     switch (activeTab) {
       case "pending":
-        return suggestion.status === "submitted" || suggestion.status === "under_review";
+        return suggestion.status === "submitted" || suggestion.status === "under_review" || suggestion.status === "needs_clarification";
       case "in-progress":
         return suggestion.status === "in_progress";
       case "completed":
@@ -220,6 +220,8 @@ export default function SuggestionsPortal() {
     switch (status) {
       case "completed": return <CheckCircle className="h-4 w-4 text-green-600" />;
       case "in_progress": return <Clock className="h-4 w-4 text-blue-600" />;
+      case "under_review": return <Eye className="h-4 w-4 text-purple-600" />;
+      case "needs_clarification": return <MessageSquare className="h-4 w-4 text-orange-600" />;
       case "on_hold": return <Pause className="h-4 w-4 text-yellow-600" />;
       case "rejected": return <XCircle className="h-4 w-4 text-red-600" />;
       default: return <Star className="h-4 w-4 text-gray-600" />;
@@ -522,42 +524,37 @@ export default function SuggestionsPortal() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'under_review' } })}
+                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'under_review', assignedTo: currentUser?.id } })}
                         disabled={selectedSuggestion.status === 'under_review'}
                       >
-                        📝 Mark as Under Review
+                        I'm Going to Work on This
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'in_progress' } })}
+                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'in_progress', assignedTo: currentUser?.id } })}
                         disabled={selectedSuggestion.status === 'in_progress'}
                       >
-                        🔄 Mark as In Progress
+                        I'm Currently Working on This
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'completed' } })}
+                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'completed', assignedTo: currentUser?.id } })}
                         disabled={selectedSuggestion.status === 'completed'}
                       >
-                        ✅ Mark as Completed
+                        I've Successfully Implemented This
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'on_hold' } })}
-                        disabled={selectedSuggestion.status === 'on_hold'}
+                        onClick={() => {
+                          updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'needs_clarification', assignedTo: currentUser?.id } });
+                          // Pre-fill the response form with a clarification request
+                          responseForm.setValue('message', 'I need more clarification on this suggestion. Could you please provide more details about what you\'d like to see implemented?');
+                        }}
                       >
-                        ⏸️ Put on Hold
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'rejected' } })}
-                        disabled={selectedSuggestion.status === 'rejected'}
-                      >
-                        ❌ Reject
+                        Ask for Clarification
                       </Button>
                     </div>
                     <div className="grid grid-cols-2 gap-4 text-sm">
