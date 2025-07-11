@@ -87,6 +87,15 @@ export default function SuggestionsPortal() {
   const canManage = hasPermission(currentUser, 'manage_suggestions');
   const canRespond = hasPermission(currentUser, 'respond_to_suggestions');
 
+  // Debug permissions
+  console.log('🔍 User permissions debug:', {
+    currentUser: currentUser,
+    canSubmit,
+    canManage,
+    canRespond,
+    userPermissions: currentUser?.permissions
+  });
+
   // Fetch suggestions
   const { data: suggestions = [], isLoading } = useQuery({
     queryKey: ['/api/suggestions'],
@@ -195,6 +204,27 @@ export default function SuggestionsPortal() {
     }
   });
 
+  // Delete suggestion mutation (admin only)
+  const deleteSuggestionMutation = useMutation({
+    mutationFn: (id: number) => apiRequest('DELETE', `/api/suggestions/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/suggestions'], staleTime: 0 });
+      setSelectedSuggestion(null);
+      toast({
+        title: "Suggestion deleted",
+        description: "The suggestion has been permanently removed.",
+      });
+    },
+    onError: (error) => {
+      console.error('Failed to delete suggestion:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete suggestion. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
+
   // Forms
   const suggestionForm = useForm<SuggestionFormData>({
     resolver: zodResolver(suggestionSchema),
@@ -284,7 +314,7 @@ export default function SuggestionsPortal() {
           <h1 className="text-3xl font-bold">Suggestions Portal</h1>
           <p className="text-gray-600">Share ideas and feedback to improve our operations</p>
         </div>
-        {canSubmit && (
+        {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (
           <Dialog open={showSubmissionForm} onOpenChange={setShowSubmissionForm}>
             <DialogTrigger asChild>
               <Button>
@@ -417,12 +447,14 @@ export default function SuggestionsPortal() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-5 w-full">
+        <TabsList className={`grid w-full ${canSubmit && hasPermission(currentUser, 'submit_suggestions') ? 'grid-cols-5' : 'grid-cols-4'}`}>
           <TabsTrigger value="all">All Suggestions</TabsTrigger>
           <TabsTrigger value="pending">Pending</TabsTrigger>
           <TabsTrigger value="in-progress">In Progress</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
-          <TabsTrigger value="mine">My Suggestions</TabsTrigger>
+          {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (
+            <TabsTrigger value="mine">My Suggestions</TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value={activeTab} className="space-y-4">
@@ -448,7 +480,7 @@ export default function SuggestionsPortal() {
               <CardContent className="text-center py-8">
                 <Lightbulb className="h-12 w-12 mx-auto text-gray-400 mb-4" />
                 <p className="text-gray-600">No suggestions found in this category.</p>
-                {canSubmit && activeTab === "mine" && (
+                {canSubmit && hasPermission(currentUser, 'submit_suggestions') && activeTab === "mine" && (
                   <Button className="mt-4" onClick={() => setShowSubmissionForm(true)}>
                     Submit Your First Suggestion
                   </Button>
@@ -514,7 +546,7 @@ export default function SuggestionsPortal() {
                     </div>
                     
                     {/* Quick Action Buttons */}
-                    {canManage && (
+                    {canManage && hasPermission(currentUser, 'manage_suggestions') && (
                       <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
                         <Button
                           variant="outline"
@@ -579,6 +611,19 @@ export default function SuggestionsPortal() {
                         >
                           ❓ Ask Details
                         </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm('Are you sure you want to delete this suggestion? This action cannot be undone.')) {
+                              deleteSuggestionMutation.mutate(suggestion.id);
+                            }
+                          }}
+                          className="h-7 px-3 text-xs bg-red-50 hover:bg-red-100 border-red-200 text-red-700"
+                        >
+                          🗑️ Delete
+                        </Button>
                       </div>
                     )}
                   </CardContent>
@@ -636,7 +681,7 @@ export default function SuggestionsPortal() {
                   <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{selectedSuggestion.description}</p>
                 </div>
 
-                {canManage && (
+                {canManage && hasPermission(currentUser, 'manage_suggestions') && (
                   <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
                     <h3 className="font-semibold mb-4 text-lg flex items-center">
                       ⚡ Workflow Actions
@@ -679,6 +724,20 @@ export default function SuggestionsPortal() {
                         className="h-12 bg-yellow-100 hover:bg-yellow-200 border-yellow-300 text-yellow-800 font-medium"
                       >
                         ❓ Ask for Clarification
+                      </Button>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-blue-300">
+                      <Button
+                        variant="outline"
+                        size="default"
+                        onClick={() => {
+                          if (confirm('Are you sure you want to delete this suggestion? This action cannot be undone.')) {
+                            deleteSuggestionMutation.mutate(selectedSuggestion.id);
+                          }
+                        }}
+                        className="h-10 px-4 bg-red-100 hover:bg-red-200 border-red-300 text-red-800 font-medium"
+                      >
+                        🗑️ Delete Suggestion
                       </Button>
                     </div>
                     <div className="grid grid-cols-2 gap-4 text-sm">
@@ -729,7 +788,7 @@ export default function SuggestionsPortal() {
                     ))}
                   </div>
 
-                  {canRespond && (
+                  {canRespond && hasPermission(currentUser, 'respond_to_suggestions') && (
                     <Form {...responseForm}>
                       <form onSubmit={responseForm.handleSubmit(onSubmitResponse)} className="mt-4 space-y-3">
                         <FormField
