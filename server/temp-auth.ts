@@ -831,7 +831,7 @@ export async function initializeTempAuth() {
     } else {
       // Use existing user without updating role (preserve current role and permissions)
       committeeMemberId = existingCommitteeMember.id;
-      console.log("✅ Found existing user: katielong2316@gmail.com (preserving current role)");
+      console.log("✅ Found existing user: katielong2316@gmail.com (preserving current role and permissions)");
     }
 
     // Assign committee member to finance committee only
@@ -884,12 +884,8 @@ export async function initializeTempAuth() {
       });
       console.log("✅ Driver user created: kenig.ka@gmail.com / driver123");
     } else {
-      // Update existing user to driver role with restricted permissions
-      await storage.updateUser(existingDriver.id, {
-        role: "driver",
-        permissions: getDefaultPermissionsForRole("driver")
-      });
-      console.log("✅ Updated kenig.ka@gmail.com to driver role with view and submit suggestions permissions");
+      // Preserve existing user permissions - do not reset them
+      console.log("✅ Found existing user: kenig.ka@gmail.com (preserving current role and permissions)");
     }
   } catch (error) {
     console.log("❌ Could not setup driver user:", error.message);
