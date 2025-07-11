@@ -517,10 +517,52 @@ export default function SuggestionsPortal() {
 
                 {canManage && (
                   <div className="border-t pt-4">
-                    <h3 className="font-semibold mb-2">Admin Information</h3>
+                    <h3 className="font-semibold mb-2">Quick Actions</h3>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'under_review' } })}
+                        disabled={selectedSuggestion.status === 'under_review'}
+                      >
+                        📝 Mark as Under Review
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'in_progress' } })}
+                        disabled={selectedSuggestion.status === 'in_progress'}
+                      >
+                        🔄 Mark as In Progress
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'completed' } })}
+                        disabled={selectedSuggestion.status === 'completed'}
+                      >
+                        ✅ Mark as Completed
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'on_hold' } })}
+                        disabled={selectedSuggestion.status === 'on_hold'}
+                      >
+                        ⏸️ Put on Hold
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'rejected' } })}
+                        disabled={selectedSuggestion.status === 'rejected'}
+                      >
+                        ❌ Reject
+                      </Button>
+                    </div>
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="font-medium">Status:</span> {selectedSuggestion.status}
+                        <span className="font-medium">Current Status:</span> {selectedSuggestion.status}
                       </div>
                       <div>
                         <span className="font-medium">Assigned to:</span> {selectedSuggestion.assignedTo || "Unassigned"}
