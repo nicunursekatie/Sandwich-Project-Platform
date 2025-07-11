@@ -101,16 +101,21 @@ export default function SuggestionsPortal() {
 
   // Submit suggestion mutation
   const submitSuggestionMutation = useMutation({
-    mutationFn: (data: SuggestionFormData) => apiRequest('POST', '/api/suggestions', data),
+    mutationFn: (data: SuggestionFormData) => {
+      console.log('🔍 Frontend form data being submitted:', data);
+      return apiRequest('POST', '/api/suggestions', data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/suggestions'] });
       setShowSubmissionForm(false);
+      suggestionForm.reset();
       toast({
         title: "Success",
         description: "Your suggestion has been submitted successfully!"
       });
     },
     onError: (error: any) => {
+      console.error('🚨 Suggestion submission error:', error);
       toast({
         title: "Error",
         description: error?.message || "Failed to submit suggestion",
