@@ -286,7 +286,7 @@ export default function InboxPage() {
               )}
             </div>
           </ScrollArea>
-        </Tabs>
+        </div>
       </div>
 
       {/* Message Detail */}
