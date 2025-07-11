@@ -889,7 +889,7 @@ export async function initializeTempAuth() {
         role: "driver",
         permissions: getDefaultPermissionsForRole("driver")
       });
-      console.log("✅ Updated kenig.ka@gmail.com to driver role with restricted permissions");
+      console.log("✅ Updated kenig.ka@gmail.com to driver role with view and submit suggestions permissions");
     }
   } catch (error) {
     console.log("❌ Could not setup driver user:", error.message);
