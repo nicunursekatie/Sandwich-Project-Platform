@@ -548,8 +548,8 @@ export default function SuggestionsPortal() {
                       </div>
                     </div>
                     
-                    {/* Quick Action Buttons */}
-                    {(canManage || currentUser?.role === 'admin' || currentUser?.role === 'super_admin') && (
+                    {/* Quick Action Buttons - Only for users with MANAGE_SUGGESTIONS permission */}
+                    {hasPermission(currentUser, 'manage_suggestions') && (
                       <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
                         <Button
                           variant="outline"
@@ -684,7 +684,7 @@ export default function SuggestionsPortal() {
                   <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{selectedSuggestion.description}</p>
                 </div>
 
-                {(canManage || currentUser?.role === 'admin' || currentUser?.role === 'super_admin') && (
+                {hasPermission(currentUser, 'manage_suggestions') && (
                   <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
                     <h3 className="font-semibold mb-4 text-lg flex items-center">
                       ⚡ Workflow Actions
@@ -791,7 +791,7 @@ export default function SuggestionsPortal() {
                     ))}
                   </div>
 
-                  {(canRespond || currentUser?.role === 'admin' || currentUser?.role === 'super_admin') && (
+                  {hasPermission(currentUser, 'respond_to_suggestions') && (
                     <Form {...responseForm}>
                       <form onSubmit={responseForm.handleSubmit(onSubmitResponse)} className="mt-4 space-y-3">
                         <FormField

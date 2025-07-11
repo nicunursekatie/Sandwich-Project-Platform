@@ -94,7 +94,9 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_ANALYTICS,
         PERMISSIONS.VIEW_ROLE_DEMO,
         PERMISSIONS.VIEW_SANDWICH_DATA,
-        PERMISSIONS.SEND_MESSAGES
+        PERMISSIONS.SEND_MESSAGES,
+        PERMISSIONS.VIEW_SUGGESTIONS,
+        PERMISSIONS.SUBMIT_SUGGESTIONS
       ];
     
     case USER_ROLES.HOST:
@@ -109,7 +111,9 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_REPORTS,
         PERMISSIONS.VIEW_PROJECTS,
         PERMISSIONS.VIEW_SANDWICH_DATA,
-        PERMISSIONS.SEND_MESSAGES
+        PERMISSIONS.SEND_MESSAGES,
+        PERMISSIONS.VIEW_SUGGESTIONS,
+        PERMISSIONS.SUBMIT_SUGGESTIONS
       ];
     
     case USER_ROLES.DRIVER:
@@ -124,7 +128,9 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.VIEW_REPORTS,
         PERMISSIONS.VIEW_PROJECTS,
         PERMISSIONS.VIEW_SANDWICH_DATA,
-        PERMISSIONS.SEND_MESSAGES
+        PERMISSIONS.SEND_MESSAGES,
+        PERMISSIONS.VIEW_SUGGESTIONS,
+        PERMISSIONS.SUBMIT_SUGGESTIONS
       ];
     
     case USER_ROLES.VOLUNTEER:
