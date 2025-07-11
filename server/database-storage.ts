@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications,
+  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, suggestions, suggestionResponses,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -20,7 +20,9 @@ import {
   type Recipient, type InsertRecipient,
   type Contact, type InsertContact,
   type Committee, type InsertCommittee,
-  type CommitteeMembership, type InsertCommitteeMembership
+  type CommitteeMembership, type InsertCommitteeMembership,
+  type Suggestion, type InsertSuggestion,
+  type SuggestionResponse, type InsertSuggestionResponse
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql, and, or, isNull, ne, isNotNull, gt, gte, lte, inArray, like } from "drizzle-orm";
@@ -1088,6 +1090,108 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error('Failed to initialize database storage:', error);
       throw error;
+    }
+  }
+
+  // Suggestions Portal methods
+  async getAllSuggestions(): Promise<Suggestion[]> {
+    try {
+      const result = await db.select().from(suggestions).orderBy(suggestions.createdAt);
+      return result as Suggestion[];
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+      return [];
+    }
+  }
+
+  async getSuggestion(id: number): Promise<Suggestion | undefined> {
+    try {
+      const result = await db.select().from(suggestions).where(eq(suggestions.id, id)).limit(1);
+      return result[0] as Suggestion | undefined;
+    } catch (error) {
+      console.error('Error fetching suggestion:', error);
+      return undefined;
+    }
+  }
+
+  async createSuggestion(suggestion: InsertSuggestion): Promise<Suggestion> {
+    try {
+      const result = await db.insert(suggestions).values(suggestion).returning();
+      return result[0] as Suggestion;
+    } catch (error) {
+      console.error('Error creating suggestion:', error);
+      throw error;
+    }
+  }
+
+  async updateSuggestion(id: number, updates: Partial<Suggestion>): Promise<Suggestion | undefined> {
+    try {
+      const result = await db.update(suggestions)
+        .set({ ...updates, updatedAt: new Date() })
+        .where(eq(suggestions.id, id))
+        .returning();
+      return result[0] as Suggestion | undefined;
+    } catch (error) {
+      console.error('Error updating suggestion:', error);
+      return undefined;
+    }
+  }
+
+  async deleteSuggestion(id: number): Promise<boolean> {
+    try {
+      // First delete all responses
+      await db.delete(suggestionResponses).where(eq(suggestionResponses.suggestionId, id));
+      // Then delete the suggestion
+      const result = await db.delete(suggestions).where(eq(suggestions.id, id));
+      return true;
+    } catch (error) {
+      console.error('Error deleting suggestion:', error);
+      return false;
+    }
+  }
+
+  async upvoteSuggestion(id: number): Promise<boolean> {
+    try {
+      await db.update(suggestions)
+        .set({ upvotes: sql`${suggestions.upvotes} + 1` })
+        .where(eq(suggestions.id, id));
+      return true;
+    } catch (error) {
+      console.error('Error upvoting suggestion:', error);
+      return false;
+    }
+  }
+
+  // Suggestion responses
+  async getSuggestionResponses(suggestionId: number): Promise<SuggestionResponse[]> {
+    try {
+      const result = await db.select().from(suggestionResponses)
+        .where(eq(suggestionResponses.suggestionId, suggestionId))
+        .orderBy(suggestionResponses.createdAt);
+      return result as SuggestionResponse[];
+    } catch (error) {
+      console.error('Error fetching suggestion responses:', error);
+      return [];
+    }
+  }
+
+  async createSuggestionResponse(response: InsertSuggestionResponse): Promise<SuggestionResponse> {
+    try {
+      const result = await db.insert(suggestionResponses).values(response).returning();
+      return result[0] as SuggestionResponse;
+    } catch (error) {
+      console.error('Error creating suggestion response:', error);
+      throw error;
+    }
+  }
+
+  async deleteSuggestionResponse(id: number): Promise<boolean> {
+    try {
+      await db.delete(suggestionResponses).where(eq(suggestionResponses.id, id));
+      return true;
+    } catch (error) {
+      console.error('Error deleting suggestion response:', error);
+      return false;
     }
   }
 }

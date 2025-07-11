@@ -2,56 +2,12 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { storage } from './storage';
 import { insertSuggestionSchema, insertSuggestionResponseSchema } from "@shared/schema";
-import { isAuthenticated } from './temp-auth';
+import { isAuthenticated, requirePermission } from './temp-auth';
 import { PERMISSIONS } from "@shared/auth-utils";
 
 const router = Router();
 
-// Permission middleware to check user permissions
-const requirePermission = (permissions: string[]) => {
-  return async (req: any, res: any, next: any) => {
-    try {
-      // Get user from session or req.user 
-      let user = req.user || req.session?.user;
-
-      if (!user) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
-
-      // Always fetch fresh user data from database to ensure permissions are current
-      if (user.email) {
-        try {
-          const freshUser = await storage.getUserByEmail(user.email);
-          if (freshUser) {
-            user = freshUser;
-            req.user = freshUser;
-          }
-        } catch (dbError) {
-          console.error("Database error in requirePermission:", dbError);
-          // Continue with session user if database fails
-        }
-      }
-
-      // Check if user has any of the required permissions
-      const hasAnyPermission = permissions.some(permission => {
-        // Super admins have all permissions
-        if (user.role === "super_admin" || user.role === "admin") {
-          return true;
-        }
-        // Check specific permission
-        return user.permissions && user.permissions.includes(permission);
-      });
-
-      if (!hasAnyPermission) {
-        return res.status(403).json({ message: "Insufficient permissions" });
-      }
-
-      next();
-    } catch (error) {
-      res.status(500).json({ message: "Permission check failed" });
-    }
-  };
-};
+// Use the requirePermission middleware from temp-auth
 
 // Get all suggestions
 router.get('/', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), async (req, res) => {
@@ -82,15 +38,22 @@ router.get('/:id', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), async (req
 // Create new suggestion
 router.post('/', requirePermission([PERMISSIONS.SUBMIT_SUGGESTIONS]), async (req, res) => {
   try {
+    console.log('=== SUGGESTION SUBMISSION DEBUG ===');
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+    console.log('User from request:', (req as any).user);
+    console.log('Session:', req.session);
+    console.log('Session user:', req.session?.user);
+    
     const validatedData = insertSuggestionSchema.parse(req.body);
     
     // Add user information from session
+    const user = (req as any).user || req.session?.user;
     const suggestionData = {
       ...validatedData,
-      submittedBy: (req as any).user?.id || 'anonymous',
-      submitterEmail: (req as any).user?.email || null,
-      submitterName: (req as any).user?.firstName 
-        ? `${(req as any).user.firstName} ${(req as any).user.lastName || ''}`.trim()
+      submittedBy: user?.id || 'anonymous',
+      submitterEmail: user?.email || null,
+      submitterName: user?.firstName 
+        ? `${user.firstName} ${user.lastName || ''}`.trim()
         : null
     };
     
@@ -98,6 +61,8 @@ router.post('/', requirePermission([PERMISSIONS.SUBMIT_SUGGESTIONS]), async (req
     res.status(201).json(suggestion);
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.log('=== VALIDATION ERROR ===');
+      console.log('Zod validation errors:', JSON.stringify(error.errors, null, 2));
       return res.status(400).json({ 
         error: 'Validation failed', 
         details: error.errors 

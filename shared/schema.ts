@@ -638,7 +638,10 @@ export const insertSuggestionSchema = createInsertSchema(suggestions).omit({
   createdAt: true,
   updatedAt: true,
   upvotes: true,
-  completedAt: true
+  completedAt: true,
+  submittedBy: true,
+  submitterEmail: true,
+  submitterName: true
 });
 
 export const insertSuggestionResponseSchema = createInsertSchema(suggestionResponses).omit({
