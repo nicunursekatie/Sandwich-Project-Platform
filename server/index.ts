@@ -106,7 +106,14 @@ async function startServer() {
     if (process.env.NODE_ENV === "production") {
       // In production, serve static files from the built frontend
       app.use(express.static("dist/public"));
-      console.log("✓ Static file serving configured for production");
+      
+      // Simple SPA fallback for production - serve index.html for non-API routes
+      app.get(/^(?!\/api).*/, (_req: Request, res: Response) => {
+        const path = require("path");
+        res.sendFile(path.join(process.cwd(), "dist/public/index.html"));
+      });
+      
+      console.log("✓ Static file serving and SPA routing configured for production");
     }
 
     // Use smart port selection in production
