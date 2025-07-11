@@ -1,0 +1,153 @@
+/favicon.ico:1  GET https://sandwich-project-platform-katielong2316.replit.app/favicon.ico 500 (Internal Server Error)
+index-BVyCc4NU.js:696 🔔 MessageNotifications component mounting...
+index-BVyCc4NU.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-BVyCc4NU.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-BVyCc4NU.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-BVyCc4NU.js:696 🔔 MessageNotifications: Loading unread counts...
+index-BVyCc4NU.js:696 🔔 WebSocket useEffect triggered, user= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-BVyCc4NU.js:696 🔔 Setting up WebSocket for user: user_1751071509329_mrkw2z95z
+index-BVyCc4NU.js:696 🔔 Debug - window.location.host: sandwich-project-platform-katielong2316.replit.app
+index-BVyCc4NU.js:696 🔔 Debug - window.location.hostname: sandwich-project-platform-katielong2316.replit.app
+index-BVyCc4NU.js:696 🔔 Debug - window.location.port: 
+index-BVyCc4NU.js:696 Connecting to WebSocket: wss://sandwich-project-platform-katielong2316.replit.app/notifications
+index-BVyCc4NU.js:696 🔔 MessageNotifications component mounting...
+index-BVyCc4NU.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-BVyCc4NU.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-BVyCc4NU.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-BVyCc4NU.js:696 🔔 MessageNotifications: Loading unread counts...
+index-BVyCc4NU.js:696 WebSocket connection to 'wss://sandwich-project-platform-katielong2316.replit.app/notifications' failed: 
+(anonymous) @ index-BVyCc4NU.js:696
+N0 @ index-BVyCc4NU.js:40
+ud @ index-BVyCc4NU.js:40
+UZ @ index-BVyCc4NU.js:40
+Kl @ index-BVyCc4NU.js:40
+Y_ @ index-BVyCc4NU.js:40
+Pl @ index-BVyCc4NU.js:38
+(anonymous) @ index-BVyCc4NU.js:40
+index-BVyCc4NU.js:696 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+overrideMethod @ hook.js:608
+m.onerror @ index-BVyCc4NU.js:696
+index-BVyCc4NU.js:696 WebSocket closed: 1006 
+index-BVyCc4NU.js:693 WebSocket connection to 'wss://sandwich-project-platform-katielong2316.replit.app/notifications' failed: 
+(anonymous) @ index-BVyCc4NU.js:693
+N0 @ index-BVyCc4NU.js:40
+ud @ index-BVyCc4NU.js:40
+UZ @ index-BVyCc4NU.js:40
+Kl @ index-BVyCc4NU.js:40
+Y_ @ index-BVyCc4NU.js:40
+Pl @ index-BVyCc4NU.js:38
+(anonymous) @ index-BVyCc4NU.js:40
+index-BVyCc4NU.js:693 Messaging WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+overrideMethod @ hook.js:608
+y.onerror @ index-BVyCc4NU.js:693
+index-BVyCc4NU.js:693 Messaging WebSocket disconnected
+index-BVyCc4NU.js:48  GET https://sandwich-project-platform-katielong2316.replit.app/api/message-notifications/unread-counts 500 (Internal Server Error)
+xe @ index-BVyCc4NU.js:48
+queryFn @ index-BVyCc4NU.js:693
+a @ index-BVyCc4NU.js:48
+b @ index-BVyCc4NU.js:48
+start @ index-BVyCc4NU.js:48
+fetch @ index-BVyCc4NU.js:48
+Lh @ index-BVyCc4NU.js:48
+onSubscribe @ index-BVyCc4NU.js:48
+subscribe @ index-BVyCc4NU.js:48
+(anonymous) @ index-BVyCc4NU.js:48
+k5 @ index-BVyCc4NU.js:38
+N0 @ index-BVyCc4NU.js:40
+ud @ index-BVyCc4NU.js:40
+UZ @ index-BVyCc4NU.js:40
+Kl @ index-BVyCc4NU.js:40
+Y_ @ index-BVyCc4NU.js:40
+Pl @ index-BVyCc4NU.js:38
+(anonymous) @ index-BVyCc4NU.js:40
+setTimeout
+$J @ index-BVyCc4NU.js:48
+o @ index-BVyCc4NU.js:48
+batch @ index-BVyCc4NU.js:48
+Ea @ index-BVyCc4NU.js:48
+setData @ index-BVyCc4NU.js:48
+onSuccess @ index-BVyCc4NU.js:48
+f @ index-BVyCc4NU.js:48
+Promise.then
+b @ index-BVyCc4NU.js:48
+start @ index-BVyCc4NU.js:48
+fetch @ index-BVyCc4NU.js:48
+Lh @ index-BVyCc4NU.js:48
+onSubscribe @ index-BVyCc4NU.js:48
+subscribe @ index-BVyCc4NU.js:48
+(anonymous) @ index-BVyCc4NU.js:48
+k5 @ index-BVyCc4NU.js:38
+N0 @ index-BVyCc4NU.js:40
+ud @ index-BVyCc4NU.js:40
+Y_ @ index-BVyCc4NU.js:40
+Pl @ index-BVyCc4NU.js:38
+UZ @ index-BVyCc4NU.js:40
+Kl @ index-BVyCc4NU.js:40
+c6 @ index-BVyCc4NU.js:40
+N @ index-BVyCc4NU.js:25
+O @ index-BVyCc4NU.js:25
+index-BVyCc4NU.js:693 Failed to fetch unread counts: Error: 500: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Internal Server Error</pre>
+</body>
+</html>
+
+    at K6 (index-BVyCc4NU.js:48:43406)
+    at async xe (index-BVyCc4NU.js:48:43640)
+    at async queryFn (index-BVyCc4NU.js:693:137026)
+overrideMethod @ hook.js:608
+queryFn @ index-BVyCc4NU.js:693
+await in queryFn
+a @ index-BVyCc4NU.js:48
+b @ index-BVyCc4NU.js:48
+start @ index-BVyCc4NU.js:48
+fetch @ index-BVyCc4NU.js:48
+Lh @ index-BVyCc4NU.js:48
+onSubscribe @ index-BVyCc4NU.js:48
+subscribe @ index-BVyCc4NU.js:48
+(anonymous) @ index-BVyCc4NU.js:48
+k5 @ index-BVyCc4NU.js:38
+N0 @ index-BVyCc4NU.js:40
+ud @ index-BVyCc4NU.js:40
+UZ @ index-BVyCc4NU.js:40
+Kl @ index-BVyCc4NU.js:40
+Y_ @ index-BVyCc4NU.js:40
+Pl @ index-BVyCc4NU.js:38
+(anonymous) @ index-BVyCc4NU.js:40
+setTimeout
+$J @ index-BVyCc4NU.js:48
+o @ index-BVyCc4NU.js:48
+batch @ index-BVyCc4NU.js:48
+Ea @ index-BVyCc4NU.js:48
+setData @ index-BVyCc4NU.js:48
+onSuccess @ index-BVyCc4NU.js:48
+f @ index-BVyCc4NU.js:48
+Promise.then
+b @ index-BVyCc4NU.js:48
+start @ index-BVyCc4NU.js:48
+fetch @ index-BVyCc4NU.js:48
+Lh @ index-BVyCc4NU.js:48
+onSubscribe @ index-BVyCc4NU.js:48
+subscribe @ index-BVyCc4NU.js:48
+(anonymous) @ index-BVyCc4NU.js:48
+k5 @ index-BVyCc4NU.js:38
+N0 @ index-BVyCc4NU.js:40
+ud @ index-BVyCc4NU.js:40
+Y_ @ index-BVyCc4NU.js:40
+Pl @ index-BVyCc4NU.js:38
+UZ @ index-BVyCc4NU.js:40
+Kl @ index-BVyCc4NU.js:40
+c6 @ index-BVyCc4NU.js:40
+N @ index-BVyCc4NU.js:25
+O @ index-BVyCc4NU.js:25
+index-BVyCc4NU.js:696 🔔 MessageNotifications component mounting...
+index-BVyCc4NU.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-BVyCc4NU.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-BVyCc4NU.js:696 🔔 MessageNotifications: Query state - isLoading: false error: null data: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+index-BVyCc4NU.js:696 🔔 MessageNotifications: Rendering with final unread counts: {general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0, …}
+index-BVyCc4NU.js:696 🔔 MessageNotifications rendering with totalUnread: 1
