@@ -784,9 +784,9 @@ export async function initializeTempAuth() {
         permissions: getDefaultPermissionsForRole("admin"),
         isActive: true,
         profileImageUrl: null,
-        metadata: { password: "admin123" } // Default password for convenience
+        metadata: { password: process.env.DEFAULT_ADMIN_PASSWORD || "admin123" } // Use env var or fallback
       });
-      console.log("✅ Default admin user created: admin@sandwich.project / admin123");
+      console.log("✅ Default admin user created: admin@sandwich.project / [password set from env or default]");
     } else {
       console.log("✅ Default admin user already exists: admin@sandwich.project");
     }
@@ -825,9 +825,9 @@ export async function initializeTempAuth() {
         permissions: getDefaultPermissionsForRole("committee_member"),
         isActive: true,
         profileImageUrl: null,
-        metadata: { password: "committee123" }
+        metadata: { password: process.env.DEFAULT_COMMITTEE_PASSWORD || "committee123" }
       });
-      console.log("✅ Committee member user created: katielong2316@gmail.com / committee123");
+      console.log("✅ Committee member user created: katielong2316@gmail.com / [password set from env or default]");
     } else {
       // Use existing user without updating role (preserve current role and permissions)
       committeeMemberId = existingCommitteeMember.id;
@@ -880,9 +880,9 @@ export async function initializeTempAuth() {
         permissions: getDefaultPermissionsForRole("driver"),
         isActive: true,
         profileImageUrl: null,
-        metadata: { password: "driver123" }
+        metadata: { password: process.env.DEFAULT_DRIVER_PASSWORD || "driver123" }
       });
-      console.log("✅ Driver user created: kenig.ka@gmail.com / driver123");
+      console.log("✅ Driver user created: kenig.ka@gmail.com / [password set from env or default]");
     } else {
       // Preserve existing user permissions - do not reset them
       console.log("✅ Found existing user: kenig.ka@gmail.com (preserving current role and permissions)");
