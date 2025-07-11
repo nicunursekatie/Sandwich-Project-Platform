@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,10 +12,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMessaging } from "@/hooks/useMessaging";
 import { apiRequest } from "@/lib/queryClient";
 import { formatDistanceToNow } from "date-fns";
-import {
-  Inbox as InboxIcon,
-  MessageCircle,
-  Send,
+import { 
+  Inbox as InboxIcon, 
+  MessageCircle, 
+  Send, 
   Search,
   CheckCheck,
   Circle,
@@ -33,7 +27,7 @@ import {
   MoreVertical,
   Reply,
   Trash2,
-  Edit2,
+  Edit2
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -61,15 +55,15 @@ interface Message {
 export default function InboxPage() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const {
-    unreadMessages,
-    markAsRead,
+  const { 
+    unreadMessages, 
+    markAsRead, 
     markAllAsRead,
     getContextMessages,
     sendMessage,
-    isSending,
+    isSending 
   } = useMessaging();
-
+  
   const [selectedTab, setSelectedTab] = useState("all");
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -77,31 +71,23 @@ export default function InboxPage() {
 
   // Fetch all messages
   const { data: allMessages = [], refetch: refetchMessages } = useQuery({
-    queryKey: ["/api/messaging/messages", selectedTab],
+    queryKey: ['/api/messaging/messages', selectedTab],
     queryFn: async () => {
-      let endpoint = "/api/messaging/messages";
-      if (selectedTab !== "all") {
+      let endpoint = '/api/messaging/messages';
+      if (selectedTab !== 'all') {
         endpoint += `?contextType=${selectedTab}`;
       }
-      const response = await apiRequest("GET", endpoint);
+      const response = await apiRequest('GET', endpoint);
       return response.messages || [];
     },
   });
 
   // Fetch thread messages when a message is selected
   const { data: threadMessages = [] } = useQuery({
-    queryKey: [
-      "/api/messaging/thread",
-      selectedMessage?.contextType,
-      selectedMessage?.contextId,
-    ],
+    queryKey: ['/api/messaging/thread', selectedMessage?.contextType, selectedMessage?.contextId],
     queryFn: async () => {
-      if (!selectedMessage?.contextType || !selectedMessage?.contextId)
-        return [];
-      return await getContextMessages(
-        selectedMessage.contextType,
-        selectedMessage.contextId,
-      );
+      if (!selectedMessage?.contextType || !selectedMessage?.contextId) return [];
+      return await getContextMessages(selectedMessage.contextType, selectedMessage.contextId);
     },
     enabled: !!selectedMessage?.contextType && !!selectedMessage?.contextId,
   });
@@ -126,14 +112,14 @@ export default function InboxPage() {
         contextType: selectedMessage.contextType as any,
         contextId: selectedMessage.contextId,
       });
-
+      
       setReplyContent("");
       refetchMessages();
       toast({ description: "Reply sent successfully" });
     } catch (error) {
-      toast({
-        description: "Failed to send reply",
-        variant: "destructive",
+      toast({ 
+        description: "Failed to send reply", 
+        variant: "destructive" 
       });
     }
   };
@@ -152,28 +138,20 @@ export default function InboxPage() {
   // Get context icon
   const getContextIcon = (contextType?: string) => {
     switch (contextType) {
-      case "suggestion":
-        return <Lightbulb className="h-4 w-4" />;
-      case "project":
-        return <FolderOpen className="h-4 w-4" />;
-      case "task":
-        return <ListTodo className="h-4 w-4" />;
-      default:
-        return <MessageCircle className="h-4 w-4" />;
+      case 'suggestion': return <Lightbulb className="h-4 w-4" />;
+      case 'project': return <FolderOpen className="h-4 w-4" />;
+      case 'task': return <ListTodo className="h-4 w-4" />;
+      default: return <MessageCircle className="h-4 w-4" />;
     }
   };
 
   // Get context color
   const getContextColor = (contextType?: string) => {
     switch (contextType) {
-      case "suggestion":
-        return "text-yellow-600 bg-yellow-50";
-      case "project":
-        return "text-blue-600 bg-blue-50";
-      case "task":
-        return "text-green-600 bg-green-50";
-      default:
-        return "text-gray-600 bg-gray-50";
+      case 'suggestion': return 'text-yellow-600 bg-yellow-50';
+      case 'project': return 'text-blue-600 bg-blue-50';
+      case 'task': return 'text-green-600 bg-green-50';
+      default: return 'text-gray-600 bg-gray-50';
     }
   };
 
@@ -188,13 +166,17 @@ export default function InboxPage() {
               Inbox
             </h2>
             {unreadMessages.length > 0 && (
-              <Button variant="ghost" size="sm" onClick={() => markAllAsRead()}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => markAllAsRead()}
+              >
                 <CheckCheck className="h-4 w-4 mr-2" />
                 Mark all read
               </Button>
             )}
           </div>
-
+          
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
@@ -206,18 +188,49 @@ export default function InboxPage() {
           </div>
         </div>
 
-        <Tabs
-          value={selectedTab}
-          onValueChange={setSelectedTab}
-          className="flex-1 flex flex-col"
-        >
-          <TabsList className="grid grid-cols-5 mx-4">
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="direct">Direct</TabsTrigger>
-            <TabsTrigger value="suggestion">Suggestions</TabsTrigger>
-            <TabsTrigger value="project">Projects</TabsTrigger>
-            <TabsTrigger value="task">Tasks</TabsTrigger>
-          </TabsList>
+        <div className="flex-1 flex flex-col">
+          {/* Custom Tab Navigation */}
+          <div className="px-4 py-3 border-b bg-slate-50">
+            <div className="flex gap-2 overflow-x-auto">
+              {[
+                { id: 'all', label: 'All Messages', icon: InboxIcon, count: allMessages.length },
+                { id: 'direct', label: 'Direct', icon: MessageCircle, count: allMessages.filter((m: Message) => m.contextType === 'direct' || !m.contextType).length },
+                { id: 'suggestion', label: 'Suggestions', icon: Lightbulb, count: allMessages.filter((m: Message) => m.contextType === 'suggestion').length },
+                { id: 'project', label: 'Projects', icon: FolderOpen, count: allMessages.filter((m: Message) => m.contextType === 'project').length },
+                { id: 'task', label: 'Tasks', icon: ListTodo, count: allMessages.filter((m: Message) => m.contextType === 'task').length },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setSelectedTab(tab.id)}
+                  className={`
+                    flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap
+                    ${selectedTab === tab.id 
+                      ? 'bg-white text-[#236383] shadow-sm border border-slate-200' 
+                      : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'
+                    }
+                  `}
+                >
+                  <tab.icon className="h-4 w-4" />
+                  <span>{tab.label}</span>
+                  {tab.count > 0 && (
+                    <Badge 
+                      variant={selectedTab === tab.id ? "default" : "secondary"}
+                      className={`
+                        h-5 px-2 text-xs
+                        ${selectedTab === tab.id 
+                          ? 'bg-[#236383] text-white' 
+                          : 'bg-slate-200 text-slate-700'
+                        }
+                      `}
+                    >
+                      {tab.count}
+                    </Badge>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <ScrollArea className="flex-1">
             <div className="p-2">
               {filteredMessages.length === 0 ? (
@@ -229,10 +242,10 @@ export default function InboxPage() {
                   <Card
                     key={message.id}
                     className={`mb-2 cursor-pointer transition-colors ${
-                      selectedMessage?.id === message.id
-                        ? "bg-blue-50 border-blue-300"
-                        : "hover:bg-gray-50"
-                    } ${!message.read ? "border-l-4 border-l-blue-500" : ""}`}
+                      selectedMessage?.id === message.id 
+                        ? 'bg-blue-50 border-blue-300' 
+                        : 'hover:bg-gray-50'
+                    } ${!message.read ? 'border-l-4 border-l-blue-500' : ''}`}
                     onClick={() => handleSelectMessage(message)}
                   >
                     <CardContent className="p-3">
@@ -240,18 +253,15 @@ export default function InboxPage() {
                         <div className="flex items-center gap-2">
                           <Avatar className="h-8 w-8">
                             <AvatarFallback>
-                              {message.senderName?.charAt(0) || "?"}
+                              {message.senderName?.charAt(0) || '?'}
                             </AvatarFallback>
                           </Avatar>
                           <div>
                             <p className="font-medium text-sm">
-                              {message.senderName || "Unknown"}
+                              {message.senderName || 'Unknown'}
                             </p>
                             <p className="text-xs text-gray-500">
-                              {formatDistanceToNow(
-                                new Date(message.createdAt),
-                                { addSuffix: true },
-                              )}
+                              {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
                             </p>
                           </div>
                         </div>
@@ -259,19 +269,15 @@ export default function InboxPage() {
                           <Circle className="h-2 w-2 fill-blue-500 text-blue-500" />
                         )}
                       </div>
-
+                      
                       <p className="text-sm text-gray-700 line-clamp-2 mb-2">
                         {message.editedContent || message.content}
                       </p>
-
+                      
                       {message.contextType && (
-                        <div
-                          className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${getContextColor(message.contextType)}`}
-                        >
+                        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${getContextColor(message.contextType)}`}>
                           {getContextIcon(message.contextType)}
-                          <span>
-                            {message.contextTitle || message.contextType}
-                          </span>
+                          <span>{message.contextTitle || message.contextType}</span>
                         </div>
                       )}
                     </CardContent>
@@ -293,23 +299,18 @@ export default function InboxPage() {
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10">
                     <AvatarFallback>
-                      {selectedMessage.senderName?.charAt(0) || "?"}
+                      {selectedMessage.senderName?.charAt(0) || '?'}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold">
-                      {selectedMessage.senderName || "Unknown"}
-                    </h3>
+                    <h3 className="font-semibold">{selectedMessage.senderName || 'Unknown'}</h3>
                     <p className="text-sm text-gray-500">
-                      {formatDistanceToNow(
-                        new Date(selectedMessage.createdAt),
-                        { addSuffix: true },
-                      )}
-                      {selectedMessage.editedAt && " (edited)"}
+                      {formatDistanceToNow(new Date(selectedMessage.createdAt), { addSuffix: true })}
+                      {selectedMessage.editedAt && ' (edited)'}
                     </p>
                   </div>
                 </div>
-
+                
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon">
@@ -333,13 +334,12 @@ export default function InboxPage() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-
+              
               {selectedMessage.contextType && (
                 <div className="mt-2">
                   <Badge variant="secondary" className="gap-1">
                     {getContextIcon(selectedMessage.contextType)}
-                    {selectedMessage.contextTitle ||
-                      selectedMessage.contextType}
+                    {selectedMessage.contextTitle || selectedMessage.contextType}
                   </Badge>
                 </div>
               )}
@@ -356,32 +356,26 @@ export default function InboxPage() {
                 </div>
 
                 {/* Thread Replies */}
-                {threadMessages
-                  .filter((m) => m.id !== selectedMessage.id)
-                  .map((message: Message) => (
-                    <div
-                      key={message.id}
-                      className={`rounded-lg p-4 ${
-                        message.senderId === user?.id
-                          ? "bg-blue-50 ml-auto max-w-[80%]"
-                          : "bg-gray-50 mr-auto max-w-[80%]"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <p className="font-medium text-sm">
-                          {message.senderName}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {formatDistanceToNow(new Date(message.createdAt), {
-                            addSuffix: true,
-                          })}
-                        </p>
-                      </div>
-                      <p className="text-sm whitespace-pre-wrap">
-                        {message.editedContent || message.content}
+                {threadMessages.filter(m => m.id !== selectedMessage.id).map((message: Message) => (
+                  <div 
+                    key={message.id} 
+                    className={`rounded-lg p-4 ${
+                      message.senderId === user?.id 
+                        ? 'bg-blue-50 ml-auto max-w-[80%]' 
+                        : 'bg-gray-50 mr-auto max-w-[80%]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <p className="font-medium text-sm">{message.senderName}</p>
+                      <p className="text-xs text-gray-500">
+                        {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
                       </p>
                     </div>
-                  ))}
+                    <p className="text-sm whitespace-pre-wrap">
+                      {message.editedContent || message.content}
+                    </p>
+                  </div>
+                ))}
               </div>
             </ScrollArea>
 
@@ -392,12 +386,10 @@ export default function InboxPage() {
                   placeholder="Type your reply..."
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
-                  onKeyPress={(e) =>
-                    e.key === "Enter" && !e.shiftKey && handleReply()
-                  }
+                  onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleReply()}
                 />
-                <Button
-                  onClick={handleReply}
+                <Button 
+                  onClick={handleReply} 
                   disabled={!replyContent.trim() || isSending}
                 >
                   <Send className="h-4 w-4" />
