@@ -15,11 +15,13 @@ import {
   Phone,
   Settings,
   Sheet,
-  Lightbulb
+  Lightbulb,
+  Inbox
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
+import { useMessaging } from "@/hooks/useMessaging";
 
 interface NavigationItem {
   id: string;
@@ -33,12 +35,15 @@ interface NavigationItem {
 export default function SimpleNav({ onSectionChange }: { onSectionChange: (section: string) => void }) {
   const { user } = useAuth();
   const [location] = useLocation();
+  const { unreadCounts, totalUnread } = useMessaging();
 
   // Flat navigation with smart grouping using visual separators
   const navigationItems: NavigationItem[] = [
     // Core section
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "dashboard" },
+    { id: "inbox", label: "Inbox", icon: Inbox, href: "inbox" },
     { id: "collections", label: "Collections", icon: Sandwich, href: "collections" },
+    { id: "messages", label: "Chat", icon: MessageCircle, href: "messages" },
     
     // Data section (filtered by permissions)
     ...(hasPermission(user, PERMISSIONS.VIEW_HOSTS) ? [{ id: "hosts", label: "Hosts", icon: Building2, href: "hosts", group: "data" }] : []),
@@ -112,6 +117,18 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
 
         const isCurrentlyActive = isActive(item.href);
         
+        // Get unread count for specific items
+        let unreadCount = 0;
+        if (item.id === 'inbox') {
+          unreadCount = totalUnread;
+        } else if (item.id === 'messages') {
+          unreadCount = unreadCounts.general;
+        } else if (item.id === 'committee-chat') {
+          unreadCount = unreadCounts.committee;
+        } else if (item.id === 'suggestions' && unreadCounts.suggestion) {
+          unreadCount = unreadCounts.suggestion;
+        }
+        
         return (
           <Button
             key={item.id}
@@ -126,7 +143,15 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
             onClick={() => onSectionChange(item.href)}
           >
             <item.icon className="h-4 w-4 mr-3 flex-shrink-0" />
-            <span className="truncate">{item.label}</span>
+            <span className="truncate flex-1">{item.label}</span>
+            {unreadCount > 0 && (
+              <Badge 
+                variant={isCurrentlyActive ? "secondary" : "destructive"} 
+                className="ml-auto h-5 px-1.5 min-w-[20px] flex items-center justify-center"
+              >
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </Badge>
+            )}
           </Button>
         );
       })}

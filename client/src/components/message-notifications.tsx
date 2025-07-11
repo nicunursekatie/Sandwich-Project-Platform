@@ -127,16 +127,19 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
         }
       };
 
-      socket.onclose = () => {
-        console.log('Notification WebSocket disconnected');
-      };
-
-      return () => {
-        socket.close();
-      };
     } catch (error) {
-      console.error('WebSocket connection failed:', error);
+      console.error('Failed to create WebSocket:', error);
+      // Still allow component to function without real-time updates
     }
+
+    return () => {
+      if (reconnectTimeoutId) {
+        clearTimeout(reconnectTimeoutId);
+      }
+      if (socket) {
+        socket.close(1000, 'Component unmounting');
+      }
+    };
   }, [user, refetch]);
 
   // Request notification permission on mount

@@ -39,6 +39,8 @@ import {
   Mail
 } from "lucide-react";
 import { hasPermission } from "@shared/auth-utils";
+import { MessageComposer } from "@/components/message-composer";
+import { useMessaging } from "@/hooks/useMessaging";
 
 // Schema for suggestion form
 const suggestionSchema = z.object({
@@ -50,12 +52,7 @@ const suggestionSchema = z.object({
   tags: z.array(z.string()).default([])
 });
 
-const clarificationSchema = z.object({
-  message: z.string().min(1, "Please enter your clarification questions").max(1000, "Message too long"),
-});
-
 type SuggestionFormData = z.infer<typeof suggestionSchema>;
-type ClarificationFormData = z.infer<typeof clarificationSchema>;
 
 interface Suggestion {
   id: number;
@@ -209,34 +206,6 @@ export default function SuggestionsPortal() {
     }
   });
 
-  // Send clarification request mutation
-  const sendClarificationMutation = useMutation({
-    mutationFn: ({ suggestionId, message }: { suggestionId: number; message: string }) => {
-      // This should integrate with your messaging system
-      // For now, we'll use the existing response system but make it clear it's a clarification request
-      return apiRequest('POST', `/api/suggestions/${suggestionId}/clarification`, {
-        message,
-        type: 'clarification_request'
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/suggestions'] });
-      setShowClarificationDialog(false);
-      setSelectedSuggestion(null);
-      clarificationForm.reset();
-      toast({
-        title: "Clarification Request Sent",
-        description: "The author will be notified and can respond through the messaging system."
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error?.message || "Failed to send clarification request",
-        variant: "destructive"
-      });
-    }
-  });
 
   // Forms
   const suggestionForm = useForm<SuggestionFormData>({
@@ -249,12 +218,6 @@ export default function SuggestionsPortal() {
     }
   });
 
-  const clarificationForm = useForm<ClarificationFormData>({
-    resolver: zodResolver(clarificationSchema),
-    defaultValues: {
-      message: ""
-    }
-  });
 
   // Enhanced filtering logic
   const filteredSuggestions = suggestions.filter((suggestion: Suggestion) => {
@@ -296,14 +259,6 @@ export default function SuggestionsPortal() {
     submitSuggestionMutation.mutate(data);
   };
 
-  const onSubmitClarification = (data: ClarificationFormData) => {
-    if (selectedSuggestion) {
-      sendClarificationMutation.mutate({ 
-        suggestionId: selectedSuggestion.id, 
-        message: data.message 
-      });
-    }
-  };
 
   const handleRequestClarification = (suggestion: Suggestion) => {
     setSelectedSuggestion(suggestion);
@@ -928,39 +883,24 @@ export default function SuggestionsPortal() {
                 <p className="text-sm text-gray-600 line-clamp-3">{selectedSuggestion.description}</p>
               </div>
 
-              <Form {...clarificationForm}>
-                <form onSubmit={clarificationForm.handleSubmit(onSubmitClarification)} className="space-y-4">
-                  <FormField
-                    control={clarificationForm.control}
-                    name="message"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Your clarification request</FormLabel>
-                        <FormControl>
-                          <Textarea 
-                            placeholder="What specific details do you need? Be clear about what would help you better understand or implement this suggestion..."
-                            rows={5}
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          This message will be sent directly to the suggestion author through the messaging system.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="flex justify-end space-x-2">
-                    <Button type="button" variant="outline" onClick={() => setShowClarificationDialog(false)}>
-                      Cancel
-                    </Button>
-                    <Button type="submit" disabled={sendClarificationMutation.isPending}>
-                      <Send className="h-4 w-4 mr-2" />
-                      {sendClarificationMutation.isPending ? "Sending..." : "Send Request"}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
+              <MessageComposer
+                contextType="suggestion"
+                contextId={String(selectedSuggestion.id)}
+                contextTitle={selectedSuggestion.title}
+                defaultRecipients={selectedSuggestion.isAnonymous ? [] : [{
+                  id: selectedSuggestion.submittedBy,
+                  name: selectedSuggestion.submitterName || 'Unknown'
+                }]}
+                compact={true}
+                onSent={() => {
+                  setShowClarificationDialog(false);
+                  toast({
+                    title: "Clarification Request Sent",
+                    description: "The author will be notified and can respond through the messaging system."
+                  });
+                }}
+                onCancel={() => setShowClarificationDialog(false)}
+              />
             </div>
           )}
         </DialogContent>

@@ -41,6 +41,7 @@ import MessageNotifications from "@/components/message-notifications";
 import WorkLogPage from "@/pages/work-log";
 import SuggestionsPortal from "@/pages/suggestions";
 import GoogleSheetsPage from "@/pages/google-sheets";
+import InboxPage from "@/pages/inbox";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -118,6 +119,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <ProjectsClean />;
       case "messages":
         return <ChatHub />;
+      case "inbox":
+        return <InboxPage />;
       case "profile":
         return <UserProfile />;
       case "meetings":

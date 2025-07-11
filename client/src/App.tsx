@@ -54,9 +54,10 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/messages" component={() => <Dashboard initialSection="messages" />} />
-      <Route path="/suggestions" component={() => <Dashboard initialSection="suggestions" />} />
-      <Route path="/google-sheets" component={() => <Dashboard initialSection="google-sheets" />} />
+      <Route path="/messages">{() => <Dashboard initialSection="messages" />}</Route>
+      <Route path="/inbox">{() => <Dashboard initialSection="inbox" />}</Route>
+      <Route path="/suggestions">{() => <Dashboard initialSection="suggestions" />}</Route>
+      <Route path="/google-sheets">{() => <Dashboard initialSection="google-sheets" />}</Route>
       <Route path="/" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>

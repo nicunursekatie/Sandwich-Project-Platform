@@ -3,6 +3,9 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { ArrowLeft, Calendar, User, Clock, Target, CheckCircle2, Circle, Pause, Play, Plus, Trash2, Edit, Check, Award } from "lucide-react";
 import { SendKudosButton } from "@/components/send-kudos-button";
 import { Button } from "@/components/ui/button";
+import { MessageComposer } from "@/components/message-composer";
+import { useMessaging } from "@/hooks/useMessaging";
+import { MessageCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -622,6 +625,10 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
         <TabsList>
           <TabsTrigger value="tasks">Tasks ({projectTasks.length})</TabsTrigger>
           <TabsTrigger value="details">Project Details</TabsTrigger>
+          <TabsTrigger value="discussion">
+            <MessageCircle className="w-4 h-4 mr-2" />
+            Discussion
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="tasks" className="space-y-4">
@@ -1219,6 +1226,44 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                     ></div>
                   </div>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="discussion" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageCircle className="w-5 h-5" />
+                Project Discussion
+              </CardTitle>
+              <CardDescription>
+                Communicate with team members about this project
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <MessageComposer
+                contextType="project"
+                contextId={String(projectId)}
+                contextTitle={project.title}
+                defaultRecipients={project.assigneeName ? [{
+                  id: project.assigneeId || '',
+                  name: project.assigneeName
+                }] : []}
+                onSent={() => {
+                  toast({
+                    title: "Message sent",
+                    description: "Your message has been delivered to the project team."
+                  });
+                }}
+              />
+              
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm text-gray-600 flex items-center gap-2">
+                  <MessageCircle className="w-4 h-4" />
+                  Team members will receive notifications and can view messages in their inbox
+                </p>
               </div>
             </CardContent>
           </Card>
