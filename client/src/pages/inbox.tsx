@@ -129,13 +129,14 @@ export default function InboxPage() {
   };
 
   // Filter messages based on search
-  const filteredMessages = allMessages.filter((message: Message) => {
+  const filteredMessages = (allMessages || []).filter((message: Message) => {
+    if (!message || typeof message !== 'object') return false;
     if (!searchQuery) return true;
     const searchLower = searchQuery.toLowerCase();
     return (
-      message.content.toLowerCase().includes(searchLower) ||
-      message.senderName?.toLowerCase().includes(searchLower) ||
-      message.contextTitle?.toLowerCase().includes(searchLower)
+      (message.content || '').toLowerCase().includes(searchLower) ||
+      (message.senderName || '').toLowerCase().includes(searchLower) ||
+      (message.contextTitle || '').toLowerCase().includes(searchLower)
     );
   });
 
@@ -252,7 +253,7 @@ export default function InboxPage() {
                   No messages found
                 </div>
               ) : (
-                filteredMessages.map((message: Message) => (
+                filteredMessages.filter(message => message && typeof message === 'object').map((message: Message) => (
                   <Card
                     key={message.id}
                     className={`mb-2 cursor-pointer transition-colors ${
@@ -267,19 +268,19 @@ export default function InboxPage() {
                         <div className="flex items-center gap-2">
                           <Avatar className="h-8 w-8">
                             <AvatarFallback>
-                              {message.senderName?.charAt(0) || '?'}
+                              {message?.senderName?.charAt(0) || '?'}
                             </AvatarFallback>
                           </Avatar>
                           <div>
                             <p className="font-medium text-sm">
-                              {message.senderName || 'Unknown'}
+                              {message?.senderName || 'Unknown'}
                             </p>
                             <p className="text-xs text-gray-500">
-                              {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+                              {message?.createdAt ? formatDistanceToNow(new Date(message.createdAt), { addSuffix: true }) : 'Unknown time'}
                             </p>
                           </div>
                         </div>
-                        {!message.read && (
+                        {!message?.read && (
                           <Circle className="h-2 w-2 fill-blue-500 text-blue-500" />
                         )}
                       </div>
@@ -381,7 +382,7 @@ export default function InboxPage() {
                 </div>
 
                 {/* Thread Replies */}
-                {threadMessages.filter((m: Message) => m.id !== selectedMessage.id).map((message: Message) => (
+                {threadMessages.filter((m: Message) => m && typeof m === 'object' && m.id !== selectedMessage?.id).map((message: Message) => (
                   <div 
                     key={message.id} 
                     className={`rounded-lg p-4 ${
@@ -391,13 +392,13 @@ export default function InboxPage() {
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-2">
-                      <p className="font-medium text-sm">{message.senderName}</p>
+                      <p className="font-medium text-sm">{message?.senderName || 'Unknown'}</p>
                       <p className="text-xs text-gray-500">
-                        {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+                        {message?.createdAt ? formatDistanceToNow(new Date(message.createdAt), { addSuffix: true }) : 'Unknown time'}
                       </p>
                     </div>
                     <p className="text-sm whitespace-pre-wrap">
-                      {message.editedContent || message.content}
+                      {message?.editedContent || message?.content || ''}
                     </p>
                   </div>
                 ))}
