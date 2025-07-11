@@ -62,9 +62,9 @@ async function startServer() {
 
     const port = process.env.PORT || 5000;
     const host = process.env.HOST || "0.0.0.0";
-    
+
     console.log(`Starting server on ${host}:${port} in ${process.env.NODE_ENV || "development"} mode`);
-    
+
     // Retry port allocation for deployment robustness
     const tryPort = async (basePort: number, maxRetries = 5): Promise<number> => {
       for (let i = 0; i < maxRetries; i++) {
@@ -92,7 +92,7 @@ async function startServer() {
 
     // Set up basic routes BEFORE starting server
     app.use("/attached_assets", express.static("attached_assets"));
-    
+
     // Health check route - available before full initialization
     app.get("/health", (_req: Request, res: Response) => {
       res.status(200).json({
@@ -106,24 +106,24 @@ async function startServer() {
     if (process.env.NODE_ENV === "production") {
       // In production, serve static files from the built frontend
       app.use(express.static("dist/public"));
-      
+
       // Simple SPA fallback for production - serve index.html for non-API routes
-      app.get(/^(?!\/api).*/, (_req: Request, res: Response) => {
-        const path = require("path");
+      app.get(/^(?!\/api).*/, async (_req: Request, res: Response) => {
+        const path = await import("path");
         res.sendFile(path.join(process.cwd(), "dist/public/index.html"));
       });
-      
+
       console.log("✓ Static file serving and SPA routing configured for production");
     }
 
     // Use smart port selection in production
     const finalPort = process.env.NODE_ENV === "production" ? await tryPort(Number(port)) : port;
-    
+
     const httpServer = app.listen(finalPort, host, () => {
       console.log(`✓ Server is running on http://${host}:${finalPort}`);
       console.log(`✓ Environment: ${process.env.NODE_ENV || "development"}`);
       console.log("✓ Basic server ready - starting background initialization...");
-      
+
       // Signal deployment readiness to Replit
       if (process.env.NODE_ENV === "production") {
         console.log("🚀 PRODUCTION SERVER READY FOR TRAFFIC 🚀");
@@ -163,8 +163,8 @@ async function startServer() {
             }
           } else {
             // In production, serve React app for all non-API routes
-            app.get("*", (_req: Request, res: Response) => {
-              const path = require("path");
+            app.get("*", async (_req: Request, res: Response) => {
+              const path = await import("path");
               const indexPath = path.join(process.cwd(), "dist/public/index.html");
               console.log(`Serving SPA for route: ${_req.path}, file: ${indexPath}`);
               res.sendFile(indexPath);
@@ -224,10 +224,10 @@ async function startServer() {
       setInterval(() => {
         // Silent heartbeat to prevent process from being garbage collected
       }, 5000);
-      
+
       // Strategy 2: Prevent process exit events
       process.stdin.resume(); // Keep process alive
-      
+
       // Strategy 3: Override process.exit in production
       const originalExit = process.exit;
       process.exit = ((code?: number) => {
@@ -235,7 +235,7 @@ async function startServer() {
         console.log("Server will continue running...");
         return undefined as never;
       }) as typeof process.exit;
-      
+
       console.log("✓ Production process keep-alive strategies activated");
     }
 
@@ -268,7 +268,7 @@ startServer()
       console.log("Starting minimal fallback server for production...");
       const express = require("express");
       const fallbackApp = express();
-      
+
       fallbackApp.get("/", (req, res) => res.status(200).send(`
         <!DOCTYPE html>
         <html>
@@ -280,25 +280,25 @@ startServer()
           </body>
         </html>
       `));
-      
+
       fallbackApp.get("/health", (req, res) => res.status(200).json({ 
         status: "fallback", 
         timestamp: Date.now(),
         mode: "production-fallback"
       }));
-      
+
       const fallbackServer = fallbackApp.listen(5000, "0.0.0.0", () => {
         console.log("✓ Minimal fallback server running on port 5000");
-        
+
         // Keep fallback server alive too
         setInterval(() => {
           console.log("✓ Fallback server heartbeat");
         }, 30000);
       });
-      
+
       // Prevent fallback server from exiting
       process.stdin.resume();
-      
+
     } else {
       process.exit(1);
     }

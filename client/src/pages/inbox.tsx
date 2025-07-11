@@ -81,7 +81,7 @@ export default function InboxPage() {
         endpoint += `?contextType=${selectedTab}`;
       }
       const response = await apiRequest('GET', endpoint);
-      return response.messages || [];
+      return (response as any).messages || [];
     },
   });
 

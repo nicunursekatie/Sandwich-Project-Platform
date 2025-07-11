@@ -37,34 +37,33 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
   const [location] = useLocation();
   const { unreadCounts, totalUnread } = useMessaging();
 
-  // Flat navigation with smart grouping using visual separators
+  // Navigation organized by sections: MAIN, COMMUNICATION, WORKFLOW, PEOPLE, DATA
   const navigationItems: NavigationItem[] = [
-    // Core section
+    // MAIN section
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "dashboard" },
-    { id: "inbox", label: "Inbox", icon: Inbox, href: "inbox" },
-    { id: "collections", label: "Collections", icon: Sandwich, href: "collections" },
-    { id: "chat", label: "Chat", icon: MessageCircle, href: "messages" },
+    ...(hasPermission(user, PERMISSIONS.VIEW_PROJECTS) ? [{ id: "projects", label: "Projects", icon: ClipboardList, href: "projects" }] : []),
+    { id: "collections", label: "Collections Log", icon: Sandwich, href: "collections" },
     
-    // Data section (filtered by permissions)
-    ...(hasPermission(user, PERMISSIONS.VIEW_HOSTS) ? [{ id: "hosts", label: "Hosts", icon: Building2, href: "hosts", group: "data" }] : []),
-    ...(hasPermission(user, PERMISSIONS.VIEW_RECIPIENTS) ? [{ id: "recipients", label: "Recipients", icon: Users, href: "recipients", group: "data" }] : []),
-    ...(hasPermission(user, PERMISSIONS.VIEW_DRIVERS) ? [{ id: "drivers", label: "Drivers", icon: Car, href: "drivers", group: "data" }] : []),
+    // COMMUNICATION section
+    { id: "inbox", label: "Inbox", icon: Inbox, href: "inbox", group: "communication" },
+    { id: "chat", label: "Chat", icon: MessageCircle, href: "messages", group: "communication" },
+    ...(hasPermission(user, PERMISSIONS.VIEW_SUGGESTIONS) ? [{ id: "suggestions", label: "Suggestions", icon: Lightbulb, href: "suggestions", group: "communication" }] : []),
     
-    // Operations section (filtered by permissions)
-    ...(hasPermission(user, PERMISSIONS.VIEW_MEETINGS) ? [{ id: "meetings", label: "Meetings", icon: ClipboardList, href: "meetings", group: "ops" }] : []),
-    ...(hasPermission(user, PERMISSIONS.VIEW_ANALYTICS) ? [{ id: "analytics", label: "Analytics", icon: BarChart3, href: "analytics", group: "ops" }] : []),
-    ...(hasPermission(user, PERMISSIONS.VIEW_REPORTS) ? [{ id: "reports", label: "Reports", icon: FileText, href: "reports", group: "ops" }] : []),
-    ...(hasPermission(user, PERMISSIONS.VIEW_PROJECTS) ? [{ id: "projects", label: "Projects", icon: ClipboardList, href: "projects", group: "ops" }] : []),
+    // WORKFLOW section
+    { id: "work-log", label: "Work Log", icon: ListTodo, href: "work-log", group: "workflow" },
+    { id: "toolkit", label: "Toolkit", icon: FolderOpen, href: "toolkit", group: "workflow" },
+    ...(hasPermission(user, PERMISSIONS.VIEW_MEETINGS) ? [{ id: "meetings", label: "Meetings", icon: ClipboardList, href: "meetings", group: "workflow" }] : []),
     
-    // Communication section  
-    { id: "phone-directory", label: "Directory", icon: Phone, href: "phone-directory", group: "comm" },
-    ...(hasPermission(user, PERMISSIONS.VIEW_SUGGESTIONS) ? [{ id: "suggestions", label: "Suggestions", icon: Lightbulb, href: "suggestions", group: "comm" }] : []),
+    // PEOPLE section
+    { id: "phone-directory", label: "Directory", icon: Phone, href: "phone-directory", group: "people" },
+    ...(hasPermission(user, PERMISSIONS.VIEW_HOSTS) ? [{ id: "hosts", label: "Hosts", icon: Building2, href: "hosts", group: "people" }] : []),
+    ...(hasPermission(user, PERMISSIONS.VIEW_DRIVERS) ? [{ id: "drivers", label: "Drivers", icon: Car, href: "drivers", group: "people" }] : []),
+    ...(hasPermission(user, PERMISSIONS.VIEW_RECIPIENTS) ? [{ id: "recipients", label: "Recipients", icon: Users, href: "recipients", group: "people" }] : []),
     
-    // Resources section
-    { id: "toolkit", label: "Toolkit", icon: FolderOpen, href: "toolkit", group: "resources" },
-    { id: "development", label: "Development", icon: FileText, href: "development", group: "resources" },
-    { id: "work-log", label: "Work Log", icon: ListTodo, href: "work-log", group: "resources" },
-    ...(hasPermission(user, PERMISSIONS.VIEW_SANDWICH_DATA) ? [{ id: "google-sheets", label: "Sandwich Data", icon: Sheet, href: "google-sheets", group: "resources" }] : []),
+    // DATA section
+    ...(hasPermission(user, PERMISSIONS.VIEW_ANALYTICS) ? [{ id: "analytics", label: "Analytics", icon: BarChart3, href: "analytics", group: "data" }] : []),
+    ...(hasPermission(user, PERMISSIONS.VIEW_REPORTS) ? [{ id: "reports", label: "Reports", icon: FileText, href: "reports", group: "data" }] : []),
+    ...(hasPermission(user, PERMISSIONS.VIEW_SANDWICH_DATA) ? [{ id: "google-sheets", label: "Sandwich Data", icon: Sheet, href: "google-sheets", group: "data" }] : []),
     
     // Admin section (filtered by permissions)
     ...(hasPermission(user, PERMISSIONS.MANAGE_USERS) ? [{ id: "user-management", label: "Admin", icon: Settings, href: "user-management", group: "admin" }] : [])
@@ -90,11 +89,11 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
 
   const getGroupLabel = (group: string) => {
     const labels = {
-      data: "Data",
-      ops: "Operations", 
-      comm: "Communication",
-      resources: "Resources",
-      admin: "Admin"
+      communication: "COMMUNICATION",
+      workflow: "WORKFLOW",
+      people: "PEOPLE",
+      data: "DATA",
+      admin: "ADMIN"
     };
     return labels[group as keyof typeof labels] || group;
   };
