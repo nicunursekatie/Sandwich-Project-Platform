@@ -458,33 +458,43 @@ export default function SuggestionsPortal() {
           ) : (
             <div className="grid gap-4">
               {filteredSuggestions.map((suggestion: Suggestion) => (
-                <Card key={suggestion.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setSelectedSuggestion(suggestion)}>
-                  <CardHeader>
+                <Card key={suggestion.id} className="hover:shadow-lg transition-all duration-200 border-l-4 border-l-teal-500">
+                  <CardHeader className="pb-3">
                     <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg">{suggestion.title}</CardTitle>
-                        <CardDescription className="mt-2">
-                          {suggestion.description.length > 150 
-                            ? `${suggestion.description.substring(0, 150)}...` 
+                      <div 
+                        className="flex-1 cursor-pointer"
+                        onClick={() => setSelectedSuggestion(suggestion)}
+                      >
+                        <CardTitle className="text-lg hover:text-teal-600 transition-colors">
+                          {suggestion.title}
+                        </CardTitle>
+                        <CardDescription className="mt-2 text-gray-600">
+                          {suggestion.description.length > 120 
+                            ? `${suggestion.description.substring(0, 120)}...` 
                             : suggestion.description}
                         </CardDescription>
                       </div>
                       <div className="flex items-center space-x-2 ml-4">
-                        {getStatusIcon(suggestion.status)}
+                        <div className="flex items-center space-x-1">
+                          {getStatusIcon(suggestion.status)}
+                          <span className="text-xs text-gray-600 capitalize">
+                            {suggestion.status.replace('_', ' ')}
+                          </span>
+                        </div>
                         <Badge className={getPriorityColor(suggestion.priority)}>
                           {suggestion.priority}
                         </Badge>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <div className="flex justify-between items-center text-sm text-gray-500">
-                      <div className="flex items-center space-x-4">
+                  <CardContent className="pt-0">
+                    <div className="flex justify-between items-center text-sm text-gray-500 mb-3">
+                      <div className="flex items-center space-x-3">
                         <span className="flex items-center">
                           {suggestion.isAnonymous ? <EyeOff className="h-4 w-4 mr-1" /> : <Eye className="h-4 w-4 mr-1" />}
                           {suggestion.isAnonymous ? "Anonymous" : suggestion.submitterName || "Unknown"}
                         </span>
-                        <Badge variant="outline">{suggestion.category}</Badge>
+                        <Badge variant="outline" className="text-xs">{suggestion.category}</Badge>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Button
@@ -494,14 +504,83 @@ export default function SuggestionsPortal() {
                             e.stopPropagation();
                             upvoteMutation.mutate(suggestion.id);
                           }}
-                          className="flex items-center space-x-1"
+                          className="flex items-center space-x-1 h-7 px-2"
                         >
-                          <ThumbsUp className="h-4 w-4" />
+                          <ThumbsUp className="h-3 w-3" />
                           <span>{suggestion.upvotes || 0}</span>
                         </Button>
-                        <span>{new Date(suggestion.createdAt).toLocaleDateString()}</span>
+                        <span className="text-xs">{new Date(suggestion.createdAt).toLocaleDateString()}</span>
                       </div>
                     </div>
+                    
+                    {/* Quick Action Buttons */}
+                    {canManage && (
+                      <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateSuggestionMutation.mutate({ 
+                              id: suggestion.id, 
+                              updates: { status: 'under_review', assignedTo: currentUser?.id } 
+                            });
+                          }}
+                          disabled={suggestion.status === 'under_review'}
+                          className="h-7 px-3 text-xs bg-blue-50 hover:bg-blue-100 border-blue-200"
+                        >
+                          📋 Going to Work
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateSuggestionMutation.mutate({ 
+                              id: suggestion.id, 
+                              updates: { status: 'in_progress', assignedTo: currentUser?.id } 
+                            });
+                          }}
+                          disabled={suggestion.status === 'in_progress'}
+                          className="h-7 px-3 text-xs bg-orange-50 hover:bg-orange-100 border-orange-200"
+                        >
+                          🔄 Working On It
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateSuggestionMutation.mutate({ 
+                              id: suggestion.id, 
+                              updates: { status: 'completed', assignedTo: currentUser?.id } 
+                            });
+                          }}
+                          disabled={suggestion.status === 'completed'}
+                          className="h-7 px-3 text-xs bg-green-50 hover:bg-green-100 border-green-200"
+                        >
+                          ✅ Implemented
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedSuggestion(suggestion);
+                            setTimeout(() => {
+                              updateSuggestionMutation.mutate({ 
+                                id: suggestion.id, 
+                                updates: { status: 'needs_clarification', assignedTo: currentUser?.id } 
+                              });
+                              responseForm.setValue('message', 'I need more clarification on this suggestion. Could you please provide more details about what you\'d like to see implemented?');
+                            }, 100);
+                          }}
+                          className="h-7 px-3 text-xs bg-yellow-50 hover:bg-yellow-100 border-yellow-200"
+                        >
+                          ❓ Ask Details
+                        </Button>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               ))}
@@ -512,82 +591,94 @@ export default function SuggestionsPortal() {
 
       {/* Suggestion Detail Dialog */}
       <Dialog open={!!selectedSuggestion} onOpenChange={() => setSelectedSuggestion(null)}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
           {selectedSuggestion && (
             <>
-              <DialogHeader>
+              <DialogHeader className="pb-6 border-b border-gray-200">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <DialogTitle className="text-xl">{selectedSuggestion.title}</DialogTitle>
-                    <div className="flex items-center space-x-2 mt-2">
+                  <div className="flex-1">
+                    <DialogTitle className="text-2xl font-bold text-gray-900 mb-3">
+                      {selectedSuggestion.title}
+                    </DialogTitle>
+                    <div className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-2">
+                        {getStatusIcon(selectedSuggestion.status)}
+                        <span className="text-sm font-medium text-gray-700 capitalize">
+                          {selectedSuggestion.status.replace('_', ' ')}
+                        </span>
+                      </div>
                       <Badge className={getPriorityColor(selectedSuggestion.priority)}>
                         {selectedSuggestion.priority} priority
                       </Badge>
                       <Badge variant="outline">{selectedSuggestion.category}</Badge>
                       <span className="text-sm text-gray-500">
-                        {selectedSuggestion.isAnonymous ? "Anonymous" : selectedSuggestion.submitterName || "Unknown"}
+                        Submitted by: {selectedSuggestion.isAnonymous ? "Anonymous" : selectedSuggestion.submitterName || "Unknown"}
                       </span>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    {getStatusIcon(selectedSuggestion.status)}
+                  <div className="flex items-center space-x-3">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => upvoteMutation.mutate(selectedSuggestion.id)}
-                      className="flex items-center space-x-1"
+                      className="flex items-center space-x-2"
                     >
                       <ThumbsUp className="h-4 w-4" />
-                      <span>{selectedSuggestion.upvotes || 0}</span>
+                      <span>{selectedSuggestion.upvotes || 0} votes</span>
                     </Button>
                   </div>
                 </div>
               </DialogHeader>
               
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-semibold mb-2">Description</h3>
-                  <p className="text-gray-700 whitespace-pre-wrap">{selectedSuggestion.description}</p>
+              <div className="space-y-6 pt-6">
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="font-semibold mb-3 text-lg">Description</h3>
+                  <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{selectedSuggestion.description}</p>
                 </div>
 
                 {canManage && (
-                  <div className="border-t pt-4">
-                    <h3 className="font-semibold mb-2">Quick Actions</h3>
-                    <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                    <h3 className="font-semibold mb-4 text-lg flex items-center">
+                      ⚡ Workflow Actions
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3 mb-4">
                       <Button
                         variant="outline"
-                        size="sm"
+                        size="default"
                         onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'under_review', assignedTo: currentUser?.id } })}
                         disabled={selectedSuggestion.status === 'under_review'}
+                        className="h-12 bg-blue-100 hover:bg-blue-200 border-blue-300 text-blue-800 font-medium"
                       >
-                        I'm Going to Work on This
+                        📋 Going to Work on This
                       </Button>
                       <Button
                         variant="outline"
-                        size="sm"
+                        size="default"
                         onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'in_progress', assignedTo: currentUser?.id } })}
                         disabled={selectedSuggestion.status === 'in_progress'}
+                        className="h-12 bg-orange-100 hover:bg-orange-200 border-orange-300 text-orange-800 font-medium"
                       >
-                        I'm Currently Working on This
+                        🔄 Currently Working on This
                       </Button>
                       <Button
                         variant="outline"
-                        size="sm"
+                        size="default"
                         onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'completed', assignedTo: currentUser?.id } })}
                         disabled={selectedSuggestion.status === 'completed'}
+                        className="h-12 bg-green-100 hover:bg-green-200 border-green-300 text-green-800 font-medium"
                       >
-                        I've Successfully Implemented This
+                        ✅ Successfully Implemented
                       </Button>
                       <Button
                         variant="outline"
-                        size="sm"
+                        size="default"
                         onClick={() => {
                           updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'needs_clarification', assignedTo: currentUser?.id } });
-                          // Pre-fill the response form with a clarification request
                           responseForm.setValue('message', 'I need more clarification on this suggestion. Could you please provide more details about what you\'d like to see implemented?');
                         }}
+                        className="h-12 bg-yellow-100 hover:bg-yellow-200 border-yellow-300 text-yellow-800 font-medium"
                       >
-                        Ask for Clarification
+                        ❓ Ask for Clarification
                       </Button>
                     </div>
                     <div className="grid grid-cols-2 gap-4 text-sm">
