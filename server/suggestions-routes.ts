@@ -178,4 +178,92 @@ router.delete('/responses/:responseId', requirePermission([PERMISSIONS.RESPOND_T
   }
 });
 
+// Send clarification request to suggestion creator
+router.post('/:id/clarification', requirePermission([PERMISSIONS.MANAGE_SUGGESTIONS]), async (req, res) => {
+  try {
+    const suggestionId = parseInt(req.params.id);
+    const { message } = req.body;
+    
+    if (!message || typeof message !== 'string') {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+    
+    // Get the suggestion to find the creator
+    const suggestion = await storage.getSuggestion(suggestionId);
+    if (!suggestion) {
+      return res.status(404).json({ error: 'Suggestion not found' });
+    }
+    
+    // Get the current user (who is requesting clarification)
+    const currentUser = (req as any).user;
+    if (!currentUser) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+    
+    // Get the suggestion creator's user ID
+    const creatorUserId = suggestion.submittedBy;
+    
+    if (!creatorUserId || creatorUserId === 'anonymous') {
+      return res.status(400).json({ error: 'Cannot send clarification to anonymous suggestion' });
+    }
+    
+    console.log(`[CLARIFICATION] Sending clarification request from ${currentUser.id} to ${creatorUserId} for suggestion ${suggestionId}`);
+    
+    // Create or find direct conversation between current user and suggestion creator
+    let conversation = await storage.getDirectConversation(currentUser.id, creatorUserId);
+    
+    if (!conversation) {
+      // Create new direct conversation
+      const conversationData = {
+        name: `Direct Message`,
+        description: `Direct conversation between ${currentUser.firstName || 'User'} and suggestion creator`,
+        type: 'direct',
+        isPrivate: true,
+        createdBy: currentUser.id
+      };
+      
+      conversation = await storage.createConversation(conversationData);
+      
+      // Add both participants
+      await storage.addConversationParticipant({
+        conversationId: conversation.id,
+        userId: currentUser.id,
+        role: 'admin'
+      });
+      
+      await storage.addConversationParticipant({
+        conversationId: conversation.id,
+        userId: creatorUserId,
+        role: 'member'
+      });
+      
+      console.log(`[CLARIFICATION] Created new direct conversation ${conversation.id}`);
+    }
+    
+    // Send clarification message
+    const clarificationMessage = `📝 Clarification request for your suggestion "${suggestion.title}":\n\n${message}`;
+    
+    const messageData = {
+      conversationId: conversation.id,
+      userId: currentUser.id,
+      content: clarificationMessage,
+      sender: `${currentUser.firstName || 'Admin'} ${currentUser.lastName || 'User'}`.trim()
+    };
+    
+    const sentMessage = await storage.createMessage(messageData);
+    console.log(`[CLARIFICATION] Sent clarification message ${sentMessage.id} in conversation ${conversation.id}`);
+    
+    res.json({ 
+      success: true, 
+      message: 'Clarification request sent successfully',
+      conversationId: conversation.id,
+      messageId: sentMessage.id
+    });
+    
+  } catch (error) {
+    console.error('Error sending clarification request:', error);
+    res.status(500).json({ error: 'Failed to send clarification request' });
+  }
+});
+
 export default router;

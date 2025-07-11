@@ -34,7 +34,9 @@ import {
   User,
   Calendar,
   AlertTriangle,
-  Trash2
+  Trash2,
+  Send,
+  Mail
 } from "lucide-react";
 import { hasPermission } from "@shared/auth-utils";
 
@@ -48,13 +50,12 @@ const suggestionSchema = z.object({
   tags: z.array(z.string()).default([])
 });
 
-const responseSchema = z.object({
-  message: z.string().min(1, "Message is required").max(1000, "Message must be under 1000 characters"),
-  isInternal: z.boolean().default(false)
+const clarificationSchema = z.object({
+  message: z.string().min(1, "Please enter your clarification questions").max(1000, "Message too long"),
 });
 
 type SuggestionFormData = z.infer<typeof suggestionSchema>;
-type ResponseFormData = z.infer<typeof responseSchema>;
+type ClarificationFormData = z.infer<typeof clarificationSchema>;
 
 interface Suggestion {
   id: number;
@@ -91,6 +92,7 @@ interface SuggestionResponse {
 export default function SuggestionsPortal() {
   const [selectedSuggestion, setSelectedSuggestion] = useState<Suggestion | null>(null);
   const [showSubmissionForm, setShowSubmissionForm] = useState(false);
+  const [showClarificationDialog, setShowClarificationDialog] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
@@ -127,12 +129,6 @@ export default function SuggestionsPortal() {
     }
   }, [suggestions, selectedSuggestion]);
 
-  // Fetch responses for selected suggestion
-  const { data: responses = [] } = useQuery({
-    queryKey: ['/api/suggestions', selectedSuggestion?.id, 'responses'],
-    enabled: !!selectedSuggestion?.id
-  });
-
   // Submit suggestion mutation
   const submitSuggestionMutation = useMutation({
     mutationFn: (data: SuggestionFormData) => {
@@ -168,39 +164,6 @@ export default function SuggestionsPortal() {
     }
   });
 
-  // Submit response mutation
-  const submitResponseMutation = useMutation({
-    mutationFn: ({ suggestionId, data }: { suggestionId: number; data: ResponseFormData }) => 
-      apiRequest('POST', `/api/suggestions/${suggestionId}/responses`, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/suggestions', selectedSuggestion?.id, 'responses'] });
-      toast({
-        title: "Success",
-        description: "Response submitted successfully!"
-      });
-    }
-  });
-
-  // Delete suggestion mutation (admin only)
-  const deleteSuggestionMutation = useMutation({
-    mutationFn: (id: number) => apiRequest('DELETE', `/api/suggestions/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/suggestions'], staleTime: 0 });
-      setSelectedSuggestion(null);
-      toast({
-        title: "Suggestion deleted",
-        description: "The suggestion has been permanently removed.",
-      });
-    },
-    onError: (error) => {
-      console.error('Failed to delete suggestion:', error);
-      toast({
-        title: "Error",
-        description: "Failed to delete suggestion. Please try again.",
-        variant: "destructive"
-      });
-    }
-  });
   // Update suggestion mutation (admin only)
   const updateSuggestionMutation = useMutation({
     mutationFn: ({ id, updates }: { id: number; updates: Partial<Suggestion> }) => 
@@ -225,6 +188,56 @@ export default function SuggestionsPortal() {
     }
   });
 
+  // Delete suggestion mutation (admin only)
+  const deleteSuggestionMutation = useMutation({
+    mutationFn: (id: number) => apiRequest('DELETE', `/api/suggestions/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/suggestions'], staleTime: 0 });
+      setSelectedSuggestion(null);
+      toast({
+        title: "Suggestion deleted",
+        description: "The suggestion has been permanently removed.",
+      });
+    },
+    onError: (error) => {
+      console.error('Failed to delete suggestion:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete suggestion. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
+
+  // Send clarification request mutation
+  const sendClarificationMutation = useMutation({
+    mutationFn: ({ suggestionId, message }: { suggestionId: number; message: string }) => {
+      // This should integrate with your messaging system
+      // For now, we'll use the existing response system but make it clear it's a clarification request
+      return apiRequest('POST', `/api/suggestions/${suggestionId}/clarification`, {
+        message,
+        type: 'clarification_request'
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/suggestions'] });
+      setShowClarificationDialog(false);
+      setSelectedSuggestion(null);
+      clarificationForm.reset();
+      toast({
+        title: "Clarification Request Sent",
+        description: "The author will be notified and can respond through the messaging system."
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to send clarification request",
+        variant: "destructive"
+      });
+    }
+  });
+
   // Forms
   const suggestionForm = useForm<SuggestionFormData>({
     resolver: zodResolver(suggestionSchema),
@@ -236,10 +249,10 @@ export default function SuggestionsPortal() {
     }
   });
 
-  const responseForm = useForm<ResponseFormData>({
-    resolver: zodResolver(responseSchema),
+  const clarificationForm = useForm<ClarificationFormData>({
+    resolver: zodResolver(clarificationSchema),
     defaultValues: {
-      isInternal: false
+      message: ""
     }
   });
 
@@ -283,11 +296,18 @@ export default function SuggestionsPortal() {
     submitSuggestionMutation.mutate(data);
   };
 
-  const onSubmitResponse = (data: ResponseFormData) => {
+  const onSubmitClarification = (data: ClarificationFormData) => {
     if (selectedSuggestion) {
-      submitResponseMutation.mutate({ suggestionId: selectedSuggestion.id, data });
-      responseForm.reset();
+      sendClarificationMutation.mutate({ 
+        suggestionId: selectedSuggestion.id, 
+        message: data.message 
+      });
     }
+  };
+
+  const handleRequestClarification = (suggestion: Suggestion) => {
+    setSelectedSuggestion(suggestion);
+    setShowClarificationDialog(true);
   };
 
   const getPriorityColor = (priority: string) => {
@@ -680,12 +700,14 @@ export default function SuggestionsPortal() {
                 return (
                   <Card 
                     key={suggestion.id} 
-                    className="cursor-pointer hover:shadow-md transition-all duration-200 hover:border-blue-200 group border-l-4 border-l-teal-500" 
-                    onClick={() => setSelectedSuggestion(suggestion)}
+                    className="hover:shadow-md transition-all duration-200 border-l-4 border-l-teal-500 group" 
                   >
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-start gap-4">
-                        <div className="flex-1 min-w-0">
+                        <div 
+                          className="flex-1 min-w-0 cursor-pointer"
+                          onClick={() => setSelectedSuggestion(suggestion)}
+                        >
                           <div className="flex items-center gap-2 mb-2">
                             <Badge 
                               variant="outline" 
@@ -750,20 +772,14 @@ export default function SuggestionsPortal() {
                             <ThumbsUp className="h-4 w-4" />
                             <span className="font-medium">{suggestion.upvotes || 0}</span>
                           </Button>
-                          {responses.length > 0 && (
-                            <div className="flex items-center gap-1 text-gray-500">
-                              <MessageSquare className="h-4 w-4" />
-                              <span className="text-sm">{responses.length}</span>
-                            </div>
-                          )}
                         </div>
                       </div>
 
-                      {/* Quick Action Buttons - Only for users with MANAGE_SUGGESTIONS permission */}
+                      {/* Admin Actions */}
                       {hasPermission(currentUser, 'manage_suggestions') && (
                         <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -773,12 +789,13 @@ export default function SuggestionsPortal() {
                               });
                             }}
                             disabled={suggestion.status === 'under_review'}
-                            className="h-7 px-3 text-xs bg-blue-50 hover:bg-blue-100 border-blue-200"
+                            className="h-8 px-3 text-xs text-blue-700 hover:bg-blue-50 hover:text-blue-800"
                           >
-                            📋 Going to Work
+                            <Eye className="h-3 w-3 mr-1.5" />
+                            Review
                           </Button>
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -788,12 +805,13 @@ export default function SuggestionsPortal() {
                               });
                             }}
                             disabled={suggestion.status === 'in_progress'}
-                            className="h-7 px-3 text-xs bg-orange-50 hover:bg-orange-100 border-orange-200"
+                            className="h-8 px-3 text-xs text-orange-700 hover:bg-orange-50 hover:text-orange-800"
                           >
-                            🔄 Working On It
+                            <Clock className="h-3 w-3 mr-1.5" />
+                            In Progress
                           </Button>
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -803,30 +821,25 @@ export default function SuggestionsPortal() {
                               });
                             }}
                             disabled={suggestion.status === 'completed'}
-                            className="h-7 px-3 text-xs bg-green-50 hover:bg-green-100 border-green-200"
+                            className="h-8 px-3 text-xs text-green-700 hover:bg-green-50 hover:text-green-800"
                           >
-                            ✅ Implemented
+                            <CheckCircle className="h-3 w-3 mr-1.5" />
+                            Complete
                           </Button>
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setSelectedSuggestion(suggestion);
-                              setTimeout(() => {
-                                updateSuggestionMutation.mutate({ 
-                                  id: suggestion.id, 
-                                  updates: { status: 'needs_clarification', assignedTo: currentUser?.id } 
-                                });
-                                responseForm.setValue('message', 'I need more clarification on this suggestion. Could you please provide more details about what you\'d like to see implemented?');
-                              }, 100);
+                              handleRequestClarification(suggestion);
                             }}
-                            className="h-7 px-3 text-xs bg-yellow-50 hover:bg-yellow-100 border-yellow-200"
+                            className="h-8 px-3 text-xs text-purple-700 hover:bg-purple-50 hover:text-purple-800"
                           >
-                            ❓ Ask Details
+                            <Mail className="h-3 w-3 mr-1.5" />
+                            Ask for Details
                           </Button>
                           <Button
-                            variant="outline"
+                            variant="ghost"
                             size="sm"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -834,9 +847,9 @@ export default function SuggestionsPortal() {
                                 deleteSuggestionMutation.mutate(suggestion.id);
                               }
                             }}
-                            className="h-7 px-3 text-xs bg-red-50 hover:bg-red-100 border-red-200 text-red-700"
+                            className="h-8 px-3 text-xs text-red-700 hover:bg-red-50 hover:text-red-800"
                           >
-                            <Trash2 className="h-3 w-3 mr-1" />
+                            <Trash2 className="h-3 w-3 mr-1.5" />
                             Delete
                           </Button>
                         </div>
@@ -850,208 +863,105 @@ export default function SuggestionsPortal() {
         </TabsContent>
       </Tabs>
 
-      {/* Suggestion Detail Dialog */}
-      <Dialog open={!!selectedSuggestion} onOpenChange={() => setSelectedSuggestion(null)}>
-        <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
+      {/* Suggestion Detail Dialog - Simple view only */}
+      <Dialog open={!!selectedSuggestion && !showClarificationDialog} onOpenChange={() => setSelectedSuggestion(null)}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
           {selectedSuggestion && (
             <>
-              <DialogHeader className="pb-6 border-b border-gray-200">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <DialogTitle className="text-2xl font-bold text-gray-900 mb-3">
-                      {selectedSuggestion.title}
-                    </DialogTitle>
-                    <div className="flex items-center space-x-3">
-                      <div className="flex items-center space-x-2">
-                        {getStatusConfig(selectedSuggestion.status).icon}
-                        <span className="text-sm font-medium text-gray-700 capitalize">
-                          {selectedSuggestion.status.replace('_', ' ')}
-                        </span>
-                      </div>
-                      <Badge className={getPriorityColor(selectedSuggestion.priority)}>
-                        {selectedSuggestion.priority} priority
-                      </Badge>
-                      <Badge variant="outline">{selectedSuggestion.category}</Badge>
-                      <span className="text-sm text-gray-500">
-                        Submitted by: {selectedSuggestion.isAnonymous ? "Anonymous" : selectedSuggestion.submitterName || "Unknown"}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => upvoteMutation.mutate(selectedSuggestion.id)}
-                      className="flex items-center space-x-2"
-                    >
-                      <ThumbsUp className="h-4 w-4" />
-                      <span>{selectedSuggestion.upvotes || 0} votes</span>
-                    </Button>
-                  </div>
+              <DialogHeader>
+                <DialogTitle className="text-xl">{selectedSuggestion.title}</DialogTitle>
+                <div className="flex items-center space-x-2 mt-2">
+                  <Badge className={getPriorityColor(selectedSuggestion.priority)}>
+                    {selectedSuggestion.priority} priority
+                  </Badge>
+                  <Badge variant="outline">{selectedSuggestion.category}</Badge>
+                  <span className="text-sm text-gray-500">
+                    {selectedSuggestion.isAnonymous ? "Anonymous" : selectedSuggestion.submitterName || "Unknown"}
+                  </span>
                 </div>
               </DialogHeader>
 
-              <div className="space-y-6 pt-6">
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h3 className="font-semibold mb-3 text-lg">Description</h3>
-                  <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{selectedSuggestion.description}</p>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-semibold mb-2">Description</h3>
+                  <p className="text-gray-700 whitespace-pre-wrap">{selectedSuggestion.description}</p>
                 </div>
 
-                {hasPermission(currentUser, 'manage_suggestions') && (
-                  <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-                    <h3 className="font-semibold mb-4 text-lg flex items-center">
-                      ⚡ Workflow Actions
-                    </h3>
-                    <div className="grid grid-cols-2 gap-3 mb-4">
-                      <Button
-                        variant="outline"
-                        size="default"
-                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'under_review', assignedTo: currentUser?.id } })}
-                        disabled={selectedSuggestion.status === 'under_review'}
-                        className="h-12 bg-blue-100 hover:bg-blue-200 border-blue-300 text-blue-800 font-medium"
-                      >
-                        📋 Going to Work on This
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="default"
-                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'in_progress', assignedTo: currentUser?.id } })}
-                        disabled={selectedSuggestion.status === 'in_progress'}
-                        className="h-12 bg-orange-100 hover:bg-orange-200 border-orange-300 text-orange-800 font-medium"
-                      >
-                        🔄 Currently Working on This
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="default"
-                        onClick={() => updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'completed', assignedTo: currentUser?.id } })}
-                        disabled={selectedSuggestion.status === 'completed'}
-                        className="h-12 bg-green-100 hover:bg-green-200 border-green-300 text-green-800 font-medium"
-                      >
-                        ✅ Successfully Implemented
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="default"
-                        onClick={() => {
-                          updateSuggestionMutation.mutate({ id: selectedSuggestion.id, updates: { status: 'needs_clarification', assignedTo: currentUser?.id } });
-                          responseForm.setValue('message', 'I need more clarification on this suggestion. Could you please provide more details about what you\'d like to see implemented?');
-                        }}
-                        className="h-12 bg-yellow-100 hover:bg-yellow-200 border-yellow-300 text-yellow-800 font-medium"
-                      >
-                        ❓ Ask for Clarification
-                      </Button>
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-blue-300">
-                      <Button
-                        variant="outline"
-                        size="default"
-                        onClick={() => {
-                          if (confirm('Are you sure you want to delete this suggestion? This action cannot be undone.')) {
-                            deleteSuggestionMutation.mutate(selectedSuggestion.id);
-                          }
-                        }}
-                        className="h-10 px-4 bg-red-100 hover:bg-red-200 border-red-300 text-red-800 font-medium"
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete Suggestion
-                      </Button>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 text-sm mt-4 pt-4 border-t border-blue-300">
-                      <div>
-                        <span className="font-medium">Current Status:</span> {selectedSuggestion.status}
-                      </div>
-                      <div>
-                        <span className="font-medium">Assigned to:</span> {selectedSuggestion.assignedTo || "Unassigned"}
-                      </div>
-                      <div>
-                        <span className="font-medium">Estimated effort:</span> {selectedSuggestion.estimatedEffort || "Not estimated"}
-                      </div>
-                      <div>
-                        <span className="font-medium">Submitted by:</span> {selectedSuggestion.submitterEmail || "Unknown"}
-                      </div>
-                    </div>
-                    {selectedSuggestion.implementationNotes && (
-                      <div className="mt-4">
-                        <span className="font-medium">Implementation notes:</span>
-                        <p className="mt-1 text-gray-700">{selectedSuggestion.implementationNotes}</p>
-                      </div>
-                    )}
+                <div className="flex items-center justify-between pt-4 border-t">
+                  <div className="flex items-center space-x-4 text-sm text-gray-500">
+                    <span>Submitted: {new Date(selectedSuggestion.createdAt).toLocaleDateString()}</span>
+                    <span>Status: {selectedSuggestion.status.replace('_', ' ')}</span>
                   </div>
-                )}
-
-                {/* Responses Section */}
-                <div className="border-t pt-4">
-                  <h3 className="font-semibold mb-4 flex items-center">
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    Discussion ({responses.length})
-                  </h3>
-
-                  <div className="space-y-4 max-h-60 overflow-y-auto">
-                    {responses.map((response: SuggestionResponse) => (
-                      <div key={response.id} className={`p-3 rounded-lg ${response.isAdminResponse ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'}`}>
-                        <div className="flex justify-between items-start mb-2">
-                          <span className="font-medium text-sm">
-                            {response.respondentName || "Unknown"}
-                            {response.isAdminResponse && <Badge className="ml-2" variant="secondary">Admin</Badge>}
-                            {response.isInternal && <Badge className="ml-2" variant="outline">Internal</Badge>}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {new Date(response.createdAt).toLocaleString()}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-700">{response.message}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {hasPermission(currentUser, 'respond_to_suggestions') && (
-                    <Form {...responseForm}>
-                      <form onSubmit={responseForm.handleSubmit(onSubmitResponse)} className="mt-4 space-y-3">
-                        <FormField
-                          control={responseForm.control}
-                          name="message"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Textarea 
-                                  placeholder="Add a response or ask for clarification..."
-                                  rows={3}
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        {canManage && (
-                          <FormField
-                            control={responseForm.control}
-                            name="isInternal"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-row items-center space-x-2">
-                                <FormControl>
-                                  <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                  />
-                                </FormControl>
-                                <FormLabel className="text-sm font-normal">
-                                  Internal note (visible to admins only)
-                                </FormLabel>
-                              </FormItem>
-                            )}
-                          />
-                        )}
-                        <Button type="submit" disabled={submitResponseMutation.isPending} size="sm">
-                          {submitResponseMutation.isPending ? "Sending..." : "Send Response"}
-                        </Button>
-                      </form>
-                    </Form>
-                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => upvoteMutation.mutate(selectedSuggestion.id)}
+                    className="flex items-center space-x-1"
+                  >
+                    <ThumbsUp className="h-4 w-4" />
+                    <span>{selectedSuggestion.upvotes || 0}</span>
+                  </Button>
                 </div>
               </div>
             </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Clarification Request Dialog */}
+      <Dialog open={showClarificationDialog} onOpenChange={setShowClarificationDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="h-5 w-5 text-blue-600" />
+              Request Clarification
+            </DialogTitle>
+            <DialogDescription>
+              Send a message to {selectedSuggestion?.isAnonymous ? 'the anonymous submitter' : selectedSuggestion?.submitterName} requesting more details about their suggestion.
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedSuggestion && (
+            <div className="space-y-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-medium mb-2">{selectedSuggestion.title}</h4>
+                <p className="text-sm text-gray-600 line-clamp-3">{selectedSuggestion.description}</p>
+              </div>
+
+              <Form {...clarificationForm}>
+                <form onSubmit={clarificationForm.handleSubmit(onSubmitClarification)} className="space-y-4">
+                  <FormField
+                    control={clarificationForm.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Your clarification request</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="What specific details do you need? Be clear about what would help you better understand or implement this suggestion..."
+                            rows={5}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          This message will be sent directly to the suggestion author through the messaging system.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex justify-end space-x-2">
+                    <Button type="button" variant="outline" onClick={() => setShowClarificationDialog(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={sendClarificationMutation.isPending}>
+                      <Send className="h-4 w-4 mr-2" />
+                      {sendClarificationMutation.isPending ? "Sending..." : "Send Request"}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </div>
           )}
         </DialogContent>
       </Dialog>

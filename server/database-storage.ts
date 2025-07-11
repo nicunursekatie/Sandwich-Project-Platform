@@ -460,6 +460,62 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
+  // Conversation management methods
+  async getDirectConversation(userId1: string, userId2: string): Promise<any | undefined> {
+    try {
+      // Find direct conversations where both users are participants
+      const directConversations = await db
+        .select({ conversation: conversations })
+        .from(conversations)
+        .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+        .where(
+          and(
+            eq(conversations.type, 'direct'),
+            eq(conversationParticipants.userId, userId1)
+          )
+        );
+
+      // Check if any of these conversations also include userId2
+      for (const conv of directConversations) {
+        const participant2 = await db
+          .select()
+          .from(conversationParticipants)
+          .where(
+            and(
+              eq(conversationParticipants.conversationId, conv.conversation.id),
+              eq(conversationParticipants.userId, userId2)
+            )
+          )
+          .limit(1);
+
+        if (participant2.length > 0) {
+          return conv.conversation;
+        }
+      }
+
+      return undefined;
+    } catch (error) {
+      console.error('Error finding direct conversation:', error);
+      return undefined;
+    }
+  }
+
+  async createConversation(conversationData: any): Promise<any> {
+    const [conversation] = await db
+      .insert(conversations)
+      .values(conversationData)
+      .returning();
+    return conversation;
+  }
+
+  async addConversationParticipant(participantData: any): Promise<any> {
+    const [participant] = await db
+      .insert(conversationParticipants)
+      .values(participantData)
+      .returning();
+    return participant;
+  }
+
   // REMOVED: Old group messaging methods - replaced with simple conversation system
   // These methods referenced non-existent tables (messageGroups, groupMessageParticipants)
   // The new system uses conversations, conversationParticipants, and messages tables
