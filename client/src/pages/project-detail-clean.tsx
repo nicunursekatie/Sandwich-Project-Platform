@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { ArrowLeft, Calendar, User, Clock, Target, CheckCircle2, Circle, Pause, Play, Plus, Trash2, Edit, Check, Award } from "lucide-react";
+import { SendKudosButton } from "@/components/send-kudos-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -840,6 +841,35 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                         </div>
                       </div>
                       <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1 ml-2 sm:ml-4 shrink-0">
+                        {/* Send Kudos for completed tasks */}
+                        {task.status === 'completed' && task.assigneeId && task.assigneeId !== user?.id && (
+                          <SendKudosButton
+                            recipientId={task.assigneeId}
+                            recipientName={task.assigneeName}
+                            contextType="task"
+                            contextId={task.id.toString()}
+                            entityName={task.title}
+                            size="sm"
+                          />
+                        )}
+                        {/* Send Kudos for multi-assignee completed tasks */}
+                        {task.status === 'completed' && task.assigneeIds && task.assigneeIds.length > 0 && (
+                          <>
+                            {task.assigneeIds.map((assigneeId, index) => 
+                              assigneeId && assigneeId !== user?.id ? (
+                                <SendKudosButton
+                                  key={assigneeId}
+                                  recipientId={assigneeId}
+                                  recipientName={task.assigneeNames?.[index]}
+                                  contextType="task"
+                                  contextId={task.id.toString()}
+                                  entityName={task.title}
+                                  size="sm"
+                                />
+                              ) : null
+                            )}
+                          </>
+                        )}
                         <Dialog open={editingTask?.id === task.id} onOpenChange={(open) => !open && setEditingTask(null)}>
                           <DialogTrigger asChild>
                             <Button 

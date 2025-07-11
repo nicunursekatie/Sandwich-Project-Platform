@@ -14,6 +14,8 @@ import { Plus, Users, Clock, CheckCircle, AlertCircle, FolderOpen, Edit2, Trash2
 import { apiRequest } from '@/lib/queryClient';
 import { useLocation } from "wouter";
 import { ProjectAssigneeSelector } from '@/components/project-assignee-selector';
+import { SendKudosButton } from '@/components/send-kudos-button';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Project {
   id: number;
@@ -21,7 +23,7 @@ interface Project {
   description: string;
   status: string;
   priority: 'low' | 'medium' | 'high';
-  assigneeId?: number;
+  assigneeId?: string;
   assigneeName?: string;
   dueDate?: string;
   progressPercentage: number;
@@ -33,6 +35,7 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [, setLocation] = useLocation();
+  const { user } = useAuth();
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -470,6 +473,16 @@ export default function ProjectsPage({ isEmbedded = false }: { isEmbedded?: bool
                         {project.priority} priority
                       </Badge>
                       <Badge variant="outline">completed</Badge>
+                      {project.assigneeId && project.assigneeId !== user?.id && (
+                        <SendKudosButton
+                          recipientId={project.assigneeId}
+                          recipientName={project.assigneeName}
+                          contextType="project"
+                          contextId={project.id.toString()}
+                          entityName={project.title}
+                          size="sm"
+                        />
+                      )}
                       <button
                         onClick={() => handleEdit(project)}
                         className="p-1 text-gray-500 hover:text-blue-600 transition-colors"

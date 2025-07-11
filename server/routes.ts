@@ -5921,6 +5921,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Register Suggestions Portal routes
   app.use("/api/suggestions", suggestionsRoutes);
+  
+  // Register Messaging routes
+  const { messagingRoutes } = await import("./routes/messaging");
+  app.use("/api/messaging", messagingRoutes);
 
   // Google Sheets sync endpoint for individual collection entries
   app.post("/api/google-sheets/sync-entry", async (req, res) => {

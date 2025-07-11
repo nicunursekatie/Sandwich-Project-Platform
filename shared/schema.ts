@@ -182,18 +182,70 @@ export const conversationParticipants = pgTable("conversation_participants", {
   pk: primaryKey({ columns: [table.conversationId, table.userId] }),
 }));
 
-// 3. Messages - simple message storage
+// 3. Messages - enhanced with contextual linking
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
   conversationId: integer("conversation_id").references(() => conversations.id, { onDelete: "cascade" }),
   userId: text("user_id").notNull(),
+  senderId: text("sender_id").notNull(),
   content: text("content").notNull(),
   sender: text("sender"), // Display name of sender
+  contextType: text("context_type"), // 'suggestion', 'project', 'task', 'direct'
+  contextId: text("context_id"),
+  editedAt: timestamp("edited_at"),
+  editedContent: text("edited_content"),
+  deletedAt: timestamp("deleted_at"),
+  deletedBy: text("deleted_by"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// All complex messaging tables removed - using simple 3-table system above
+// 4. Message Recipients - track read status per recipient
+export const messageRecipients = pgTable("message_recipients", {
+  id: serial("id").primaryKey(),
+  messageId: integer("message_id").references(() => messages.id, { onDelete: "cascade" }),
+  recipientId: text("recipient_id").notNull(),
+  read: boolean("read").notNull().default(false),
+  readAt: timestamp("read_at"),
+  notificationSent: boolean("notification_sent").notNull().default(false),
+  emailSentAt: timestamp("email_sent_at"),
+  contextAccessRevoked: boolean("context_access_revoked").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => ({
+  uniqueRecipient: unique().on(table.messageId, table.recipientId),
+  unreadIdx: index("idx_message_recipients_unread").on(table.recipientId, table.read),
+}));
+
+// 5. Message Threads - maintain threading hierarchy
+export const messageThreads = pgTable("message_threads", {
+  id: serial("id").primaryKey(),
+  rootMessageId: integer("root_message_id").references(() => messages.id, { onDelete: "cascade" }),
+  messageId: integer("message_id").references(() => messages.id, { onDelete: "cascade" }),
+  parentMessageId: integer("parent_message_id").references(() => messages.id, { onDelete: "cascade" }),
+  depth: integer("depth").notNull().default(0),
+  path: text("path").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => ({
+  uniqueMessage: unique().on(table.messageId),
+  pathIdx: index("idx_thread_path").on(table.path),
+}));
+
+// 6. Kudos Tracking - prevent spam by tracking sent kudos
+export const kudosTracking = pgTable("kudos_tracking", {
+  id: serial("id").primaryKey(),
+  senderId: text("sender_id").notNull(),
+  recipientId: text("recipient_id").notNull(),
+  contextType: text("context_type").notNull(), // 'project' or 'task'
+  contextId: text("context_id").notNull(),
+  messageId: integer("message_id").references(() => messages.id, { onDelete: "cascade" }),
+  sentAt: timestamp("sent_at").defaultNow(),
+}, (table) => ({
+  // Ensure one kudos per sender-recipient-context combination
+  uniqueKudos: unique().on(table.senderId, table.recipientId, table.contextType, table.contextId),
+  senderIdx: index("idx_kudos_sender").on(table.senderId),
+}));
+
+// All complex messaging tables removed - using enhanced messaging system above
 
 export const weeklyReports = pgTable("weekly_reports", {
   id: serial("id").primaryKey(),
@@ -346,6 +398,9 @@ export const projectDocuments = pgTable("project_documents", {
 export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertProjectSchema = createInsertSchema(projects).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertMessageSchema = createInsertSchema(messages).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertMessageRecipientSchema = createInsertSchema(messageRecipients).omit({ id: true, createdAt: true });
+export const insertMessageThreadSchema = createInsertSchema(messageThreads).omit({ id: true, createdAt: true });
+export const insertKudosTrackingSchema = createInsertSchema(kudosTracking).omit({ id: true, sentAt: true });
 export const insertWeeklyReportSchema = createInsertSchema(weeklyReports).omit({ id: true, submittedAt: true });
 export const insertSandwichCollectionSchema = createInsertSchema(sandwichCollections).omit({ id: true, submittedAt: true });
 export const insertMeetingMinutesSchema = createInsertSchema(meetingMinutes).omit({ id: true });
@@ -375,6 +430,12 @@ export type Project = typeof projects.$inferSelect;
 export type InsertProject = z.infer<typeof insertProjectSchema>;
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+export type MessageRecipient = typeof messageRecipients.$inferSelect;
+export type InsertMessageRecipient = z.infer<typeof insertMessageRecipientSchema>;
+export type MessageThread = typeof messageThreads.$inferSelect;
+export type InsertMessageThread = z.infer<typeof insertMessageThreadSchema>;
+export type KudosTracking = typeof kudosTracking.$inferSelect;
+export type InsertKudosTracking = z.infer<typeof insertKudosTrackingSchema>;
 export type WeeklyReport = typeof weeklyReports.$inferSelect;
 export type InsertWeeklyReport = z.infer<typeof insertWeeklyReportSchema>;
 export type SandwichCollection = typeof sandwichCollections.$inferSelect;
