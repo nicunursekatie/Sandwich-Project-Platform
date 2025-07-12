@@ -14,7 +14,7 @@ import path from "path";
 import mammoth from "mammoth";
 import { storage } from "./storage-wrapper";
 import { sendDriverAgreementNotification } from "./sendgrid";
-import { messageNotificationRoutes } from "./routes/message-notifications";
+import { registerMessageNotificationRoutes } from "./routes/message-notifications";
 import googleSheetsRoutes from "./routes/google-sheets";
 import suggestionsRoutes from "./suggestions-routes";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
@@ -4871,23 +4871,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  // Message notification routes
-  app.get(
-    "/api/messages/unread-counts",
-    isAuthenticated,
-    messageNotificationRoutes.getUnreadCounts,
-  );
-  app.post(
-    "/api/messages/mark-read",
-    isAuthenticated,
-    messageNotificationRoutes.markMessagesRead,
-  );
-  app.post(
-    "/api/messages/mark-all-read",
-    isAuthenticated,
-    messageNotificationRoutes.markAllRead,
-  );
-
   // Announcement routes
   app.get("/api/announcements", async (req, res) => {
     try {
@@ -4981,23 +4964,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.status(500).json({ message: "Failed to delete announcement" });
       }
     },
-  );
-
-  // Message notification routes
-  app.get(
-    "/api/messages/unread-counts",
-    isAuthenticated,
-    messageNotificationRoutes.getUnreadCounts,
-  );
-  app.post(
-    "/api/messages/mark-read",
-    isAuthenticated,
-    messageNotificationRoutes.markMessagesRead,
-  );
-  app.post(
-    "/api/messages/mark-all-read",
-    isAuthenticated,
-    messageNotificationRoutes.markAllRead,
   );
 
   // Custom Message Groups API
@@ -7090,6 +7056,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Failed to check project data status' });
     }
   });
+
+  // Register message notification routes
+  registerMessageNotificationRoutes(app);
 
   // Make broadcast functions available globally for use in other routes
   (global as any).broadcastNewMessage = broadcastNewMessage;
