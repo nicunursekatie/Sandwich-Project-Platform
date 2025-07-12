@@ -33,7 +33,7 @@ export function GroupConversation({ groupId, groupName, groupDescription, onBack
   const { useAutoMarkAsRead } = useMessageReads();
 
   // Fetch group members
-  const { data: groupMembers = [] } = useQuery<Array<{
+  const { data: groupMembers = [], isLoading: participantsLoading, error: participantsError } = useQuery<Array<{
     userId: string;
     role: string;
     firstName: string;
@@ -42,16 +42,28 @@ export function GroupConversation({ groupId, groupName, groupDescription, onBack
   }>>({
     queryKey: ["/api/conversations", groupId, "participants"],
     queryFn: async () => {
+      console.log(`[FRONTEND] Fetching participants for group ${groupId}`);
       const response = await fetch(`/api/conversations/${groupId}/participants`, {
         credentials: 'include'
       });
+      console.log(`[FRONTEND] Participants response status: ${response.status}`);
       if (!response.ok) {
+        console.error(`[FRONTEND] Failed to fetch participants: ${response.status}`);
         throw new Error(`Failed to fetch participants: ${response.status}`);
       }
       const data = await response.json();
+      console.log(`[FRONTEND] Participants data:`, data);
       return Array.isArray(data) ? data : [];
     },
+    enabled: !!groupId,
   });
+
+  // Debug logging for participants
+  useEffect(() => {
+    console.log(`[FRONTEND] Group members state:`, groupMembers);
+    console.log(`[FRONTEND] Participants loading:`, participantsLoading);
+    console.log(`[FRONTEND] Participants error:`, participantsError);
+  }, [groupMembers, participantsLoading, participantsError]);
 
   // Fetch messages for group conversation
   const { data: messages = [], isLoading: messagesLoading } = useQuery<Message[]>({
@@ -76,6 +88,7 @@ export function GroupConversation({ groupId, groupName, groupDescription, onBack
     setOptimisticMessages(null);
     if (groupId) {
       queryClient.invalidateQueries({ queryKey: ["/api/conversations", groupId, "messages"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/conversations", groupId, "participants"] });
     }
   }, [groupId]);
 
