@@ -95,4 +95,23 @@ router.post("/conversations/:id/messages", async (req, res) => {
   }
 });
 
+// Get participants for a conversation
+router.get("/conversations/:id/participants", async (req, res) => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      console.log('DEBUG: No user ID found in get participants, user object:', (req as any).user);
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+    
+    const conversationId = parseInt(req.params.id);
+    const participants = await storage.getConversationParticipants(conversationId);
+    console.log(`[PARTICIPANTS] Found ${participants.length} participants for conversation ${conversationId}`);
+    res.json(participants);
+  } catch (error) {
+    console.error("Error fetching conversation participants:", error);
+    res.status(500).json({ error: "Failed to fetch participants" });
+  }
+});
+
 export { router as conversationsRoutes };

@@ -319,6 +319,36 @@ export class DatabaseStorage implements IStorage {
     }));
   }
 
+  // Get participants for a conversation
+  async getConversationParticipants(conversationId: number): Promise<Array<{
+    userId: string;
+    role: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  }>> {
+    // Note: conversationParticipants table doesn't have role column, so we'll default to 'member'
+    const results = await db
+      .select({
+        userId: conversationParticipants.userId,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        email: users.email,
+      })
+      .from(conversationParticipants)
+      .leftJoin(users, eq(users.id, conversationParticipants.userId))
+      .where(eq(conversationParticipants.conversationId, conversationId));
+    
+    console.log(`[DB] Found ${results.length} participants for conversation ${conversationId}`);
+    return results.map(row => ({
+      userId: row.userId,
+      role: 'member', // Default role since table doesn't have role column
+      firstName: row.firstName || '',
+      lastName: row.lastName || '',
+      email: row.email || '',
+    }));
+  }
+
   // ALIAS: getMessagesByThreadId for backwards compatibility
   async getMessagesByThreadId(threadId: number): Promise<Message[]> {
     return await this.getMessagesByConversationId(threadId);
