@@ -6837,6 +6837,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
+  // Get participants for a conversation
+  app.get("/api/conversations/:id/participants", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).user;
+      if (!user?.id) {
+        console.log('DEBUG: No user ID found in get participants, user object:', user);
+        return res.status(401).json({ error: "User not authenticated" });
+      }
+      
+      const conversationId = parseInt(req.params.id);
+      const participants = await storage.getConversationParticipants(conversationId);
+      console.log(`[PARTICIPANTS] Found ${participants.length} participants for conversation ${conversationId}`);
+      res.json(participants);
+    } catch (error) {
+      console.error("Error fetching conversation participants:", error);
+      res.status(500).json({ error: "Failed to fetch participants" });
+    }
+  });
+
   // Create or get direct conversation between two users
   app.post("/api/conversations/direct", isAuthenticated, async (req, res) => {
     console.log("=== POST /api/conversations/direct START ===");

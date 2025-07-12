@@ -1,0 +1,77 @@
+Messaging WebSocket connected
+queryClient.ts:17  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/conversations/11/messages 403 (Forbidden)
+apiRequest @ queryClient.ts:17
+(anonymous) @ inbox.tsx:114
+await in (anonymous)
+queryFn @ inbox.tsx:107
+await in queryFn
+fetchFn @ @tanstack_react-query.js?v=a93b0d88:881
+run @ @tanstack_react-query.js?v=a93b0d88:513
+start @ @tanstack_react-query.js?v=a93b0d88:555
+fetch @ @tanstack_react-query.js?v=a93b0d88:969
+executeFetch_fn @ @tanstack_react-query.js?v=a93b0d88:2279
+onSubscribe @ @tanstack_react-query.js?v=a93b0d88:1983
+subscribe @ @tanstack_react-query.js?v=a93b0d88:24
+(anonymous) @ @tanstack_react-query.js?v=a93b0d88:3146
+subscribeToStore @ chunk-RPCDYKBN.js?v=a93b0d88:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=a93b0d88:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=a93b0d88:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=a93b0d88:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=a93b0d88:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=a93b0d88:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=a93b0d88:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=a93b0d88:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=a93b0d88:19416
+commitRoot @ chunk-RPCDYKBN.js?v=a93b0d88:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=a93b0d88:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=a93b0d88:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=a93b0d88:18627
+inbox.tsx:137 Error fetching data for group 11: Error: 403: {"message":"Access denied"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async inbox.tsx:114:40
+    at async Promise.all (:5000/index 1)
+    at async queryFn (inbox.tsx:106:30)
+overrideMethod @ hook.js:608
+(anonymous) @ inbox.tsx:137
+await in (anonymous)
+queryFn @ inbox.tsx:107
+await in queryFn
+fetchFn @ @tanstack_react-query.js?v=a93b0d88:881
+run @ @tanstack_react-query.js?v=a93b0d88:513
+start @ @tanstack_react-query.js?v=a93b0d88:555
+fetch @ @tanstack_react-query.js?v=a93b0d88:969
+executeFetch_fn @ @tanstack_react-query.js?v=a93b0d88:2279
+onSubscribe @ @tanstack_react-query.js?v=a93b0d88:1983
+subscribe @ @tanstack_react-query.js?v=a93b0d88:24
+(anonymous) @ @tanstack_react-query.js?v=a93b0d88:3146
+subscribeToStore @ chunk-RPCDYKBN.js?v=a93b0d88:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=a93b0d88:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=a93b0d88:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=a93b0d88:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=a93b0d88:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=a93b0d88:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=a93b0d88:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=a93b0d88:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=a93b0d88:19416
+commitRoot @ chunk-RPCDYKBN.js?v=a93b0d88:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=a93b0d88:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=a93b0d88:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=a93b0d88:18627
+group-conversation.tsx:45 [FRONTEND] Fetching participants for group 10
+group-conversation.tsx:63 [FRONTEND] Group members state: []
+group-conversation.tsx:64 [FRONTEND] Participants loading: true
+group-conversation.tsx:65 [FRONTEND] Participants error: null
+group-conversation.tsx:63 [FRONTEND] Group members state: []
+group-conversation.tsx:64 [FRONTEND] Participants loading: true
+group-conversation.tsx:65 [FRONTEND] Participants error: null
+group-conversation.tsx:49 [FRONTEND] Participants response status: 200
+group-conversation.tsx:63 [FRONTEND] Group members state: []
+group-conversation.tsx:64 [FRONTEND] Participants loading: false
+group-conversation.tsx:65 [FRONTEND] Participants error: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+group-conversation.tsx:63 [FRONTEND] Group members state: []
+group-conversation.tsx:64 [FRONTEND] Participants loading: false
+group-conversation.tsx:65 [FRONTEND] Participants error: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+group-conversation.tsx:63 [FRONTEND] Group members state: []
+group-conversation.tsx:64 [FRONTEND] Participants loading: false
+group-conversation.tsx:65 [FRONTEND] Participants error: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
