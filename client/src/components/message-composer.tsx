@@ -72,18 +72,43 @@ export function MessageComposer({
   const [recipientSearch, setRecipientSearch] = useState("");
 
   // Fetch users for recipient selection
-  const { data: users = [] } = useQuery({
-    queryKey: ["/api/users/search", recipientSearch],
+  const { data: allUsers = [], isError: usersError } = useQuery({
+    queryKey: ["/api/users"],
     queryFn: async () => {
-      if (!recipientSearch) return [];
-      const response = await apiRequest(
-        "GET",
-        `/api/users/search?q=${encodeURIComponent(recipientSearch)}`,
-      );
-      return response.users || [];
+      try {
+        const response = await apiRequest("GET", "/api/users");
+        return Array.isArray(response) ? response : [];
+      } catch (error: any) {
+        // If user doesn't have permission to view users, show a helpful message
+        if (error.status === 403) {
+          console.warn("User doesn't have permission to view all users for messaging");
+        }
+        console.error("Failed to fetch users:", error);
+        return [];
+      }
     },
-    enabled: recipientSearch.length > 1,
+    retry: false, // Don't retry if there's a permission error
   });
+
+  // Filter users based on search query
+  const users = allUsers.filter((user: any) => {
+    // Show all users when search is empty or show filtered results
+    if (!recipientSearch) return true;
+    const searchLower = recipientSearch.toLowerCase();
+    const name = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+    return (
+      name.toLowerCase().includes(searchLower) ||
+      user.email?.toLowerCase().includes(searchLower) ||
+      user.displayName?.toLowerCase().includes(searchLower)
+    );
+  }).slice(0, 10); // Limit to 10 results to avoid overwhelming the UI
+
+  // Helper function to get user display name
+  const getUserDisplayName = (user: any) => {
+    if (user.displayName) return user.displayName;
+    const name = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+    return name || user.email || 'Unknown User';
+  };
 
   const handleSend = async () => {
     if (!content.trim()) {
@@ -187,15 +212,15 @@ export function MessageComposer({
                     <CommandItem
                       key={user.id}
                       onSelect={() =>
-                        addRecipient({ id: user.id, name: user.name })
+                        addRecipient({ id: user.id, name: getUserDisplayName(user) })
                       }
                     >
                       <Avatar className="h-6 w-6 mr-2">
                         <AvatarFallback>
-                          {user.name?.charAt(0) || "?"}
+                          {getUserDisplayName(user)?.charAt(0) || "?"}
                         </AvatarFallback>
                       </Avatar>
-                      <span>{user.name}</span>
+                      <span>{getUserDisplayName(user)}</span>
                       {user.email && (
                         <span className="text-xs text-muted-foreground ml-2">
                           ({user.email})
@@ -310,17 +335,17 @@ export function MessageComposer({
                     <CommandItem
                       key={user.id}
                       onSelect={() =>
-                        addRecipient({ id: user.id, name: user.name })
+                        addRecipient({ id: user.id, name: getUserDisplayName(user) })
                       }
                       className="cursor-pointer"
                     >
                       <Avatar className="h-8 w-8 mr-3">
                         <AvatarFallback>
-                          {user.name?.charAt(0) || "?"}
+                          {getUserDisplayName(user)?.charAt(0) || "?"}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
-                        <p className="font-medium">{user.name}</p>
+                        <p className="font-medium">{getUserDisplayName(user)}</p>
                         {user.email && (
                           <p className="text-sm text-muted-foreground">
                             {user.email}

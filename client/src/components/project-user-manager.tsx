@@ -38,16 +38,22 @@ export default function ProjectUserManager({ project, onUpdate }: ProjectUserMan
   const [selectedRole, setSelectedRole] = useState<string>("member");
   const [sendNotification, setSendNotification] = useState(true);
 
-  // Fetch all users for assignment
+  // Fetch all users for assignment with fresh data
   const { data: allUsers = [] } = useQuery<User[]>({
     queryKey: ["/api/users"],
-    enabled: canEdit
+    enabled: canEdit,
+    staleTime: 0,
+    cacheTime: 30000,
+    refetchOnWindowFocus: true,
   });
 
-  // Fetch current project assignments
+  // Fetch current project assignments with fresh data
   const { data: assignments = [], isLoading } = useQuery<ProjectAssignment[]>({
     queryKey: ["/api/projects", project.id, "assignments"],
     queryFn: () => fetch(`/api/projects/${project.id}/assignments`).then(res => res.json()),
+    staleTime: 0,
+    cacheTime: 30000,
+    refetchOnWindowFocus: true,
   });
 
   // Add user to project mutation

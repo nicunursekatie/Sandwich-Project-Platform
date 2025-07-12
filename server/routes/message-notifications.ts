@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, Express } from "express";
 import { eq, sql, and } from "drizzle-orm";
 import { messages, conversations, conversationParticipants } from "../../shared/schema";
 import { db } from "../db";
@@ -31,9 +31,8 @@ function checkUserChatPermission(user: any, chatType: string): boolean {
   }
 }
 
-export const messageNotificationRoutes = {
-  // Get unread message counts for a user
-  getUnreadCounts: async (req: Request, res: Response) => {
+// Get unread message counts for a user
+const getUnreadCounts = async (req: Request, res: Response) => {
     try {
       const userId = (req as any).user?.id;
       if (!userId) {
@@ -118,10 +117,10 @@ export const messageNotificationRoutes = {
       console.error("Error getting unread counts:", error);
       res.status(500).json({ error: "Failed to get unread counts" });
     }
-  },
+};
 
-  // Mark messages as read when user views a chat
-  markMessagesRead: async (req: Request, res: Response) => {
+// Mark messages as read when user views a chat
+const markMessagesRead = async (req: Request, res: Response) => {
     try {
       const userId = (req as any).user?.id;
       if (!userId) {
@@ -140,10 +139,10 @@ export const messageNotificationRoutes = {
       console.error("Error marking messages as read:", error);
       res.status(500).json({ error: "Failed to mark messages as read" });
     }
-  },
+};
 
-  // Mark all messages as read for user
-  markAllRead: async (req: Request, res: Response) => {
+// Mark all messages as read for user
+const markAllRead = async (req: Request, res: Response) => {
     try {
       const userId = (req as any).user?.id;
       if (!userId) {
@@ -156,5 +155,26 @@ export const messageNotificationRoutes = {
       console.error("Error marking all messages as read:", error);
       res.status(500).json({ error: "Failed to mark all messages as read" });
     }
-  }
+};
+
+// Register routes function
+export function registerMessageNotificationRoutes(app: Express) {
+  const isAuthenticated = (req: any, res: any, next: any) => {
+    if (req.user) {
+      next();
+    } else {
+      res.status(401).json({ message: "Unauthorized" });
+    }
+  };
+
+  app.get("/api/message-notifications/unread-counts", isAuthenticated, getUnreadCounts);
+  app.post("/api/message-notifications/mark-read", isAuthenticated, markMessagesRead);
+  app.post("/api/message-notifications/mark-all-read", isAuthenticated, markAllRead);
+}
+
+// Legacy export for backward compatibility
+export const messageNotificationRoutes = {
+  getUnreadCounts,
+  markMessagesRead,
+  markAllRead
 };

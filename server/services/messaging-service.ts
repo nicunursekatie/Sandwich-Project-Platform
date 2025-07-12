@@ -128,7 +128,7 @@ export class MessagingService {
       const query = db
         .select({
           message: messages,
-          senderName: users.firstName,
+          senderName: sql<string>`COALESCE(${users.firstName}, ${messages.sender}, 'Unknown User')`,
           senderEmail: users.email,
         })
         .from(messageRecipients)
@@ -151,7 +151,7 @@ export class MessagingService {
       
       return results.map(row => ({
         ...row.message,
-        senderName: row.senderName || undefined,
+        senderName: row.senderName || 'Unknown User',
         senderEmail: row.senderEmail || undefined,
       }));
     } catch (error) {
@@ -254,7 +254,7 @@ export class MessagingService {
       const results = await db
         .select({
           message: messages,
-          senderName: users.firstName,
+          senderName: sql<string>`COALESCE(${users.firstName}, ${messages.sender}, 'Unknown User')`,
           senderEmail: users.email,
         })
         .from(messages)
@@ -272,7 +272,7 @@ export class MessagingService {
       
       return results.map(row => ({
         ...row.message,
-        senderName: row.senderName || undefined,
+        senderName: row.senderName || 'Unknown User',
         senderEmail: row.senderEmail || undefined,
       }));
     } catch (error) {

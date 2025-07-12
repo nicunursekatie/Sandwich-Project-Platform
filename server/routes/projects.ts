@@ -349,6 +349,14 @@ router.delete("/projects/:projectId/comments/:commentId", async (req, res) => {
 router.get("/projects/:id/assignments", async (req, res) => {
   try {
     const projectId = parseInt(req.params.id);
+    
+    // Set no-cache headers for fresh user data
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+    
     const assignments = await storage.getProjectAssignments(projectId);
     res.json(assignments);
   } catch (error) {

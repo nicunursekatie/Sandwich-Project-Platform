@@ -164,6 +164,14 @@ router.get("/unread", async (req, res) => {
       offset: parseInt(offset as string),
     });
 
+    // Debug: Check for incomplete messages before sending
+    const incompleteMessages = messages.filter(msg => !msg || !msg.senderName || !msg.content);
+    if (incompleteMessages.length > 0) {
+      console.error('Found incomplete messages being sent to frontend:', incompleteMessages);
+    }
+
+    console.log('Sending messages to frontend. Total:', messages.length, 'Valid:', messages.filter(msg => msg && msg.senderName && msg.content).length);
+
     res.json({ messages });
   } catch (error) {
     console.error("Error getting unread messages:", error);
@@ -203,6 +211,14 @@ router.get("/context/:contextType/:contextId", async (req, res) => {
         offset: parseInt(offset as string),
       }
     );
+
+    // Debug: Check for incomplete messages before sending
+    const incompleteMessages = messages.filter(msg => !msg || !msg.senderName || !msg.content);
+    if (incompleteMessages.length > 0) {
+      console.error('Found incomplete messages being sent to frontend:', incompleteMessages);
+    }
+
+    console.log('Sending messages to frontend. Total:', messages.length, 'Valid:', messages.filter(msg => msg && msg.senderName && msg.content).length);
 
     res.json({ messages });
   } catch (error) {
@@ -323,6 +339,49 @@ router.delete("/:messageId", async (req, res) => {
     } else {
       res.status(500).json({ error: "Failed to delete message" });
     }
+  }
+});
+
+// Get all messages for a user
+router.get("/messages", async (req, res) => {
+  try {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const { contextType } = req.query;
+
+    // Set no-cache headers to prevent stale data
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+
+    let messages;
+    if (contextType && contextType !== 'all') {
+      messages = await messagingService.getUnreadMessages(user.id, { 
+        contextType: contextType as string 
+      });
+    } else {
+      // Get all messages for this user
+      const allUnread = await messagingService.getUnreadMessages(user.id);
+      const contextMessages = await messagingService.getContextMessages('direct', user.id);
+      messages = [...allUnread, ...contextMessages];
+    }
+
+    // Filter out messages with missing user data and provide fallbacks
+    const validMessages = messages.map(msg => ({
+      ...msg,
+      senderName: msg.senderName || msg.sender || 'Unknown User',
+      senderEmail: msg.senderEmail || undefined
+    })).filter(msg => msg.id && msg.content);
+
+    res.json({ messages: validMessages });
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+    res.status(500).json({ error: "Failed to fetch messages" });
   }
 });
 
