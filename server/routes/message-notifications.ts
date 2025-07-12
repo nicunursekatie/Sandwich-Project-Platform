@@ -2,13 +2,14 @@ import { Request, Response, Express } from "express";
 import { eq, sql, and } from "drizzle-orm";
 import { messages, conversations, conversationParticipants } from "../../shared/schema";
 import { db } from "../db";
+import { isAuthenticated } from "../temp-auth";
 
 // Helper function to check if user has permission for specific chat type
 function checkUserChatPermission(user: any, chatType: string): boolean {
   if (!user || !user.permissions) return false;
-  
+
   const permissions = user.permissions;
-  
+
   switch (chatType) {
     case 'core_team':
       return permissions.includes('core_team_chat');
@@ -40,7 +41,7 @@ const getUnreadCounts = async (req: Request, res: Response) => {
       }
 
       const user = (req as any).user;
-      
+
       // Initialize counts
       let unreadCounts = {
         general: 0,
@@ -77,7 +78,7 @@ const getUnreadCounts = async (req: Request, res: Response) => {
         // Process conversation counts by type
         for (const conversation of unreadConversationCounts) {
           const count = Number(conversation.count);
-          
+
           if (conversation.conversationType === 'direct') {
             unreadCounts.direct += count;
           } else if (conversation.conversationType === 'group') {
@@ -100,7 +101,7 @@ const getUnreadCounts = async (req: Request, res: Response) => {
             }
           }
         }
-        
+
         // Calculate total
         unreadCounts.total = unreadCounts.general + unreadCounts.committee + 
                            unreadCounts.hosts + unreadCounts.drivers + 
@@ -128,7 +129,7 @@ const markMessagesRead = async (req: Request, res: Response) => {
       }
 
       const { conversationId } = req.body;
-      
+
       if (!conversationId) {
         return res.status(400).json({ error: "Conversation ID is required" });
       }
@@ -159,14 +160,6 @@ const markAllRead = async (req: Request, res: Response) => {
 
 // Register routes function
 export function registerMessageNotificationRoutes(app: Express) {
-  const isAuthenticated = (req: any, res: any, next: any) => {
-    if (req.user) {
-      next();
-    } else {
-      res.status(401).json({ message: "Unauthorized" });
-    }
-  };
-
   app.get("/api/message-notifications/unread-counts", isAuthenticated, getUnreadCounts);
   app.post("/api/message-notifications/mark-read", isAuthenticated, markMessagesRead);
   app.post("/api/message-notifications/mark-all-read", isAuthenticated, markAllRead);

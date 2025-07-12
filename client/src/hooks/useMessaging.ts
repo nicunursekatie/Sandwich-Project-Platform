@@ -46,9 +46,10 @@ interface SendMessageParams {
 }
 
 export function useMessaging() {
-  const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+
   const [wsConnection, setWsConnection] = useState<WebSocket | null>(null);
 
   // Get unread message counts
@@ -172,12 +173,12 @@ export function useMessaging() {
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        
+
         if (data.type === 'new_message') {
           // Refetch unread counts and messages
           refetchUnreadCounts();
           refetchUnreadMessages();
-          
+
           // Show toast notification
           toast({
             title: 'New message',
@@ -246,7 +247,7 @@ export function useMessaging() {
     unreadCounts,
     unreadMessages,
     totalUnread: unreadCounts.total + unreadCounts.suggestion + unreadCounts.project + unreadCounts.task,
-    
+
     // Actions
     sendMessage,
     markAsRead,
@@ -254,7 +255,7 @@ export function useMessaging() {
     getContextMessages,
     refetchUnreadCounts,
     refetchUnreadMessages,
-    
+
     // Status
     isConnected: !!wsConnection,
     isSending: sendMessageMutation.isPending,

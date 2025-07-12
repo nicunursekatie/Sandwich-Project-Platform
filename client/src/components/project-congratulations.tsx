@@ -117,7 +117,9 @@ export default function ProjectCongratulations({
         {/* Display existing congratulations */}
         {congratulations && congratulations.length > 0 && (
           <div className="space-y-3 max-h-48 overflow-y-auto">
-            {congratulations.map((congrats) => (
+            {congratulations
+              .filter((congrats) => congrats && congrats.celebrationData && congrats.celebrationData.senderName)
+              .map((congrats) => (
               <div key={congrats.id} className="flex items-start gap-3 p-3 bg-white rounded-lg border">
                 <Avatar className="w-8 h-8">
                   <AvatarFallback className="bg-teal-100 text-teal-700 text-sm">

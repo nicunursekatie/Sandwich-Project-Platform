@@ -47,7 +47,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
   const [activeSection, setActiveSection] = useState(initialSection);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   // Make setActiveSection available globally for embedded components
   React.useEffect(() => {
@@ -317,6 +317,24 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <DashboardOverview onSectionChange={setActiveSection} />;
     }
   };
+
+  // Show loading state while authentication is being checked
+  if (isLoading) {
+    return (
+      <div className="bg-slate-50 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If not authenticated after loading, redirect or show error
+  if (!user) {
+    window.location.href = '/';
+    return null;
+  }
 
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col">

@@ -47,7 +47,7 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
 
   // Query for unread message counts - only when authenticated
   const { data: unreadCounts, refetch, error, isLoading } = useQuery<UnreadCounts>({
-    queryKey: ['/api/messages/unread-counts'],
+    queryKey: ['/api/message-notifications/unread-counts'],
     enabled: !!user && isAuthenticated,
     refetchInterval: isAuthenticated ? 30000 : false, // Check every 30 seconds only when authenticated
   });
@@ -198,7 +198,7 @@ export default function MessageNotifications({ user }: MessageNotificationsProps
 
   const handleMarkAllRead = async () => {
     try {
-      await apiRequest('POST', '/api/messages/mark-all-read');
+      await apiRequest('POST', '/api/message-notifications/mark-all-read');
       refetch();
     } catch (error) {
       console.error('Failed to mark all messages as read:', error);

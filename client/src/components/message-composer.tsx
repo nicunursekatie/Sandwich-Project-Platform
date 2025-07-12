@@ -1,47 +1,14 @@
 import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useMessaging } from "@/hooks/useMessaging";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Send,
-  Lightbulb,
-  FolderOpen,
-  ListTodo,
-  MessageCircle,
-  X,
-  Loader2,
-} from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { useQuery } from "@tanstack/react-query";
+import { useMessaging } from "@/hooks/useMessaging";
+import { Send, X, User, Plus } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { apiRequest } from "@/lib/queryClient";
 
 interface MessageComposerProps {
@@ -55,60 +22,32 @@ interface MessageComposerProps {
 }
 
 export function MessageComposer({
-  contextType,
+  contextType = "direct",
   contextId,
   contextTitle,
-  defaultRecipients = [],
   onSent,
   onCancel,
-  compact = false,
 }: MessageComposerProps) {
-  const { sendMessage, isSending } = useMessaging();
-  const { toast } = useToast();
   const [content, setContent] = useState("");
-  const [selectedRecipients, setSelectedRecipients] =
-    useState<Array<{ id: string; name: string }>>(defaultRecipients);
-  const [recipientSearchOpen, setRecipientSearchOpen] = useState(false);
-  const [recipientSearch, setRecipientSearch] = useState("");
+  const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
+  const { toast } = useToast();
+  const { sendMessage, isSending } = useMessaging();
+  const queryClient = useQueryClient();
 
-  // Fetch users for recipient selection
-  const { data: allUsers = [], isError: usersError } = useQuery({
-    queryKey: ["/api/users"],
+  // Fetch all users for direct messaging
+  const { data: users = [], isLoading: isLoadingUsers } = useQuery({
+    queryKey: ['/api/auth/users'],
     queryFn: async () => {
       try {
-        const response = await apiRequest("GET", "/api/users");
+        const response = await apiRequest('GET', '/api/auth/users');
         return Array.isArray(response) ? response : [];
-      } catch (error: any) {
-        // If user doesn't have permission to view users, show a helpful message
-        if (error.status === 403) {
-          console.warn("User doesn't have permission to view all users for messaging");
-        }
-        console.error("Failed to fetch users:", error);
+      } catch (error) {
+        console.error('Error fetching users:', error);
         return [];
       }
     },
-    retry: false, // Don't retry if there's a permission error
+    enabled: contextType === 'direct',
   });
-
-  // Filter users based on search query
-  const users = allUsers.filter((user: any) => {
-    // Show all users when search is empty or show filtered results
-    if (!recipientSearch) return true;
-    const searchLower = recipientSearch.toLowerCase();
-    const name = `${user.firstName || ''} ${user.lastName || ''}`.trim();
-    return (
-      name.toLowerCase().includes(searchLower) ||
-      user.email?.toLowerCase().includes(searchLower) ||
-      user.displayName?.toLowerCase().includes(searchLower)
-    );
-  }).slice(0, 10); // Limit to 10 results to avoid overwhelming the UI
-
-  // Helper function to get user display name
-  const getUserDisplayName = (user: any) => {
-    if (user.displayName) return user.displayName;
-    const name = `${user.firstName || ''} ${user.lastName || ''}`.trim();
-    return name || user.email || 'Unknown User';
-  };
 
   const handleSend = async () => {
     if (!content.trim()) {
@@ -129,19 +68,20 @@ export function MessageComposer({
 
     try {
       await sendMessage({
-        recipientIds: selectedRecipients.map((r) => r.id),
+        recipientIds: selectedRecipients,
         content: content.trim(),
         contextType,
         contextId,
       });
 
       setContent("");
-      setSelectedRecipients(defaultRecipients);
+      setSelectedRecipients([]);
       onSent?.();
 
       toast({
         description: "Message sent successfully",
       });
+      queryClient.invalidateQueries(['/api/messages']); // Refresh messages
     } catch (error) {
       console.error("Failed to send message:", error);
       toast({
@@ -150,252 +90,114 @@ export function MessageComposer({
       });
     }
   };
-
-  const removeRecipient = (id: string) => {
-    setSelectedRecipients((prev) => prev.filter((r) => r.id !== id));
-  };
-
-  const addRecipient = (user: { id: string; name: string }) => {
-    if (!selectedRecipients.find((r) => r.id === user.id)) {
-      setSelectedRecipients((prev) => [...prev, user]);
-    }
-    setRecipientSearchOpen(false);
-    setRecipientSearch("");
-  };
-
-  const getContextIcon = () => {
-    switch (contextType) {
-      case "suggestion":
-        return <Lightbulb className="h-4 w-4" />;
-      case "project":
-        return <FolderOpen className="h-4 w-4" />;
-      case "task":
-        return <ListTodo className="h-4 w-4" />;
-      default:
-        return <MessageCircle className="h-4 w-4" />;
-    }
-  };
-
-  if (compact) {
-    return (
-      <div className="space-y-3">
-        <div className="flex flex-wrap gap-2 items-center">
-          <Label className="text-sm">To:</Label>
-          {selectedRecipients.map((recipient) => (
-            <Badge key={recipient.id} variant="secondary" className="gap-1">
-              {recipient.name}
-              <X
-                className="h-3 w-3 cursor-pointer hover:text-destructive"
-                onClick={() => removeRecipient(recipient.id)}
-              />
-            </Badge>
-          ))}
-          <Popover
-            open={recipientSearchOpen}
-            onOpenChange={setRecipientSearchOpen}
-          >
-            <PopoverTrigger asChild>
-              <Button variant="outline" size="sm">
-                Add recipient
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 p-0" align="start">
-              <Command>
-                <CommandInput
-                  placeholder="Search users..."
-                  value={recipientSearch}
-                  onValueChange={setRecipientSearch}
-                />
-                <CommandEmpty>No users found.</CommandEmpty>
-                <CommandGroup>
-                  {users.map((user: any) => (
-                    <CommandItem
-                      key={user.id}
-                      onSelect={() =>
-                        addRecipient({ id: user.id, name: getUserDisplayName(user) })
-                      }
-                    >
-                      <Avatar className="h-6 w-6 mr-2">
-                        <AvatarFallback>
-                          {getUserDisplayName(user)?.charAt(0) || "?"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span>{getUserDisplayName(user)}</span>
-                      {user.email && (
-                        <span className="text-xs text-muted-foreground ml-2">
-                          ({user.email})
-                        </span>
-                      )}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <Textarea
-          placeholder="Type your message..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          rows={3}
-          className="resize-none"
-        />
-
-        <div className="flex justify-between items-center">
-          {contextType && contextTitle && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              {getContextIcon()}
-              <span>{contextTitle}</span>
-            </div>
-          )}
-          <div className="flex gap-2 ml-auto">
-            {onCancel && (
-              <Button variant="outline" size="sm" onClick={onCancel}>
-                Cancel
-              </Button>
-            )}
-            <Button
-              size="sm"
-              onClick={handleSend}
-              disabled={
-                isSending || !content.trim() || selectedRecipients.length === 0
-              }
-            >
-              {isSending ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                <>
-                  <Send className="h-4 w-4 mr-2" />
-                  Send
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <Card>
+return (
+    <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          {getContextIcon()}
-          Send Message
-          {contextType && contextTitle && (
-            <Badge variant="secondary" className="ml-auto">
-              {contextTitle}
-            </Badge>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">
+            Compose Message
+            {contextType !== "direct" && contextTitle && (
+              <span className="text-sm font-normal text-gray-500 ml-2">
+                to {contextTitle}
+              </span>
+            )}
+          </CardTitle>
+          {onCancel && (
+            <Button variant="ghost" size="icon" onClick={onCancel}>
+              <X className="h-4 w-4" />
+            </Button>
           )}
-        </CardTitle>
+        </div>
+        {contextType !== "direct" && (
+          <Badge variant="secondary" className="w-fit">
+            {contextType.charAt(0).toUpperCase() + contextType.slice(1)} Message
+          </Badge>
+        )}
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <Label>Recipients</Label>
-          <div className="flex flex-wrap gap-2 mb-2">
-            {selectedRecipients.map((recipient) => (
-              <Badge key={recipient.id} variant="secondary" className="gap-1">
-                <Avatar className="h-4 w-4">
-                  <AvatarFallback className="text-xs">
-                    {recipient.name?.charAt(0) || "?"}
-                  </AvatarFallback>
-                </Avatar>
-                {recipient.name}
-                <X
-                  className="h-3 w-3 cursor-pointer hover:text-destructive"
-                  onClick={() => removeRecipient(recipient.id)}
-                />
-              </Badge>
-            ))}
-          </div>
-          <Popover
-            open={recipientSearchOpen}
-            onOpenChange={setRecipientSearchOpen}
-          >
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="w-full justify-start">
-                <Send className="h-4 w-4 mr-2" />
-                Add recipients...
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[400px] p-0" align="start">
-              <Command>
-                <CommandInput
-                  placeholder="Search users by name or email..."
-                  value={recipientSearch}
-                  onValueChange={setRecipientSearch}
-                />
-                <CommandEmpty>No users found.</CommandEmpty>
-                <CommandGroup>
-                  {users.map((user: any) => (
-                    <CommandItem
-                      key={user.id}
-                      onSelect={() =>
-                        addRecipient({ id: user.id, name: getUserDisplayName(user) })
-                      }
-                      className="cursor-pointer"
-                    >
-                      <Avatar className="h-8 w-8 mr-3">
-                        <AvatarFallback>
-                          {getUserDisplayName(user)?.charAt(0) || "?"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <p className="font-medium">{getUserDisplayName(user)}</p>
-                        {user.email && (
-                          <p className="text-sm text-muted-foreground">
-                            {user.email}
-                          </p>
+        {contextType === "direct" && (
+          <div>
+            <label className="text-sm font-medium">Recipients</label>
+            {isLoadingUsers ? (
+              <div className="text-sm text-gray-500 mt-1">Loading users...</div>
+            ) : (
+              <div className="mt-2 space-y-2 max-h-40 overflow-y-auto border rounded p-2">
+                {users.length === 0 ? (
+                  <div className="text-sm text-gray-500">No users available</div>
+                ) : (
+                  users.map((user: any) => (
+                    <div key={user.id} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={user.id}
+                        checked={selectedRecipients.includes(user.id)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedRecipients([...selectedRecipients, user.id]);
+                          } else {
+                            setSelectedRecipients(selectedRecipients.filter(id => id !== user.id));
+                          }
+                        }}
+                      />
+                      <label htmlFor={user.id} className="text-sm cursor-pointer">
+                        {user.firstName && user.lastName 
+                          ? `${user.firstName} ${user.lastName}` 
+                          : user.email}
+                        {user.email && user.firstName && (
+                          <span className="text-gray-500 ml-1">({user.email})</span>
                         )}
-                      </div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </div>
+                      </label>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+            {selectedRecipients.length > 0 && (
+              <div className="mt-2">
+                <div className="text-sm font-medium">Selected:</div>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {selectedRecipients.map(recipientId => {
+                    const user = users.find((u: any) => u.id === recipientId);
+                    return user ? (
+                      <Badge key={recipientId} variant="outline" className="text-xs">
+                        {user.firstName && user.lastName 
+                          ? `${user.firstName} ${user.lastName}` 
+                          : user.email}
+                      </Badge>
+                    ) : null;
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
-        <div className="space-y-2">
-          <Label>Message</Label>
+        <div>
+          <label className="text-sm font-medium">Message</label>
           <Textarea
-            placeholder="Type your message here..."
+            placeholder="Type your message..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            rows={5}
-            className="resize-none"
+            rows={4}
+            className="mt-1"
           />
         </div>
-      </CardContent>
-      <CardFooter className="flex justify-end gap-2">
-        {onCancel && (
-          <Button variant="outline" onClick={onCancel}>
-            Cancel
-          </Button>
-        )}
-        <Button
-          onClick={handleSend}
-          disabled={
-            isSending || !content.trim() || selectedRecipients.length === 0
-          }
-        >
-          {isSending ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Sending...
-            </>
-          ) : (
-            <>
-              <Send className="h-4 w-4 mr-2" />
-              Send Message
-            </>
+
+        <div className="flex justify-end space-x-2">
+          {onCancel && (
+            <Button type="button" variant="outline" onClick={onCancel}>
+              Cancel
+            </Button>
           )}
-        </Button>
-      </CardFooter>
+          <Button
+            onClick={handleSend}
+            disabled={!content.trim() || isSending || (contextType === "direct" && selectedRecipients.length === 0)}
+            className="flex items-center gap-2"
+          >
+            <Send className="h-4 w-4" />
+            {isSending ? "Sending..." : "Send Message"}
+          </Button>
+        </div>
+      </CardContent>
     </Card>
   );
 }

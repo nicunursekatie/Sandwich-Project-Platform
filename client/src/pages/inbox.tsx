@@ -28,7 +28,8 @@ import {
   Reply,
   Trash2,
   Edit2,
-  Plus
+  Plus,
+  Users
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -38,6 +39,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MessageComposer } from "@/components/message-composer";
+import { GroupConversation } from "@/components/group-conversation";
+
+interface GroupThread {
+  id: number;
+  name: string;
+  description?: string;
+  memberCount: number;
+  unreadCount: number;
+  lastMessage?: {
+    content: string;
+    senderName: string;
+    createdAt: string;
+  };
+  members: Array<{
+    userId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  }>;
+}
 
 interface Message {
   id: number;
@@ -65,17 +86,86 @@ export default function InboxPage() {
     sendMessage,
     isSending 
   } = useMessaging();
-  
+
   const [selectedTab, setSelectedTab] = useState("all");
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [replyContent, setReplyContent] = useState("");
   const [showComposer, setShowComposer] = useState(false);
 
-  // Fetch all messages with fresh user data
+  // Fetch group threads for the "groups" tab
+  const { data: groupThreads = [] } = useQuery<GroupThread[]>({
+    queryKey: ['/api/conversations/groups-with-preview'],
+    queryFn: async () => {
+      try {
+        // Get conversations
+        const conversationsResponse = await apiRequest('GET', '/api/conversations?type=group');
+        const conversations = Array.isArray(conversationsResponse) ? conversationsResponse : [];
+
+        // For each conversation, get preview data
+        const groupThreads = await Promise.all(
+          conversations.map(async (conv: any) => {
+            try {
+              // Get participants
+              const participantsResponse = await apiRequest('GET', `/api/conversations/${conv.id}/participants`);
+              const participants = Array.isArray(participantsResponse) ? participantsResponse : [];
+
+              // Get recent messages
+              const messagesResponse = await apiRequest('GET', `/api/conversations/${conv.id}/messages`);
+              const messages = Array.isArray(messagesResponse) ? messagesResponse : [];
+
+              // Get unread count for this group
+              const unreadResponse = await apiRequest('GET', `/api/messaging/unread?contextType=group&contextId=${conv.id}`);
+              const unreadCount = unreadResponse?.count || 0;
+
+              const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
+
+              return {
+                id: conv.id,
+                name: conv.name || 'Unnamed Group',
+                description: conv.description,
+                memberCount: participants.length,
+                unreadCount,
+                lastMessage: lastMessage ? {
+                  content: lastMessage.content,
+                  senderName: lastMessage.sender || 'Unknown',
+                  createdAt: lastMessage.createdAt
+                } : undefined,
+                members: participants.slice(0, 5) // Show first 5 members for preview
+              };
+            } catch (error) {
+              console.error(`Error fetching data for group ${conv.id}:`, error);
+              return {
+                id: conv.id,
+                name: conv.name || 'Unnamed Group',
+                description: conv.description,
+                memberCount: 0,
+                unreadCount: 0,
+                members: []
+              };
+            }
+          })
+        );
+
+        return groupThreads;
+      } catch (error) {
+        console.error('Error fetching group threads:', error);
+        return [];
+      }
+    },
+    refetchInterval: 30000, // Refresh every 30 seconds
+    enabled: selectedTab === 'groups' || selectedTab === 'all',
+  });
+
+  // Fetch all messages
   const { data: allMessages = [], refetch: refetchMessages } = useQuery({
     queryKey: ['/api/messaging/messages', selectedTab],
     queryFn: async () => {
+      if (selectedTab === 'groups') {
+        // For groups tab, return empty array since we'll show group threads instead
+        return [];
+      }
+
       let endpoint = '/api/messaging/messages';
       if (selectedTab !== 'all') {
         endpoint += `?contextType=${selectedTab}`;
@@ -83,33 +173,55 @@ export default function InboxPage() {
       const response = await apiRequest('GET', endpoint);
       return (response as any).messages || [];
     },
-    staleTime: 0, // Always fetch fresh data
-    cacheTime: 30000, // Cache for 30 seconds only
-    refetchInterval: 60000, // Refetch every minute
-    refetchOnWindowFocus: true,
   });
 
-  // Fetch thread messages when a message is selected with fresh user data
+  // Fetch thread messages when a message is selected
   const { data: threadMessages = [] } = useQuery({
     queryKey: ['/api/messaging/thread', selectedMessage?.contextType, selectedMessage?.contextId],
     queryFn: async () => {
       if (!selectedMessage?.contextType || !selectedMessage?.contextId) return [];
+
+      // Handle group conversations specially
+      if (selectedMessage.contextType === 'group') {
+        try {
+          const response = await apiRequest('GET', `/api/conversations/${selectedMessage.contextId}/messages`);
+          return Array.isArray(response) ? response : [];
+        } catch (error) {
+          console.error('Error fetching group messages:', error);
+          return [];
+        }
+      }
+
       return await getContextMessages(selectedMessage.contextType, selectedMessage.contextId);
     },
     enabled: !!selectedMessage?.contextType && !!selectedMessage?.contextId,
-    staleTime: 0, // Always fetch fresh data
-    cacheTime: 30000, // Cache for 30 seconds only
-    refetchOnWindowFocus: true,
   });
 
   // Handle message selection and mark as read
-  const handleSelectMessage = async (message: Message) => {
-    setSelectedMessage(message);
-    setShowComposer(false); // Close composer when selecting a message
-    if (!message.read) {
-      await markAsRead(message.id);
-      refetchMessages();
+  const handleSelectMessage = async (message: any) => {
+    // Handle group thread selection
+    if (message.contextType === 'group' && message.groupData) {
+      const mockMessage = {
+        id: -1,
+        senderId: 'system',
+        senderName: message.groupData.name,
+        content: `Group conversation: ${message.groupData.name}`,
+        contextType: 'group',
+        contextId: message.contextId,
+        contextTitle: message.groupData.name,
+        createdAt: new Date().toISOString(),
+        read: true,
+        groupData: message.groupData
+      };
+      setSelectedMessage(mockMessage);
+    } else {
+      setSelectedMessage(message);
+      if (!message.read) {
+        await markAsRead(message.id);
+        refetchMessages();
+      }
     }
+    setShowComposer(false); // Close composer when selecting a message
   };
 
   // Handle reply
@@ -117,13 +229,28 @@ export default function InboxPage() {
     if (!replyContent.trim() || !selectedMessage) return;
 
     try {
-      await sendMessage({
-        recipientIds: [selectedMessage.senderId],
-        content: replyContent,
-        contextType: selectedMessage.contextType as any,
-        contextId: selectedMessage.contextId,
-      });
-      
+      // Handle group conversation replies specially
+      if (selectedMessage.contextType === 'group' && selectedMessage.contextId) {
+        const response = await apiRequest('POST', `/api/conversations/${selectedMessage.contextId}/messages`, {
+          content: replyContent
+        });
+
+        // Invalidate group thread queries
+        queryClient.invalidateQueries({ 
+          queryKey: ['/api/messaging/thread', selectedMessage.contextType, selectedMessage.contextId] 
+        });
+        queryClient.invalidateQueries({ 
+          queryKey: ['/api/conversations/groups-with-preview'] 
+        });
+      } else {
+        await sendMessage({
+          recipientIds: [selectedMessage.senderId],
+          content: replyContent,
+          contextType: selectedMessage.contextType as any,
+          contextId: selectedMessage.contextId,
+        });
+      }
+
       setReplyContent("");
       refetchMessages();
       toast({ description: "Reply sent successfully" });
@@ -135,28 +262,33 @@ export default function InboxPage() {
     }
   };
 
-  // Debug logging to understand invalid messages
-  console.log('Raw allMessages array:', allMessages);
-  console.log('Invalid allMessages:', allMessages?.filter(msg => !msg || !msg.senderName));
-  
-  // Filter out undefined/invalid messages first
-  const validMessages = (allMessages || [])
-    .filter(msg => msg && typeof msg === 'object' && msg.senderName && msg.content) || [];
-  
-  console.log('Valid messages after filtering:', validMessages);
-  
-  // Debug threadMessages too
-  console.log('Raw threadMessages array:', threadMessages);
-  console.log('Invalid threadMessages:', threadMessages?.filter(msg => !msg || !msg.senderName));
-  
+  // Convert group threads to message-like objects for display
+  const groupThreadMessages = groupThreads.map(group => ({
+    id: `group-${group.id}`,
+    senderId: 'system',
+    senderName: group.name,
+    content: group.lastMessage?.content || 'No messages yet',
+    contextType: 'group' as const,
+    contextId: group.id.toString(),
+    contextTitle: group.name,
+    createdAt: group.lastMessage?.createdAt || new Date().toISOString(),
+    read: group.unreadCount === 0,
+    groupData: group // Store the full group data
+  }));
+
+  // Combine messages based on selected tab
+  const displayMessages = selectedTab === 'groups' ? groupThreadMessages : 
+                          selectedTab === 'all' ? [...allMessages, ...groupThreadMessages] : 
+                          allMessages;
+
   // Filter messages based on search
-  const filteredMessages = validMessages.filter((message: Message) => {
+  const filteredMessages = displayMessages.filter((message: any) => {
     if (!searchQuery) return true;
     const searchLower = searchQuery.toLowerCase();
     return (
-      (message.content || '').toLowerCase().includes(searchLower) ||
-      (message.senderName || '').toLowerCase().includes(searchLower) ||
-      (message.contextTitle || '').toLowerCase().includes(searchLower)
+      message.content.toLowerCase().includes(searchLower) ||
+      message.senderName?.toLowerCase().includes(searchLower) ||
+      message.contextTitle?.toLowerCase().includes(searchLower)
     );
   });
 
@@ -180,38 +312,42 @@ export default function InboxPage() {
     }
   };
 
+
+
   return (
     <div className="flex h-[calc(100vh-64px)]">
       {/* Message List */}
       <div className="w-1/3 border-r flex flex-col">
         <div className="p-4 border-b">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold flex items-center gap-2">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold flex items-center gap-2 mb-3">
               <InboxIcon className="h-5 w-5" />
               Inbox
             </h2>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => setShowComposer(true)}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Compose
-              </Button>
-              {unreadMessages.length > 0 && (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
                 <Button
-                  variant="ghost"
+                  variant="default"
                   size="sm"
-                  onClick={() => markAllAsRead()}
+                  onClick={() => setShowComposer(true)}
                 >
-                  <CheckCheck className="h-4 w-4 mr-2" />
-                  Mark all read
+                  <Plus className="h-4 w-4 mr-2" />
+                  Compose
                 </Button>
-              )}
+                {unreadMessages.length > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => markAllAsRead()}
+                  >
+                    <CheckCheck className="h-4 w-4 mr-2" />
+                    Mark all read
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
-          
+
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
@@ -226,32 +362,33 @@ export default function InboxPage() {
         <div className="flex-1 flex flex-col">
           {/* Custom Tab Navigation */}
           <div className="px-4 py-3 border-b bg-slate-50">
-            <div className="flex gap-2 overflow-x-auto">
+            <div className="flex gap-1 overflow-x-auto scrollbar-thin">
               {[
-                { id: 'all', label: 'All Messages', icon: InboxIcon, count: validMessages.length },
-                { id: 'direct', label: 'Direct', icon: MessageCircle, count: validMessages.filter((m: Message) => m && (m.contextType === 'direct' || !m.contextType)).length },
-                { id: 'suggestion', label: 'Suggestions', icon: Lightbulb, count: validMessages.filter((m: Message) => m && m.contextType === 'suggestion').length },
-                { id: 'project', label: 'Projects', icon: FolderOpen, count: validMessages.filter((m: Message) => m && m.contextType === 'project').length },
-                { id: 'task', label: 'Tasks', icon: ListTodo, count: validMessages.filter((m: Message) => m && m.contextType === 'task').length },
+                { id: 'all', label: 'All', icon: InboxIcon, count: allMessages.length + groupThreads.length },
+                { id: 'direct', label: 'Direct', icon: MessageCircle, count: allMessages.filter((m: Message) => m.contextType === 'direct' || !m.contextType).length },
+                { id: 'groups', label: 'Groups', icon: Users, count: groupThreads.length },
+                { id: 'suggestion', label: 'Ideas', icon: Lightbulb, count: allMessages.filter((m: Message) => m.contextType === 'suggestion').length },
+                { id: 'project', label: 'Projects', icon: FolderOpen, count: allMessages.filter((m: Message) => m.contextType === 'project').length },
+                { id: 'task', label: 'Tasks', icon: ListTodo, count: allMessages.filter((m: Message) => m.contextType === 'task').length },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setSelectedTab(tab.id)}
                   className={`
-                    flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap
+                    flex items-center gap-1.5 px-3 py-2 rounded-lg font-medium text-xs transition-all whitespace-nowrap flex-shrink-0
                     ${selectedTab === tab.id 
                       ? 'bg-white text-[#236383] shadow-sm border border-slate-200' 
                       : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'
                     }
                   `}
                 >
-                  <tab.icon className="h-4 w-4" />
+                  <tab.icon className="h-3.5 w-3.5" />
                   <span>{tab.label}</span>
                   {tab.count > 0 && (
                     <Badge 
                       variant={selectedTab === tab.id ? "default" : "secondary"}
                       className={`
-                        h-5 px-2 text-xs
+                        h-4 px-1.5 text-[10px] min-w-[16px] flex items-center justify-center
                         ${selectedTab === tab.id 
                           ? 'bg-[#236383] text-white' 
                           : 'bg-slate-200 text-slate-700'
@@ -273,51 +410,105 @@ export default function InboxPage() {
                   No messages found
                 </div>
               ) : (
-                filteredMessages.map((message: Message) => (
-                  <Card
-                    key={message.id}
-                    className={`mb-2 cursor-pointer transition-colors ${
-                      selectedMessage?.id === message.id 
-                        ? 'bg-blue-50 border-blue-300' 
-                        : 'hover:bg-gray-50'
-                    } ${!message.read ? 'border-l-4 border-l-blue-500' : ''}`}
-                    onClick={() => handleSelectMessage(message)}
-                  >
-                    <CardContent className="p-3">
-                      <div className="flex items-start justify-between mb-1">
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback>
-                              {message?.senderName?.charAt(0) || '?'}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium text-sm">
-                              {message?.senderName || 'Unknown'}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {message?.createdAt ? formatDistanceToNow(new Date(message.createdAt), { addSuffix: true }) : 'Unknown time'}
-                            </p>
+                filteredMessages.map((message: any) => {
+                  const isGroupThread = message.groupData;
+
+                  return (
+                    <Card
+                      key={message.id}
+                      className={`mb-2 cursor-pointer transition-colors ${
+                        selectedMessage?.contextId === message.contextId && selectedMessage?.contextType === message.contextType
+                          ? 'bg-blue-50 border-blue-300' 
+                          : 'hover:bg-gray-50'
+                      } ${!message.read ? 'border-l-4 border-l-blue-500' : ''}`}
+                      onClick={() => handleSelectMessage(message)}
+                    >
+                      <CardContent className="p-3">
+                        <div className="flex items-start justify-between mb-1">
+                          <div className="flex items-center gap-2">
+                            <Avatar className="h-8 w-8">
+                              <AvatarFallback>
+                                {isGroupThread ? <Users className="h-4 w-4" /> : (message.senderName?.charAt(0) || '?')}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium text-sm">
+                                {message.senderName || 'Unknown'}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {isGroupThread && message.groupData.lastMessage ? 
+                                  formatDistanceToNow(new Date(message.groupData.lastMessage.createdAt), { addSuffix: true }) :
+                                  formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })
+                                }
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {isGroupThread && message.groupData.unreadCount > 0 && (
+                              <Badge variant="destructive" className="h-5 min-w-[20px] text-xs">
+                                {message.groupData.unreadCount}
+                              </Badge>
+                            )}
+                            {!message.read && !isGroupThread && (
+                              <Circle className="h-2 w-2 fill-blue-500 text-blue-500" />
+                            )}
                           </div>
                         </div>
-                        {!message?.read && (
-                          <Circle className="h-2 w-2 fill-blue-500 text-blue-500" />
+
+                        {/* Group thread preview */}
+                        {isGroupThread ? (
+                          <div>
+                            {message.groupData.description && (
+                              <p className="text-sm text-gray-600 mb-1">{message.groupData.description}</p>
+                            )}
+                            {message.groupData.lastMessage && (
+                              <p className="text-sm text-gray-700 line-clamp-2 mb-2">
+                                <span className="font-medium">{message.groupData.lastMessage.senderName}:</span>{' '}
+                                {message.groupData.lastMessage.content}
+                              </p>
+                            )}
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Users className="h-4 w-4 text-gray-400" />
+                                <span className="text-xs text-gray-600">{message.groupData.memberCount} members</span>
+                              </div>
+                              {/* Member avatars preview */}
+                              {message.groupData.members.length > 0 && (
+                                <div className="flex -space-x-1">
+                                  {message.groupData.members.slice(0, 3).map((member: any, index: number) => (
+                                    <Avatar key={member.userId} className="h-5 w-5 border border-white">
+                                      <AvatarFallback className="text-xs">
+                                        {member.firstName?.[0] || member.email?.[0] || '?'}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                  ))}
+                                  {message.groupData.memberCount > 3 && (
+                                    <div className="h-5 w-5 bg-gray-200 rounded-full border border-white flex items-center justify-center">
+                                      <span className="text-xs text-gray-600">+{message.groupData.memberCount - 3}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            <p className="text-sm text-gray-700 line-clamp-2 mb-2">
+                              {message.editedContent || message.content}
+                            </p>
+
+                            {message.contextType && message.contextType !== 'group' && (
+                              <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${getContextColor(message.contextType)}`}>
+                                {getContextIcon(message.contextType)}
+                                <span>{message.contextTitle || message.contextType}</span>
+                              </div>
+                            )}
+                          </div>
                         )}
-                      </div>
-                      
-                      <p className="text-sm text-gray-700 line-clamp-2 mb-2">
-                        {message.editedContent || message.content}
-                      </p>
-                      
-                      {message.contextType && (
-                        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${getContextColor(message.contextType)}`}>
-                          {getContextIcon(message.contextType)}
-                          <span>{message.contextTitle || message.contextType}</span>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))
+                      </CardContent>
+                    </Card>
+                  );
+                })
               )}
             </div>
           </ScrollArea>
@@ -338,126 +529,143 @@ export default function InboxPage() {
             />
           </div>
         ) : selectedMessage ? (
-          <>
-            {/* Message Header */}
-            <div className="p-4 border-b">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarFallback>
-                      {selectedMessage.senderName?.charAt(0) || '?'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-semibold">{selectedMessage.senderName || 'Unknown'}</h3>
-                    <p className="text-sm text-gray-500">
-                      {formatDistanceToNow(new Date(selectedMessage.createdAt), { addSuffix: true })}
-                      {selectedMessage.editedAt && ' (edited)'}
-                    </p>
-                  </div>
-                </div>
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      <Star className="h-4 w-4 mr-2" />
-                      Star
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Archive className="h-4 w-4 mr-2" />
-                      Archive
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-red-600">
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-              
-              {selectedMessage.contextType && (
-                <div className="mt-2">
-                  <Badge variant="secondary" className="gap-1">
-                    {getContextIcon(selectedMessage.contextType)}
-                    {selectedMessage.contextTitle || selectedMessage.contextType}
-                  </Badge>
-                </div>
-              )}
-            </div>
-
-            {/* Thread Messages */}
-            <ScrollArea className="flex-1 p-4">
-              <div className="space-y-4">
-                {/* Original Message */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-sm whitespace-pre-wrap">
-                    {selectedMessage.editedContent || selectedMessage.content}
-                  </p>
-                </div>
-
-                {/* Thread Replies */}
-                {((threadMessages || [])
-                  .filter(m => m && typeof m === 'object' && m.senderName && m.content && m.id !== selectedMessage?.id)
-                ).map((message: Message) => (
-                  <div 
-                    key={message.id} 
-                    className={`rounded-lg p-4 ${
-                      message.senderId === (user as any)?.id 
-                        ? 'bg-blue-50 ml-auto max-w-[80%]' 
-                        : 'bg-gray-50 mr-auto max-w-[80%]'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <p className="font-medium text-sm">{message?.senderName || 'Unknown'}</p>
-                      <p className="text-xs text-gray-500">
-                        {message?.createdAt ? formatDistanceToNow(new Date(message.createdAt), { addSuffix: true }) : 'Unknown time'}
+          selectedMessage.contextType === 'group' ? (
+            <GroupConversation
+              groupId={parseInt(selectedMessage.contextId)}
+              groupName={selectedMessage.senderName || 'Group Chat'}
+              groupDescription={selectedMessage.groupData?.description}
+              onBack={() => setSelectedMessage(null)}
+              currentUser={user}
+            />
+          ) : (
+            <>
+              {/* Message Header */}
+              <div className="p-4 border-b">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback>
+                        {selectedMessage.senderName?.charAt(0) || '?'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="font-semibold">{selectedMessage.senderName || 'Unknown'}</h3>
+                      <p className="text-sm text-gray-500">
+                        {formatDistanceToNow(new Date(selectedMessage.createdAt), { addSuffix: true })}
+                        {selectedMessage.editedAt && ' (edited)'}
                       </p>
                     </div>
+                  </div>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>
+                        <Star className="h-4 w-4 mr-2" />
+                        Star
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Archive className="h-4 w-4 mr-2" />
+                        Archive
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="text-red-600">
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
+                {selectedMessage.contextType && selectedMessage.contextType !== 'group' && (
+                  <div className="mt-2">
+                    <Badge variant="secondary" className="gap-1">
+                      {getContextIcon(selectedMessage.contextType)}
+                      {selectedMessage.contextTitle || selectedMessage.contextType}
+                    </Badge>
+                  </div>
+                )}
+              </div>
+
+              {/* Thread Messages */}
+              <ScrollArea className="flex-1 p-4">
+                <div className="space-y-4">
+                  {/* Original Message */}
+                  <div className="bg-gray-50 rounded-lg p-4">
                     <p className="text-sm whitespace-pre-wrap">
-                      {message?.editedContent || message?.content || ''}
+                      {selectedMessage.editedContent || selectedMessage.content}
                     </p>
                   </div>
-                ))}
-              </div>
-            </ScrollArea>
 
-            {/* Reply Box */}
-            <div className="p-4 border-t">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Type your reply..."
-                  value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleReply()}
-                />
-                <Button 
-                  onClick={handleReply} 
-                  disabled={!replyContent.trim() || isSending}
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
+                  {/* Thread Replies */}
+                  {threadMessages.filter((m: Message) => m.id !== selectedMessage.id).map((message: Message) => (
+                    <div 
+                      key={message.id} 
+                      className={`rounded-lg p-4 ${
+                        message.senderId === (user as any)?.id 
+                          ? 'bg-blue-50 ml-auto max-w-[80%]' 
+                          : 'bg-gray-50 mr-auto max-w-[80%]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <p className="font-medium text-sm">{message.senderName}</p>
+                        <p className="text-xs text-gray-500">
+                          {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+                        </p>
+                      </div>
+                      <p className="text-sm whitespace-pre-wrap">
+                        {message.editedContent || message.content}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+
+              {/* Reply Box */}
+              <div className="p-4 border-t">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Type your reply..."
+                    value={replyContent}
+                    onChange={(e) => setReplyContent(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleReply()}
+                  />
+                  <Button 
+                    onClick={handleReply} 
+                    disabled={!replyContent.trim() || isSending}
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
-          </>
+            </>
+          )
         ) : (
           <div className="flex-1 flex items-center justify-center text-gray-500">
             <div className="text-center">
-              <InboxIcon className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-              <p>Select a message to view</p>
-              <Button 
-                variant="outline" 
-                className="mt-4"
-                onClick={() => setShowComposer(true)}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Compose New Message
-              </Button>
+              {selectedTab === 'groups' ? (
+                <>
+                  <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                  <p>Group messaging</p>
+                </>
+              ) : (
+                <>
+                  <InboxIcon className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                  <p>Select a message to view</p>
+                  <Button 
+                    variant="outline" 
+                    className="mt-4"
+                    onClick={() => setShowComposer(true)}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Compose New Message
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         )}

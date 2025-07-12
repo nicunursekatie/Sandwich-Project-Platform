@@ -291,9 +291,32 @@ export class DatabaseStorage implements IStorage {
 
   // UPDATED: Get messages by conversationId (preferred method)
   async getMessagesByConversationId(conversationId: number): Promise<Message[]> {
-    return await db.select().from(messages)
+    const results = await db
+      .select({
+        id: messages.id,
+        conversationId: messages.conversationId,
+        userId: messages.userId,
+        senderId: messages.senderId,
+        content: messages.content,
+        sender: sql<string>`COALESCE(CONCAT(${users.firstName}, ' ', ${users.lastName}), ${users.firstName}, ${users.email}, ${messages.sender}, 'Member')`,
+        contextType: messages.contextType,
+        contextId: messages.contextId,
+        editedAt: messages.editedAt,
+        editedContent: messages.editedContent,
+        deletedAt: messages.deletedAt,
+        deletedBy: messages.deletedBy,
+        createdAt: messages.createdAt,
+        updatedAt: messages.updatedAt,
+      })
+      .from(messages)
+      .leftJoin(users, eq(users.id, messages.senderId))
       .where(eq(messages.conversationId, conversationId))
       .orderBy(messages.createdAt);
+    
+    return results.map(row => ({
+      ...row,
+      sender: row.sender || 'Member'
+    }));
   }
 
   // ALIAS: getMessagesByThreadId for backwards compatibility

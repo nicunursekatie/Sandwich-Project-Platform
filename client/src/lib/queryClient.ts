@@ -11,7 +11,7 @@ export async function apiRequest(
   method: string,
   url: string,
   body?: any
-): Promise<Response> {
+): Promise<any> {
   const isFormData = body instanceof FormData;
   
   const res = await fetch(url, {
@@ -22,7 +22,15 @@ export async function apiRequest(
   });
 
   await throwIfResNotOk(res);
-  return res;
+  
+  // If response has content, parse as JSON
+  const contentType = res.headers.get("content-type");
+  if (contentType && contentType.includes("application/json")) {
+    return await res.json();
+  }
+  
+  // For empty responses (like 204), return null
+  return null;
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
