@@ -1,0 +1,167 @@
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+ 🔔 MessageNotifications: Loading unread counts...
+ 🔔 WebSocket useEffect triggered, user= Object
+ 🔔 Setting up WebSocket for user: user_1751071509329_mrkw2z95z
+ 🔔 Debug - window.location.host: sandwich-project-platform-katielong2316.replit.app
+ 🔔 Debug - window.location.hostname: sandwich-project-platform-katielong2316.replit.app
+ 🔔 Debug - window.location.port: 
+ Connecting to WebSocket: wss://sandwich-project-platform-katielong2316.replit.app/notifications
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+ 🔔 MessageNotifications: Loading unread counts...
+ Notification WebSocket connected successfully
+ User ID: user_1751071509329_mrkw2z95z
+ Messaging WebSocket connected
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+ 🔔 MessageNotifications: Rendering with final unread counts: Object
+ 🔔 MessageNotifications rendering with totalUnread: 1
+/api/message-notifications/unread-counts:1  Failed to load resource: the server responded with a status of 404 ()
+ Failed to fetch unread counts: 
+overrideMethod @ installHook.js:1
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+ 🔔 MessageNotifications: Rendering with final unread counts: Object
+ 🔔 MessageNotifications rendering with totalUnread: 1
+ Raw allMessages array: Array(0)
+ Invalid allMessages: Array(0)
+ Valid messages after filtering: Array(0)
+ Raw threadMessages array: Array(0)
+ Invalid threadMessages: Array(0)
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Rendering with final unread counts: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications rendering with totalUnread: 1
+index-RX2jvprj.js:696 Raw allMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid allMessages: Array(0)
+index-RX2jvprj.js:696 Valid messages after filtering: Array(0)
+index-RX2jvprj.js:696 Raw threadMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid threadMessages: Array(0)
+index-RX2jvprj.js:693 Messaging WebSocket connected
+index-RX2jvprj.js:696 Raw allMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid allMessages: Array(0)
+index-RX2jvprj.js:696 Valid messages after filtering: Array(0)
+index-RX2jvprj.js:696 Raw threadMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid threadMessages: Array(0)
+index-RX2jvprj.js:696 Raw allMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid allMessages: Array(0)
+index-RX2jvprj.js:696 Valid messages after filtering: Array(0)
+index-RX2jvprj.js:696 Raw threadMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid threadMessages: Array(0)
+index-RX2jvprj.js:696 Raw allMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid allMessages: Array(0)
+index-RX2jvprj.js:696 Valid messages after filtering: Array(0)
+index-RX2jvprj.js:696 Raw threadMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid threadMessages: Array(0)
+index-RX2jvprj.js:696 Raw allMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid allMessages: Array(0)
+index-RX2jvprj.js:696 Valid messages after filtering: Array(0)
+index-RX2jvprj.js:696 Raw threadMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid threadMessages: Array(0)
+index-RX2jvprj.js:696 Raw allMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid allMessages: Array(0)
+index-RX2jvprj.js:696 Valid messages after filtering: Array(0)
+index-RX2jvprj.js:696 Raw threadMessages array: Array(0)
+index-RX2jvprj.js:696 Invalid threadMessages: Array(0)
+index-RX2jvprj.js:696 🔔 MessageNotifications component mounting...
+index-RX2jvprj.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-RX2jvprj.js:696 🔔 MessageNotifications: user object= Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Rendering with final unread counts: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications rendering with totalUnread: 1
+index-RX2jvprj.js:696 🔔 MessageNotifications component mounting...
+index-RX2jvprj.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-RX2jvprj.js:696 🔔 MessageNotifications: user object= Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Rendering with final unread counts: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications rendering with totalUnread: 1
+index-RX2jvprj.js:693 Messaging WebSocket disconnected
+/api/message-notifications/unread-counts:1  Failed to load resource: the server responded with a status of 404 ()
+hook.js:608 Failed to fetch unread counts: Error: 404: {"error":"API route not found: /api/message-notifications/unread-counts"}
+    at K6 (index-RX2jvprj.js:48:43406)
+    at async xe (index-RX2jvprj.js:48:43640)
+    at async queryFn (index-RX2jvprj.js:693:137024)
+overrideMethod @ hook.js:608
+index-RX2jvprj.js:696 🔔 MessageNotifications component mounting...
+index-RX2jvprj.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-RX2jvprj.js:696 🔔 MessageNotifications: user object= Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Rendering with final unread counts: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications rendering with totalUnread: 1
+index-RX2jvprj.js:696 🔔 MessageNotifications component mounting...
+index-RX2jvprj.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-RX2jvprj.js:696 🔔 MessageNotifications: user object= Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Rendering with final unread counts: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications rendering with totalUnread: 1
+index-RX2jvprj.js:693 Navigating to project: 18
+index-RX2jvprj.js:693 Using dashboard navigation
+index-RX2jvprj.js:696 🔔 MessageNotifications component mounting...
+index-RX2jvprj.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-RX2jvprj.js:696 🔔 MessageNotifications: user object= Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Rendering with final unread counts: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications rendering with totalUnread: 1
+index-RX2jvprj.js:693 Project Detail - User: Object
+index-RX2jvprj.js:693 Project Detail - Can Edit: true
+index-RX2jvprj.js:693 Project Detail - User Permissions: Array(42)
+index-RX2jvprj.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-RX2jvprj.js:696 🔔 MessageNotifications component mounting...
+index-RX2jvprj.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-RX2jvprj.js:696 🔔 MessageNotifications: user object= Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Query state - isLoading: false error: null data: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications: Rendering with final unread counts: Object
+index-RX2jvprj.js:696 🔔 MessageNotifications rendering with totalUnread: 1
+index-RX2jvprj.js:693 Project Detail - User: Object
+index-RX2jvprj.js:693 Project Detail - Can Edit: true
+index-RX2jvprj.js:693 Project Detail - User Permissions: Array(42)
+index-RX2jvprj.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-RX2jvprj.js:693 Project Detail - User: Object
+index-RX2jvprj.js:693 Project Detail - Can Edit: true
+index-RX2jvprj.js:693 Project Detail - User Permissions: Array(42)
+index-RX2jvprj.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-RX2jvprj.js:693 Project Detail - User: Object
+index-RX2jvprj.js:693 Project Detail - Can Edit: true
+index-RX2jvprj.js:693 Project Detail - User Permissions: Array(42)
+index-RX2jvprj.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-RX2jvprj.js:693 Project Detail - User: Object
+index-RX2jvprj.js:693 Project Detail - Can Edit: true
+index-RX2jvprj.js:693 Project Detail - User Permissions: Array(42)
+index-RX2jvprj.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+hook.js:608 TypeError: Cannot read properties of undefined (reading 'senderName')
+    at index-RX2jvprj.js:693:174709
+    at Array.map (<anonymous>)
+    at k6e (index-RX2jvprj.js:693:174490)
+    at bP (index-RX2jvprj.js:38:17018)
+    at BN (index-RX2jvprj.js:40:3139)
+    at p6 (index-RX2jvprj.js:40:44833)
+    at f6 (index-RX2jvprj.js:40:39790)
+    at BZ (index-RX2jvprj.js:40:39718)
+    at Nv (index-RX2jvprj.js:40:39570)
+    at ZN (index-RX2jvprj.js:40:35934)
+overrideMethod @ hook.js:608
+hook.js:608 Error caught by boundary: TypeError: Cannot read properties of undefined (reading 'senderName')
+    at index-RX2jvprj.js:693:174709
+    at Array.map (<anonymous>)
+    at k6e (index-RX2jvprj.js:693:174490)
+    at bP (index-RX2jvprj.js:38:17018)
+    at BN (index-RX2jvprj.js:40:3139)
+    at p6 (index-RX2jvprj.js:40:44833)
+    at f6 (index-RX2jvprj.js:40:39790)
+    at BZ (index-RX2jvprj.js:40:39718)
+    at Nv (index-RX2jvprj.js:40:39570)
+    at ZN (index-RX2jvprj.js:40:35934) Object
+overrideMethod @ hook.js:608
+index-RX2jvprj.js:696 WebSocket connection closed, code: 1000
+index-RX2jvprj.js:693 Messaging WebSocket disconnected
