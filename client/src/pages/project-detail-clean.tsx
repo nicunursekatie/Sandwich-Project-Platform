@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -68,7 +68,7 @@ interface Task {
 
 export default function ProjectDetailClean() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { user } = useAuth();
   const [isAddingTask, setIsAddingTask] = useState(false);
@@ -212,7 +212,7 @@ export default function ProjectDetailClean() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/dashboard/projects')}
+            onClick={() => setLocation('/dashboard/projects')}
             className="flex items-center gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
