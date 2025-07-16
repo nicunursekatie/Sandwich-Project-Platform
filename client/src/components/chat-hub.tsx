@@ -8,8 +8,7 @@ import HostChat from "@/components/host-chat";
 import DriverChat from "@/components/driver-chat";
 import RecipientChat from "@/components/recipient-chat";
 import CoreTeamChat from "@/components/core-team-chat";
-import { GroupMessaging } from "@/components/group-messaging";
-import DirectMessaging from "@/components/direct-messaging";
+// Group messaging and direct messaging moved to inbox system
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, USER_ROLES, PERMISSIONS } from "@shared/auth-utils";
 import {
@@ -112,29 +111,8 @@ export default function ChatHub() {
     });
   }
 
-  // Direct messaging for all authenticated users
-  if (user) {
-    availableChannels.push({
-      value: "direct",
-      label: "Direct Messages",
-      description: "One-on-one conversations",
-      icon: <Mail className="h-4 w-4" />,
-      component: <DirectMessaging />,
-      color: "bg-primary/10 text-primary",
-    });
-  }
-
-  // Group messaging for all authenticated users
-  if (user) {
-    availableChannels.push({
-      value: "groups",
-      label: "Group Messages",
-      description: "Custom group conversations",
-      icon: <UsersRound className="h-4 w-4" />,
-      component: <GroupMessaging currentUser={user} />,
-      color: "bg-primary/10 text-primary",
-    });
-  }
+  // Direct messaging and group messaging moved to Messages section
+  // These features are now available in the Messages section under Communication
 
   // Auto-select first channel if none selected
   if (!activeChannel && availableChannels.length > 0) {

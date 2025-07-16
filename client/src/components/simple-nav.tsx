@@ -16,7 +16,8 @@ import {
   Settings,
   Sheet,
   Lightbulb,
-  Inbox
+  Inbox,
+  Hash
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
@@ -45,8 +46,8 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
     { id: "collections", label: "Collections Log", icon: Sandwich, href: "collections" },
     
     // COMMUNICATION section
-    { id: "inbox", label: "Inbox", icon: Inbox, href: "inbox", group: "communication" },
-    { id: "chat", label: "Chat", icon: MessageCircle, href: "messages", group: "communication" },
+    { id: "messages", label: "Messages", icon: MessageCircle, href: "messages", group: "communication" },
+    { id: "chat", label: "Chat", icon: Hash, href: "chat", group: "communication" },
     ...(hasPermission(user, PERMISSIONS.VIEW_SUGGESTIONS) ? [{ id: "suggestions", label: "Suggestions", icon: Lightbulb, href: "suggestions", group: "communication" }] : []),
     
     // WORKFLOW section
@@ -116,10 +117,10 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
         
         // Get unread count for specific items
         let unreadCount = 0;
-        if (item.id === 'inbox') {
-          unreadCount = totalUnread;
-        } else if (item.id === 'chat' || item.id === 'messages') {
-          unreadCount = unreadCounts.general;
+        if (item.id === 'messages') {
+          unreadCount = totalUnread; // Direct/Group messages
+        } else if (item.id === 'chat') {
+          unreadCount = unreadCounts.general; // Chat rooms
         } else if (item.id === 'committee-chat') {
           unreadCount = unreadCounts.committee;
         } else if (item.id === 'suggestions' && unreadCounts.suggestion) {

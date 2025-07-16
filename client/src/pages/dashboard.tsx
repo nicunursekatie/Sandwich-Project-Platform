@@ -42,6 +42,7 @@ import WorkLogPage from "@/pages/work-log";
 import SuggestionsPortal from "@/pages/suggestions";
 import GoogleSheetsPage from "@/pages/google-sheets";
 import InboxPage from "@/pages/inbox";
+import MessagingSystem from "@/components/messaging-system";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -122,6 +123,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "projects":
         return <ProjectsClean />;
       case "messages":
+        return <MessagingSystem />;
+      case "chat":
         return <ChatHub />;
       case "inbox":
         return <InboxPage />;
