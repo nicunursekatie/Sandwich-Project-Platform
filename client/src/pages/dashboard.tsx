@@ -123,11 +123,9 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "projects":
         return <ProjectsClean />;
       case "messages":
-        return <MessagingSystem />;
+        return <InboxPage />;
       case "chat":
         return <ChatHub />;
-      case "inbox":
-        return <InboxPage />;
       case "profile":
         return <UserProfile />;
       case "meetings":
