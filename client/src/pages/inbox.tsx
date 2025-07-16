@@ -176,6 +176,20 @@ export default function InboxPage() {
     },
   });
 
+  // Fetch sent messages
+  const { data: sentMessages = [] } = useQuery({
+    queryKey: ['/api/messaging/sent', selectedTab],
+    queryFn: async () => {
+      if (selectedTab !== 'sent') {
+        return [];
+      }
+
+      const response = await apiRequest('GET', '/api/messaging/sent');
+      return (response as any).messages || [];
+    },
+    enabled: selectedTab === 'sent',
+  });
+
   // Fetch thread messages when a message is selected
   const { data: threadMessages = [] } = useQuery({
     queryKey: ['/api/messaging/thread', selectedMessage?.contextType, selectedMessage?.contextId],
@@ -279,6 +293,7 @@ export default function InboxPage() {
 
   // Combine messages based on selected tab
   const displayMessages = selectedTab === 'groups' ? groupThreadMessages : 
+                          selectedTab === 'sent' ? sentMessages :
                           selectedTab === 'all' ? [...allMessages, ...groupThreadMessages] : 
                           allMessages;
 
@@ -362,35 +377,68 @@ export default function InboxPage() {
         </div>
 
         <div className="flex-1 flex flex-col">
-          {/* Custom Tab Navigation */}
-          <div className="px-4 py-3 border-b bg-slate-50">
-            <div className="flex gap-1 overflow-x-auto scrollbar-thin">
+          {/* Improved Tab Navigation */}
+          <div className="px-4 py-2 border-b bg-slate-50">
+            <div className="grid grid-cols-3 gap-1 mb-2">
               {[
                 { id: 'all', label: 'All', icon: InboxIcon, count: allMessages.length + groupThreads.length },
                 { id: 'direct', label: 'Direct', icon: MessageCircle, count: allMessages.filter((m: Message) => m.contextType === 'direct' || !m.contextType).length },
-                { id: 'groups', label: 'Groups', icon: Users, count: groupThreads.length },
-                { id: 'suggestion', label: 'Ideas', icon: Lightbulb, count: allMessages.filter((m: Message) => m.contextType === 'suggestion').length },
-                { id: 'project', label: 'Projects', icon: FolderOpen, count: allMessages.filter((m: Message) => m.contextType === 'project').length },
-                { id: 'task', label: 'Tasks', icon: ListTodo, count: allMessages.filter((m: Message) => m.contextType === 'task').length },
+                { id: 'sent', label: 'Sent', icon: Send, count: sentMessages.length },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setSelectedTab(tab.id)}
                   className={`
-                    flex items-center gap-1.5 px-3 py-2 rounded-lg font-medium text-xs transition-all whitespace-nowrap flex-shrink-0
+                    flex items-center justify-center gap-1 px-2 py-1.5 rounded-md font-medium text-xs transition-all
                     ${selectedTab === tab.id 
                       ? 'bg-white text-[#236383] shadow-sm border border-slate-200' 
                       : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'
                     }
                   `}
                 >
-                  <tab.icon className="h-3.5 w-3.5" />
+                  <tab.icon className="h-3 w-3" />
                   <span>{tab.label}</span>
                   {tab.count > 0 && (
                     <Badge 
                       variant={selectedTab === tab.id ? "default" : "secondary"}
                       className={`
-                        h-4 px-1.5 text-[10px] min-w-[16px] flex items-center justify-center
+                        h-3 px-1 text-[9px] min-w-[12px] flex items-center justify-center
+                        ${selectedTab === tab.id 
+                          ? 'bg-[#236383] text-white' 
+                          : 'bg-slate-200 text-slate-700'
+                        }
+                      `}
+                    >
+                      {tab.count}
+                    </Badge>
+                  )}
+                </button>
+              ))}
+            </div>
+            <div className="grid grid-cols-3 gap-1">
+              {[
+                { id: 'groups', label: 'Groups', icon: Users, count: groupThreads.length },
+                { id: 'suggestion', label: 'Ideas', icon: Lightbulb, count: allMessages.filter((m: Message) => m.contextType === 'suggestion').length },
+                { id: 'project', label: 'Projects', icon: FolderOpen, count: allMessages.filter((m: Message) => m.contextType === 'project').length },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setSelectedTab(tab.id)}
+                  className={`
+                    flex items-center justify-center gap-1 px-2 py-1.5 rounded-md font-medium text-xs transition-all
+                    ${selectedTab === tab.id 
+                      ? 'bg-white text-[#236383] shadow-sm border border-slate-200' 
+                      : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'
+                    }
+                  `}
+                >
+                  <tab.icon className="h-3 w-3" />
+                  <span>{tab.label}</span>
+                  {tab.count > 0 && (
+                    <Badge 
+                      variant={selectedTab === tab.id ? "default" : "secondary"}
+                      className={`
+                        h-3 px-1 text-[9px] min-w-[12px] flex items-center justify-center
                         ${selectedTab === tab.id 
                           ? 'bg-[#236383] text-white' 
                           : 'bg-slate-200 text-slate-700'

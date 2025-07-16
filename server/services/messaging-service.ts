@@ -797,6 +797,59 @@ export class MessagingService {
     }
   }
 
+  /**
+   * Get sent messages for a user
+   */
+  async getSentMessages(userId: string, options: {
+    contextType?: string;
+    limit?: number;
+    offset?: number;
+  } = {}): Promise<Message[]> {
+    const { contextType, limit = 50, offset = 0 } = options;
+
+    try {
+      let query = db
+        .select({
+          id: messages.id,
+          senderId: messages.senderId,
+          content: messages.content,
+          contextType: messages.contextType,
+          contextId: messages.contextId,
+          createdAt: messages.createdAt,
+          editedAt: messages.editedAt,
+          editedContent: messages.editedContent,
+          senderName: users.displayName,
+          senderEmail: users.email,
+          recipientId: messageRecipients.recipientId,
+          read: messageRecipients.read,
+          readAt: messageRecipients.readAt,
+        })
+        .from(messages)
+        .innerJoin(messageRecipients, eq(messages.id, messageRecipients.messageId))
+        .leftJoin(users, eq(messages.senderId, users.id))
+        .where(eq(messages.senderId, userId));
+
+      if (contextType) {
+        query = query.where(eq(messages.contextType, contextType));
+      }
+
+      const result = await query
+        .orderBy(desc(messages.createdAt))
+        .limit(limit)
+        .offset(offset);
+
+      return result.map(msg => ({
+        ...msg,
+        senderName: msg.senderName || msg.senderEmail || `User ${msg.senderId}` || 'Unknown User',
+        read: !!msg.read,
+        readAt: msg.readAt || undefined,
+      }));
+    } catch (error) {
+      console.error('Failed to get sent messages:', error);
+      throw error;
+    }
+  }
+
 
 }
 
