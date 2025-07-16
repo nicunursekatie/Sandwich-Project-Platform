@@ -592,9 +592,9 @@ export default function InboxPage() {
         ) : selectedMessage ? (
           selectedMessage.contextType === 'group' ? (
             <GroupConversation
-              groupId={parseInt(selectedMessage.contextId)}
+              groupId={parseInt(selectedMessage.contextId || '0')}
               groupName={selectedMessage.senderName || 'Group Chat'}
-              groupDescription={selectedMessage.groupData?.description}
+              groupDescription={(selectedMessage as any).groupData?.description}
               onBack={() => setSelectedMessage(null)}
               currentUser={user}
             />
