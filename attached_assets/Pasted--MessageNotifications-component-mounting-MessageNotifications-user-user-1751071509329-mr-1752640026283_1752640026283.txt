@@ -1,0 +1,69 @@
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+ 🔔 MessageNotifications: Loading unread counts...
+ 🔔 WebSocket useEffect triggered, user= Object
+ 🔔 Setting up WebSocket for user: user_1751071509329_mrkw2z95z
+ 🔔 Debug - window.location.host: sandwich-project-platform-katielong2316.replit.app
+ 🔔 Debug - window.location.hostname: sandwich-project-platform-katielong2316.replit.app
+ 🔔 Debug - window.location.port: 
+ Connecting to WebSocket: wss://sandwich-project-platform-katielong2316.replit.app/notifications
+ 🔔 MessageNotifications component mounting...
+ 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+ 🔔 MessageNotifications: user object= Object
+ 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+ 🔔 MessageNotifications: Loading unread counts...
+ Notification WebSocket connected successfully
+ User ID: user_1751071509329_mrkw2z95z
+index-DbV34yad.js:693 Messaging WebSocket connected
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= Object
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= Object
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:693 Navigating to project: 23
+index-DbV34yad.js:693 Using dashboard navigation
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= Object
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:693 Project Detail - User: Object
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: Array(42)
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= Object
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:693 Project Detail - User: Object
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: Array(42)
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:693 Project Detail - User: Object
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: Array(42)
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:693 Project Detail - User: Object
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: Array(42)
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+hook.js:608 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+overrideMethod @ hook.js:608
+/api/notifications:1  Failed to load resource: the server responded with a status of 500 ()
+hook.js:608 Error sending congratulations: Error: 500: {"message":"Failed to create notification"}
+    at m6 (index-DbV34yad.js:48:43390)
+    at async pe (index-DbV34yad.js:48:43617)
+    at async v (index-DbV34yad.js:693:152366)
+overrideMethod @ hook.js:608
+index-DbV34yad.js:693 Project Detail - User: Object
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: Array(42)
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data

@@ -1019,28 +1019,71 @@ export class DatabaseStorage implements IStorage {
 
   // Notifications & Celebrations
   async getUserNotifications(userId: string): Promise<any[]> {
-    // For now return empty array - notifications can be implemented later
-    return [];
+    try {
+      return await db.select().from(notifications).where(eq(notifications.userId, userId)).orderBy(desc(notifications.createdAt));
+    } catch (error) {
+      console.error('Failed to get user notifications:', error);
+      return [];
+    }
   }
 
   async createNotification(notification: any): Promise<any> {
-    // Basic notification creation - can be enhanced later
-    return notification;
+    try {
+      const [createdNotification] = await db
+        .insert(notifications)
+        .values(notification)
+        .returning();
+      return createdNotification;
+    } catch (error) {
+      console.error('Failed to create notification:', error);
+      throw error;
+    }
   }
 
   async markNotificationRead(id: number): Promise<boolean> {
-    // For now return true - can be implemented later
-    return true;
+    try {
+      const result = await db
+        .update(notifications)
+        .set({ isRead: true })
+        .where(eq(notifications.id, id));
+      return (result.rowCount ?? 0) > 0;
+    } catch (error) {
+      console.error('Failed to mark notification as read:', error);
+      return false;
+    }
   }
 
   async deleteNotification(id: number): Promise<boolean> {
-    // For now return true - can be implemented later
-    return true;
+    try {
+      const result = await db
+        .delete(notifications)
+        .where(eq(notifications.id, id));
+      return (result.rowCount ?? 0) > 0;
+    } catch (error) {
+      console.error('Failed to delete notification:', error);
+      return false;
+    }
   }
 
   async createCelebration(userId: string, taskId: number, message: string): Promise<any> {
-    // For now return basic celebration object - can be implemented later
-    return { userId, taskId, message, type: 'celebration' };
+    const celebrationEmojis = ["🎉", "🌟", "🎊", "🥳", "🏆", "✨", "👏", "💪"];
+    const randomEmoji = celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)];
+    
+    return this.createNotification({
+      userId,
+      type: "celebration",
+      title: `${randomEmoji} Task Completed!`,
+      message: `Thanks for completing your task! ${message}`,
+      isRead: false,
+      relatedType: "task",
+      relatedId: taskId,
+      celebrationData: {
+        emoji: randomEmoji,
+        achievementType: "task_completion",
+        taskId,
+        completedAt: new Date().toISOString()
+      }
+    });
   }
 
   // Announcements
