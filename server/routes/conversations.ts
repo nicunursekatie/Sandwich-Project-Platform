@@ -2,6 +2,9 @@
 import { Router } from "express";
 import { z } from "zod";
 import { storage } from "../storage-wrapper";
+import { db } from "../db";
+import { conversations, conversationParticipants } from "@shared/schema";
+import { eq } from "drizzle-orm";
 
 const router = Router();
 
@@ -16,14 +19,24 @@ router.get("/conversations", async (req, res) => {
     
     const { type } = req.query;
     
-    let conversations = await storage.getUserConversations(userId);
+    // Temporary implementation: Query conversations with user participation directly
+    let userConversations = await db
+      .select({
+        id: conversations.id,
+        type: conversations.type,
+        name: conversations.name,
+        createdAt: conversations.createdAt
+      })
+      .from(conversations)
+      .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+      .where(eq(conversationParticipants.userId, userId));
     
     // Filter by type if requested
     if (type) {
-      conversations = conversations.filter(conv => conv.type === type);
+      userConversations = userConversations.filter(conv => conv.type === type);
     }
     
-    res.json(conversations);
+    res.json(userConversations);
   } catch (error) {
     console.error("Error fetching conversations:", error);
     res.status(500).json({ error: "Failed to fetch conversations" });
