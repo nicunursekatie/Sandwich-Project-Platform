@@ -247,7 +247,7 @@ export default function ProjectList() {
   };
 
   const handleProjectClick = (projectId: number) => {
-    setLocation(`/projects/${projectId}`);
+    setLocation(`/dashboard?section=project-${projectId}`);
   };
 
   const getStatusColor = (status: string) => {
