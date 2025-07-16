@@ -181,7 +181,16 @@ export default function ProjectsClean() {
   const handleProjectClick = (projectId: number) => {
     console.log('Navigating to project:', projectId);
     // Navigate to dashboard with project section
-    setLocation(`/dashboard?section=project-${projectId}`);
+    const newUrl = `/dashboard?section=project-${projectId}`;
+    setLocation(newUrl);
+    
+    // Update the URL in the browser history
+    window.history.pushState({}, '', newUrl);
+    
+    // Trigger the dashboard section change if available
+    if ((window as any).dashboardSetActiveSection) {
+      (window as any).dashboardSetActiveSection(`project-${projectId}`);
+    }
   };
 
   const handleStatusChange = (projectId: number, newStatus: string) => {

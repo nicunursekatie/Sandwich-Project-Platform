@@ -68,8 +68,9 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
       // Replit environment - use the full hostname without port
       wsUrl = `${protocol}//${window.location.hostname}/notifications`;
     } else if (window.location.port && window.location.port !== '80' && window.location.port !== '443') {
-      // Local development with explicit port
-      wsUrl = `${protocol}//${window.location.hostname}:${window.location.port}/notifications`;
+      // Local development with explicit port - ensure port is defined
+      const port = window.location.port || '5000';
+      wsUrl = `${protocol}//${window.location.hostname}:${port}/notifications`;
     } else {
       // Default case - use window.location.host if available, otherwise construct manually
       const host = window.location.host || `${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`;

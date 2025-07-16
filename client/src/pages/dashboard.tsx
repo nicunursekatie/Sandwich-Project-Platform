@@ -65,6 +65,27 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
     };
   }, []);
 
+  // Listen for URL changes to update active section
+  React.useEffect(() => {
+    const handleLocationChange = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const section = urlParams.get('section');
+      if (section && section !== activeSection) {
+        setActiveSection(section);
+      }
+    };
+
+    // Listen for popstate events (back/forward navigation)
+    window.addEventListener('popstate', handleLocationChange);
+    
+    // Also check for URL changes on component mount
+    handleLocationChange();
+
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+    };
+  }, [activeSection]);
+
   const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => 
       prev.includes(sectionId) 
