@@ -168,12 +168,6 @@ export default function CoreTeamChat() {
     },
     enabled: !!coreTeamConversation,
     refetchInterval: 3000,
-    onSuccess: (data) => {
-      console.log("[DEBUG] Core Team Chat: Messages loaded:", data);
-    },
-    onError: (error) => {
-      console.error("[DEBUG] Core Team Chat: Error loading messages:", error);
-    },
   });
 
   console.log(

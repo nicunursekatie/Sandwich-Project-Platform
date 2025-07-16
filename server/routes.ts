@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { z } from "zod";
-import { eq, and, or, sql, desc } from "drizzle-orm";
+import { eq, and, or, sql, desc, isNull, ne } from "drizzle-orm";
 import express from "express";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
@@ -996,7 +996,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 conversationId: messagesTable.conversationId,
               })
               .from(messagesTable)
-              .where(eq(messagesTable.conversationId, generalConversation.id))
+              .where(
+                and(
+                  eq(messagesTable.conversationId, generalConversation.id),
+                  // CRITICAL FIX: Exclude direct messages from general chat
+                  or(
+                    isNull(messagesTable.contextType),
+                    ne(messagesTable.contextType, 'direct')
+                  )
+                )
+              )
               .orderBy(messagesTable.createdAt);
 
             messages = conversationMessages;
