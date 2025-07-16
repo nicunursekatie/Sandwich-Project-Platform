@@ -141,12 +141,12 @@ export function MultiUserTaskCompletion({
     return <div className="text-sm text-gray-500">Loading completion status...</div>;
   }
 
-  const currentUserCompletion = completions.find(
+  const currentUserCompletion = (completions || []).find(
     (c: TaskCompletion) => c.userId === currentUserId
   );
   const isCurrentUserCompleted = !!currentUserCompletion;
-  const completedCount = completions.length;
-  const totalAssignees = assigneeIds.length;
+  const completedCount = (completions || []).length;
+  const totalAssignees = (assigneeIds || []).length;
   const isFullyCompleted = completedCount >= totalAssignees && taskStatus === 'completed';
   
   // Team progress calculation is working properly
@@ -157,7 +157,7 @@ export function MultiUserTaskCompletion({
     const isCurrentUser = assigneeId === currentUserId;
     
     // Match completion by user ID (assigneeId is actually a user ID from the assigneeIds array)
-    const completion = completions.find((c: TaskCompletion) => {
+    const completion = (completions || []).find((c: TaskCompletion) => {
       return c.userId === assigneeId;
     });
     const isCompleted = !!completion;

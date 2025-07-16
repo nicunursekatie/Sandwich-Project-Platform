@@ -61,20 +61,15 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
     // Set up WebSocket connection for real-time notifications
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     
-    // Robust WebSocket URL construction for different environments
+    // Simple WebSocket URL construction for Replit environment
     let wsUrl: string;
     
     if (window.location.hostname.includes('.replit.dev') || window.location.hostname.includes('.replit.app')) {
       // Replit environment - use the full hostname without port
       wsUrl = `${protocol}//${window.location.hostname}/notifications`;
-    } else if (window.location.port && window.location.port !== '80' && window.location.port !== '443') {
-      // Local development with explicit port - ensure port is defined
-      const port = window.location.port || '5000';
-      wsUrl = `${protocol}//${window.location.hostname}:${port}/notifications`;
     } else {
-      // Default case - use window.location.host if available, otherwise construct manually
-      const host = window.location.host || `${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`;
-      wsUrl = `${protocol}//${host}/notifications`;
+      // Local development - use current host with default port
+      wsUrl = `${protocol}//${window.location.hostname}:5000/notifications`;
     }
 
     try {
@@ -92,6 +87,7 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
 
       socket.onerror = (error) => {
         // Silently handle WebSocket errors to avoid console spam
+        console.debug('WebSocket error:', error);
       };
 
       socket.onclose = (event) => {
