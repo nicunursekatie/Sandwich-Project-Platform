@@ -57,7 +57,7 @@ export default function CoreTeamChat() {
 
   // Helper functions for user display
   const getUserDisplayName = (userId: string) => {
-    const userFound = allUsers.find((u: any) => u.id === userId);
+    const userFound = (allUsers as any[]).find((u: any) => u.id === userId);
     if (userFound) {
       if (userFound.displayName) return userFound.displayName;
       if (userFound.firstName) return userFound.firstName;
@@ -67,7 +67,7 @@ export default function CoreTeamChat() {
   };
 
   const getUserInitials = (userId: string) => {
-    const userFound = allUsers.find((u: any) => u.id === userId);
+    const userFound = (allUsers as any[]).find((u: any) => u.id === userId);
     if (userFound) {
       if (userFound.firstName && userFound.lastName) {
         return (userFound.firstName[0] + userFound.lastName[0]).toUpperCase();

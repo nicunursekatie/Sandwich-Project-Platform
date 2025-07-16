@@ -870,7 +870,15 @@ export class MessagingService {
         .from(messages)
         .innerJoin(messageRecipients, eq(messages.id, messageRecipients.messageId))
         .leftJoin(users, eq(messages.senderId, users.id))
-        .where(eq(messages.senderId, userId));
+        .where(
+          and(
+            eq(messages.senderId, userId),
+            // Only include formal messages (not chat messages)
+            isNull(messages.conversationId),
+            // Exclude direct chat messages that might have been misclassified
+            not(eq(messages.contextType, 'direct'))
+          )
+        );
 
       if (contextType) {
         query = query.where(eq(messages.contextType, contextType));
