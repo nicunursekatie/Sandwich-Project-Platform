@@ -49,16 +49,15 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isLoading } = useAuth();
 
-  // Make setActiveSection available globally for embedded components
+  // Handle URL parameters and make setActiveSection available globally
   React.useEffect(() => {
-    (window as any).dashboardSetActiveSection = setActiveSection;
-    
-    // Check URL params on load for direct navigation
     const urlParams = new URLSearchParams(window.location.search);
     const section = urlParams.get('section');
     if (section) {
       setActiveSection(section);
     }
+    
+    (window as any).dashboardSetActiveSection = setActiveSection;
     
     return () => {
       delete (window as any).dashboardSetActiveSection;
@@ -111,6 +110,11 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
     // Extract project ID from activeSection if it's a project detail page
     const projectIdMatch = activeSection.match(/^project-(\d+)$/);
     const projectId = projectIdMatch ? parseInt(projectIdMatch[1]) : null;
+
+    // Handle project detail pages
+    if (projectId) {
+      return <ProjectDetailClean />;
+    }
 
     switch (activeSection) {
       case "dashboard":
