@@ -188,7 +188,7 @@ export function MultiUserTaskCompletion({
       <div className="flex items-center gap-2">
         <Users className="w-4 h-4 text-gray-500" />
         <span className="text-sm font-medium">
-          Team Progress: {completions.length}/{totalAssignees}
+          Team Progress: {completions?.length || 0}/{totalAssignees || 0}
         </span>
         {isFullyCompleted && (
           <Badge className="bg-green-600 hover:bg-green-700">
@@ -199,8 +199,12 @@ export function MultiUserTaskCompletion({
 
       {/* Individual assignee status */}
       <div className="space-y-2">
-        {assigneeIds.map((assigneeId, index) => 
-          getAssigneeStatus(assigneeId, assigneeNames[index] || 'Unknown User')
+        {assigneeIds && assigneeIds.length > 0 ? (
+          assigneeIds.map((assigneeId, index) => 
+            getAssigneeStatus(assigneeId, assigneeNames[index] || 'Unknown User')
+          )
+        ) : (
+          <div className="text-sm text-gray-500">No assignees found</div>
         )}
       </div>
 
