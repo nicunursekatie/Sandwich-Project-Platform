@@ -394,21 +394,7 @@ export class MemStorage implements IStorage {
     return Array.from(this.users.values()).find(user => user.email === username);
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentIds.user++;
-    const user: User = { 
-      ...insertUser, 
-      id: id.toString(),
-      role: insertUser.role || 'volunteer', // Use provided role or default
-      permissions: insertUser.permissions || {},
-      metadata: insertUser.metadata || {},
-      isActive: insertUser.isActive !== false, // Default to true unless explicitly false
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.users.set(id, user);
-    return user;
-  }
+
 
   // Project methods
   async getAllProjects(): Promise<Project[]> {
@@ -876,10 +862,6 @@ export class MemStorage implements IStorage {
     const updated: AgendaItem = { ...item, ...updates };
     this.agendaItems.set(id, updated);
     return updated;
-  }
-
-  async deleteAgendaItem(id: number): Promise<boolean> {
-    return this.agendaItems.delete(id);
   }
 
   async deleteAgendaItem(id: number): Promise<boolean> {

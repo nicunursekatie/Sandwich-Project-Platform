@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MessageComposer } from "@/components/message-composer";
 import { GroupConversation } from "@/components/group-conversation";
+import { queryClient } from "@/lib/queryClient";
 
 interface GroupThread {
   id: number;
@@ -127,9 +128,9 @@ export default function InboxPage() {
                 memberCount: participants.length,
                 unreadCount,
                 lastMessage: lastMessage ? {
-                  content: lastMessage.content,
-                  senderName: lastMessage.sender || 'Unknown',
-                  createdAt: lastMessage.createdAt
+                  content: lastMessage.content || '',
+                  senderName: lastMessage.senderName || lastMessage.sender || 'Unknown',
+                  createdAt: lastMessage.createdAt || new Date().toISOString()
                 } : undefined,
                 members: participants.slice(0, 5) // Show first 5 members for preview
               };
@@ -283,12 +284,13 @@ export default function InboxPage() {
 
   // Filter messages based on search
   const filteredMessages = displayMessages.filter((message: any) => {
+    if (!message) return false; // Skip undefined/null messages
     if (!searchQuery) return true;
     const searchLower = searchQuery.toLowerCase();
     return (
-      message.content.toLowerCase().includes(searchLower) ||
-      message.senderName?.toLowerCase().includes(searchLower) ||
-      message.contextTitle?.toLowerCase().includes(searchLower)
+      (message.content || '').toLowerCase().includes(searchLower) ||
+      (message.senderName || '').toLowerCase().includes(searchLower) ||
+      (message.contextTitle || '').toLowerCase().includes(searchLower)
     );
   });
 
@@ -411,6 +413,7 @@ export default function InboxPage() {
                 </div>
               ) : (
                 filteredMessages.map((message: any) => {
+                  if (!message) return null; // Skip undefined messages
                   const isGroupThread = message.groupData;
 
                   return (
@@ -433,12 +436,12 @@ export default function InboxPage() {
                             </Avatar>
                             <div>
                               <p className="font-medium text-sm">
-                                {message.senderName || 'Unknown'}
+                                {message?.senderName || 'Unknown'}
                               </p>
                               <p className="text-xs text-gray-500">
-                                {isGroupThread && message.groupData.lastMessage ? 
+                                {isGroupThread && message?.groupData?.lastMessage?.createdAt ? 
                                   formatDistanceToNow(new Date(message.groupData.lastMessage.createdAt), { addSuffix: true }) :
-                                  formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })
+                                  message?.createdAt ? formatDistanceToNow(new Date(message.createdAt), { addSuffix: true }) : 'Unknown time'
                                 }
                               </p>
                             </div>
@@ -456,35 +459,35 @@ export default function InboxPage() {
                         </div>
 
                         {/* Group thread preview */}
-                        {isGroupThread ? (
+                        {isGroupThread && message?.groupData ? (
                           <div>
                             {message.groupData.description && (
                               <p className="text-sm text-gray-600 mb-1">{message.groupData.description}</p>
                             )}
                             {message.groupData.lastMessage && (
                               <p className="text-sm text-gray-700 line-clamp-2 mb-2">
-                                <span className="font-medium">{message.groupData.lastMessage.senderName}:</span>{' '}
+                                <span className="font-medium">{message.groupData.lastMessage.senderName || message.groupData.lastMessage.sender || 'Unknown'}:</span>{' '}
                                 {message.groupData.lastMessage.content}
                               </p>
                             )}
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
                                 <Users className="h-4 w-4 text-gray-400" />
-                                <span className="text-xs text-gray-600">{message.groupData.memberCount} members</span>
+                                <span className="text-xs text-gray-600">{message.groupData.memberCount || 0} members</span>
                               </div>
                               {/* Member avatars preview */}
-                              {message.groupData.members.length > 0 && (
+                              {message.groupData.members?.length > 0 && (
                                 <div className="flex -space-x-1">
                                   {message.groupData.members.slice(0, 3).map((member: any, index: number) => (
-                                    <Avatar key={member.userId} className="h-5 w-5 border border-white">
+                                    <Avatar key={member?.userId || index} className="h-5 w-5 border border-white">
                                       <AvatarFallback className="text-xs">
-                                        {member.firstName?.[0] || member.email?.[0] || '?'}
+                                        {member?.firstName?.[0] || member?.email?.[0] || '?'}
                                       </AvatarFallback>
                                     </Avatar>
                                   ))}
-                                  {message.groupData.memberCount > 3 && (
+                                  {(message.groupData.memberCount || 0) > 3 && (
                                     <div className="h-5 w-5 bg-gray-200 rounded-full border border-white flex items-center justify-center">
-                                      <span className="text-xs text-gray-600">+{message.groupData.memberCount - 3}</span>
+                                      <span className="text-xs text-gray-600">+{(message.groupData.memberCount || 0) - 3}</span>
                                     </div>
                                   )}
                                 </div>
@@ -494,13 +497,13 @@ export default function InboxPage() {
                         ) : (
                           <div>
                             <p className="text-sm text-gray-700 line-clamp-2 mb-2">
-                              {message.editedContent || message.content}
+                              {message?.editedContent || message?.content || 'No content'}
                             </p>
 
-                            {message.contextType && message.contextType !== 'group' && (
+                            {message?.contextType && message.contextType !== 'group' && (
                               <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${getContextColor(message.contextType)}`}>
                                 {getContextIcon(message.contextType)}
-                                <span>{message.contextTitle || message.contextType}</span>
+                                <span>{message?.contextTitle || message.contextType}</span>
                               </div>
                             )}
                           </div>

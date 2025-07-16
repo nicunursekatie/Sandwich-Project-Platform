@@ -37,7 +37,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
   const { toast } = useToast();
   const { user } = useAuth();
   const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
-  
+
   // Debug logging
   console.log('Project Detail - User:', user);
   console.log('Project Detail - Can Edit:', canEdit);
@@ -121,16 +121,16 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
       setEditingTask(null);
       toast({ title: "Task updated successfully" });
-      
+
       // Update project progress after task status change
       const updatedTasks = await queryClient.fetchQuery({ 
         queryKey: ["/api/projects", projectId, "tasks"] 
       }) as ProjectTask[];
-      
+
       if (updatedTasks) {
         const completedTasks = updatedTasks.filter(task => task.status === 'completed').length;
         const newProgress = updatedTasks.length > 0 ? Math.round((completedTasks / updatedTasks.length) * 100) : 0;
-        
+
         // Update project progress in database
         updateProjectMutation.mutate({
           progressPercentage: newProgress
@@ -223,14 +223,14 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
 
   const handleToggleTaskCompletion = async (task: ProjectTask) => {
     const newStatus = task.status === 'completed' ? 'pending' : 'completed';
-    
+
     // For multi-user tasks, check if all team members have completed before allowing main completion
     if (newStatus === 'completed' && task.assigneeIds?.length > 1) {
       try {
         const completionsResponse = await apiRequest('GET', `/api/tasks/${task.id}/completions`);
         const completions = completionsResponse || [];
         const totalAssignees = task.assigneeIds.length;
-        
+
         if (completions.length < totalAssignees) {
           toast({
             title: "Team Completion Required",
@@ -249,11 +249,11 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
         return;
       }
     }
-    
+
     // If we're marking the task as completed, trigger celebration
     if (newStatus === 'completed') {
       triggerCelebration(task.title, task.id);
-      
+
       // Create notification for task completion
       const notificationData = {
         userId: (user as any)?.id || 'anonymous',
@@ -268,11 +268,11 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
           completedAt: new Date().toISOString()
         }
       };
-      
+
       // Send notification to backend
       apiRequest('POST', '/api/notifications', notificationData).catch(err => console.log('Notification storage failed:', err));
     }
-    
+
     updateTaskMutation.mutate({
       id: task.id,
       updates: { status: newStatus }
@@ -317,7 +317,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
 
   const handleUpdateProject = () => {
     if (!editProject.title.trim()) return;
-    
+
     const projectData = {
       title: editProject.title,
       description: editProject.description,
@@ -378,13 +378,13 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
             </div>
           </div>
         </div>
-        
+
         {/* Mobile-friendly action bar */}
         <div className="flex flex-wrap items-center gap-2">
           <Badge className={getPriorityColor(project.priority)}>
             {project.priority}
           </Badge>
-          
+
           {/* Status badge with quick change dropdown */}
           {canEdit ? (
             <Select 
@@ -436,7 +436,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
               <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
             </Badge>
           )}
-          
+
           {/* Always show edit button for admin users - force display */}
           <Button 
             variant="outline" 
@@ -504,7 +504,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                       const dueDate = new Date(project.dueDate);
                       const diffTime = dueDate.getTime() - today.getTime();
                       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                      
+
                       if (diffDays < 0) {
                         return `${Math.abs(diffDays)} days overdue`;
                       } else if (diffDays === 0) {
@@ -543,7 +543,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                 <p className="text-3xl font-bold text-slate-900">{currentProgress}%</p>
                 <p className="text-sm font-medium text-slate-600">Complete</p>
               </div>
-              
+
               <div className="space-y-3">
                 <Progress 
                   value={currentProgress} 
@@ -630,7 +630,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
             Discussion
           </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="tasks" className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Project Tasks</h3>
@@ -987,7 +987,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                             )}
                           </DialogContent>
                         </Dialog>
-                        
+
                         {/* Congratulate Button - only show for completed tasks with assignee */}
                         {task.status === 'completed' && task.assigneeName && (
                           <Button 
@@ -1011,7 +1011,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                                   sentAt: new Date().toISOString()
                                 }
                               };
-                              
+
                               // Send notification silently (no popup for sender)
                               apiRequest('POST', '/api/notifications', congratulationData).then(() => {
                                 // Simple confirmation toast for sender
@@ -1034,7 +1034,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                             <Award className="w-3 h-3" />
                           </Button>
                         )}
-                        
+
                         <Button 
                           variant="outline" 
                           size="sm"
@@ -1051,7 +1051,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
             </div>
           )}
         </TabsContent>
-        
+
         <TabsContent value="details" className="space-y-6">
           {/* Project Header Card */}
           <Card className="border-0 bg-gradient-to-br from-slate-50 via-white to-blue-50 shadow-lg">
@@ -1106,14 +1106,14 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                       {(project.category || 'General').charAt(0).toUpperCase() + (project.category || 'General').slice(1)}
                     </Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between py-2 border-b border-indigo-100">
                     <span className="text-sm font-medium text-slate-600">Project ID</span>
                     <span className="text-sm font-mono text-slate-800 bg-slate-100 px-2 py-1 rounded">
                       #{project.id}
                     </span>
                   </div>
-                  
+
                   <div className="flex items-center justify-between py-2">
                     <span className="text-sm font-medium text-slate-600">Created</span>
                     <span className="text-sm text-slate-700">
@@ -1149,14 +1149,14 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                       {project.estimatedHours ? `${project.estimatedHours}h` : 'Not set'}
                     </span>
                   </div>
-                  
+
                   <div className="flex items-center justify-between py-2 border-b border-emerald-100">
                     <span className="text-sm font-medium text-slate-600">Actual Hours</span>
                     <span className="text-lg font-bold text-slate-700">
                       {project.actualHours ? `${project.actualHours}h` : '0h'}
                     </span>
                   </div>
-                  
+
                   <div className="flex items-center justify-between py-2">
                     <span className="text-sm font-medium text-slate-600">Budget</span>
                     <span className="text-lg font-bold text-emerald-700">
@@ -1188,7 +1188,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                   <div className="text-sm font-medium text-slate-600">Completion</div>
                   <Progress value={currentProgress} className="h-2 bg-purple-100" />
                 </div>
-                
+
                 <div className="text-center space-y-2">
                   <div className="text-3xl font-bold text-blue-600">{projectTasks.length}</div>
                   <div className="text-sm font-medium text-slate-600">Total Tasks</div>
@@ -1196,7 +1196,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                     <div className="h-2 bg-blue-500 rounded-full" style={{ width: '100%' }}></div>
                   </div>
                 </div>
-                
+
                 <div className="text-center space-y-2">
                   <div className="text-3xl font-bold text-green-600">
                     {projectTasks.filter(task => task.status === 'completed').length}
@@ -1211,7 +1211,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                     ></div>
                   </div>
                 </div>
-                
+
                 <div className="text-center space-y-2">
                   <div className="text-3xl font-bold text-orange-600">
                     {projectTasks.length - projectTasks.filter(task => task.status === 'completed').length}
@@ -1246,9 +1246,9 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
               <MessageComposer
                 contextType="project"
                 contextId={String(projectId)}
-                contextTitle={project.title}
-                defaultRecipients={project.assigneeName ? [{
-                  id: project.assigneeId || '',
+                contextTitle={project?.title || 'Project'}
+                defaultRecipients={(project?.assigneeName && project?.assigneeId) ? [{
+                  id: project.assigneeId,
                   name: project.assigneeName
                 }] : []}
                 onSent={() => {
@@ -1258,7 +1258,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                   });
                 }}
               />
-              
+
               <div className="mt-6 p-4 bg-gray-50 rounded-lg">
                 <p className="text-sm text-gray-600 flex items-center gap-2">
                   <MessageCircle className="w-4 h-4" />
@@ -1402,7 +1402,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
               sentAt: new Date().toISOString()
             }
           };
-          
+
           apiRequest('POST', '/api/notifications', thankYouData).then(() => {
             toast({ 
               title: "Thank you sent!", 

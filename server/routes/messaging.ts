@@ -33,15 +33,29 @@ router.post("/send", async (req, res) => {
   try {
     const user = (req as any).user;
     if (!user) {
+      console.error("Send message: User not authenticated");
       return res.status(401).json({ error: "User not authenticated" });
     }
 
+    console.log("Send message request:", { userId: user.id, body: req.body });
+
     const result = sendMessageSchema.safeParse(req.body);
     if (!result.success) {
+      console.error("Send message validation failed:", result.error.errors);
       return res.status(400).json({ 
         error: "Invalid request", 
         details: result.error.errors 
       });
+    }
+
+    if (!result.data.recipientIds || result.data.recipientIds.length === 0) {
+      console.error("No recipients specified");
+      return res.status(400).json({ error: "At least one recipient is required" });
+    }
+
+    if (!result.data.content || result.data.content.trim().length === 0) {
+      console.error("No content specified");
+      return res.status(400).json({ error: "Message content is required" });
     }
 
     const message = await messagingService.sendMessage({
@@ -49,13 +63,15 @@ router.post("/send", async (req, res) => {
       ...result.data,
     });
 
+    console.log("Message sent successfully:", message.id);
+
     res.status(201).json({ 
       success: true, 
       message 
     });
   } catch (error) {
     console.error("Error sending message:", error);
-    res.status(500).json({ error: "Failed to send message" });
+    res.status(500).json({ error: "Failed to send message", details: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
