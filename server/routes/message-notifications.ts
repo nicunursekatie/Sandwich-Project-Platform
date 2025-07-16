@@ -35,9 +35,16 @@ function checkUserChatPermission(user: any, chatType: string): boolean {
 // Get unread message counts for a user
 const getUnreadCounts = async (req: Request, res: Response) => {
     try {
+      console.log('=== UNREAD COUNTS REQUEST ===');
+      console.log('req.user exists:', !!(req as any).user);
+      console.log('req.user?.id:', (req as any).user?.id);
+      console.log('req.session exists:', !!(req as any).session);
+      console.log('req.session?.user exists:', !!(req as any).session?.user);
+      
       const userId = (req as any).user?.id;
       if (!userId) {
-        return res.status(401).json({ error: "User not authenticated" });
+        console.log('Authentication failed: No user ID found');
+        return res.status(401).json({ message: "Unauthorized" });
       }
 
       const user = (req as any).user;
@@ -159,65 +166,9 @@ const markAllRead = async (req: Request, res: Response) => {
 };
 
 // Register routes function
-import { Express } from "express";
-import { broadcastToUser } from '../index';
-import { isAuthenticated } from '../replitAuth';
-import { db } from '../db';
 export function registerMessageNotificationRoutes(app: Express) {
-  // WebSocket upgrade handling is done in the main server file
-
-  // Basic health check
-  app.get('/api/message-notifications/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
-  });
-
-  // Unread counts endpoint
-  app.get('/api/message-notifications/unread-counts', isAuthenticated, async (req, res) => {
-    try {
-      const userId = (req as any).user?.id;
-      if (!userId) {
-        return res.status(401).json({ error: 'Not authenticated' });
-      }
-
-      // Get unread message counts from database
-      const unreadCounts = await db.execute(`
-        SELECT 
-          COUNT(*) as total_unread,
-          SUM(CASE WHEN context_type = 'direct' OR context_type IS NULL THEN 1 ELSE 0 END) as direct,
-          SUM(CASE WHEN context_type = 'group' THEN 1 ELSE 0 END) as groups,
-          SUM(CASE WHEN context_type = 'suggestion' THEN 1 ELSE 0 END) as suggestion,
-          SUM(CASE WHEN context_type = 'project' THEN 1 ELSE 0 END) as project,
-          SUM(CASE WHEN context_type = 'task' THEN 1 ELSE 0 END) as task
-        FROM messages 
-        WHERE sender_id != ? 
-        AND (read_at IS NULL OR read_at = '')
-        AND (
-          -- Direct messages to this user
-          (context_type = 'direct' OR context_type IS NULL) OR
-          -- Messages in groups where user is a participant
-          context_id IN (
-            SELECT conversation_id::text 
-            FROM conversation_participants 
-            WHERE user_id = ?
-          )
-        )
-      `, [userId, userId]);
-
-      const counts = unreadCounts.rows[0] || {};
-
-      res.json({
-        total: parseInt(counts.total_unread) || 0,
-        direct: parseInt(counts.direct) || 0,
-        groups: parseInt(counts.groups) || 0,
-        suggestion: parseInt(counts.suggestion) || 0,
-        project: parseInt(counts.project) || 0,
-        task: parseInt(counts.task) || 0
-      });
-    } catch (error) {
-      console.error('Error fetching unread counts:', error);
-      res.status(500).json({ error: 'Failed to fetch unread counts' });
-    }
-  });
+  // Use the proper unread counts function with the existing database schema
+  app.get('/api/message-notifications/unread-counts', isAuthenticated, getUnreadCounts);
   app.post("/api/message-notifications/mark-read", isAuthenticated, markMessagesRead);
   app.post("/api/message-notifications/mark-all-read", isAuthenticated, markAllRead);
 }
