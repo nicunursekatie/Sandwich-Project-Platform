@@ -6,10 +6,10 @@ export function useAuth() {
     queryKey: ["/api/auth/user"],
     queryFn: getQueryFn({ on401: "returnNull" }),
     retry: false,
-    staleTime: 0, // Force fresh data
-    gcTime: 0, // Don't cache
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
+    staleTime: 5 * 60 * 1000, // Keep fresh for 5 minutes instead of 0
+    gcTime: 10 * 60 * 1000, // Cache for 10 minutes instead of 0
+    refetchOnMount: false, // Don't refetch on every mount
+    refetchOnWindowFocus: false, // Don't refetch on window focus
   });
 
   // Enhanced debugging for mobile issues

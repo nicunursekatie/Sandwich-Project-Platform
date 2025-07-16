@@ -38,11 +38,7 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
   const { user } = useAuth();
   const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
 
-  // Debug logging
-  console.log('Project Detail - User:', user);
-  console.log('Project Detail - Can Edit:', canEdit);
-  console.log('Project Detail - User Permissions:', user?.permissions);
-  console.log('Project Detail - PERMISSIONS.EDIT_COLLECTIONS:', PERMISSIONS.EDIT_COLLECTIONS);
+
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
 
   const [isAddingTask, setIsAddingTask] = useState(false);
@@ -833,13 +829,14 @@ export default function ProjectDetailClean({ projectId, onBack }: ProjectDetailC
                               <div className="text-sm font-medium text-blue-800 mb-3">Team Completion Status</div>
                               <MultiUserTaskCompletion
                                 taskId={task.id}
+                                projectId={projectId}
                                 assigneeIds={task.assigneeIds || []}
                                 assigneeNames={task.assigneeNames || []}
                                 currentUserId={user?.id}
                                 currentUserName={user?.displayName || user?.email}
                                 taskStatus={task.status}
                                 onStatusChange={(isCompleted) => {
-                                  queryClient.invalidateQueries({ queryKey: ['/api/projects', project.id, 'tasks'] });
+                                  queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId, 'tasks'] });
                                   queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
                                 }}
                               />

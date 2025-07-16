@@ -1,0 +1,107 @@
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:696 🔔 WebSocket useEffect triggered, user= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:696 🔔 Setting up WebSocket for user: user_1751071509329_mrkw2z95z
+index-DbV34yad.js:696 🔔 Debug - window.location.host: sandwich-project-platform-katielong2316.replit.app
+index-DbV34yad.js:696 🔔 Debug - window.location.hostname: sandwich-project-platform-katielong2316.replit.app
+index-DbV34yad.js:696 🔔 Debug - window.location.port: 
+index-DbV34yad.js:696 Connecting to WebSocket: wss://sandwich-project-platform-katielong2316.replit.app/notifications
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:696 Notification WebSocket connected successfully
+index-DbV34yad.js:696 User ID: user_1751071509329_mrkw2z95z
+index-DbV34yad.js:693 Messaging WebSocket connected
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:693 Navigating to project: 22
+index-DbV34yad.js:693 Using dashboard navigation
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:693 Project Detail - User: {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: (42) ['manage_users', 'manage_hosts', 'manage_recipients', 'manage_drivers', 'manage_collections', 'manage_announcements', 'manage_committees', 'manage_projects', 'view_phone_directory', 'view_hosts', 'view_recipients', 'view_drivers', 'view_committee', 'view_users', 'view_collections', 'view_reports', 'view_meetings', 'view_analytics', 'view_projects', 'view_role_demo', 'edit_data', 'edit_meetings', 'delete_data', 'schedule_reports', 'general_chat', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'core_team_chat', 'direct_messages', 'group_messages', 'send_messages', 'export_data', 'import_data', 'toolkit_access', 'moderate_messages', 'submit_suggestions', 'respond_to_suggestions', 'view_suggestions', 'manage_suggestions', 'view_sandwich_data']
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:693 Project Detail - User: {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: (42) ['manage_users', 'manage_hosts', 'manage_recipients', 'manage_drivers', 'manage_collections', 'manage_announcements', 'manage_committees', 'manage_projects', 'view_phone_directory', 'view_hosts', 'view_recipients', 'view_drivers', 'view_committee', 'view_users', 'view_collections', 'view_reports', 'view_meetings', 'view_analytics', 'view_projects', 'view_role_demo', 'edit_data', 'edit_meetings', 'delete_data', 'schedule_reports', 'general_chat', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'core_team_chat', 'direct_messages', 'group_messages', 'send_messages', 'export_data', 'import_data', 'toolkit_access', 'moderate_messages', 'submit_suggestions', 'respond_to_suggestions', 'view_suggestions', 'manage_suggestions', 'view_sandwich_data']
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:693 Project Detail - User: {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: (42) ['manage_users', 'manage_hosts', 'manage_recipients', 'manage_drivers', 'manage_collections', 'manage_announcements', 'manage_committees', 'manage_projects', 'view_phone_directory', 'view_hosts', 'view_recipients', 'view_drivers', 'view_committee', 'view_users', 'view_collections', 'view_reports', 'view_meetings', 'view_analytics', 'view_projects', 'view_role_demo', 'edit_data', 'edit_meetings', 'delete_data', 'schedule_reports', 'general_chat', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'core_team_chat', 'direct_messages', 'group_messages', 'send_messages', 'export_data', 'import_data', 'toolkit_access', 'moderate_messages', 'submit_suggestions', 'respond_to_suggestions', 'view_suggestions', 'manage_suggestions', 'view_sandwich_data']
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:693 Project Detail - User: {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: (42) ['manage_users', 'manage_hosts', 'manage_recipients', 'manage_drivers', 'manage_collections', 'manage_announcements', 'manage_committees', 'manage_projects', 'view_phone_directory', 'view_hosts', 'view_recipients', 'view_drivers', 'view_committee', 'view_users', 'view_collections', 'view_reports', 'view_meetings', 'view_analytics', 'view_projects', 'view_role_demo', 'edit_data', 'edit_meetings', 'delete_data', 'schedule_reports', 'general_chat', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'core_team_chat', 'direct_messages', 'group_messages', 'send_messages', 'export_data', 'import_data', 'toolkit_access', 'moderate_messages', 'submit_suggestions', 'respond_to_suggestions', 'view_suggestions', 'manage_suggestions', 'view_sandwich_data']
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:693 Project Detail - User: {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: (42) ['manage_users', 'manage_hosts', 'manage_recipients', 'manage_drivers', 'manage_collections', 'manage_announcements', 'manage_committees', 'manage_projects', 'view_phone_directory', 'view_hosts', 'view_recipients', 'view_drivers', 'view_committee', 'view_users', 'view_collections', 'view_reports', 'view_meetings', 'view_analytics', 'view_projects', 'view_role_demo', 'edit_data', 'edit_meetings', 'delete_data', 'schedule_reports', 'general_chat', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'core_team_chat', 'direct_messages', 'group_messages', 'send_messages', 'export_data', 'import_data', 'toolkit_access', 'moderate_messages', 'submit_suggestions', 'respond_to_suggestions', 'view_suggestions', 'manage_suggestions', 'view_sandwich_data']
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:693 Navigating to project: 20
+index-DbV34yad.js:693 Using dashboard navigation
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:693 Project Detail - User: {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: (42) ['manage_users', 'manage_hosts', 'manage_recipients', 'manage_drivers', 'manage_collections', 'manage_announcements', 'manage_committees', 'manage_projects', 'view_phone_directory', 'view_hosts', 'view_recipients', 'view_drivers', 'view_committee', 'view_users', 'view_collections', 'view_reports', 'view_meetings', 'view_analytics', 'view_projects', 'view_role_demo', 'edit_data', 'edit_meetings', 'delete_data', 'schedule_reports', 'general_chat', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'core_team_chat', 'direct_messages', 'group_messages', 'send_messages', 'export_data', 'import_data', 'toolkit_access', 'moderate_messages', 'submit_suggestions', 'respond_to_suggestions', 'view_suggestions', 'manage_suggestions', 'view_sandwich_data']
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:696 🔔 MessageNotifications component mounting...
+index-DbV34yad.js:696 🔔 MessageNotifications: user= user_1751071509329_mrkw2z95z isAuthenticated= true
+index-DbV34yad.js:696 🔔 MessageNotifications: user object= {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:696 🔔 MessageNotifications: Query state - isLoading: true error: null data: undefined
+index-DbV34yad.js:696 🔔 MessageNotifications: Loading unread counts...
+index-DbV34yad.js:693 Project Detail - User: {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: (42) ['manage_users', 'manage_hosts', 'manage_recipients', 'manage_drivers', 'manage_collections', 'manage_announcements', 'manage_committees', 'manage_projects', 'view_phone_directory', 'view_hosts', 'view_recipients', 'view_drivers', 'view_committee', 'view_users', 'view_collections', 'view_reports', 'view_meetings', 'view_analytics', 'view_projects', 'view_role_demo', 'edit_data', 'edit_meetings', 'delete_data', 'schedule_reports', 'general_chat', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'core_team_chat', 'direct_messages', 'group_messages', 'send_messages', 'export_data', 'import_data', 'toolkit_access', 'moderate_messages', 'submit_suggestions', 'respond_to_suggestions', 'view_suggestions', 'manage_suggestions', 'view_sandwich_data']
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:693 Project Detail - User: {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: (42) ['manage_users', 'manage_hosts', 'manage_recipients', 'manage_drivers', 'manage_collections', 'manage_announcements', 'manage_committees', 'manage_projects', 'view_phone_directory', 'view_hosts', 'view_recipients', 'view_drivers', 'view_committee', 'view_users', 'view_collections', 'view_reports', 'view_meetings', 'view_analytics', 'view_projects', 'view_role_demo', 'edit_data', 'edit_meetings', 'delete_data', 'schedule_reports', 'general_chat', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'core_team_chat', 'direct_messages', 'group_messages', 'send_messages', 'export_data', 'import_data', 'toolkit_access', 'moderate_messages', 'submit_suggestions', 'respond_to_suggestions', 'view_suggestions', 'manage_suggestions', 'view_sandwich_data']
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:693 Project Detail - User: {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: (42) ['manage_users', 'manage_hosts', 'manage_recipients', 'manage_drivers', 'manage_collections', 'manage_announcements', 'manage_committees', 'manage_projects', 'view_phone_directory', 'view_hosts', 'view_recipients', 'view_drivers', 'view_committee', 'view_users', 'view_collections', 'view_reports', 'view_meetings', 'view_analytics', 'view_projects', 'view_role_demo', 'edit_data', 'edit_meetings', 'delete_data', 'schedule_reports', 'general_chat', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'core_team_chat', 'direct_messages', 'group_messages', 'send_messages', 'export_data', 'import_data', 'toolkit_access', 'moderate_messages', 'submit_suggestions', 'respond_to_suggestions', 'view_suggestions', 'manage_suggestions', 'view_sandwich_data']
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:693 Project Detail - User: {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: (42) ['manage_users', 'manage_hosts', 'manage_recipients', 'manage_drivers', 'manage_collections', 'manage_announcements', 'manage_committees', 'manage_projects', 'view_phone_directory', 'view_hosts', 'view_recipients', 'view_drivers', 'view_committee', 'view_users', 'view_collections', 'view_reports', 'view_meetings', 'view_analytics', 'view_projects', 'view_role_demo', 'edit_data', 'edit_meetings', 'delete_data', 'schedule_reports', 'general_chat', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'core_team_chat', 'direct_messages', 'group_messages', 'send_messages', 'export_data', 'import_data', 'toolkit_access', 'moderate_messages', 'submit_suggestions', 'respond_to_suggestions', 'view_suggestions', 'manage_suggestions', 'view_sandwich_data']
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data
+index-DbV34yad.js:693 Project Detail - User: {id: 'user_1751071509329_mrkw2z95z', role: 'admin', email: 'katielong2316@gmail.com', isActive: true, lastName: 'Long', …}
+index-DbV34yad.js:693 Project Detail - Can Edit: true
+index-DbV34yad.js:693 Project Detail - User Permissions: (42) ['manage_users', 'manage_hosts', 'manage_recipients', 'manage_drivers', 'manage_collections', 'manage_announcements', 'manage_committees', 'manage_projects', 'view_phone_directory', 'view_hosts', 'view_recipients', 'view_drivers', 'view_committee', 'view_users', 'view_collections', 'view_reports', 'view_meetings', 'view_analytics', 'view_projects', 'view_role_demo', 'edit_data', 'edit_meetings', 'delete_data', 'schedule_reports', 'general_chat', 'committee_chat', 'host_chat', 'driver_chat', 'recipient_chat', 'core_team_chat', 'direct_messages', 'group_messages', 'send_messages', 'export_data', 'import_data', 'toolkit_access', 'moderate_messages', 'submit_suggestions', 'respond_to_suggestions', 'view_suggestions', 'manage_suggestions', 'view_sandwich_data']
+index-DbV34yad.js:693 Project Detail - PERMISSIONS.EDIT_COLLECTIONS: edit_data

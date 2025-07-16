@@ -20,6 +20,7 @@ interface TaskCompletion {
 
 interface MultiUserTaskCompletionProps {
   taskId: number;
+  projectId: number;
   assigneeIds: string[];
   assigneeNames: string[];
   currentUserId?: string;
@@ -30,6 +31,7 @@ interface MultiUserTaskCompletionProps {
 
 export function MultiUserTaskCompletion({
   taskId,
+  projectId,
   assigneeIds,
   assigneeNames,
   currentUserId,
@@ -72,7 +74,7 @@ export function MultiUserTaskCompletion({
       // Force comprehensive cache invalidation and refresh
       await queryClient.invalidateQueries({ queryKey: ['/api/tasks', taskId, 'completions'] });
       await queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
-      await queryClient.invalidateQueries({ queryKey: ['/api/projects', 25, 'tasks'] });
+      await queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId, 'tasks'] });
       await refetch();
       setShowCompletionDialog(false);
       setNotes("");
@@ -110,6 +112,7 @@ export function MultiUserTaskCompletion({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/tasks', taskId, 'completions'] });
       queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId, 'tasks'] });
       toast({
         title: "Completion removed",
         description: "Your completion has been removed from this task"
