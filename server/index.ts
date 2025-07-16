@@ -4,6 +4,7 @@ import { WebSocketServer } from "ws";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { initializeDatabase } from "./db-init";
+import { setupSocketChat } from "./socket-chat";
 
 const app = express();
 app.use(express.json());
@@ -122,6 +123,9 @@ async function startServer() {
     const finalPort = process.env.NODE_ENV === "production" ? await tryPort(Number(port)) : port;
 
     const httpServer = createServer(app);
+
+    // Set up Socket.io for chat system
+    const io = setupSocketChat(httpServer);
 
     // Set up WebSocket server for real-time notifications
     const wss = new WebSocketServer({ 
