@@ -109,7 +109,7 @@ export async function setupAuth(app: Express) {
   app.get("/api/login", (req, res, next) => {
     try {
       const strategyName = `replitauth:${req.hostname}`;
-      
+
       // Check if strategy exists before attempting to authenticate
       if (!passport._strategy(strategyName)) {
         console.error(`Strategy ${strategyName} not found. Available strategies:`, Object.keys(passport._strategies || {}));
@@ -123,7 +123,7 @@ export async function setupAuth(app: Express) {
           </html>
         `);
       }
-      
+
       passport.authenticate(strategyName, {
         prompt: "login consent",
         scope: ["openid", "email", "profile", "offline_access"],
@@ -176,11 +176,12 @@ export async function setupAuth(app: Express) {
 }
 
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
-  const user = req.user as any;
-
-  if (!req.isAuthenticated() || !user.expires_at) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
+  try {
+    const user = req.user as any;
+    // Check if user exists and has valid session
+    if (!user || !user.expires_at) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
 
   const now = Math.floor(Date.now() / 1000);
   if (now <= user.expires_at) {
@@ -202,13 +203,17 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
 };
 
 // Role-based authorization middleware
 export const requireRole = (allowedRoles: string[]): RequestHandler => {
   return async (req, res, next) => {
     const user = req.user as any;
-    
+
     if (!req.isAuthenticated() || !user.claims?.sub) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -240,7 +245,7 @@ export const requireRole = (allowedRoles: string[]): RequestHandler => {
 export const requirePermission = (permission: string): RequestHandler => {
   return async (req, res, next) => {
     const user = req.user as any;
-    
+
     if (!req.isAuthenticated() || !user.claims?.sub) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -252,7 +257,7 @@ export const requirePermission = (permission: string): RequestHandler => {
       }
 
       const permissions = Array.isArray(dbUser.permissions) ? dbUser.permissions : [];
-      
+
       // Admin role has all permissions
       if (dbUser.role === 'admin' || permissions.includes(permission)) {
         (req as any).currentUser = dbUser;
