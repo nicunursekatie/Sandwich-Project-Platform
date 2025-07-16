@@ -21,6 +21,7 @@ import {
   type Contact, type InsertContact,
   type Committee, type InsertCommittee,
   type CommitteeMembership, type InsertCommitteeMembership,
+  type Notification, type InsertNotification,
   type Suggestion, type InsertSuggestion,
   type SuggestionResponse, type InsertSuggestionResponse
 } from "@shared/schema";
@@ -1018,7 +1019,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Notifications & Celebrations
-  async getUserNotifications(userId: string): Promise<any[]> {
+  async getUserNotifications(userId: string): Promise<Notification[]> {
     try {
       return await db.select().from(notifications).where(eq(notifications.userId, userId)).orderBy(desc(notifications.createdAt));
     } catch (error) {
@@ -1027,7 +1028,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async createNotification(notification: any): Promise<any> {
+  async createNotification(notification: InsertNotification): Promise<Notification> {
     try {
       const [createdNotification] = await db
         .insert(notifications)
@@ -1065,7 +1066,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async createCelebration(userId: string, taskId: number, message: string): Promise<any> {
+  async createCelebration(userId: string, taskId: number, message: string): Promise<Notification> {
     const celebrationEmojis = ["🎉", "🌟", "🎊", "🥳", "🏆", "✨", "👏", "💪"];
     const randomEmoji = celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)];
     
