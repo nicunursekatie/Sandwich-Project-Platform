@@ -519,12 +519,55 @@ export class MessagingService {
         });
       }
 
+      // Send immediate email notifications for direct messages
+      if (message.contextType === 'direct') {
+        await this.sendDirectMessageEmails(message, recipientIds);
+      }
+
       // Schedule email fallback for offline users
       for (const recipientId of recipientIds) {
         await this.scheduleEmailFallback(message.id, recipientId);
       }
     } catch (error) {
       console.error('Failed to trigger notifications:', error);
+    }
+  }
+
+  /**
+   * Send immediate email notifications for direct messages
+   */
+  private async sendDirectMessageEmails(message: Message, recipientIds: string[]): Promise<void> {
+    try {
+      // Import NotificationService dynamically to avoid circular dependency
+      const { NotificationService } = await import('../notification-service');
+      
+      // Get sender name
+      const senderName = message.sender || 'Unknown User';
+      
+      // Send email to each recipient
+      for (const recipientId of recipientIds) {
+        try {
+          // Get recipient email
+          const [recipient] = await db
+            .select({ email: users.email })
+            .from(users)
+            .where(eq(users.id, recipientId))
+            .limit(1);
+
+          if (recipient?.email) {
+            await NotificationService.sendDirectMessageNotification(
+              recipient.email,
+              senderName,
+              message.content,
+              message.contextType
+            );
+          }
+        } catch (error) {
+          console.error(`Failed to send direct message email to ${recipientId}:`, error);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to send direct message emails:', error);
     }
   }
 

@@ -14,7 +14,15 @@ router.get("/conversations", async (req, res) => {
       return res.status(401).json({ error: "User not authenticated" });
     }
     
-    const conversations = await storage.getUserConversations(userId);
+    const { type } = req.query;
+    
+    let conversations = await storage.getUserConversations(userId);
+    
+    // Filter by type if requested
+    if (type) {
+      conversations = conversations.filter(conv => conv.type === type);
+    }
+    
     res.json(conversations);
   } catch (error) {
     console.error("Error fetching conversations:", error);
@@ -58,7 +66,7 @@ router.get("/conversations/:id/messages", async (req, res) => {
     }
     
     const conversationId = parseInt(req.params.id);
-    const messages = await storage.getConversationMessages(conversationId);
+    const messages = await storage.getConversationMessages(conversationId, userId);
     res.json(messages);
   } catch (error) {
     console.error("Error fetching conversation messages:", error);
@@ -82,16 +90,88 @@ router.post("/conversations/:id/messages", async (req, res) => {
       return res.status(400).json({ error: "Message content is required" });
     }
     
-    const message = await storage.createConversationMessage({
+    // Get user display name
+    const user = await storage.getUser(userId);
+    const senderName = user ? (user.displayName || user.firstName || user.email || 'Unknown User') : 'Unknown User';
+    
+    const message = await storage.addConversationMessage({
       conversationId,
       userId,
-      content: content.trim()
+      content: content.trim(),
+      sender: senderName,
+      contextType: 'group',
+      contextId: conversationId.toString(),
     });
+    
+    // Broadcast the message via WebSocket
+    if ((global as any).broadcastNewMessage) {
+      await (global as any).broadcastNewMessage({
+        type: 'new_message',
+        message,
+        context: {
+          type: 'group',
+          id: conversationId.toString(),
+        }
+      });
+    }
     
     res.status(201).json(message);
   } catch (error) {
     console.error("Error sending message:", error);
     res.status(500).json({ error: "Failed to send message" });
+  }
+});
+
+// Update a message in a conversation
+router.patch("/conversations/:id/messages/:messageId", async (req, res) => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+    
+    const messageId = parseInt(req.params.messageId);
+    const { content } = req.body;
+    
+    if (!content?.trim()) {
+      return res.status(400).json({ error: "Message content is required" });
+    }
+    
+    const updatedMessage = await storage.updateConversationMessage(messageId, userId, {
+      content: content.trim(),
+    });
+    
+    if (!updatedMessage) {
+      return res.status(404).json({ error: "Message not found or not authorized" });
+    }
+    
+    res.json(updatedMessage);
+  } catch (error) {
+    console.error("Error updating conversation message:", error);
+    res.status(500).json({ error: "Failed to update message" });
+  }
+});
+
+// Delete a message from a conversation
+router.delete("/conversations/:id/messages/:messageId", async (req, res) => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+    
+    const messageId = parseInt(req.params.messageId);
+    
+    const success = await storage.deleteConversationMessage(messageId, userId);
+    
+    if (!success) {
+      return res.status(404).json({ error: "Message not found or not authorized" });
+    }
+    
+    res.status(204).send();
+  } catch (error) {
+    console.error("Error deleting conversation message:", error);
+    res.status(500).json({ error: "Failed to delete message" });
   }
 });
 

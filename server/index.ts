@@ -162,6 +162,27 @@ async function startServer() {
       });
     });
 
+    // Global broadcast function for messaging system
+    (global as any).broadcastNewMessage = async (data: any) => {
+      console.log('Broadcasting message to', clients.size, 'connected clients');
+      
+      // Broadcast to all connected clients
+      for (const [userId, ws] of clients.entries()) {
+        if (ws.readyState === 1) { // WebSocket.OPEN
+          try {
+            ws.send(JSON.stringify(data));
+          } catch (error) {
+            console.error(`Error sending message to user ${userId}:`, error);
+            // Remove dead connection
+            clients.delete(userId);
+          }
+        } else {
+          // Remove dead connection
+          clients.delete(userId);
+        }
+      }
+    };
+
     httpServer.listen(finalPort, host, () => {
       console.log(`✓ Server is running on http://${host}:${finalPort}`);
       console.log(`✓ WebSocket server ready on ws://${host}:${finalPort}/notifications`);

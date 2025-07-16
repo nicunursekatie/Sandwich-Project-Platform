@@ -1347,4 +1347,233 @@ export class DatabaseStorage implements IStorage {
       return false;
     }
   }
+
+  // Messaging System methods
+  async getUserConversations(userId: string): Promise<any[]> {
+    try {
+      console.log(`[DB] Getting conversations for user: ${userId}`);
+      
+      // Get all conversations where the user is a participant
+      const userConversations = await db
+        .select({
+          id: conversations.id,
+          type: conversations.type,
+          name: conversations.name,
+          createdAt: conversations.createdAt,
+          lastReadAt: conversationParticipants.lastReadAt,
+          joinedAt: conversationParticipants.joinedAt,
+        })
+        .from(conversations)
+        .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+        .where(eq(conversationParticipants.userId, userId))
+        .orderBy(conversations.createdAt);
+
+      console.log(`[DB] Found ${userConversations.length} conversations for user ${userId}`);
+
+      // For each conversation, get additional metadata
+      const enrichedConversations = await Promise.all(
+        userConversations.map(async (conv) => {
+          // Get member count
+          const memberCount = await db
+            .select({ count: sql<number>`count(*)` })
+            .from(conversationParticipants)
+            .where(eq(conversationParticipants.conversationId, conv.id));
+
+          // Get last message
+          const lastMessage = await db
+            .select({
+              id: messages.id,
+              content: messages.content,
+              createdAt: messages.createdAt,
+              sender: messages.sender,
+              userId: messages.userId,
+            })
+            .from(messages)
+            .where(eq(messages.conversationId, conv.id))
+            .orderBy(messages.createdAt)
+            .limit(1);
+
+          return {
+            ...conv,
+            memberCount: memberCount[0]?.count || 0,
+            lastMessage: lastMessage[0] || null,
+          };
+        })
+      );
+
+      return enrichedConversations;
+    } catch (error) {
+      console.error('Error getting user conversations:', error);
+      return [];
+    }
+  }
+
+  async createConversation(conversationData: {
+    type: string;
+    name?: string;
+    createdBy: string;
+  }, participants: string[]): Promise<any> {
+    try {
+      console.log(`[DB] Creating conversation:`, conversationData);
+      
+      // Create the conversation
+      const [newConversation] = await db
+        .insert(conversations)
+        .values({
+          type: conversationData.type,
+          name: conversationData.name,
+        })
+        .returning();
+
+      console.log(`[DB] Created conversation with ID: ${newConversation.id}`);
+
+      // Add participants
+      const participantData = participants.map(userId => ({
+        conversationId: newConversation.id,
+        userId: userId,
+      }));
+
+      await db.insert(conversationParticipants).values(participantData);
+
+      console.log(`[DB] Added ${participants.length} participants to conversation ${newConversation.id}`);
+
+      return {
+        ...newConversation,
+        memberCount: participants.length,
+      };
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+      throw error;
+    }
+  }
+
+  async getConversationMessages(conversationId: number, userId: string): Promise<any[]> {
+    try {
+      console.log(`[DB] Getting messages for conversation ${conversationId} and user ${userId}`);
+      
+      // First verify user has access to this conversation
+      const hasAccess = await db
+        .select()
+        .from(conversationParticipants)
+        .where(and(
+          eq(conversationParticipants.conversationId, conversationId),
+          eq(conversationParticipants.userId, userId)
+        ))
+        .limit(1);
+
+      if (hasAccess.length === 0) {
+        console.log(`[DB] User ${userId} does not have access to conversation ${conversationId}`);
+        return [];
+      }
+
+      // Get messages with sender information
+      const messages = await db
+        .select({
+          id: messages.id,
+          conversationId: messages.conversationId,
+          userId: messages.userId,
+          senderId: messages.senderId,
+          content: messages.content,
+          sender: messages.sender,
+          contextType: messages.contextType,
+          contextId: messages.contextId,
+          createdAt: messages.createdAt,
+          updatedAt: messages.updatedAt,
+          editedAt: messages.editedAt,
+          deletedAt: messages.deletedAt,
+        })
+        .from(messages)
+        .where(and(
+          eq(messages.conversationId, conversationId),
+          isNull(messages.deletedAt)
+        ))
+        .orderBy(messages.createdAt);
+
+      console.log(`[DB] Found ${messages.length} messages for conversation ${conversationId}`);
+      return messages;
+    } catch (error) {
+      console.error('Error getting conversation messages:', error);
+      return [];
+    }
+  }
+
+  async addConversationMessage(messageData: {
+    conversationId: number;
+    userId: string;
+    content: string;
+    sender?: string;
+    contextType?: string;
+    contextId?: string;
+  }): Promise<any> {
+    try {
+      console.log(`[DB] Adding message to conversation ${messageData.conversationId}`);
+      
+      const [newMessage] = await db
+        .insert(messages)
+        .values({
+          conversationId: messageData.conversationId,
+          userId: messageData.userId,
+          senderId: messageData.userId,
+          content: messageData.content,
+          sender: messageData.sender || 'Unknown User',
+          contextType: messageData.contextType || 'direct',
+          contextId: messageData.contextId,
+        })
+        .returning();
+
+      console.log(`[DB] Created message with ID: ${newMessage.id}`);
+      return newMessage;
+    } catch (error) {
+      console.error('Error adding conversation message:', error);
+      throw error;
+    }
+  }
+
+  async updateConversationMessage(messageId: number, userId: string, updates: {
+    content?: string;
+    editedAt?: Date;
+  }): Promise<any> {
+    try {
+      console.log(`[DB] Updating message ${messageId} by user ${userId}`);
+      
+      const [updatedMessage] = await db
+        .update(messages)
+        .set({
+          ...updates,
+          editedAt: new Date(),
+        })
+        .where(and(
+          eq(messages.id, messageId),
+          eq(messages.userId, userId)
+        ))
+        .returning();
+
+      return updatedMessage;
+    } catch (error) {
+      console.error('Error updating conversation message:', error);
+      throw error;
+    }
+  }
+
+  async deleteConversationMessage(messageId: number, userId: string): Promise<boolean> {
+    try {
+      console.log(`[DB] Deleting message ${messageId} by user ${userId}`);
+      
+      const result = await db
+        .update(messages)
+        .set({
+          deletedAt: new Date(),
+          deletedBy: userId,
+        })
+        .where(and(
+          eq(messages.id, messageId),
+          eq(messages.userId, userId)
+        ));
+
+      return (result.rowCount ?? 0) > 0;
+    } catch (error) {
+      console.error('Error deleting conversation message:', error);
+      return false;
+    }
+  }
 }

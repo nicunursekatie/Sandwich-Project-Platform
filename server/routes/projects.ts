@@ -57,6 +57,39 @@ router.post("/projects", sanitizeMiddleware, async (req, res) => {
       return res.status(400).json({ error: result.error.message });
     }
     const project = await storage.createProject(result.data);
+    
+    // Send email notifications to assignees
+    if (project.assigneeIds && project.assigneeIds.length > 0) {
+      try {
+        const { NotificationService } = await import('../notification-service');
+        const user = (req as any).user;
+        const assignerName = user ? (user.displayName || user.firstName || user.email || 'Admin User') : 'Admin User';
+        
+        // Get assignee emails
+        const assigneeEmails = [];
+        for (const assigneeId of project.assigneeIds) {
+          if (assigneeId && assigneeId.trim()) {
+            const assignee = await storage.getUser(assigneeId);
+            if (assignee && assignee.email) {
+              assigneeEmails.push(assignee.email);
+            }
+          }
+        }
+        
+        if (assigneeEmails.length > 0) {
+          await NotificationService.sendProjectAssignmentNotification(
+            project.id.toString(),
+            project.title,
+            assigneeEmails,
+            assignerName
+          );
+        }
+      } catch (emailError) {
+        console.error('Error sending project assignment emails:', emailError);
+        // Don't fail the project creation if email fails
+      }
+    }
+    
     res.status(201).json(project);
   } catch (error) {
     console.error("Error creating project:", error);
@@ -68,10 +101,53 @@ router.patch("/projects/:id", sanitizeMiddleware, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const updates = req.body;
+    
+    // Get original project to compare assignees
+    const originalProject = await storage.getProject(id);
+    
     const project = await storage.updateProject(id, updates);
     if (!project) {
       return res.status(404).json({ error: "Project not found" });
     }
+    
+    // Send email notifications to newly assigned users
+    if (updates.assigneeIds && originalProject) {
+      try {
+        const { NotificationService } = await import('../notification-service');
+        const user = (req as any).user;
+        const assignerName = user ? (user.displayName || user.firstName || user.email || 'Admin User') : 'Admin User';
+        
+        // Find newly assigned users
+        const originalAssignees = originalProject.assigneeIds || [];
+        const newAssignees = updates.assigneeIds.filter((id: string) => 
+          id && id.trim() && !originalAssignees.includes(id)
+        );
+        
+        if (newAssignees.length > 0) {
+          // Get assignee emails
+          const assigneeEmails = [];
+          for (const assigneeId of newAssignees) {
+            const assignee = await storage.getUser(assigneeId);
+            if (assignee && assignee.email) {
+              assigneeEmails.push(assignee.email);
+            }
+          }
+          
+          if (assigneeEmails.length > 0) {
+            await NotificationService.sendProjectAssignmentNotification(
+              project.id.toString(),
+              project.title,
+              assigneeEmails,
+              assignerName
+            );
+          }
+        }
+      } catch (emailError) {
+        console.error('Error sending project assignment emails:', emailError);
+        // Don't fail the project update if email fails
+      }
+    }
+    
     res.json(project);
   } catch (error) {
     console.error("Error updating project:", error);
