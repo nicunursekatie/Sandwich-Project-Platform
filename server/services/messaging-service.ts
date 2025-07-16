@@ -1,4 +1,4 @@
-import { and, eq, sql, desc, inArray, isNull, lte, or } from "drizzle-orm";
+import { and, eq, sql, desc, inArray, isNull, lte, or, not } from "drizzle-orm";
 import { db } from "../db";
 import { 
   messages, 
@@ -54,56 +54,48 @@ export class MessagingService {
     const { senderId, recipientIds, content, contextType, contextId, parentMessageId } = params;
 
     try {
-      // Start transaction
-      return await db.transaction(async (tx) => {
-        // Get sender details
-        const sender = await tx.select({
-          displayName: users.displayName,
-          email: users.email,
-        })
-        .from(users)
-        .where(eq(users.id, senderId))
-        .limit(1);
+      // Get sender details
+      const sender = await db.select({
+        displayName: users.displayName,
+        email: users.email,
+      })
+      .from(users)
+      .where(eq(users.id, senderId))
+      .limit(1);
 
-        const senderName = sender[0] 
-          ? sender[0].displayName || sender[0].email || 'Unknown User'
-          : 'Unknown User';
+      const senderName = sender[0] 
+        ? sender[0].displayName || sender[0].email || 'Unknown User'
+        : 'Unknown User';
 
-        // Create the message
-        const [message] = await tx.insert(messages).values({
-          userId: senderId, // Keep for backward compatibility
-          senderId,
-          content,
-          sender: senderName,
-          contextType,
-          contextId,
-        }).returning();
+      // Create the message
+      const [message] = await db.insert(messages).values({
+        userId: senderId, // Keep for backward compatibility
+        senderId,
+        content,
+        sender: senderName,
+        contextType,
+        contextId,
+      }).returning();
 
-        // Create recipient entries
-        const recipientValues: InsertMessageRecipient[] = recipientIds.map(recipientId => ({
-          messageId: message.id,
-          recipientId,
-          read: false,
-          notificationSent: false,
-        }));
+      // Create recipient entries
+      const recipientValues: InsertMessageRecipient[] = recipientIds.map(recipientId => ({
+        messageId: message.id,
+        recipientId,
+        read: false,
+        notificationSent: false,
+      }));
 
-        await tx.insert(messageRecipients).values(recipientValues);
+      await db.insert(messageRecipients).values(recipientValues);
 
-        // Handle threading if this is a reply
-        if (parentMessageId) {
-          await this.createThreadEntry(tx, message.id, parentMessageId);
-        } else if (contextType && contextId) {
-          // Auto-thread messages in same context
-          await this.autoThreadMessage(tx, message);
-        }
+      // Threading functionality disabled - using simplified messaging architecture
+      // The current system uses conversations instead of message threads
 
-        // Trigger notifications (don't await - let it run async)
-        this.triggerNotifications(message, recipientIds).catch(error => {
-          console.error('Failed to send notifications:', error);
-        });
-
-        return message;
+      // Trigger notifications (don't await - let it run async)
+      this.triggerNotifications(message, recipientIds).catch(error => {
+        console.error('Failed to send notifications:', error);
       });
+
+      return message;
     } catch (error) {
       console.error('Failed to send message:', error);
       throw error;
@@ -600,6 +592,48 @@ export class MessagingService {
   /**
    * Create thread entry for a reply
    */
+  private async createThreadEntryNoTx(messageId: number, parentMessageId: number): Promise<void> {
+    // Get parent thread info
+    const [parentThread] = await db
+      .select()
+      .from(messageThreads)
+      .where(eq(messageThreads.messageId, parentMessageId))
+      .limit(1);
+
+    if (parentThread) {
+      // Add to existing thread
+      const newPath = `${parentThread.path}.${String(messageId).padStart(10, '0')}`;
+      await db.insert(messageThreads).values({
+        rootMessageId: parentThread.rootMessageId,
+        messageId,
+        parentMessageId,
+        depth: parentThread.depth + 1,
+        path: newPath,
+      });
+    } else {
+      // Parent isn't threaded yet - create entries for both
+      const parentPath = String(parentMessageId).padStart(10, '0');
+      const childPath = `${parentPath}.${String(messageId).padStart(10, '0')}`;
+
+      await db.insert(messageThreads).values([
+        {
+          rootMessageId: parentMessageId,
+          messageId: parentMessageId,
+          parentMessageId: null,
+          depth: 0,
+          path: parentPath,
+        },
+        {
+          rootMessageId: parentMessageId,
+          messageId,
+          parentMessageId,
+          depth: 1,
+          path: childPath,
+        }
+      ]);
+    }
+  }
+
   private async createThreadEntry(tx: any, messageId: number, parentMessageId: number): Promise<void> {
     // Get parent thread info
     const [parentThread] = await tx
@@ -645,6 +679,38 @@ export class MessagingService {
   /**
    * Auto-thread messages in same context
    */
+  private async autoThreadMessageNoTx(message: Message): Promise<void> {
+    if (!message.contextType || !message.contextId) return;
+
+    // Find the most recent message in same context
+    const [recentMessage] = await db
+      .select({ id: messages.id })
+      .from(messages)
+      .where(
+        and(
+          eq(messages.contextType, message.contextType),
+          eq(messages.contextId, message.contextId),
+          not(eq(messages.id, message.id)),
+          isNull(messages.deletedAt)
+        )
+      )
+      .orderBy(desc(messages.createdAt))
+      .limit(1);
+
+    if (recentMessage) {
+      await this.createThreadEntryNoTx(message.id, recentMessage.id);
+    } else {
+      // First message in context - create root thread entry
+      await db.insert(messageThreads).values({
+        rootMessageId: message.id,
+        messageId: message.id,
+        parentMessageId: null,
+        depth: 0,
+        path: String(message.id).padStart(10, '0'),
+      });
+    }
+  }
+
   private async autoThreadMessage(tx: any, message: Message): Promise<void> {
     if (!message.contextType || !message.contextId) return;
 
@@ -656,7 +722,7 @@ export class MessagingService {
         and(
           eq(messages.contextType, message.contextType),
           eq(messages.contextId, message.contextId),
-          eq(messages.id, message.id).not(),
+          not(eq(messages.id, message.id)),
           isNull(messages.deletedAt)
         )
       )
