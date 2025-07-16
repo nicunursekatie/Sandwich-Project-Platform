@@ -401,41 +401,7 @@ router.get("/messages", async (req, res) => {
   }
 });
 
-// Get sent messages for a user
-router.get("/sent", async (req, res) => {
-  try {
-    const user = (req as any).user;
-    if (!user) {
-      return res.status(401).json({ error: "Not authenticated" });
-    }
-
-    const { contextType, limit = "50", offset = "0" } = req.query;
-
-    // Set no-cache headers to prevent stale data
-    res.set({
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0'
-    });
-
-    const messages = await messagingService.getSentMessages(user.id, {
-      contextType: contextType as string | undefined,
-      limit: parseInt(limit as string),
-      offset: parseInt(offset as string),
-    });
-
-    // Filter out messages with missing user data and provide fallbacks
-    const validMessages = messages.map(msg => ({
-      ...msg,
-      senderName: msg.senderName || msg.sender || 'Unknown User',
-      senderEmail: msg.senderEmail || undefined
-    })).filter(msg => msg.id && msg.content);
-
-    res.json({ messages: validMessages });
-  } catch (error) {
-    console.error("Error fetching sent messages:", error);
-    res.status(500).json({ error: "Failed to fetch sent messages" });
-  }
-});
+// Sent messages route removed - architecturally incompatible with current inbox/chat separation
+// TODO: Implement proper sent messages when inbox system is fully separated from chat system
 
 export { router as messagingRoutes };

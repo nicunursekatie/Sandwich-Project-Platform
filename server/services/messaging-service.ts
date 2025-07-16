@@ -840,66 +840,8 @@ export class MessagingService {
     }
   }
 
-  /**
-   * Get sent messages for a user
-   */
-  async getSentMessages(userId: string, options: {
-    contextType?: string;
-    limit?: number;
-    offset?: number;
-  } = {}): Promise<Message[]> {
-    const { contextType, limit = 50, offset = 0 } = options;
-
-    try {
-      let query = db
-        .select({
-          id: messages.id,
-          senderId: messages.senderId,
-          content: messages.content,
-          contextType: messages.contextType,
-          contextId: messages.contextId,
-          createdAt: messages.createdAt,
-          editedAt: messages.editedAt,
-          editedContent: messages.editedContent,
-          senderName: users.displayName,
-          senderEmail: users.email,
-          recipientId: messageRecipients.recipientId,
-          read: messageRecipients.read,
-          readAt: messageRecipients.readAt,
-        })
-        .from(messages)
-        .innerJoin(messageRecipients, eq(messages.id, messageRecipients.messageId))
-        .leftJoin(users, eq(messages.senderId, users.id))
-        .where(
-          and(
-            eq(messages.senderId, userId),
-            // Only include formal messages (not chat messages)
-            isNull(messages.conversationId),
-            // Exclude direct chat messages that might have been misclassified
-            not(eq(messages.contextType, 'direct'))
-          )
-        );
-
-      if (contextType) {
-        query = query.where(eq(messages.contextType, contextType));
-      }
-
-      const result = await query
-        .orderBy(desc(messages.createdAt))
-        .limit(limit)
-        .offset(offset);
-
-      return result.map(msg => ({
-        ...msg,
-        senderName: msg.senderName || msg.senderEmail || `User ${msg.senderId}` || 'Unknown User',
-        read: !!msg.read,
-        readAt: msg.readAt || undefined,
-      }));
-    } catch (error) {
-      console.error('Failed to get sent messages:', error);
-      throw error;
-    }
-  }
+  // getSentMessages method removed - architecturally incompatible with current inbox/chat separation
+  // TODO: Implement proper sent messages when inbox system is fully separated from chat system
 
 
 }

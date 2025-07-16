@@ -341,15 +341,7 @@ export default function InboxPage() {
               <InboxIcon className="h-5 w-5" />
               Inbox
             </h2>
-            <div className="mb-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <div className="flex items-center gap-2 mb-2">
-                <Info className="h-4 w-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-800">Message System Update</span>
-              </div>
-              <p className="text-sm text-blue-700">
-                Direct messages have moved to the <strong>Chat</strong> section. This inbox is now for formal notifications, suggestions, and project updates.
-              </p>
-            </div>
+
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Button
