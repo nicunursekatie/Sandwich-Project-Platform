@@ -64,6 +64,8 @@ export default function ProjectsClean() {
   // Fetch all projects
   const { data: projects = [], isLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
+    staleTime: 30000, // Consider data fresh for 30 seconds
+    refetchOnWindowFocus: true, // Refetch when user returns to tab
   });
 
   // Update project status mutation
