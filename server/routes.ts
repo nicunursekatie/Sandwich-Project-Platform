@@ -17,6 +17,7 @@ import { sendDriverAgreementNotification } from "./sendgrid";
 import { registerMessageNotificationRoutes } from "./routes/message-notifications";
 import googleSheetsRoutes from "./routes/google-sheets";
 import suggestionsRoutes from "./suggestions-routes";
+import realTimeMessagesRoutes from "./routes/real-time-messages";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
@@ -7087,6 +7088,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register message notification routes
   registerMessageNotificationRoutes(app);
+
+  // Register real-time messages routes
+  const { default: realTimeMessagesRoutes } = await import("./routes/real-time-messages");
+  app.use("/api/real-time-messages", realTimeMessagesRoutes);
 
   // Make broadcast functions available globally for use in other routes
   (global as any).broadcastNewMessage = broadcastNewMessage;

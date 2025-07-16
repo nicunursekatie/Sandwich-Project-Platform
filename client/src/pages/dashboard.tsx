@@ -43,6 +43,7 @@ import SuggestionsPortal from "@/pages/suggestions";
 import GoogleSheetsPage from "@/pages/google-sheets";
 import InboxPage from "@/pages/inbox";
 import MessagingSystem from "@/components/messaging-system";
+import RealTimeMessages from "@/pages/real-time-messages";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -307,6 +308,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <SuggestionsPortal />;
       case "google-sheets":
         return <GoogleSheetsPage />;
+      case "real-time-messages":
+        return <RealTimeMessages />;
 
       case "committee":
       case "committee-chat":
