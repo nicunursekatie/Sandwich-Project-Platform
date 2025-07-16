@@ -48,7 +48,8 @@ export function MultiUserTaskCompletion({
   const { data: completionsData, isLoading, refetch } = useQuery({
     queryKey: ['/api/tasks', taskId, 'completions'],
     enabled: !!taskId,
-    refetchInterval: 2000, // Refresh every 2 seconds for real-time updates
+    staleTime: 30000, // Consider data fresh for 30 seconds
+    refetchOnWindowFocus: false, // Prevent automatic refetch on window focus
     queryFn: async () => {
       const response = await apiRequest('GET', `/api/tasks/${taskId}/completions`);
       const data = await response.json();
@@ -70,12 +71,11 @@ export function MultiUserTaskCompletion({
         notes: completionNotes
       });
     },
-    onSuccess: async (data) => {
-      // Force comprehensive cache invalidation and refresh
-      await queryClient.invalidateQueries({ queryKey: ['/api/tasks', taskId, 'completions'] });
-      await queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
-      await queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId, 'tasks'] });
-      await refetch();
+    onSuccess: (data) => {
+      // Only invalidate the specific task completions - avoid excessive invalidation
+      queryClient.invalidateQueries({ queryKey: ['/api/tasks', taskId, 'completions'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId, 'tasks'] });
+      
       setShowCompletionDialog(false);
       setNotes("");
       
@@ -110,9 +110,10 @@ export function MultiUserTaskCompletion({
       return apiRequest('DELETE', `/api/tasks/${taskId}/complete`);
     },
     onSuccess: () => {
+      // Only invalidate the specific task completions - avoid excessive invalidation
       queryClient.invalidateQueries({ queryKey: ['/api/tasks', taskId, 'completions'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
       queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId, 'tasks'] });
+      
       toast({
         title: "Completion removed",
         description: "Your completion has been removed from this task"

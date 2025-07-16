@@ -93,9 +93,8 @@ export default function ProjectsClean() {
       return await apiRequest('POST', '/api/projects', projectData);
     },
     onSuccess: (data) => {
-      // Force immediate cache invalidation and refetch
+      // Only invalidate the projects cache once - no need for refetch
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
-      queryClient.refetchQueries({ queryKey: ["/api/projects"] });
       
       setShowCreateDialog(false);
       setNewProject({
@@ -114,8 +113,6 @@ export default function ProjectsClean() {
         title: "Project created successfully!", 
         description: `"${data.title}" has been added to your Available projects.` 
       });
-      
-      console.log('New project created:', data);
     },
     onError: (error: any) => {
       console.error('Project creation failed:', error);
