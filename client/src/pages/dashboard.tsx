@@ -113,7 +113,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
 
     // Handle project detail pages
     if (projectId) {
-      return <ProjectDetailClean />;
+      return <ProjectDetailClean projectId={projectId} />;
     }
 
     switch (activeSection) {

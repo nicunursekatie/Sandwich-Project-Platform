@@ -66,8 +66,9 @@ interface Task {
   updatedAt: string;
 }
 
-export default function ProjectDetailClean() {
-  const { id } = useParams<{ id: string }>();
+export default function ProjectDetailClean({ projectId }: { projectId?: number }) {
+  const { id: paramId } = useParams<{ id: string }>();
+  const id = projectId ? projectId.toString() : paramId;
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { user } = useAuth();

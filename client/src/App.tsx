@@ -58,6 +58,8 @@ function Router() {
       <Route path="/inbox">{() => <Dashboard initialSection="inbox" />}</Route>
       <Route path="/suggestions">{() => <Dashboard initialSection="suggestions" />}</Route>
       <Route path="/google-sheets">{() => <Dashboard initialSection="google-sheets" />}</Route>
+      <Route path="/dashboard">{() => <Dashboard />}</Route>
+      <Route path="/dashboard/:section">{(params) => <Dashboard initialSection={params.section} />}</Route>
       <Route path="/" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
