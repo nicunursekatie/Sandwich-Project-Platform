@@ -89,7 +89,7 @@ export default function InboxPage() {
     isSending 
   } = useMessaging();
 
-  const [selectedTab, setSelectedTab] = useState("all");
+  const [selectedTab, setSelectedTab] = useState("inbox");
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [replyContent, setReplyContent] = useState("");
@@ -156,7 +156,7 @@ export default function InboxPage() {
       }
     },
     refetchInterval: 30000, // Refresh every 30 seconds
-    enabled: selectedTab === 'groups' || selectedTab === 'all',
+    enabled: selectedTab === 'groups' || selectedTab === 'inbox',
   });
 
   // Fetch all messages
@@ -185,7 +185,7 @@ export default function InboxPage() {
         return [];
       }
 
-      const response = await apiRequest('GET', '/api/messaging/sent');
+      const response = await apiRequest('GET', '/api/messaging/messages?sent=true');
       return (response as any).messages || [];
     },
     enabled: selectedTab === 'sent',
@@ -294,7 +294,8 @@ export default function InboxPage() {
 
   // Combine messages based on selected tab
   const displayMessages = selectedTab === 'groups' ? groupThreadMessages : 
-                          selectedTab === 'all' ? [...allMessages, ...groupThreadMessages] : 
+                          selectedTab === 'sent' ? sentMessages :
+                          selectedTab === 'inbox' ? [...allMessages, ...groupThreadMessages] : 
                           allMessages;
 
   // Filter messages based on search
@@ -378,69 +379,32 @@ export default function InboxPage() {
         </div>
 
         <div className="flex-1 flex flex-col">
-          {/* Improved Tab Navigation */}
+          {/* Standard Inbox Navigation */}
           <div className="px-4 py-2 border-b bg-slate-50">
-            <div className="grid grid-cols-3 gap-1 mb-2">
+            <div className="flex gap-1">
               {[
-                { id: 'all', label: 'All', icon: InboxIcon, count: allMessages.length + groupThreads.length },
-                { id: 'direct', label: 'Direct', icon: MessageCircle, count: allMessages.filter((m: Message) => m.contextType === 'direct' || !m.contextType).length },
-                // Temporarily removed until inbox/chat separation is complete
-                // { id: 'sent', label: 'Sent', icon: Send, count: sentMessages.length },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setSelectedTab(tab.id)}
-                  className={`
-                    flex items-center justify-center gap-1 px-2 py-1.5 rounded-md font-medium text-xs transition-all
-                    ${selectedTab === tab.id 
-                      ? 'bg-white text-[#236383] shadow-sm border border-slate-200' 
-                      : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'
-                    }
-                  `}
-                >
-                  <tab.icon className="h-3 w-3" />
-                  <span>{tab.label}</span>
-                  {tab.count > 0 && (
-                    <Badge 
-                      variant={selectedTab === tab.id ? "default" : "secondary"}
-                      className={`
-                        h-3 px-1 text-[9px] min-w-[12px] flex items-center justify-center
-                        ${selectedTab === tab.id 
-                          ? 'bg-[#236383] text-white' 
-                          : 'bg-slate-200 text-slate-700'
-                        }
-                      `}
-                    >
-                      {tab.count}
-                    </Badge>
-                  )}
-                </button>
-              ))}
-            </div>
-            <div className="grid grid-cols-3 gap-1">
-              {[
+                { id: 'inbox', label: 'Inbox', icon: InboxIcon, count: allMessages.length + groupThreads.length },
+                { id: 'sent', label: 'Sent', icon: Send, count: sentMessages.length },
                 { id: 'groups', label: 'Groups', icon: Users, count: groupThreads.length },
-                { id: 'suggestion', label: 'Ideas', icon: Lightbulb, count: allMessages.filter((m: Message) => m.contextType === 'suggestion').length },
-                { id: 'project', label: 'Projects', icon: FolderOpen, count: allMessages.filter((m: Message) => m.contextType === 'project').length },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setSelectedTab(tab.id)}
                   className={`
-                    flex items-center justify-center gap-1 px-2 py-1.5 rounded-md font-medium text-xs transition-all
+                    flex items-center justify-center gap-1 px-3 py-1.5 rounded-md font-medium text-sm transition-all
                     ${selectedTab === tab.id 
                       ? 'bg-white text-[#236383] shadow-sm border border-slate-200' 
                       : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'
                     }
                   `}
                 >
-                  <tab.icon className="h-3 w-3" />
+                  <tab.icon className="h-4 w-4" />
                   <span>{tab.label}</span>
                   {tab.count > 0 && (
                     <Badge 
                       variant={selectedTab === tab.id ? "default" : "secondary"}
                       className={`
-                        h-3 px-1 text-[9px] min-w-[12px] flex items-center justify-center
+                        h-4 px-1.5 text-xs min-w-[16px] flex items-center justify-center
                         ${selectedTab === tab.id 
                           ? 'bg-[#236383] text-white' 
                           : 'bg-slate-200 text-slate-700'

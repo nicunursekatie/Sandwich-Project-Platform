@@ -943,6 +943,49 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.createCelebration(userId, taskId, message)
     );
   }
+
+  // Conversation methods
+  async createConversation(conversationData: any, participants: string[]) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createConversation(conversationData, participants),
+      () => this.fallbackStorage.createConversation(conversationData, participants)
+    );
+  }
+
+  async getConversationMessages(conversationId: number, userId: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getConversationMessages(conversationId, userId),
+      () => this.fallbackStorage.getConversationMessages(conversationId, userId)
+    );
+  }
+
+  async addConversationMessage(messageData: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.addConversationMessage(messageData),
+      () => this.fallbackStorage.addConversationMessage(messageData)
+    );
+  }
+
+  async updateConversationMessage(messageId: number, userId: string, updates: any) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateConversationMessage(messageId, userId, updates),
+      () => this.fallbackStorage.updateConversationMessage(messageId, userId, updates)
+    );
+  }
+
+  async deleteConversationMessage(messageId: number, userId: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteConversationMessage(messageId, userId),
+      () => this.fallbackStorage.deleteConversationMessage(messageId, userId)
+    );
+  }
+
+  async getConversationParticipants(conversationId: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getConversationParticipants(conversationId),
+      () => this.fallbackStorage.getConversationParticipants(conversationId)
+    );
+  }
 }
 
 export const storage = new StorageWrapper();

@@ -96,6 +96,14 @@ export interface IStorage {
   createMessageGroup(group: any): Promise<any>;
   addUserToMessageGroup(groupId: number, userId: string, role?: string): Promise<any>;
   
+  // Conversation methods
+  createConversation(conversationData: any, participants: string[]): Promise<any>;
+  getConversationMessages(conversationId: number, userId: string): Promise<any[]>;
+  addConversationMessage(messageData: any): Promise<any>;
+  updateConversationMessage(messageId: number, userId: string, updates: any): Promise<any>;
+  deleteConversationMessage(messageId: number, userId: string): Promise<boolean>;
+  getConversationParticipants(conversationId: number): Promise<any[]>;
+  
   // Thread participant management - individual user control over group threads
   getThreadParticipants(threadId: number): Promise<any[]>;
   getParticipantStatus(threadId: number, userId: string): Promise<string | null>;
@@ -1299,6 +1307,58 @@ export class MemStorage implements IStorage {
 
   async deleteSuggestionResponse(id: number): Promise<boolean> {
     return this.suggestionResponses.delete(id);
+  }
+
+  // Project assignments (stub implementations for memory storage)
+  async getProjectAssignments(projectId: number) {
+    // TODO: Implement in memory storage
+    return [];
+  }
+
+  async addProjectAssignment(assignment: { projectId: number; userId: string; role: string }) {
+    // TODO: Implement in memory storage
+    return null;
+  }
+
+  async removeProjectAssignment(projectId: number, userId: string) {
+    // TODO: Implement in memory storage
+    return false;
+  }
+
+  async updateProjectAssignment(projectId: number, userId: string, updates: { role: string }) {
+    // TODO: Implement in memory storage
+    return null;
+  }
+
+  // Conversation methods (stub implementations for memory storage)
+  async createConversation(conversationData: any, participants: string[]) {
+    // TODO: Implement in memory storage
+    return null;
+  }
+
+  async getConversationMessages(conversationId: number, userId: string) {
+    // TODO: Implement in memory storage
+    return [];
+  }
+
+  async addConversationMessage(messageData: any) {
+    // TODO: Implement in memory storage
+    return null;
+  }
+
+  async updateConversationMessage(messageId: number, userId: string, updates: any) {
+    // TODO: Implement in memory storage
+    return null;
+  }
+
+  async deleteConversationMessage(messageId: number, userId: string) {
+    // TODO: Implement in memory storage
+    return false;
+  }
+
+  async getConversationParticipants(conversationId: number) {
+    // TODO: Implement in memory storage
+    return [];
   }
 }
 
