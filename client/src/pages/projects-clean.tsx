@@ -46,6 +46,8 @@ export default function ProjectsClean() {
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
   const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [activeTab, setActiveTab] = useState("active");
   const [newProject, setNewProject] = useState<Partial<InsertProject>>({
     title: '',
@@ -126,6 +128,30 @@ export default function ProjectsClean() {
     },
   });
 
+  // Edit project mutation
+  const editProjectMutation = useMutation({
+    mutationFn: async ({ id, projectData }: { id: number; projectData: Partial<InsertProject> }) => {
+      return await apiRequest('PATCH', `/api/projects/${id}`, projectData);
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      setShowEditDialog(false);
+      setEditingProject(null);
+      toast({ 
+        title: "Project updated successfully!", 
+        description: `"${data.title}" has been updated.` 
+      });
+    },
+    onError: (error: any) => {
+      console.error('Project update failed:', error);
+      toast({ 
+        title: "Error", 
+        description: "Failed to update project.",
+        variant: "destructive" 
+      });
+    },
+  });
+
   // Delete project mutation
   const deleteProjectMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -196,6 +222,22 @@ export default function ProjectsClean() {
   const handleStatusChange = (projectId: number, newStatus: string) => {
     if (canEdit) {
       updateProjectMutation.mutate({ id: projectId, status: newStatus });
+    }
+  };
+
+  const handleEditProject = (project: Project, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingProject(project);
+    setShowEditDialog(true);
+  };
+
+  const handleEditFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingProject) {
+      editProjectMutation.mutate({ 
+        id: editingProject.id, 
+        projectData: editingProject 
+      });
     }
   };
 
@@ -345,10 +387,7 @@ export default function ProjectsClean() {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleProjectClick(project.id);
-                      }}
+                      onClick={(e) => handleEditProject(project, e)}
                     >
                       <Edit className="w-4 h-4 mr-2 text-blue-600" />
                       Edit Details
@@ -681,6 +720,165 @@ export default function ProjectsClean() {
                 className="btn-tsp-primary text-white"
               >
                 {createProjectMutation.isPending ? "Creating..." : "Create Project"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Project Dialog */}
+      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Project</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleEditFormSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="md:col-span-2">
+                <Label htmlFor="edit-title">Title</Label>
+                <Input
+                  id="edit-title"
+                  value={editingProject?.title || ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, title: e.target.value } : null)}
+                  required
+                />
+              </div>
+              
+              <div className="md:col-span-2">
+                <Label htmlFor="edit-description">Description</Label>
+                <Textarea
+                  id="edit-description"
+                  value={editingProject?.description || ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, description: e.target.value } : null)}
+                  rows={3}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="edit-status">Status</Label>
+                <Select 
+                  value={editingProject?.status || ''} 
+                  onValueChange={(value) => setEditingProject(prev => prev ? { ...prev, status: value } : null)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="available">Available</SelectItem>
+                    <SelectItem value="in_progress">In Progress</SelectItem>
+                    <SelectItem value="waiting">Waiting</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="edit-priority">Priority</Label>
+                <Select 
+                  value={editingProject?.priority || ''} 
+                  onValueChange={(value) => setEditingProject(prev => prev ? { ...prev, priority: value } : null)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="edit-category">Category</Label>
+                <Select 
+                  value={editingProject?.category || ''} 
+                  onValueChange={(value) => setEditingProject(prev => prev ? { ...prev, category: value } : null)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="general">General</SelectItem>
+                    <SelectItem value="operations">Operations</SelectItem>
+                    <SelectItem value="outreach">Outreach</SelectItem>
+                    <SelectItem value="technology">Technology</SelectItem>
+                    <SelectItem value="fundraising">Fundraising</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <ProjectAssigneeSelector
+                  value={editingProject?.assigneeName || ''}
+                  onChange={(value) => setEditingProject(prev => prev ? { ...prev, assigneeName: value } : null)}
+                  label="Assignee"
+                  placeholder="Select or enter person responsible"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="edit-startDate">Start Date</Label>
+                <Input
+                  id="edit-startDate"
+                  type="date"
+                  value={editingProject?.startDate || ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, startDate: e.target.value } : null)}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="edit-dueDate">Due Date</Label>
+                <Input
+                  id="edit-dueDate"
+                  type="date"
+                  value={editingProject?.dueDate || ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, dueDate: e.target.value } : null)}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="edit-estimatedHours">Estimated Hours</Label>
+                <Input
+                  id="edit-estimatedHours"
+                  type="number"
+                  min="0"
+                  value={editingProject?.estimatedHours || ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, estimatedHours: parseInt(e.target.value) || 0 } : null)}
+                  placeholder="0"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="edit-budget">Budget</Label>
+                <Input
+                  id="edit-budget"
+                  type="text"
+                  value={editingProject?.budget || ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, budget: e.target.value } : null)}
+                  placeholder="e.g., $500 or TBD"
+                />
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-2 pt-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => {
+                  setShowEditDialog(false);
+                  setEditingProject(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                disabled={editProjectMutation.isPending || !editingProject?.title?.trim()}
+                className="btn-tsp-primary text-white"
+              >
+                {editProjectMutation.isPending ? "Updating..." : "Update Project"}
               </Button>
             </div>
           </form>

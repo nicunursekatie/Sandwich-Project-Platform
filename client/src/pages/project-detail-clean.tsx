@@ -287,7 +287,13 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setLocation('/dashboard/projects')}
+            onClick={() => {
+              // Navigate back to projects section in dashboard
+              const url = new URL(window.location.href);
+              url.searchParams.set('section', 'projects');
+              window.history.pushState({}, '', url.toString());
+              setLocation('/dashboard?section=projects');
+            }}
             className="flex items-center gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
