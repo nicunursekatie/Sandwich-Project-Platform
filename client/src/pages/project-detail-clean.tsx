@@ -31,6 +31,7 @@ import {
   Award
 } from "lucide-react";
 import { TaskAssigneeSelector } from "@/components/task-assignee-selector";
+import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
 import { MultiUserTaskCompletion } from "@/components/multi-user-task-completion";
 import { SendKudosButton } from "@/components/send-kudos-button";
 import { useAuth } from "@/hooks/useAuth";
@@ -683,12 +684,11 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                 </Select>
               </div>
               <div>
-                <Label htmlFor="edit-project-assignee">Assigned To</Label>
-                <Input
-                  id="edit-project-assignee"
+                <ProjectAssigneeSelector
                   value={editingProject?.assigneeName || ''}
-                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, assigneeName: e.target.value } : null)}
-                  placeholder="Assignee name"
+                  onChange={(value) => setEditingProject(prev => prev ? { ...prev, assigneeName: value } : null)}
+                  label="Assigned To"
+                  placeholder="Select or enter person responsible"
                 />
               </div>
               <div>
