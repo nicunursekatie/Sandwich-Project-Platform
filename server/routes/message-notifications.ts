@@ -63,12 +63,48 @@ const getUnreadCounts = async (req: Request, res: Response) => {
       };
 
       try {
-        // Get basic message counts for conversations the user is a participant in
+        // Get chat message counts from Socket.IO chat system (chat_messages table)
+        const chatChannels = ['general', 'core-team', 'committee', 'host', 'driver', 'recipient'];
+        
+        for (const channel of chatChannels) {
+          // Get messages for this channel that are not from the current user
+          const channelMessages = await db
+            .select({
+              count: sql<number>`count(*)`
+            })
+            .from(sql`chat_messages`)
+            .where(sql`channel = ${channel} AND user_id != ${userId}`);
+          
+          const count = Number(channelMessages[0]?.count || 0);
+          
+          // Map channel to notification count
+          switch (channel) {
+            case 'general':
+              unreadCounts.general = count;
+              break;
+            case 'core-team':
+              unreadCounts.core_team = count;
+              break;
+            case 'committee':
+              unreadCounts.committee = count;
+              break;
+            case 'host':
+              unreadCounts.hosts = count;
+              break;
+            case 'driver':
+              unreadCounts.drivers = count;
+              break;
+            case 'recipient':
+              unreadCounts.recipients = count;
+              break;
+          }
+        }
+
+        // Also get formal messaging system counts (conversations/messages table) for direct messages
         const unreadConversationCounts = await db
           .select({
             conversationId: messages.conversationId,
             conversationType: conversations.type,
-            conversationName: conversations.name,
             count: sql<number>`count(*)`
           })
           .from(messages)
@@ -80,32 +116,15 @@ const getUnreadCounts = async (req: Request, res: Response) => {
           .where(
             sql`${messages.userId} != ${userId}` // Don't count own messages
           )
-          .groupBy(messages.conversationId, conversations.type, conversations.name);
+          .groupBy(messages.conversationId, conversations.type);
 
-        // Process conversation counts by type
+        // Process formal messaging counts
         for (const conversation of unreadConversationCounts) {
           const count = Number(conversation.count);
-
           if (conversation.conversationType === 'direct') {
             unreadCounts.direct += count;
           } else if (conversation.conversationType === 'group') {
             unreadCounts.groups += count;
-          } else if (conversation.conversationType === 'channel') {
-            // Map channel names to specific categories
-            const name = conversation.conversationName?.toLowerCase() || '';
-            if (name.includes('core team')) {
-              unreadCounts.core_team += count;
-            } else if (name.includes('committee')) {
-              unreadCounts.committee += count;
-            } else if (name.includes('host')) {
-              unreadCounts.hosts += count;
-            } else if (name.includes('driver')) {
-              unreadCounts.drivers += count;
-            } else if (name.includes('recipient')) {
-              unreadCounts.recipients += count;
-            } else {
-              unreadCounts.general += count;
-            }
           }
         }
 
