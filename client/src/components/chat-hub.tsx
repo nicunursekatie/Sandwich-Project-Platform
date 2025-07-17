@@ -1,283 +1,144 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import MessageLog from "@/components/message-log";
-import CommitteeChat from "@/components/committee-chat";
-import HostChat from "@/components/host-chat";
-import DriverChat from "@/components/driver-chat";
-import RecipientChat from "@/components/recipient-chat";
-import CoreTeamChat from "@/components/core-team-chat";
-// Group messaging and direct messaging moved to inbox system
+import { Users, MessageCircle, Shield, Car, Heart, Globe } from "lucide-react";
+import SimpleChat from "./simple-chat";
 import { useAuth } from "@/hooks/useAuth";
-import { hasPermission, USER_ROLES, PERMISSIONS } from "@shared/auth-utils";
-import {
-  MessageSquare,
-  Users,
-  Building2,
-  Truck,
-  Heart,
-  Shield,
-  Mail,
-  UsersRound,
-  ChevronLeft,
-  ChevronRight,
-  Hash,
-} from "lucide-react";
 
-interface ChatChannel {
-  value: string;
-  label: string;
+interface ChatRoom {
+  id: string;
+  name: string;
   description: string;
   icon: React.ReactNode;
-  component: React.ReactNode;
-  badge?: string;
-  color: string;
+  permission?: string;
 }
 
+const CHAT_ROOMS: ChatRoom[] = [
+  {
+    id: "general",
+    name: "General Chat",
+    description: "Open discussion for all team members",
+    icon: <Globe className="h-5 w-5" />
+  },
+  {
+    id: "core-team",
+    name: "Core Team",
+    description: "Private discussions for core team members",
+    icon: <Shield className="h-5 w-5" />,
+    permission: "core_team_chat"
+  },
+  {
+    id: "committee",
+    name: "Committee Chat",
+    description: "Committee member discussions",
+    icon: <Users className="h-5 w-5" />,
+    permission: "committee_chat"
+  },
+  {
+    id: "host",
+    name: "Host Chat",
+    description: "Communication for sandwich collection hosts",
+    icon: <Heart className="h-5 w-5" />,
+    permission: "host_chat"
+  },
+  {
+    id: "driver",
+    name: "Driver Chat",
+    description: "Coordination for delivery drivers",
+    icon: <Car className="h-5 w-5" />,
+    permission: "driver_chat"
+  },
+  {
+    id: "recipient",
+    name: "Recipient Chat",
+    description: "Communication for recipient organizations",
+    icon: <MessageCircle className="h-5 w-5" />,
+    permission: "recipient_chat"
+  }
+];
+
 export default function ChatHub() {
+  const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const { user } = useAuth();
-  const [activeChannel, setActiveChannel] = useState<string | null>(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // Determine available chat channels based on user role
-  const availableChannels: ChatChannel[] = [];
+  // Filter rooms based on user permissions
+  const availableRooms = CHAT_ROOMS.filter(room => {
+    if (!room.permission) return true; // General chat is always available
+    if (!user?.permissions) return false;
+    return user.permissions.includes(room.permission);
+  });
 
-  if (hasPermission(user, PERMISSIONS.GENERAL_CHAT)) {
-    availableChannels.push({
-      value: "general",
-      label: "General Chat",
-      description: "Open discussion for all team members",
-      icon: <MessageSquare className="h-4 w-4" />,
-      component: <MessageLog />,
-      color: "bg-primary/10 text-primary",
-    });
-  }
+  const selectedRoomData = CHAT_ROOMS.find(room => room.id === selectedRoom);
 
-  if (hasPermission(user, PERMISSIONS.COMMITTEE_CHAT)) {
-    availableChannels.push({
-      value: "committee",
-      label: "Committee Chat",
-      description: "Specific committee discussions",
-      icon: <Users className="h-4 w-4" />,
-      component: <CommitteeChat />,
-      color: "bg-primary/10 text-primary",
-    });
-  }
-
-  if (hasPermission(user, PERMISSIONS.HOST_CHAT)) {
-    availableChannels.push({
-      value: "hosts",
-      label: "Host Chat",
-      description: "Coordination with sandwich collection hosts",
-      icon: <Building2 className="h-4 w-4" />,
-      component: <HostChat />,
-      color: "bg-primary/10 text-primary",
-    });
-  }
-
-  if (hasPermission(user, PERMISSIONS.DRIVER_CHAT)) {
-    availableChannels.push({
-      value: "drivers",
-      label: "Driver Chat",
-      description: "Delivery and transportation coordination",
-      icon: <Truck className="h-4 w-4" />,
-      component: <DriverChat />,
-      color: "bg-orange-100 text-orange-800",
-    });
-  }
-
-  if (hasPermission(user, PERMISSIONS.RECIPIENT_CHAT)) {
-    availableChannels.push({
-      value: "recipients",
-      label: "Recipient Chat",
-      description: "Communication with receiving organizations",
-      icon: <Heart className="h-4 w-4" />,
-      component: <RecipientChat />,
-      color: "bg-primary/10 text-primary",
-    });
-  }
-
-  // Core team chat for admins only
-  if (hasPermission(user, PERMISSIONS.CORE_TEAM_CHAT)) {
-    availableChannels.push({
-      value: "core_team",
-      label: "Core Team",
-      description: "Private administrative discussions",
-      icon: <Shield className="h-4 w-4" />,
-      component: <CoreTeamChat />,
-      badge: "Admin",
-      color: "bg-amber-100 text-amber-800",
-    });
-  }
-
-  // Direct messaging and group messaging moved to Messages section
-  // These features are now available in the Messages section under Communication
-
-  // Auto-select first channel if none selected
-  if (!activeChannel && availableChannels.length > 0) {
-    setActiveChannel(availableChannels[0].value);
-  }
-
-  const renderActiveChannel = () => {
-    if (!activeChannel) return null;
-    const channel = availableChannels.find((ch) => ch.value === activeChannel);
-    return channel?.component;
-  };
-
-  if (availableChannels.length === 0) {
+  if (selectedRoom && selectedRoomData) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-main-heading text-primary">
-              Team Communication
-            </h1>
-            <p className="text-sm sm:text-base font-body text-muted-foreground">
-              Stay connected with your team and committees
-            </p>
+      <div className="flex flex-col h-[calc(100vh-200px)]">
+        <div className="flex items-center gap-2 mb-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setSelectedRoom(null)}
+          >
+            ← Back to Chat Rooms
+          </Button>
+          <div className="flex items-center gap-2">
+            {selectedRoomData.icon}
+            <h2 className="text-lg font-semibold">{selectedRoomData.name}</h2>
           </div>
         </div>
-        <Card className="p-8 text-center">
-          <div className="text-muted-foreground">
-            <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p className="text-lg font-medium mb-2">
-              No Chat Channels Available
-            </p>
-            <p className="text-sm">
-              You don't have access to any chat channels yet.
-            </p>
-          </div>
-        </Card>
+        
+        <div className="flex-1">
+          <SimpleChat 
+            channel={selectedRoom} 
+            title={selectedRoomData.name}
+            icon={selectedRoomData.icon}
+          />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-[calc(100vh-120px)] md:h-[calc(100vh-200px)] gap-2 md:gap-4">
-      {/* Mobile: Channel selection as horizontal tabs */}
-      <div className="md:hidden">
-        <div className="flex gap-1 p-2 bg-slate-50 rounded-lg overflow-x-auto">
-          {availableChannels.map((channel) => (
-            <Button
-              key={channel.value}
-              variant={activeChannel === channel.value ? "default" : "outline"}
-              size="sm"
-              className="flex items-center gap-2 whitespace-nowrap min-w-fit"
-              onClick={() => setActiveChannel(channel.value)}
-            >
-              <div className={`p-1 rounded ${channel.color}`}>
-                {channel.icon}
-              </div>
-              <span className="text-xs font-medium">
-                {channel.label.replace(" Chat", "")}
-              </span>
-              {channel.badge && (
-                <Badge variant="secondary" className="text-xs h-4 px-1">
-                  {channel.badge}
-                </Badge>
-              )}
-            </Button>
-          ))}
-        </div>
+    <div className="space-y-6">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold mb-2">Team Chat</h1>
+        <p className="text-gray-600">
+          Connect with your team in real-time across different channels
+        </p>
       </div>
 
-      {/* Desktop: Sidebar with Channel List */}
-      <div
-        className={`hidden md:block ${sidebarCollapsed ? "w-16" : "w-80"} transition-all duration-300 flex-shrink-0`}
-      >
-        <Card className="h-full">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              {!sidebarCollapsed && (
-                <div>
-                  <CardTitle className="text-lg font-sub-heading">
-                    Channels
-                  </CardTitle>
-                  <p className="text-xs font-body text-muted-foreground">
-                    Select a conversation
-                  </p>
-                </div>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                className="h-8 w-8 p-0"
-              >
-                {sidebarCollapsed ? (
-                  <ChevronRight className="h-4 w-4" />
-                ) : (
-                  <ChevronLeft className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="p-2 space-y-1 overflow-y-auto max-h-[calc(100vh-300px)]">
-            {availableChannels.map((channel) => (
-              <Button
-                key={channel.value}
-                variant={activeChannel === channel.value ? "default" : "ghost"}
-                className={`w-full justify-start h-auto p-3 ${sidebarCollapsed ? "px-2 min-h-[50px]" : "min-h-[70px]"}`}
-                onClick={() => setActiveChannel(channel.value)}
-              >
-                <div className="flex items-start gap-3 w-full">
-                  <div className={`p-2 rounded-md ${channel.color}`}>
-                    {channel.icon}
-                  </div>
-                  {!sidebarCollapsed && (
-                    <div className="flex-1 text-left">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-sm">
-                          {channel.label}
-                        </span>
-                        {channel.badge && (
-                          <Badge variant="secondary" className="text-xs">
-                            {channel.badge}
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground line-clamp-2">
-                        {channel.description}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </Button>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Chat Area */}
-      <div className="flex-1 min-h-0">
-        <Card className="h-full flex flex-col">
-          {/* Mobile Header with back button and channel name */}
-          <CardHeader className="pb-3 flex-shrink-0">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-sub-heading flex items-center gap-2">
-                <Hash className="h-5 w-5 text-[#236383]" />
-                {availableChannels.find((ch) => ch.value === activeChannel)
-                  ?.label || "Select a channel"}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {availableRooms.map((room) => (
+          <Card 
+            key={room.id} 
+            className="cursor-pointer hover:bg-gray-50 transition-colors"
+            onClick={() => setSelectedRoom(room.id)}
+          >
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                {room.icon}
+                {room.name}
               </CardTitle>
-              <div className="flex items-center gap-2">
-                {/* Mobile collapse indicator */}
-                <Badge variant="outline" className="md:hidden text-xs">
-                  {availableChannels.length} channels
-                </Badge>
-              </div>
-            </div>
-            {activeChannel && (
-              <p className="text-sm text-muted-foreground">
-                {availableChannels.find((ch) => ch.value === activeChannel)?.description}
-              </p>
-            )}
-          </CardHeader>
-          <CardContent className="p-0 flex-1 min-h-0 overflow-hidden">
-            {renderActiveChannel()}
-          </CardContent>
-        </Card>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 mb-4">{room.description}</p>
+              <Button variant="outline" size="sm" className="w-full">
+                Join Chat
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
       </div>
+
+      {availableRooms.length === 0 && (
+        <div className="text-center py-8">
+          <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-500">No chat rooms available</p>
+          <p className="text-sm text-gray-400 mt-2">
+            Contact your administrator for access to chat channels
+          </p>
+        </div>
+      )}
     </div>
   );
 }

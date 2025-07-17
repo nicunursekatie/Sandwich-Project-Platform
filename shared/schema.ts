@@ -48,6 +48,16 @@ export const auditLogs = pgTable("audit_logs", {
   timestamp: timestamp("timestamp").defaultNow().notNull(),
 });
 
+// Chat messages table for real-time chat system
+export const chatMessages = pgTable("chat_messages", {
+  id: serial("id").primaryKey(),
+  channel: varchar("channel").notNull().default("general"), // 'general', 'core-team', 'host', 'driver', 'recipient'
+  userId: varchar("user_id").notNull(),
+  userName: varchar("user_name").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),

@@ -1,14 +1,27 @@
 import { Server as SocketServer } from "socket.io";
 import { Server as HttpServer } from "http";
 import { storage } from "./storage";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+import { pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+
+// Chat messages table for Socket.IO chat system
+export const chatMessages = pgTable("chat_messages", {
+  id: serial("id").primaryKey(),
+  channel: varchar("channel").notNull().default("general"), // 'general', 'core-team', 'host', 'driver', 'recipient'
+  userId: varchar("user_id").notNull(),
+  userName: varchar("user_name").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
 
 export interface ChatMessage {
-  id: string;
+  id: number;
+  channel: string;
   userId: string;
-  username: string;
+  userName: string;
   content: string;
-  timestamp: Date;
-  room: string;
+  createdAt: Date;
 }
 
 export interface ChatUser {
@@ -32,11 +45,11 @@ export function setupSocketChat(httpServer: HttpServer) {
   // Available chat rooms
   const CHAT_ROOMS = {
     general: "General Chat",
-    core_team: "Core Team",
+    "core-team": "Core Team",
     committee: "Committee",
-    hosts: "Host Chat",
-    drivers: "Driver Chat",
-    recipients: "Recipient Chat"
+    host: "Host Chat",
+    driver: "Driver Chat",
+    recipient: "Recipient Chat"
   };
 
   io.on("connection", (socket) => {
@@ -170,6 +183,89 @@ export function setupSocketChat(httpServer: HttpServer) {
       } catch (error) {
         console.error("Error fetching room history:", error);
         socket.emit("error", { message: "Failed to fetch room history" });
+      }
+    });
+
+    // Join a chat channel
+    socket.on("join-channel", (channel: string) => {
+      socket.join(channel);
+      console.log(`User ${socket.id} joined channel: ${channel}`);
+    });
+    
+    // Leave a chat channel
+    socket.on("leave-channel", (channel: string) => {
+      socket.leave(channel);
+      console.log(`User ${socket.id} left channel: ${channel}`);
+    });
+    
+    // Handle new chat message
+    socket.on("send-message", async (data: { channel: string; content: string; userId: string; userName: string }) => {
+      try {
+        const { channel, content, userId, userName } = data;
+        
+        // Save message to database
+        const [newMessage] = await db
+          .insert(chatMessages)
+          .values({
+            channel,
+            userId,
+            userName,
+            content: content.trim(),
+          })
+          .returning();
+        
+        // Broadcast to all users in the channel
+        io.to(channel).emit("new-message", {
+          id: newMessage.id,
+          channel: newMessage.channel,
+          userId: newMessage.userId,
+          userName: newMessage.userName,
+          content: newMessage.content,
+          createdAt: newMessage.createdAt,
+        });
+        
+        console.log(`Message sent to channel ${channel}: ${content}`);
+      } catch (error) {
+        console.error("Error sending chat message:", error);
+        socket.emit("error", { message: "Failed to send message" });
+      }
+    });
+    
+    // Handle message deletion
+    socket.on("delete-message", async (data: { messageId: number; userId: string; userRole: string }) => {
+      try {
+        const { messageId, userId, userRole } = data;
+        
+        // Get the message to check permissions
+        const [message] = await db
+          .select()
+          .from(chatMessages)
+          .where(eq(chatMessages.id, messageId));
+        
+        if (!message) {
+          socket.emit("error", { message: "Message not found" });
+          return;
+        }
+        
+        // Check if user can delete (author or admin)
+        const isAuthor = message.userId === userId;
+        const isAdmin = userRole === "admin" || userRole === "super_admin";
+        
+        if (!isAuthor && !isAdmin) {
+          socket.emit("error", { message: "Permission denied" });
+          return;
+        }
+        
+        // Delete the message
+        await db.delete(chatMessages).where(eq(chatMessages.id, messageId));
+        
+        // Broadcast deletion to all users in the channel
+        io.to(message.channel).emit("message-deleted", { messageId });
+        
+        console.log(`Message ${messageId} deleted from channel ${message.channel}`);
+      } catch (error) {
+        console.error("Error deleting chat message:", error);
+        socket.emit("error", { message: "Failed to delete message" });
       }
     });
 

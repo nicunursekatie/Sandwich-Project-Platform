@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { io, Socket } from "socket.io-client";
 
 interface ChatMessage {
   id: number;
@@ -26,61 +27,61 @@ interface SimpleChatProps {
 
 export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [socket, setSocket] = useState<Socket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Fetch messages for this channel
-  const { data: messages = [], isLoading } = useQuery<ChatMessage[]>({
+  // Initialize Socket.IO connection
+  useEffect(() => {
+    if (!user) return;
+
+    const socketInstance = io({
+      path: "/socket.io/",
+      transports: ["websocket", "polling"],
+    });
+
+    setSocket(socketInstance);
+
+    socketInstance.on("connect", () => {
+      console.log("Connected to Socket.IO chat server");
+      socketInstance.emit("join-channel", channel);
+    });
+
+    socketInstance.on("new-message", (newMessage: ChatMessage) => {
+      setMessages(prev => [...prev, newMessage]);
+    });
+
+    socketInstance.on("message-deleted", ({ messageId }: { messageId: number }) => {
+      setMessages(prev => prev.filter(msg => msg.id !== messageId));
+    });
+
+    socketInstance.on("error", (error: { message: string }) => {
+      toast({
+        title: "Chat Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    });
+
+    return () => {
+      socketInstance.emit("leave-channel", channel);
+      socketInstance.disconnect();
+    };
+  }, [user, channel, toast]);
+
+  // Fetch initial messages for this channel
+  const { isLoading } = useQuery<ChatMessage[]>({
     queryKey: ["chat", channel],
     queryFn: async () => {
       const response = await apiRequest("GET", `/api/chat/${channel}`);
       return response;
     },
-    refetchInterval: 5000, // Refresh every 5 seconds
-  });
-
-  // Send message mutation
-  const sendMessageMutation = useMutation({
-    mutationFn: async (content: string) => {
-      return await apiRequest("POST", `/api/chat/${channel}`, { content });
+    onSuccess: (data) => {
+      setMessages(data);
     },
-    onSuccess: () => {
-      setMessage("");
-      queryClient.invalidateQueries({ queryKey: ["chat", channel] });
-      toast({
-        title: "Message sent",
-        description: "Your message has been posted.",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: `Failed to send message: ${error.message}`,
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Delete message mutation
-  const deleteMessageMutation = useMutation({
-    mutationFn: async (messageId: number) => {
-      return await apiRequest("DELETE", `/api/chat/message/${messageId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["chat", channel] });
-      toast({
-        title: "Message deleted",
-        description: "Your message has been removed.",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: `Failed to delete message: ${error.message}`,
-        variant: "destructive",
-      });
-    },
+    enabled: !!user,
   });
 
   // Auto-scroll to bottom when new messages arrive
@@ -89,8 +90,14 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
   }, [messages]);
 
   const handleSendMessage = () => {
-    if (message.trim() && !sendMessageMutation.isPending) {
-      sendMessageMutation.mutate(message.trim());
+    if (message.trim() && socket && user) {
+      socket.emit("send-message", {
+        channel,
+        content: message.trim(),
+        userId: user.id,
+        userName: user.firstName || user.email || "Anonymous User"
+      });
+      setMessage("");
     }
   };
 
@@ -102,8 +109,12 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
   };
 
   const handleDeleteMessage = (messageId: number) => {
-    if (window.confirm("Are you sure you want to delete this message?")) {
-      deleteMessageMutation.mutate(messageId);
+    if (window.confirm("Are you sure you want to delete this message?") && socket && user) {
+      socket.emit("delete-message", {
+        messageId,
+        userId: user.id,
+        userRole: user.role
+      });
     }
   };
 
@@ -204,12 +215,12 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type your message..."
-            disabled={sendMessageMutation.isPending}
+            disabled={!socket || !user}
             className="flex-1"
           />
           <Button
             onClick={handleSendMessage}
-            disabled={!message.trim() || sendMessageMutation.isPending}
+            disabled={!message.trim() || !socket || !user}
             size="sm"
           >
             <Send className="h-4 w-4" />
