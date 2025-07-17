@@ -3,7 +3,7 @@ import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
-import ChatHub from "@/components/chat-hub";
+import EnhancedChat from "@/components/enhanced-chat";
 import CommitteeChat from "@/components/committee-chat";
 import GoogleDriveLinks from "@/components/google-drive-links";
 import DashboardOverview from "@/components/dashboard-overview";
@@ -152,7 +152,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "messages":
         return <InboxPage />;
       case "chat":
-        return <ChatHub />;
+        return <EnhancedChat />;
       case "profile":
         return <UserProfile />;
       case "meetings":
