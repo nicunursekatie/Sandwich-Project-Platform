@@ -1596,7 +1596,7 @@ export class DatabaseStorage implements IStorage {
     return await db
       .select()
       .from(chatMessages)
-      .where(eq(chatMessages.channel, channel))
+      .where(eq(chatMessages.channel, channel))  // CRITICAL: Filter by channel field in chatMessages table
       .orderBy(desc(chatMessages.createdAt))
       .limit(limit);
   }

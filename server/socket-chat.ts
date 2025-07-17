@@ -52,8 +52,12 @@ export function setupSocketChat(httpServer: HttpServer) {
         // Load and send message history (latest 50 messages in reverse chronological order)
         try {
           const messageHistory = await storage.getChatMessages(channel, 50);
-          // Reverse to send oldest first
-          socket.emit("message-history", messageHistory.reverse());
+          // Convert database timestamps to proper Date objects and reverse to send oldest first
+          const formattedMessages = messageHistory.map(msg => ({
+            ...msg,
+            timestamp: new Date(msg.createdAt)
+          })).reverse();
+          socket.emit("message-history", formattedMessages);
         } catch (error) {
           console.error("Error loading message history:", error);
           socket.emit("message-history", []);
