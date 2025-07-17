@@ -137,13 +137,13 @@ export function ProjectAssigneeSelector({
       
       {/* Single dropdown with all users plus "Custom..." option */}
       <Select 
-        value={selectedUsers.length > 0 ? selectedUsers[0].id : (textValue ? 'custom' : '')} 
+        value={selectedUsers.length > 0 ? selectedUsers[0].id : (textValue ? 'custom' : 'unassigned')} 
         onValueChange={(value) => {
           if (value === 'custom') {
             setMode('text');
             setSelectedUsers([]);
             onChange(textValue, []);
-          } else if (value === '') {
+          } else if (value === 'unassigned') {
             // Clear selection
             setMode('user');
             setSelectedUsers([]);
@@ -167,7 +167,7 @@ export function ProjectAssigneeSelector({
           <SelectValue placeholder="Select team member or enter custom name" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">Unassigned</SelectItem>
+          <SelectItem value="unassigned">Unassigned</SelectItem>
           {users.map((user) => (
             <SelectItem key={user.id} value={user.id}>
               {`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email}

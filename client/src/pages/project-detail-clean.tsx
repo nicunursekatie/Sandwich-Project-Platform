@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -634,6 +634,9 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Edit Project</DialogTitle>
+            <DialogDescription>
+              Update project details and assignments
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateProject} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -748,6 +751,9 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Edit Task</DialogTitle>
+            <DialogDescription>
+              Modify task details and assignments
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateTask} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
