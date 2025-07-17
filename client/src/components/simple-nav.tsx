@@ -138,7 +138,12 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
                 : "hover:bg-slate-100 text-slate-700"
               }
             `}
-            onClick={() => onSectionChange(item.href)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('Navigation click:', item.href);
+              onSectionChange(item.href);
+            }}
           >
             <item.icon className="h-4 w-4 mr-3 flex-shrink-0" />
             <span className="truncate flex-1">{item.label}</span>

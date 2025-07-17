@@ -47,6 +47,11 @@ import RealTimeMessages from "@/pages/real-time-messages";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
+  
+  // Debug logging
+  React.useEffect(() => {
+    console.log('Dashboard activeSection changed to:', activeSection);
+  }, [activeSection]);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isLoading } = useAuth();
@@ -450,7 +455,13 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         } md:translate-x-0 fixed md:relative z-50 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out h-screen max-h-screen`}>
           {/* Simple Navigation with enhanced mobile scrolling */}
           <div className="flex-1 overflow-y-auto pb-6 touch-pan-y">
-            <SimpleNav onSectionChange={setActiveSection} />
+            <SimpleNav onSectionChange={(section) => {
+              console.log('Dashboard setActiveSection called with:', section);
+              setActiveSection(section);
+              // Also update URL for back button support
+              const newUrl = section === 'dashboard' ? '/dashboard' : `/dashboard?section=${section}`;
+              window.history.pushState({}, '', newUrl);
+            }} />
           </div>
         </div>
 
