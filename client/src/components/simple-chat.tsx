@@ -37,9 +37,13 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
   useEffect(() => {
     if (!user) return;
 
+    // Use relative URL for Socket.IO connection - let the client figure out the correct URL
     const socketInstance = io({
       path: "/socket.io/",
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"], // Try polling first, then websocket
+      autoConnect: true,
+      forceNew: false,
+      timeout: 5000,
     });
 
     setSocket(socketInstance);
