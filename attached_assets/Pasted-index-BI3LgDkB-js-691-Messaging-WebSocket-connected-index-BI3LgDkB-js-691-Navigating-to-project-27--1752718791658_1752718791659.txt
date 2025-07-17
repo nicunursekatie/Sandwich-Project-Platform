@@ -1,0 +1,58 @@
+index-BI3LgDkB.js:691 Messaging WebSocket connected
+index-BI3LgDkB.js:691 Navigating to project: 27
+index-BI3LgDkB.js:691 Messaging WebSocket disconnected
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Conversation ID: undefined
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages loading: false
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages error: null
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages count: 0
+index-BI3LgDkB.js:597 🔧 DEBUG Filtering:
+index-BI3LgDkB.js:597 Raw messages count: 0
+index-BI3LgDkB.js:597 Displayed messages count: 0
+index-BI3LgDkB.js:597 Sample raw message: undefined
+index-BI3LgDkB.js:597 Sample displayed message: undefined
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Starting conversation lookup...
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Conversation ID: undefined
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages loading: false
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages error: null
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages count: 0
+index-BI3LgDkB.js:597 🔧 DEBUG Filtering:
+index-BI3LgDkB.js:597 Raw messages count: 0
+index-BI3LgDkB.js:597 Displayed messages count: 0
+index-BI3LgDkB.js:597 Sample raw message: undefined
+index-BI3LgDkB.js:597 Sample displayed message: undefined
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Conversation ID: undefined
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages loading: false
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages error: null
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages count: 0
+index-BI3LgDkB.js:597 🔧 DEBUG Filtering:
+index-BI3LgDkB.js:597 Raw messages count: 0
+index-BI3LgDkB.js:597 Displayed messages count: 0
+index-BI3LgDkB.js:597 Sample raw message: undefined
+index-BI3LgDkB.js:597 Sample displayed message: undefined
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Conversation ID: undefined
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages loading: false
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages error: null
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages count: 0
+index-BI3LgDkB.js:597 🔧 DEBUG Filtering:
+index-BI3LgDkB.js:597 Raw messages count: 0
+index-BI3LgDkB.js:597 Displayed messages count: 0
+index-BI3LgDkB.js:597 Sample raw message: undefined
+index-BI3LgDkB.js:597 Sample displayed message: undefined
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Conversation ID: undefined
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages loading: false
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages error: null
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages count: 0
+index-BI3LgDkB.js:597 🔧 DEBUG Filtering:
+index-BI3LgDkB.js:597 Raw messages count: 0
+index-BI3LgDkB.js:597 Displayed messages count: 0
+index-BI3LgDkB.js:597 Sample raw message: undefined
+index-BI3LgDkB.js:597 Sample displayed message: undefined
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Conversation ID: undefined
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages loading: false
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages error: null
+index-BI3LgDkB.js:597 [DEBUG] Core Team Chat: Messages count: 0
+index-BI3LgDkB.js:597 🔧 DEBUG Filtering:
+index-BI3LgDkB.js:597 Raw messages count: 0
+index-BI3LgDkB.js:597 Displayed messages count: 0
+index-BI3LgDkB.js:597 Sample raw message: undefined
+index-BI3LgDkB.js:597 Sample displayed message: undefined

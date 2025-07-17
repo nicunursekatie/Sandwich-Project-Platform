@@ -110,8 +110,7 @@ export default function CoreTeamChat() {
       console.log("[DEBUG] Core Team Chat: Starting conversation lookup...");
 
       // First try to find existing Core Team conversation
-      const response = await apiRequest("GET", "/api/conversations");
-      const conversations = await response.json();
+      const conversations = await apiRequest("GET", "/api/conversations");
       console.log("[DEBUG] Core Team Chat: All conversations:", conversations);
 
       const existing = conversations.find(
@@ -152,17 +151,7 @@ export default function CoreTeamChat() {
     queryKey: ["/api/conversations", coreTeamConversation?.id, "messages"],
     queryFn: async () => {
       if (!coreTeamConversation) return [];
-      const response = await fetch(
-        `/api/conversations/${coreTeamConversation.id}/messages`,
-        {
-          credentials: "include",
-        },
-      );
-      if (!response.ok) {
-        console.error("Failed to fetch Core Team messages:", response.status);
-        throw new Error(`Failed to fetch messages: ${response.status}`);
-      }
-      const data = await response.json();
+      const data = await apiRequest("GET", `/api/conversations/${coreTeamConversation.id}/messages`);
       console.log("Core Team messages response:", data);
       return Array.isArray(data) ? data : [];
     },

@@ -298,6 +298,8 @@ Preferred communication style: Simple, everyday language.
 - July 17, 2025: FIXED project edit interface to use modern user selection tool: replaced "Edit Details" navigation to project detail page with direct edit dialog on projects list, implemented proper ProjectAssigneeSelector component instead of text input field for assignee selection, users can now edit projects with proper user selection dropdowns directly from projects list without navigation to detail page
 - July 17, 2025: COMPLETED project assignee selector modernization: updated both projects list and project detail pages to use ProjectAssigneeSelector component instead of free text input fields, all project edit interfaces now feature proper user selection dropdowns with system user integration, eliminated inconsistent text-based assignee fields across entire project management system
 - July 17, 2025: FIXED project detail page navigation: updated "Back to Projects" button to properly navigate back to projects list in dashboard, implemented proper section switching and fallback page refresh to ensure reliable navigation flow
+- July 17, 2025: RESOLVED critical user assignment bug: fixed ProjectAssigneeSelector onChange handler to properly capture both user names and user IDs for assignment, updated all project edit forms (projects list, project detail, new project creation) to handle both parameters correctly, user selection now saves actual user IDs to database instead of just display names
+- July 17, 2025: FIXED Core Team Chat conversation lookup authentication: corrected API calls to use apiRequest instead of fetch for proper authentication handling, Core Team Chat should now connect to existing conversation ID 2 in database
 
 ## Changelog
 
