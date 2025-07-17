@@ -77,7 +77,12 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
 
     socketInstance.on("message-history", (history: ChatMessage[]) => {
       console.log(`Loaded ${history.length} messages from history`);
-      setMessages(history);
+      setMessages(prev => {
+        // Merge history with any existing messages, avoiding duplicates
+        const existingIds = new Set(prev.map(m => m.id));
+        const newHistory = history.filter(m => !existingIds.has(m.id));
+        return [...newHistory, ...prev];
+      });
     });
 
     socketInstance.on("error", (error: { message: string }) => {
