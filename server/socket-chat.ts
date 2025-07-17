@@ -33,11 +33,9 @@ export function setupSocketChat(httpServer: HttpServer) {
     console.log(`Socket connected: ${socket.id}`);
 
     // Handle joining a channel
-    socket.on("join-channel", async (channel: string) => {
+    socket.on("join-channel", async (data: { channel: string; userId: string; userName: string }) => {
       try {
-        // For now, use socket ID as user identifier
-        const userId = `user_${socket.id}`;
-        const userName = `User_${socket.id.slice(0, 6)}`;
+        const { channel, userId, userName } = data;
         
         // Store user info
         activeUsers.set(socket.id, {
@@ -49,7 +47,7 @@ export function setupSocketChat(httpServer: HttpServer) {
         // Join the channel
         socket.join(channel);
         
-        console.log(`User ${userName} joined channel: ${channel}`);
+        console.log(`User ${userName} (${userId}) joined channel: ${channel}`);
         
         // Send confirmation
         socket.emit("joined-channel", { channel, userName });
@@ -88,9 +86,10 @@ export function setupSocketChat(httpServer: HttpServer) {
     });
 
     // Handle leaving a channel
-    socket.on("leave-channel", (channel: string) => {
+    socket.on("leave-channel", (data: { channel: string; userId: string; userName: string }) => {
+      const { channel, userName } = data;
       socket.leave(channel);
-      console.log(`User left channel: ${channel}`);
+      console.log(`User ${userName} left channel: ${channel}`);
     });
 
     // Handle disconnect

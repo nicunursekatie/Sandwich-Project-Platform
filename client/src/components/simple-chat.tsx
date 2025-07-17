@@ -54,7 +54,12 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
     socketInstance.on("connect", () => {
       console.log("Connected to Socket.IO chat server");
       setIsConnected(true);
-      socketInstance.emit("join-channel", channel);
+      // Send user info when joining a channel
+      socketInstance.emit("join-channel", {
+        channel,
+        userId: user.id,
+        userName: user.firstName || user.email || "User"
+      });
     });
 
     socketInstance.on("disconnect", () => {
@@ -79,7 +84,11 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
     });
 
     return () => {
-      socketInstance.emit("leave-channel", channel);
+      socketInstance.emit("leave-channel", {
+        channel,
+        userId: user.id,
+        userName: user.firstName || user.email || "User"
+      });
       socketInstance.disconnect();
     };
   }, [user, channel, toast]);
