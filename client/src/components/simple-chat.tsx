@@ -37,19 +37,30 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
   useEffect(() => {
     if (!user) return;
 
-    // Use relative URL for Socket.IO connection - let the client figure out the correct URL
-    const socketInstance = io({
+    // Configure Socket.IO for Replit environment
+    const socketUrl = window.location.origin;
+    
+    const socketInstance = io(socketUrl, {
       path: "/socket.io/",
-      transports: ["polling", "websocket"], // Try polling first, then websocket
+      transports: ["polling"], // Use polling only for Replit compatibility
       autoConnect: true,
       forceNew: false,
-      timeout: 5000,
+      timeout: 10000,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
 
     setSocket(socketInstance);
 
     socketInstance.on("connect", () => {
       console.log("Connected to Socket.IO chat server");
+      // Send user info and join channel
+      socketInstance.emit("join", {
+        userId: user.id,
+        username: user.firstName || user.email || "User",
+        userPermissions: user.permissions || []
+      });
       socketInstance.emit("join-channel", channel);
     });
 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users, MessageCircle, Shield, Car, Heart, Globe } from "lucide-react";
-import HttpChat from "./http-chat";
+import SimpleChat from "./simple-chat";
 import { useAuth } from "@/hooks/useAuth";
 
 interface ChatRoom {
@@ -88,7 +88,7 @@ export default function ChatHub() {
         </div>
         
         <div className="flex-1">
-          <HttpChat 
+          <SimpleChat 
             channel={selectedRoom} 
             title={selectedRoomData.name}
             icon={selectedRoomData.icon}
