@@ -31,15 +31,14 @@ interface SelectedUser {
 export function ProjectAssigneeSelector({ 
   value, 
   onChange, 
-  placeholder = "Enter assignee names or select users",
+  placeholder = "Add team members",
   label = "Assigned To",
   className,
   multiple = true
 }: ProjectAssigneeSelectorProps) {
-  const [mode, setMode] = useState<'text' | 'user'>('text');
-  const [textValue, setTextValue] = useState(value || '');
   const [selectedUsers, setSelectedUsers] = useState<SelectedUser[]>([]);
-  const [pendingUserId, setPendingUserId] = useState<string>('');
+  const [textInput, setTextInput] = useState('');
+  const [mode, setMode] = useState<'user' | 'text'>('user');
 
   // Fetch system users
   const { data: users = [] } = useQuery<User[]>({
@@ -47,64 +46,63 @@ export function ProjectAssigneeSelector({
     retry: false,
   });
 
-  // Initialize from existing value
+  // Initialize from existing value - handle both single names and comma-separated
   useEffect(() => {
     if (value && users.length > 0) {
-      // Try to match the name to a user
-      const matchedUser = users.find(user => {
-        const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim();
-        return fullName === value || user.email === value;
+      const names = value.split(',').map(name => name.trim()).filter(name => name.length > 0);
+      const matchedUsers: SelectedUser[] = [];
+      
+      names.forEach(name => {
+        const matchedUser = users.find(user => {
+          const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+          return fullName === name || user.email === name;
+        });
+        
+        if (matchedUser) {
+          const fullName = `${matchedUser.firstName || ''} ${matchedUser.lastName || ''}`.trim() || matchedUser.email;
+          matchedUsers.push({ id: matchedUser.id, name: fullName });
+        }
       });
       
-      if (matchedUser) {
-        const fullName = `${matchedUser.firstName || ''} ${matchedUser.lastName || ''}`.trim() || matchedUser.email;
-        setSelectedUsers([{ id: matchedUser.id, name: fullName }]);
+      if (matchedUsers.length > 0) {
+        setSelectedUsers(matchedUsers);
         setMode('user');
-        setTextValue('');
       } else {
-        // No user match, treat as custom text
-        setTextValue(value);
+        // No user matches, treat as custom text
+        setTextInput(value);
         setMode('text');
-        setSelectedUsers([]);
       }
-    } else if (!value) {
-      // Clear everything if no value
-      setSelectedUsers([]);
-      setTextValue('');
-      setMode('user');
     }
   }, [users, value]);
 
-  const handleTextChange = (newValue: string) => {
-    setTextValue(newValue);
-    onChange(newValue, []);
-  };
-
-  const addUser = () => {
-    if (!pendingUserId) return;
+  const addUserById = (userId: string) => {
+    if (userId === 'custom') {
+      setMode('text');
+      return;
+    }
     
-    const user = users.find(u => u.id === pendingUserId);
-    if (!user) return;
-
-    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email;
-    const newUser: SelectedUser = {
-      id: user.id,
-      name: fullName
-    };
-
-    // Check if already selected
-    if (selectedUsers.some(u => u.id === user.id)) {
-      setPendingUserId('');
+    if (userId === 'none') {
+      // Clear all selections
+      setSelectedUsers([]);
+      setTextInput('');
+      onChange('', []);
       return;
     }
 
-    const updatedUsers = [...selectedUsers, newUser];
-    setSelectedUsers(updatedUsers);
-    setPendingUserId('');
+    const user = users.find(u => u.id === userId);
+    if (!user) return;
+
+    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email;
     
-    // Update parent with names and IDs
+    // Check if already selected
+    if (selectedUsers.some(u => u.id === user.id)) return;
+
+    const updatedUsers = [...selectedUsers, { id: user.id, name: fullName }];
+    setSelectedUsers(updatedUsers);
+    
+    // Update parent
     const names = updatedUsers.map(u => u.name).join(', ');
-    const userIds = updatedUsers.filter(u => !u.id.startsWith('text_')).map(u => u.id);
+    const userIds = updatedUsers.map(u => u.id);
     onChange(names, userIds);
   };
 
@@ -113,81 +111,102 @@ export function ProjectAssigneeSelector({
     setSelectedUsers(updatedUsers);
     
     const names = updatedUsers.map(u => u.name).join(', ');
-    const userIds = updatedUsers.filter(u => !u.id.startsWith('text_')).map(u => u.id);
+    const userIds = updatedUsers.map(u => u.id);
     onChange(names, userIds);
   };
 
-  const toggleMode = () => {
-    const newMode = mode === 'text' ? 'user' : 'text';
-    setMode(newMode);
-    
-    if (newMode === 'text') {
-      setSelectedUsers([]);
-      setPendingUserId('');
-      onChange(textValue, []);
-    } else {
-      setTextValue('');
-      onChange('', []);
-    }
+  const handleTextChange = (newValue: string) => {
+    setTextInput(newValue);
+    onChange(newValue, []);
   };
 
   return (
     <div className={className}>
       <Label className="mb-2 block">{label}</Label>
       
-      {/* Single dropdown with all users plus "Custom..." option */}
-      <Select 
-        value={selectedUsers.length > 0 ? selectedUsers[0].id : (textValue ? 'custom' : 'unassigned')} 
-        onValueChange={(value) => {
-          if (value === 'custom') {
-            setMode('text');
-            setSelectedUsers([]);
-            onChange(textValue, []);
-          } else if (value === 'unassigned') {
-            // Clear selection
-            setMode('user');
-            setSelectedUsers([]);
-            setTextValue('');
-            onChange('', []);
-          } else {
-            // Select a user
-            const user = users.find(u => u.id === value);
-            if (user) {
-              const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email;
-              const newUser = { id: user.id, name: fullName };
-              setSelectedUsers([newUser]);
-              setTextValue('');
-              setMode('user');
-              onChange(fullName, [user.id]);
-            }
-          }
-        }}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Select team member or enter custom name" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="unassigned">Unassigned</SelectItem>
-          {users.map((user) => (
-            <SelectItem key={user.id} value={user.id}>
-              {`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email}
-            </SelectItem>
-          ))}
-          <SelectItem value="custom">Custom name...</SelectItem>
-        </SelectContent>
-      </Select>
+      {/* Mode Toggle */}
+      <div className="flex gap-2 mb-3">
+        <Button
+          type="button"
+          variant={mode === 'user' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setMode('user')}
+          className="text-xs"
+        >
+          <Users className="w-3 h-3 mr-1" />
+          Team Members
+        </Button>
+        <Button
+          type="button"
+          variant={mode === 'text' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setMode('text')}
+          className="text-xs"
+        >
+          Custom Names
+        </Button>
+      </div>
 
-      {/* Show text input when custom is selected */}
-      {mode === 'text' && (
-        <div className="mt-2">
+      {mode === 'user' ? (
+        <div className="space-y-3">
+          {/* User Selection Dropdown */}
+          <Select value="none" onValueChange={addUserById}>
+            <SelectTrigger>
+              <SelectValue placeholder="+ Add team member" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Select a team member...</SelectItem>
+              {users
+                .filter(user => !selectedUsers.some(selected => selected.id === user.id))
+                .map((user) => (
+                  <SelectItem key={user.id} value={user.id}>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">
+                        {`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email}
+                      </span>
+                      <Badge variant="secondary" className="text-xs">
+                        {user.role || 'User'}
+                      </Badge>
+                    </div>
+                  </SelectItem>
+                ))}
+              <SelectItem value="custom">Custom name...</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Selected Users */}
+          {selectedUsers.length > 0 && (
+            <div className="space-y-2">
+              <Label className="text-sm text-slate-600">Assigned Members:</Label>
+              <div className="flex flex-wrap gap-2">
+                {selectedUsers.map((user) => (
+                  <Badge key={user.id} variant="default" className="flex items-center gap-1 px-3 py-1">
+                    <span>{user.name}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-4 w-4 p-0 ml-1 hover:bg-red-100"
+                      onClick={() => removeUser(user.id)}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-2">
           <Input
-            value={textValue}
-            onChange={(e) => {
-              setTextValue(e.target.value);
-              onChange(e.target.value, []);
-            }}
-            placeholder="Enter custom assignee name"
+            value={textInput}
+            onChange={(e) => handleTextChange(e.target.value)}
+            placeholder="Enter names separated by commas"
           />
+          <p className="text-xs text-slate-500">
+            Enter multiple names separated by commas (e.g., "John Smith, Jane Doe, Bob Wilson")
+          </p>
         </div>
       )}
     </div>
