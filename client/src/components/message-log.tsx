@@ -103,8 +103,16 @@ export default function MessageLog({ chatType }: MessageLogProps = {}) {
       console.log('Message data being sent:', data);
       console.log('API endpoint: POST /api/messages');
       
+      // Prepare the message data in the format expected by the backend
+      const messageData = {
+        content: data.content,
+        sender: userName || user?.firstName || user?.email || "Anonymous User"
+      };
+      
+      console.log('Formatted message data:', messageData);
+      
       try {
-        const result = await apiRequest("POST", "/api/messages", data);
+        const result = await apiRequest("POST", "/api/messages", messageData);
         console.log('API response received:', result);
         return result;
       } catch (error) {

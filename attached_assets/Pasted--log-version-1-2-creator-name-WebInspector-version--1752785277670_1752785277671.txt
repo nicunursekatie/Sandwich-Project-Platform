@@ -1,0 +1,369 @@
+{
+  "log": {
+    "version": "1.2",
+    "creator": {
+      "name": "WebInspector",
+      "version": "537.36"
+    },
+    "pages": [],
+    "entries": [
+      {
+        "_connectionId": "984400",
+        "_initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "apiRequest",
+                "scriptId": "698",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/lib/queryClient.ts",
+                "lineNumber": 9,
+                "columnNumber": 20
+              },
+              {
+                "functionName": "mutationFn",
+                "scriptId": "774",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/message-log.tsx",
+                "lineNumber": 102,
+                "columnNumber": 29
+              },
+              {
+                "functionName": "fn",
+                "scriptId": "695",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=f5c79159",
+                "lineNumber": 1235,
+                "columnNumber": 28
+              },
+              {
+                "functionName": "run",
+                "scriptId": "695",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=f5c79159",
+                "lineNumber": 512,
+                "columnNumber": 48
+              },
+              {
+                "functionName": "start",
+                "scriptId": "695",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=f5c79159",
+                "lineNumber": 554,
+                "columnNumber": 8
+              },
+              {
+                "functionName": "execute",
+                "scriptId": "695",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=f5c79159",
+                "lineNumber": 1271,
+                "columnNumber": 55
+              }
+            ],
+            "parent": {
+              "description": "await",
+              "callFrames": [
+                {
+                  "functionName": "mutate",
+                  "scriptId": "695",
+                  "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=f5c79159",
+                  "lineNumber": 2690,
+                  "columnNumber": 48
+                },
+                {
+                  "functionName": "",
+                  "scriptId": "695",
+                  "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=f5c79159",
+                  "lineNumber": 3413,
+                  "columnNumber": 15
+                },
+                {
+                  "functionName": "onSubmit",
+                  "scriptId": "774",
+                  "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/message-log.tsx",
+                  "lineNumber": 194,
+                  "columnNumber": 24
+                },
+                {
+                  "functionName": "",
+                  "scriptId": "820",
+                  "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-4BFJKWC4.js?v=f5c79159",
+                  "lineNumber": 1464,
+                  "columnNumber": 14
+                }
+              ],
+              "parent": {
+                "description": "await",
+                "callFrames": [
+                  {
+                    "functionName": "onKeyDown",
+                    "scriptId": "774",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/message-log.tsx",
+                    "lineNumber": 833,
+                    "columnNumber": 47
+                  },
+                  {
+                    "functionName": "callCallback2",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 3673,
+                    "columnNumber": 21
+                  },
+                  {
+                    "functionName": "invokeGuardedCallbackDev",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 3698,
+                    "columnNumber": 23
+                  },
+                  {
+                    "functionName": "invokeGuardedCallback",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 3732,
+                    "columnNumber": 38
+                  },
+                  {
+                    "functionName": "invokeGuardedCallbackAndCatchFirstError",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 3735,
+                    "columnNumber": 32
+                  },
+                  {
+                    "functionName": "executeDispatch",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 7013,
+                    "columnNumber": 10
+                  },
+                  {
+                    "functionName": "processDispatchQueueItemsInOrder",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 7033,
+                    "columnNumber": 14
+                  },
+                  {
+                    "functionName": "processDispatchQueue",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 7042,
+                    "columnNumber": 12
+                  },
+                  {
+                    "functionName": "dispatchEventsForPlugins",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 7050,
+                    "columnNumber": 10
+                  },
+                  {
+                    "functionName": "",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 7173,
+                    "columnNumber": 19
+                  },
+                  {
+                    "functionName": "batchedUpdates$1",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 18912,
+                    "columnNumber": 19
+                  },
+                  {
+                    "functionName": "batchedUpdates",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 3578,
+                    "columnNumber": 19
+                  },
+                  {
+                    "functionName": "dispatchEventForPluginEventSystem",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 7172,
+                    "columnNumber": 10
+                  },
+                  {
+                    "functionName": "dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 5477,
+                    "columnNumber": 12
+                  },
+                  {
+                    "functionName": "dispatchEvent",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 5471,
+                    "columnNumber": 12
+                  },
+                  {
+                    "functionName": "dispatchDiscreteEvent",
+                    "scriptId": "690",
+                    "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=f5c79159",
+                    "lineNumber": 5448,
+                    "columnNumber": 12
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "_priority": "High",
+        "_resourceType": "fetch",
+        "cache": {},
+        "connection": "5000",
+        "request": {
+          "method": "POST",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/messages",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Content-Length",
+              "value": "78"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000"
+            },
+            {
+              "name": "Origin",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/dashboard?section=chat"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Sec-GPC",
+              "value": "1"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Brave\";v=\"138\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"macOS\""
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": 924,
+          "bodySize": 78,
+          "postData": {
+            "mimeType": "application/json",
+            "text": "{\"content\":\"hey\",\"sender\":\"Anonymous\",\"userId\":\"user_1751071509329_mrkw2z95z\"}"
+          }
+        },
+        "response": {
+          "status": 400,
+          "statusText": "Bad Request",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Content-Length",
+              "value": "34"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "Date",
+              "value": "Thu, 17 Jul 2025 20:47:50 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"22-H+sGByDlZSO/ZDJ3ZUzFoaNaB5A\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 34,
+            "mimeType": "application/json",
+            "compression": 0
+          },
+          "redirectURL": "",
+          "headersSize": 392,
+          "bodySize": 34,
+          "_transferSize": 426,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "34.82.58.13",
+        "startedDateTime": "2025-07-17T20:47:50.025Z",
+        "time": 762.1069999926426,
+        "timings": {
+          "blocked": 5.354000012448058,
+          "dns": 0.007000000000000006,
+          "ssl": 186.988,
+          "connect": 262.211,
+          "send": 0.1279999999999859,
+          "wait": 494.15699999742395,
+          "receive": 0.24999998277053237,
+          "_blocked_queueing": 5.0660000124480575,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      }
+    ]
+  }
+}

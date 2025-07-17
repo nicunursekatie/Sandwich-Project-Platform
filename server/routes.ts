@@ -6762,7 +6762,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     isAuthenticated,
     async (req, res) => {
       try {
+        console.log("=== POST /api/conversations/:id/messages ===");
+        console.log("Request params:", req.params);
+        console.log("Request body:", req.body);
+        
         const user = (req as any).user;
+        console.log("User:", user ? { id: user.id, email: user.email } : "none");
+        
         if (!user?.id) {
           return res.status(401).json({ message: "Unauthorized" });
         }
@@ -6770,7 +6776,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const conversationId = parseInt(req.params.id);
         const { content } = req.body;
 
+        console.log("Conversation ID:", conversationId);
+        console.log("Content:", content);
+
         if (!content || !content.trim()) {
+          console.log("ERROR: No content provided");
           return res
             .status(400)
             .json({ message: "Message content is required" });
