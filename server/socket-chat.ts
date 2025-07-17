@@ -49,6 +49,16 @@ export function setupSocketChat(httpServer: HttpServer) {
         
         console.log(`User ${userName} (${userId}) joined channel: ${channel}`);
         
+        // Load and send message history (latest 50 messages in reverse chronological order)
+        try {
+          const messageHistory = await storage.getChatMessages(channel, 50);
+          // Reverse to send oldest first
+          socket.emit("message-history", messageHistory.reverse());
+        } catch (error) {
+          console.error("Error loading message history:", error);
+          socket.emit("message-history", []);
+        }
+        
         // Send confirmation
         socket.emit("joined-channel", { channel, userName });
       } catch (error) {
@@ -66,19 +76,27 @@ export function setupSocketChat(httpServer: HttpServer) {
           return;
         }
 
+        // Save message to database
+        const savedMessage = await storage.createChatMessage({
+          channel,
+          userId: user.id,
+          userName: user.userName,
+          content
+        });
+
         const message: ChatMessage = {
-          id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          id: savedMessage.id.toString(),
           userId: user.id,
           userName: user.userName,
           content,
-          timestamp: new Date(),
+          timestamp: savedMessage.createdAt,
           channel
         };
 
         // Broadcast to all users in the channel
         io.to(channel).emit("new-message", message);
         
-        console.log(`Message sent to ${channel} by ${user.userName}: ${content}`);
+        console.log(`Message saved and sent to ${channel} by ${user.userName}: ${content}`);
       } catch (error) {
         console.error("Error sending message:", error);
         socket.emit("error", { message: "Failed to send message" });

@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, suggestions, suggestionResponses,
+  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, suggestions, suggestionResponses, chatMessages,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -1575,5 +1575,33 @@ export class DatabaseStorage implements IStorage {
       console.error('Error deleting conversation message:', error);
       return false;
     }
+  }
+
+  // Chat message methods for Socket.IO
+  async createChatMessage(data: { channel: string; userId: string; userName: string; content: string }): Promise<any> {
+    const [message] = await db
+      .insert(chatMessages)
+      .values({
+        channel: data.channel,
+        userId: data.userId,
+        userName: data.userName,
+        content: data.content,
+        createdAt: new Date()
+      })
+      .returning();
+    return message;
+  }
+
+  async getChatMessages(channel: string, limit: number = 50): Promise<any[]> {
+    return await db
+      .select()
+      .from(chatMessages)
+      .where(eq(chatMessages.channel, channel))
+      .orderBy(desc(chatMessages.createdAt))
+      .limit(limit);
+  }
+
+  async deleteChatMessage(id: number): Promise<void> {
+    await db.delete(chatMessages).where(eq(chatMessages.id, id));
   }
 }

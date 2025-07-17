@@ -986,6 +986,28 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.getConversationParticipants(conversationId)
     );
   }
+
+  // Chat message methods for Socket.IO
+  async createChatMessage(data: { channel: string; userId: string; userName: string; content: string }) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createChatMessage(data),
+      () => this.fallbackStorage.createChatMessage(data)
+    );
+  }
+
+  async getChatMessages(channel: string, limit?: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getChatMessages(channel, limit),
+      () => this.fallbackStorage.getChatMessages(channel, limit)
+    );
+  }
+
+  async deleteChatMessage(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.deleteChatMessage(id),
+      () => this.fallbackStorage.deleteChatMessage(id)
+    );
+  }
 }
 
 export const storage = new StorageWrapper();

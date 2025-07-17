@@ -214,6 +214,11 @@ export interface IStorage {
   addProjectAssignment(assignment: { projectId: number; userId: string; role: string }): Promise<any>;
   removeProjectAssignment(projectId: number, userId: string): Promise<boolean>;
   updateProjectAssignment(projectId: number, userId: string, updates: { role: string }): Promise<any>;
+
+  // Chat message methods for Socket.IO
+  createChatMessage(data: { channel: string; userId: string; userName: string; content: string }): Promise<any>;
+  getChatMessages(channel: string, limit?: number): Promise<any[]>;
+  deleteChatMessage(id: number): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -1359,6 +1364,23 @@ export class MemStorage implements IStorage {
   async getConversationParticipants(conversationId: number) {
     // TODO: Implement in memory storage
     return [];
+  }
+
+  // Chat message methods for Socket.IO (fallback implementations)
+  async createChatMessage(data: { channel: string; userId: string; userName: string; content: string }): Promise<any> {
+    return {
+      id: Date.now(),
+      ...data,
+      createdAt: new Date()
+    };
+  }
+
+  async getChatMessages(channel: string, limit?: number): Promise<any[]> {
+    return [];
+  }
+
+  async deleteChatMessage(id: number): Promise<void> {
+    // No-op for memory storage
   }
 }
 

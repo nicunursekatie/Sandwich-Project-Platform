@@ -75,6 +75,11 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
       setMessages(prev => [...prev, newMessage]);
     });
 
+    socketInstance.on("message-history", (history: ChatMessage[]) => {
+      console.log(`Loaded ${history.length} messages from history`);
+      setMessages(history);
+    });
+
     socketInstance.on("error", (error: { message: string }) => {
       toast({
         title: "Chat Error",
