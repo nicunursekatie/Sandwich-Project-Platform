@@ -26,6 +26,7 @@ interface User {
 interface SelectedUser {
   id: string;
   name: string;
+  isSystemUser: boolean;
 }
 
 export function ProjectAssigneeSelector({ 
@@ -37,8 +38,7 @@ export function ProjectAssigneeSelector({
   multiple = true
 }: ProjectAssigneeSelectorProps) {
   const [selectedUsers, setSelectedUsers] = useState<SelectedUser[]>([]);
-  const [textInput, setTextInput] = useState('');
-  const [mode, setMode] = useState<'user' | 'text'>('user');
+  const [customNameInput, setCustomNameInput] = useState('');
 
   // Fetch system users
   const { data: users = [] } = useQuery<User[]>({
@@ -50,7 +50,7 @@ export function ProjectAssigneeSelector({
   useEffect(() => {
     if (value && users.length > 0) {
       const names = value.split(',').map(name => name.trim()).filter(name => name.length > 0);
-      const matchedUsers: SelectedUser[] = [];
+      const allUsers: SelectedUser[] = [];
       
       names.forEach(name => {
         const matchedUser = users.find(user => {
@@ -60,33 +60,20 @@ export function ProjectAssigneeSelector({
         
         if (matchedUser) {
           const fullName = `${matchedUser.firstName || ''} ${matchedUser.lastName || ''}`.trim() || matchedUser.email;
-          matchedUsers.push({ id: matchedUser.id, name: fullName });
+          allUsers.push({ id: matchedUser.id, name: fullName, isSystemUser: true });
+        } else {
+          // Add as custom name
+          allUsers.push({ id: `custom_${Date.now()}_${Math.random()}`, name, isSystemUser: false });
         }
       });
       
-      if (matchedUsers.length > 0) {
-        setSelectedUsers(matchedUsers);
-        setMode('user');
-      } else {
-        // No user matches, treat as custom text
-        setTextInput(value);
-        setMode('text');
-      }
+      setSelectedUsers(allUsers);
     }
   }, [users, value]);
 
   const addUserById = (userId: string) => {
-    if (userId === 'custom') {
-      setMode('text');
-      return;
-    }
-    
     if (userId === 'none') {
-      // Clear all selections
-      setSelectedUsers([]);
-      setTextInput('');
-      onChange('', []);
-      return;
+      return; // Don't do anything for the placeholder option
     }
 
     const user = users.find(u => u.id === userId);
@@ -97,59 +84,56 @@ export function ProjectAssigneeSelector({
     // Check if already selected
     if (selectedUsers.some(u => u.id === user.id)) return;
 
-    const updatedUsers = [...selectedUsers, { id: user.id, name: fullName }];
+    const updatedUsers = [...selectedUsers, { id: user.id, name: fullName, isSystemUser: true }];
     setSelectedUsers(updatedUsers);
     
     // Update parent
-    const names = updatedUsers.map(u => u.name).join(', ');
-    const userIds = updatedUsers.map(u => u.id);
-    onChange(names, userIds);
+    updateParent(updatedUsers);
+  };
+
+  const addCustomName = () => {
+    if (!customNameInput.trim()) return;
+    
+    // Check if already exists
+    if (selectedUsers.some(u => u.name.toLowerCase() === customNameInput.trim().toLowerCase())) {
+      setCustomNameInput('');
+      return;
+    }
+
+    const customUser: SelectedUser = {
+      id: `custom_${Date.now()}_${Math.random()}`,
+      name: customNameInput.trim(),
+      isSystemUser: false
+    };
+
+    const updatedUsers = [...selectedUsers, customUser];
+    setSelectedUsers(updatedUsers);
+    setCustomNameInput('');
+    
+    // Update parent
+    updateParent(updatedUsers);
+  };
+
+  const updateParent = (users: SelectedUser[]) => {
+    const names = users.map(u => u.name).join(', ');
+    const systemUserIds = users.filter(u => u.isSystemUser).map(u => u.id);
+    onChange(names, systemUserIds);
   };
 
   const removeUser = (userId: string) => {
     const updatedUsers = selectedUsers.filter(u => u.id !== userId);
     setSelectedUsers(updatedUsers);
-    
-    const names = updatedUsers.map(u => u.name).join(', ');
-    const userIds = updatedUsers.map(u => u.id);
-    onChange(names, userIds);
-  };
-
-  const handleTextChange = (newValue: string) => {
-    setTextInput(newValue);
-    onChange(newValue, []);
+    updateParent(updatedUsers);
   };
 
   return (
     <div className={className}>
       <Label className="mb-2 block">{label}</Label>
       
-      {/* Mode Toggle */}
-      <div className="flex gap-2 mb-3">
-        <Button
-          type="button"
-          variant={mode === 'user' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setMode('user')}
-          className="text-xs"
-        >
-          <Users className="w-3 h-3 mr-1" />
-          Team Members
-        </Button>
-        <Button
-          type="button"
-          variant={mode === 'text' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setMode('text')}
-          className="text-xs"
-        >
-          Custom Names
-        </Button>
-      </div>
-
-      {mode === 'user' ? (
-        <div className="space-y-3">
-          {/* User Selection Dropdown */}
+      <div className="space-y-4">
+        {/* System User Selection */}
+        <div>
+          <Label className="text-sm text-slate-600 mb-2 block">Add Team Members</Label>
           <Select value="none" onValueChange={addUserById}>
             <SelectTrigger>
               <SelectValue placeholder="+ Add team member" />
@@ -157,7 +141,7 @@ export function ProjectAssigneeSelector({
             <SelectContent>
               <SelectItem value="none">Select a team member...</SelectItem>
               {users
-                .filter(user => !selectedUsers.some(selected => selected.id === user.id))
+                .filter(user => !selectedUsers.some(selected => selected.id === user.id && selected.isSystemUser))
                 .map((user) => (
                   <SelectItem key={user.id} value={user.id}>
                     <div className="flex items-center gap-2">
@@ -170,45 +154,67 @@ export function ProjectAssigneeSelector({
                     </div>
                   </SelectItem>
                 ))}
-              <SelectItem value="custom">Custom name...</SelectItem>
             </SelectContent>
           </Select>
+        </div>
 
-          {/* Selected Users */}
-          {selectedUsers.length > 0 && (
-            <div className="space-y-2">
-              <Label className="text-sm text-slate-600">Assigned Members:</Label>
-              <div className="flex flex-wrap gap-2">
-                {selectedUsers.map((user) => (
-                  <Badge key={user.id} variant="default" className="flex items-center gap-1 px-3 py-1">
-                    <span>{user.name}</span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="h-4 w-4 p-0 ml-1 hover:bg-red-100"
-                      onClick={() => removeUser(user.id)}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </Badge>
-                ))}
-              </div>
+        {/* Custom Name Input */}
+        <div>
+          <Label className="text-sm text-slate-600 mb-2 block">Add Custom Names</Label>
+          <div className="flex gap-2">
+            <Input
+              value={customNameInput}
+              onChange={(e) => setCustomNameInput(e.target.value)}
+              placeholder="Enter custom name"
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  addCustomName();
+                }
+              }}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addCustomName}
+              disabled={!customNameInput.trim()}
+            >
+              <UserPlus className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* All Selected Users (System + Custom) */}
+        {selectedUsers.length > 0 && (
+          <div className="space-y-2">
+            <Label className="text-sm text-slate-600">Assigned:</Label>
+            <div className="flex flex-wrap gap-2">
+              {selectedUsers.map((user) => (
+                <Badge 
+                  key={user.id} 
+                  variant={user.isSystemUser ? "default" : "outline"} 
+                  className="flex items-center gap-1 px-3 py-1"
+                >
+                  <span>{user.name}</span>
+                  {user.isSystemUser && (
+                    <span className="text-xs opacity-75">(User)</span>
+                  )}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-4 w-4 p-0 ml-1 hover:bg-red-100"
+                    onClick={() => removeUser(user.id)}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </Badge>
+              ))}
             </div>
-          )}
-        </div>
-      ) : (
-        <div className="space-y-2">
-          <Input
-            value={textInput}
-            onChange={(e) => handleTextChange(e.target.value)}
-            placeholder="Enter names separated by commas"
-          />
-          <p className="text-xs text-slate-500">
-            Enter multiple names separated by commas (e.g., "John Smith, Jane Doe, Bob Wilson")
-          </p>
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
