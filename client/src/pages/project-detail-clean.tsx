@@ -757,11 +757,12 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
               </div>
               <div>
                 <Label htmlFor="edit-task-assignee">Assigned To</Label>
-                <Input
-                  id="edit-task-assignee"
-                  value={isEditingTask?.assigneeName || ''}
-                  onChange={(e) => setIsEditingTask(prev => prev ? { ...prev, assigneeName: e.target.value } : null)}
-                  placeholder="Assignee name"
+                <TaskAssigneeSelector
+                  value={isEditingTask?.assigneeId || ''}
+                  displayName={isEditingTask?.assigneeName || ''}
+                  onAssigneeChange={(assigneeId, assigneeName) => 
+                    setIsEditingTask(prev => prev ? { ...prev, assigneeId, assigneeName } : null)
+                  }
                 />
               </div>
               <div>
