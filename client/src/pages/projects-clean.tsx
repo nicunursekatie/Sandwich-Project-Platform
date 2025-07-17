@@ -653,7 +653,11 @@ export default function ProjectsClean() {
               <div>
                 <ProjectAssigneeSelector
                   value={newProject.assigneeName || ''}
-                  onChange={(value) => setNewProject(prev => ({ ...prev, assigneeName: value }))}
+                  onChange={(value, userIds) => setNewProject(prev => ({ 
+                    ...prev, 
+                    assigneeName: value,
+                    assigneeIds: userIds?.length ? userIds : undefined
+                  }))}
                   label="Assignee"
                   placeholder="Select or enter person responsible"
                 />
@@ -812,7 +816,11 @@ export default function ProjectsClean() {
               <div>
                 <ProjectAssigneeSelector
                   value={editingProject?.assigneeName || ''}
-                  onChange={(value) => setEditingProject(prev => prev ? { ...prev, assigneeName: value } : null)}
+                  onChange={(value, userIds) => setEditingProject(prev => prev ? { 
+                    ...prev, 
+                    assigneeName: value,
+                    assigneeIds: userIds?.length ? userIds : undefined
+                  } : null)}
                   label="Assignee"
                   placeholder="Select or enter person responsible"
                 />

@@ -692,7 +692,11 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
               <div>
                 <ProjectAssigneeSelector
                   value={editingProject?.assigneeName || ''}
-                  onChange={(value) => setEditingProject(prev => prev ? { ...prev, assigneeName: value } : null)}
+                  onChange={(value, userIds) => setEditingProject(prev => prev ? { 
+                    ...prev, 
+                    assigneeName: value,
+                    assigneeIds: userIds?.length ? userIds : undefined
+                  } : null)}
                   label="Assigned To"
                   placeholder="Select or enter person responsible"
                 />
