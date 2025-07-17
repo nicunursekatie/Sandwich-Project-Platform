@@ -154,10 +154,37 @@ export default function ChatHub() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-200px)] gap-4">
-      {/* Sidebar with Channel List */}
+    <div className="flex flex-col md:flex-row h-[calc(100vh-120px)] md:h-[calc(100vh-200px)] gap-2 md:gap-4">
+      {/* Mobile: Channel selection as horizontal tabs */}
+      <div className="md:hidden">
+        <div className="flex gap-1 p-2 bg-slate-50 rounded-lg overflow-x-auto">
+          {availableChannels.map((channel) => (
+            <Button
+              key={channel.value}
+              variant={activeChannel === channel.value ? "default" : "outline"}
+              size="sm"
+              className="flex items-center gap-2 whitespace-nowrap min-w-fit"
+              onClick={() => setActiveChannel(channel.value)}
+            >
+              <div className={`p-1 rounded ${channel.color}`}>
+                {channel.icon}
+              </div>
+              <span className="text-xs font-medium">
+                {channel.label.replace(" Chat", "")}
+              </span>
+              {channel.badge && (
+                <Badge variant="secondary" className="text-xs h-4 px-1">
+                  {channel.badge}
+                </Badge>
+              )}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: Sidebar with Channel List */}
       <div
-        className={`${sidebarCollapsed ? "w-16" : "w-80"} transition-all duration-300 flex-shrink-0`}
+        className={`hidden md:block ${sidebarCollapsed ? "w-16" : "w-80"} transition-all duration-300 flex-shrink-0`}
       >
         <Card className="h-full">
           <CardHeader className="pb-3">
@@ -223,15 +250,30 @@ export default function ChatHub() {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1">
-        <Card className="h-full">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-sub-heading">
-              {availableChannels.find((ch) => ch.value === activeChannel)
-                ?.label || "Chat"}
-            </CardTitle>
+      <div className="flex-1 min-h-0">
+        <Card className="h-full flex flex-col">
+          {/* Mobile Header with back button and channel name */}
+          <CardHeader className="pb-3 flex-shrink-0">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg font-sub-heading flex items-center gap-2">
+                <Hash className="h-5 w-5 text-[#236383]" />
+                {availableChannels.find((ch) => ch.value === activeChannel)
+                  ?.label || "Select a channel"}
+              </CardTitle>
+              <div className="flex items-center gap-2">
+                {/* Mobile collapse indicator */}
+                <Badge variant="outline" className="md:hidden text-xs">
+                  {availableChannels.length} channels
+                </Badge>
+              </div>
+            </div>
+            {activeChannel && (
+              <p className="text-sm text-muted-foreground">
+                {availableChannels.find((ch) => ch.value === activeChannel)?.description}
+              </p>
+            )}
           </CardHeader>
-          <CardContent className="p-0 h-[calc(100%-80px)]">
+          <CardContent className="p-0 flex-1 min-h-0 overflow-hidden">
             {renderActiveChannel()}
           </CardContent>
         </Card>

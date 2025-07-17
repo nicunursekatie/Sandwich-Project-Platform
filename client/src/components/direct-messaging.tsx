@@ -283,46 +283,170 @@ export default function DirectMessaging() {
   }, {});
 
   return (
-    <div className="h-full max-h-screen flex flex-col lg:flex-row">
-      {/* User Selection Sidebar */}
-      <div className="w-full lg:w-1/3 lg:border-r bg-gray-50 dark:bg-gray-900 flex flex-col lg:min-h-0">
-        <div className="p-4 border-b border-slate-200">
-          <h2 className="font-sub-heading text-lg mb-3">Direct Messages</h2>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <Input
-              placeholder="Search users..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+    <div className="h-full max-h-screen flex flex-col md:flex-row">
+      {/* Mobile: Show either user list or conversation */}
+      {currentConversation && window.innerWidth < 768 ? (
+        // Mobile conversation view with back button
+        <div className="flex-1 flex flex-col">
+          <div className="p-4 border-b bg-white flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setCurrentConversation(null)}
+              className="h-8 w-8 p-0"
+            >
+              <MessageCircle className="h-4 w-4" />
+            </Button>
+            <Avatar className="w-8 h-8">
+              <AvatarFallback className="bg-teal-100 text-teal-700 text-xs">
+                {selectedUser?.firstName?.[0]}{selectedUser?.lastName?.[0]}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <h3 className="font-medium text-sm">{selectedUser?.firstName} {selectedUser?.lastName}</h3>
+              <p className="text-xs text-gray-500">{selectedUser?.role}</p>
+            </div>
+          </div>
+          {/* Mobile messages area */}
+          <div className="flex-1 flex flex-col min-h-0">
+            <ScrollArea className="flex-1 p-3">
+              {Object.entries(groupedMessages).map(([date, dateMessages]) => (
+                <div key={date} className="mb-4">
+                  <div className="text-center mb-3">
+                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                      {date}
+                    </span>
+                  </div>
+                  {dateMessages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`mb-3 flex ${msg.userId === (user as any)?.id ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div className={`max-w-[85%] ${msg.userId === (user as any)?.id ? 'order-2' : 'order-1'}`}>
+                        <div
+                          className={`rounded-2xl px-3 py-2 text-sm ${
+                            msg.userId === (user as any)?.id
+                              ? 'bg-[#236383] text-white rounded-br-md'
+                              : 'bg-gray-100 text-gray-900 rounded-bl-md'
+                          }`}
+                        >
+                          {editingMessage?.id === msg.id ? (
+                            <div className="space-y-2">
+                              <Textarea
+                                value={editedContent}
+                                onChange={(e) => setEditedContent(e.target.value)}
+                                className="min-h-[60px] text-sm"
+                              />
+                              <div className="flex gap-2">
+                                <Button size="sm" onClick={handleSaveEdit} className="h-7 text-xs">
+                                  Save
+                                </Button>
+                                <Button size="sm" variant="outline" onClick={handleCancelEdit} className="h-7 text-xs">
+                                  Cancel
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <p className="break-words">{msg.content}</p>
+                              {canEditMessage(msg) && (
+                                <div className="flex gap-1 mt-1">
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleEditMessage(msg)}
+                                    className="h-6 w-6 p-0 opacity-60 hover:opacity-100"
+                                  >
+                                    <Edit className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleDeleteMessage(msg.id)}
+                                    className="h-6 w-6 p-0 opacity-60 hover:opacity-100"
+                                  >
+                                    <Trash2 className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1 px-2">
+                          {formatTime(msg.createdAt)}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </ScrollArea>
+            
+            {/* Mobile message input */}
+            <div className="p-3 border-t bg-white">
+              <div className="flex gap-2">
+                <Textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                  placeholder="Type a message..."
+                  className="flex-1 min-h-[44px] max-h-[120px] resize-none text-sm"
+                  rows={1}
+                />
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={!message.trim() || sendMessageMutation.isPending}
+                  size="sm"
+                  className="h-[44px] w-[44px] p-0"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
-
-        <ScrollArea className="h-[500px]">
-          <div className="p-2">
-            {filteredUsers.length === 0 ? (
-              <div className="text-center py-8 text-slate-500">
-                <User className="w-12 h-12 mx-auto mb-2" />
-                <p>No users found</p>
+      ) : (
+        <>
+          {/* User Selection Sidebar */}
+          <div className="w-full md:w-1/3 md:border-r bg-gray-50 dark:bg-gray-900 flex flex-col md:min-h-0">
+            <div className="p-3 md:p-4 border-b border-slate-200">
+              <h2 className="font-sub-heading text-lg mb-3">Direct Messages</h2>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                <Input
+                  placeholder="Search users..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 text-sm"
+                />
               </div>
-            ) : (
-              filteredUsers.map((u) => (
-                <div
-                  key={u.id}
-                  onClick={() => setSelectedUser(u)}
-                  className={`flex items-center p-3 rounded-lg cursor-pointer hover:bg-slate-100 ${
-                    selectedUser?.id === u.id ? 'bg-teal-50 border border-teal-200' : ''
-                  }`}
-                >
-                  <Avatar className="w-10 h-10 mr-3">
-                    <AvatarFallback className="bg-teal-100 text-teal-700">
-                      {u.firstName?.[0]}{u.lastName?.[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm text-slate-900 truncate">
-                      {u.firstName} {u.lastName}
+            </div>
+
+            <ScrollArea className="flex-1 md:h-[500px]">
+              <div className="p-2">
+                {filteredUsers.length === 0 ? (
+                  <div className="text-center py-8 text-slate-500">
+                    <User className="w-12 h-12 mx-auto mb-2" />
+                    <p className="text-sm">No users found</p>
+                  </div>
+                ) : (
+                  filteredUsers.map((u) => (
+                    <div
+                      key={u.id}
+                      onClick={() => setSelectedUser(u)}
+                      className={`flex items-center p-3 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors ${
+                        selectedUser?.id === u.id ? 'bg-teal-50 border border-teal-200' : ''
+                      }`}
+                    >
+                      <Avatar className="w-10 h-10 mr-3">
+                        <AvatarFallback className="bg-teal-100 text-teal-700">
+                          {u.firstName?.[0]}{u.lastName?.[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm text-slate-900 truncate">
+                          {u.firstName} {u.lastName}
                     </p>
                     <p className="text-xs text-slate-500 truncate">{u.email}</p>
                     <Badge variant="secondary" className="text-xs mt-1">

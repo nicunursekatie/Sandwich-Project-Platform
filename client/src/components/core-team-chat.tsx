@@ -445,27 +445,29 @@ export default function CoreTeamChat() {
         </ScrollArea>
       </div>
 
-      <div className="border-t border-slate-200 p-4">
+      <div className="border-t border-slate-200 p-3 md:p-4">
         <div className="flex space-x-2">
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Send a secure message to the core team..."
-            className="flex-1"
+            className="flex-1 text-sm h-10"
             disabled={sendMessageMutation.isPending}
           />
           <Button
             onClick={handleSendMessage}
             disabled={!message.trim() || sendMessageMutation.isPending}
-            className="bg-orange-600 hover:bg-orange-700"
+            className="bg-orange-600 hover:bg-orange-700 h-10 w-10 p-0 md:w-auto md:px-4"
           >
             <Send className="w-4 h-4" />
+            <span className="hidden md:inline ml-2">Send</span>
           </Button>
         </div>
         <p className="text-xs text-slate-500 mt-2 flex items-center">
           <Shield className="w-3 h-3 mr-1" />
-          Messages in this channel are only visible to core team administrators
+          <span className="hidden sm:inline">Messages in this channel are only visible to core team administrators</span>
+          <span className="sm:hidden">Core team only</span>
         </p>
       </div>
     </div>
