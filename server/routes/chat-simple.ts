@@ -2,10 +2,11 @@ import { Router } from "express";
 import { db } from "../db";
 import { eq, desc, and } from "drizzle-orm";
 import { pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { Server as SocketServer } from "socket.io";
 
 const router = Router();
 
-// Simple chat messages table
+// Chat messages table for Socket.IO chat system
 export const chatMessages = pgTable("chat_messages", {
   id: serial("id").primaryKey(),
   channel: varchar("channel").notNull().default("general"), // 'general', 'core-team', 'host', 'driver', 'recipient'
@@ -14,6 +15,100 @@ export const chatMessages = pgTable("chat_messages", {
   content: text("content").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+// Socket.IO chat server setup
+export function setupChatSocket(io: SocketServer) {
+  io.on("connection", (socket) => {
+    console.log("User connected to chat:", socket.id);
+    
+    // Join a chat channel
+    socket.on("join-channel", (channel: string) => {
+      socket.join(channel);
+      console.log(`User ${socket.id} joined channel: ${channel}`);
+    });
+    
+    // Leave a chat channel
+    socket.on("leave-channel", (channel: string) => {
+      socket.leave(channel);
+      console.log(`User ${socket.id} left channel: ${channel}`);
+    });
+    
+    // Handle new chat message
+    socket.on("send-message", async (data: { channel: string; content: string; userId: string; userName: string }) => {
+      try {
+        const { channel, content, userId, userName } = data;
+        
+        // Save message to database
+        const [newMessage] = await db
+          .insert(chatMessages)
+          .values({
+            channel,
+            userId,
+            userName,
+            content: content.trim(),
+          })
+          .returning();
+        
+        // Broadcast to all users in the channel
+        io.to(channel).emit("new-message", {
+          id: newMessage.id,
+          channel: newMessage.channel,
+          userId: newMessage.userId,
+          userName: newMessage.userName,
+          content: newMessage.content,
+          createdAt: newMessage.createdAt,
+        });
+        
+        console.log(`Message sent to channel ${channel}: ${content}`);
+      } catch (error) {
+        console.error("Error sending chat message:", error);
+        socket.emit("error", { message: "Failed to send message" });
+      }
+    });
+    
+    // Handle message deletion
+    socket.on("delete-message", async (data: { messageId: number; userId: string; userRole: string }) => {
+      try {
+        const { messageId, userId, userRole } = data;
+        
+        // Get the message to check permissions
+        const [message] = await db
+          .select()
+          .from(chatMessages)
+          .where(eq(chatMessages.id, messageId));
+        
+        if (!message) {
+          socket.emit("error", { message: "Message not found" });
+          return;
+        }
+        
+        // Check if user can delete (author or admin)
+        const isAuthor = message.userId === userId;
+        const isAdmin = userRole === "admin" || userRole === "super_admin";
+        
+        if (!isAuthor && !isAdmin) {
+          socket.emit("error", { message: "Permission denied" });
+          return;
+        }
+        
+        // Delete the message
+        await db.delete(chatMessages).where(eq(chatMessages.id, messageId));
+        
+        // Broadcast deletion to all users in the channel
+        io.to(message.channel).emit("message-deleted", { messageId });
+        
+        console.log(`Message ${messageId} deleted from channel ${message.channel}`);
+      } catch (error) {
+        console.error("Error deleting chat message:", error);
+        socket.emit("error", { message: "Failed to delete message" });
+      }
+    });
+    
+    socket.on("disconnect", () => {
+      console.log("User disconnected from chat:", socket.id);
+    });
+  });
+}
 
 // Get messages for a channel
 router.get("/chat/:channel", async (req, res) => {
