@@ -318,7 +318,7 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
       </div>
 
       {/* Project Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Project Owner */}
         <Card className="border-l-4 border-l-blue-500">
           <CardHeader className="pb-3">
@@ -379,20 +379,7 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
           </CardContent>
         </Card>
 
-        {/* Budget */}
-        <Card className="border-l-4 border-l-purple-500">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-semibold text-purple-600 flex items-center gap-2">
-              <DollarSign className="h-5 w-5" />
-              BUDGET
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="text-2xl font-bold text-gray-900 mb-1">
-              {project.budget ? `$${project.budget.toLocaleString()}` : 'Not set'}
-            </div>
-          </CardContent>
-        </Card>
+
       </div>
 
       {/* Tasks Section */}
