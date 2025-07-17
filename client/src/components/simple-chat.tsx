@@ -1,22 +1,19 @@
-import { useState, useEffect, useRef } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { Send, Trash2, MessageCircle } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { io, Socket } from "socket.io-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useAuth } from "@/hooks/useAuth";
+import { Send, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { io, Socket } from "socket.io-client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ChatMessage {
-  id: number;
-  channel: string;
+  id: string;
   userId: string;
   userName: string;
   content: string;
-  createdAt: string;
+  timestamp: Date;
+  channel: string;
 }
 
 interface SimpleChatProps {
@@ -29,41 +26,48 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { toast } = useToast();
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   // Initialize Socket.IO connection
   useEffect(() => {
     if (!user) return;
 
-    // Configure Socket.IO for Replit environment
     const socketUrl = window.location.origin;
     
     const socketInstance = io(socketUrl, {
       path: "/socket.io/",
-      transports: ["polling"], // Use polling only for Replit compatibility
+      transports: ["polling"],
       autoConnect: true,
-      forceNew: false,
       timeout: 10000,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
     });
 
     setSocket(socketInstance);
 
     socketInstance.on("connect", () => {
       console.log("Connected to Socket.IO chat server");
+      setIsConnected(true);
       socketInstance.emit("join-channel", channel);
+    });
+
+    socketInstance.on("disconnect", () => {
+      console.log("Disconnected from Socket.IO chat server");
+      setIsConnected(false);
+    });
+
+    socketInstance.on("joined-channel", ({ channel: joinedChannel, userName }) => {
+      console.log(`Joined channel: ${joinedChannel} as ${userName}`);
     });
 
     socketInstance.on("new-message", (newMessage: ChatMessage) => {
       setMessages(prev => [...prev, newMessage]);
-    });
-
-    socketInstance.on("message-deleted", ({ messageId }: { messageId: number }) => {
-      setMessages(prev => prev.filter(msg => msg.id !== messageId));
     });
 
     socketInstance.on("error", (error: { message: string }) => {
@@ -80,136 +84,66 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
     };
   }, [user, channel, toast]);
 
-  // Fetch initial messages for this channel
-  const { isLoading } = useQuery<ChatMessage[]>({
-    queryKey: ["chat", channel],
-    queryFn: async () => {
-      const response = await apiRequest("GET", `/api/chat/${channel}`);
-      return response;
-    },
-    onSuccess: (data) => {
-      setMessages(data);
-    },
-    enabled: !!user,
-  });
+  const sendMessage = () => {
+    if (!socket || !message.trim() || !isConnected) return;
 
-  // Auto-scroll to bottom when new messages arrive
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    socket.emit("send-message", {
+      channel,
+      content: message.trim()
+    });
 
-  const handleSendMessage = () => {
-    if (message.trim() && socket && user) {
-      socket.emit("send-message", {
-        channel,
-        content: message.trim(),
-        userId: user.id,
-        userName: user.firstName || user.email || "Anonymous User"
-      });
-      setMessage("");
-    }
+    setMessage("");
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      sendMessage();
     }
-  };
-
-  const handleDeleteMessage = (messageId: number) => {
-    if (window.confirm("Are you sure you want to delete this message?") && socket && user) {
-      socket.emit("delete-message", {
-        messageId,
-        userId: user.id,
-        userRole: user.role
-      });
-    }
-  };
-
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
-  const canDeleteMessage = (messageUserId: string) => {
-    return (
-      messageUserId === user?.id ||
-      user?.role === "admin" ||
-      user?.role === "super_admin"
-    );
   };
 
   if (!user) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            {icon || <MessageCircle className="h-5 w-5" />}
-            {title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">
-            Please log in to participate in chat.
-          </p>
+      <Card className="h-full">
+        <CardContent className="flex items-center justify-center h-full">
+          <p className="text-muted-foreground">Please log in to access chat</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="h-[600px] flex flex-col">
-      <CardHeader className="flex-shrink-0">
-        <CardTitle className="flex items-center gap-2">
-          {icon || <MessageCircle className="h-5 w-5" />}
+    <Card className="h-full flex flex-col">
+      <CardHeader className="flex-shrink-0 pb-3">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          {icon}
           {title}
+          <span className={`ml-auto text-xs px-2 py-1 rounded ${
+            isConnected ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+          }`}>
+            {isConnected ? 'Connected' : 'Disconnected'}
+          </span>
         </CardTitle>
       </CardHeader>
       
-      <CardContent className="flex-1 flex flex-col gap-4 p-4">
+      <CardContent className="flex-1 flex flex-col p-4 min-h-0">
         {/* Messages area */}
-        <div className="flex-1 overflow-y-auto space-y-4 max-h-[400px]">
-          {isLoading ? (
-            <div className="text-center text-muted-foreground">
-              Loading messages...
-            </div>
-          ) : messages.length === 0 ? (
-            <div className="text-center text-muted-foreground">
+        <div className="flex-1 overflow-y-auto mb-4 space-y-3 min-h-0">
+          {messages.length === 0 ? (
+            <div className="text-center text-muted-foreground py-8">
               No messages yet. Start the conversation!
             </div>
           ) : (
             messages.map((msg) => (
-              <div key={msg.id} className="flex items-start gap-3 group">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="text-xs">
-                    {getInitials(msg.userName)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium text-sm">{msg.userName}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(msg.createdAt).toLocaleTimeString()}
-                    </span>
-                    {canDeleteMessage(msg.userId) && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => handleDeleteMessage(msg.id)}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    )}
-                  </div>
-                  <p className="text-sm whitespace-pre-wrap break-words">
-                    {msg.content}
-                  </p>
+              <div key={msg.id} className="flex flex-col space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">{msg.userName}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(msg.timestamp).toLocaleTimeString()}
+                  </span>
+                </div>
+                <div className="bg-muted p-3 rounded-lg">
+                  <p className="text-sm">{msg.content}</p>
                 </div>
               </div>
             ))
@@ -218,19 +152,19 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
         </div>
 
         {/* Message input */}
-        <div className="flex gap-2">
+        <div className="flex-shrink-0 flex gap-2">
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Type your message..."
-            disabled={!socket || !user}
+            placeholder={isConnected ? "Type your message..." : "Connecting..."}
+            disabled={!isConnected}
             className="flex-1"
           />
-          <Button
-            onClick={handleSendMessage}
-            disabled={!message.trim() || !socket || !user}
-            size="sm"
+          <Button 
+            onClick={sendMessage} 
+            disabled={!message.trim() || !isConnected}
+            size="icon"
           >
             <Send className="h-4 w-4" />
           </Button>
