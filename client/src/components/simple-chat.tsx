@@ -55,12 +55,6 @@ export default function SimpleChat({ channel, title, icon }: SimpleChatProps) {
 
     socketInstance.on("connect", () => {
       console.log("Connected to Socket.IO chat server");
-      // Send user info and join channel
-      socketInstance.emit("join", {
-        userId: user.id,
-        username: user.firstName || user.email || "User",
-        userPermissions: user.permissions || []
-      });
       socketInstance.emit("join-channel", channel);
     });
 

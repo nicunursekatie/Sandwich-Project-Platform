@@ -56,7 +56,13 @@ export function setupSocketChat(httpServer: HttpServer) {
     console.log(`Socket connected: ${socket.id}`);
 
     // Handle user joining
-    socket.on("join", async ({ userId, username, userPermissions }) => {
+    socket.on("join-channel", async (channel) => {
+      // Get user info from socket session/auth
+      const userId = socket.handshake.auth?.userId || `user_${socket.id}`;
+      const username = socket.handshake.auth?.username || "Guest";
+      const userPermissions = socket.handshake.auth?.permissions || [];
+      
+      try {
       try {
         // Determine which rooms user can access based on permissions
         const allowedRooms = [];
@@ -105,7 +111,7 @@ export function setupSocketChat(httpServer: HttpServer) {
     });
 
     // Handle sending messages
-    socket.on("send_message", async ({ room, content }) => {
+    socket.on("send-message", async ({ channel, content }) => {
       try {
         const user = activeUsers.get(socket.id);
         if (!user) {
@@ -113,8 +119,8 @@ export function setupSocketChat(httpServer: HttpServer) {
           return;
         }
 
-        if (!user.rooms.includes(room)) {
-          socket.emit("error", { message: "Not authorized for this room" });
+        if (!user.rooms.includes(channel)) {
+          socket.emit("error", { message: "Not authorized for this channel" });
           return;
         }
 
@@ -124,7 +130,7 @@ export function setupSocketChat(httpServer: HttpServer) {
           username: user.username,
           content,
           timestamp: new Date(),
-          room
+          room: channel
         };
 
         // Save message to database (simple storage)
@@ -133,7 +139,7 @@ export function setupSocketChat(httpServer: HttpServer) {
             senderId: user.id,
             content,
             contextType: 'chat_room',
-            contextId: room,
+            contextId: channel,
             senderEmail: null
           });
         } catch (dbError) {
@@ -141,10 +147,10 @@ export function setupSocketChat(httpServer: HttpServer) {
           // Continue anyway - don't break real-time chat
         }
 
-        // Broadcast to room
-        io.to(room).emit("new_message", message);
+        // Broadcast to channel
+        io.to(channel).emit("new-message", message);
 
-        console.log(`Message sent to ${room} by ${user.username}`);
+        console.log(`Message sent to ${channel} by ${user.username}`);
       } catch (error) {
         console.error("Error sending message:", error);
         socket.emit("error", { message: "Failed to send message" });
