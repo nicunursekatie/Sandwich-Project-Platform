@@ -446,11 +446,21 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                 </div>
               </div>
               <TaskAssigneeSelector
-                value={newTask.assigneeId}
-                displayName={newTask.assigneeName}
-                onAssigneeChange={(assigneeId, assigneeName) => 
-                  setNewTask({ ...newTask, assigneeId, assigneeName })
+                value={{
+                  assigneeIds: newTask.assigneeIds || [],
+                  assigneeNames: newTask.assigneeNames || []
+                }}
+                onChange={({ assigneeIds, assigneeNames }) => 
+                  setNewTask({ 
+                    ...newTask, 
+                    assigneeIds, 
+                    assigneeNames,
+                    // Keep backward compatibility
+                    assigneeId: assigneeIds?.[0],
+                    assigneeName: assigneeNames?.[0]
+                  })
                 }
+                multiple={true}
               />
               <div>
                 <Label htmlFor="task-estimated-hours">Estimated Hours</Label>
@@ -528,10 +538,22 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                 <CardContent>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 text-sm text-gray-600">
-                      {task.assigneeName && (
+                      {(task.assigneeNames?.length > 0 || task.assigneeName) && (
                         <div className="flex items-center gap-1">
                           <User className="h-4 w-4" />
-                          {task.assigneeName}
+                          <div className="flex flex-wrap gap-1">
+                            {task.assigneeNames?.length > 0 ? (
+                              task.assigneeNames.map((name, index) => (
+                                <Badge key={index} variant="outline" className="text-xs">
+                                  {name}
+                                </Badge>
+                              ))
+                            ) : task.assigneeName ? (
+                              <Badge variant="outline" className="text-xs">
+                                {task.assigneeName}
+                              </Badge>
+                            ) : null}
+                          </div>
                         </div>
                       )}
                       {task.dueDate && (
@@ -551,29 +573,39 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                       <MultiUserTaskCompletion 
                         taskId={task.id}
                         projectId={project.id}
-                        assigneeIds={task.assigneeId ? [task.assigneeId] : []}
-                        assigneeNames={task.assigneeName ? [task.assigneeName] : []}
+                        assigneeIds={task.assigneeIds?.length > 0 ? task.assigneeIds : (task.assigneeId ? [task.assigneeId] : [])}
+                        assigneeNames={task.assigneeNames?.length > 0 ? task.assigneeNames : (task.assigneeName ? [task.assigneeName] : [])}
                         currentUserId={user?.id}
                         currentUserName={user?.firstName || user?.displayName}
                         taskStatus={task.status}
                         onStatusChange={(isCompleted) => {
                           // Trigger congratulations when task is completed by someone else
-                          if (isCompleted && task.assigneeId && task.assigneeId !== user?.id) {
+                          const assigneeIds = task.assigneeIds?.length > 0 ? task.assigneeIds : (task.assigneeId ? [task.assigneeId] : []);
+                          const assigneeNames = task.assigneeNames?.length > 0 ? task.assigneeNames : (task.assigneeName ? [task.assigneeName] : []);
+                          if (isCompleted && assigneeIds.length > 0 && !assigneeIds.includes(user?.id || '')) {
                             toast({
                               title: "🎉 Task Completed!",
-                              description: `${task.assigneeName || 'Team member'} completed "${task.title}"`,
+                              description: `Team member completed "${task.title}"`,
                             });
                           }
                         }}
                       />
-                      {task.status === 'completed' && task.assigneeId && task.assigneeId !== user?.id && (
-                        <SendKudosButton 
-                          recipientId={task.assigneeId}
-                          recipientName={task.assigneeName || 'Unknown'}
-                          contextType="task"
-                          contextId={task.id.toString()}
-                          entityName={task.title}
-                        />
+                      {task.status === 'completed' && (
+                        <div className="flex gap-1">
+                          {(task.assigneeIds?.length > 0 ? task.assigneeIds : (task.assigneeId ? [task.assigneeId] : [])).map((assigneeId, index) => {
+                            const assigneeName = (task.assigneeNames?.length > 0 ? task.assigneeNames : (task.assigneeName ? [task.assigneeName] : []))[index] || 'Unknown';
+                            return assigneeId !== user?.id ? (
+                              <SendKudosButton 
+                                key={index}
+                                recipientId={assigneeId}
+                                recipientName={assigneeName}
+                                contextType="task"
+                                contextId={task.id.toString()}
+                                entityName={task.title}
+                              />
+                            ) : null;
+                          })}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -759,13 +791,20 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                 <Label htmlFor="edit-task-assignee">Assigned To</Label>
                 <TaskAssigneeSelector
                   value={{
-                    assigneeId: isEditingTask?.assigneeId,
-                    assigneeName: isEditingTask?.assigneeName
+                    assigneeIds: isEditingTask?.assigneeIds || (isEditingTask?.assigneeId ? [isEditingTask.assigneeId] : []),
+                    assigneeNames: isEditingTask?.assigneeNames || (isEditingTask?.assigneeName ? [isEditingTask.assigneeName] : [])
                   }}
-                  onChange={({ assigneeId, assigneeName }) => 
-                    setIsEditingTask(prev => prev ? { ...prev, assigneeId, assigneeName } : null)
+                  onChange={({ assigneeIds, assigneeNames }) => 
+                    setIsEditingTask(prev => prev ? { 
+                      ...prev, 
+                      assigneeIds, 
+                      assigneeNames,
+                      // Keep backward compatibility with single assignee fields
+                      assigneeId: assigneeIds?.[0],
+                      assigneeName: assigneeNames?.[0]
+                    } : null)
                   }
-                  multiple={false}
+                  multiple={true}
                 />
               </div>
               <div>
