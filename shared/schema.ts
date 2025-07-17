@@ -55,6 +55,7 @@ export const chatMessages = pgTable("chat_messages", {
   userId: varchar("user_id").notNull(),
   userName: varchar("user_name").notNull(),
   content: text("content").notNull(),
+  editedAt: timestamp("edited_at"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

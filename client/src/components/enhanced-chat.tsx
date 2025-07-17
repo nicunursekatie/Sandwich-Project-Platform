@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Send, Users, Hash, Shield, Crown } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
 import io, { Socket } from "socket.io-client";
 import LiveChatHub from "./live-chat-hub";
+import ChatMessageComponent from "./chat-message";
 
 interface ChatMessage {
   id: string;
@@ -16,6 +18,7 @@ interface ChatMessage {
   content: string;
   timestamp: Date;
   channel: string;
+  edited?: boolean;
 }
 
 interface ChannelInfo {
@@ -80,6 +83,7 @@ export default function EnhancedChat() {
   const [isJoined, setIsJoined] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
+  const { toast } = useToast();
 
   const channelInfo = CHANNEL_INFO[selectedChannel];
 
@@ -132,6 +136,36 @@ export default function EnhancedChat() {
       setMessages(formattedHistory);
     });
 
+    socketInstance.on("message-edited", (editedMessage: ChatMessage) => {
+      if (editedMessage.channel === selectedChannel) {
+        setMessages(prev => prev.map(msg => 
+          msg.id === editedMessage.id 
+            ? { ...editedMessage, timestamp: new Date(editedMessage.timestamp) }
+            : msg
+        ));
+        toast({
+          title: "Message edited",
+          description: "The message has been updated.",
+        });
+      }
+    });
+
+    socketInstance.on("message-deleted", ({ messageId, deletedBy }) => {
+      setMessages(prev => prev.filter(msg => msg.id !== messageId));
+      toast({
+        title: "Message deleted",
+        description: `Message was deleted by ${deletedBy}`,
+      });
+    });
+
+    socketInstance.on("error", ({ message }) => {
+      toast({
+        title: "Error",
+        description: message,
+        variant: "destructive",
+      });
+    });
+
     return () => {
       socketInstance.disconnect();
     };
@@ -171,6 +205,25 @@ export default function EnhancedChat() {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
+    }
+  };
+
+  const handleEditMessage = (messageId: string, newContent: string) => {
+    if (!socket) return;
+    
+    socket.emit("edit-message", {
+      messageId: parseInt(messageId),
+      newContent
+    });
+  };
+
+  const handleDeleteMessage = (messageId: string) => {
+    if (!socket) return;
+    
+    if (window.confirm("Are you sure you want to delete this message?")) {
+      socket.emit("delete-message", {
+        messageId: parseInt(messageId)
+      });
     }
   };
 
@@ -244,31 +297,17 @@ export default function EnhancedChat() {
               </div>
             </div>
           ) : (
-            <>
+            <div className="space-y-1">
               {messages.map((message) => (
-                <div key={message.id} className="flex space-x-3">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-[#236383] rounded-full flex items-center justify-center text-white text-sm font-medium">
-                      {message.userName.charAt(0).toUpperCase()}
-                    </div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                        {message.userName}
-                      </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {formatMessageTime(message.timestamp)}
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-700 dark:text-gray-300 break-words">
-                      {message.content}
-                    </div>
-                  </div>
-                </div>
+                <ChatMessageComponent
+                  key={message.id}
+                  message={message}
+                  onEdit={handleEditMessage}
+                  onDelete={handleDeleteMessage}
+                />
               ))}
               <div ref={messagesEndRef} />
-            </>
+            </div>
           )}
         </div>
 

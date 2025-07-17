@@ -218,6 +218,7 @@ export interface IStorage {
   // Chat message methods for Socket.IO
   createChatMessage(data: { channel: string; userId: string; userName: string; content: string }): Promise<any>;
   getChatMessages(channel: string, limit?: number): Promise<any[]>;
+  updateChatMessage(id: number, updates: { content: string }): Promise<void>;
   deleteChatMessage(id: number): Promise<void>;
 }
 
@@ -1373,6 +1374,11 @@ export class MemStorage implements IStorage {
       ...data,
       createdAt: new Date()
     };
+  }
+
+  async updateChatMessage(id: number, updates: { content: string }): Promise<void> {
+    // In-memory storage doesn't persist anyway, so just log
+    console.log(`[MemStorage] Updated chat message ${id} with content: ${updates.content}`);
   }
 
   async getChatMessages(channel: string, limit?: number): Promise<any[]> {

@@ -1601,6 +1601,16 @@ export class DatabaseStorage implements IStorage {
       .limit(limit);
   }
 
+  async updateChatMessage(id: number, updates: { content: string }): Promise<void> {
+    await db
+      .update(chatMessages)
+      .set({ 
+        content: updates.content,
+        editedAt: new Date()
+      })
+      .where(eq(chatMessages.id, id));
+  }
+
   async deleteChatMessage(id: number): Promise<void> {
     await db.delete(chatMessages).where(eq(chatMessages.id, id));
   }

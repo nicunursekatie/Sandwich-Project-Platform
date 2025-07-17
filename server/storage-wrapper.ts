@@ -1002,6 +1002,13 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async updateChatMessage(id: number, updates: { content: string }) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.updateChatMessage(id, updates),
+      () => this.fallbackStorage.updateChatMessage(id, updates)
+    );
+  }
+
   async deleteChatMessage(id: number) {
     return this.executeWithFallback(
       () => this.primaryStorage.deleteChatMessage(id),

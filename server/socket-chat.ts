@@ -107,6 +107,92 @@ export function setupSocketChat(httpServer: HttpServer) {
       }
     });
 
+    // Handle message editing
+    socket.on("edit-message", async ({ messageId, newContent }: { messageId: number; newContent: string }) => {
+      try {
+        const user = activeUsers.get(socket.id);
+        if (!user) {
+          socket.emit("error", { message: "User not found" });
+          return;
+        }
+
+        // Get the message to verify ownership
+        const messages = await storage.getChatMessages("", 1000); // Get all messages to find the specific one
+        const messageToEdit = messages.find(msg => msg.id === messageId);
+        
+        if (!messageToEdit) {
+          socket.emit("error", { message: "Message not found" });
+          return;
+        }
+
+        if (messageToEdit.userId !== user.id) {
+          socket.emit("error", { message: "You can only edit your own messages" });
+          return;
+        }
+
+        // Update the message in database
+        await storage.updateChatMessage(messageId, { content: newContent });
+
+        const updatedMessage: ChatMessage = {
+          id: messageId.toString(),
+          userId: user.id,
+          userName: user.userName,
+          content: newContent,
+          timestamp: new Date(),
+          channel: messageToEdit.channel,
+          edited: true
+        };
+
+        // Broadcast the updated message to all users in the channel
+        io.to(messageToEdit.channel).emit("message-edited", updatedMessage);
+        
+        console.log(`Message ${messageId} edited by ${user.userName} in ${messageToEdit.channel}`);
+      } catch (error) {
+        console.error("Error editing message:", error);
+        socket.emit("error", { message: "Failed to edit message" });
+      }
+    });
+
+    // Handle message deletion
+    socket.on("delete-message", async ({ messageId }: { messageId: number }) => {
+      try {
+        const user = activeUsers.get(socket.id);
+        if (!user) {
+          socket.emit("error", { message: "User not found" });
+          return;
+        }
+
+        // Get the message to verify ownership or admin rights
+        const messages = await storage.getChatMessages("", 1000); // Get all messages to find the specific one
+        const messageToDelete = messages.find(msg => msg.id === messageId);
+        
+        if (!messageToDelete) {
+          socket.emit("error", { message: "Message not found" });
+          return;
+        }
+
+        // Allow deletion if user owns the message or is admin
+        const isOwner = messageToDelete.userId === user.id;
+        const isAdmin = user.userName.includes("admin") || user.id === "admin@sandwich.project"; // Simple admin check
+        
+        if (!isOwner && !isAdmin) {
+          socket.emit("error", { message: "You can only delete your own messages" });
+          return;
+        }
+
+        // Delete the message from database
+        await storage.deleteChatMessage(messageId);
+
+        // Broadcast the deletion to all users in the channel
+        io.to(messageToDelete.channel).emit("message-deleted", { messageId, deletedBy: user.userName });
+        
+        console.log(`Message ${messageId} deleted by ${user.userName} in ${messageToDelete.channel}`);
+      } catch (error) {
+        console.error("Error deleting message:", error);
+        socket.emit("error", { message: "Failed to delete message" });
+      }
+    });
+
     // Handle leaving a channel
     socket.on("leave-channel", (data: { channel: string; userId: string; userName: string }) => {
       const { channel, userName } = data;
