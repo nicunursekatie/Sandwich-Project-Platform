@@ -117,8 +117,15 @@ export function setupSocketChat(httpServer: HttpServer) {
         }
 
         // Get the message to verify ownership
-        const messages = await storage.getChatMessages("", 1000); // Get all messages to find the specific one
-        const messageToEdit = messages.find(msg => msg.id === messageId);
+        // Get all messages from all channels to find the specific one
+        const allChannels = ["general", "core-team", "committee", "host", "driver", "recipient"];
+        let messageToEdit = null;
+        
+        for (const channel of allChannels) {
+          const channelMessages = await storage.getChatMessages(channel, 1000);
+          messageToEdit = channelMessages.find(msg => msg.id === messageId || msg.id === messageId.toString());
+          if (messageToEdit) break;
+        }
         
         if (!messageToEdit) {
           socket.emit("error", { message: "Message not found" });
@@ -163,8 +170,15 @@ export function setupSocketChat(httpServer: HttpServer) {
         }
 
         // Get the message to verify ownership or admin rights
-        const messages = await storage.getChatMessages("", 1000); // Get all messages to find the specific one
-        const messageToDelete = messages.find(msg => msg.id === messageId);
+        // Get all messages from all channels to find the specific one
+        const allChannels = ["general", "core-team", "committee", "host", "driver", "recipient"];
+        let messageToDelete = null;
+        
+        for (const channel of allChannels) {
+          const channelMessages = await storage.getChatMessages(channel, 1000);
+          messageToDelete = channelMessages.find(msg => msg.id === messageId || msg.id === messageId.toString());
+          if (messageToDelete) break;
+        }
         
         if (!messageToDelete) {
           socket.emit("error", { message: "Message not found" });
@@ -173,7 +187,10 @@ export function setupSocketChat(httpServer: HttpServer) {
 
         // Allow deletion if user owns the message or is admin
         const isOwner = messageToDelete.userId === user.id;
-        const isAdmin = user.userName.includes("admin") || user.id === "admin@sandwich.project"; // Simple admin check
+        // Check for admin permissions - expand this based on your auth system
+        const isAdmin = user.id === "admin@sandwich.project" || 
+                       user.userName.toLowerCase().includes("admin") ||
+                       user.id === "user_1751071509329_mrkw2z95z"; // Katie's admin account
         
         if (!isOwner && !isAdmin) {
           socket.emit("error", { message: "You can only delete your own messages" });
