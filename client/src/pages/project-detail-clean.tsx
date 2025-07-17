@@ -328,7 +328,7 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <div className="text-2xl font-bold text-gray-900 mb-1">
+            <div className="text-lg font-bold text-gray-900 mb-1">
               {project.assigneeName || 'Not assigned'}
             </div>
             <div className="text-sm text-gray-500">
@@ -346,7 +346,7 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <div className="text-2xl font-bold text-gray-900 mb-1">
+            <div className="text-lg font-bold text-gray-900 mb-1">
               {project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'Not set'}
             </div>
             {project.dueDate && (
