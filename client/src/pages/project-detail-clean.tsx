@@ -290,10 +290,16 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
             size="sm"
             onClick={() => {
               // Navigate back to projects section in dashboard
-              const url = new URL(window.location.href);
-              url.searchParams.set('section', 'projects');
-              window.history.pushState({}, '', url.toString());
               setLocation('/dashboard?section=projects');
+              
+              // Force dashboard section change immediately
+              setTimeout(() => {
+                if ((window as any).dashboardSetActiveSection) {
+                  (window as any).dashboardSetActiveSection('projects');
+                }
+                // Also trigger a page refresh to ensure proper navigation
+                window.location.href = '/dashboard?section=projects';
+              }, 100);
             }}
             className="flex items-center gap-2"
           >
