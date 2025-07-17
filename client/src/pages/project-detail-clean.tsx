@@ -10,6 +10,8 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { formatDistanceToNow } from "date-fns";
@@ -73,6 +75,8 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
   const { toast } = useToast();
   const { user } = useAuth();
   const [isAddingTask, setIsAddingTask] = useState(false);
+  const [isEditingProject, setIsEditingProject] = useState(false);
+  const [isEditingTask, setIsEditingTask] = useState<Task | null>(null);
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
@@ -82,6 +86,7 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
     assigneeName: '',
     estimatedHours: 0
   });
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
 
   // Fetch project details
   const { data: project, isLoading: isProjectLoading } = useQuery<Project>({
@@ -101,6 +106,27 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
       return Array.isArray(response) ? response : [];
     },
     enabled: !!id,
+  });
+
+  // Project edit mutation
+  const editProjectMutation = useMutation({
+    mutationFn: async (projectData: Partial<Project>) => {
+      return await apiRequest('PATCH', `/api/projects/${id}`, projectData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/projects', id] });
+      queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      setIsEditingProject(false);
+      setEditingProject(null);
+      toast({ description: "Project updated successfully" });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error updating project",
+        description: error.message || "Failed to update project",
+        variant: "destructive"
+      });
+    }
   });
 
   // Add task mutation
@@ -130,6 +156,26 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
         variant: "destructive" 
       });
     },
+  });
+
+  // Edit task mutation
+  const editTaskMutation = useMutation({
+    mutationFn: async ({ taskId, taskData }: { taskId: number; taskData: Partial<Task> }) => {
+      return await apiRequest('PATCH', `/api/tasks/${taskId}`, taskData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/projects', id, 'tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/projects', id] });
+      setIsEditingTask(null);
+      toast({ description: "Task updated successfully" });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error updating task",
+        description: error.message || "Failed to update task",
+        variant: "destructive"
+      });
+    }
   });
 
   // Delete task mutation
@@ -162,6 +208,34 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
   const handleDeleteTask = (taskId: number) => {
     if (window.confirm("Are you sure you want to delete this task?")) {
       deleteTaskMutation.mutate(taskId);
+    }
+  };
+
+  const handleEditProject = () => {
+    if (project) {
+      setEditingProject(project);
+      setIsEditingProject(true);
+    }
+  };
+
+  const handleUpdateProject = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingProject) {
+      editProjectMutation.mutate(editingProject);
+    }
+  };
+
+  const handleEditTask = (task: Task) => {
+    setIsEditingTask(task);
+  };
+
+  const handleUpdateTask = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isEditingTask) {
+      editTaskMutation.mutate({ 
+        taskId: isEditingTask.id, 
+        taskData: isEditingTask 
+      });
     }
   };
 
@@ -225,6 +299,15 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleEditProject}
+            className="flex items-center gap-2"
+          >
+            <Edit2 className="h-4 w-4" />
+            Edit Project
+          </Button>
           <Badge className={getStatusColor(project.status)}>
             {project.status?.replace('_', ' ')}
           </Badge>
@@ -439,6 +522,14 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => handleEditTask(task)}
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => handleDeleteTask(task.id)}
                         className="text-red-600 hover:text-red-800"
                       >
@@ -470,14 +561,31 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                       )}
                     </div>
                     <div className="flex items-center gap-2">
-                      <MultiUserTaskCompletion taskId={task.id} />
-                      {task.status === 'completed' && task.assigneeId && (
+                      <MultiUserTaskCompletion 
+                        taskId={task.id}
+                        projectId={project.id}
+                        assigneeIds={task.assigneeId ? [task.assigneeId] : []}
+                        assigneeNames={task.assigneeName ? [task.assigneeName] : []}
+                        currentUserId={user?.id}
+                        currentUserName={user?.firstName || user?.displayName}
+                        taskStatus={task.status}
+                        onStatusChange={(isCompleted) => {
+                          // Trigger congratulations when task is completed by someone else
+                          if (isCompleted && task.assigneeId && task.assigneeId !== user?.id) {
+                            toast({
+                              title: "🎉 Task Completed!",
+                              description: `${task.assigneeName || 'Team member'} completed "${task.title}"`,
+                            });
+                          }
+                        }}
+                      />
+                      {task.status === 'completed' && task.assigneeId && task.assigneeId !== user?.id && (
                         <SendKudosButton 
                           recipientId={task.assigneeId}
                           recipientName={task.assigneeName || 'Unknown'}
                           contextType="task"
-                          contextId={task.id}
-                          contextTitle={task.title}
+                          contextId={task.id.toString()}
+                          entityName={task.title}
                         />
                       )}
                     </div>
@@ -488,6 +596,218 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
           )}
         </div>
       </div>
+
+      {/* Project Edit Dialog */}
+      <Dialog open={isEditingProject} onOpenChange={setIsEditingProject}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Project</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleUpdateProject} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="md:col-span-2">
+                <Label htmlFor="edit-project-title">Title</Label>
+                <Input
+                  id="edit-project-title"
+                  value={editingProject?.title || ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, title: e.target.value } : null)}
+                  required
+                />
+              </div>
+              <div className="md:col-span-2">
+                <Label htmlFor="edit-project-description">Description</Label>
+                <Textarea
+                  id="edit-project-description"
+                  value={editingProject?.description || ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, description: e.target.value } : null)}
+                  rows={3}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-project-status">Status</Label>
+                <Select 
+                  value={editingProject?.status || ''} 
+                  onValueChange={(value) => setEditingProject(prev => prev ? { ...prev, status: value } : null)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="available">Available</SelectItem>
+                    <SelectItem value="in_progress">In Progress</SelectItem>
+                    <SelectItem value="waiting">Waiting</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-project-priority">Priority</Label>
+                <Select 
+                  value={editingProject?.priority || ''} 
+                  onValueChange={(value) => setEditingProject(prev => prev ? { ...prev, priority: value } : null)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-project-assignee">Assigned To</Label>
+                <Input
+                  id="edit-project-assignee"
+                  value={editingProject?.assigneeName || ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, assigneeName: e.target.value } : null)}
+                  placeholder="Assignee name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-project-due-date">Due Date</Label>
+                <Input
+                  id="edit-project-due-date"
+                  type="date"
+                  value={editingProject?.dueDate ? editingProject.dueDate.split('T')[0] : ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, dueDate: e.target.value } : null)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-project-budget">Budget</Label>
+                <Input
+                  id="edit-project-budget"
+                  type="number"
+                  value={editingProject?.budget || ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, budget: Number(e.target.value) } : null)}
+                  placeholder="0"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-project-estimated-hours">Estimated Hours</Label>
+                <Input
+                  id="edit-project-estimated-hours"
+                  type="number"
+                  value={editingProject?.estimatedHours || ''}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, estimatedHours: Number(e.target.value) } : null)}
+                  placeholder="0"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setIsEditingProject(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={editProjectMutation.isPending}>
+                {editProjectMutation.isPending ? 'Updating...' : 'Update Project'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Task Edit Dialog */}
+      <Dialog open={!!isEditingTask} onOpenChange={() => setIsEditingTask(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Task</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleUpdateTask} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="md:col-span-2">
+                <Label htmlFor="edit-task-title">Title</Label>
+                <Input
+                  id="edit-task-title"
+                  value={isEditingTask?.title || ''}
+                  onChange={(e) => setIsEditingTask(prev => prev ? { ...prev, title: e.target.value } : null)}
+                  required
+                />
+              </div>
+              <div className="md:col-span-2">
+                <Label htmlFor="edit-task-description">Description</Label>
+                <Textarea
+                  id="edit-task-description"
+                  value={isEditingTask?.description || ''}
+                  onChange={(e) => setIsEditingTask(prev => prev ? { ...prev, description: e.target.value } : null)}
+                  rows={3}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-task-status">Status</Label>
+                <Select 
+                  value={isEditingTask?.status || ''} 
+                  onValueChange={(value) => setIsEditingTask(prev => prev ? { ...prev, status: value } : null)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="available">Available</SelectItem>
+                    <SelectItem value="in_progress">In Progress</SelectItem>
+                    <SelectItem value="waiting">Waiting</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-task-priority">Priority</Label>
+                <Select 
+                  value={isEditingTask?.priority || ''} 
+                  onValueChange={(value) => setIsEditingTask(prev => prev ? { ...prev, priority: value } : null)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-task-assignee">Assigned To</Label>
+                <Input
+                  id="edit-task-assignee"
+                  value={isEditingTask?.assigneeName || ''}
+                  onChange={(e) => setIsEditingTask(prev => prev ? { ...prev, assigneeName: e.target.value } : null)}
+                  placeholder="Assignee name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-task-due-date">Due Date</Label>
+                <Input
+                  id="edit-task-due-date"
+                  type="date"
+                  value={isEditingTask?.dueDate ? isEditingTask.dueDate.split('T')[0] : ''}
+                  onChange={(e) => setIsEditingTask(prev => prev ? { ...prev, dueDate: e.target.value } : null)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-task-estimated-hours">Estimated Hours</Label>
+                <Input
+                  id="edit-task-estimated-hours"
+                  type="number"
+                  value={isEditingTask?.estimatedHours || ''}
+                  onChange={(e) => setIsEditingTask(prev => prev ? { ...prev, estimatedHours: Number(e.target.value) } : null)}
+                  placeholder="0"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setIsEditingTask(null)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={editTaskMutation.isPending}>
+                {editTaskMutation.isPending ? 'Updating...' : 'Update Task'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

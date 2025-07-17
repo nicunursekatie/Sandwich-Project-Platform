@@ -51,9 +51,8 @@ export function MultiUserTaskCompletion({
     staleTime: 30000, // Consider data fresh for 30 seconds
     refetchOnWindowFocus: false, // Prevent automatic refetch on window focus
     queryFn: async () => {
-      const response = await apiRequest('GET', `/api/tasks/${taskId}/completions`);
-      const data = await response.json();
-      // Data is now properly parsed
+      const data = await apiRequest('GET', `/api/tasks/${taskId}/completions`);
+      // apiRequest already returns parsed data, no need to call .json()
       // Ensure we always return an array
       return Array.isArray(data) ? data : [];
     }
