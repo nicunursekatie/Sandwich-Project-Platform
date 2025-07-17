@@ -42,9 +42,11 @@ export function CollectionFilters({
   };
 
   const updateFilter = (key: keyof SearchFilters, value: string) => {
+    // Convert "all" back to empty string for filtering logic
+    const filterValue = value === "all" ? "" : value;
     onFiltersChange({
       ...searchFilters,
-      [key]: value
+      [key]: filterValue
     });
   };
 
@@ -77,7 +79,7 @@ export function CollectionFilters({
                   <SelectValue placeholder="All hosts" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All hosts</SelectItem>
+                  <SelectItem value="all">All hosts</SelectItem>
                   {hosts.map((host) => (
                     <SelectItem key={host.id} value={host.name}>
                       {host.name}

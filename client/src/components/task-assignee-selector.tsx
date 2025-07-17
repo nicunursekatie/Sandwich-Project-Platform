@@ -67,6 +67,24 @@ export function TaskAssigneeSelector({ value, onChange, placeholder = "Assign to
   }, [value, multiple]);
 
   const handleUserSelect = (userId: string) => {
+    if (userId === 'none') {
+      // Clear selection
+      if (multiple) {
+        setSelectedUsers([]);
+        setSelectedNames([]);
+        onChange({
+          assigneeIds: undefined,
+          assigneeNames: undefined
+        });
+      } else {
+        onChange({
+          assigneeId: undefined,
+          assigneeName: undefined
+        });
+      }
+      return;
+    }
+
     const selectedUser = users.find(u => u.id === userId);
     if (!selectedUser) return;
 
@@ -240,7 +258,7 @@ export function TaskAssigneeSelector({ value, onChange, placeholder = "Assign to
       {inputMode === 'user' ? (
         <div className="space-y-2">
           <Select
-            value={multiple ? '' : (value?.assigneeId || '')}
+            value={multiple ? 'none' : (value?.assigneeId || 'none')}
             onValueChange={handleUserSelect}
             disabled={isLoading}
           >
@@ -248,6 +266,7 @@ export function TaskAssigneeSelector({ value, onChange, placeholder = "Assign to
               <SelectValue placeholder={isLoading ? "Loading users..." : placeholder} />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="none">Unassigned</SelectItem>
               {users
                 .filter(user => user.isActive)
                 .map((user) => (
