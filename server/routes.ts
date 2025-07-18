@@ -3821,9 +3821,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Register project routes
-  const { projectsRoutes } = await import("./routes/projects");
-  app.use("/api", projectsRoutes);
+  // Register modular routes (NEW ARCHITECTURE)
+  const { registerModularRoutes } = await import("./routes/index");
+  registerModularRoutes(app);
 
   // Register work logs routes
   const workLogsModule = await import("./routes/work-logs");
