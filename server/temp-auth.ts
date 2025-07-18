@@ -507,7 +507,18 @@ export function setupTempAuth(app: Express) {
         // Standardize authentication - Always use (req as any).user and attach dbUser to request
         (req as any).user = dbUser;
 
-        res.json(req.session.user);
+        // Return the database user data instead of session data to include latest profile updates
+        res.json({
+          id: dbUser.id,
+          email: dbUser.email,
+          firstName: dbUser.firstName,
+          lastName: dbUser.lastName,
+          displayName: dbUser.displayName,
+          profileImageUrl: dbUser.profileImageUrl,
+          role: dbUser.role,
+          permissions: dbUser.permissions,
+          isActive: dbUser.isActive
+        });
       } catch (error) {
         console.error("Error fetching user data:", error);
         res.status(500).json({ message: "Error fetching user data" });

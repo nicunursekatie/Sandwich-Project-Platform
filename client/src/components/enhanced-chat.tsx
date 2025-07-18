@@ -177,10 +177,18 @@ export default function EnhancedChat() {
       setIsJoined(false);
       setMessages([]); // Clear messages when switching channels
       
+      const displayName = user.displayName || user.firstName || user.email || "User";
+      console.log("Chat sending user data:", { 
+        displayName: user.displayName, 
+        firstName: user.firstName, 
+        email: user.email,
+        finalName: displayName 
+      });
+      
       socket.emit("join-channel", {
         channel: selectedChannel,
         userId: user.id,
-        userName: user.displayName || user.firstName || user.email || "User"
+        userName: displayName
       });
     }
   }, [socket, isConnected, user, selectedChannel]);
