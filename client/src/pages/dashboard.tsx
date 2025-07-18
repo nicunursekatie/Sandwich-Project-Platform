@@ -376,7 +376,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       <AnnouncementBanner />
       
       {/* Top Header */}
-      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex justify-between items-center">
+      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex justify-between items-center relative z-50">
         <div className="flex items-center space-x-3">
           {/* Mobile menu button */}
           <button
@@ -389,10 +389,13 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
           <h1 className="text-lg font-semibold text-slate-900 hidden sm:block">The Sandwich Project</h1>
           <h1 className="text-sm font-semibold text-slate-900 sm:hidden">TSP</h1>
         </div>
-        <div className="flex items-center space-x-2 sm:space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4 relative z-50">
           <button
-            onClick={() => setActiveSection("messages")}
-            className={`p-2 rounded-lg transition-colors ${
+            onClick={() => {
+              console.log('Messages button clicked');
+              setActiveSection("messages");
+            }}
+            className={`p-2 rounded-lg transition-colors relative z-50 pointer-events-auto ${
               activeSection === "messages"
                 ? "bg-blue-50 text-blue-700 border border-blue-200"
                 : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
@@ -403,8 +406,11 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
           </button>
           <MessageNotifications user={user} />
           <button
-            onClick={() => setActiveSection("profile")}
-            className={`p-2 rounded-lg transition-colors ${
+            onClick={() => {
+              console.log('Profile button clicked, current section:', activeSection);
+              setActiveSection("profile");
+            }}
+            className={`p-2 rounded-lg transition-colors relative z-50 pointer-events-auto ${
               activeSection === "profile"
                 ? "bg-blue-50 text-blue-700 border border-blue-200"
                 : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
@@ -466,7 +472,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto w-full md:w-auto">
+        <div className="flex-1 overflow-y-auto w-full md:w-auto relative z-10">
           <div className="p-4 sm:p-6 pb-20">
             {renderContent()}
           </div>

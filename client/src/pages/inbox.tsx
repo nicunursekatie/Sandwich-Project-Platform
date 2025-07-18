@@ -333,7 +333,7 @@ export default function InboxPage() {
 
 
   return (
-    <div className="flex h-[calc(100vh-64px)]">
+    <div className="flex h-[calc(100vh-64px)] relative z-10">
       {/* Message List */}
       <div className="w-1/3 border-r flex flex-col">
         <div className="p-4 border-b">

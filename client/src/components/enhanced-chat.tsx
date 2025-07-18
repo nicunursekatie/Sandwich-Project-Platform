@@ -180,7 +180,7 @@ export default function EnhancedChat() {
       socket.emit("join-channel", {
         channel: selectedChannel,
         userId: user.id,
-        userName: user.firstName || user.email || "User"
+        userName: user.displayName || user.firstName || user.email || "User"
       });
     }
   }, [socket, isConnected, user, selectedChannel]);
@@ -243,7 +243,7 @@ export default function EnhancedChat() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-200px)] bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden">
+    <div className="flex h-[calc(100vh-200px)] bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden relative z-10">
       {/* Sidebar with live previews */}
       <LiveChatHub 
         onChannelSelect={setSelectedChannel}
