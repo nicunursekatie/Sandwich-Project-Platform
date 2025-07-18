@@ -184,8 +184,8 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
   };
 
   const navigateToChat = (chatType: string) => {
-    // Navigate to the appropriate chat page - all chat types go to messages
-    window.location.href = '/messages';
+    // Navigate to chat system instead of messages inbox
+    window.location.href = '/dashboard?section=chat';
   };
 
 

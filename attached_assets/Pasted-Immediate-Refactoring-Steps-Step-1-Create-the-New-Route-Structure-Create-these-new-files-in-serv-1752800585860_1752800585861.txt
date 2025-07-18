@@ -1,0 +1,105 @@
+Immediate Refactoring Steps:
+Step 1: Create the New Route Structure
+Create these new files in server/routes/:
+
+server/routes/auth.ts - Authentication & permissions server/routes/users.ts - User management
+server/routes/projects.ts - Projects & tasks server/routes/messages.ts - Messaging system server/routes/collections.ts - Sandwich collections server/routes/drivers.ts - Driver management server/routes/hosts.ts - Host management server/routes/analytics.ts - Statistics & reporting
+
+Step 2: Extract Common Middleware
+Create server/middleware/auth.ts:
+
+import { storage } from "../storage-wrapper";
+
+export const requirePermission = (permission: string) => {
+  return async (req: any, res: any, next: any) => {
+    try {
+      let user = req.user || req.session?.user;
+      if (!user) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Check permissions logic here
+      const hasPermission = checkUserPermissions(user, permission);
+      if (!hasPermission) {
+        return res.status(403).json({ message: "Insufficient permissions" });
+      }
+      
+      next();
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+};
+
+export const isAuthenticated = (req: any, res: any, next: any) => {
+  const user = req.user || req.session?.user;
+  if (!user) {
+    return res.status(401).json({ message: "Authentication required" });
+  }
+  next();
+};
+Step 3: Extract Route Categories
+Projects Routes (extract lines 509-800 from current routes.ts):
+
+import { Router } from "express";
+import { storage } from "../storage-wrapper";
+import { requirePermission } from "../middleware/auth";
+
+const router = Router();
+
+router.get("/", async (req, res) => {
+  // Move GET /api/projects logic here
+});
+
+router.post("/", requirePermission("edit_data"), async (req, res) => {
+  // Move POST /api/projects logic here
+});
+
+// Continue with all project-related routes...
+
+export default router;
+Step 4: Create Route Aggregator
+Create server/routes/index.ts:
+
+import { Express } from "express";
+import authRoutes from "./auth";
+import usersRoutes from "./users";
+import projectsRoutes from "./projects";
+// ... other imports
+
+export function registerRoutes(app: Express) {
+  app.use("/api/auth", authRoutes);
+  app.use("/api/users", usersRoutes);
+  app.use("/api/projects", projectsRoutes);
+  // ... other route registrations
+}
+Step 5: Update Main Routes File
+Gradually replace the monolithic routes.ts with:
+
+import { registerRoutes } from "./routes/index";
+
+export async function setupRoutes(app: Express): Promise<Server> {
+  // Register all modular routes
+  registerRoutes(app);
+  
+  // Keep existing socket and WebSocket setup
+  // Remove the massive route definitions
+  
+  return httpServer;
+}
+Priority Implementation Order:
+Week 1: Extract auth, users, and projects routes (highest impact)
+Week 2: Extract messages, collections, and drivers routes
+Week 3: Extract remaining routes and clean up debug code
+Week 4: Performance optimization and testing
+Expected Benefits:
+Maintainability: From 2/10 to 8/10
+Developer Experience: From 2/10 to 9/10
+Performance: From 3/10 to 7/10
+File Navigation: From impossible to instant
+This refactoring will transform your codebase from an unmaintainable mess into a professional, scalable architecture. The biggest wins will come from:
+
+Breaking the 7,114-line monster into 12 focused modules
+Removing debug pollution (100+ console.log statements)
+Eliminating code duplication
+Standardizing error handling
