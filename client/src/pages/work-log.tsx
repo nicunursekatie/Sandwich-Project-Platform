@@ -17,8 +17,7 @@ export default function WorkLogPage() {
     queryKey: ["/api/work-logs"],
     queryFn: async () => {
       console.log("🚀 Work logs query function called");
-      const response = await apiRequest("GET", "/api/work-logs");
-      const data = await response.json();
+      const data = await apiRequest("GET", "/api/work-logs");
       console.log("🚀 Work logs API response data:", data);
       return data;
     },
@@ -34,12 +33,12 @@ export default function WorkLogPage() {
 
   const createLog = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/work-logs", { 
+      const data = await apiRequest("POST", "/api/work-logs", { 
         description, 
         hours, 
         minutes
       });
-      return await response.json();
+      return data;
     },
     onSuccess: () => {
       setDescription("");
@@ -52,12 +51,8 @@ export default function WorkLogPage() {
 
   const deleteLog = useMutation({
     mutationFn: async (id: number) => {
-      const response = await apiRequest("DELETE", `/api/work-logs/${id}`);
-      // DELETE requests typically return empty responses, so handle accordingly
-      if (response.status === 204) {
-        return null; // 204 No Content
-      }
-      return await response.json();
+      const data = await apiRequest("DELETE", `/api/work-logs/${id}`);
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/work-logs"] });
