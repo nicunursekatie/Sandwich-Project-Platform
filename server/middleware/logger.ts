@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { logger } from "../utils/logger";
 
 export interface LogEntry {
   timestamp: string;
@@ -40,13 +41,13 @@ class Logger {
     
     switch (entry.level) {
       case 'error':
-        console.error(logMessage, entry.error || '');
+        logger.error(logMessage, entry.error || '');
         break;
       case 'warn':
-        console.warn(logMessage);
+        logger.warn(logMessage);
         break;
       default:
-        console.log(logMessage);
+        logger.info(logMessage);
     }
   }
 

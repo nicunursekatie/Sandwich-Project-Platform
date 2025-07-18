@@ -2,6 +2,7 @@ import express from "express";
 import { z } from "zod";
 import { storage } from "../storage";
 import { isAuthenticated } from "../temp-auth";
+import { logger } from "../utils/logger";
 
 // Use the existing authentication middleware
 const requireAuth = isAuthenticated;
@@ -49,7 +50,7 @@ router.get("/", requireAuth, async (req, res) => {
     
     res.json(messages);
   } catch (error) {
-    console.error("Error fetching messages:", error);
+    logger.error("Error fetching messages:", error);
     res.status(500).json({ error: "Failed to fetch messages" });
   }
 });
@@ -99,7 +100,7 @@ router.post("/", requireAuth, async (req, res) => {
       message: "Message sent and delivered instantly"
     });
   } catch (error) {
-    console.error("Error sending message:", error);
+    logger.error("Error sending message:", error);
     res.status(500).json({ error: "Failed to send message" });
   }
 });
@@ -114,7 +115,7 @@ router.post("/:id/read", requireAuth, async (req, res) => {
     // For now, just return success
     res.json({ message: "Message marked as read" });
   } catch (error) {
-    console.error("Error marking message as read:", error);
+    logger.error("Error marking message as read:", error);
     res.status(500).json({ error: "Failed to mark message as read" });
   }
 });
@@ -128,7 +129,7 @@ router.post("/:id/star", requireAuth, async (req, res) => {
     // In a real implementation, you'd update star status in database
     res.json({ message: "Message star status updated" });
   } catch (error) {
-    console.error("Error updating star status:", error);
+    logger.error("Error updating star status:", error);
     res.status(500).json({ error: "Failed to update star status" });
   }
 });
@@ -141,11 +142,11 @@ router.delete("/:id", requireAuth, async (req, res) => {
     
     // For now, just acknowledge the delete request
     // We'll implement proper storage integration later
-    console.log(`Delete message ${messageId} for user ${userId}`);
+    logger.info(`Delete message ${messageId} for user ${userId}`);
     
     res.json({ message: "Message deleted" });
   } catch (error) {
-    console.error("Error deleting message:", error);
+    logger.error("Error deleting message:", error);
     res.status(500).json({ error: "Failed to delete message" });
   }
 });

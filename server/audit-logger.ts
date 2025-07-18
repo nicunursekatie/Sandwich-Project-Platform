@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { auditLogs, type InsertAuditLog } from "@shared/schema";
 import { sql, desc, eq } from "drizzle-orm";
+import { logger } from "./utils/logger";
 
 export interface AuditContext {
   userId?: string;
@@ -33,7 +34,7 @@ export class AuditLogger {
 
       await db.insert(auditLogs).values(auditEntry);
     } catch (error) {
-      console.error('Failed to log audit entry:', error);
+      logger.error('Failed to log audit entry:', error);
       // Don't throw - audit logging shouldn't break the main operation
     }
   }
@@ -102,7 +103,7 @@ export class AuditLogger {
 
       return results;
     } catch (error) {
-      console.error('Failed to retrieve audit history:', error);
+      logger.error('Failed to retrieve audit history:', error);
       return [];
     }
   }

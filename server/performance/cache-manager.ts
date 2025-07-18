@@ -1,4 +1,5 @@
 import { LRUCache } from 'lru-cache';
+import { logger } from "../utils/logger";
 
 export interface CacheOptions {
   maxSize?: number;
@@ -90,7 +91,7 @@ export class CacheManager {
 
   // Smart cache warming for critical data
   static async warmCaches() {
-    console.log('Warming critical caches...');
+    logger.info('Warming critical caches...');
     
     // Pre-load frequently accessed data
     const warmingTasks = [
@@ -100,7 +101,7 @@ export class CacheManager {
     ];
 
     await Promise.allSettled(warmingTasks);
-    console.log('Cache warming completed');
+    logger.info('Cache warming completed');
   }
 
   private static async warmCollectionStats() {
@@ -112,7 +113,7 @@ export class CacheManager {
         this.stats.set('collection-stats', stats);
       }
     } catch (error) {
-      console.warn('Failed to warm collection stats cache:', error);
+      logger.warn('Failed to warm collection stats cache:', error);
     }
   }
 
@@ -124,7 +125,7 @@ export class CacheManager {
         this.hosts.set('active-hosts', hosts);
       }
     } catch (error) {
-      console.warn('Failed to warm hosts cache:', error);
+      logger.warn('Failed to warm hosts cache:', error);
     }
   }
 
@@ -136,7 +137,7 @@ export class CacheManager {
         this.projects.set('recent-projects', projects);
       }
     } catch (error) {
-      console.warn('Failed to warm projects cache:', error);
+      logger.warn('Failed to warm projects cache:', error);
     }
   }
 
@@ -158,7 +159,7 @@ export class CacheManager {
           const nextPageData = await fetcher(currentPage + 1);
           cache.set(nextPageKey, nextPageData);
         } catch (error) {
-          console.warn('Failed to preload next page:', error);
+          logger.warn('Failed to preload next page:', error);
         }
       }, 100);
     }
@@ -172,7 +173,7 @@ export class CacheManager {
       const sizeAfter = cache.size;
       
       if (sizeBefore > sizeAfter) {
-        console.log(`Cache ${name}: cleaned ${sizeBefore - sizeAfter} stale entries`);
+        logger.info(`Cache ${name}: cleaned ${sizeBefore - sizeAfter} stale entries`);
       }
     }
   }

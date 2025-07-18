@@ -1,4 +1,5 @@
 import sgMail from '@sendgrid/mail';
+import { logger } from "../utils/logger";
 
 export interface EmailTemplate {
   id: string;
@@ -284,7 +285,7 @@ View full dashboard: {{dashboardLink}}
   static async sendEmail(notification: EmailNotification): Promise<boolean> {
     try {
       if (!process.env.SENDGRID_API_KEY) {
-        console.warn('SendGrid API key not configured. Email notification skipped.');
+        logger.warn('SendGrid API key not configured. Email notification skipped.');
         return false;
       }
 
@@ -315,16 +316,16 @@ View full dashboard: {{dashboardLink}}
 
       if (notification.scheduledFor && notification.scheduledFor > new Date()) {
         // For scheduled emails, store them for later processing
-        console.log('Email scheduled for:', notification.scheduledFor);
+        logger.info('Email scheduled for:', notification.scheduledFor);
         return true;
       }
 
       const result = await sgMail.send(emailData);
-      console.log('Email sent successfully:', result[0].statusCode);
+      logger.info('Email sent successfully:', result[0].statusCode);
       return true;
 
     } catch (error) {
-      console.error('Failed to send email:', error);
+      logger.error('Failed to send email:', error);
       return false;
     }
   }

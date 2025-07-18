@@ -3,6 +3,7 @@ import { z } from "zod";
 import { storage } from "../storage-wrapper";
 import { requirePermission, isAuthenticated, optionalAuth } from "../middleware/auth";
 import { insertHostSchema } from "@shared/schema";
+import { logger } from "../utils/logger";
 
 const router = Router();
 
@@ -12,7 +13,7 @@ router.get("/", optionalAuth, async (req: any, res) => {
     const hosts = await storage.getAllHosts();
     res.json(hosts);
   } catch (error) {
-    console.error("Error fetching hosts:", error);
+    logger.error("Error fetching hosts:", error);
     res.status(500).json({ error: "Failed to fetch hosts" });
   }
 });
@@ -27,7 +28,7 @@ router.get("/:id", optionalAuth, async (req: any, res) => {
     }
     res.json(host);
   } catch (error) {
-    console.error("Error fetching host:", error);
+    logger.error("Error fetching host:", error);
     res.status(500).json({ error: "Failed to fetch host" });
   }
 });
@@ -42,7 +43,7 @@ router.post("/", requirePermission("edit_data"), async (req: any, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: "Invalid host data", details: error.errors });
     }
-    console.error("Error creating host:", error);
+    logger.error("Error creating host:", error);
     res.status(500).json({ error: "Failed to create host" });
   }
 });
@@ -61,7 +62,7 @@ router.patch("/:id", requirePermission("edit_data"), async (req: any, res) => {
     const updatedHost = await storage.updateHost(hostId, req.body);
     res.json(updatedHost);
   } catch (error) {
-    console.error("Error updating host:", error);
+    logger.error("Error updating host:", error);
     res.status(500).json({ error: "Failed to update host" });
   }
 });
@@ -80,7 +81,7 @@ router.delete("/:id", requirePermission("delete_data"), async (req: any, res) =>
     await storage.deleteHost(hostId);
     res.json({ message: "Host deleted successfully" });
   } catch (error) {
-    console.error("Error deleting host:", error);
+    logger.error("Error deleting host:", error);
     res.status(500).json({ error: "Failed to delete host" });
   }
 });
@@ -94,7 +95,7 @@ router.patch("/:id/status", requirePermission("edit_data"), async (req: any, res
     const updatedHost = await storage.updateHost(hostId, { isActive });
     res.json(updatedHost);
   } catch (error) {
-    console.error("Error updating host status:", error);
+    logger.error("Error updating host status:", error);
     res.status(500).json({ error: "Failed to update host status" });
   }
 });
@@ -106,7 +107,7 @@ router.get("/type/:type", optionalAuth, async (req: any, res) => {
     const hosts = await storage.getHostsByType(type);
     res.json(hosts);
   } catch (error) {
-    console.error("Error fetching hosts by type:", error);
+    logger.error("Error fetching hosts by type:", error);
     res.status(500).json({ error: "Failed to fetch hosts by type" });
   }
 });
@@ -125,7 +126,7 @@ router.get("/:id/collections", optionalAuth, async (req: any, res) => {
     const collections = await storage.getHostCollections(hostId, dateRange);
     res.json(collections);
   } catch (error) {
-    console.error("Error fetching host collections:", error);
+    logger.error("Error fetching host collections:", error);
     res.status(500).json({ error: "Failed to fetch host collections" });
   }
 });
@@ -137,7 +138,7 @@ router.get("/:id/stats", optionalAuth, async (req: any, res) => {
     const stats = await storage.getHostStats(hostId);
     res.json(stats);
   } catch (error) {
-    console.error("Error fetching host stats:", error);
+    logger.error("Error fetching host stats:", error);
     res.status(500).json({ error: "Failed to fetch host stats" });
   }
 });

@@ -29,7 +29,7 @@ router.get('/export/collections', async (req, res) => {
       res.json(result);
     }
   } catch (error) {
-    console.error('Export failed:', error);
+    logger.error('Export failed:', error);
     res.status(500).json({ error: 'Export failed' });
   }
 });
@@ -53,7 +53,7 @@ router.get('/export/hosts', async (req, res) => {
       res.json(result);
     }
   } catch (error) {
-    console.error('Export failed:', error);
+    logger.error('Export failed:', error);
     res.status(500).json({ error: 'Export failed' });
   }
 });
@@ -66,7 +66,7 @@ router.get('/export/full-dataset', async (req, res) => {
     res.setHeader('Content-Disposition', 'attachment; filename="full_dataset.json"');
     res.json(result.data);
   } catch (error) {
-    console.error('Full export failed:', error);
+    logger.error('Full export failed:', error);
     res.status(500).json({ error: 'Full export failed' });
   }
 });
@@ -76,7 +76,7 @@ router.get('/summary', async (req, res) => {
     const summary = await DataExporter.getDataSummary();
     res.json(summary);
   } catch (error) {
-    console.error('Summary failed:', error);
+    logger.error('Summary failed:', error);
     res.status(500).json({ error: 'Summary failed' });
   }
 });
@@ -94,7 +94,7 @@ router.post('/bulk/deduplicate-hosts', async (req: any, res) => {
     const result = await BulkOperationsManager.deduplicateHosts(context);
     res.json(result);
   } catch (error) {
-    console.error('Deduplication failed:', error);
+    logger.error('Deduplication failed:', error);
     res.status(500).json({ error: 'Deduplication failed' });
   }
 });
@@ -117,7 +117,7 @@ router.delete('/bulk/collections', async (req: any, res) => {
     const result = await BulkOperationsManager.bulkDeleteCollections(ids, context);
     res.json(result);
   } catch (error) {
-    console.error('Bulk deletion failed:', error);
+    logger.error('Bulk deletion failed:', error);
     res.status(500).json({ error: 'Bulk deletion failed' });
   }
 });
@@ -128,7 +128,7 @@ router.get('/integrity/check', async (req, res) => {
     const result = await BulkOperationsManager.validateDataIntegrity();
     res.json(result);
   } catch (error) {
-    console.error('Integrity check failed:', error);
+    logger.error('Integrity check failed:', error);
     res.status(500).json({ error: 'Integrity check failed' });
   }
 });
@@ -148,7 +148,7 @@ router.get('/audit/history', async (req, res) => {
 
     res.json({ history });
   } catch (error) {
-    console.error('Audit history failed:', error);
+    logger.error('Audit history failed:', error);
     res.status(500).json({ error: 'Audit history failed' });
   }
 });

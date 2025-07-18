@@ -1,5 +1,6 @@
 import { storage } from "../storage-wrapper";
 import { format } from "date-fns";
+import { logger } from "../utils/logger";
 
 export interface ReportConfig {
   type: 'collections' | 'hosts' | 'impact' | 'comprehensive';
@@ -131,7 +132,7 @@ export class ReportGenerator {
           submittedAt: c.submittedAt
         }));
     } catch (error) {
-      console.error('Error getting collections data for report:', error);
+      logger.error('Error getting collections data for report:', error);
       return [];
     }
   }
@@ -155,7 +156,7 @@ export class ReportGenerator {
           createdAt: h.createdAt
         }));
     } catch (error) {
-      console.error('Error getting hosts data for report:', error);
+      logger.error('Error getting hosts data for report:', error);
       return [];
     }
   }
@@ -183,7 +184,7 @@ export class ReportGenerator {
           dueDate: p.dueDate
         }));
     } catch (error) {
-      console.error('Error getting projects data for report:', error);
+      logger.error('Error getting projects data for report:', error);
       return [];
     }
   }
@@ -214,7 +215,7 @@ export class ReportGenerator {
         uniqueHosts: item.uniqueHosts.size
       }));
     } catch (error) {
-      console.error('Error getting impact data for report:', error);
+      logger.error('Error getting impact data for report:', error);
       return [];
     }
   }
@@ -242,7 +243,7 @@ export class ReportGenerator {
           type: 'host' as const
         }));
     } catch (error) {
-      console.error('Error getting top performers for report:', error);
+      logger.error('Error getting top performers for report:', error);
       return [];
     }
   }
@@ -315,7 +316,7 @@ export class ReportGenerator {
       nextRun: this.calculateNextRun(schedule)
     };
 
-    console.log('Scheduled report configured:', scheduledReport);
+    logger.info('Scheduled report configured:', scheduledReport);
     return scheduledReport;
   }
 

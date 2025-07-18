@@ -3,6 +3,7 @@ import { z } from "zod";
 import { storage } from "../storage-wrapper";
 import { requirePermission, isAuthenticated, optionalAuth } from "../middleware/auth";
 import { insertSandwichCollectionSchema } from "@shared/schema";
+import { logger } from "../utils/logger";
 
 const router = Router();
 
@@ -12,7 +13,7 @@ router.get("/", optionalAuth, async (req: any, res) => {
     const collections = await storage.getAllCollections();
     res.json(collections);
   } catch (error) {
-    console.error("Error fetching collections:", error);
+    logger.error("Error fetching collections:", error);
     res.status(500).json({ error: "Failed to fetch collections" });
   }
 });
@@ -27,7 +28,7 @@ router.get("/:id", optionalAuth, async (req: any, res) => {
     }
     res.json(collection);
   } catch (error) {
-    console.error("Error fetching collection:", error);
+    logger.error("Error fetching collection:", error);
     res.status(500).json({ error: "Failed to fetch collection" });
   }
 });
@@ -42,7 +43,7 @@ router.post("/", requirePermission("edit_data"), async (req: any, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: "Invalid collection data", details: error.errors });
     }
-    console.error("Error creating collection:", error);
+    logger.error("Error creating collection:", error);
     res.status(500).json({ error: "Failed to create collection" });
   }
 });
@@ -61,7 +62,7 @@ router.patch("/:id", requirePermission("edit_data"), async (req: any, res) => {
     const updatedCollection = await storage.updateCollection(collectionId, req.body);
     res.json(updatedCollection);
   } catch (error) {
-    console.error("Error updating collection:", error);
+    logger.error("Error updating collection:", error);
     res.status(500).json({ error: "Failed to update collection" });
   }
 });
@@ -80,7 +81,7 @@ router.delete("/:id", requirePermission("delete_data"), async (req: any, res) =>
     await storage.deleteCollection(collectionId);
     res.json({ message: "Collection deleted successfully" });
   } catch (error) {
-    console.error("Error deleting collection:", error);
+    logger.error("Error deleting collection:", error);
     res.status(500).json({ error: "Failed to delete collection" });
   }
 });
@@ -91,7 +92,7 @@ router.get("/analytics/summary", optionalAuth, async (req: any, res) => {
     const summary = await storage.getCollectionsSummary();
     res.json(summary);
   } catch (error) {
-    console.error("Error fetching collections summary:", error);
+    logger.error("Error fetching collections summary:", error);
     res.status(500).json({ error: "Failed to fetch collections summary" });
   }
 });
@@ -104,7 +105,7 @@ router.get("/analytics/by-date", optionalAuth, async (req: any, res) => {
     const analytics = await storage.getCollectionsByDate(dateRange);
     res.json(analytics);
   } catch (error) {
-    console.error("Error fetching collections by date:", error);
+    logger.error("Error fetching collections by date:", error);
     res.status(500).json({ error: "Failed to fetch collections analytics" });
   }
 });
@@ -114,7 +115,7 @@ router.get("/analytics/by-host", optionalAuth, async (req: any, res) => {
     const analytics = await storage.getCollectionsByHost();
     res.json(analytics);
   } catch (error) {
-    console.error("Error fetching collections by host:", error);
+    logger.error("Error fetching collections by host:", error);
     res.status(500).json({ error: "Failed to fetch host analytics" });
   }
 });
@@ -131,7 +132,7 @@ router.get("/export/csv", requirePermission("view_reports"), async (req: any, re
     res.setHeader('Content-Disposition', 'attachment; filename="collections.csv"');
     res.send(csvData);
   } catch (error) {
-    console.error("Error exporting collections to CSV:", error);
+    logger.error("Error exporting collections to CSV:", error);
     res.status(500).json({ error: "Failed to export collections" });
   }
 });

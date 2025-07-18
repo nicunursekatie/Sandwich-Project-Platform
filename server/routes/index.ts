@@ -41,5 +41,5 @@ export function registerModularRoutes(app: Express) {
   registerMessageNotificationRoutes(app);
   registerPerformanceRoutes(app);
   
-  console.log("✓ Modular routes registered successfully");
+  // Modular routes registered successfully
 }

@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger";
 import { Router } from "express";
 import { z } from "zod";
 import { sql, eq } from "drizzle-orm";
@@ -40,24 +41,24 @@ router.get("/work-logs", isAuthenticated, async (req, res) => {
     const userEmail = req.user.email;
     const userRole = req.user.role;
     
-    console.log(`[WORK LOGS] User: ${userId}, Email: ${userEmail}, Role: ${userRole}`);
-    console.log(`[WORK LOGS] isSuperAdmin check: ${isSuperAdmin(req)}, isMarcy: ${userEmail === 'mdlouza@gmail.com'}`);
+    logger.info(`[WORK LOGS] User: ${userId}, Email: ${userEmail}, Role: ${userRole}`);
+    logger.info(`[WORK LOGS] isSuperAdmin check: ${isSuperAdmin(req)}, isMarcy: ${userEmail === 'mdlouza@gmail.com'}`);
     
     // Super admin and Marcy can see ALL work logs
     if (isSuperAdmin(req) || userEmail === 'mdlouza@gmail.com') {
-      console.log(`[WORK LOGS] Admin access - fetching ALL logs`);
+      logger.info(`[WORK LOGS] Admin access - fetching ALL logs`);
       const logs = await db.select().from(workLogs);
-      console.log(`[WORK LOGS] Found ${logs.length} total logs:`, logs.map(l => `${l.id}: ${l.userId}`));
+      logger.info(`[WORK LOGS] Found ${logs.length} total logs:`, logs.map(l => `${l.id}: ${l.userId}`));
       return res.json(logs);
     } else {
       // Regular users can only see their own logs
-      console.log(`[WORK LOGS] Regular user access - fetching logs for ${userId}`);
+      logger.info(`[WORK LOGS] Regular user access - fetching logs for ${userId}`);
       const logs = await db.select().from(workLogs).where(eq(workLogs.userId, userId));
-      console.log(`[WORK LOGS] Found ${logs.length} logs for user ${userId}:`, logs.map(l => `${l.id}: ${l.description.substring(0, 30)}`));
+      logger.info(`[WORK LOGS] Found ${logs.length} logs for user ${userId}:`, logs.map(l => `${l.id}: ${l.description.substring(0, 30)}`));
       return res.json(logs);
     }
   } catch (error) {
-    console.error("Error fetching work logs:", error);
+    logger.error("Error fetching work logs:", error);
     res.status(500).json({ error: "Failed to fetch work logs" });
   }
 });
@@ -76,7 +77,7 @@ router.post("/work-logs", isAuthenticated, async (req, res) => {
     }).returning();
     res.status(201).json(log[0]);
   } catch (error) {
-    console.error("Error creating work log:", error);
+    logger.error("Error creating work log:", error);
     res.status(500).json({ error: "Failed to create work log" });
   }
 });
@@ -108,32 +109,32 @@ router.put("/work-logs/:id", isAuthenticated, async (req, res) => {
 // Delete a work log (own or any if super admin)
 router.delete("/work-logs/:id", isAuthenticated, async (req, res) => {
   const logId = parseInt(req.params.id);
-  console.log("[WORK LOGS DELETE] Attempting to delete log ID:", logId);
+  logger.info("[WORK LOGS DELETE] Attempting to delete log ID:", logId);
   
   if (isNaN(logId)) return res.status(400).json({ error: "Invalid log ID" });
   
   try {
-    console.log("[WORK LOGS DELETE] Fetching log for permission check...");
+    logger.info("[WORK LOGS DELETE] Fetching log for permission check...");
     const log = await db.select().from(workLogs).where(eq(workLogs.id, logId));
-    console.log("[WORK LOGS DELETE] Found log:", log[0] ? `ID ${log[0].id}, User ${log[0].userId}` : "None");
+    logger.info("[WORK LOGS DELETE] Found log:", log[0] ? `ID ${log[0].id}, User ${log[0].userId}` : "None");
     
     if (!log[0]) return res.status(404).json({ error: "Work log not found" });
     
     const hasPermission = isSuperAdmin(req) || req.user.email === 'mdlouza@gmail.com' || log[0].userId === req.user.id;
-    console.log("[WORK LOGS DELETE] Permission check:", { hasPermission, userRole: req.user.role, userEmail: req.user.email, logUserId: log[0].userId });
+    logger.info("[WORK LOGS DELETE] Permission check:", { hasPermission, userRole: req.user.role, userEmail: req.user.email, logUserId: log[0].userId });
     
     if (!hasPermission) {
       return res.status(403).json({ error: "Insufficient permissions" });
     }
     
-    console.log("[WORK LOGS DELETE] Deleting log...");
+    logger.info("[WORK LOGS DELETE] Deleting log...");
     await db.delete(workLogs).where(eq(workLogs.id, logId));
-    console.log("[WORK LOGS DELETE] Successfully deleted log ID:", logId);
+    logger.info("[WORK LOGS DELETE] Successfully deleted log ID:", logId);
     
     res.status(204).send();
   } catch (error) {
-    console.error("[WORK LOGS DELETE] Error:", error);
-    console.error("[WORK LOGS DELETE] Stack trace:", error.stack);
+    logger.error("[WORK LOGS DELETE] Error:", error);
+    logger.error("[WORK LOGS DELETE] Stack trace:", error.stack);
     res.status(500).json({ error: "Failed to delete work log" });
   }
 });

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { storage } from "../storage-wrapper";
 import { requirePermission, isAuthenticated } from "../middleware/auth";
+import { logger } from "../utils/logger";
 
 const router = Router();
 
@@ -10,7 +11,7 @@ router.get("/", requirePermission("manage_users"), async (req: any, res) => {
     const users = await storage.getAllUsers();
     res.json(users);
   } catch (error) {
-    console.error("Error fetching users:", error);
+    logger.error("Error fetching users:", error);
     res.status(500).json({ error: "Failed to fetch users" });
   }
 });
@@ -33,7 +34,7 @@ router.get("/:id", isAuthenticated, async (req: any, res) => {
     
     res.json(user);
   } catch (error) {
-    console.error("Error fetching user:", error);
+    logger.error("Error fetching user:", error);
     res.status(500).json({ error: "Failed to fetch user" });
   }
 });
@@ -53,7 +54,7 @@ router.patch("/:id", requirePermission("manage_users"), async (req: any, res) =>
     const updatedUser = await storage.updateUser(userId, updates);
     res.json(updatedUser);
   } catch (error) {
-    console.error("Error updating user:", error);
+    logger.error("Error updating user:", error);
     res.status(500).json({ error: "Failed to update user" });
   }
 });
@@ -71,7 +72,7 @@ router.patch("/:id/role", requirePermission("manage_users"), async (req: any, re
     const updatedUser = await storage.updateUser(userId, { role });
     res.json(updatedUser);
   } catch (error) {
-    console.error("Error updating user role:", error);
+    logger.error("Error updating user role:", error);
     res.status(500).json({ error: "Failed to update user role" });
   }
 });
@@ -89,7 +90,7 @@ router.patch("/:id/permissions", requirePermission("manage_users"), async (req: 
     const updatedUser = await storage.updateUser(userId, { permissions });
     res.json(updatedUser);
   } catch (error) {
-    console.error("Error updating user permissions:", error);
+    logger.error("Error updating user permissions:", error);
     res.status(500).json({ error: "Failed to update user permissions" });
   }
 });
@@ -103,7 +104,7 @@ router.patch("/:id/status", requirePermission("manage_users"), async (req: any, 
     const updatedUser = await storage.updateUser(userId, { isActive });
     res.json(updatedUser);
   } catch (error) {
-    console.error("Error updating user status:", error);
+    logger.error("Error updating user status:", error);
     res.status(500).json({ error: "Failed to update user status" });
   }
 });
@@ -122,7 +123,7 @@ router.delete("/:id", requirePermission("manage_users"), async (req: any, res) =
     await storage.deleteUser(userId);
     res.json({ success: true, message: "User deleted successfully" });
   } catch (error) {
-    console.error("Error deleting user:", error);
+    logger.error("Error deleting user:", error);
     res.status(500).json({ error: "Failed to delete user" });
   }
 });
@@ -134,7 +135,7 @@ router.get("/:id/committees", isAuthenticated, async (req: any, res) => {
     const committees = await storage.getUserCommittees(userId);
     res.json(committees);
   } catch (error) {
-    console.error("Error fetching user committees:", error);
+    logger.error("Error fetching user committees:", error);
     res.status(500).json({ error: "Failed to fetch user committees" });
   }
 });
@@ -151,7 +152,7 @@ router.post("/:id/committees", requirePermission("manage_users"), async (req: an
     await storage.addUserToCommittee(userId, committeeId);
     res.json({ success: true, message: "User added to committee successfully" });
   } catch (error) {
-    console.error("Error adding user to committee:", error);
+    logger.error("Error adding user to committee:", error);
     res.status(500).json({ error: "Failed to add user to committee" });
   }
 });
@@ -164,7 +165,7 @@ router.delete("/:id/committees/:committeeId", requirePermission("manage_users"),
     await storage.removeUserFromCommittee(userId, committeeId);
     res.json({ success: true, message: "User removed from committee successfully" });
   } catch (error) {
-    console.error("Error removing user from committee:", error);
+    logger.error("Error removing user from committee:", error);
     res.status(500).json({ error: "Failed to remove user from committee" });
   }
 });

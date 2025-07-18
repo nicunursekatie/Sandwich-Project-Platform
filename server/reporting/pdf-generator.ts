@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ReportData } from './report-generator';
+import { logger } from "../utils/logger";
 
 export class PDFGenerator {
   static async generatePDF(reportData: ReportData): Promise<Buffer> {
@@ -221,7 +222,7 @@ export class PDFGenerator {
 
       return Buffer.from(doc.output('arraybuffer'));
     } catch (error) {
-      console.error('PDF generation failed:', error);
+      logger.error('PDF generation failed:', error);
       throw new Error('Failed to generate PDF');
     }
   }

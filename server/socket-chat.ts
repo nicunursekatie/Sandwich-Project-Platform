@@ -1,6 +1,7 @@
 import { Server as SocketServer } from "socket.io";
 import { Server as HttpServer } from "http";
 import { storage } from "./storage";
+import { logger } from "./utils/logger";
 
 interface ChatMessage {
   id: string;
@@ -30,7 +31,7 @@ export function setupSocketChat(httpServer: HttpServer) {
   const activeUsers = new Map<string, ConnectedUser>();
 
   io.on("connection", (socket) => {
-    console.log(`Socket connected: ${socket.id}`);
+    logger.info(`Socket connected: ${socket.id}`);
 
     // Handle joining a channel
     socket.on("join-channel", async (data: { channel: string; userId: string; userName: string }) => {
@@ -47,7 +48,7 @@ export function setupSocketChat(httpServer: HttpServer) {
         // Join the channel
         socket.join(channel);
         
-        console.log(`User ${userName} (${userId}) joined channel: ${channel}`);
+        logger.info(`User ${userName} (${userId}) joined channel: ${channel}`);
         
         // Load and send message history (latest 50 messages in reverse chronological order)
         try {
@@ -59,14 +60,14 @@ export function setupSocketChat(httpServer: HttpServer) {
           })).reverse();
           socket.emit("message-history", formattedMessages);
         } catch (error) {
-          console.error("Error loading message history:", error);
+          logger.error("Error loading message history:", error);
           socket.emit("message-history", []);
         }
         
         // Send confirmation
         socket.emit("joined-channel", { channel, userName });
       } catch (error) {
-        console.error("Error joining channel:", error);
+        logger.error("Error joining channel:", error);
         socket.emit("error", { message: "Failed to join channel" });
       }
     });
@@ -100,9 +101,9 @@ export function setupSocketChat(httpServer: HttpServer) {
         // Broadcast to all users in the channel
         io.to(channel).emit("new-message", message);
         
-        console.log(`Message saved and sent to ${channel} by ${user.userName}: ${content}`);
+        logger.info(`Message saved and sent to ${channel} by ${user.userName}: ${content}`);
       } catch (error) {
-        console.error("Error sending message:", error);
+        logger.error("Error sending message:", error);
         socket.emit("error", { message: "Failed to send message" });
       }
     });
@@ -153,9 +154,9 @@ export function setupSocketChat(httpServer: HttpServer) {
         // Broadcast the updated message to all users in the channel
         io.to(messageToEdit.channel).emit("message-edited", updatedMessage);
         
-        console.log(`Message ${messageId} edited by ${user.userName} in ${messageToEdit.channel}`);
+        logger.info(`Message ${messageId} edited by ${user.userName} in ${messageToEdit.channel}`);
       } catch (error) {
-        console.error("Error editing message:", error);
+        logger.error("Error editing message:", error);
         socket.emit("error", { message: "Failed to edit message" });
       }
     });
@@ -203,9 +204,9 @@ export function setupSocketChat(httpServer: HttpServer) {
         // Broadcast the deletion to all users in the channel
         io.to(messageToDelete.channel).emit("message-deleted", { messageId, deletedBy: user.userName });
         
-        console.log(`Message ${messageId} deleted by ${user.userName} in ${messageToDelete.channel}`);
+        logger.info(`Message ${messageId} deleted by ${user.userName} in ${messageToDelete.channel}`);
       } catch (error) {
-        console.error("Error deleting message:", error);
+        logger.error("Error deleting message:", error);
         socket.emit("error", { message: "Failed to delete message" });
       }
     });
@@ -214,13 +215,13 @@ export function setupSocketChat(httpServer: HttpServer) {
     socket.on("leave-channel", (data: { channel: string; userId: string; userName: string }) => {
       const { channel, userName } = data;
       socket.leave(channel);
-      console.log(`User ${userName} left channel: ${channel}`);
+      logger.info(`User ${userName} left channel: ${channel}`);
     });
 
     // Handle disconnect
     socket.on("disconnect", () => {
       activeUsers.delete(socket.id);
-      console.log(`Socket disconnected: ${socket.id}`);
+      logger.info(`Socket disconnected: ${socket.id}`);
     });
   });
 

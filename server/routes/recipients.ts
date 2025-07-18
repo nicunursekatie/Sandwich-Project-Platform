@@ -3,6 +3,7 @@ import { z } from "zod";
 import { storage } from "../storage-wrapper";
 import { requirePermission, isAuthenticated, optionalAuth } from "../middleware/auth";
 import { insertRecipientSchema } from "@shared/schema";
+import { logger } from "../utils/logger";
 
 const router = Router();
 
@@ -12,7 +13,7 @@ router.get("/", optionalAuth, async (req: any, res) => {
     const recipients = await storage.getAllRecipients();
     res.json(recipients);
   } catch (error) {
-    console.error("Error fetching recipients:", error);
+    logger.error("Error fetching recipients:", error);
     res.status(500).json({ error: "Failed to fetch recipients" });
   }
 });
@@ -27,7 +28,7 @@ router.get("/:id", optionalAuth, async (req: any, res) => {
     }
     res.json(recipient);
   } catch (error) {
-    console.error("Error fetching recipient:", error);
+    logger.error("Error fetching recipient:", error);
     res.status(500).json({ error: "Failed to fetch recipient" });
   }
 });
@@ -42,7 +43,7 @@ router.post("/", requirePermission("edit_data"), async (req: any, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: "Invalid recipient data", details: error.errors });
     }
-    console.error("Error creating recipient:", error);
+    logger.error("Error creating recipient:", error);
     res.status(500).json({ error: "Failed to create recipient" });
   }
 });
@@ -61,7 +62,7 @@ router.patch("/:id", requirePermission("edit_data"), async (req: any, res) => {
     const updatedRecipient = await storage.updateRecipient(recipientId, req.body);
     res.json(updatedRecipient);
   } catch (error) {
-    console.error("Error updating recipient:", error);
+    logger.error("Error updating recipient:", error);
     res.status(500).json({ error: "Failed to update recipient" });
   }
 });
@@ -80,7 +81,7 @@ router.delete("/:id", requirePermission("delete_data"), async (req: any, res) =>
     await storage.deleteRecipient(recipientId);
     res.json({ message: "Recipient deleted successfully" });
   } catch (error) {
-    console.error("Error deleting recipient:", error);
+    logger.error("Error deleting recipient:", error);
     res.status(500).json({ error: "Failed to delete recipient" });
   }
 });
@@ -94,7 +95,7 @@ router.patch("/:id/status", requirePermission("edit_data"), async (req: any, res
     const updatedRecipient = await storage.updateRecipient(recipientId, { isActive });
     res.json(updatedRecipient);
   } catch (error) {
-    console.error("Error updating recipient status:", error);
+    logger.error("Error updating recipient status:", error);
     res.status(500).json({ error: "Failed to update recipient status" });
   }
 });
@@ -106,7 +107,7 @@ router.get("/type/:type", optionalAuth, async (req: any, res) => {
     const recipients = await storage.getRecipientsByType(type);
     res.json(recipients);
   } catch (error) {
-    console.error("Error fetching recipients by type:", error);
+    logger.error("Error fetching recipients by type:", error);
     res.status(500).json({ error: "Failed to fetch recipients by type" });
   }
 });
@@ -125,7 +126,7 @@ router.get("/:id/distributions", optionalAuth, async (req: any, res) => {
     const distributions = await storage.getRecipientDistributions(recipientId, dateRange);
     res.json(distributions);
   } catch (error) {
-    console.error("Error fetching recipient distributions:", error);
+    logger.error("Error fetching recipient distributions:", error);
     res.status(500).json({ error: "Failed to fetch recipient distributions" });
   }
 });
@@ -137,7 +138,7 @@ router.get("/:id/stats", optionalAuth, async (req: any, res) => {
     const stats = await storage.getRecipientStats(recipientId);
     res.json(stats);
   } catch (error) {
-    console.error("Error fetching recipient stats:", error);
+    logger.error("Error fetching recipient stats:", error);
     res.status(500).json({ error: "Failed to fetch recipient stats" });
   }
 });

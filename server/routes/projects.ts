@@ -3,6 +3,7 @@ import { z } from "zod";
 import { storage } from "../storage-wrapper";
 import { requirePermission, isAuthenticated } from "../middleware/auth";
 import { insertProjectSchema, insertProjectTaskSchema, insertTaskCompletionSchema } from "@shared/schema";
+import { logger } from "../utils/logger";
 
 const router = Router();
 
@@ -12,7 +13,7 @@ router.get("/", isAuthenticated, async (req: any, res) => {
     const projects = await storage.getAllProjects();
     res.json(projects);
   } catch (error) {
-    console.error("Error fetching projects:", error);
+    logger.error("Error fetching projects:", error);
     res.status(500).json({ error: "Failed to fetch projects" });
   }
 });
@@ -27,7 +28,7 @@ router.get("/:id", isAuthenticated, async (req: any, res) => {
     }
     res.json(project);
   } catch (error) {
-    console.error("Error fetching project:", error);
+    logger.error("Error fetching project:", error);
     res.status(500).json({ error: "Failed to fetch project" });
   }
 });
@@ -42,7 +43,7 @@ router.post("/", requirePermission("edit_data"), async (req: any, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: "Invalid project data", details: error.errors });
     }
-    console.error("Error creating project:", error);
+    logger.error("Error creating project:", error);
     res.status(500).json({ error: "Failed to create project" });
   }
 });
@@ -62,7 +63,7 @@ router.patch("/:id", requirePermission("edit_data"), async (req: any, res) => {
     const updatedProject = await storage.updateProject(projectId, req.body);
     res.json(updatedProject);
   } catch (error) {
-    console.error("Error updating project:", error);
+    logger.error("Error updating project:", error);
     res.status(500).json({ error: "Failed to update project" });
   }
 });
@@ -81,7 +82,7 @@ router.delete("/:id", requirePermission("delete_data"), async (req: any, res) =>
     await storage.deleteProject(projectId);
     res.json({ message: "Project deleted successfully" });
   } catch (error) {
-    console.error("Error deleting project:", error);
+    logger.error("Error deleting project:", error);
     res.status(500).json({ error: "Failed to delete project" });
   }
 });
@@ -93,7 +94,7 @@ router.get("/:id/tasks", isAuthenticated, async (req: any, res) => {
     const tasks = await storage.getProjectTasks(projectId);
     res.json(tasks);
   } catch (error) {
-    console.error("Error fetching project tasks:", error);
+    logger.error("Error fetching project tasks:", error);
     res.status(500).json({ error: "Failed to fetch project tasks" });
   }
 });
@@ -110,7 +111,7 @@ router.post("/:id/tasks", requirePermission("edit_data"), async (req: any, res) 
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: "Invalid task data", details: error.errors });
     }
-    console.error("Error creating project task:", error);
+    logger.error("Error creating project task:", error);
     res.status(500).json({ error: "Failed to create project task" });
   }
 });
@@ -128,7 +129,7 @@ router.patch("/tasks/:taskId", requirePermission("edit_data"), async (req: any, 
     const updatedTask = await storage.updateProjectTask(taskId, req.body);
     res.json(updatedTask);
   } catch (error) {
-    console.error("Error updating project task:", error);
+    logger.error("Error updating project task:", error);
     res.status(500).json({ error: "Failed to update project task" });
   }
 });
@@ -146,7 +147,7 @@ router.delete("/tasks/:taskId", requirePermission("delete_data"), async (req: an
     await storage.deleteProjectTask(taskId);
     res.json({ message: "Task deleted successfully" });
   } catch (error) {
-    console.error("Error deleting project task:", error);
+    logger.error("Error deleting project task:", error);
     res.status(500).json({ error: "Failed to delete project task" });
   }
 });
@@ -171,7 +172,7 @@ router.post("/tasks/:taskId/complete", requirePermission("edit_data"), async (re
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: "Invalid completion data", details: error.errors });
     }
-    console.error("Error marking task complete:", error);
+    logger.error("Error marking task complete:", error);
     res.status(500).json({ error: "Failed to mark task complete" });
   }
 });
@@ -184,7 +185,7 @@ router.delete("/tasks/:taskId/complete", requirePermission("edit_data"), async (
     await storage.removeTaskCompletion(taskId, user.id);
     res.json({ message: "Task completion removed successfully" });
   } catch (error) {
-    console.error("Error removing task completion:", error);
+    logger.error("Error removing task completion:", error);
     res.status(500).json({ error: "Failed to remove task completion" });
   }
 });
@@ -196,7 +197,7 @@ router.get("/:id/assignments", isAuthenticated, async (req: any, res) => {
     const assignments = await storage.getProjectAssignments(projectId);
     res.json(assignments);
   } catch (error) {
-    console.error("Error fetching project assignments:", error);
+    logger.error("Error fetching project assignments:", error);
     res.status(500).json({ error: "Failed to fetch project assignments" });
   }
 });
@@ -213,7 +214,7 @@ router.post("/:id/assign-user", requirePermission("edit_data"), async (req: any,
     const assignment = await storage.assignUserToProject(projectId, userId, role);
     res.status(201).json(assignment);
   } catch (error) {
-    console.error("Error assigning user to project:", error);
+    logger.error("Error assigning user to project:", error);
     res.status(500).json({ error: "Failed to assign user to project" });
   }
 });
@@ -230,7 +231,7 @@ router.delete("/:id/remove-user", requirePermission("edit_data"), async (req: an
     await storage.removeUserFromProject(projectId, userId);
     res.json({ message: "User removed from project successfully" });
   } catch (error) {
-    console.error("Error removing user from project:", error);
+    logger.error("Error removing user from project:", error);
     res.status(500).json({ error: "Failed to remove user from project" });
   }
 });

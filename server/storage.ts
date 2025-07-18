@@ -1378,7 +1378,7 @@ export class MemStorage implements IStorage {
 
   async updateChatMessage(id: number, updates: { content: string }): Promise<void> {
     // In-memory storage doesn't persist anyway, so just log
-    console.log(`[MemStorage] Updated chat message ${id} with content: ${updates.content}`);
+    logger.info(`[MemStorage] Updated chat message ${id} with content: ${updates.content}`);
   }
 
   async getChatMessages(channel: string, limit?: number): Promise<any[]> {
@@ -1392,6 +1392,7 @@ export class MemStorage implements IStorage {
 
 import { GoogleSheetsStorage } from './google-sheets';
 import { DatabaseStorage } from './database-storage';
+import { logger } from './utils/logger';
 
 // Create storage instance with error handling
 let storageInstance: IStorage;
@@ -1399,21 +1400,21 @@ let storageInstance: IStorage;
 try {
   // Priority 1: Use database storage if available (for persistence across deployments)
   if (process.env.DATABASE_URL) {
-    console.log('Using database storage for data persistence...');
+    logger.info('Using database storage for data persistence...');
     storageInstance = new DatabaseStorage();
   } 
   // Priority 2: Use Google Sheets if database not available
   else if (process.env.GOOGLE_SPREADSHEET_ID && process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL) {
-    console.log('Database not available, using Google Sheets storage...');
+    logger.info('Database not available, using Google Sheets storage...');
     storageInstance = new GoogleSheetsStorage();
   } 
   // Fallback: Memory storage (data will not persist across deployments)
   else {
-    console.log('No persistent storage configured, using memory storage (data will not persist)');
+    logger.info('No persistent storage configured, using memory storage (data will not persist)');
     storageInstance = new MemStorage();
   }
 } catch (error) {
-  console.error('Failed to initialize persistent storage, falling back to memory:', error);
+  logger.error('Failed to initialize persistent storage, falling back to memory:', error);
   storageInstance = new MemStorage();
 }
 

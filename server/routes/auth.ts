@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { storage } from "../storage-wrapper";
 import { isAuthenticated } from "../middleware/auth";
+import { logger } from "../utils/logger";
 
 const router = Router();
 
@@ -17,7 +18,7 @@ router.get("/profile", isAuthenticated, async (req: any, res) => {
       profileImageUrl: user.profileImageUrl
     });
   } catch (error) {
-    console.error("Profile fetch error:", error);
+    logger.apiError("GET", "/profile", error, req.user?.id);
     res.status(500).json({ message: "Failed to fetch profile" });
   }
 });
@@ -49,7 +50,7 @@ router.put("/profile", isAuthenticated, async (req: any, res) => {
       profileImageUrl: updatedUser.profileImageUrl
     });
   } catch (error) {
-    console.error("Profile update error:", error);
+    logger.apiError("PUT", "/profile", error, req.user?.id);
     res.status(500).json({ message: "Failed to update profile" });
   }
 });
@@ -80,7 +81,7 @@ router.get("/user", async (req: any, res) => {
         isActive: dbUser.isActive
       });
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      logger.apiError("GET", "/user", error);
       res.status(500).json({ message: "Error fetching user data" });
     }
   } else {
@@ -104,7 +105,7 @@ router.get("/debug/user/:email", async (req: any, res) => {
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
-    console.error("Debug user error:", error);
+    logger.error("Debug user error:", error);
     res.status(500).json({ error: "Failed to get user" });
   }
 });
@@ -120,7 +121,7 @@ router.get("/debug-user/:email", async (req: any, res) => {
       exists: true 
     } : { exists: false });
   } catch (error) {
-    console.error("Debug user error:", error);
+    logger.error("Debug user error:", error);
     res.status(500).json({ error: "Failed to get user" });
   }
 });
@@ -131,7 +132,7 @@ router.post("/fix-permissions", async (req: any, res) => {
     // Implementation for fixing permissions would go here
     res.json({ success: true, message: "Permissions fixed" });
   } catch (error) {
-    console.error("Fix permissions error:", error);
+    logger.error("Fix permissions error:", error);
     res.status(500).json({ error: "Failed to fix permissions" });
   }
 });

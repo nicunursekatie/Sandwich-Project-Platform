@@ -3,6 +3,7 @@ import { db } from "../db";
 import { eq, desc, and } from "drizzle-orm";
 import { pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { Server as SocketServer } from "socket.io";
+import { logger } from "../utils/logger";
 
 const router = Router();
 
@@ -19,18 +20,18 @@ export const chatMessages = pgTable("chat_messages", {
 // Socket.IO chat server setup
 export function setupChatSocket(io: SocketServer) {
   io.on("connection", (socket) => {
-    console.log("User connected to chat:", socket.id);
+    logger.info("User connected to chat:", socket.id);
     
     // Join a chat channel
     socket.on("join-channel", (channel: string) => {
       socket.join(channel);
-      console.log(`User ${socket.id} joined channel: ${channel}`);
+      logger.info(`User ${socket.id} joined channel: ${channel}`);
     });
     
     // Leave a chat channel
     socket.on("leave-channel", (channel: string) => {
       socket.leave(channel);
-      console.log(`User ${socket.id} left channel: ${channel}`);
+      logger.info(`User ${socket.id} left channel: ${channel}`);
     });
     
     // Handle new chat message
@@ -59,9 +60,9 @@ export function setupChatSocket(io: SocketServer) {
           createdAt: newMessage.createdAt,
         });
         
-        console.log(`Message sent to channel ${channel}: ${content}`);
+        logger.info(`Message sent to channel ${channel}: ${content}`);
       } catch (error) {
-        console.error("Error sending chat message:", error);
+        logger.error("Error sending chat message:", error);
         socket.emit("error", { message: "Failed to send message" });
       }
     });
@@ -97,15 +98,15 @@ export function setupChatSocket(io: SocketServer) {
         // Broadcast deletion to all users in the channel
         io.to(message.channel).emit("message-deleted", { messageId });
         
-        console.log(`Message ${messageId} deleted from channel ${message.channel}`);
+        logger.info(`Message ${messageId} deleted from channel ${message.channel}`);
       } catch (error) {
-        console.error("Error deleting chat message:", error);
+        logger.error("Error deleting chat message:", error);
         socket.emit("error", { message: "Failed to delete message" });
       }
     });
     
     socket.on("disconnect", () => {
-      console.log("User disconnected from chat:", socket.id);
+      logger.info("User disconnected from chat:", socket.id);
     });
   });
 }
@@ -129,7 +130,7 @@ router.get("/chat/:channel", async (req, res) => {
 
     res.json(messages.reverse()); // Most recent at bottom
   } catch (error) {
-    console.error("Error fetching chat messages:", error);
+    logger.error("Error fetching chat messages:", error);
     res.status(500).json({ error: "Failed to fetch messages" });
   }
 });
@@ -171,7 +172,7 @@ router.post("/chat/:channel", async (req, res) => {
 
     res.status(201).json(newMessage);
   } catch (error) {
-    console.error("Error sending chat message:", error);
+    logger.error("Error sending chat message:", error);
     res.status(500).json({ error: "Failed to send message" });
   }
 });
@@ -207,7 +208,7 @@ router.delete("/chat/message/:id", async (req, res) => {
 
     res.status(204).send();
   } catch (error) {
-    console.error("Error deleting chat message:", error);
+    logger.error("Error deleting chat message:", error);
     res.status(500).json({ error: "Failed to delete message" });
   }
 });

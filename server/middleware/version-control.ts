@@ -166,7 +166,7 @@ export class VersionControl {
 
       return true;
     } catch (error) {
-      console.error('Failed to restore version:', error);
+      logger.error('Failed to restore version:', error);
       return false;
     }
   }

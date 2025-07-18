@@ -1,4 +1,5 @@
 import { storage } from "../storage-wrapper";
+import { logger } from "../utils/logger";
 import { hasPermission } from "@shared/auth-utils";
 
 export const requirePermission = (permission: string) => {
@@ -26,7 +27,7 @@ export const requirePermission = (permission: string) => {
       
       next();
     } catch (error) {
-      console.error("Permission check error:", error);
+      logger.error("Permission check failed", error, { userId: req.user?.id, permission });
       res.status(500).json({ message: "Internal server error" });
     }
   };
@@ -50,7 +51,7 @@ export const isAuthenticated = async (req: any, res: any, next: any) => {
     
     next();
   } catch (error) {
-    console.error("Authentication error:", error);
+    logger.error("Authentication middleware error", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

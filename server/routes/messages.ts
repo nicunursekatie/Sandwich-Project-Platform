@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger";
 import { Router } from "express";
 import { z } from "zod";
 import { storage } from "../storage-wrapper";
@@ -11,7 +12,7 @@ router.get("/messages", async (req, res) => {
   try {
     const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
 
-    console.log(`🔍 API QUERY: /messages - limit: ${limit}`);
+    logger.info(`🔍 API QUERY: /messages - limit: ${limit}`);
 
     let messages;
     if (limit) {
@@ -20,10 +21,10 @@ router.get("/messages", async (req, res) => {
       messages = await storage.getAllMessages();
     }
     
-    console.log(`📤 API RESPONSE: Returning ${messages.length} messages`);
+    logger.info(`📤 API RESPONSE: Returning ${messages.length} messages`);
     res.json(messages);
   } catch (error) {
-    console.error("Error fetching messages:", error);
+    logger.error("Error fetching messages:", error);
     res.status(500).json({ error: "Failed to fetch messages" });
   }
 });
@@ -34,7 +35,7 @@ router.get("/messages/:id/thread", async (req, res) => {
     const messages = await storage.getThreadMessages(id);
     res.json(messages);
   } catch (error) {
-    console.error("Error fetching thread messages:", error);
+    logger.error("Error fetching thread messages:", error);
     res.status(500).json({ error: "Failed to fetch thread messages" });
   }
 });
@@ -56,17 +57,17 @@ router.post("/messages", sanitizeMiddleware, async (req, res) => {
     }
     
     // Broadcast notification for new messages
-    console.log('Broadcasting new message notification:', message);
+    logger.info('Broadcasting new message notification:', message);
     if ((global as any).broadcastNewMessage) {
       (global as any).broadcastNewMessage(message);
-      console.log('Message broadcast sent successfully');
+      logger.info('Message broadcast sent successfully');
     } else {
-      console.error('broadcastNewMessage function not available');
+      logger.error('broadcastNewMessage function not available');
     }
     
     res.status(201).json(message);
   } catch (error) {
-    console.error("Error creating message:", error);
+    logger.error("Error creating message:", error);
     res.status(500).json({ error: "Failed to create message" });
   }
 });
@@ -80,7 +81,7 @@ router.delete("/messages/:id", async (req, res) => {
     }
     res.status(204).send();
   } catch (error) {
-    console.error("Error deleting message:", error);
+    logger.error("Error deleting message:", error);
     res.status(500).json({ error: "Failed to delete message" });
   }
 });

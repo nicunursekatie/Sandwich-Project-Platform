@@ -5,6 +5,7 @@ import type {
   MeetingMinutes, InsertMeetingMinutes, DriveLink, InsertDriveLink
 } from '@shared/schema';
 import type { IStorage } from './storage';
+import { logger } from "./utils/logger";
 
 export class GoogleSheetsStorage implements IStorage {
   private sheets: any;
@@ -56,7 +57,7 @@ export class GoogleSheetsStorage implements IStorage {
         await this.addHeaders(sheetName);
       }
     } catch (error) {
-      console.error('Google Sheets access error:', error);
+      logger.error('Google Sheets access error:', error);
       throw new Error('Google Sheets permission denied. Please ensure the service account has access to the spreadsheet.');
     }
   }
@@ -97,7 +98,7 @@ export class GoogleSheetsStorage implements IStorage {
       const ids = values.slice(1).map((row: any[]) => parseInt(row[0]) || 0).filter(id => id > 0);
       return ids.length > 0 ? Math.max(...ids) + 1 : 1;
     } catch (error) {
-      console.error(`Error getting next ID for ${sheetName}:`, error);
+      logger.error(`Error getting next ID for ${sheetName}:`, error);
       return 1;
     }
   }
@@ -125,7 +126,7 @@ export class GoogleSheetsStorage implements IStorage {
       }
       return undefined;
     } catch (error) {
-      console.error('Error getting user:', error);
+      logger.error('Error getting user:', error);
       throw error;
     }
   }
@@ -152,7 +153,7 @@ export class GoogleSheetsStorage implements IStorage {
       }
       return undefined;
     } catch (error) {
-      console.error('Error getting user by username:', error);
+      logger.error('Error getting user by username:', error);
       throw error;
     }
   }
@@ -175,7 +176,7 @@ export class GoogleSheetsStorage implements IStorage {
 
       return user;
     } catch (error) {
-      console.error('Error creating user:', error);
+      logger.error('Error creating user:', error);
       throw error;
     }
   }
@@ -203,7 +204,7 @@ export class GoogleSheetsStorage implements IStorage {
         color: row[6] || 'blue'
       })).filter(project => project.id > 0);
     } catch (error) {
-      console.error('Error getting projects:', error);
+      logger.error('Error getting projects:', error);
       throw error;
     }
   }
@@ -245,7 +246,7 @@ export class GoogleSheetsStorage implements IStorage {
 
       return project;
     } catch (error) {
-      console.error('Error creating project:', error);
+      logger.error('Error creating project:', error);
       throw error;
     }
   }
@@ -289,7 +290,7 @@ export class GoogleSheetsStorage implements IStorage {
 
       return updatedProject;
     } catch (error) {
-      console.error('Error updating project:', error);
+      logger.error('Error updating project:', error);
       throw error;
     }
   }
@@ -318,7 +319,7 @@ export class GoogleSheetsStorage implements IStorage {
         committee: row[7] || 'general'
       })).filter(message => message.id > 0);
     } catch (error) {
-      console.error('Error getting messages:', error);
+      logger.error('Error getting messages:', error);
       throw error;
     }
   }
@@ -370,7 +371,7 @@ export class GoogleSheetsStorage implements IStorage {
 
       return message;
     } catch (error) {
-      console.error('Error creating message:', error);
+      logger.error('Error creating message:', error);
       throw error;
     }
   }
@@ -419,7 +420,7 @@ export class GoogleSheetsStorage implements IStorage {
             }
           });
         } catch (error) {
-          console.error('Error updating reply count:', error);
+          logger.error('Error updating reply count:', error);
         }
       }
     }
@@ -442,7 +443,7 @@ export class GoogleSheetsStorage implements IStorage {
       );
       
       if (!messagesSheet || !messagesSheet.properties) {
-        console.error('Messages sheet not found');
+        logger.error('Messages sheet not found');
         return false;
       }
 
@@ -464,10 +465,10 @@ export class GoogleSheetsStorage implements IStorage {
           }]
         }
       });
-      console.log(`Successfully deleted message ${id} from Google Sheets`);
+      logger.info(`Successfully deleted message ${id} from Google Sheets`);
       return true;
     } catch (error) {
-      console.error('Error deleting message:', error);
+      logger.error('Error deleting message:', error);
       return false;
     }
   }
@@ -494,7 +495,7 @@ export class GoogleSheetsStorage implements IStorage {
         submittedAt: new Date(row[5] || Date.now())
       })).filter(report => report.id > 0);
     } catch (error) {
-      console.error('Error getting weekly reports:', error);
+      logger.error('Error getting weekly reports:', error);
       return [];
     }
   }
@@ -529,7 +530,7 @@ export class GoogleSheetsStorage implements IStorage {
 
       return report;
     } catch (error) {
-      console.error('Error creating weekly report:', error);
+      logger.error('Error creating weekly report:', error);
       throw error;
     }
   }
@@ -556,7 +557,7 @@ export class GoogleSheetsStorage implements IStorage {
         submittedAt: new Date(row[4] || Date.now()) // Logged At
       }));
     } catch (error) {
-      console.error('Error getting sandwich collections:', error);
+      logger.error('Error getting sandwich collections:', error);
       return [];
     }
   }
@@ -592,14 +593,14 @@ export class GoogleSheetsStorage implements IStorage {
 
       return collection;
     } catch (error) {
-      console.error('Error creating sandwich collection:', error);
+      logger.error('Error creating sandwich collection:', error);
       throw error;
     }
   }
 
   async updateSandwichCollection(id: number, updates: Partial<SandwichCollection>): Promise<SandwichCollection | undefined> {
     // Google Sheets update not implemented - return undefined to trigger fallback
-    console.log(`Update operation for sandwich collection ${id} not implemented in Google Sheets, using fallback storage`);
+    logger.info(`Update operation for sandwich collection ${id} not implemented in Google Sheets, using fallback storage`);
     return undefined;
   }
 
@@ -626,7 +627,7 @@ export class GoogleSheetsStorage implements IStorage {
       }
       
       if (rowIndex === -1) {
-        console.log(`Sandwich collection ${id} not found in Google Sheets`);
+        logger.info(`Sandwich collection ${id} not found in Google Sheets`);
         return false;
       }
       
@@ -647,10 +648,10 @@ export class GoogleSheetsStorage implements IStorage {
         }
       });
       
-      console.log(`Successfully deleted sandwich collection ${id} from Google Sheets`);
+      logger.info(`Successfully deleted sandwich collection ${id} from Google Sheets`);
       return true;
     } catch (error) {
-      console.error(`Failed to delete sandwich collection ${id} from Google Sheets:`, error);
+      logger.error(`Failed to delete sandwich collection ${id} from Google Sheets:`, error);
       return false;
     }
   }
@@ -685,7 +686,7 @@ export class GoogleSheetsStorage implements IStorage {
         color: row[4] || 'blue'
       })).filter(minutes => minutes.id > 0);
     } catch (error) {
-      console.error('Error getting meeting minutes:', error);
+      logger.error('Error getting meeting minutes:', error);
       return [];
     }
   }
@@ -723,7 +724,7 @@ export class GoogleSheetsStorage implements IStorage {
 
       return minutes;
     } catch (error) {
-      console.error('Error creating meeting minutes:', error);
+      logger.error('Error creating meeting minutes:', error);
       throw error;
     }
   }
@@ -750,7 +751,7 @@ export class GoogleSheetsStorage implements IStorage {
         iconColor: row[5] || ''
       })).filter(link => link.id > 0);
     } catch (error) {
-      console.error('Error getting drive links:', error);
+      logger.error('Error getting drive links:', error);
       return [];
     }
   }
@@ -780,7 +781,7 @@ export class GoogleSheetsStorage implements IStorage {
 
       return link;
     } catch (error) {
-      console.error('Error creating drive link:', error);
+      logger.error('Error creating drive link:', error);
       throw error;
     }
   }

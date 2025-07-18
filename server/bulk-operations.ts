@@ -334,7 +334,7 @@ export class BulkOperationsManager {
         summary: { totalIssues, criticalIssues }
       };
     } catch (error) {
-      console.error('Data integrity check failed:', error);
+      logger.error('Data integrity check failed:', error);
       return {
         issues: [{ type: 'check_failed', description: 'Could not complete integrity check', count: 1 }],
         summary: { totalIssues: 1, criticalIssues: 1 }

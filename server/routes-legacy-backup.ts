@@ -93,7 +93,7 @@ const requirePermission = (permission: string) => {
             req.user = freshUser;
           }
         } catch (dbError) {
-          console.error("Database error in requirePermission:", dbError);
+          logger.error("Database error in requirePermission", dbError, { userId, permission });
           // Continue with session user if database fails
         }
       }
@@ -270,7 +270,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       tableName: "sessions",
       pruneSessionInterval: false, // Disable auto-pruning to prevent connection issues
       errorLog: (error) => {
-        console.warn("Session store warning (non-critical):", error.message);
+        logger.warn("Session store warning (non-critical)", { error: error.message });
         // Don't throw - continue with memory store fallback
       },
     });
@@ -278,30 +278,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Test the session store connection
     await new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
-        console.log("Session store test timed out, using fallback");
+        logger.info("Session store test timed out, using fallback");
         resolve(null);
       }, 2000);
       
       sessionStore.on('connect', () => {
         clearTimeout(timeout);
-        console.log("✓ PostgreSQL session store connected successfully");
+        logger.info("PostgreSQL session store connected successfully");
         resolve(true);
       });
       
       sessionStore.on('disconnect', () => {
         clearTimeout(timeout);
-        console.log("Session store disconnected, using fallback");
+        logger.info("Session store disconnected, using fallback");
         resolve(null);
       });
     });
   } catch (error) {
-    console.warn("PostgreSQL session store failed, using memory fallback:", error.message);
+    logger.warn("PostgreSQL session store failed, using memory fallback", { error: error.message });
     sessionStore = new session.MemoryStore();
   }
   
   // Fallback to memory store if PostgreSQL session store failed
   if (!sessionStore) {
-    console.log("Using memory-based session store as fallback");
+    logger.info("Using memory-based session store as fallback");
     sessionStore = new session.MemoryStore();
   }
 
@@ -338,64 +338,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { signupRoutes } = await import("./routes/signup");
   app.use("/api", signupRoutes);
 
-  // Comprehensive debug endpoints for authentication troubleshooting
-  app.get("/api/debug/session", async (req: any, res) => {
-    try {
-      const sessionUser = req.session?.user;
-      const reqUser = req.user;
 
-      res.json({
-        hasSession: !!req.session,
-        sessionId: req.sessionID,
-        sessionStore: !!sessionStore,
-        sessionUser: sessionUser
-          ? {
-              id: sessionUser.id,
-              email: sessionUser.email,
-              role: sessionUser.role,
-              isActive: sessionUser.isActive,
-            }
-          : null,
-        reqUser: reqUser
-          ? {
-              id: reqUser.id,
-              email: reqUser.email,
-              role: reqUser.role,
-              isActive: reqUser.isActive,
-            }
-          : null,
-        cookies: req.headers.cookie,
-        userAgent: req.headers["user-agent"],
-        timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV || "development",
-      });
-    } catch (error) {
-      console.error("Debug session error:", error);
-      res.status(500).json({ error: "Failed to get session info" });
-    }
-  });
-
-  // Debug endpoint to check authentication status
-  app.get("/api/debug/auth-status", async (req: any, res) => {
-    try {
-      const user = req.session?.user || req.user;
-
-      res.json({
-        isAuthenticated: !!user,
-        sessionExists: !!req.session,
-        userInSession: !!req.session?.user,
-        userInRequest: !!req.user,
-        userId: user?.id || null,
-        userEmail: user?.email || null,
-        userRole: user?.role || null,
-        sessionId: req.sessionID,
-        timestamp: new Date().toISOString(),
-      });
-    } catch (error) {
-      console.error("Debug auth status error:", error);
-      res.status(500).json({ error: "Failed to get auth status" });
-    }
-  });
 
   // Auth routes - Fixed to work with temp auth system
   app.get("/api/auth/user", isAuthenticated, async (req: any, res) => {
@@ -418,7 +361,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const dbUser = await storage.getUser(userId);
       res.json(dbUser || user);
     } catch (error) {
-      console.error("Error fetching user:", error);
+      logger.apiError("GET", "/api/auth/user", error, req.user?.id);
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
@@ -450,7 +393,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const users = await storage.getAllUsers();
         res.json(users);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        logger.apiError("GET", "/api/users", error);
         res.status(500).json({ message: "Failed to fetch users" });
       }
     },
@@ -467,7 +410,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const updatedUser = await storage.updateUser(id, { role, permissions });
         res.json(updatedUser);
       } catch (error) {
-        console.error("Error updating user:", error);
+        logger.apiError("PATCH", "/api/users/:id", error, req.user?.id);
         res.status(500).json({ message: "Failed to update user" });
       }
     },
@@ -484,7 +427,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const updatedUser = await storage.updateUser(id, { isActive });
         res.json(updatedUser);
       } catch (error) {
-        console.error("Error updating user status:", error);
+        logger.apiError("PATCH", "/api/users/:id/status", error, req.user?.id);
         res.status(500).json({ message: "Failed to update user status" });
       }
     },
@@ -500,7 +443,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.deleteUser(id);
         res.json({ success: true, message: "User deleted successfully" });
       } catch (error) {
-        console.error("Error deleting user:", error);
+        logger.apiError("DELETE", "/api/users/:id", error, req.user?.id);
         res.status(500).json({ message: "Failed to delete user" });
       }
     },
@@ -522,13 +465,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     requirePermission("edit_data"),
     async (req, res) => {
       try {
-        console.log("Received project data:", req.body);
+        logger.debug("Creating new project", { projectData: req.body });
         const projectData = insertProjectSchema.parse(req.body);
-        console.log("Parsed project data:", projectData);
+
         const project = await storage.createProject(projectData);
         res.status(201).json(project);
       } catch (error) {
-        console.error("Project creation error details:", error);
+        logger.apiError("POST", "/api/projects", error, req.user?.id);
         logger.error("Failed to create project", error);
         res.status(400).json({
           message: "Invalid project data",
@@ -608,7 +551,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         totalAssignees: assigneeIds.length,
       });
     } catch (error) {
-      console.error("Error completing task:", error);
+      logger.apiError("POST", "/api/tasks/:id/complete", error, req.user?.id);
       res.status(500).json({ error: "Failed to complete task" });
     }
   });
@@ -637,7 +580,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ success: true });
     } catch (error) {
-      console.error("Error removing completion:", error);
+      logger.apiError("DELETE", "/api/tasks/:id/complete", error, req.user?.id);
       res.status(500).json({ error: "Failed to remove completion" });
     }
   });
@@ -649,7 +592,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const completions = await storage.getTaskCompletions(taskId);
       res.json(completions);
     } catch (error) {
-      console.error("Error fetching completions:", error);
+      logger.apiError("GET", "/api/tasks/:id/completions", error);
       res.status(500).json({ error: "Failed to fetch completions" });
     }
   });
@@ -792,9 +735,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
     async (req, res) => {
       try {
-        console.log(`[DEBUG] FULL URL: ${req.url}`);
-        console.log(`[DEBUG] QUERY OBJECT:`, req.query);
-        console.log(`[DEBUG] USER SESSION:`, (req as any).user);
+        logger.debug("Collections request", { 
+          url: req.url, 
+          query: req.query, 
+          userId: (req as any).user?.id 
+        });
 
         const limit = req.query.limit
           ? parseInt(req.query.limit as string)
@@ -808,7 +753,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Use chatType if provided, otherwise fall back to committee for backwards compatibility
         const messageContext = chatType || committee;
-        console.log(
+        logger.info(
           `[DEBUG] API call received - chatType: "${chatType}", committee: "${committee}", recipientId: "${recipientId}", groupId: ${groupId}`,
         );
 
@@ -816,7 +761,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (messageContext === "direct" && recipientId) {
           // For direct messages, get conversations between current user and recipient
           const currentUserId = (req as any).user?.id;
-          console.log(
+          logger.info(
             `[DEBUG] Direct messages requested - currentUserId: ${currentUserId}, recipientId: ${recipientId}`,
           );
           if (!currentUserId) {
@@ -828,14 +773,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             currentUserId,
             recipientId,
           );
-          console.log(
+          logger.info(
             `[DEBUG] Direct messages found: ${messages.length} messages`,
           );
         } else if (groupId) {
           // For group messages, use proper thread-based filtering
           const currentUserId = (req as any).user?.id;
           if (!currentUserId) {
-            console.log(
+            logger.info(
               `[DEBUG] No user authentication found for group ${groupId} request`,
             );
             return res
@@ -843,7 +788,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               .json({ message: "Authentication required for group messages" });
           }
 
-          console.log(
+          logger.info(
             `[DEBUG] Group messages requested - currentUserId: ${currentUserId}, groupId: ${groupId}`,
           );
 
@@ -861,7 +806,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .limit(1);
 
           if (membership.length === 0) {
-            console.log(
+            logger.info(
               `[DEBUG] User ${currentUserId} is not a member of group ${groupId}`,
             );
             return res
@@ -869,7 +814,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               .json({ message: "Not a member of this group" });
           }
 
-          console.log(
+          logger.info(
             `[DEBUG] User ${currentUserId} verified as member of group ${groupId}`,
           );
 
@@ -887,7 +832,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           //   .limit(1);
 
           // if (thread.length === 0) {
-          //   console.log(`[DEBUG] No conversation thread found for group ${groupId}`);
+          //   logger.info(`[DEBUG] No conversation thread found for group ${groupId}`);
           //   return res.json([]); // Return empty array if no thread exists
           // }
 
@@ -905,12 +850,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .limit(1);
 
           if (conversation.length === 0) {
-            console.log(`[DEBUG] No conversation found for group ${groupId}`);
+            logger.info(`[DEBUG] No conversation found for group ${groupId}`);
             return res.json([]); // Return empty array if no conversation exists
           }
 
           const conversationId = conversation[0].id;
-          console.log(
+          logger.info(
             `[DEBUG] Using conversation ID ${conversationId} for group ${groupId}`,
           );
 
@@ -922,13 +867,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .orderBy(messagesTable.createdAt);
           messages = messageResults;
 
-          console.log(
+          logger.info(
             `[DEBUG] Group messages found: ${messages.length} messages for thread ${threadId}`,
           );
 
           // TEMPORARILY DISABLED: Get messages for this specific thread
           // const threadId = thread[0].id;
-          // console.log(`[DEBUG] Using thread ID ${threadId} for group ${groupId}`);
+          // logger.info(`[DEBUG] Using thread ID ${threadId} for group ${groupId}`);
 
           // Get messages for this specific thread
           // const messageResults = await db
@@ -939,7 +884,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // messages = messageResults;
 
           // TEMPORARILY DISABLED: Group messages functionality
-          // console.log(`[DEBUG] Group messages found: ${messages.length} messages for thread ${threadId}`);
+          // logger.info(`[DEBUG] Group messages found: ${messages.length} messages for thread ${threadId}`);
         } else if (messageContext) {
           // TEMPORARILY DISABLED: For chat types, use thread-based filtering
           // const thread = await db
@@ -956,7 +901,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           // if (thread.length > 0) {
           //   const threadId = thread[0].id;
-          //   console.log(`[DEBUG] Using thread ID ${threadId} for chat type ${messageContext}`);
+          //   logger.info(`[DEBUG] Using thread ID ${threadId} for chat type ${messageContext}`);
 
           //   const messageResults = await db
           //     .select()
@@ -966,9 +911,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           //   messages = messageResults;
           // } else {
           //   // FIXED: Use storage layer to create thread instead of legacy committee filtering
-          //   console.log(`❌ CRITICAL: No thread found for chat type ${messageContext}, creating via storage layer`);
+          //   logger.info(`❌ CRITICAL: No thread found for chat type ${messageContext}, creating via storage layer`);
           //   const threadId = await storage.getOrCreateThreadId(messageContext);
-          //   console.log(`✅ Created threadId ${threadId} for ${messageContext} via storage layer`);
+          //   logger.info(`✅ Created threadId ${threadId} for ${messageContext} via storage layer`);
           //   messages = await storage.getMessagesByThreadId(threadId);
           // }
 
@@ -1023,7 +968,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         res.json(filteredMessages);
       } catch (error) {
-        console.error("Error fetching messages:", error);
+        logger.error("Error fetching messages:", error);
         res.status(500).json({ message: "Failed to fetch messages" });
       }
     },
@@ -1041,11 +986,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ...messageData,
           userId: req.user?.id || null,
         };
-        console.log(
+        logger.info(
           `📤 CREATING MESSAGE: committee=${messageData.committee}, conversationId=${messageData.conversationId}, userId=${req.user?.id}`,
         );
         const message = await storage.createMessage(messageWithUser);
-        console.log(
+        logger.info(
           `✅ MESSAGE CREATED: id=${message.id}, conversationId=${message.conversationId}`,
         );
 
@@ -1376,7 +1321,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             deletedCount++;
           }
         } catch (error) {
-          console.error(`Failed to delete collection ${collection.id}:`, error);
+          logger.error(`Failed to delete collection ${collection.id}:`, error);
         }
       }
 
@@ -1551,7 +1496,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors.push(
             `Failed to delete collection ${collection.id}: ${errorMessage}`,
           );
-          console.error(`Failed to delete collection ${collection.id}:`, error);
+          logger.error(`Failed to delete collection ${collection.id}:`, error);
         }
       }
 
@@ -1562,7 +1507,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
       });
     } catch (error) {
-      console.error("Failed to clean duplicates", error);
+      logger.error("Failed to clean duplicates", error);
       res.status(500).json({ message: "Failed to clean duplicate entries" });
     }
   });
@@ -1780,7 +1725,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors.push(
             `Failed to delete collection ${collection.id}: ${errorMessage}`,
           );
-          console.error(`Failed to delete collection ${collection.id}:`, error);
+          logger.error(`Failed to delete collection ${collection.id}:`, error);
         }
       }
 
@@ -2800,7 +2745,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const updates = req.body;
 
       // Log the update data for debugging
-      console.log(
+      logger.info(
         `Updating driver ${id} with data:`,
         JSON.stringify(updates, null, 2),
       );
@@ -2815,7 +2760,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Driver not found" });
       }
 
-      console.log(
+      logger.info(
         `Driver ${id} updated successfully:`,
         JSON.stringify(driver, null, 2),
       );
@@ -2830,14 +2775,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/drivers/:id", sanitizeMiddleware, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      console.log(`Deleting driver ${id}`);
+      logger.info(`Deleting driver ${id}`);
 
       const success = await storage.deleteDriver(id);
       if (!success) {
         return res.status(404).json({ message: "Driver not found" });
       }
 
-      console.log(`Driver ${id} deleted successfully`);
+      logger.info(`Driver ${id} deleted successfully`);
       res.json({ message: "Driver deleted successfully" });
     } catch (error) {
       logger.error("Failed to delete driver", error);
@@ -2954,7 +2899,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const emailSent = await sendDriverAgreementNotification(agreement);
 
       if (!emailSent) {
-        console.warn(
+        logger.warn(
           "Failed to send email notification for driver agreement:",
           agreement.id,
         );
@@ -2968,7 +2913,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         id: agreement.id,
       });
     } catch (error: any) {
-      console.error("Error submitting driver agreement:", error);
+      logger.error("Error submitting driver agreement:", error);
       res.status(500).json({ error: error.message });
     }
   });
@@ -3030,7 +2975,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(404).json({ message: "Host not found" });
         }
 
-        console.log("Host update request:", {
+        logger.info("Host update request:", {
           currentHostName: currentHost.name,
           newName: updates.name,
         });
@@ -3044,7 +2989,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         );
 
         if (targetHost) {
-          console.log(
+          logger.info(
             "Reassignment detected: moving contacts from",
             currentHost.name,
             "to",
@@ -3053,11 +2998,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           // This is a location reassignment - merge contacts to the target host
           const contactsToMove = await storage.getHostContacts(id);
-          console.log("Moving", contactsToMove.length, "contacts");
+          logger.info("Moving", contactsToMove.length, "contacts");
 
           // Update all contacts to point to the target host
           for (const contact of contactsToMove) {
-            console.log(
+            logger.info(
               "Moving contact:",
               contact.name,
               "from host",
@@ -3075,7 +3020,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             currentHost.name,
             targetHost.name,
           );
-          console.log(
+          logger.info(
             "Updated",
             collectionsUpdated,
             "sandwich collection records",
@@ -3083,7 +3028,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           // Delete the original host since its contacts have been moved
           await storage.deleteHost(id);
-          console.log("Deleted original host:", currentHost.name);
+          logger.info("Deleted original host:", currentHost.name);
 
           // Return the target host with success message
           res.json({
@@ -3092,7 +3037,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         } else {
           // Normal host update
-          console.log("Normal host update for:", currentHost.name);
+          logger.info("Normal host update for:", currentHost.name);
           const host = await storage.updateHost(id, updates);
           if (!host) {
             return res.status(404).json({ message: "Host not found" });
@@ -3107,12 +3052,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   app.patch("/api/hosts/:id", async (req, res) => {
-    console.log(`🔥 PATCH route hit for host ${req.params.id}`);
+    logger.info(`🔥 PATCH route hit for host ${req.params.id}`);
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
 
-      console.log(
+      logger.info(
         "PATCH host update - ID:",
         id,
         "Updates:",
@@ -3124,18 +3069,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (cleanUpdates.createdAt) delete cleanUpdates.createdAt;
       if (cleanUpdates.updatedAt) delete cleanUpdates.updatedAt;
 
-      console.log("Cleaned updates:", JSON.stringify(cleanUpdates, null, 2));
+      logger.info("Cleaned updates:", JSON.stringify(cleanUpdates, null, 2));
 
       const host = await storage.updateHost(id, cleanUpdates);
       if (!host) {
-        console.log("Host not found in storage for ID:", id);
+        logger.info("Host not found in storage for ID:", id);
         return res.status(404).json({ error: "Host not found" });
       }
-      console.log("Host updated successfully:", host);
+      logger.info("Host updated successfully:", host);
       res.json(host);
     } catch (error) {
       logger.error("Failed to update host", error);
-      console.error("Host update error details:", error);
+      logger.error("Host update error details:", error);
       res.status(500).json({ error: "Failed to update host" });
     }
   });
@@ -3533,7 +3478,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
             imported++;
           } catch (error) {
-            console.error("Import error:", error);
+            logger.error("Import error:", error);
             errors.push(
               `Row skipped: ${error instanceof Error ? error.message : "Unknown error"}`,
             );
@@ -3922,7 +3867,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(reportData);
     } catch (error) {
-      console.error("Report generation failed:", error);
+      logger.error("Report generation failed:", error);
       res.status(500).json({ error: "Failed to generate report" });
     }
   });
@@ -4120,7 +4065,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   }
                 }
               } catch (e) {
-                console.warn("Date parsing error for record:", record);
+                logger.warn("Date parsing error for record:", record);
               }
 
               const individual = record.individualSandwiches || 0;
@@ -4213,7 +4158,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   }
                 }
               } catch (e) {
-                console.warn("Date parsing error for record:", record);
+                logger.warn("Date parsing error for record:", record);
               }
 
               const individual = record.individualSandwiches || 0;
@@ -4255,7 +4200,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Finalize the PDF
           doc.end();
         } catch (error) {
-          console.error("PDF generation error:", error);
+          logger.error("PDF generation error:", error);
           // Fallback to enhanced CSV if PDF fails
           res.setHeader("Content-Type", "text/csv");
           res.setHeader(
@@ -4284,7 +4229,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.json(reportData);
       }
     } catch (error) {
-      console.error("Report download failed:", error);
+      logger.error("Report download failed:", error);
       res.status(500).json({ error: "Failed to download report" });
     }
   });
@@ -4300,7 +4245,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(scheduledReport);
     } catch (error) {
-      console.error("Report scheduling failed:", error);
+      logger.error("Report scheduling failed:", error);
       res.status(500).json({ error: "Failed to schedule report" });
     }
   });
@@ -4316,7 +4261,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const scheduledReports = reportsCache.get("scheduled_reports") || [];
       res.json(scheduledReports);
     } catch (error) {
-      console.error("Failed to fetch scheduled reports:", error);
+      logger.error("Failed to fetch scheduled reports:", error);
       res.status(500).json({ error: "Failed to fetch scheduled reports" });
     }
   });
@@ -4328,7 +4273,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const recentReports = [];
       res.json(recentReports);
     } catch (error) {
-      console.error("Failed to fetch recent reports:", error);
+      logger.error("Failed to fetch recent reports:", error);
       res.status(500).json({ error: "Failed to fetch recent reports" });
     }
   });
@@ -4351,7 +4296,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: success ? "Email sent successfully" : "Email sending failed",
       });
     } catch (error) {
-      console.error("Test email failed:", error);
+      logger.error("Test email failed:", error);
       res.status(500).json({ error: "Failed to send test email" });
     }
   });
@@ -4362,7 +4307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const templates = EmailService.getAvailableTemplates();
       res.json(templates);
     } catch (error) {
-      console.error("Failed to fetch email templates:", error);
+      logger.error("Failed to fetch email templates:", error);
       res.status(500).json({ error: "Failed to fetch email templates" });
     }
   });
@@ -4384,7 +4329,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           : "Failed to send notification",
       });
     } catch (error) {
-      console.error("Milestone notification failed:", error);
+      logger.error("Milestone notification failed:", error);
       res.status(500).json({ error: "Failed to send milestone notification" });
     }
   });
@@ -4404,7 +4349,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: success ? "Deadline reminder sent" : "Failed to send reminder",
       });
     } catch (error) {
-      console.error("Deadline reminder failed:", error);
+      logger.error("Deadline reminder failed:", error);
       res.status(500).json({ error: "Failed to send deadline reminder" });
     }
   });
@@ -4424,7 +4369,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: success ? "Weekly summary sent" : "Failed to send summary",
       });
     } catch (error) {
-      console.error("Weekly summary failed:", error);
+      logger.error("Weekly summary failed:", error);
       res.status(500).json({ error: "Failed to send weekly summary" });
     }
   });
@@ -4628,12 +4573,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           break;
 
         default:
-          console.log(`Unknown webhook event: ${event}`);
+          logger.info(`Unknown webhook event: ${event}`);
       }
 
       res.json({ success: true, processed: event });
     } catch (error) {
-      console.error("Webhook processing error:", error);
+      logger.error("Webhook processing error:", error);
       res.status(500).json({ error: error.message });
     }
   });
@@ -4767,7 +4712,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize backup system
   BackupManager.initialize().then(() => {
     BackupManager.scheduleAutoBackup();
-    console.log("Backup system initialized with automated daily backups");
+    logger.info("Backup system initialized with automated daily backups");
   });
 
   const httpServer = createServer(app);
@@ -4777,7 +4722,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const committees = await storage.getAllCommittees();
       res.json({ committees });
     } catch (error) {
-      console.error("Error fetching committees:", error);
+      logger.error("Error fetching committees:", error);
       res.status(500).json({ message: "Failed to fetch committees" });
     }
   });
@@ -4791,7 +4736,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(committee);
     } catch (error) {
-      console.error("Error fetching committee:", error);
+      logger.error("Error fetching committee:", error);
       res.status(500).json({ message: "Failed to fetch committee" });
     }
   });
@@ -4805,7 +4750,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const committee = await storage.createCommittee(req.body);
         res.json(committee);
       } catch (error) {
-        console.error("Error creating committee:", error);
+        logger.error("Error creating committee:", error);
         res.status(500).json({ message: "Failed to create committee" });
       }
     },
@@ -4820,7 +4765,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const members = await storage.getCommitteeMembers(id);
         res.json({ members });
       } catch (error) {
-        console.error("Error fetching committee members:", error);
+        logger.error("Error fetching committee members:", error);
         res.status(500).json({ message: "Failed to fetch committee members" });
       }
     },
@@ -4841,7 +4786,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
         res.json(membership);
       } catch (error) {
-        console.error("Error adding committee member:", error);
+        logger.error("Error adding committee member:", error);
         res.status(500).json({ message: "Failed to add committee member" });
       }
     },
@@ -4861,7 +4806,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           res.status(404).json({ message: "Membership not found" });
         }
       } catch (error) {
-        console.error("Error removing committee member:", error);
+        logger.error("Error removing committee member:", error);
         res.status(500).json({ message: "Failed to remove committee member" });
       }
     },
@@ -4876,7 +4821,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const userCommittees = await storage.getUserCommittees(id);
         res.json({ committees: userCommittees });
       } catch (error) {
-        console.error("Error fetching user committees:", error);
+        logger.error("Error fetching user committees:", error);
         res.status(500).json({ message: "Failed to fetch user committees" });
       }
     },
@@ -4888,7 +4833,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const announcements = await storage.getAllAnnouncements();
       res.json(announcements);
     } catch (error) {
-      console.error("Error fetching announcements:", error);
+      logger.error("Error fetching announcements:", error);
       res.status(500).json({ message: "Failed to fetch announcements" });
     }
   });
@@ -4899,7 +4844,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     requirePermission("manage_users"),
     async (req: any, res) => {
       try {
-        console.log("Received announcement data:", req.body);
+        logger.info("Received announcement data:", req.body);
 
         // Convert ISO strings to Date objects for validation
         const processedData = {
@@ -4910,7 +4855,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         const result = insertAnnouncementSchema.safeParse(processedData);
         if (!result.success) {
-          console.log("Validation errors:", result.error.errors);
+          logger.info("Validation errors:", result.error.errors);
           return res.status(400).json({
             message: "Invalid announcement data",
             errors: result.error.errors,
@@ -4920,7 +4865,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const announcement = await storage.createAnnouncement(result.data);
         res.status(201).json(announcement);
       } catch (error) {
-        console.error("Error creating announcement:", error);
+        logger.error("Error creating announcement:", error);
         res.status(500).json({ message: "Failed to create announcement" });
       }
     },
@@ -4950,7 +4895,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         res.json(announcement);
       } catch (error) {
-        console.error("Error updating announcement:", error);
+        logger.error("Error updating announcement:", error);
         res.status(500).json({ message: "Failed to update announcement" });
       }
     },
@@ -4971,7 +4916,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         res.status(204).send();
       } catch (error) {
-        console.error("Error deleting announcement:", error);
+        logger.error("Error deleting announcement:", error);
         res.status(500).json({ message: "Failed to delete announcement" });
       }
     },
@@ -5082,7 +5027,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         })
         .returning();
 
-      console.log(
+      logger.info(
         `[DEBUG] Created thread ${thread.id} for group ${group.id} (${name})`,
       );
 
@@ -5138,7 +5083,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.status(201).json({ ...group, threadId: thread.id });
     } catch (error) {
-      console.error("Error creating message group:", error);
+      logger.error("Error creating message group:", error);
       res.status(500).json({ message: "Failed to create message group" });
     }
   });
@@ -5233,7 +5178,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const userId = (req as any).user?.id;
         const user = (req as any).user;
 
-        console.log(
+        logger.info(
           `[DEBUG] Fetching members for group ${groupId}, user ${userId}`,
         );
 
@@ -5242,7 +5187,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           user.role === "super_admin" ||
           (user.permissions && user.permissions.includes("moderate_messages"));
 
-        console.log(
+        logger.info(
           `[DEBUG] User moderation permissions: ${canModerateMessages}`,
         );
 
@@ -5267,7 +5212,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 .json({ message: "Not a member of this group" });
             }
           } catch (membershipError) {
-            console.error(
+            logger.error(
               `[ERROR] Error checking membership:`,
               membershipError,
             );
@@ -5300,17 +5245,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
               ),
             );
 
-          console.log(
+          logger.info(
             `[DEBUG] Found ${members.length} members for group ${groupId}`,
           );
           res.json(members);
         } catch (membersError) {
-          console.error(`[ERROR] Error fetching group members:`, membersError);
+          logger.error(`[ERROR] Error fetching group members:`, membersError);
           // If groupMemberships table doesn't exist, return empty array for now
           res.json([]);
         }
       } catch (error) {
-        console.error(
+        logger.error(
           `[ERROR] General error in group members endpoint:`,
           error,
         );
@@ -5450,7 +5395,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const groupId = parseInt(req.params.groupId);
         const userId = (req as any).user?.id;
 
-        console.log(
+        logger.info(
           `[DEBUG] Fetching messages for group ${groupId}, user ${userId}`,
         );
 
@@ -5468,7 +5413,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             );
 
           if (!thread) {
-            console.log(`[DEBUG] No thread found for group ${groupId}`);
+            logger.info(`[DEBUG] No thread found for group ${groupId}`);
             return res.json([]);
           }
 
@@ -5487,7 +5432,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             participantStatus.length === 0 ||
             participantStatus[0].status === "left"
           ) {
-            console.log(
+            logger.info(
               `[DEBUG] User ${userId} has no access to thread ${thread.threadId} for group ${groupId}`,
             );
             return res.json([]); // Return empty array for users who left
@@ -5500,12 +5445,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .where(eq(messagesTable.threadId, thread.threadId))
             .orderBy(messagesTable.createdAt);
 
-          console.log(
+          logger.info(
             `[DEBUG] Found ${groupMessages.length} messages for group ${groupId} thread ${thread.threadId}`,
           );
           res.json(groupMessages);
         } catch (threadError) {
-          console.log(
+          logger.info(
             `[DEBUG] Thread system not available, falling back to conversation-based messages`,
           );
 
@@ -5523,13 +5468,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .where(eq(messagesTable.conversationId, groupId))
             .orderBy(messagesTable.createdAt);
 
-          console.log(
+          logger.info(
             `[DEBUG] Fallback: Found ${groupMessages.length} messages for conversation ${groupId}`,
           );
           res.json(groupMessages);
         }
       } catch (error) {
-        console.error("Error fetching group messages:", error);
+        logger.error("Error fetching group messages:", error);
         res
           .status(500)
           .json({
@@ -5610,7 +5555,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .set({ lastMessageAt: new Date() })
           .where(eq(conversationThreads.id, thread.threadId));
 
-        console.log(
+        logger.info(
           `[DEBUG] Message sent to group ${groupId} thread ${thread.threadId}`,
         );
 
@@ -5621,7 +5566,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         res.json(message);
       } catch (error) {
-        console.error("Error sending group message:", error);
+        logger.error("Error sending group message:", error);
         res.status(500).json({ message: "Failed to send message" });
       }
     },
@@ -5641,19 +5586,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const currentUser = (req as any).user;
         const isPlatformSuperAdmin = currentUser?.role === "super_admin";
 
-        console.log(
+        logger.info(
           `[DEBUG] Delete member - Current user:`,
           JSON.stringify(currentUser, null, 2),
         );
-        console.log(
+        logger.info(
           `[DEBUG] Delete member - isPlatformSuperAdmin:`,
           isPlatformSuperAdmin,
         );
-        console.log(
+        logger.info(
           `[DEBUG] Delete member - User role check:`,
           currentUser?.role,
         );
-        console.log(
+        logger.info(
           `[DEBUG] Delete member - User role === 'super_admin':`,
           currentUser?.role === "super_admin",
         );
@@ -5736,12 +5681,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
             ),
           );
 
-        console.log(
+        logger.info(
           `[DEBUG] Removed user ${targetUserId} from group ${groupId}`,
         );
         res.json({ success: true });
       } catch (error) {
-        console.error("Error removing member from group:", error);
+        logger.error("Error removing member from group:", error);
         res.status(500).json({ message: "Failed to remove member" });
       }
     },
@@ -5799,12 +5744,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
             ),
           );
 
-        console.log(
+        logger.info(
           `[DEBUG] Updated user ${targetUserId} role to ${role} in group ${groupId}`,
         );
         res.json({ success: true });
       } catch (error) {
-        console.error("Error updating member role:", error);
+        logger.error("Error updating member role:", error);
         res.status(500).json({ message: "Failed to update member role" });
       }
     },
@@ -5819,7 +5764,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const groupId = parseInt(req.params.groupId);
         const currentUser = (req as any).user;
 
-        console.log(
+        logger.info(
           `[DEBUG] Attempting to delete group ${groupId} by user ${currentUser?.id} with role ${currentUser?.role}`,
         );
 
@@ -5846,20 +5791,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
             ),
           );
 
-        console.log(`[DEBUG] Found thread for group ${groupId}:`, thread);
+        logger.info(`[DEBUG] Found thread for group ${groupId}:`, thread);
 
         if (thread) {
           // 2. Delete all messages in the thread (use messagesTable alias)
           const deletedMessages = await db
             .delete(messagesTable)
             .where(eq(messagesTable.threadId, thread.threadId));
-          console.log(`[DEBUG] Deleted messages in thread ${thread.threadId}`);
+          logger.info(`[DEBUG] Deleted messages in thread ${thread.threadId}`);
 
           // 3. Delete all thread participants
           const deletedParticipants = await db
             .delete(groupMessageParticipants)
             .where(eq(groupMessageParticipants.threadId, thread.threadId));
-          console.log(
+          logger.info(
             `[DEBUG] Deleted participants for thread ${thread.threadId}`,
           );
 
@@ -5868,29 +5813,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .update(conversationThreads)
             .set({ isActive: false })
             .where(eq(conversationThreads.id, thread.threadId));
-          console.log(`[DEBUG] Marked thread ${thread.threadId} as inactive`);
+          logger.info(`[DEBUG] Marked thread ${thread.threadId} as inactive`);
         }
 
         // 5. Delete all group memberships
         const deletedMemberships = await db
           .delete(groupMemberships)
           .where(eq(groupMemberships.groupId, groupId));
-        console.log(`[DEBUG] Deleted memberships for group ${groupId}`);
+        logger.info(`[DEBUG] Deleted memberships for group ${groupId}`);
 
         // 6. Mark the group as inactive
         await db
           .update(messageGroups)
           .set({ isActive: false })
           .where(eq(messageGroups.id, groupId));
-        console.log(`[DEBUG] Marked group ${groupId} as inactive`);
+        logger.info(`[DEBUG] Marked group ${groupId} as inactive`);
 
-        console.log(
+        logger.info(
           `[DEBUG] Super admin successfully deleted entire group ${groupId}`,
         );
         res.json({ success: true, message: "Group deleted successfully" });
       } catch (error) {
-        console.error("Error deleting group:", error);
-        console.error("Full error details:", error.message, error.stack);
+        logger.error("Error deleting group:", error);
+        // Error details removed to prevent circular logging
         res
           .status(500)
           .json({ message: `Failed to delete group: ${error.message}` });
@@ -5960,7 +5905,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Entry synced to Google Sheets successfully",
       });
     } catch (error: any) {
-      console.error("Error syncing entry to Google Sheets:", error);
+      logger.error("Error syncing entry to Google Sheets:", error);
       res.status(500).json({
         error: "Failed to sync to Google Sheets",
         details: error.message,
@@ -5976,7 +5921,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const connectedClients = new Map<string, WebSocket[]>();
 
   wss.on("connection", (ws: WebSocket, request) => {
-    console.log("WebSocket client connected");
+    logger.info("WebSocket client connected");
 
     // Add connection state tracking
     let isAlive = true;
@@ -6009,10 +5954,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             connectedClients.set(data.userId, []);
           }
           connectedClients.get(data.userId)!.push(ws);
-          console.log(`User ${data.userId} connected via WebSocket`);
+          logger.info(`User ${data.userId} connected via WebSocket`);
         }
       } catch (error) {
-        console.error("Error parsing WebSocket message:", error);
+        logger.error("Error parsing WebSocket message:", error);
       }
     });
 
@@ -6030,14 +5975,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             if (clients.length === 0) {
               connectedClients.delete(userId);
             }
-            console.log(`User ${userId} disconnected from WebSocket`);
+            logger.info(`User ${userId} disconnected from WebSocket`);
           }
         }
       }
     });
 
     ws.on("error", (error) => {
-      console.error("WebSocket error:", error);
+      logger.error("WebSocket error:", error);
       // Clean up on error
       clearInterval(heartbeatInterval);
       ws.terminate();
@@ -6055,7 +6000,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         CHAT_PERMISSIONS[chatName as keyof typeof CHAT_PERMISSIONS];
 
       if (!requiredPermission) {
-        console.log(`No permission mapping found for chat: ${chatName}`);
+        logger.info(`No permission mapping found for chat: ${chatName}`);
         return [];
       }
 
@@ -6068,10 +6013,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         )
         .map((user) => user.id);
 
-      console.log(`Users with access to ${chatName} chat:`, usersWithAccess);
+      logger.info(`Users with access to ${chatName} chat:`, usersWithAccess);
       return usersWithAccess;
     } catch (error) {
-      console.error("Error getting users with chat access:", error);
+      logger.error("Error getting users with chat access:", error);
       return [];
     }
   };
@@ -6079,8 +6024,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Function to broadcast new message notifications
   const broadcastNewMessage = async (message: any) => {
     try {
-      console.log("broadcastNewMessage called with:", message);
-      console.log("Connected clients count:", connectedClients.size);
+      logger.info("broadcastNewMessage called with:", message);
+      logger.info("Connected clients count:", connectedClients.size);
 
       const notificationData = {
         type: "new_message",
@@ -6098,7 +6043,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (message.committee === "direct" && message.recipientId) {
         // Direct message - notify recipient only
         targetUsers.add(message.recipientId);
-        console.log(
+        logger.info(
           "Direct message, notifying recipient:",
           message.recipientId,
         );
@@ -6112,7 +6057,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             targetUsers.add(userId);
           }
         }
-        console.log(
+        logger.info(
           `${message.committee} chat message, target users:`,
           Array.from(targetUsers),
         );
@@ -6122,32 +6067,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let sentCount = 0;
       for (const userId of targetUsers) {
         const userClients = connectedClients.get(userId);
-        console.log(
+        logger.info(
           `Checking user ${userId}, clients:`,
           userClients?.length || 0,
         );
         if (userClients) {
           userClients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
-              console.log("Sending notification to client:", notificationData);
+              logger.info("Sending notification to client:", notificationData);
               client.send(JSON.stringify(notificationData));
               sentCount++;
             } else {
-              console.log("Client not ready, readyState:", client.readyState);
+              logger.info("Client not ready, readyState:", client.readyState);
             }
           });
         }
       }
-      console.log(`Sent ${sentCount} notifications total`);
+      logger.info(`Sent ${sentCount} notifications total`);
     } catch (error) {
-      console.error("Error broadcasting message notification:", error);
+      logger.error("Error broadcasting message notification:", error);
     }
   };
 
   // Task assignment notification broadcasting function
   const broadcastTaskAssignment = (userId: string, notificationData: any) => {
     try {
-      console.log(
+      logger.info(
         `Broadcasting task assignment notification to user: ${userId}`,
       );
       const userClients = connectedClients.get(userId);
@@ -6156,7 +6101,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         let sentCount = 0;
         userClients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
-            console.log(
+            logger.info(
               "Sending task assignment notification to client:",
               notificationData,
             );
@@ -6169,14 +6114,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             sentCount++;
           }
         });
-        console.log(
+        logger.info(
           `Sent task assignment notification to ${sentCount} clients for user ${userId}`,
         );
       } else {
-        console.log(`No connected clients found for user ${userId}`);
+        logger.info(`No connected clients found for user ${userId}`);
       }
     } catch (error) {
-      console.error("Error broadcasting task assignment notification:", error);
+      logger.error("Error broadcasting task assignment notification:", error);
     }
   };
 
@@ -6187,7 +6132,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const notifications = await storage.getUserNotifications(user.id);
       res.json(notifications);
     } catch (error) {
-      console.error("Error fetching notifications:", error);
+      logger.error("Error fetching notifications:", error);
       res.status(500).json({ error: "Failed to fetch notifications" });
     }
   });
@@ -6204,7 +6149,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         res.json({ success: true });
       } catch (error) {
-        console.error("Error marking notification as read:", error);
+        logger.error("Error marking notification as read:", error);
         res.status(500).json({ error: "Failed to mark notification as read" });
       }
     },
@@ -6219,7 +6164,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const success = await storage.markAllNotificationsAsRead(user.id);
         res.json({ success });
       } catch (error) {
-        console.error("Error marking all notifications as read:", error);
+        logger.error("Error marking all notifications as read:", error);
         res
           .status(500)
           .json({ error: "Failed to mark all notifications as read" });
@@ -6288,41 +6233,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(formattedMessages);
     } catch (error) {
-      console.error("[API] Error fetching messages:", error);
+      logger.error("[API] Error fetching messages:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
 
   app.post("/api/messages", isAuthenticated, async (req, res) => {
-    console.log("=== POST /api/messages START ===");
+    logger.info("=== POST /api/messages START ===");
     try {
       const user = (req as any).user;
-      console.log("[STEP 1] User authentication check:");
-      console.log("  - req.user exists:", !!user);
-      console.log("  - user object:", user);
-      console.log("  - user.id:", user?.id);
-      console.log("  - user.firstName:", user?.firstName);
-      console.log("  - user.lastName:", user?.lastName);
-      console.log("  - user.email:", user?.email);
+      logger.info("[STEP 1] User authentication check:");
+      logger.info("  - req.user exists:", !!user);
+      logger.info("  - user object:", user);
+      logger.info("  - user.id:", user?.id);
+      logger.info("  - user.firstName:", user?.firstName);
+      logger.info("  - user.lastName:", user?.lastName);
+      logger.info("  - user.email:", user?.email);
 
-      console.log("[STEP 2] Request body:");
-      console.log("  - req.body:", req.body);
-      console.log("  - content:", req.body?.content);
-      console.log("  - sender:", req.body?.sender);
+      logger.info("[STEP 2] Request body:");
+      logger.info("  - req.body:", req.body);
+      logger.info("  - content:", req.body?.content);
+      logger.info("  - sender:", req.body?.sender);
 
       if (!user?.id) {
-        console.log("[ERROR] No user.id found, returning 401");
+        logger.info("[ERROR] No user.id found, returning 401");
         return res.status(401).json({ message: "Unauthorized" });
       }
 
       const { content, sender } = req.body;
 
       if (!content || !content.trim()) {
-        console.log("[ERROR] No content provided, returning 400");
+        logger.info("[ERROR] No content provided, returning 400");
         return res.status(400).json({ message: "Message content is required" });
       }
 
-      console.log("[STEP 3] Looking for existing team-chat conversation...");
+      logger.info("[STEP 3] Looking for existing team-chat conversation...");
 
       // Get or create general team chat conversation
       let generalConversation;
@@ -6337,17 +6282,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
             ),
           );
 
-        console.log(
+        logger.info(
           "  - Found existing conversations:",
           existingConversations.length,
         );
         generalConversation = existingConversations[0];
 
         if (generalConversation) {
-          console.log("  - Using existing conversation:", generalConversation);
+          logger.info("  - Using existing conversation:", generalConversation);
         }
       } catch (dbError) {
-        console.error(
+        logger.error(
           "[ERROR] Database query for conversations failed:",
           dbError,
         );
@@ -6355,13 +6300,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (!generalConversation) {
-        console.log("[STEP 4] Creating new team-chat conversation...");
+        logger.info("[STEP 4] Creating new team-chat conversation...");
         try {
           const newConversationData = {
             type: "channel",
             name: "team-chat",
           };
-          console.log("  - Conversation data to insert:", newConversationData);
+          logger.info("  - Conversation data to insert:", newConversationData);
 
           const newConversations = await db
             .insert(conversations)
@@ -6369,9 +6314,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .returning();
 
           generalConversation = newConversations[0];
-          console.log("  - Created new conversation:", generalConversation);
+          logger.info("  - Created new conversation:", generalConversation);
         } catch (dbError) {
-          console.error(
+          logger.error(
             "[ERROR] Database insert for conversations failed:",
             dbError,
           );
@@ -6384,11 +6329,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         `${user.firstName} ${user.lastName}` ||
         user.email ||
         "Unknown User";
-      console.log("[STEP 5] Preparing message data:");
-      console.log("  - userName:", userName);
-      console.log("  - conversationId:", generalConversation.id);
-      console.log("  - userId:", user.id);
-      console.log("  - content:", content.trim());
+      logger.info("[STEP 5] Preparing message data:");
+      logger.info("  - userName:", userName);
+      logger.info("  - conversationId:", generalConversation.id);
+      logger.info("  - userId:", user.id);
+      logger.info("  - content:", content.trim());
 
       const messageData = {
         conversationId: generalConversation.id,
@@ -6396,9 +6341,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         content: content.trim(),
         sender: userName,
       };
-      console.log("  - Complete message data:", messageData);
+      logger.info("  - Complete message data:", messageData);
 
-      console.log("[STEP 6] Inserting message into database...");
+      logger.info("[STEP 6] Inserting message into database...");
       let message;
       try {
         const insertedMessages = await db
@@ -6407,10 +6352,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .returning();
 
         message = insertedMessages[0];
-        console.log("  - Inserted message successfully:", message);
+        logger.info("  - Inserted message successfully:", message);
       } catch (dbError) {
-        console.error("[ERROR] Database insert for messages failed:", dbError);
-        console.error("  - Error details:", {
+        logger.error("[ERROR] Database insert for messages failed:", dbError);
+        logger.error("  - Error details:", {
           message: dbError.message,
           code: dbError.code,
           detail: dbError.detail,
@@ -6419,7 +6364,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         throw dbError;
       }
 
-      console.log("[STEP 7] Broadcasting message...");
+      logger.info("[STEP 7] Broadcasting message...");
       // Broadcast via WebSocket if available
       if (broadcastNewMessage) {
         const broadcastData = {
@@ -6434,10 +6379,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             committee: "general",
           },
         };
-        console.log("  - Broadcasting data:", broadcastData);
+        logger.info("  - Broadcasting data:", broadcastData);
         broadcastNewMessage(broadcastData);
       } else {
-        console.log("  - No broadcast function available");
+        logger.info("  - No broadcast function available");
       }
 
       const responseData = {
@@ -6448,20 +6393,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         timestamp: message.createdAt,
         committee: "general",
       };
-      console.log("[STEP 8] Sending response:", responseData);
-      console.log("=== POST /api/messages SUCCESS ===");
+      logger.info("[STEP 8] Sending response:", responseData);
+      logger.info("=== POST /api/messages SUCCESS ===");
 
       res.json(responseData);
     } catch (error) {
-      console.error("=== POST /api/messages ERROR ===");
-      console.error("[ERROR] Full error object:", error);
-      console.error("[ERROR] Error name:", error.name);
-      console.error("[ERROR] Error message:", error.message);
-      console.error("[ERROR] Error stack:", error.stack);
-      if (error.code) console.error("[ERROR] Error code:", error.code);
-      if (error.detail) console.error("[ERROR] Error detail:", error.detail);
-      if (error.hint) console.error("[ERROR] Error hint:", error.hint);
-      console.error("=== POST /api/messages ERROR END ===");
+      logger.error("=== POST /api/messages ERROR ===");
+      logger.error("[ERROR] Full error object:", error);
+      logger.error("=== POST /api/messages ERROR END ===");
 
       res.status(500).json({
         message: "Internal server error",
@@ -6506,7 +6445,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.status(204).send();
     } catch (error) {
-      console.error("[API] Error deleting message:", error);
+      logger.error("[API] Error deleting message:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
@@ -6629,7 +6568,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.json(userConversations);
       }
     } catch (error) {
-      console.error("[API] Error fetching conversations:", error);
+      logger.error("[API] Error fetching conversations:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
@@ -6664,7 +6603,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(conversation);
     } catch (error) {
-      console.error("[API] Error creating conversation:", error);
+      logger.error("[API] Error creating conversation:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
@@ -6674,11 +6613,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     isAuthenticated,
     async (req, res) => {
       try {
-        console.log("[CONVERSATION MESSAGES] Request received for conversation:", req.params.id);
+        logger.info("[CONVERSATION MESSAGES] Request received for conversation:", req.params.id);
         const user = (req as any).user;
-        console.log("[CONVERSATION MESSAGES] User object:", user ? "exists" : "missing");
+        logger.info("[CONVERSATION MESSAGES] User object:", user ? "exists" : "missing");
         if (!user?.id) {
-          console.log("[CONVERSATION MESSAGES] No user.id found, returning 401");
+          logger.info("[CONVERSATION MESSAGES] No user.id found, returning 401");
           return res.status(401).json({ message: "Unauthorized" });
         }
 
@@ -6718,7 +6657,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         }
 
-        console.log(
+        logger.info(
           "[DEBUG] Fetching messages for conversation ID:",
           conversationId,
         );
@@ -6730,8 +6669,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .where(eq(messagesTable.conversationId, conversationId))
           .orderBy(messagesTable.createdAt);
 
-        console.log("[DEBUG] Found messages:", conversationMessages.length);
-        console.log("[DEBUG] Sample message:", conversationMessages[0]);
+        logger.info("[DEBUG] Found messages:", conversationMessages.length);
+        logger.info("[DEBUG] Sample message:", conversationMessages[0]);
 
         // Transform to match expected format
         const formattedMessages = conversationMessages.map((msg) => ({
@@ -6748,9 +6687,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         res.json(formattedMessages);
       } catch (error) {
-        console.error("[CONVERSATION MESSAGES] Full error details:", error);
-        console.error("[CONVERSATION MESSAGES] Error message:", error.message);
-        console.error("[CONVERSATION MESSAGES] Error stack:", error.stack);
+        logger.error("[CONVERSATION MESSAGES] Full error details:", error);
         res
           .status(500)
           .json({ message: "Internal server error", details: error.message });
@@ -6763,12 +6700,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     isAuthenticated,
     async (req, res) => {
       try {
-        console.log("=== POST /api/conversations/:id/messages ===");
-        console.log("Request params:", req.params);
-        console.log("Request body:", req.body);
+        logger.info("=== POST /api/conversations/:id/messages ===");
+        logger.info("Request params:", req.params);
+        logger.info("Request body:", req.body);
         
         const user = (req as any).user;
-        console.log("User:", user ? { id: user.id, email: user.email } : "none");
+        logger.info("User:", user ? { id: user.id, email: user.email } : "none");
         
         if (!user?.id) {
           return res.status(401).json({ message: "Unauthorized" });
@@ -6777,11 +6714,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const conversationId = parseInt(req.params.id);
         const { content } = req.body;
 
-        console.log("Conversation ID:", conversationId);
-        console.log("Content:", content);
+        logger.info("Conversation ID:", conversationId);
+        logger.info("Content:", content);
 
         if (!content || !content.trim()) {
-          console.log("ERROR: No content provided");
+          logger.info("ERROR: No content provided");
           return res
             .status(400)
             .json({ message: "Message content is required" });
@@ -6852,7 +6789,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         res.json(message);
       } catch (error) {
-        console.error("[API] Error sending message:", error);
+        logger.error("[API] Error sending message:", error);
         res.status(500).json({ message: "Internal server error" });
       }
     },
@@ -6863,27 +6800,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const user = (req as any).user;
       if (!user?.id) {
-        console.log('DEBUG: No user ID found in get participants, user object:', user);
+        logger.info('DEBUG: No user ID found in get participants, user object:', user);
         return res.status(401).json({ error: "User not authenticated" });
       }
       
       const conversationId = parseInt(req.params.id);
       const participants = await storage.getConversationParticipants(conversationId);
-      console.log(`[PARTICIPANTS] Found ${participants.length} participants for conversation ${conversationId}`);
+      logger.info(`[PARTICIPANTS] Found ${participants.length} participants for conversation ${conversationId}`);
       res.json(participants);
     } catch (error) {
-      console.error("Error fetching conversation participants:", error);
+      logger.error("Error fetching conversation participants:", error);
       res.status(500).json({ error: "Failed to fetch participants" });
     }
   });
 
   // Create or get direct conversation between two users
   app.post("/api/conversations/direct", isAuthenticated, async (req, res) => {
-    console.log("=== POST /api/conversations/direct START ===");
+    logger.info("=== POST /api/conversations/direct START ===");
     try {
       const user = (req as any).user;
-      console.log("User:", user);
-      console.log("Request body:", req.body);
+      logger.info("User:", user);
+      logger.info("Request body:", req.body);
 
       const { otherUserId } = req.body;
 
@@ -6947,15 +6884,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(newConversation);
     } catch (error) {
-      console.error("=== POST /api/conversations/direct ERROR ===");
-      console.error("[ERROR] Full error object:", error);
-      console.error("[ERROR] Error name:", error.name);
-      console.error("[ERROR] Error message:", error.message);
-      console.error("[ERROR] Error stack:", error.stack);
-      if (error.code) console.error("[ERROR] Error code:", error.code);
-      if (error.detail) console.error("[ERROR] Error detail:", error.detail);
-      if (error.hint) console.error("[ERROR] Error hint:", error.hint);
-      console.error("=== POST /api/conversations/direct ERROR END ===");
+      logger.error("=== POST /api/conversations/direct ERROR ===");
+      logger.error("[ERROR] Full error object:", error);
+      logger.error("=== POST /api/conversations/direct ERROR END ===");
 
       res.status(500).json({
         message: "Failed to create conversation",
@@ -6996,7 +6927,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           file: fileInfo
         });
       } catch (error) {
-        console.error('Project data upload error:', error);
+        logger.error('Project data upload error:', error);
         res.status(500).json({ message: 'Failed to upload project data file' });
       }
     }
@@ -7051,7 +6982,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const fileStream = createReadStream(newestFile.filePath);
       fileStream.pipe(res);
     } catch (error) {
-      console.error('Project data serving error:', error);
+      logger.error('Project data serving error:', error);
       res.status(500).json({ message: 'Failed to serve project data file' });
     }
   });
@@ -7092,7 +7023,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.json({ hasFile: false });
       }
     } catch (error) {
-      console.error('Project data status error:', error);
+      logger.error('Project data status error:', error);
       res.status(500).json({ message: 'Failed to check project data status' });
     }
   });

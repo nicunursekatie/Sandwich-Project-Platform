@@ -17,6 +17,7 @@ import {
   type InsertKudosTracking
 } from "@shared/schema";
 import { NotificationService } from "../notification-service";
+import { logger } from "../utils/logger";
 
 export interface MessageWithSender extends Message {
   senderName?: string;
@@ -92,12 +93,12 @@ export class MessagingService {
 
       // Trigger notifications (don't await - let it run async)
       this.triggerNotifications(message, recipientIds).catch(error => {
-        console.error('Failed to send notifications:', error);
+        logger.error('Failed to send notifications:', error);
       });
 
       return message;
     } catch (error) {
-      console.error('Failed to send message:', error);
+      logger.error('Failed to send message:', error);
       throw error;
     }
   }
@@ -146,7 +147,7 @@ export class MessagingService {
         senderEmail: row.senderEmail || undefined,
       }));
     } catch (error) {
-      console.error('Failed to get unread messages:', error);
+      logger.error('Failed to get unread messages:', error);
       throw error;
     }
   }
@@ -171,7 +172,7 @@ export class MessagingService {
 
       return true;
     } catch (error) {
-      console.error('Failed to mark message as read:', error);
+      logger.error('Failed to mark message as read:', error);
       return false;
     }
   }
@@ -223,7 +224,7 @@ export class MessagingService {
         return 0; // Return count if needed
       }
     } catch (error) {
-      console.error('Failed to mark all messages as read:', error);
+      logger.error('Failed to mark all messages as read:', error);
       throw error;
     }
   }
@@ -267,7 +268,7 @@ export class MessagingService {
         senderEmail: row.senderEmail || undefined,
       }));
     } catch (error) {
-      console.error('Failed to get context messages:', error);
+      logger.error('Failed to get context messages:', error);
       throw error;
     }
   }
@@ -319,7 +320,7 @@ export class MessagingService {
 
       return updatedMessage;
     } catch (error) {
-      console.error('Failed to edit message:', error);
+      logger.error('Failed to edit message:', error);
       throw error;
     }
   }
@@ -364,7 +365,7 @@ export class MessagingService {
 
       return true;
     } catch (error) {
-      console.error('Failed to delete message:', error);
+      logger.error('Failed to delete message:', error);
       return false;
     }
   }
@@ -413,7 +414,7 @@ export class MessagingService {
           );
       }
     } catch (error) {
-      console.error('Failed to sync context permissions:', error);
+      logger.error('Failed to sync context permissions:', error);
       throw error;
     }
   }
@@ -473,7 +474,7 @@ export class MessagingService {
 
       return { message, alreadySent: false };
     } catch (error) {
-      console.error('Failed to send kudos:', error);
+      logger.error('Failed to send kudos:', error);
       throw error;
     }
   }
@@ -497,7 +498,7 @@ export class MessagingService {
 
       return result[0]?.count > 0;
     } catch (error) {
-      console.error('Failed to check kudos status:', error);
+      logger.error('Failed to check kudos status:', error);
       return false;
     }
   }
@@ -529,7 +530,7 @@ export class MessagingService {
         await this.scheduleEmailFallback(message.id, recipientId);
       }
     } catch (error) {
-      console.error('Failed to trigger notifications:', error);
+      logger.error('Failed to trigger notifications:', error);
     }
   }
 
@@ -563,11 +564,11 @@ export class MessagingService {
             );
           }
         } catch (error) {
-          console.error(`Failed to send direct message email to ${recipientId}:`, error);
+          logger.error(`Failed to send direct message email to ${recipientId}:`, error);
         }
       }
     } catch (error) {
-      console.error('Failed to send direct message emails:', error);
+      logger.error('Failed to send direct message emails:', error);
     }
   }
 
@@ -627,7 +628,7 @@ export class MessagingService {
           }
         }
       } catch (error) {
-        console.error('Failed to send email fallback:', error);
+        logger.error('Failed to send email fallback:', error);
       }
     }, delayMinutes * 60 * 1000);
   }
@@ -835,7 +836,7 @@ export class MessagingService {
         readAt: msg.readAt || undefined,
       }));
     } catch (error) {
-      console.error('Failed to get all messages:', error);
+      logger.error('Failed to get all messages:', error);
       throw error;
     }
   }

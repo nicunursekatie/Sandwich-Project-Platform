@@ -3,6 +3,7 @@ import { storage } from "../storage-wrapper";
 import { optionalAuth, requirePermission } from "../middleware/auth";
 import { ReportGenerator } from "../reporting/report-generator";
 import { CacheManager } from "../performance/cache-manager";
+import { logger } from "../utils/logger";
 
 const router = Router();
 
@@ -12,7 +13,7 @@ router.get("/summary", optionalAuth, async (req: any, res) => {
     const summary = await storage.getAnalyticsSummary();
     res.json(summary);
   } catch (error) {
-    console.error("Error fetching analytics summary:", error);
+    logger.error("Error fetching analytics summary:", error);
     res.status(500).json({ error: "Failed to fetch analytics summary" });
   }
 });
@@ -30,7 +31,7 @@ router.get("/collections/by-date", optionalAuth, async (req: any, res) => {
     const analytics = await storage.getCollectionAnalyticsByDate(dateRange, groupBy as string);
     res.json(analytics);
   } catch (error) {
-    console.error("Error fetching collection analytics by date:", error);
+    logger.error("Error fetching collection analytics by date:", error);
     res.status(500).json({ error: "Failed to fetch collection analytics by date" });
   }
 });
@@ -47,7 +48,7 @@ router.get("/top-performers", optionalAuth, async (req: any, res) => {
     );
     res.json(topPerformers);
   } catch (error) {
-    console.error("Error fetching top performers:", error);
+    logger.error("Error fetching top performers:", error);
     res.status(500).json({ error: "Failed to fetch top performers" });
   }
 });
@@ -60,7 +61,7 @@ router.get("/trends", optionalAuth, async (req: any, res) => {
     const trends = await storage.getTrends(metric as string, period as string);
     res.json(trends);
   } catch (error) {
-    console.error("Error fetching trends analysis:", error);
+    logger.error("Error fetching trends analysis:", error);
     res.status(500).json({ error: "Failed to fetch trends analysis" });
   }
 });
@@ -71,7 +72,7 @@ router.get("/geography", optionalAuth, async (req: any, res) => {
     const geoData = await storage.getGeographicalDistribution();
     res.json(geoData);
   } catch (error) {
-    console.error("Error fetching geographical distribution:", error);
+    logger.error("Error fetching geographical distribution:", error);
     res.status(500).json({ error: "Failed to fetch geographical distribution" });
   }
 });
@@ -105,7 +106,7 @@ router.post("/reports/generate", requirePermission("view_reports"), async (req: 
 
     res.send(reportData);
   } catch (error) {
-    console.error("Error generating report:", error);
+    logger.error("Error generating report:", error);
     res.status(500).json({ error: "Failed to generate report" });
   }
 });
@@ -130,7 +131,7 @@ router.post("/reports/schedule", requirePermission("view_reports"), async (req: 
 
     res.status(201).json(scheduledReport);
   } catch (error) {
-    console.error("Error scheduling report:", error);
+    logger.error("Error scheduling report:", error);
     res.status(500).json({ error: "Failed to schedule report" });
   }
 });
@@ -141,7 +142,7 @@ router.get("/performance", requirePermission("view_reports"), async (req: any, r
     const metrics = await CacheManager.getPerformanceMetrics();
     res.json(metrics);
   } catch (error) {
-    console.error("Error fetching performance metrics:", error);
+    logger.error("Error fetching performance metrics:", error);
     res.status(500).json({ error: "Failed to fetch performance metrics" });
   }
 });
@@ -158,7 +159,7 @@ router.get("/cached/:cacheKey", optionalAuth, async (req: any, res) => {
 
     res.json(cachedData);
   } catch (error) {
-    console.error("Error fetching cached analytics:", error);
+    logger.error("Error fetching cached analytics:", error);
     res.status(500).json({ error: "Failed to fetch cached analytics" });
   }
 });
@@ -176,7 +177,7 @@ router.delete("/cache", requirePermission("view_reports"), async (req: any, res)
 
     res.json({ message: "Analytics cache cleared successfully" });
   } catch (error) {
-    console.error("Error clearing analytics cache:", error);
+    logger.error("Error clearing analytics cache:", error);
     res.status(500).json({ error: "Failed to clear analytics cache" });
   }
 });

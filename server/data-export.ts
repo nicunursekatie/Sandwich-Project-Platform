@@ -10,6 +10,7 @@ import {
   hostContacts
 } from "@shared/schema";
 import { eq, gte, lte, desc, sql } from "drizzle-orm";
+import { logger } from "./utils/logger";
 
 export interface ExportOptions {
   format: 'csv' | 'json';
@@ -43,7 +44,7 @@ export class DataExporter {
 
       return { data, format: 'json' };
     } catch (error) {
-      console.error('Export failed:', error);
+      logger.error('Export failed:', error);
       throw new Error('Failed to export sandwich collections');
     }
   }
@@ -66,7 +67,7 @@ export class DataExporter {
 
       return { data, format: 'json' };
     } catch (error) {
-      console.error('Export failed:', error);
+      logger.error('Export failed:', error);
       throw new Error('Failed to export hosts');
     }
   }
@@ -84,7 +85,7 @@ export class DataExporter {
 
       return { data, format: 'json' };
     } catch (error) {
-      console.error('Export failed:', error);
+      logger.error('Export failed:', error);
       throw new Error('Failed to export projects');
     }
   }
@@ -112,7 +113,7 @@ export class DataExporter {
 
       return { data, format: 'json' };
     } catch (error) {
-      console.error('Export failed:', error);
+      logger.error('Export failed:', error);
       throw new Error('Failed to export audit logs');
     }
   }
@@ -157,7 +158,7 @@ export class DataExporter {
 
       return { data: fullDataset, format: 'json' };
     } catch (error) {
-      console.error('Full export failed:', error);
+      logger.error('Full export failed:', error);
       throw new Error('Failed to export full dataset');
     }
   }
@@ -189,7 +190,7 @@ export class DataExporter {
         totalSandwiches: Number(totalSandwiches[0]?.total || 0)
       };
     } catch (error) {
-      console.error('Summary failed:', error);
+      logger.error('Summary failed:', error);
       return {
         collections: 0,
         hosts: 0,

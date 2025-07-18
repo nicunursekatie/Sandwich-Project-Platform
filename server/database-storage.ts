@@ -28,6 +28,7 @@ import {
 import { db } from "./db";
 import { eq, desc, sql, and, or, isNull, ne, isNotNull, gt, gte, lte, inArray, like } from "drizzle-orm";
 import type { IStorage } from "./storage";
+import { logger } from "./utils/logger";
 
 export class DatabaseStorage implements IStorage {
   // Users (required for authentication)
@@ -146,7 +147,7 @@ export class DatabaseStorage implements IStorage {
 
   async updateProjectTask(id: number, updates: Partial<ProjectTask>): Promise<ProjectTask | undefined> {
     // Log for debugging
-    console.log(`Updating task ${id} with updates:`, updates);
+    logger.info(`Updating task ${id} with updates:`, updates);
 
     // Handle timestamp fields properly and filter out fields that shouldn't be updated
     const processedUpdates = { ...updates };
@@ -166,14 +167,14 @@ export class DatabaseStorage implements IStorage {
     // Always update the updatedAt timestamp
     processedUpdates.updatedAt = new Date();
 
-    console.log(`Processed updates for task ${id}:`, processedUpdates);
+    logger.info(`Processed updates for task ${id}:`, processedUpdates);
 
     try {
       const [task] = await db.update(projectTasks).set(processedUpdates).where(eq(projectTasks.id, id)).returning();
-      console.log(`Task ${id} updated successfully:`, task);
+      logger.info(`Task ${id} updated successfully:`, task);
       return task || undefined;
     } catch (error) {
-      console.error(`Error updating task ${id}:`, error);
+      logger.error(`Error updating task ${id}:`, error);
       throw error;
     }
   }
@@ -264,7 +265,7 @@ export class DatabaseStorage implements IStorage {
       return result;
     } catch (error) {
       // If sender column doesn't exist, query without it and add default sender
-      console.log('Sender column not found, using fallback query');
+      logger.info('Sender column not found, using fallback query');
       const result = await db
         .select({
           id: messages.id,
@@ -340,7 +341,7 @@ export class DatabaseStorage implements IStorage {
       .leftJoin(users, eq(users.id, conversationParticipants.userId))
       .where(eq(conversationParticipants.conversationId, conversationId));
     
-    console.log(`[DB] Found ${results.length} participants for conversation ${conversationId}`);
+    logger.info(`[DB] Found ${results.length} participants for conversation ${conversationId}`);
     return results.map(row => ({
       userId: row.userId,
       role: 'member', // Default role since table doesn't have role column
@@ -389,7 +390,7 @@ export class DatabaseStorage implements IStorage {
 
       return newConversation.id;
     } catch (error) {
-      console.error("Error getting/creating conversation:", error);
+      logger.error("Error getting/creating conversation:", error);
       throw error;
     }
   }
@@ -415,24 +416,24 @@ export class DatabaseStorage implements IStorage {
     const referenceId = userIds.join('_');
     const conversationId = await this.getOrCreateThreadId('direct', referenceId);
 
-    console.log(`🔍 QUERY: getDirectMessages - conversationId: ${conversationId}, users: ${userId1} <-> ${userId2}, referenceId: ${referenceId}`);
+    logger.info(`🔍 QUERY: getDirectMessages - conversationId: ${conversationId}, users: ${userId1} <-> ${userId2}, referenceId: ${referenceId}`);
 
     const messageResults = await db.select().from(messages)
       .where(eq(messages.conversationId, conversationId))
       .orderBy(messages.createdAt);
 
-    console.log(`🔍 RESULT: Found ${messageResults.length} direct messages for conversationId ${conversationId}`);
+    logger.info(`🔍 RESULT: Found ${messageResults.length} direct messages for conversationId ${conversationId}`);
     return messageResults;
   }
 
   async getMessageById(id: number): Promise<Message | undefined> {
-    console.log(`[DEBUG] getMessageById called with id: ${id}`);
+    logger.info(`[DEBUG] getMessageById called with id: ${id}`);
     try {
       const [message] = await db.select().from(messages).where(eq(messages.id, id));
-      console.log(`[DEBUG] getMessageById result:`, message);
+      logger.info(`[DEBUG] getMessageById result:`, message);
       return message || undefined;
     } catch (error) {
-      console.error(`[ERROR] getMessageById failed for id ${id}:`, error);
+      logger.error(`[ERROR] getMessageById failed for id ${id}:`, error);
       return undefined;
     }
   }
@@ -458,7 +459,7 @@ export class DatabaseStorage implements IStorage {
 
       if (conversation) {
         insertMessage.conversationId = conversation.id;
-        console.log(`✅ SEND: Using existing conversationId ${conversation.id} for general message from ${insertMessage.userId}`);
+        logger.info(`✅ SEND: Using existing conversationId ${conversation.id} for general message from ${insertMessage.userId}`);
       } else {
         // Create new general conversation
         const [newConversation] = await db
@@ -470,21 +471,21 @@ export class DatabaseStorage implements IStorage {
           .returning();
         
         insertMessage.conversationId = newConversation.id;
-        console.log(`✅ SEND: Created new conversationId ${newConversation.id} for general message from ${insertMessage.userId}`);
+        logger.info(`✅ SEND: Created new conversationId ${newConversation.id} for general message from ${insertMessage.userId}`);
       }
     } else {
-      console.log(`🔄 SEND: Using existing conversationId ${insertMessage.conversationId} for message from ${insertMessage.userId}`);
+      logger.info(`🔄 SEND: Using existing conversationId ${insertMessage.conversationId} for message from ${insertMessage.userId}`);
     }
 
     const [message] = await db.insert(messages).values(insertMessage).returning();
-    console.log(`📤 MESSAGE SENT: id=${message.id}, conversationId=${message.conversationId}, sender=${message.userId}`);
+    logger.info(`📤 MESSAGE SENT: id=${message.id}, conversationId=${message.conversationId}, sender=${message.userId}`);
     return message;
   }
 
   async getThreadMessages(threadId: number): Promise<Message[]> {
-    console.log(`🔍 QUERY: getThreadMessages - threadId: ${threadId}`);
+    logger.info(`🔍 QUERY: getThreadMessages - threadId: ${threadId}`);
     const messageResults = await db.select().from(messages).where(eq(messages.conversationId, threadId)).orderBy(messages.createdAt);
-    console.log(`🔍 RESULT: Found ${messageResults.length} messages for threadId ${threadId}`);
+    logger.info(`🔍 RESULT: Found ${messageResults.length} messages for threadId ${threadId}`);
     return messageResults;
   }
 
@@ -501,15 +502,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteMessage(id: number): Promise<boolean> {
-    console.log(`[DEBUG] deleteMessage called with id: ${id}`);
+    logger.info(`[DEBUG] deleteMessage called with id: ${id}`);
     try {
       const result = await db.delete(messages).where(eq(messages.id, id));
-      console.log(`[DEBUG] deleteMessage result:`, result);
+      logger.info(`[DEBUG] deleteMessage result:`, result);
       const success = (result.rowCount ?? 0) > 0;
-      console.log(`[DEBUG] deleteMessage success: ${success}`);
+      logger.info(`[DEBUG] deleteMessage success: ${success}`);
       return success;
     } catch (error) {
-      console.error(`[ERROR] deleteMessage failed for id ${id}:`, error);
+      logger.error(`[ERROR] deleteMessage failed for id ${id}:`, error);
       return false;
     }
   }
@@ -549,7 +550,7 @@ export class DatabaseStorage implements IStorage {
 
       return undefined;
     } catch (error) {
-      console.error('Error finding direct conversation:', error);
+      logger.error('Error finding direct conversation:', error);
       return undefined;
     }
   }
@@ -1023,7 +1024,7 @@ export class DatabaseStorage implements IStorage {
     try {
       return await db.select().from(notifications).where(eq(notifications.userId, userId)).orderBy(desc(notifications.createdAt));
     } catch (error) {
-      console.error('Failed to get user notifications:', error);
+      logger.error('Failed to get user notifications:', error);
       return [];
     }
   }
@@ -1036,7 +1037,7 @@ export class DatabaseStorage implements IStorage {
         .returning();
       return createdNotification;
     } catch (error) {
-      console.error('Failed to create notification:', error);
+      logger.error('Failed to create notification:', error);
       throw error;
     }
   }
@@ -1049,7 +1050,7 @@ export class DatabaseStorage implements IStorage {
         .where(eq(notifications.id, id));
       return (result.rowCount ?? 0) > 0;
     } catch (error) {
-      console.error('Failed to mark notification as read:', error);
+      logger.error('Failed to mark notification as read:', error);
       return false;
     }
   }
@@ -1061,7 +1062,7 @@ export class DatabaseStorage implements IStorage {
         .where(eq(notifications.id, id));
       return (result.rowCount ?? 0) > 0;
     } catch (error) {
-      console.error('Failed to delete notification:', error);
+      logger.error('Failed to delete notification:', error);
       return false;
     }
   }
@@ -1117,7 +1118,7 @@ export class DatabaseStorage implements IStorage {
         .where(eq(notifications.id, notificationId));
       return (result.rowCount ?? 0) > 0;
     } catch (error) {
-      console.error("Error marking notification as read:", error);
+      logger.error("Error marking notification as read:", error);
       return false;
     }
   }
@@ -1130,7 +1131,7 @@ export class DatabaseStorage implements IStorage {
         .where(and(eq(notifications.userId, userId), eq(notifications.isRead, false)));
       return (result.rowCount ?? 0) > 0;
     } catch (error) {
-      console.error("Error marking all notifications as read:", error);
+      logger.error("Error marking all notifications as read:", error);
       return false;
     }
   }
@@ -1160,7 +1161,7 @@ export class DatabaseStorage implements IStorage {
       
       return assignments;
     } catch (error) {
-      console.error('Error fetching project assignments:', error);
+      logger.error('Error fetching project assignments:', error);
       return [];
     }
   }
@@ -1179,7 +1180,7 @@ export class DatabaseStorage implements IStorage {
       
       return newAssignment;
     } catch (error) {
-      console.error('Error adding project assignment:', error);
+      logger.error('Error adding project assignment:', error);
       return null;
     }
   }
@@ -1195,7 +1196,7 @@ export class DatabaseStorage implements IStorage {
       
       return (result.rowCount ?? 0) > 0;
     } catch (error) {
-      console.error('Error removing project assignment:', error);
+      logger.error('Error removing project assignment:', error);
       return false;
     }
   }
@@ -1213,14 +1214,14 @@ export class DatabaseStorage implements IStorage {
       
       return updatedAssignment;
     } catch (error) {
-      console.error('Error updating project assignment:', error);
+      logger.error('Error updating project assignment:', error);
       return null;
     }
   }
 
   async initialize(): Promise<void> {
     try {
-      console.log('Initializing database storage...');
+      logger.info('Initializing database storage...');
 
       // Test database connection
       await this.testConnection();
@@ -1228,20 +1229,20 @@ export class DatabaseStorage implements IStorage {
       // Check and add missing sender column if needed
       try {
         await db.execute(sql`SELECT sender FROM messages LIMIT 1`);
-        console.log('Sender column exists');
+        logger.info('Sender column exists');
       } catch (error) {
-        console.log('Adding missing sender column to messages table...');
+        logger.info('Adding missing sender column to messages table...');
         try {
           await db.execute(sql`ALTER TABLE messages ADD COLUMN sender TEXT DEFAULT 'Unknown User'`);
-          console.log('Sender column added successfully');
+          logger.info('Sender column added successfully');
         } catch (alterError) {
-          console.log('Could not add sender column, will use fallback queries');
+          logger.info('Could not add sender column, will use fallback queries');
         }
       }
 
-      console.log('Database storage initialized successfully');
+      logger.info('Database storage initialized successfully');
     } catch (error) {
-      console.error('Failed to initialize database storage:', error);
+      logger.error('Failed to initialize database storage:', error);
       throw error;
     }
   }
@@ -1252,7 +1253,7 @@ export class DatabaseStorage implements IStorage {
       const result = await db.select().from(suggestions).orderBy(suggestions.createdAt);
       return result as Suggestion[];
     } catch (error) {
-      console.error('Error fetching suggestions:', error);
+      logger.error('Error fetching suggestions:', error);
       return [];
     }
   }
@@ -1262,7 +1263,7 @@ export class DatabaseStorage implements IStorage {
       const result = await db.select().from(suggestions).where(eq(suggestions.id, id)).limit(1);
       return result[0] as Suggestion | undefined;
     } catch (error) {
-      console.error('Error fetching suggestion:', error);
+      logger.error('Error fetching suggestion:', error);
       return undefined;
     }
   }
@@ -1272,7 +1273,7 @@ export class DatabaseStorage implements IStorage {
       const result = await db.insert(suggestions).values(suggestion).returning();
       return result[0] as Suggestion;
     } catch (error) {
-      console.error('Error creating suggestion:', error);
+      logger.error('Error creating suggestion:', error);
       throw error;
     }
   }
@@ -1285,7 +1286,7 @@ export class DatabaseStorage implements IStorage {
         .returning();
       return result[0] as Suggestion | undefined;
     } catch (error) {
-      console.error('Error updating suggestion:', error);
+      logger.error('Error updating suggestion:', error);
       return undefined;
     }
   }
@@ -1298,7 +1299,7 @@ export class DatabaseStorage implements IStorage {
       const result = await db.delete(suggestions).where(eq(suggestions.id, id));
       return true;
     } catch (error) {
-      console.error('Error deleting suggestion:', error);
+      logger.error('Error deleting suggestion:', error);
       return false;
     }
   }
@@ -1310,7 +1311,7 @@ export class DatabaseStorage implements IStorage {
         .where(eq(suggestions.id, id));
       return true;
     } catch (error) {
-      console.error('Error upvoting suggestion:', error);
+      logger.error('Error upvoting suggestion:', error);
       return false;
     }
   }
@@ -1323,7 +1324,7 @@ export class DatabaseStorage implements IStorage {
         .orderBy(suggestionResponses.createdAt);
       return result as SuggestionResponse[];
     } catch (error) {
-      console.error('Error fetching suggestion responses:', error);
+      logger.error('Error fetching suggestion responses:', error);
       return [];
     }
   }
@@ -1333,7 +1334,7 @@ export class DatabaseStorage implements IStorage {
       const result = await db.insert(suggestionResponses).values(response).returning();
       return result[0] as SuggestionResponse;
     } catch (error) {
-      console.error('Error creating suggestion response:', error);
+      logger.error('Error creating suggestion response:', error);
       throw error;
     }
   }
@@ -1343,7 +1344,7 @@ export class DatabaseStorage implements IStorage {
       await db.delete(suggestionResponses).where(eq(suggestionResponses.id, id));
       return true;
     } catch (error) {
-      console.error('Error deleting suggestion response:', error);
+      logger.error('Error deleting suggestion response:', error);
       return false;
     }
   }
@@ -1351,7 +1352,7 @@ export class DatabaseStorage implements IStorage {
   // Messaging System methods
   async getUserConversations(userId: string): Promise<any[]> {
     try {
-      console.log(`[DB] Getting conversations for user: ${userId}`);
+      logger.info(`[DB] Getting conversations for user: ${userId}`);
       
       // Get all conversations where the user is a participant
       const userConversations = await db
@@ -1368,7 +1369,7 @@ export class DatabaseStorage implements IStorage {
         .where(eq(conversationParticipants.userId, userId))
         .orderBy(conversations.createdAt);
 
-      console.log(`[DB] Found ${userConversations.length} conversations for user ${userId}`);
+      logger.info(`[DB] Found ${userConversations.length} conversations for user ${userId}`);
 
       // For each conversation, get additional metadata
       const enrichedConversations = await Promise.all(
@@ -1403,7 +1404,7 @@ export class DatabaseStorage implements IStorage {
 
       return enrichedConversations;
     } catch (error) {
-      console.error('Error getting user conversations:', error);
+      logger.error('Error getting user conversations:', error);
       return [];
     }
   }
@@ -1414,7 +1415,7 @@ export class DatabaseStorage implements IStorage {
     createdBy: string;
   }, participants: string[]): Promise<any> {
     try {
-      console.log(`[DB] Creating conversation:`, conversationData);
+      logger.info(`[DB] Creating conversation:`, conversationData);
       
       // Create the conversation
       const [newConversation] = await db
@@ -1425,7 +1426,7 @@ export class DatabaseStorage implements IStorage {
         })
         .returning();
 
-      console.log(`[DB] Created conversation with ID: ${newConversation.id}`);
+      logger.info(`[DB] Created conversation with ID: ${newConversation.id}`);
 
       // Add participants
       const participantData = participants.map(userId => ({
@@ -1435,21 +1436,21 @@ export class DatabaseStorage implements IStorage {
 
       await db.insert(conversationParticipants).values(participantData);
 
-      console.log(`[DB] Added ${participants.length} participants to conversation ${newConversation.id}`);
+      logger.info(`[DB] Added ${participants.length} participants to conversation ${newConversation.id}`);
 
       return {
         ...newConversation,
         memberCount: participants.length,
       };
     } catch (error) {
-      console.error('Error creating conversation:', error);
+      logger.error('Error creating conversation:', error);
       throw error;
     }
   }
 
   async getConversationMessages(conversationId: number, userId: string): Promise<any[]> {
     try {
-      console.log(`[DB] Getting messages for conversation ${conversationId} and user ${userId}`);
+      logger.info(`[DB] Getting messages for conversation ${conversationId} and user ${userId}`);
       
       // First verify user has access to this conversation
       const hasAccess = await db
@@ -1462,7 +1463,7 @@ export class DatabaseStorage implements IStorage {
         .limit(1);
 
       if (hasAccess.length === 0) {
-        console.log(`[DB] User ${userId} does not have access to conversation ${conversationId}`);
+        logger.info(`[DB] User ${userId} does not have access to conversation ${conversationId}`);
         return [];
       }
 
@@ -1489,10 +1490,10 @@ export class DatabaseStorage implements IStorage {
         ))
         .orderBy(messages.createdAt);
 
-      console.log(`[DB] Found ${messages.length} messages for conversation ${conversationId}`);
+      logger.info(`[DB] Found ${messages.length} messages for conversation ${conversationId}`);
       return messages;
     } catch (error) {
-      console.error('Error getting conversation messages:', error);
+      logger.error('Error getting conversation messages:', error);
       return [];
     }
   }
@@ -1506,7 +1507,7 @@ export class DatabaseStorage implements IStorage {
     contextId?: string;
   }): Promise<any> {
     try {
-      console.log(`[DB] Adding message to conversation ${messageData.conversationId}`);
+      logger.info(`[DB] Adding message to conversation ${messageData.conversationId}`);
       
       const [newMessage] = await db
         .insert(messages)
@@ -1521,10 +1522,10 @@ export class DatabaseStorage implements IStorage {
         })
         .returning();
 
-      console.log(`[DB] Created message with ID: ${newMessage.id}`);
+      logger.info(`[DB] Created message with ID: ${newMessage.id}`);
       return newMessage;
     } catch (error) {
-      console.error('Error adding conversation message:', error);
+      logger.error('Error adding conversation message:', error);
       throw error;
     }
   }
@@ -1534,7 +1535,7 @@ export class DatabaseStorage implements IStorage {
     editedAt?: Date;
   }): Promise<any> {
     try {
-      console.log(`[DB] Updating message ${messageId} by user ${userId}`);
+      logger.info(`[DB] Updating message ${messageId} by user ${userId}`);
       
       const [updatedMessage] = await db
         .update(messages)
@@ -1550,14 +1551,14 @@ export class DatabaseStorage implements IStorage {
 
       return updatedMessage;
     } catch (error) {
-      console.error('Error updating conversation message:', error);
+      logger.error('Error updating conversation message:', error);
       throw error;
     }
   }
 
   async deleteConversationMessage(messageId: number, userId: string): Promise<boolean> {
     try {
-      console.log(`[DB] Deleting message ${messageId} by user ${userId}`);
+      logger.info(`[DB] Deleting message ${messageId} by user ${userId}`);
       
       const result = await db
         .update(messages)
@@ -1572,7 +1573,7 @@ export class DatabaseStorage implements IStorage {
 
       return (result.rowCount ?? 0) > 0;
     } catch (error) {
-      console.error('Error deleting conversation message:', error);
+      logger.error('Error deleting conversation message:', error);
       return false;
     }
   }

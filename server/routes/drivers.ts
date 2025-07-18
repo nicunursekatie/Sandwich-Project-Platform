@@ -3,6 +3,7 @@ import { z } from "zod";
 import { storage } from "../storage-wrapper";
 import { requirePermission, isAuthenticated, optionalAuth } from "../middleware/auth";
 import { insertDriverSchema } from "@shared/schema";
+import { logger } from "../utils/logger";
 
 const router = Router();
 
@@ -12,7 +13,7 @@ router.get("/", optionalAuth, async (req: any, res) => {
     const drivers = await storage.getAllDrivers();
     res.json(drivers);
   } catch (error) {
-    console.error("Error fetching drivers:", error);
+    logger.error("Error fetching drivers:", error);
     res.status(500).json({ error: "Failed to fetch drivers" });
   }
 });
@@ -27,7 +28,7 @@ router.get("/:id", optionalAuth, async (req: any, res) => {
     }
     res.json(driver);
   } catch (error) {
-    console.error("Error fetching driver:", error);
+    logger.error("Error fetching driver:", error);
     res.status(500).json({ error: "Failed to fetch driver" });
   }
 });
@@ -42,7 +43,7 @@ router.post("/", requirePermission("edit_data"), async (req: any, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: "Invalid driver data", details: error.errors });
     }
-    console.error("Error creating driver:", error);
+    logger.error("Error creating driver:", error);
     res.status(500).json({ error: "Failed to create driver" });
   }
 });
@@ -61,7 +62,7 @@ router.patch("/:id", requirePermission("edit_data"), async (req: any, res) => {
     const updatedDriver = await storage.updateDriver(driverId, req.body);
     res.json(updatedDriver);
   } catch (error) {
-    console.error("Error updating driver:", error);
+    logger.error("Error updating driver:", error);
     res.status(500).json({ error: "Failed to update driver" });
   }
 });
@@ -80,7 +81,7 @@ router.delete("/:id", requirePermission("delete_data"), async (req: any, res) =>
     await storage.deleteDriver(driverId);
     res.json({ message: "Driver deleted successfully" });
   } catch (error) {
-    console.error("Error deleting driver:", error);
+    logger.error("Error deleting driver:", error);
     res.status(500).json({ error: "Failed to delete driver" });
   }
 });
@@ -98,7 +99,7 @@ router.patch("/:id/agreement", requirePermission("edit_data"), async (req: any, 
     const updatedDriver = await storage.updateDriverAgreement(driverId, status, notes);
     res.json(updatedDriver);
   } catch (error) {
-    console.error("Error updating driver agreement:", error);
+    logger.error("Error updating driver agreement:", error);
     res.status(500).json({ error: "Failed to update driver agreement" });
   }
 });
@@ -112,7 +113,7 @@ router.patch("/:id/zone", requirePermission("edit_data"), async (req: any, res) 
     const updatedDriver = await storage.updateDriver(driverId, { zone });
     res.json(updatedDriver);
   } catch (error) {
-    console.error("Error updating driver zone:", error);
+    logger.error("Error updating driver zone:", error);
     res.status(500).json({ error: "Failed to update driver zone" });
   }
 });
@@ -126,7 +127,7 @@ router.patch("/:id/status", requirePermission("edit_data"), async (req: any, res
     const updatedDriver = await storage.updateDriver(driverId, { isActive });
     res.json(updatedDriver);
   } catch (error) {
-    console.error("Error updating driver status:", error);
+    logger.error("Error updating driver status:", error);
     res.status(500).json({ error: "Failed to update driver status" });
   }
 });
@@ -138,7 +139,7 @@ router.get("/zone/:zone", optionalAuth, async (req: any, res) => {
     const drivers = await storage.getDriversByZone(zone);
     res.json(drivers);
   } catch (error) {
-    console.error("Error fetching drivers by zone:", error);
+    logger.error("Error fetching drivers by zone:", error);
     res.status(500).json({ error: "Failed to fetch drivers by zone" });
   }
 });
@@ -149,7 +150,7 @@ router.get("/van-approved", optionalAuth, async (req: any, res) => {
     const drivers = await storage.getVanApprovedDrivers();
     res.json(drivers);
   } catch (error) {
-    console.error("Error fetching van-approved drivers:", error);
+    logger.error("Error fetching van-approved drivers:", error);
     res.status(500).json({ error: "Failed to fetch van-approved drivers" });
   }
 });

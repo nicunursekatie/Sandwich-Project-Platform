@@ -2,6 +2,7 @@ import express from "express";
 import { storage } from "../storage";
 import { requireAuth } from "../middleware/auth";
 import { z } from "zod";
+import { logger } from "../utils/logger";
 
 const router = express.Router();
 
@@ -53,7 +54,7 @@ router.get("/inbox", requireAuth, async (req, res) => {
     
     res.json(simpleMessages);
   } catch (error) {
-    console.error("Error fetching inbox messages:", error);
+    logger.error("Error fetching inbox messages:", error);
     res.status(500).json({ error: "Failed to fetch inbox messages" });
   }
 });
@@ -81,7 +82,7 @@ router.get("/sent", requireAuth, async (req, res) => {
     
     res.json(simpleMessages);
   } catch (error) {
-    console.error("Error fetching sent messages:", error);
+    logger.error("Error fetching sent messages:", error);
     res.status(500).json({ error: "Failed to fetch sent messages" });
   }
 });
@@ -106,7 +107,7 @@ router.post("/", requireAuth, async (req, res) => {
       message: "Message sent successfully" 
     });
   } catch (error) {
-    console.error("Error sending message:", error);
+    logger.error("Error sending message:", error);
     res.status(500).json({ error: "Failed to send message" });
   }
 });
@@ -137,7 +138,7 @@ router.post("/reply", requireAuth, async (req, res) => {
       message: "Reply sent successfully" 
     });
   } catch (error) {
-    console.error("Error sending reply:", error);
+    logger.error("Error sending reply:", error);
     res.status(500).json({ error: "Failed to send reply" });
   }
 });
@@ -152,7 +153,7 @@ router.post("/:id/read", requireAuth, async (req, res) => {
     // For now, just return success
     res.json({ message: "Message marked as read" });
   } catch (error) {
-    console.error("Error marking message as read:", error);
+    logger.error("Error marking message as read:", error);
     res.status(500).json({ error: "Failed to mark message as read" });
   }
 });
