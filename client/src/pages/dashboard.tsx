@@ -406,9 +406,15 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
           </button>
           <MessageNotifications user={user} />
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               console.log('Profile button clicked, current section:', activeSection);
               setActiveSection("profile");
+              // Force update URL to ensure proper navigation
+              window.history.pushState({}, '', '/dashboard?section=profile');
+              // Close mobile menu if open
+              setIsMobileMenuOpen(false);
             }}
             className={`p-2 rounded-lg transition-colors relative z-50 pointer-events-auto ${
               activeSection === "profile"
@@ -464,6 +470,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
             <SimpleNav onSectionChange={(section) => {
               console.log('Dashboard setActiveSection called with:', section);
               setActiveSection(section);
+              // Close mobile menu when navigation item is clicked
+              setIsMobileMenuOpen(false);
               // Also update URL for back button support
               const newUrl = section === 'dashboard' ? '/dashboard' : `/dashboard?section=${section}`;
               window.history.pushState({}, '', newUrl);

@@ -1579,17 +1579,36 @@ export class DatabaseStorage implements IStorage {
 
   // Chat message methods for Socket.IO
   async createChatMessage(data: { channel: string; userId: string; userName: string; content: string }): Promise<any> {
-    const [message] = await db
-      .insert(chatMessages)
-      .values({
-        channel: data.channel,
-        userId: data.userId,
-        userName: data.userName,
-        content: data.content,
-        createdAt: new Date()
-      })
-      .returning();
-    return message;
+    try {
+      const [message] = await db
+        .insert(chatMessages)
+        .values({
+          channel: data.channel,
+          userId: data.userId,
+          userName: data.userName,
+          content: data.content,
+          createdAt: new Date()
+        })
+        .returning();
+      return message;
+    } catch (error: any) {
+      if (error.code === '23505') {
+        // Retry with a small delay to avoid ID collision
+        await new Promise(resolve => setTimeout(resolve, 10));
+        const [message] = await db
+          .insert(chatMessages)
+          .values({
+            channel: data.channel,
+            userId: data.userId,
+            userName: data.userName,
+            content: data.content,
+            createdAt: new Date()
+          })
+          .returning();
+        return message;
+      }
+      throw error;
+    }
   }
 
   async getChatMessages(channel: string, limit: number = 50): Promise<any[]> {
