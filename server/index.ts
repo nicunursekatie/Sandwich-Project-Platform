@@ -7,6 +7,9 @@ import { initializeDatabase } from "./db-init";
 import { setupSocketChat } from "./socket-chat";
 import { logger } from "./utils/logger";
 
+// Make logger available globally for vite.ts compatibility  
+(global as any).logger = logger;
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

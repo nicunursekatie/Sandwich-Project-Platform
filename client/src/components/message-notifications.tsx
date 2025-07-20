@@ -68,12 +68,24 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
       // Replit environment - use the full hostname without port but with correct protocol
       wsUrl = `${protocol}//${window.location.hostname}/notifications`;
     } else if (window.location.hostname === 'localhost') {
-      // Local development - use the actual port from location
+      // Local development - ensure we have a valid port
       const port = window.location.port || '5000';
-      wsUrl = `${protocol}//${window.location.hostname}:${port}/notifications`;
+      if (port && port !== 'undefined') {
+        wsUrl = `${protocol}//${window.location.hostname}:${port}/notifications`;
+      } else {
+        wsUrl = `${protocol}//${window.location.hostname}:5000/notifications`;
+      }
     } else {
-      // Fallback for other environments
+      // Fallback for other environments - use window.location.host which includes port
       wsUrl = `${protocol}//${window.location.host}/notifications`;
+    }
+
+    // Validate the URL before creating WebSocket
+    try {
+      new URL(wsUrl);
+    } catch (urlError) {
+      console.error('Invalid WebSocket URL:', wsUrl);
+      return;
     }
 
     try {

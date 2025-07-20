@@ -1,10 +1,9 @@
-import { logger } from "../utils/logger";
 import { Router } from "express";
 import { z } from "zod";
 import { sql, eq } from "drizzle-orm";
 import { workLogs } from "@shared/schema";
 import { db } from "../db";
-import { logger } from "../middleware/logger";
+import { logger } from "../utils/logger";
 // Import the actual authentication middleware being used in the app
 const isAuthenticated = (req: any, res: any, next: any) => {
   const user = req.user || req.session?.user;
