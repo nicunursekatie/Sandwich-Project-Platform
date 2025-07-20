@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { logger } from "../utils/logger";
+import { logger as utilLogger } from "../utils/logger";
 
 export interface LogEntry {
   timestamp: string;
@@ -41,13 +41,13 @@ class Logger {
     
     switch (entry.level) {
       case 'error':
-        logger.error(logMessage, entry.error || '');
+        utilLogger.error(logMessage, entry.error || '');
         break;
       case 'warn':
-        logger.warn(logMessage);
+        utilLogger.warn(logMessage);
         break;
       default:
-        logger.info(logMessage);
+        utilLogger.info(logMessage);
     }
   }
 
@@ -98,7 +98,7 @@ export function requestLogger(req: Request, res: Response, next: NextFunction) {
 
 // Express error handling middleware
 export function errorLogger(err: Error, req: Request, res: Response, next: NextFunction) {
-  logger.error(`Request failed: ${req.method} ${req.url}`, err, {
+  utilLogger.error(`Request failed: ${req.method} ${req.url}`, err, {
     method: req.method,
     url: req.url,
     ip: req.ip,

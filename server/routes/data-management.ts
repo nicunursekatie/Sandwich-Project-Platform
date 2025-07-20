@@ -2,6 +2,7 @@ import { Router } from "express";
 import { DataExporter } from "../data-export";
 import { BulkOperationsManager } from "../bulk-operations";
 import { AuditLogger } from "../audit-logger";
+import { logger } from "../utils/logger";
 import { z } from "zod";
 
 const router = Router();

@@ -1,6 +1,7 @@
 import { db } from "../db";
 import { storage } from "../storage-wrapper";
 import { AuditLogger } from "../audit-logger";
+import { logger } from "../utils/logger";
 import fs from "fs/promises";
 import path from "path";
 

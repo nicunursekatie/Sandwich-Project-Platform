@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { logger } from "./utils/logger";
 import { 
   sandwichCollections, 
   hosts, 

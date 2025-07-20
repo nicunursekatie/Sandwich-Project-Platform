@@ -14,6 +14,7 @@ import realTimeMessagesRoutes from "./real-time-messages";
 import chatRoutes from "./chat";
 import { registerMessageNotificationRoutes } from "./message-notifications";
 import { registerPerformanceRoutes } from "./performance";
+import { logger } from "../utils/logger";
 
 export function registerModularRoutes(app: Express) {
   // Authentication routes

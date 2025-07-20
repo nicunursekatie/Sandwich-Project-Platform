@@ -18,7 +18,7 @@ router.get("/profile", isAuthenticated, async (req: any, res) => {
       profileImageUrl: user.profileImageUrl
     });
   } catch (error) {
-    logger.apiError("GET", "/profile", error, req.user?.id);
+    logger.error("GET /profile failed:", error);
     res.status(500).json({ message: "Failed to fetch profile" });
   }
 });
@@ -50,7 +50,7 @@ router.put("/profile", isAuthenticated, async (req: any, res) => {
       profileImageUrl: updatedUser.profileImageUrl
     });
   } catch (error) {
-    logger.apiError("PUT", "/profile", error, req.user?.id);
+    logger.error("PUT /profile failed:", error);
     res.status(500).json({ message: "Failed to update profile" });
   }
 });
@@ -81,7 +81,7 @@ router.get("/user", async (req: any, res) => {
         isActive: dbUser.isActive
       });
     } catch (error) {
-      logger.apiError("GET", "/user", error);
+      logger.error("GET /user failed:", error);
       res.status(500).json({ message: "Error fetching user data" });
     }
   } else {
