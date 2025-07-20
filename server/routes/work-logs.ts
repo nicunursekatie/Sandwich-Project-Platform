@@ -77,7 +77,7 @@ router.post("/work-logs", isAuthenticated, async (req, res) => {
     }).returning();
     res.status(201).json(log[0]);
   } catch (error) {
-    logger.error("Error creating work log:", error);
+    logger.error("Error creating work log:", error?.message || error || "Unknown error");
     res.status(500).json({ error: "Failed to create work log" });
   }
 });

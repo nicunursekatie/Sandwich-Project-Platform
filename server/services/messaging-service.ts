@@ -320,7 +320,7 @@ export class MessagingService {
 
       return updatedMessage;
     } catch (error) {
-      logger.error('Failed to edit message:', error);
+      logger.error('Failed to edit message:', error?.message || error || "Unknown error");
       throw error;
     }
   }

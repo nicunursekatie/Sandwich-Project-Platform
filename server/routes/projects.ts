@@ -13,7 +13,7 @@ router.get("/", isAuthenticated, async (req: any, res) => {
     const projects = await storage.getAllProjects();
     res.json(projects);
   } catch (error) {
-    logger.error("Error fetching projects:", error);
+    logger.error("Error fetching projects:", error?.message || error || "Unknown error");
     res.status(500).json({ error: "Failed to fetch projects" });
   }
 });
@@ -28,7 +28,7 @@ router.get("/:id", isAuthenticated, async (req: any, res) => {
     }
     res.json(project);
   } catch (error) {
-    logger.error("Error fetching project:", error);
+    logger.error("Error fetching project:", error?.message || error || "Unknown error");
     res.status(500).json({ error: "Failed to fetch project" });
   }
 });
