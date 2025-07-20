@@ -67,7 +67,7 @@ router.get("/work-logs", isAuthenticated, async (req, res) => {
 router.post("/work-logs", isAuthenticated, async (req, res) => {
   if (!canLogWork(req)) return res.status(403).json({ error: "Insufficient permissions" });
   const result = insertWorkLogSchema.safeParse(req.body);
-  if (!result.success) return res.status(400).json({ error: result.error.message });
+  if (!result.success) return res.status(400).json({ error: result.error?.message || String(error) });
   try {
     const log = await db.insert(workLogs).values({
       userId: req.user.id,
@@ -87,7 +87,7 @@ router.put("/work-logs/:id", isAuthenticated, async (req, res) => {
   const logId = parseInt(req.params.id);
   if (isNaN(logId)) return res.status(400).json({ error: "Invalid log ID" });
   const result = insertWorkLogSchema.safeParse(req.body);
-  if (!result.success) return res.status(400).json({ error: result.error.message });
+  if (!result.success) return res.status(400).json({ error: result.error?.message || String(error) });
   try {
     // Only allow editing own log unless super admin or Marcy
     const log = await db.select().from(workLogs).where(eq(workLogs.id, logId));
@@ -134,7 +134,7 @@ router.delete("/work-logs/:id", isAuthenticated, async (req, res) => {
     res.status(204).send();
   } catch (error) {
     logger.error("[WORK LOGS DELETE] Error:", error);
-    logger.error("[WORK LOGS DELETE] Stack trace:", error.stack);
+    logger.error("[WORK LOGS DELETE] Stack trace:", error?.stack || 'No stack trace');
     res.status(500).json({ error: "Failed to delete work log" });
   }
 });

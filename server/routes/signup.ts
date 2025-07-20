@@ -90,7 +90,7 @@ Registration Date: ${new Date().toISOString()}
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         message: "Invalid registration data",
-        errors: error.errors
+        errors: error?.errors || "Unknown"
       });
     }
 

@@ -78,7 +78,7 @@ router.post('/', isAuthenticated, async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ 
         message: 'Invalid input data',
-        errors: error.errors 
+        errors: error?.errors || "Unknown" 
       });
     }
     
@@ -123,7 +123,7 @@ router.patch('/:id', isAuthenticated, async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ 
         message: 'Invalid input data',
-        errors: error.errors 
+        errors: error?.errors || "Unknown" 
       });
     }
     
@@ -212,7 +212,7 @@ router.get('/sync/analyze', async (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: 'Google Sheets analysis failed. Please check API credentials.',
-      error: error.message 
+      error: error?.message || String(error) 
     });
   }
 });
@@ -256,7 +256,7 @@ router.post('/sync/import', isAuthenticated, async (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: 'Google Sheets import failed',
-      error: error.message 
+      error: error?.message || String(error) 
     });
   }
 });
@@ -282,7 +282,7 @@ router.post('/sync/export', isAuthenticated, async (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: 'Google Sheets export failed',
-      error: error.message 
+      error: error?.message || String(error) 
     });
   }
 });
@@ -317,7 +317,7 @@ router.post('/sync/bidirectional', isAuthenticated, async (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: 'Google Sheets sync failed',
-      error: error.message 
+      error: error?.message || String(error) 
     });
   }
 });

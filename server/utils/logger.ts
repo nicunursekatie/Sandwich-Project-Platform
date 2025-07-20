@@ -64,7 +64,7 @@ class Logger {
       // Prevent circular references by limiting error serialization
       let errorDetails = '';
       if (error instanceof Error) {
-        errorDetails = error.message;
+        errorDetails = error?.message || String(error);
       } else if (typeof error === 'string') {
         errorDetails = error;
       } else if (error && typeof error === 'object') {

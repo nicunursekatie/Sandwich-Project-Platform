@@ -63,10 +63,10 @@ router.post('/', requirePermission([PERMISSIONS.SUBMIT_SUGGESTIONS]), async (req
   } catch (error) {
     if (error instanceof z.ZodError) {
       logger.info('=== VALIDATION ERROR ===');
-      logger.info('Zod validation errors:', JSON.stringify(error.errors, null, 2));
+      logger.info('Zod validation errors:', JSON.stringify(error?.errors || "Unknown", null, 2));
       return res.status(400).json({ 
         error: 'Validation failed', 
-        details: error.errors 
+        details: error?.errors || "Unknown" 
       });
     }
     logger.error('Error creating suggestion:', error);
@@ -156,7 +156,7 @@ router.post('/:id/responses', requirePermission([PERMISSIONS.RESPOND_TO_SUGGESTI
     if (error instanceof z.ZodError) {
       return res.status(400).json({ 
         error: 'Validation failed', 
-        details: error.errors 
+        details: error?.errors || "Unknown" 
       });
     }
     logger.error('Error creating suggestion response:', error);

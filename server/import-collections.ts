@@ -111,7 +111,7 @@ export async function importCollectionsFromCSV(filePath: string) {
       
     } catch (error) {
       errorCount++;
-      const errorMsg = `Row ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`;
+      const errorMsg = `Row ${i + 1}: ${error instanceof Error ? error?.message || String(error) : 'Unknown error'}`;
       errors.push(errorMsg);
       logger.error(errorMsg);
     }

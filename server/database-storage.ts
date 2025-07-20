@@ -1593,7 +1593,7 @@ export class DatabaseStorage implements IStorage {
         .returning();
       return message;
     } catch (error: any) {
-      if (error.code === '23505') {
+      if (error?.code || "Unknown" === '23505') {
         // Retry with a small delay to avoid ID collision
         await new Promise(resolve => setTimeout(resolve, 10));
         const [message] = await db

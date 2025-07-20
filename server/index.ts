@@ -228,7 +228,7 @@ async function startServer() {
             } catch (error) {
               logger.info(
                 "⚠ Vite setup failed, continuing without it:",
-                error.message,
+                error?.message || String(error),
               );
             }
           } else {

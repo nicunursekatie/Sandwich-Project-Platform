@@ -44,7 +44,7 @@ router.post("/messages", sanitizeMiddleware, async (req, res) => {
   try {
     const result = insertMessageSchema.safeParse(req.body);
     if (!result.success) {
-      return res.status(400).json({ error: result.error.message });
+      return res.status(400).json({ error: result.error?.message || String(error) });
     }
     
     const { parentId, ...messageData } = result.data;

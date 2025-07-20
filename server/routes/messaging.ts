@@ -42,10 +42,10 @@ router.post("/send", async (req, res) => {
 
     const result = sendMessageSchema.safeParse(req.body);
     if (!result.success) {
-      logger.error("Send message validation failed:", result.error.errors);
+      logger.error("Send message validation failed:", result.error?.errors || "Unknown");
       return res.status(400).json({ 
         error: "Invalid request", 
-        details: result.error.errors 
+        details: result.error?.errors || "Unknown" 
       });
     }
 
@@ -72,7 +72,7 @@ router.post("/send", async (req, res) => {
     });
   } catch (error) {
     logger.error("Error sending message:", error);
-    res.status(500).json({ error: "Failed to send message", details: error instanceof Error ? error.message : 'Unknown error' });
+    res.status(500).json({ error: "Failed to send message", details: error instanceof Error ? error?.message || String(error) : 'Unknown error' });
   }
 });
 
@@ -90,7 +90,7 @@ router.post("/kudos", async (req, res) => {
     if (!result.success) {
       return res.status(400).json({ 
         error: "Invalid request", 
-        details: result.error.errors 
+        details: result.error?.errors || "Unknown" 
       });
     }
 
@@ -320,8 +320,8 @@ router.put("/:messageId", async (req, res) => {
     res.json({ success: true, message });
   } catch (error: any) {
     logger.error("Error editing message:", error);
-    if (error.message?.includes("edit window") || error.message?.includes("sender")) {
-      res.status(403).json({ error: error.message });
+    if (error?.message || String(error)?.includes("edit window") || error?.message || String(error)?.includes("sender")) {
+      res.status(403).json({ error: error?.message || String(error) });
     } else {
       res.status(500).json({ error: "Failed to edit message" });
     }
@@ -351,8 +351,8 @@ router.delete("/:messageId", async (req, res) => {
     res.json({ success: true });
   } catch (error: any) {
     logger.error("Error deleting message:", error);
-    if (error.message?.includes("sender")) {
-      res.status(403).json({ error: error.message });
+    if (error?.message || String(error)?.includes("sender")) {
+      res.status(403).json({ error: error?.message || String(error) });
     } else {
       res.status(500).json({ error: "Failed to delete message" });
     }

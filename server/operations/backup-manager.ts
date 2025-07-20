@@ -229,7 +229,7 @@ export class BackupManager {
     } catch (error) {
       return {
         valid: false,
-        errors: [`Backup validation failed: ${error.message}`]
+        errors: [`Backup validation failed: ${error?.message || String(error)}`]
       };
     }
   }

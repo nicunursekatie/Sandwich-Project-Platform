@@ -351,7 +351,7 @@ View full dashboard: {{dashboardLink}}
         }
       } catch (error) {
         results.failed++;
-        results.errors.push(error.message);
+        results.errors.push(error?.message || String(error));
       }
     }
 

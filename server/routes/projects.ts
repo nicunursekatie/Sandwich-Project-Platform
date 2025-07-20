@@ -41,7 +41,7 @@ router.post("/", requirePermission("edit_data"), async (req: any, res) => {
     res.status(201).json(project);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: "Invalid project data", details: error.errors });
+      return res.status(400).json({ error: "Invalid project data", details: error?.errors || "Unknown" });
     }
     logger.error("Error creating project:", error);
     res.status(500).json({ error: "Failed to create project" });
@@ -109,7 +109,7 @@ router.post("/:id/tasks", requirePermission("edit_data"), async (req: any, res) 
     res.status(201).json(task);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: "Invalid task data", details: error.errors });
+      return res.status(400).json({ error: "Invalid task data", details: error?.errors || "Unknown" });
     }
     logger.error("Error creating project task:", error);
     res.status(500).json({ error: "Failed to create project task" });
@@ -170,7 +170,7 @@ router.post("/tasks/:taskId/complete", requirePermission("edit_data"), async (re
     res.status(201).json(completion);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: "Invalid completion data", details: error.errors });
+      return res.status(400).json({ error: "Invalid completion data", details: error?.errors || "Unknown" });
     }
     logger.error("Error marking task complete:", error);
     res.status(500).json({ error: "Failed to mark task complete" });

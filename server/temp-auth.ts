@@ -254,7 +254,7 @@ export function setupTempAuth(app: Express) {
               document.getElementById('login-error').textContent = result.message || 'Login failed';
             }
           } catch (error) {
-            document.getElementById('login-error').textContent = 'Login failed: ' + error.message;
+            document.getElementById('login-error').textContent = 'Login failed: ' + error?.message || String(error);
           }
         });
 
@@ -280,7 +280,7 @@ export function setupTempAuth(app: Express) {
               document.getElementById('register-error').textContent = result.message || 'Registration failed';
             }
           } catch (error) {
-            document.getElementById('register-error').textContent = 'Registration failed: ' + error.message;
+            document.getElementById('register-error').textContent = 'Registration failed: ' + error?.message || String(error);
           }
         });
       </script>
@@ -767,7 +767,7 @@ export async function initializeTempAuth() {
       logger.info("✅ Default admin user already exists: admin@sandwich.project");
     }
   } catch (error) {
-    logger.info("❌ Could not create default admin user (using fallback):", error.message);
+    logger.info("❌ Could not create default admin user (using fallback):", error?.message || String(error));
   }
 
   // Setup default committees and committee member user
@@ -782,7 +782,7 @@ export async function initializeTempAuth() {
         logger.info("✅ Default committees created");
       }
     } catch (error) {
-      logger.warn("Committee creation failed:", error.message);
+      logger.warn("Committee creation failed:", error?.message || String(error));
     }
 
     // Create committee member user and assign to specific committee
@@ -833,11 +833,11 @@ export async function initializeTempAuth() {
         }
       }
     } catch (error) {
-      logger.warn("Assigning committee member failed:", error.message);
+      logger.warn("Assigning committee member failed:", error?.message || String(error));
     }
 
   } catch (error) {
-    logger.info("❌ Could not setup committees:", error.message);
+    logger.info("❌ Could not setup committees:", error?.message || String(error));
   }
 
   // Setup driver user - kenig.ka@gmail.com with restricted permissions
@@ -864,6 +864,6 @@ export async function initializeTempAuth() {
       logger.info("✅ Found existing user: kenig.ka@gmail.com (preserving current role and permissions)");
     }
   } catch (error) {
-    logger.info("❌ Could not setup driver user:", error.message);
+    logger.info("❌ Could not setup driver user:", error?.message || String(error));
   }
 }

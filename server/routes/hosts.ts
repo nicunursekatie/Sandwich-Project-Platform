@@ -41,7 +41,7 @@ router.post("/", requirePermission("edit_data"), async (req: any, res) => {
     res.status(201).json(host);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: "Invalid host data", details: error.errors });
+      return res.status(400).json({ error: "Invalid host data", details: error?.errors || "Unknown" });
     }
     logger.error("Error creating host:", error);
     res.status(500).json({ error: "Failed to create host" });
