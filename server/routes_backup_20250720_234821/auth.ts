@@ -5,29 +5,6 @@ import { logger } from "../utils/logger";
 
 const router = Router();
 
-// Authentication status endpoint
-router.get("/status", async (req: any, res) => {
-  try {
-    const user = req.user || req.session?.user;
-    if (user) {
-      res.json({ 
-        authenticated: true, 
-        user: {
-          id: user.id,
-          email: user.email,
-          role: user.role,
-          displayName: user.displayName
-        }
-      });
-    } else {
-      res.json({ authenticated: false, user: null });
-    }
-  } catch (error) {
-    logger.error("GET /auth/status failed:", error);
-    res.status(500).json({ message: "Authentication check failed" });
-  }
-});
-
 // Profile management endpoints
 router.get("/profile", isAuthenticated, async (req: any, res) => {
   try {

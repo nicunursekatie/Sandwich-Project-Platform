@@ -209,19 +209,9 @@ async function startServer() {
           await initializeDatabase();
           logger.info("✓ Database initialization complete");
 
+          // Register API routes FIRST, before Vite setup
           registerModularRoutes(app);
           logger.info("✓ Routes registered successfully");
-
-          // Update health check to reflect full init
-          app.get("/health", (_req: Request, res: Response) => {
-            res.status(200).json({
-              status: "healthy",
-              timestamp: new Date().toISOString(),
-              uptime: process.uptime(),
-              environment: process.env.NODE_ENV || "development",
-              initialized: true,
-            });
-          });
 
           if (process.env.NODE_ENV === "development") {
             try {
@@ -234,30 +224,18 @@ async function startServer() {
                 error?.message || String(error),
               );
             }
-          } else {
-              // Add catch-all for unknown routes before SPA
-              app.use("*", (req, res, next) => {
-                logger.info(`Catch-all route hit: ${req.method} ${req.originalUrl}`);
-                if (req.originalUrl.startsWith('/api')) {
-                  return res.status(404).json({ error: `API route not found: ${req.originalUrl}` });
-                }
-                next();
-              });
+          }
 
-              // In production, serve React app for all non-API routes
-              app.get("*", async (_req: Request, res: Response) => {
-                try {
-                  const path = await import("path");
-                  const indexPath = path.join(process.cwd(), "dist/public/index.html");
-                  logger.info(`Serving SPA for route: ${_req.path}, file: ${indexPath}`);
-                  res.sendFile(indexPath);
-                } catch (error) {
-                  logger.error("SPA serving error:", error);
-                  res.status(500).send("Error serving application");
-                }
-              });
-              logger.info("✓ Production SPA routing configured");
-            }
+          // Update health check to reflect full init
+          app.get("/health", (_req: Request, res: Response) => {
+            res.status(200).json({
+              status: "healthy",
+              timestamp: new Date().toISOString(),
+              uptime: process.uptime(),
+              environment: process.env.NODE_ENV || "development",
+              initialized: true,
+            });
+          });
 
           logger.info(
             "✓ The Sandwich Project server is fully ready to handle requests",
