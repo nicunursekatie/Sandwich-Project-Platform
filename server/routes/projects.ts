@@ -134,4 +134,83 @@ router.delete("/tasks/:taskId", requirePermission("edit_data"), async (req: any,
   }
 });
 
+// Mark task as complete/incomplete
+router.post("/tasks/:taskId/completion", requirePermission("edit_data"), async (req: any, res) => {
+  try {
+    const taskId = parseInt(req.params.taskId);
+    const { userId, completed } = req.body;
+    
+    if (completed) {
+      const validatedData = insertTaskCompletionSchema.parse({
+        taskId,
+        userId,
+        completedAt: new Date().toISOString()
+      });
+      const completion = await storage.createTaskCompletion(validatedData);
+      res.status(201).json(completion);
+    } else {
+      await storage.deleteTaskCompletion(taskId, userId);
+      res.json({ success: true, message: "Task completion removed" });
+    }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: "Invalid completion data", details: error?.errors || "Unknown" });
+    }
+    logger.error("Error managing task completion:", error?.message || error || "Unknown error");
+    res.status(500).json({ error: "Failed to manage task completion" });
+  }
+});
+
+// Get task completions
+router.get("/tasks/:taskId/completions", isAuthenticated, async (req: any, res) => {
+  try {
+    const taskId = parseInt(req.params.taskId);
+    const completions = await storage.getTaskCompletions(taskId);
+    res.json(completions);
+  } catch (error) {
+    logger.error("Error fetching task completions:", error?.message || error || "Unknown error");
+    res.status(500).json({ error: "Failed to fetch task completions" });
+  }
+});
+
+// Assign user to project
+router.post("/:id/assign-user", requirePermission("edit_data"), async (req: any, res) => {
+  try {
+    const projectId = parseInt(req.params.id);
+    const { userId, role } = req.body;
+    
+    const assignment = await storage.assignUserToProject(projectId, userId, role);
+    res.status(201).json(assignment);
+  } catch (error) {
+    logger.error("Error assigning user to project:", error?.message || error || "Unknown error");
+    res.status(500).json({ error: "Failed to assign user to project" });
+  }
+});
+
+// Remove user from project
+router.delete("/:id/remove-user", requirePermission("edit_data"), async (req: any, res) => {
+  try {
+    const projectId = parseInt(req.params.id);
+    const { userId } = req.body;
+    
+    await storage.removeUserFromProject(projectId, userId);
+    res.json({ success: true, message: "User removed from project successfully" });
+  } catch (error) {
+    logger.error("Error removing user from project:", error?.message || error || "Unknown error");
+    res.status(500).json({ error: "Failed to remove user from project" });
+  }
+});
+
+// Get project assignments
+router.get("/:id/assignments", isAuthenticated, async (req: any, res) => {
+  try {
+    const projectId = parseInt(req.params.id);
+    const assignments = await storage.getProjectAssignments(projectId);
+    res.json(assignments);
+  } catch (error) {
+    logger.error("Error fetching project assignments:", error?.message || error || "Unknown error");
+    res.status(500).json({ error: "Failed to fetch project assignments" });
+  }
+});
+
 export default router;
