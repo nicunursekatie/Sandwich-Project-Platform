@@ -88,6 +88,13 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async getUserById(id: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getUserById(id),
+      () => this.fallbackStorage.getUserById(id)
+    );
+  }
+
   async getUserByEmail(email: string) {
     return this.executeWithFallback(
       () => this.primaryStorage.getUserByEmail(email),

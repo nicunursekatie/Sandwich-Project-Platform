@@ -27,6 +27,7 @@ import {
 export interface IStorage {
   // Users (required for authentication)
   getUser(id: string): Promise<User | undefined>;
+  getUserById(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   getAllUsers(): Promise<User[]>;
@@ -325,6 +326,15 @@ export class MemStorage implements IStorage {
 
   // User methods (required for authentication)
   async getUser(id: string): Promise<User | undefined> {
+    for (const user of this.users.values()) {
+      if (user.id === id) {
+        return user;
+      }
+    }
+    return undefined;
+  }
+
+  async getUserById(id: string): Promise<User | undefined> {
     for (const user of this.users.values()) {
       if (user.id === id) {
         return user;
