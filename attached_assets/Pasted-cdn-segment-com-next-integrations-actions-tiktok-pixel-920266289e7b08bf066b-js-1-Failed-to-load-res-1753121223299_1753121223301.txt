@@ -1,0 +1,277 @@
+cdn.segment.com/next-integrations/actions/tiktok-pixel/920266289e7b08bf066b.js:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+hook.js:608 Failed to create PluginFactory Object
+overrideMethod @ hook.js:608
+hook.js:608 Failed to load Remote Plugin Error: Failed to load https://cdn.segment.com/next-integrations/actions/tiktok-pixel/920266289e7b08bf066b.js
+    at HTMLScriptElement.<anonymous> (load-script.ts:53:24)
+overrideMethod @ hook.js:608
+o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+_app-f10df38f71c1285f.js:38 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+_app-f10df38f71c1285f.js:38 [LaunchDarkly] LaunchDarkly client initialized
+Sandwich-Project-Platform:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+_app-f10df38f71c1285f.js:38 Adding extension: Javascript Commands Object
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+_app-f10df38f71c1285f.js:38 Adding extension: ReplDB Export and Import Object
+_app-f10df38f71c1285f.js:38 Adding extension: repl.tv Object
+_app-f10df38f71c1285f.js:38 Adding extension: AI Playground Object
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/diagnostic/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/diagnostic/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A1a67f49f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=f5d44245-0114-447a-b568-ae6134e038d3:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+ Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'battery'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'layout-animations'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'navigation-override'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'oversized-images'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'publickey-credentials'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'speaker-selection'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'unoptimized-images'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'unsized-media'.
+_ @ framework-d6ce62f547324137.js:1
+ Unrecognized feature: 'pointer-lock'.
+_ @ framework-d6ce62f547324137.js:1
+ Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-d6ce62f547324137.js:1
+ Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-d6ce62f547324137.js:1
+hook.js:608 Command: javascript-root-command has unrecognized contributions: commandbar. Valid contributions are commandbar,filetree-context-menu,sidebar-search,editor-context-menu Object
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitComplete listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/102-3d47774b8c277a0f.js:1:68084)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/102-3d47774b8c277a0f.js:1:70970)
+    at h (https://cdn.replit.com/_next/static/chunks/692-6985e58dc654dfc8.js:1:44832)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-6985e58dc654dfc8.js:1:50702)
+    at https://cdn.replit.com/_next/static/chunks/3430-3d770cc90d759bc9.js:1:202562
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/3430-3d770cc90d759bc9.js:1:202537
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileDirty listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/102-3d47774b8c277a0f.js:1:68084)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/102-3d47774b8c277a0f.js:1:70970)
+    at h (https://cdn.replit.com/_next/static/chunks/692-6985e58dc654dfc8.js:1:44952)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-6985e58dc654dfc8.js:1:50702)
+    at https://cdn.replit.com/_next/static/chunks/3430-3d770cc90d759bc9.js:1:202562
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/3430-3d770cc90d759bc9.js:1:202537
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileClean listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/102-3d47774b8c277a0f.js:1:68084)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/102-3d47774b8c277a0f.js:1:70970)
+    at h (https://cdn.replit.com/_next/static/chunks/692-6985e58dc654dfc8.js:1:45067)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-6985e58dc654dfc8.js:1:50702)
+    at https://cdn.replit.com/_next/static/chunks/3430-3d770cc90d759bc9.js:1:202562
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/3430-3d770cc90d759bc9.js:1:202537
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitStart listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/102-3d47774b8c277a0f.js:1:68084)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/102-3d47774b8c277a0f.js:1:70970)
+    at h (https://cdn.replit.com/_next/static/chunks/692-6985e58dc654dfc8.js:1:45184)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-6985e58dc654dfc8.js:1:50702)
+    at https://cdn.replit.com/_next/static/chunks/3430-3d770cc90d759bc9.js:1:202562
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/3430-3d770cc90d759bc9.js:1:202537
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 promptUserReconnect listeners added. Use emitter.setMaxListeners() to increase limit
+    at d (https://cdn.replit.com/_next/static/chunks/102-3d47774b8c277a0f.js:1:68084)
+    at r.<anonymous> (https://cdn.replit.com/_next/static/chunks/102-3d47774b8c277a0f.js:1:70970)
+    at h (https://cdn.replit.com/_next/static/chunks/692-6985e58dc654dfc8.js:1:46477)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/692-6985e58dc654dfc8.js:1:50702)
+    at https://cdn.replit.com/_next/static/chunks/3430-3d770cc90d759bc9.js:1:202562
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/3430-3d770cc90d759bc9.js:1:202537
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d6ce62f547324137.js:1:134884
+overrideMethod @ hook.js:608
+ stallwart: failed ping 1
+ stallwart: failed ping 2
+ stallwart: failed ping 3
+ stallwart: failed ping 4
+ stallwart: failed ping 1
+ stallwart: failed ping 2
+gravatar.com/avatar/aaec642e8dc542f81beff3c51968cae4?d=404:1  Failed to load resource: the server responded with a status of 404 ()
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A1a67f49f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=69bf8309-625f-4ea2-ba52-aded1ce365ed:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A1a67f49f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=156a547f-b379-4583-b53e-ab8d5f3891b4:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3A1a67f49f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=bbb384d8-fc5d-4882-834b-6b3b2a6892f5:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+hook.js:608 task queue exceeded allotted deadline by 25ms
+overrideMethod @ hook.js:608
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+workspace_iframe.html:32 Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html:32 Unrecognized feature: 'battery'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html:32 Unrecognized feature: 'layout-animations'.
+workspace_iframe.html:32 Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html:32 Unrecognized feature: 'navigation-override'.
+workspace_iframe.html:32 Unrecognized feature: 'oversized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html:32 Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/:1 Refused to load the script 'https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/static/devtools/eruda/3.2.3/eruda.js' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/:1 Refused to load the script 'https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/static/devtools/injected.js' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/:1 Refused to execute inline event handler because it violates the following Content Security Policy directive: "default-src 'none'". Either the 'unsafe-inline' keyword, a hash ('sha256-...'), or a nonce ('nonce-...') is required to enable inline execution. Note that hashes do not apply to event handlers, style attributes and javascript: navigations unless the 'unsafe-hashes' keyword is present. Note also that 'script-src' was not explicitly set, so 'default-src' is used as a fallback.
+
+ Refused to load the script 'https://replit.com/public/js/beacon.js' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+onIframeLoad @ workspace_iframe.html:142
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/diagnostic/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/diagnostic/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+gravatar.com/avatar/aaec642e8dc542f81beff3c51968cae4?d=404:1  Failed to load resource: the server responded with a status of 404 ()
+Network.js:227 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=LgAKsmvNqOEy' failed: 
+t @ Network.js:227
+Network.js:227 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=LgAKsmvNqOEy' is invalid.
+beacon.js:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/auth/user:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+Network.js:227 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=LgAKsmvNqOEy' failed: 
+t @ Network.js:227
+Network.js:227 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=LgAKsmvNqOEy' is invalid.
+beacon.js:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/auth/user:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+Network.js:227 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=LgAKsmvNqOEy' failed: 
+t @ Network.js:227
+Network.js:227 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=LgAKsmvNqOEy' is invalid.
+    at new t (Network.js:227:18)
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+beacon.js:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENT
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/auth/user:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+_app-f10df38f71c1285f.js:38  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-f10df38f71c1285f.js:38
+(anonymous) @ _app-f10df38f71c1285f.js:38
+(anonymous) @ _app-f10df38f71c1285f.js:6
+(anonymous) @ _app-f10df38f71c1285f.js:6
+(anonymous) @ _app-f10df38f71c1285f.js:6
+t @ _app-f10df38f71c1285f.js:6
+(anonymous) @ _app-f10df38f71c1285f.js:6
+(anonymous) @ _app-f10df38f71c1285f.js:6
+(anonymous) @ _app-f10df38f71c1285f.js:6
+e @ _app-f10df38f71c1285f.js:6
+n @ _app-f10df38f71c1285f.js:38
+_app-f10df38f71c1285f.js:38  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-f10df38f71c1285f.js:38
+(anonymous) @ _app-f10df38f71c1285f.js:38
+(anonymous) @ _app-f10df38f71c1285f.js:6
+(anonymous) @ _app-f10df38f71c1285f.js:6
+(anonymous) @ _app-f10df38f71c1285f.js:6
+t @ _app-f10df38f71c1285f.js:6
+(anonymous) @ _app-f10df38f71c1285f.js:6
+Promise.catch
+t @ _app-f10df38f71c1285f.js:6
+(anonymous) @ _app-f10df38f71c1285f.js:6
+(anonymous) @ _app-f10df38f71c1285f.js:6
+(anonymous) @ _app-f10df38f71c1285f.js:6
+e @ _app-f10df38f71c1285f.js:6
+n @ _app-f10df38f71c1285f.js:38
