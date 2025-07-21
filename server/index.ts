@@ -156,7 +156,7 @@ async function startServer() {
 
       ws.on('close', () => {
         // Remove client from map when disconnected
-        for (const [userId, client] of clients.entries()) {
+        for (const [userId, client] of Array.from(clients.entries())) {
           if (client === ws) {
             clients.delete(userId);
             logger.info(`User ${userId} disconnected from notifications`);
@@ -172,10 +172,10 @@ async function startServer() {
 
     // Global broadcast function for messaging system
     (global as any).broadcastNewMessage = async (data: any) => {
-      logger.info('Broadcasting message to', clients.size, 'connected clients');
+      logger.info(`Broadcasting message to ${clients.size} connected clients`);
       
       // Broadcast to all connected clients
-      for (const [userId, ws] of clients.entries()) {
+      for (const [userId, ws] of Array.from(clients.entries())) {
         if (ws.readyState === 1) { // WebSocket.OPEN
           try {
             ws.send(JSON.stringify(data));
