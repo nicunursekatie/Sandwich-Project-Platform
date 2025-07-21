@@ -46,6 +46,7 @@ export const PERMISSIONS = {
   MANAGE_PROJECTS: 'manage_projects',
   MANAGE_MEETINGS: 'manage_meetings',
   MANAGE_SUGGESTIONS: 'manage_suggestions',
+  SUBMIT_SUGGESTIONS: 'submit_suggestions',
   
   // Data action permissions
   EDIT_DATA: 'edit_data',
@@ -87,7 +88,6 @@ export const PERMISSIONS = {
   EDIT_COLLECTIONS: 'edit_data',
   DELETE_COLLECTIONS: 'delete_data',
   EDIT_MEETINGS: 'manage_meetings',
-  SUBMIT_SUGGESTIONS: 'access_suggestions',
   RESPOND_TO_SUGGESTIONS: 'manage_suggestions'
 } as const;
 
