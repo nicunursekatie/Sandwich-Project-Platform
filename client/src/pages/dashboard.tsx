@@ -12,7 +12,7 @@ import RecipientsManagement from "@/components/recipients-management";
 import DriversManagement from "@/components/drivers-management";
 import HostsManagement from "@/components/hosts-management-consolidated";
 import { DocumentsBrowser } from "@/components/documents-browser";
-import PhoneDirectory from "@/components/phone-directory";
+import PhoneDirectoryFixed from "@/components/phone-directory-fixed";
 import BulkDataManager from "@/components/bulk-data-manager";
 import AnalyticsDashboard from "@/components/analytics-dashboard";
 import Development from "@/pages/development";
@@ -283,7 +283,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "drivers":
         return <DriversManagement />;
       case "phone-directory":
-        return <PhoneDirectory />;
+        return <PhoneDirectoryFixed />;
       case "analytics":
         return (
           <div className="p-6">
