@@ -55,7 +55,7 @@ router.get("/", requireAuth, async (req, res) => {
           let recipientEmail = 'unknown@example.com';
           
           // Try to look up recipient user information by contextId (which can be userId or email)
-          if (msg.contextId) {
+          if (msg.contextId && msg.contextId.trim()) {
             try {
               let recipientUser = null;
               
@@ -78,6 +78,10 @@ router.get("/", requireAuth, async (req, res) => {
             } catch (error) {
               console.error('Error looking up recipient user:', error);
             }
+          } else {
+            // Handle empty context_id values - these are legacy messages with missing recipient data
+            recipientName = 'System Message';
+            recipientEmail = 'system@sandwich.project';
           }
           
           return {
