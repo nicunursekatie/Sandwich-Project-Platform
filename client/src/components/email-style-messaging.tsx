@@ -60,6 +60,7 @@ export default function EmailStyleMessaging() {
   const [activeFolder, setActiveFolder] = useState<'inbox' | 'sent' | 'drafts' | 'trash'>('inbox');
   const [searchQuery, setSearchQuery] = useState("");
   const [isComposing, setIsComposing] = useState(false);
+  const [selectedMessages, setSelectedMessages] = useState<string[]>([]);
   const [composeData, setComposeData] = useState({
     to: "",
     subject: "",
@@ -120,6 +121,43 @@ export default function EmailStyleMessaging() {
     msg.content.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Bulk actions
+  const toggleMessageSelection = (messageId: string) => {
+    setSelectedMessages(prev => 
+      prev.includes(messageId) 
+        ? prev.filter(id => id !== messageId)
+        : [...prev, messageId]
+    );
+  };
+
+  const handleBulkMarkAsRead = async () => {
+    for (const messageId of selectedMessages) {
+      await markAsReadMutation.mutateAsync(messageId);
+    }
+    setSelectedMessages([]);
+  };
+
+  const handleBulkDelete = async () => {
+    for (const messageId of selectedMessages) {
+      await deleteMessageMutation.mutateAsync(messageId);
+    }
+    setSelectedMessages([]);
+  };
+
+  // Delete message mutation
+  const deleteMessageMutation = useMutation({
+    mutationFn: async (messageId: string) => {
+      return apiRequest('DELETE', `/api/real-time-messages/${messageId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/real-time-messages'] });
+      toast({
+        title: "Message deleted",
+        description: "The message has been moved to trash."
+      });
+    }
+  });
+
   // Mark message as read when clicked
   const markAsReadMutation = useMutation({
     mutationFn: async (messageId: string) => {
@@ -161,7 +199,7 @@ export default function EmailStyleMessaging() {
   }
 
   return (
-    <div className="flex h-[700px] bg-white rounded-lg border">
+    <div className="flex h-[calc(100vh-200px)] bg-white rounded-lg border">
       {/* Sidebar */}
       <div className="w-64 border-r bg-gray-50">
         <div className="p-4 border-b">
@@ -219,7 +257,7 @@ export default function EmailStyleMessaging() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0">
         {isComposing ? (
           /* Compose View */
           <div className="flex-1 flex flex-col">
@@ -268,7 +306,7 @@ export default function EmailStyleMessaging() {
                   value={composeData.content}
                   onChange={(e) => setComposeData(prev => ({ ...prev, content: e.target.value }))}
                   placeholder="Type your message..."
-                  className="min-h-[300px]"
+                  className="min-h-[200px]"
                 />
               </div>
               
@@ -298,10 +336,10 @@ export default function EmailStyleMessaging() {
           </div>
         ) : (
           /* Message List & Detail View */
-          <div className="flex-1 flex">
+          <div className="flex-1 flex min-h-0">
             {/* Message List */}
-            <div className="w-96 border-r flex flex-col">
-              <div className="p-4 border-b">
+            <div className="w-1/3 min-w-0 border-r flex flex-col">
+              <div className="p-3 border-b space-y-3">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -311,6 +349,30 @@ export default function EmailStyleMessaging() {
                     className="pl-10"
                   />
                 </div>
+                
+                {/* Bulk Actions */}
+                {selectedMessages.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      {selectedMessages.length} selected
+                    </span>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={handleBulkMarkAsRead}
+                    >
+                      Mark Read
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={handleBulkDelete}
+                    >
+                      <Trash2 className="h-3 w-3 mr-1" />
+                      Delete
+                    </Button>
+                  </div>
+                )}
               </div>
               
               <ScrollArea className="flex-1">
@@ -320,24 +382,33 @@ export default function EmailStyleMessaging() {
                       <p className="text-muted-foreground text-sm">No messages</p>
                     </div>
                   ) : (
-                    filteredMessages.map(message => (
+                    filteredMessages.map((message: EmailMessage) => (
                       <div
                         key={message.id}
-                        className={`p-3 rounded-lg cursor-pointer transition-colors mb-2 ${
+                        className={`p-3 rounded-lg transition-colors mb-2 ${
                           selectedMessage?.id === message.id
                             ? 'bg-primary/10 border-primary'
                             : 'hover:bg-gray-50 border-transparent'
-                        } border`}
-                        onClick={() => handleMessageClick(message)}
+                        } border ${selectedMessages.includes(message.id) ? 'bg-blue-50' : ''}`}
                       >
                         <div className="flex items-center justify-between mb-1">
                           <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={selectedMessages.includes(message.id)}
+                              onChange={() => toggleMessageSelection(message.id)}
+                              onClick={(e) => e.stopPropagation()}
+                              className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded"
+                            />
                             <Avatar className="h-6 w-6">
                               <AvatarFallback className="text-xs">
                                 {getInitials(message.from.name)}
                               </AvatarFallback>
                             </Avatar>
-                            <span className={`text-sm truncate ${!message.read ? 'font-semibold' : ''}`}>
+                            <span 
+                              className={`text-sm truncate cursor-pointer ${!message.read ? 'font-semibold' : ''}`}
+                              onClick={() => handleMessageClick(message)}
+                            >
                               {message.from.name}
                             </span>
                           </div>
@@ -388,7 +459,11 @@ export default function EmailStyleMessaging() {
                             <Star className="h-4 w-4" />
                           }
                         </Button>
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => deleteMessageMutation.mutate(selectedMessage.id)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -414,30 +489,32 @@ export default function EmailStyleMessaging() {
                     </div>
                   </div>
                   
-                  <div className="flex-1 p-4">
-                    <div className="prose max-w-none">
-                      <p className="whitespace-pre-wrap text-sm">
-                        {selectedMessage.content}
-                      </p>
-                    </div>
-                    
-                    {selectedMessage.attachments && selectedMessage.attachments.length > 0 && (
-                      <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                        <h4 className="font-medium mb-2 flex items-center gap-2">
-                          <Paperclip className="h-4 w-4" />
-                          Attachments
-                        </h4>
-                        <div className="space-y-1">
-                          {selectedMessage.attachments.map((attachment, index) => (
-                            <div key={index} className="flex items-center gap-2 text-sm">
-                              <span>{attachment.name}</span>
-                              <span className="text-muted-foreground">({attachment.size})</span>
-                            </div>
-                          ))}
-                        </div>
+                  <ScrollArea className="flex-1">
+                    <div className="p-4">
+                      <div className="prose max-w-none">
+                        <p className="whitespace-pre-wrap text-sm">
+                          {selectedMessage.content}
+                        </p>
                       </div>
-                    )}
-                  </div>
+                    
+                      {selectedMessage.attachments && selectedMessage.attachments.length > 0 && (
+                        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                          <h4 className="font-medium mb-2 flex items-center gap-2">
+                            <Paperclip className="h-4 w-4" />
+                            Attachments
+                          </h4>
+                          <div className="space-y-1">
+                            {selectedMessage.attachments.map((attachment, index) => (
+                              <div key={index} className="flex items-center gap-2 text-sm">
+                                <span>{attachment.name}</span>
+                                <span className="text-muted-foreground">({attachment.size})</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </ScrollArea>
                   
                   <div className="p-4 border-t">
                     <div className="flex items-center gap-2">
