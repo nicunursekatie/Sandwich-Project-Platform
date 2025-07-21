@@ -259,51 +259,9 @@ const projectDataUpload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup robust PostgreSQL session store with fallback handling
-  let sessionStore;
-  try {
-    const pgStore = connectPg(session);
-    sessionStore = new pgStore({
-      conString: process.env.DATABASE_URL,
-      createTableIfMissing: true, // Sessions table exists, safe to enable
-      ttl: 7 * 24 * 60 * 60, // 7 days TTL (in seconds for pg-simple)
-      tableName: "sessions",
-      pruneSessionInterval: false, // Disable auto-pruning to prevent connection issues
-      errorLog: (error) => {
-        console.warn("Session store warning (non-critical):", error.message);
-        // Don't throw - continue with memory store fallback
-      },
-    });
-    
-    // Test the session store connection
-    await new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        console.log("Session store test timed out, using fallback");
-        resolve(null);
-      }, 2000);
-      
-      sessionStore.on('connect', () => {
-        clearTimeout(timeout);
-        console.log("✓ PostgreSQL session store connected successfully");
-        resolve(true);
-      });
-      
-      sessionStore.on('disconnect', () => {
-        clearTimeout(timeout);
-        console.log("Session store disconnected, using fallback");
-        resolve(null);
-      });
-    });
-  } catch (error) {
-    console.warn("PostgreSQL session store failed, using memory fallback:", error.message);
-    sessionStore = new session.MemoryStore();
-  }
-  
-  // Fallback to memory store if PostgreSQL session store failed
-  if (!sessionStore) {
-    console.log("Using memory-based session store as fallback");
-    sessionStore = new session.MemoryStore();
-  }
+  // Use memory-based session store to avoid PostgreSQL connectivity issues
+  console.log("Using memory-based session store for stability");
+  const sessionStore = new session.MemoryStore();
 
   // Add session middleware with PostgreSQL storage
   app.use(
