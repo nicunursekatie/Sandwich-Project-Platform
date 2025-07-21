@@ -69,7 +69,20 @@ export function useMessaging() {
   } as UnreadCounts, refetch: refetchUnreadCounts } = useQuery({
     queryKey: ['/api/message-notifications/unread-counts', user?.id],
     queryFn: async () => {
-      if (!user?.id) return null;
+      if (!user?.id) return {
+        general: 0,
+        committee: 0,
+        hosts: 0,
+        drivers: 0,
+        recipients: 0,
+        core_team: 0,
+        direct: 0,
+        groups: 0,
+        total: 0,
+        suggestion: 0,
+        project: 0,
+        task: 0,
+      };
       try {
         const response = await apiRequest('GET', '/api/message-notifications/unread-counts');
         // Add context-specific counts
@@ -99,6 +112,8 @@ export function useMessaging() {
       }
     },
     enabled: !!user?.id,
+    staleTime: 30000, // Data remains fresh for 30 seconds
+    gcTime: 60000,
     refetchInterval: 30000, // Refetch every 30 seconds
   });
 

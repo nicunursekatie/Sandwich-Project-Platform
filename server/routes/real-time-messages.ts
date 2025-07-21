@@ -54,10 +54,23 @@ router.get("/", requireAuth, async (req, res) => {
           let recipientName = 'Unknown Recipient';
           let recipientEmail = 'unknown@example.com';
           
-          // Try to look up recipient user information by contextId (which should be the recipient userId)
+          // Try to look up recipient user information by contextId (which can be userId or email)
           if (msg.contextId) {
             try {
-              const recipientUser = await storage.getUserById(msg.contextId);
+              let recipientUser = null;
+              
+              // Try to find by user ID first
+              try {
+                recipientUser = await storage.getUserById(msg.contextId);
+              } catch (error) {
+                // If lookup by ID fails, try lookup by email
+                try {
+                  recipientUser = await storage.getUserByEmail(msg.contextId);
+                } catch (emailError) {
+                  console.error('Error looking up recipient by email:', emailError);
+                }
+              }
+              
               if (recipientUser) {
                 recipientName = `${recipientUser.firstName || ''} ${recipientUser.lastName || ''}`.trim() || recipientUser.email || 'Unknown User';
                 recipientEmail = recipientUser.email || 'unknown@example.com';

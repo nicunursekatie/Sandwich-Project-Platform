@@ -120,6 +120,25 @@ export default function EmailStyleMessaging() {
     msg.content.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Mark message as read when clicked
+  const markAsReadMutation = useMutation({
+    mutationFn: async (messageId: string) => {
+      return apiRequest('POST', `/api/real-time-messages/${messageId}/read`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/real-time-messages'] });
+    }
+  });
+
+  const handleMessageClick = (message: EmailMessage) => {
+    setSelectedMessage(message);
+    
+    // Mark message as read if it's unread
+    if (!message.read) {
+      markAsReadMutation.mutate(message.id);
+    }
+  };
+
   const handleCompose = () => {
     if (!composeData.to || !composeData.subject || !composeData.content) {
       toast({
@@ -309,7 +328,7 @@ export default function EmailStyleMessaging() {
                             ? 'bg-primary/10 border-primary'
                             : 'hover:bg-gray-50 border-transparent'
                         } border`}
-                        onClick={() => setSelectedMessage(message)}
+                        onClick={() => handleMessageClick(message)}
                       >
                         <div className="flex items-center justify-between mb-1">
                           <div className="flex items-center gap-2">
