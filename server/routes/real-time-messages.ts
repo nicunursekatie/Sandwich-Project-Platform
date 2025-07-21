@@ -254,11 +254,20 @@ router.delete("/:id", requireAuth, async (req, res) => {
     const messageId = parseInt(req.params.id);
     const userId = (req.user as any).id;
     
-    // For now, just acknowledge the delete request
-    // We'll implement proper storage integration later
     console.log(`Delete message ${messageId} for user ${userId}`);
     
-    res.json({ message: "Message deleted" });
+    // Actually delete the message from storage
+    try {
+      const success = await storage.deleteMessage(messageId);
+      if (!success) {
+        return res.status(404).json({ error: "Message not found" });
+      }
+      
+      res.json({ message: "Message deleted" });
+    } catch (storageError) {
+      console.error("Storage error deleting message:", storageError);
+      res.status(500).json({ error: "Failed to delete message from database" });
+    }
   } catch (error) {
     console.error("Error deleting message:", error);
     res.status(500).json({ error: "Failed to delete message" });
