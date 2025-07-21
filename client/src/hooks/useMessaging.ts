@@ -168,12 +168,8 @@ export function useMessaging() {
     if (window.location.hostname.includes('.replit.dev') || window.location.hostname.includes('.replit.app')) {
       // Replit environment - use the full hostname without port
       wsUrl = `${protocol}//${window.location.hostname}/notifications`;
-    } else if (window.location.hostname === 'localhost') {
-      // Local development - use the actual port from location
-      const port = window.location.port || '5000';
-      wsUrl = `${protocol}//${window.location.hostname}:${port}/notifications`;
     } else {
-      // Fallback for other environments
+      // Local development or other environments - use window.location.host which includes port
       wsUrl = `${protocol}//${window.location.host}/notifications`;
     }
     
