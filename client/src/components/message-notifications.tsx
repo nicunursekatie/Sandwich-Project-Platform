@@ -40,13 +40,16 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
   }
 
   // Query for unread message counts - only when authenticated
-  const { data: unreadCounts, refetch, error, isLoading } = useQuery<UnreadCounts>({
-    queryKey: ['/api/message-notifications/unread-counts'],
+  const {
+    data: unreadCounts,
+    refetch,
+    error,
+    isLoading,
+  } = useQuery<UnreadCounts>({
+    queryKey: ["/api/message-notifications/unread-counts"],
     enabled: !!user && isAuthenticated,
     refetchInterval: isAuthenticated ? 30000 : false, // Check every 30 seconds only when authenticated
   });
-
-
 
   // Listen for WebSocket notifications
   useEffect(() => {
@@ -60,17 +63,22 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
 
     // Set up WebSocket connection for real-time notifications
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    
-    // Simple WebSocket URL construction for Replit environment
+
+    // Robust WebSocket URL construction for different environments
     let wsUrl: string;
-    
-    if (window.location.hostname.includes('.replit.dev') || window.location.hostname.includes('.replit.app')) {
+
+    if (
+      window.location.hostname.includes(".replit.dev") ||
+      window.location.hostname.includes(".replit.app") ||
+      window.location.hostname.includes(".spock.replit.dev")
+    ) {
       // Replit environment - use the full hostname without port but with correct protocol
+      // Handle both old and new Replit domains
       wsUrl = `${protocol}//${window.location.hostname}/notifications`;
-    } else if (window.location.hostname === 'localhost') {
+    } else if (window.location.hostname === "localhost") {
       // Local development - ensure we have a valid port
-      const port = window.location.port || '5000';
-      if (port && port !== 'undefined') {
+      const port = window.location.port || "5000";
+      if (port && port !== "undefined") {
         wsUrl = `${protocol}//${window.location.hostname}:${port}/notifications`;
       } else {
         wsUrl = `${protocol}//${window.location.hostname}:5000/notifications`;
@@ -84,7 +92,7 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
     try {
       new URL(wsUrl);
     } catch (urlError) {
-      console.error('Invalid WebSocket URL:', wsUrl);
+      console.error("Invalid WebSocket URL:", wsUrl);
       return;
     }
 
@@ -94,21 +102,24 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
       socket.onopen = () => {
         // Send user identification
         if (socket) {
-          socket.send(JSON.stringify({
-            type: 'identify',
-            userId: (user as any)?.id
-          }));
+          socket.send(
+            JSON.stringify({
+              type: "identify",
+              userId: (user as any)?.id,
+            }),
+          );
         }
       };
 
       socket.onerror = (error) => {
         // Silently handle WebSocket errors to avoid console spam
-        console.debug('WebSocket error:', error);
+        console.debug("WebSocket error:", error);
       };
 
       socket.onclose = (event) => {
-        // Only attempt reconnection if not a normal closure
-        if (event.code !== 1000) {
+        console.debug("WebSocket closed:", event.code, event.reason);
+        // Only attempt reconnection if not a normal closure and not a connection failure
+        if (event.code !== 1000 && event.code !== 1006) {
           reconnectTimeoutId = setTimeout(() => {
             // The cleanup function will trigger re-initialization
           }, 5000);
@@ -118,15 +129,18 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
       socket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          if (data.type === 'new_message') {
+          if (data.type === "new_message") {
             // Refetch unread counts when new message arrives
             refetch();
 
             // Show browser notification if permission granted and available
-            if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+            if (
+              typeof Notification !== "undefined" &&
+              Notification.permission === "granted"
+            ) {
               new Notification(`New message in ${data.committee}`, {
                 body: `${data.sender}: ${data.content.substring(0, 100)}...`,
-                icon: '/favicon.ico'
+                icon: "/favicon.ico",
               });
             }
           }
@@ -134,7 +148,6 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
           // Silently handle parsing errors
         }
       };
-
     } catch (error) {
       // Still allow component to function without real-time updates
     }
@@ -144,14 +157,17 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
         clearTimeout(reconnectTimeoutId);
       }
       if (socket) {
-        socket.close(1000, 'Component unmounting');
+        socket.close(1000, "Component unmounting");
       }
     };
   }, [user, refetch]);
 
   // Request notification permission on mount
   useEffect(() => {
-    if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+    if (
+      typeof Notification !== "undefined" &&
+      Notification.permission === "default"
+    ) {
       Notification.requestPermission();
     }
   }, []);
@@ -166,15 +182,22 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
   }
 
   const finalUnreadCounts = unreadCounts || {
-    general: 0, committee: 0, hosts: 0, drivers: 0, recipients: 0,
-    core_team: 0, direct: 0, groups: 0, total: 0
+    general: 0,
+    committee: 0,
+    hosts: 0,
+    drivers: 0,
+    recipients: 0,
+    core_team: 0,
+    direct: 0,
+    groups: 0,
+    total: 0,
   };
 
   const totalUnread = finalUnreadCounts.total || 0;
 
   const handleMarkAllRead = async () => {
     try {
-      await apiRequest('POST', '/api/message-notifications/mark-all-read');
+      await apiRequest("POST", "/api/message-notifications/mark-all-read");
       refetch();
     } catch (error) {
       // Silently handle errors
@@ -183,24 +206,22 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
 
   const getChatDisplayName = (committee: string) => {
     const names = {
-      general: 'General Chat',
-      committee: 'Committee Chat',
-      hosts: 'Host Chat',
-      drivers: 'Driver Chat',
-      recipients: 'Recipient Chat',
-      core_team: 'Core Team',
-      direct: 'Direct Messages',
-      groups: 'Group Messages'
+      general: "General Chat",
+      committee: "Committee Chat",
+      hosts: "Host Chat",
+      drivers: "Driver Chat",
+      recipients: "Recipient Chat",
+      core_team: "Core Team",
+      direct: "Direct Messages",
+      groups: "Group Messages",
     };
     return names[committee as keyof typeof names] || committee;
   };
 
   const navigateToChat = (chatType: string) => {
     // Navigate to chat system instead of messages inbox
-    window.location.href = '/dashboard?section=chat';
+    window.location.href = "/dashboard?section=chat";
   };
-
-
 
   return (
     <DropdownMenu>
@@ -208,13 +229,16 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
         <Button variant="ghost" size="sm" className="relative">
           <Bell className="h-5 w-5" />
           {/* Debug indicator - green dot shows component is mounted */}
-          <div className="absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full" title="Notifications Active"></div>
+          <div
+            className="absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full"
+            title="Notifications Active"
+          ></div>
           {totalUnread > 0 && (
-            <Badge 
-              variant="destructive" 
+            <Badge
+              variant="destructive"
               className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
             >
-              {totalUnread > 99 ? '99+' : totalUnread}
+              {totalUnread > 99 ? "99+" : totalUnread}
             </Badge>
           )}
         </Button>
@@ -225,9 +249,9 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
           <div className="flex items-center justify-between">
             <span>Message Notifications</span>
             {totalUnread > 0 && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleMarkAllRead}
                 className="text-xs h-6 px-2"
               >
@@ -244,9 +268,9 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
           </DropdownMenuItem>
         ) : (
           Object.entries(finalUnreadCounts)
-            .filter(([key, count]) => key !== 'total' && count > 0)
+            .filter(([key, count]) => key !== "total" && count > 0)
             .map(([committee, count]) => (
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 key={committee}
                 className="flex items-center justify-between cursor-pointer"
                 onClick={() => navigateToChat(committee)}

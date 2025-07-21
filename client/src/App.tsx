@@ -60,7 +60,7 @@ function Router() {
       <Route path="/google-sheets">{() => <Dashboard initialSection="google-sheets" />}</Route>
       <Route path="/dashboard">{() => <Dashboard />}</Route>
       <Route path="/dashboard/:section">{(params) => <Dashboard initialSection={params.section} />}</Route>
-      <Route path="/" component={Dashboard} />
+      <Route path="/">{() => <Dashboard />}</Route>
       <Route component={NotFound} />
     </Switch>
   );

@@ -28,6 +28,29 @@ router.get("/status", async (req: any, res) => {
   }
 });
 
+// Legacy user endpoint for compatibility
+router.get("/user", async (req: any, res) => {
+  try {
+    const user = req.user || req.session?.user;
+    if (user) {
+      res.json({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        displayName: user.displayName,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profileImageUrl: user.profileImageUrl
+      });
+    } else {
+      res.status(401).json({ message: "Not authenticated" });
+    }
+  } catch (error) {
+    logger.error("GET /auth/user failed:", error);
+    res.status(500).json({ message: "Authentication check failed" });
+  }
+});
+
 // Profile management endpoints
 router.get("/profile", isAuthenticated, async (req: any, res) => {
   try {
@@ -58,6 +81,10 @@ router.put("/profile", isAuthenticated, async (req: any, res) => {
       email,
       updatedAt: new Date()
     });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     // Update session with new email if changed
     if (email !== user.email) {
