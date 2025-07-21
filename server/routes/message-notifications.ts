@@ -1,6 +1,6 @@
 import { Request, Response, Express } from "express";
-import { eq, sql, and } from "drizzle-orm";
-import { messages, conversations, conversationParticipants } from "../../shared/schema";
+import { eq, sql, and, gt } from "drizzle-orm";
+import { messages, conversations, conversationParticipants, chatMessages, chatMessageReads } from "../../shared/schema";
 import { db } from "../db";
 import { isAuthenticated } from "../temp-auth";
 
@@ -64,52 +64,47 @@ const getUnreadCounts = async (req: Request, res: Response) => {
 
       try {
         // Get chat message counts from Socket.IO chat system (chat_messages table)
-        const chatChannels = ['general', 'core-team', 'committee', 'host', 'driver', 'recipient'];
+        const chatChannels = [
+          { channel: 'general', permission: 'general_chat', key: 'general' },
+          { channel: 'core-team', permission: 'core_team_chat', key: 'core_team' },
+          { channel: 'committee', permission: 'committee_chat', key: 'committee' },
+          { channel: 'host', permission: 'host_chat', key: 'hosts' },
+          { channel: 'driver', permission: 'driver_chat', key: 'drivers' },
+          { channel: 'recipient', permission: 'recipient_chat', key: 'recipients' }
+        ];
         
-        for (const channel of chatChannels) {
-          // Check when user last read this channel
-          const readKey = `${userId}:${channel}`;
-          const lastReadTime = chatReadTracker.get(readKey);
-          
-          // Get messages for this channel that are not from the current user
-          // and were created after the last read time
-          let whereCondition = sql`channel = ${channel} AND user_id != ${userId}`;
-          
-          if (lastReadTime) {
-            whereCondition = sql`channel = ${channel} AND user_id != ${userId} AND created_at > ${lastReadTime.toISOString()}`;
+        for (const { channel, permission, key } of chatChannels) {
+          // Check if user has permission to see this channel
+          if (!checkUserChatPermission(user, key)) {
+            continue;
           }
-
-          const channelMessages = await db
-            .select({
-              count: sql<number>`count(*)`
-            })
-            .from(sql`chat_messages`)
-            .where(whereCondition);
           
-          const count = Number(channelMessages[0]?.count || 0);
+          // Count unread messages in this channel
+          const unreadCount = await db
+            .select({ count: sql<number>`COUNT(*)` })
+            .from(chatMessages)
+            .leftJoin(
+              chatMessageReads, 
+              and(
+                eq(chatMessageReads.messageId, chatMessages.id),
+                eq(chatMessageReads.userId, userId)
+              )
+            )
+            .where(
+              and(
+                eq(chatMessages.channel, channel),
+                // Not from current user
+                sql`${chatMessages.userId} != ${userId}`,
+                // Not yet read by current user
+                sql`${chatMessageReads.messageId} IS NULL`
+              )
+            );
           
-          // Map channel to notification count
-          switch (channel) {
-            case 'general':
-              unreadCounts.general = count;
-              break;
-            case 'core-team':
-              unreadCounts.core_team = count;
-              break;
-            case 'committee':
-              unreadCounts.committee = count;
-              break;
-            case 'host':
-              unreadCounts.hosts = count;
-              break;
-            case 'driver':
-              unreadCounts.drivers = count;
-              break;
-            case 'recipient':
-              unreadCounts.recipients = count;
-              break;
-          }
+          const count = unreadCount[0]?.count || 0;
+          unreadCounts[key as keyof typeof unreadCounts] = count;
         }
+
+        // Calculate total will be done after formal messaging counts
 
         // Also get formal messaging system counts (conversations/messages table) for direct messages
         const unreadConversationCounts = await db
@@ -169,7 +164,7 @@ const markChatMessagesRead = async (req: Request, res: Response) => {
         return res.status(401).json({ error: "User not authenticated" });
       }
 
-      const { channel } = req.body;
+      const { channel, messageIds } = req.body;
 
       if (!channel) {
         return res.status(400).json({ error: "Channel is required" });
@@ -177,13 +172,51 @@ const markChatMessagesRead = async (req: Request, res: Response) => {
 
       console.log(`Marking chat messages as read for user ${userId} in channel ${channel}`);
       
-      // Store the read timestamp for this user-channel combination
-      const readKey = `${userId}:${channel}`;
-      chatReadTracker.set(readKey, new Date());
-      
-      console.log(`Chat read status updated: ${readKey} at ${new Date()}`);
-      
-      res.json({ success: true, channel, userId, timestamp: new Date() });
+      // If specific message IDs are provided, mark those
+      if (messageIds && Array.isArray(messageIds)) {
+        for (const messageId of messageIds) {
+          await db
+            .insert(chatMessageReads)
+            .values({
+              messageId: parseInt(messageId),
+              userId: userId,
+              channel: channel,
+              readAt: new Date(),
+              createdAt: new Date()
+            })
+            .onConflictDoNothing(); // Ignore if already exists
+        }
+        
+        res.json({ success: true, channel, userId, markedRead: messageIds.length });
+      } else {
+        // Mark all messages in channel as read
+        const channelMessages = await db
+          .select({ id: chatMessages.id })
+          .from(chatMessages)
+          .where(
+            and(
+              eq(chatMessages.channel, channel),
+              sql`${chatMessages.userId} != ${userId}` // Don't mark own messages
+            )
+          );
+        
+        let markedCount = 0;
+        for (const message of channelMessages) {
+          await db
+            .insert(chatMessageReads)
+            .values({
+              messageId: message.id,
+              userId: userId,
+              channel: channel,
+              readAt: new Date(),
+              createdAt: new Date()
+            })
+            .onConflictDoNothing();
+          markedCount++;
+        }
+        
+        res.json({ success: true, channel, userId, markedRead: markedCount });
+      }
     } catch (error) {
       console.error("Error marking chat messages as read:", error);
       res.status(500).json({ error: "Failed to mark chat messages as read" });

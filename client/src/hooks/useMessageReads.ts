@@ -9,17 +9,22 @@ interface Message {
   timestamp: string;
 }
 
+interface User {
+  id: string;
+  permissions?: string[];
+}
+
 export function useMessageReads() {
-  const { user } = useAuth();
+  const { user } = useAuth() as { user: User | null };
 
   // Mutation to mark messages as read
   const markMessagesReadMutation = useMutation({
     mutationFn: async ({ committee, messageIds }: { committee: string; messageIds?: number[] }) => {
-      return apiRequest("POST", "/api/notifications/mark-read", { committee, messageIds });
+      return apiRequest("POST", "/api/message-notifications/mark-chat-read", { channel: committee, messageIds });
     },
     onSuccess: () => {
       // Invalidate notification counts to update the bell icon
-      queryClient.invalidateQueries({ queryKey: ["/api/notifications/unread-counts"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/message-notifications/unread-counts"] });
     },
     onError: (error) => {
       console.error("Failed to mark messages as read:", error);

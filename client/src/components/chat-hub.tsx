@@ -64,7 +64,7 @@ export default function ChatHub() {
   // Filter rooms based on user permissions
   const availableRooms = CHAT_ROOMS.filter(room => {
     if (!room.permission) return true; // General chat is always available
-    if (!user?.permissions) return false;
+    if (!user || !user.permissions || !Array.isArray(user.permissions)) return false;
     return user.permissions.includes(room.permission);
   });
 
