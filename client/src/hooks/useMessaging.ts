@@ -156,6 +156,20 @@ export function useMessaging() {
     },
   });
 
+  // Listen for notification refresh events (from chat mark-as-read)
+  useEffect(() => {
+    const handleNotificationRefresh = () => {
+      console.log('Notification refresh event received in useMessaging hook - refetching counts');
+      refetchUnreadCounts();
+    };
+
+    window.addEventListener('notificationRefresh', handleNotificationRefresh);
+    
+    return () => {
+      window.removeEventListener('notificationRefresh', handleNotificationRefresh);
+    };
+  }, [refetchUnreadCounts]);
+
   // Setup WebSocket connection for real-time updates
   useEffect(() => {
     if (!user?.id) return;
