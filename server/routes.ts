@@ -519,12 +519,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post(
     "/api/projects",
-    requirePermission("edit_data"),
+    isAuthenticated,
     async (req, res) => {
       try {
+        // Check if user can create projects (either edit_own_projects or edit_all_projects)
+        if (!req.user?.permissions?.includes('edit_own_projects') && 
+            !req.user?.permissions?.includes('edit_all_projects') &&
+            !req.user?.permissions?.includes('manage_projects')) {
+          return res.status(403).json({ message: "Permission denied. You cannot create projects." });
+        }
+
         console.log("Received project data:", req.body);
-        const projectData = insertProjectSchema.parse(req.body);
-        console.log("Parsed project data:", projectData);
+        const projectData = insertProjectSchema.parse({
+          ...req.body,
+          created_by: req.user.id,
+          created_by_name: req.user.firstName ? `${req.user.firstName} ${req.user.lastName || ''}`.trim() : req.user.email
+        });
+        console.log("Parsed project data with creator:", projectData);
         const project = await storage.createProject(projectData);
         res.status(201).json(project);
       } catch (error) {
@@ -681,14 +692,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch(
     "/api/projects/:id",
-    requirePermission("edit_data"),
+    isAuthenticated,
     async (req, res) => {
       try {
         const id = parseInt(req.params.id);
         const updates = req.body;
 
-        // Filter out timestamp fields that shouldn't be updated directly
-        const { createdAt, updatedAt, ...validUpdates } = updates;
+        // Get the existing project to check ownership
+        const existingProject = await storage.getProjectById(id);
+        if (!existingProject) {
+          return res.status(404).json({ message: "Project not found" });
+        }
+
+        // Check permissions - ownership-based or admin
+        const canEditAll = req.user?.permissions?.includes('edit_all_projects') || 
+                          req.user?.permissions?.includes('manage_projects') ||
+                          req.user?.role === 'admin' || req.user?.role === 'super_admin';
+        
+        const canEditOwn = req.user?.permissions?.includes('edit_own_projects') && 
+                          (existingProject.created_by === req.user.id);
+
+        if (!canEditAll && !canEditOwn) {
+          return res.status(403).json({ 
+            message: "Permission denied. You can only edit your own projects or need admin privileges." 
+          });
+        }
+
+        // Filter out fields that shouldn't be updated directly
+        const { createdAt, updatedAt, created_by, created_by_name, ...validUpdates } = updates;
 
         const updatedProject = await storage.updateProject(id, validUpdates);
 
@@ -706,12 +737,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete(
     "/api/projects/:id",
-    requirePermission("edit_data"),
+    isAuthenticated,
     async (req, res) => {
       try {
         const id = parseInt(req.params.id);
         if (isNaN(id)) {
           return res.status(400).json({ message: "Invalid project ID" });
+        }
+
+        // Get the existing project to check ownership
+        const existingProject = await storage.getProjectById(id);
+        if (!existingProject) {
+          return res.status(404).json({ message: "Project not found" });
+        }
+
+        // Check permissions - ownership-based or admin
+        const canDeleteAll = req.user?.permissions?.includes('delete_all_projects') || 
+                            req.user?.permissions?.includes('manage_projects') ||
+                            req.user?.role === 'admin' || req.user?.role === 'super_admin';
+        
+        const canDeleteOwn = req.user?.permissions?.includes('delete_own_projects') && 
+                            (existingProject.created_by === req.user.id);
+
+        if (!canDeleteAll && !canDeleteOwn) {
+          return res.status(403).json({ 
+            message: "Permission denied. You can only delete your own projects or need admin privileges." 
+          });
         }
 
         const deleted = await storage.deleteProject(id);

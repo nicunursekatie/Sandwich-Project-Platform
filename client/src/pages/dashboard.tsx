@@ -403,8 +403,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
                 <span className="text-xs font-medium text-slate-700">
                   {user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email}
                 </span>
-                <span className="text-xs text-slate-500 capitalize">
-                  {user.role?.replace('_', ' ') || 'User'}
+                <span className="text-xs text-slate-500">
+                  {user.email}
                 </span>
               </div>
               <div className="sm:hidden">

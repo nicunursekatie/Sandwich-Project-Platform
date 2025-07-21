@@ -44,6 +44,10 @@ export const PERMISSIONS = {
   MANAGE_DRIVERS: 'manage_drivers',
   MANAGE_COLLECTIONS: 'manage_collections',
   MANAGE_PROJECTS: 'manage_projects',
+  EDIT_OWN_PROJECTS: 'edit_own_projects',
+  EDIT_ALL_PROJECTS: 'edit_all_projects',
+  DELETE_OWN_PROJECTS: 'delete_own_projects',
+  DELETE_ALL_PROJECTS: 'delete_all_projects',
   MANAGE_MEETINGS: 'manage_meetings',
   MANAGE_SUGGESTIONS: 'manage_suggestions',
   SUBMIT_SUGGESTIONS: 'submit_suggestions',
@@ -259,6 +263,38 @@ export function canDeleteCollection(user: any, collection: any): boolean {
   
   // Check if user has delete_own_collections permission AND owns this collection
   if (user.permissions.includes('delete_own_collections') && (collection?.createdBy === user.id || collection?.created_by === user.id)) return true;
+  
+  return false;
+}
+
+// Function to check if user can edit a specific project
+export function canEditProject(user: any, project: any): boolean {
+  if (!user || !user.permissions) return false;
+  
+  // Super admins and admins can edit all projects
+  if (user.role === 'super_admin' || user.role === 'admin') return true;
+  
+  // Check if user has edit_all_projects permission (can edit ALL projects)
+  if (user.permissions.includes('edit_all_projects') || user.permissions.includes('manage_projects')) return true;
+  
+  // Check if user has edit_own_projects permission AND owns this project
+  if (user.permissions.includes('edit_own_projects') && (project?.createdBy === user.id || project?.created_by === user.id)) return true;
+  
+  return false;
+}
+
+// Function to check if user can delete a specific project
+export function canDeleteProject(user: any, project: any): boolean {
+  if (!user || !user.permissions) return false;
+  
+  // Super admins and admins can delete all projects
+  if (user.role === 'super_admin' || user.role === 'admin') return true;
+  
+  // Check if user has delete_all_projects permission (can delete ALL projects)
+  if (user.permissions.includes('delete_all_projects') || user.permissions.includes('manage_projects')) return true;
+  
+  // Check if user has delete_own_projects permission AND owns this project
+  if (user.permissions.includes('delete_own_projects') && (project?.createdBy === user.id || project?.created_by === user.id)) return true;
   
   return false;
 }

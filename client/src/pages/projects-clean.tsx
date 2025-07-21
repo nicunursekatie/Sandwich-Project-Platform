@@ -36,7 +36,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useCelebration, CelebrationToast } from "@/components/celebration-toast";
 import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
-import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
+import { hasPermission, PERMISSIONS, canEditProject, canDeleteProject } from "@shared/auth-utils";
 import type { Project, InsertProject } from "@shared/schema";
 
 export default function ProjectsClean() {
@@ -44,7 +44,7 @@ export default function ProjectsClean() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
-  const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
+  // Remove old blanket edit permission - now handled per-project basis
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -220,7 +220,8 @@ export default function ProjectsClean() {
   };
 
   const handleStatusChange = (projectId: number, newStatus: string) => {
-    if (canEdit) {
+    const project = projects?.find(p => p.id === projectId);
+    if (project && canEditProject(user, project)) {
       updateProjectMutation.mutate({ id: projectId, status: newStatus });
     }
   };
@@ -243,14 +244,16 @@ export default function ProjectsClean() {
 
   const handleDeleteProject = (projectId: number, projectTitle: string, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click navigation
-    if (canEdit && confirm(`Are you sure you want to delete "${projectTitle}"? This action cannot be undone.`)) {
+    const project = projects?.find(p => p.id === projectId);
+    if (project && canDeleteProject(user, project) && confirm(`Are you sure you want to delete "${projectTitle}"? This action cannot be undone.`)) {
       deleteProjectMutation.mutate(projectId);
     }
   };
 
   const handleMarkComplete = (projectId: number, projectTitle: string, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click navigation
-    if (canEdit && confirm(`Mark "${projectTitle}" as completed?`)) {
+    const project = projects?.find(p => p.id === projectId);
+    if (project && canEditProject(user, project) && confirm(`Mark "${projectTitle}" as completed?`)) {
       updateProjectMutation.mutate({ id: projectId, status: 'completed' });
       toast({
         title: "Project completed!",
@@ -261,7 +264,8 @@ export default function ProjectsClean() {
 
   const handleStatusQuickChange = (projectId: number, newStatus: string, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click navigation
-    if (canEdit) {
+    const project = projects?.find(p => p.id === projectId);
+    if (project && canEditProject(user, project)) {
       updateProjectMutation.mutate({ id: projectId, status: newStatus });
       toast({
         title: "Status updated",
@@ -273,7 +277,13 @@ export default function ProjectsClean() {
   const handleCreateProject = (e: React.FormEvent) => {
     e.preventDefault();
     if (newProject.title?.trim()) {
-      createProjectMutation.mutate(newProject);
+      // Add creator information to the project
+      const projectWithCreator = {
+        ...newProject,
+        created_by: user?.id,
+        created_by_name: user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email
+      };
+      createProjectMutation.mutate(projectWithCreator);
     }
   };
 
@@ -332,7 +342,7 @@ export default function ProjectsClean() {
                 <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
               </Badge>
             </div>
-            {canEdit && (
+            {canEditProject(user, project) && (
               <div className="flex gap-1 ml-1">
                 {/* Quick Complete Button for non-completed projects */}
                 {project.status !== 'completed' && (
@@ -458,7 +468,11 @@ export default function ProjectsClean() {
           </h2>
           <p className="text-slate-600 mt-1 text-sm sm:text-base">Organize and track all team projects</p>
         </div>
-        <Button onClick={() => setShowCreateDialog(true)} disabled={!canEdit} className="w-full sm:w-auto">
+        <Button 
+          onClick={() => setShowCreateDialog(true)} 
+          disabled={!hasPermission(user, PERMISSIONS.EDIT_OWN_PROJECTS) && !hasPermission(user, PERMISSIONS.EDIT_ALL_PROJECTS)}
+          className="w-full sm:w-auto"
+        >
           <Plus className="w-4 h-4 mr-2" />
           New Project
         </Button>

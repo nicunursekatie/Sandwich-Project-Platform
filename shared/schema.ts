@@ -84,6 +84,8 @@ export const projects = pgTable("projects", {
   actualHours: integer("actual_hours"), // Actual hours worked
   budget: varchar("budget"), // Project budget
   color: text("color").notNull().default("blue"), // for status indicator
+  createdBy: varchar("created_by"), // User ID who created the project
+  createdByName: varchar("created_by_name"), // Display name of creator
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
