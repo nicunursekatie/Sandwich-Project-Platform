@@ -263,12 +263,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   console.log("Using memory-based session store for stability");
   const sessionStore = new session.MemoryStore();
 
-  // Add session middleware with PostgreSQL storage
+  // Add session middleware with enhanced stability
   app.use(
     session({
       store: sessionStore,
       secret: process.env.SESSION_SECRET || "temp-secret-key-for-development",
-      resave: false,
+      resave: true, // Force session save on every request to prevent data loss
       saveUninitialized: false,
       cookie: {
         secure: false, // Should be true in production with HTTPS, false for development
@@ -277,6 +277,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         sameSite: "lax", // CSRF protection
       },
       name: "tsp.session", // Custom session name
+      rolling: true, // Reset maxAge on every request to keep active sessions alive
     }),
   );
 

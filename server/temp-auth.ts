@@ -696,12 +696,20 @@ export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
           permissions: freshUser.permissions,
           isActive: freshUser.isActive
         };
+        
+        // Force session save to ensure persistence
+        req.session.save((err) => {
+          if (err) console.error('Session save error:', err);
+        });
       }
       // Set req.user to the fresh database user data
       req.user = freshUser;
       console.log('Authentication successful, user attached to req.user with permissions:', freshUser.permissions?.length || 0);
     } else {
-      // User not found in database
+      // User not found in database, clear invalid session
+      req.session.destroy((err) => {
+        if (err) console.error('Session destroy error:', err);
+      });
       return res.status(401).json({ message: "Unauthorized" });
     }
   } catch (error) {
