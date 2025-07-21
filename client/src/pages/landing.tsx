@@ -161,16 +161,22 @@ export default function Landing() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">449K</div>
-                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Peak Year Output</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">2024 verified weekly totals</div>
+                <div className="text-2xl font-bold text-blue-600">{totalSandwiches > 0 ? `${Math.round(totalSandwiches / 1000000 * 10) / 10}M+` : '2.2M+'}</div>
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Total Impact</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">cumulative sandwiches delivered</div>
+                <div className="text-xs text-gray-500 dark:text-gray-500 mt-1 italic">March 2023 - present</div>
               </div>
               <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
-                <div className="text-2xl font-bold text-red-600">47+</div>
-                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Mile Radius</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">verified geographic coverage</div>
+                <div className="text-2xl font-bold text-purple-600">25+</div>
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Host Partners</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">active collection locations</div>
+              </div>
+              <div className="text-center p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
+                <div className="text-2xl font-bold text-red-600">1,800+</div>
+                <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Collections</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">weekly data points tracked</div>
               </div>
             </div>
             <div className="mt-6 text-center">
