@@ -54,8 +54,8 @@ export const getQueryFn: <T>(options: {
 
       await throwIfResNotOk(res);
       return await res.json();
-    } catch (error: any) {
-      if (unauthorizedBehavior === "returnNull" && error?.message?.includes('401')) {
+    } catch (error) {
+      if (unauthorizedBehavior === "returnNull" && error.message?.includes('401')) {
         return null;
       }
       throw error;
