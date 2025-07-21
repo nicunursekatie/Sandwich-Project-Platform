@@ -273,6 +273,8 @@ export const sandwichCollections = pgTable("sandwich_collections", {
   hostName: text("host_name").notNull(),
   individualSandwiches: integer("individual_sandwiches").notNull(),
   groupCollections: text("group_collections").notNull(), // JSON string of group data
+  createdBy: text("created_by"), // User ID who created this entry
+  createdByName: text("created_by_name"), // Display name of creator
   submittedAt: timestamp("submitted_at").notNull().defaultNow(),
 });
 

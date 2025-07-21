@@ -77,8 +77,10 @@ const PERMISSION_GROUPS = [
     permissions: [
       { key: PERMISSIONS.ACCESS_COLLECTIONS, label: "View Collections", icon: Eye, description: "View all collection records" },
       { key: PERMISSIONS.MANAGE_COLLECTIONS, label: "Submit Own Collections", icon: Database, description: "Submit your own collection data" },
-      { key: PERMISSIONS.EDIT_DATA, label: "Edit Own Collections", icon: Edit, description: "Modify your own collection records" },
-      { key: PERMISSIONS.DELETE_DATA, label: "Manage All Collections", icon: Shield, description: "Edit/delete any collection record" },
+      { key: PERMISSIONS.EDIT_OWN_COLLECTIONS, label: "Edit Own Collections", icon: Edit, description: "Modify your own collection records" },
+      { key: PERMISSIONS.DELETE_OWN_COLLECTIONS, label: "Delete Own Collections", icon: Edit, description: "Delete your own collection records" },
+      { key: PERMISSIONS.EDIT_COLLECTIONS, label: "Edit All Collections", icon: Shield, description: "Edit any collection record" },
+      { key: PERMISSIONS.DELETE_COLLECTIONS, label: "Delete All Collections", icon: Shield, description: "Delete any collection record" },
       
       { key: PERMISSIONS.ACCESS_PROJECTS, label: "View Projects", icon: Eye, description: "View project information" },
       { key: PERMISSIONS.MANAGE_PROJECTS, label: "Create/Edit Own Projects", icon: FolderOpen, description: "Create projects and edit ones you own" },

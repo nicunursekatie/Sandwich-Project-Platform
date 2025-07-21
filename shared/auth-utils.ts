@@ -85,8 +85,10 @@ export const PERMISSIONS = {
   VIEW_USERS: 'manage_users',
   VIEW_COMMITTEE: 'committee_chat',
   TOOLKIT_ACCESS: 'access_toolkit',
-  EDIT_COLLECTIONS: 'edit_data',
-  DELETE_COLLECTIONS: 'delete_data',
+  EDIT_COLLECTIONS: 'edit_collections',
+  DELETE_COLLECTIONS: 'delete_collections',
+  EDIT_OWN_COLLECTIONS: 'edit_own_collections',
+  DELETE_OWN_COLLECTIONS: 'delete_own_collections',
   EDIT_MEETINGS: 'manage_meetings',
   RESPOND_TO_SUGGESTIONS: 'manage_suggestions'
 } as const;
@@ -130,7 +132,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_SANDWICH_DATA,
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.HOST_CHAT,
-        PERMISSIONS.EDIT_DATA
+        PERMISSIONS.EDIT_OWN_COLLECTIONS, // Hosts can only edit their own collections
+        PERMISSIONS.DELETE_OWN_COLLECTIONS // Hosts can only delete their own collections
       ];
     
     case USER_ROLES.DRIVER:
@@ -158,7 +161,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_PROJECTS,
         PERMISSIONS.ACCESS_SUGGESTIONS,
         PERMISSIONS.GENERAL_CHAT,
-        PERMISSIONS.EDIT_DATA
+        PERMISSIONS.EDIT_OWN_COLLECTIONS, // Volunteers can only edit their own collections
+        PERMISSIONS.DELETE_OWN_COLLECTIONS // Volunteers can only delete their own collections
       ];
     
     case USER_ROLES.RECIPIENT:
@@ -225,6 +229,38 @@ export function hasAccessToChat(user: any, chatRoom: string): boolean {
 export function hasPermission(user: any, permission: string): boolean {
   if (!user || !user.permissions) return false;
   return user.permissions.includes(permission);
+}
+
+// Function to check if user can edit a specific collection entry
+export function canEditCollection(user: any, collection: any): boolean {
+  if (!user || !user.permissions) return false;
+  
+  // Super admins and admins can edit all collections
+  if (user.role === 'super_admin' || user.role === 'admin') return true;
+  
+  // Check if user has edit_collections permission (can edit ALL collections)
+  if (user.permissions.includes('edit_collections') || user.permissions.includes('manage_collections')) return true;
+  
+  // Check if user has edit_own_collections permission AND owns this collection
+  if (user.permissions.includes('edit_own_collections') && collection?.createdBy === user.id) return true;
+  
+  return false;
+}
+
+// Function to check if user can delete a specific collection entry
+export function canDeleteCollection(user: any, collection: any): boolean {
+  if (!user || !user.permissions) return false;
+  
+  // Super admins and admins can delete all collections
+  if (user.role === 'super_admin' || user.role === 'admin') return true;
+  
+  // Check if user has delete_collections permission (can delete ALL collections)
+  if (user.permissions.includes('delete_collections') || user.permissions.includes('manage_collections')) return true;
+  
+  // Check if user has delete_own_collections permission AND owns this collection
+  if (user.permissions.includes('delete_own_collections') && collection?.createdBy === user.id) return true;
+  
+  return false;
 }
 
 // Function to get human-readable role display name

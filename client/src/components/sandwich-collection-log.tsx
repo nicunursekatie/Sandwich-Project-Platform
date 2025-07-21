@@ -12,7 +12,7 @@ import BulkDataManager from "@/components/bulk-data-manager";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
-import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
+import { hasPermission, PERMISSIONS, canEditCollection, canDeleteCollection } from "@shared/auth-utils";
 import type { SandwichCollection, Host } from "@shared/schema";
 
 
@@ -1361,7 +1361,7 @@ export default function SandwichCollectionLog() {
                       <div className={`text-lg font-semibold ${isInactiveHost ? 'text-gray-700' : 'text-slate-900'}`}>{totalSandwiches}</div>
                       <div className={`text-xs ${isInactiveHost ? 'text-gray-500' : 'text-slate-500'}`}>total sandwiches</div>
                     </div>
-                    {canEditData && (
+                    {canEditCollection(user, collection) && (
                       <Button
                         variant="outline"
                         size="sm"
@@ -1371,7 +1371,7 @@ export default function SandwichCollectionLog() {
                         <Edit className="w-4 h-4" />
                       </Button>
                     )}
-                    {canDeleteData && (
+                    {canDeleteCollection(user, collection) && (
                       <Button
                         variant="outline"
                         size="sm"

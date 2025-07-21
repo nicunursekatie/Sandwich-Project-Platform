@@ -320,4 +320,4 @@ Preferred communication style: Simple, everyday language.
 ## Changelog
 
 Changelog:
-- June 24, 2025. Initial setup
+- June 24, 2025. Initial setup- July 21, 2025: IMPLEMENTED comprehensive authorship tracking for sandwich collections: added created_by and created_by_name fields to database table and schema, updated collection form to populate creator information, created ownership-based permission functions (canEditCollection, canDeleteCollection) that check both user permissions AND content ownership, replaced global edit/delete permissions with granular edit_own_collections, delete_own_collections, edit_collections, delete_collections permissions, populated 1806 existing records with creator information, resolved core issue where permission system couldn't distinguish between users who can edit their own vs all collections

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import type { Host } from "@shared/schema";
 
@@ -25,6 +26,7 @@ interface GroupCollection {
 
 export default function SandwichCollectionForm() {
   const { toast } = useToast();
+  const { user } = useAuth();
 
   // Default to today's date
   const today = new Date().toISOString().split("T")[0];
@@ -76,6 +78,8 @@ export default function SandwichCollectionForm() {
       hostName: string;
       individualSandwiches: number;
       groupCollections: string;
+      createdBy?: string;
+      createdByName?: string;
     }) => {
       return await apiRequest(
         "POST",
@@ -241,6 +245,10 @@ export default function SandwichCollectionForm() {
       hostName: finalHostName,
       individualSandwiches: finalIndividualSandwiches,
       groupCollections: finalGroupCollections,
+      createdBy: user?.id,
+      createdByName: user?.firstName && user?.lastName 
+        ? `${user.firstName} ${user.lastName}` 
+        : user?.displayName || user?.email || 'Unknown User',
     });
   };
 
