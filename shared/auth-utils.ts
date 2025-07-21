@@ -277,8 +277,23 @@ export function canEditProject(user: any, project: any): boolean {
   // Check if user has edit_all_projects permission (can edit ALL projects)
   if (user.permissions.includes('edit_all_projects') || user.permissions.includes('manage_projects')) return true;
   
-  // Check if user has edit_own_projects permission AND owns this project
-  if (user.permissions.includes('edit_own_projects') && (project?.createdBy === user.id || project?.created_by === user.id)) return true;
+  // Check if user has edit_own_projects permission AND is assigned to this project
+  if (user.permissions.includes('edit_own_projects')) {
+    // Check if user is the assignee of this project
+    if (project?.assigneeIds && Array.isArray(project.assigneeIds)) {
+      // Multi-assignee support - check if user ID is in assignee list
+      if (project.assigneeIds.includes(user.id)) return true;
+    }
+    
+    // Check assigneeName matches user's display name or email
+    if (project?.assigneeName) {
+      const userDisplayName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email;
+      if (project.assigneeName === userDisplayName || project.assigneeName === user.email) return true;
+    }
+    
+    // Fallback: check ownership (creator) only as last resort
+    if (project?.createdBy === user.id || project?.created_by === user.id) return true;
+  }
   
   return false;
 }
@@ -293,8 +308,23 @@ export function canDeleteProject(user: any, project: any): boolean {
   // Check if user has delete_all_projects permission (can delete ALL projects)
   if (user.permissions.includes('delete_all_projects') || user.permissions.includes('manage_projects')) return true;
   
-  // Check if user has delete_own_projects permission AND owns this project
-  if (user.permissions.includes('delete_own_projects') && (project?.createdBy === user.id || project?.created_by === user.id)) return true;
+  // Check if user has delete_own_projects permission AND is assigned to this project
+  if (user.permissions.includes('delete_own_projects')) {
+    // Check if user is the assignee of this project
+    if (project?.assigneeIds && Array.isArray(project.assigneeIds)) {
+      // Multi-assignee support - check if user ID is in assignee list
+      if (project.assigneeIds.includes(user.id)) return true;
+    }
+    
+    // Check assigneeName matches user's display name or email
+    if (project?.assigneeName) {
+      const userDisplayName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email;
+      if (project.assigneeName === userDisplayName || project.assigneeName === user.email) return true;
+    }
+    
+    // Fallback: check ownership (creator) only as last resort
+    if (project?.createdBy === user.id || project?.created_by === user.id) return true;
+  }
   
   return false;
 }
