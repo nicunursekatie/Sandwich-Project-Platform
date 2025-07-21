@@ -35,6 +35,7 @@ import { ProjectAssigneeSelector } from "@/components/project-assignee-selector"
 import { MultiUserTaskCompletion } from "@/components/multi-user-task-completion";
 import { SendKudosButton } from "@/components/send-kudos-button";
 import { useAuth } from "@/hooks/useAuth";
+import { canEditProject, canDeleteProject } from "@shared/auth-utils";
 
 interface Project {
   id: number;
@@ -312,15 +313,17 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleEditProject}
-            className="flex items-center gap-2"
-          >
-            <Edit2 className="h-4 w-4" />
-            Edit Project
-          </Button>
+          {user && canEditProject(user, project) && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleEditProject}
+              className="flex items-center gap-2"
+            >
+              <Edit2 className="h-4 w-4" />
+              Edit Project
+            </Button>
+          )}
           <Badge className={getStatusColor(project.status)}>
             {project.status?.replace('_', ' ')}
           </Badge>
@@ -399,13 +402,15 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Tasks</h2>
-          <Button
-            onClick={() => setIsAddingTask(true)}
-            className="flex items-center gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            Add Task
-          </Button>
+          {user && canEditProject(user, project) && (
+            <Button
+              onClick={() => setIsAddingTask(true)}
+              className="flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add Task
+            </Button>
+          )}
         </div>
 
         {/* Add Task Form */}
@@ -529,22 +534,26 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                       <Badge className={getStatusColor(task.status)}>
                         {task.status?.replace('_', ' ')}
                       </Badge>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEditTask(task)}
-                        className="text-blue-600 hover:text-blue-800"
-                      >
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteTask(task.id)}
-                        className="text-red-600 hover:text-red-800"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {user && canEditProject(user, project) && (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEditTask(task)}
+                            className="text-blue-600 hover:text-blue-800"
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteTask(task.id)}
+                            className="text-red-600 hover:text-red-800"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </div>
                 </CardHeader>
