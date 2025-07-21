@@ -46,6 +46,9 @@ import {
   Edit,
   Eye,
   Settings,
+  CheckSquare,
+  Square,
+  Minus,
 } from "lucide-react";
 
 interface User {
@@ -223,6 +226,43 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
     return selectedPermissions.includes(permission);
   };
 
+  // Bulk selection helpers
+  const getCategoryStatus = (category: any) => {
+    const categoryPermissions = category.permissions.map((p: any) => p.key);
+    const checkedCount = categoryPermissions.filter((p: string) => selectedPermissions.includes(p)).length;
+    
+    if (checkedCount === 0) return 'none';
+    if (checkedCount === categoryPermissions.length) return 'all';
+    return 'partial';
+  };
+
+  const handleBulkCategoryToggle = (category: any) => {
+    const categoryPermissions = category.permissions.map((p: any) => p.key);
+    const status = getCategoryStatus(category);
+    
+    if (status === 'all') {
+      // Remove all category permissions
+      setSelectedPermissions(selectedPermissions.filter(p => !categoryPermissions.includes(p)));
+    } else {
+      // Add all category permissions
+      const newPermissions = [...selectedPermissions];
+      categoryPermissions.forEach((perm: string) => {
+        if (!newPermissions.includes(perm)) {
+          newPermissions.push(perm);
+        }
+      });
+      setSelectedPermissions(newPermissions);
+    }
+  };
+
+  const getBulkIcon = (status: string) => {
+    switch (status) {
+      case 'all': return <CheckSquare className="h-4 w-4" />;
+      case 'partial': return <Minus className="h-4 w-4" />;
+      default: return <Square className="h-4 w-4" />;
+    }
+  };
+
   if (!user) return null;
 
   return (
@@ -240,8 +280,55 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
 
         <div className="space-y-6">
           {/* Role Selection */}
-          <div className="space-y-2">
-            <Label htmlFor="role">User Role</Label>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="role">User Role</Label>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    // Common viewer permissions
+                    const viewerPermissions = [
+                      PERMISSIONS.ACCESS_DIRECTORY,
+                      PERMISSIONS.ACCESS_COLLECTIONS,
+                      PERMISSIONS.ACCESS_REPORTS,
+                      PERMISSIONS.ACCESS_TOOLKIT,
+                      PERMISSIONS.ACCESS_SANDWICH_DATA,
+                      PERMISSIONS.GENERAL_CHAT
+                    ];
+                    setSelectedPermissions(viewerPermissions);
+                  }}
+                  className="text-xs"
+                >
+                  Viewer Preset
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    // Common editor permissions
+                    const editorPermissions = [
+                      PERMISSIONS.ACCESS_DIRECTORY,
+                      PERMISSIONS.ACCESS_HOSTS,
+                      PERMISSIONS.ACCESS_RECIPIENTS,
+                      PERMISSIONS.ACCESS_DRIVERS,
+                      PERMISSIONS.ACCESS_COLLECTIONS,
+                      PERMISSIONS.ACCESS_REPORTS,
+                      PERMISSIONS.ACCESS_TOOLKIT,
+                      PERMISSIONS.MANAGE_COLLECTIONS,
+                      PERMISSIONS.EDIT_DATA,
+                      PERMISSIONS.EXPORT_DATA,
+                      PERMISSIONS.GENERAL_CHAT
+                    ];
+                    setSelectedPermissions(editorPermissions);
+                  }}
+                  className="text-xs"
+                >
+                  Editor Preset
+                </Button>
+              </div>
+            </div>
             <Select value={selectedRole} onValueChange={handleRoleChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a role" />
@@ -255,7 +342,7 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
               </SelectContent>
             </Select>
             <p className="text-sm text-muted-foreground">
-              Changing the role will reset permissions to defaults for that role.
+              Use role presets for quick setup, or choose permission presets above for common configurations.
             </p>
           </div>
 
@@ -265,10 +352,24 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
               {PERMISSION_GROUPS.map((category) => (
                 <Card key={category.id} className={`${getCardColorForType(category.type)}`}>
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      {getIconForType(category.type)}
-                      {category.label}
-                    </CardTitle>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-base flex items-center gap-2">
+                        {getIconForType(category.type)}
+                        {category.label}
+                      </CardTitle>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleBulkCategoryToggle(category)}
+                        className="h-8 px-2 text-xs"
+                        title={`Select all ${category.label.toLowerCase()}`}
+                      >
+                        {getBulkIcon(getCategoryStatus(category))}
+                        <span className="ml-1 hidden sm:inline">
+                          {getCategoryStatus(category) === 'all' ? 'Deselect All' : 'Select All'}
+                        </span>
+                      </Button>
+                    </div>
                     <CardDescription className="text-sm">
                       {category.description}
                     </CardDescription>
@@ -314,7 +415,7 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
             </div>
           </ScrollArea>
 
-          {/* Current Permission Count */}
+          {/* Quick Actions & Permission Count */}
           <div className="flex items-center justify-between pt-2 border-t">
             <div className="flex items-center gap-2">
               <Badge variant="secondary">
@@ -323,6 +424,29 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
               <span className="text-sm text-muted-foreground">
                 Role: {getRoleDisplayName(selectedRole)}
               </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSelectedPermissions([])}
+                disabled={selectedPermissions.length === 0}
+              >
+                Clear All
+              </Button>
+              <Button
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  const allPermissions = PERMISSION_GROUPS.flatMap(group => 
+                    group.permissions.map(p => p.key)
+                  );
+                  setSelectedPermissions(allPermissions);
+                }}
+                disabled={selectedPermissions.length === Object.values(PERMISSIONS).length}
+              >
+                Select All
+              </Button>
             </div>
           </div>
         </div>
