@@ -269,32 +269,65 @@ export function canDeleteCollection(user: any, collection: any): boolean {
 
 // Function to check if user can edit a specific project
 export function canEditProject(user: any, project: any): boolean {
-  if (!user || !user.permissions) return false;
+  // Debug logging
+  console.log('=== canEditProject Debug ===');
+  console.log('User:', { id: user?.id, email: user?.email, firstName: user?.firstName, lastName: user?.lastName, role: user?.role });
+  console.log('Project:', { id: project?.id, title: project?.title, assigneeName: project?.assigneeName, assigneeIds: project?.assigneeIds, createdBy: project?.createdBy, created_by: project?.created_by });
+  console.log('User permissions:', user?.permissions);
+
+  if (!user || !user.permissions) {
+    console.log('Permission check failed: no user or permissions');
+    return false;
+  }
   
   // Super admins and admins can edit all projects
-  if (user.role === 'super_admin' || user.role === 'admin') return true;
+  if (user.role === 'super_admin' || user.role === 'admin') {
+    console.log('Permission granted: super admin or admin role');
+    return true;
+  }
   
   // Check if user has edit_all_projects permission (can edit ALL projects)
-  if (user.permissions.includes('edit_all_projects') || user.permissions.includes('manage_projects')) return true;
+  if (user.permissions.includes('edit_all_projects') || user.permissions.includes('manage_projects')) {
+    console.log('Permission granted: has edit_all_projects or manage_projects');
+    return true;
+  }
   
   // Check if user has edit_own_projects permission AND is assigned to this project
   if (user.permissions.includes('edit_own_projects')) {
+    console.log('User has edit_own_projects permission, checking assignment...');
+    
     // Check if user is the assignee of this project
     if (project?.assigneeIds && Array.isArray(project.assigneeIds)) {
-      // Multi-assignee support - check if user ID is in assignee list
-      if (project.assigneeIds.includes(user.id)) return true;
+      console.log('Checking assigneeIds array:', project.assigneeIds, 'for user ID:', user.id);
+      if (project.assigneeIds.includes(user.id)) {
+        console.log('Permission granted: user ID found in assigneeIds');
+        return true;
+      }
     }
     
     // Check assigneeName matches user's display name or email
     if (project?.assigneeName) {
       const userDisplayName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email;
-      if (project.assigneeName === userDisplayName || project.assigneeName === user.email) return true;
+      console.log('Checking assigneeName:', project.assigneeName, 'vs userDisplayName:', userDisplayName, 'vs email:', user.email);
+      if (project.assigneeName === userDisplayName || project.assigneeName === user.email) {
+        console.log('Permission granted: assigneeName matches user');
+        return true;
+      }
     }
     
     // Fallback: check ownership (creator) only as last resort
-    if (project?.createdBy === user.id || project?.created_by === user.id) return true;
+    console.log('Checking creator ownership - project.createdBy:', project?.createdBy, 'project.created_by:', project?.created_by, 'user.id:', user.id);
+    if (project?.createdBy === user.id || project?.created_by === user.id) {
+      console.log('Permission granted: user is creator/owner');
+      return true;
+    }
+    
+    console.log('Permission denied: user not assigned and not creator');
+  } else {
+    console.log('Permission denied: user does not have edit_own_projects permission');
   }
   
+  console.log('=== canEditProject Result: FALSE ===');
   return false;
 }
 
