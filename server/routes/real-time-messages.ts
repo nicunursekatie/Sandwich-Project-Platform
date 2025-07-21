@@ -48,37 +48,81 @@ router.get("/", requireAuth, async (req, res) => {
       if (folder === 'sent') {
         // For sent folder, get messages where current user is the sender
         const sentMessages = await storage.getMessagesBySender(userId);
-        messages = sentMessages.map(msg => ({
-          id: msg.id.toString(),
-          from: {
-            name: msg.contextId || 'Unknown Recipient', // Show recipient name in sent folder
-            email: msg.contextId || 'unknown@example.com'  // Show recipient email
-          },
-          to: [(req.user as any).email], // Current user is implied sender
-          subject: msg.contextType || 'No Subject',
-          content: msg.content,
-          timestamp: msg.createdAt?.toISOString() || new Date().toISOString(),
-          read: true, // Sent messages are always "read" by sender
-          starred: false,
-          folder: 'sent'
+        
+        // Process messages and look up recipient information
+        const processedMessages = await Promise.all(sentMessages.map(async (msg) => {
+          let recipientName = 'Unknown Recipient';
+          let recipientEmail = 'unknown@example.com';
+          
+          // Try to look up recipient user information by contextId (which should be the recipient userId)
+          if (msg.contextId) {
+            try {
+              const recipientUser = await storage.getUserById(msg.contextId);
+              if (recipientUser) {
+                recipientName = `${recipientUser.firstName || ''} ${recipientUser.lastName || ''}`.trim() || recipientUser.email || 'Unknown User';
+                recipientEmail = recipientUser.email || 'unknown@example.com';
+              }
+            } catch (error) {
+              console.error('Error looking up recipient user:', error);
+            }
+          }
+          
+          return {
+            id: msg.id.toString(),
+            from: {
+              name: recipientName, // Show recipient name in sent folder
+              email: recipientEmail  // Show recipient email
+            },
+            to: [(req.user as any).email], // Current user is implied sender
+            subject: msg.contextType || 'No Subject',
+            content: msg.content,
+            timestamp: msg.createdAt?.toISOString() || new Date().toISOString(),
+            read: true, // Sent messages are always "read" by sender
+            starred: false,
+            folder: 'sent'
+          };
         }));
+        
+        messages = processedMessages;
       } else if (folder === 'inbox') {
         // For inbox, get messages where current user is the recipient
         const inboxMessages = await storage.getMessagesForRecipient(userId);
-        messages = inboxMessages.map(msg => ({
-          id: msg.id.toString(),
-          from: {
-            name: msg.sender || 'Unknown Sender',
-            email: msg.senderEmail || 'unknown@example.com'
-          },
-          to: [(req.user as any).email],
-          subject: msg.contextType || 'No Subject',
-          content: msg.content,
-          timestamp: msg.createdAt?.toISOString() || new Date().toISOString(),
-          read: false,
-          starred: false,
-          folder: 'inbox'
+        
+        // Process messages and look up sender information if needed
+        const processedMessages = await Promise.all(inboxMessages.map(async (msg) => {
+          let senderName = msg.sender || 'Unknown Sender';
+          let senderEmail = msg.senderEmail || 'unknown@example.com';
+          
+          // If we don't have sender email but have senderId, look it up
+          if (!msg.senderEmail && msg.senderId) {
+            try {
+              const senderUser = await storage.getUserById(msg.senderId);
+              if (senderUser) {
+                senderName = `${senderUser.firstName || ''} ${senderUser.lastName || ''}`.trim() || senderUser.email || 'Unknown User';
+                senderEmail = senderUser.email || 'unknown@example.com';
+              }
+            } catch (error) {
+              console.error('Error looking up sender user:', error);
+            }
+          }
+          
+          return {
+            id: msg.id.toString(),
+            from: {
+              name: senderName,
+              email: senderEmail
+            },
+            to: [(req.user as any).email],
+            subject: msg.contextType || 'No Subject',
+            content: msg.content,
+            timestamp: msg.createdAt?.toISOString() || new Date().toISOString(),
+            read: false,
+            starred: false,
+            folder: 'inbox'
+          };
         }));
+        
+        messages = processedMessages;
       }
     } catch (storageError) {
       console.error("Storage error when fetching messages:", storageError);
