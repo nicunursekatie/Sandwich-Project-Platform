@@ -346,6 +346,13 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async markMessageAsRead(messageId: number, userId: string) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.markMessageAsRead(messageId, userId),
+      () => this.fallbackStorage.markMessageAsRead(messageId, userId)
+    );
+  }
+
   async getMessagesForRecipient(recipientId: string) {
     return this.executeWithFallback(
       () => this.primaryStorage.getMessagesForRecipient(recipientId),

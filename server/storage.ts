@@ -84,6 +84,7 @@ export interface IStorage {
   getMessagesByCommittee(committee: string): Promise<Message[]>;
   getDirectMessages(userId1: string, userId2: string): Promise<Message[]>;
   getMessageById(id: number): Promise<Message | undefined>;
+  markMessageAsRead(messageId: number, userId: string): Promise<void>;
   createMessage(message: InsertMessage): Promise<Message>;
   getThreadMessages(threadId: number): Promise<Message[]>;
   createReply(message: InsertMessage, parentId: number): Promise<Message>;
@@ -566,6 +567,13 @@ export class MemStorage implements IStorage {
 
   async getMessageById(id: number): Promise<Message | undefined> {
     return this.messages.get(id);
+  }
+
+  async markMessageAsRead(messageId: number, userId: string): Promise<void> {
+    // For the real-time messaging system, we don't have a read status field in the Message schema
+    // This is a placeholder implementation for now
+    // In a real implementation, you would need a separate table for message read status
+    console.log(`MemStorage: Marking message ${messageId} as read for user ${userId}`);
   }
 
   async createMessage(insertMessage: InsertMessage): Promise<Message> {

@@ -231,10 +231,18 @@ export default function InboxPage() {
       };
       setSelectedMessage(mockMessage);
     } else {
-      setSelectedMessage(message);
+      // Update local message state to show as read immediately
+      const updatedMessage = { ...message, read: true };
+      setSelectedMessage(updatedMessage);
+      
+      // Mark as read on the server if not already read
       if (!message.read) {
-        await markAsRead(message.id);
-        refetchMessages();
+        try {
+          await markAsRead(message.id);
+          console.log(`Message ${message.id} marked as read`);
+        } catch (error) {
+          console.error('Failed to mark message as read:', error);
+        }
       }
     }
     setShowComposer(false); // Close composer when selecting a message

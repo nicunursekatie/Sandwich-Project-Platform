@@ -437,6 +437,20 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
+  async markMessageAsRead(messageId: number, userId: string): Promise<void> {
+    console.log(`[DB] Marking message ${messageId} as read for user ${userId}`);
+    try {
+      // For the real-time messaging system, we don't have a read status field in the Message schema
+      // This is a placeholder implementation for now
+      // In a real implementation, you would need a separate table for message read status
+      // or add a 'read' field to the messages table
+      console.log(`[DB] Message ${messageId} marked as read for user ${userId} (placeholder)`);
+    } catch (error) {
+      console.error(`[ERROR] Failed to mark message ${messageId} as read for user ${userId}:`, error);
+      throw error;
+    }
+  }
+
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
     // Ensure conversationId is set for proper conversation isolation
     if (!insertMessage.conversationId) {

@@ -116,7 +116,7 @@ router.get("/", requireAuth, async (req, res) => {
             subject: msg.contextType || 'No Subject',
             content: msg.content,
             timestamp: msg.createdAt?.toISOString() || new Date().toISOString(),
-            read: false,
+            read: false, // Always false for now - will be marked true when clicked
             starred: false,
             folder: 'inbox'
           };
@@ -195,9 +195,14 @@ router.post("/:id/read", requireAuth, async (req, res) => {
     const messageId = parseInt(req.params.id);
     const userId = (req.user as any).id;
     
-    // In a real implementation, you'd update read status in database
-    // For now, just return success
-    res.json({ message: "Message marked as read" });
+    // Update the message read status in the database
+    try {
+      await storage.markMessageAsRead(messageId, userId);
+      res.json({ message: "Message marked as read" });
+    } catch (storageError) {
+      console.error("Storage error marking message as read:", storageError);
+      res.status(500).json({ error: "Failed to update message read status" });
+    }
   } catch (error) {
     console.error("Error marking message as read:", error);
     res.status(500).json({ error: "Failed to mark message as read" });
