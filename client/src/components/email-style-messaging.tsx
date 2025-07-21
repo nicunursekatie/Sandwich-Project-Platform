@@ -403,8 +403,8 @@ export default function EmailStyleMessaging() {
           /* Message List & Detail View */
           <div className="flex-1 flex min-h-0">
             {/* Message List */}
-            <div className="w-1/3 min-w-0 border-r flex flex-col">
-              <div className="p-3 border-b space-y-3">
+            <div className="w-2/5 min-w-0 border-r flex flex-col bg-white">
+              <div className="p-4 border-b bg-gray-50 space-y-3">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -441,7 +441,7 @@ export default function EmailStyleMessaging() {
               </div>
               
               <ScrollArea className="flex-1">
-                <div className="p-2">
+                <div className="">
                   {filteredMessages.length === 0 ? (
                     <div className="flex items-center justify-center h-32">
                       <p className="text-muted-foreground text-sm">No messages</p>
@@ -450,58 +450,93 @@ export default function EmailStyleMessaging() {
                     filteredMessages.map((message: EmailMessage) => (
                       <div
                         key={message.id}
-                        className={`p-3 rounded-lg transition-colors mb-2 ${
+                        className={`px-3 py-4 cursor-pointer transition-colors border-b border-gray-100 ${
                           selectedMessage?.id === message.id
-                            ? 'bg-primary/10 border-primary'
-                            : 'hover:bg-gray-50 border-transparent'
-                        } border ${selectedMessages.includes(message.id) ? 'bg-blue-50' : ''}`}
+                            ? 'bg-blue-50 border-l-4 border-l-blue-500'
+                            : 'hover:bg-gray-50'
+                        } ${selectedMessages.includes(message.id) ? 'bg-blue-25' : ''}`}
+                        onClick={() => handleMessageClick(message)}
                       >
-                        <div className="flex items-center justify-between mb-1">
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={selectedMessages.includes(message.id)}
-                              onChange={() => toggleMessageSelection(message.id)}
-                              onClick={(e) => e.stopPropagation()}
-                              className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded"
-                            />
-                            <Avatar className="h-6 w-6">
-                              <AvatarFallback className="text-xs">
-                                {getInitials(message.from.name)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span 
-                              className={`text-sm truncate cursor-pointer ${!message.read ? 'font-semibold' : ''}`}
-                              onClick={() => handleMessageClick(message)}
-                            >
-                              {message.from.name}
-                            </span>
+                        <div className="flex items-start gap-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedMessages.includes(message.id)}
+                            onChange={() => toggleMessageSelection(message.id)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 mt-1"
+                          />
+                          
+                          <Avatar className="h-8 w-8 flex-shrink-0">
+                            <AvatarFallback className="text-xs bg-gray-200 text-gray-600">
+                              {getInitials(message.from.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          
+                          <div className="flex-1 min-w-0">
+                            {/* Header Row */}
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className={`text-sm truncate ${!message.read ? 'font-semibold text-gray-900' : 'font-medium text-gray-700'}`}>
+                                  {message.from.name}
+                                </span>
+                                {activeFolder === 'sent' && message.to && (
+                                  <span className="text-xs text-gray-500 truncate">
+                                    to: {Array.isArray(message.to) ? message.to.join(', ') : message.to}
+                                  </span>
+                                )}
+                                {!message.read && (
+                                  <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
+                                )}
+                              </div>
+                              
+                              <div className="flex items-center gap-1 flex-shrink-0">
+                                {message.starred && (
+                                  <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                                )}
+                                {message.attachments && message.attachments.length > 0 && (
+                                  <Paperclip className="h-4 w-4 text-gray-400" />
+                                )}
+                                <span className="text-xs text-gray-500 ml-2">
+                                  {formatDate(message.timestamp)}
+                                </span>
+                              </div>
+                            </div>
+                            
+                            {/* Subject Line */}
+                            <div className="mb-2">
+                              <h4 className={`text-sm truncate ${!message.read ? 'font-semibold text-gray-900' : 'font-medium text-gray-800'}`}>
+                                {message.subject || '(No Subject)'}
+                              </h4>
+                            </div>
+                            
+                            {/* Message Preview */}
+                            <p className="text-xs text-gray-600 leading-relaxed line-clamp-2 pr-4">
+                              {message.content}
+                            </p>
+                            
+                            {/* Tags and Status */}
+                            <div className="flex items-center gap-2 mt-2">
+                              {!message.read && (
+                                <Badge variant="secondary" className="text-xs px-2 py-1 bg-blue-100 text-blue-700 font-medium">
+                                  New
+                                </Badge>
+                              )}
+                              {message.priority === 'high' && (
+                                <Badge variant="destructive" className="text-xs px-2 py-1">
+                                  High Priority
+                                </Badge>
+                              )}
+                              {message.labels && message.labels.length > 0 && (
+                                <div className="flex gap-1">
+                                  {message.labels.map((label: string) => (
+                                    <Badge key={label} variant="outline" className="text-xs px-2 py-1">
+                                      {label}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1">
-                            {message.starred && (
-                              <Star className="h-3 w-3 text-yellow-500 fill-current" />
-                            )}
-                            <span className="text-xs text-muted-foreground">
-                              {formatDate(message.timestamp)}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <h4 className={`text-sm mb-1 truncate ${!message.read ? 'font-semibold' : ''}`}>
-                          {message.subject}
-                        </h4>
-                        
-                        <p className="text-xs text-gray-600 line-clamp-2">
-                          {message.content}
-                        </p>
-                        
-                        <div className="flex items-center justify-between mt-2">
-                          {!message.read && (
-                            <Badge variant="secondary" className="text-xs">New</Badge>
-                          )}
-                          {message.attachments && message.attachments.length > 0 && (
-                            <Paperclip className="h-3 w-3 text-gray-400" />
-                          )}
                         </div>
                       </div>
                     ))
