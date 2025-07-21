@@ -242,7 +242,7 @@ export function canEditCollection(user: any, collection: any): boolean {
   if (user.permissions.includes('edit_collections') || user.permissions.includes('manage_collections')) return true;
   
   // Check if user has edit_own_collections permission AND owns this collection
-  if (user.permissions.includes('edit_own_collections') && collection?.createdBy === user.id) return true;
+  if (user.permissions.includes('edit_own_collections') && (collection?.createdBy === user.id || collection?.created_by === user.id)) return true;
   
   return false;
 }
@@ -258,7 +258,7 @@ export function canDeleteCollection(user: any, collection: any): boolean {
   if (user.permissions.includes('delete_collections') || user.permissions.includes('manage_collections')) return true;
   
   // Check if user has delete_own_collections permission AND owns this collection
-  if (user.permissions.includes('delete_own_collections') && collection?.createdBy === user.id) return true;
+  if (user.permissions.includes('delete_own_collections') && (collection?.createdBy === user.id || collection?.created_by === user.id)) return true;
   
   return false;
 }
