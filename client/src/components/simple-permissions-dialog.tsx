@@ -67,102 +67,102 @@ interface SimplePermissionsDialogProps {
   onSave: (userId: string, role: string, permissions: string[]) => void;
 }
 
-// Granular permission groups organized by section and action
+// Content-focused permission groups organized by user capabilities
 const PERMISSION_GROUPS = [
   {
-    id: "access_tabs",
-    label: "Tab Access",
-    description: "Control which sections users can view",
-    type: "access",
+    id: "content_management",
+    label: "Content Management",
+    description: "Control over creating, editing, and managing various content types",
+    type: "content",
     permissions: [
-      { key: PERMISSIONS.ACCESS_DIRECTORY, label: "Directory Tab", icon: Phone, description: "Phone directory and contact information" },
-      { key: PERMISSIONS.ACCESS_HOSTS, label: "Hosts Tab", icon: Building, description: "Host organizations section" },
-      { key: PERMISSIONS.ACCESS_RECIPIENTS, label: "Recipients Tab", icon: UserCheck, description: "Recipient organizations section" },
-      { key: PERMISSIONS.ACCESS_DRIVERS, label: "Drivers Tab", icon: Truck, description: "Driver management section" },
-      { key: PERMISSIONS.ACCESS_COLLECTIONS, label: "Collections Tab", icon: Database, description: "Sandwich collection data" },
-      { key: PERMISSIONS.ACCESS_CHAT, label: "Chat Tab", icon: MessageCircle, description: "Real-time team chat" },
-      { key: PERMISSIONS.ACCESS_MESSAGES, label: "Messages Tab", icon: Mail, description: "Formal messaging system" },
-      { key: PERMISSIONS.ACCESS_TOOLKIT, label: "Toolkit Tab", icon: Wrench, description: "Documents and resources" },
+      { key: PERMISSIONS.ACCESS_COLLECTIONS, label: "View Collections", icon: Eye, description: "View all collection records" },
+      { key: PERMISSIONS.MANAGE_COLLECTIONS, label: "Submit Own Collections", icon: Database, description: "Submit your own collection data" },
+      { key: PERMISSIONS.EDIT_DATA, label: "Edit Own Collections", icon: Edit, description: "Modify your own collection records" },
+      { key: PERMISSIONS.DELETE_DATA, label: "Manage All Collections", icon: Shield, description: "Edit/delete any collection record" },
+      
+      { key: PERMISSIONS.ACCESS_PROJECTS, label: "View Projects", icon: Eye, description: "View project information" },
+      { key: PERMISSIONS.MANAGE_PROJECTS, label: "Create/Edit Own Projects", icon: FolderOpen, description: "Create projects and edit ones you own" },
+      // Note: Multi-user ownership and project privacy would need new permissions
+      
+      { key: PERMISSIONS.ACCESS_SUGGESTIONS, label: "View Suggestions", icon: Eye, description: "View suggestion portal" },
+      { key: PERMISSIONS.SUBMIT_SUGGESTIONS, label: "Submit Suggestions", icon: Lightbulb, description: "Submit your own suggestions" },
+      { key: PERMISSIONS.MANAGE_SUGGESTIONS, label: "Manage All Suggestions", icon: Shield, description: "Review and respond to all suggestions" },
     ]
   },
   {
-    id: "operations_access",
-    label: "Operations Access",
-    description: "Access to operational tools and reporting",
-    type: "access",
+    id: "directory_contact",
+    label: "Directory & Contact Data",
+    description: "Access levels to organizational contact information",
+    type: "directory",
     permissions: [
-      { key: PERMISSIONS.ACCESS_MEETINGS, label: "Meetings", icon: Calendar, description: "Meeting management and agendas" },
-      { key: PERMISSIONS.ACCESS_ANALYTICS, label: "Analytics", icon: TrendingUp, description: "Data analytics and insights" },
-      { key: PERMISSIONS.ACCESS_REPORTS, label: "Reports", icon: FileText, description: "Generate and view reports" },
-      { key: PERMISSIONS.ACCESS_PROJECTS, label: "Projects", icon: FolderOpen, description: "Project management" },
-      { key: PERMISSIONS.ACCESS_ROLE_DEMO, label: "Role Demo", icon: Users, description: "User role demonstration" },
+      { key: PERMISSIONS.ACCESS_DIRECTORY, label: "Basic Directory Access", icon: Phone, description: "View basic contact information" },
+      // Note: Full contact details would need a new permission
+      
+      { key: PERMISSIONS.ACCESS_HOSTS, label: "View Hosts", icon: Eye, description: "View host organizations" },
+      { key: PERMISSIONS.MANAGE_HOSTS, label: "Add/Edit Hosts", icon: Building, description: "Add and edit host organizations" },
+      // Note: "Manage All Hosts" would be separate from basic edit
+      
+      { key: PERMISSIONS.ACCESS_DRIVERS, label: "View Drivers", icon: Eye, description: "View driver information" },
+      { key: PERMISSIONS.MANAGE_DRIVERS, label: "Add/Edit Drivers", icon: Truck, description: "Add and edit driver records" },
+      
+      { key: PERMISSIONS.ACCESS_RECIPIENTS, label: "View Recipients", icon: Eye, description: "View recipient organizations" },
+      { key: PERMISSIONS.MANAGE_RECIPIENTS, label: "Add/Edit Recipients", icon: UserCheck, description: "Add and edit recipient organizations" },
     ]
   },
   {
-    id: "resources_access",
-    label: "Resources Access", 
-    description: "Additional tools and data access",
-    type: "access",
-    permissions: [
-      { key: PERMISSIONS.ACCESS_SUGGESTIONS, label: "Suggestions", icon: Lightbulb, description: "Suggestion portal" },
-      { key: PERMISSIONS.ACCESS_SANDWICH_DATA, label: "Sandwich Data", icon: PieChart, description: "Sandwich totals data sheet" },
-    ]
-  },
-  {
-    id: "management_permissions",
-    label: "Management Permissions",
-    description: "Ability to add, edit, and manage data in sections",
-    type: "management",
-    permissions: [
-      { key: PERMISSIONS.MANAGE_HOSTS, label: "Manage Hosts", icon: Building, description: "Add, edit, delete host organizations" },
-      { key: PERMISSIONS.MANAGE_RECIPIENTS, label: "Manage Recipients", icon: UserCheck, description: "Add, edit, delete recipient organizations" },
-      { key: PERMISSIONS.MANAGE_DRIVERS, label: "Manage Drivers", icon: Truck, description: "Add, edit, delete drivers" },
-      { key: PERMISSIONS.MANAGE_COLLECTIONS, label: "Manage Collections", icon: Database, description: "Add, edit, delete collection records" },
-      { key: PERMISSIONS.MANAGE_PROJECTS, label: "Manage Projects", icon: FolderOpen, description: "Create and modify projects" },
-      { key: PERMISSIONS.MANAGE_MEETINGS, label: "Manage Meetings", icon: Calendar, description: "Schedule and edit meetings" },
-      { key: PERMISSIONS.MANAGE_SUGGESTIONS, label: "Manage Suggestions", icon: Lightbulb, description: "Review and respond to suggestions" },
-    ]
-  },
-  {
-    id: "data_actions",
-    label: "Data Actions",
-    description: "Specific actions users can perform with data",
-    type: "action",
-    permissions: [
-      { key: PERMISSIONS.EDIT_DATA, label: "Edit Data", icon: Edit, description: "Modify existing records" },
-      { key: PERMISSIONS.DELETE_DATA, label: "Delete Data", icon: Users, description: "Remove records permanently" },
-      { key: PERMISSIONS.EXPORT_DATA, label: "Export Data", icon: FileText, description: "Download data as files" },
-      { key: PERMISSIONS.IMPORT_DATA, label: "Import Data", icon: Database, description: "Upload data from files" },
-      { key: PERMISSIONS.SCHEDULE_REPORTS, label: "Schedule Reports", icon: Calendar, description: "Set up automated reporting" },
-    ]
-  },
-  {
-    id: "communication",
+    id: "communication_access",
     label: "Communication",
-    description: "Messaging and chat permissions",
+    description: "Chat room access and messaging capabilities",
     type: "communication",
     permissions: [
-      { key: PERMISSIONS.SEND_MESSAGES, label: "Send Messages", icon: Mail, description: "Send formal messages" },
-      { key: PERMISSIONS.DIRECT_MESSAGES, label: "Direct Messages", icon: MessageCircle, description: "One-on-one messaging" },
-      { key: PERMISSIONS.GROUP_MESSAGES, label: "Group Messages", icon: Users, description: "Group conversations" },
-      { key: PERMISSIONS.GENERAL_CHAT, label: "General Chat", icon: MessageCircle, description: "General chat room" },
-      { key: PERMISSIONS.COMMITTEE_CHAT, label: "Committee Chat", icon: Users, description: "Committee chat room" },
-      { key: PERMISSIONS.HOST_CHAT, label: "Host Chat", icon: Building, description: "Host chat room" },
-      { key: PERMISSIONS.DRIVER_CHAT, label: "Driver Chat", icon: Truck, description: "Driver chat room" },
-      { key: PERMISSIONS.RECIPIENT_CHAT, label: "Recipient Chat", icon: UserCheck, description: "Recipient chat room" },
-      { key: PERMISSIONS.CORE_TEAM_CHAT, label: "Core Team Chat", icon: Shield, description: "Leadership chat room" },
+      { key: PERMISSIONS.GENERAL_CHAT, label: "General Chat", icon: MessageCircle, description: "Access general team chat" },
+      { key: PERMISSIONS.HOST_CHAT, label: "Host Chat", icon: Building, description: "Access host-specific chat room" },
+      { key: PERMISSIONS.DRIVER_CHAT, label: "Driver Chat", icon: Truck, description: "Access driver-specific chat room" },
+      { key: PERMISSIONS.RECIPIENT_CHAT, label: "Recipient Chat", icon: UserCheck, description: "Access recipient-specific chat room" },
+      { key: PERMISSIONS.COMMITTEE_CHAT, label: "Committee Chat", icon: Users, description: "Access committee chat room" },
+      { key: PERMISSIONS.CORE_TEAM_CHAT, label: "Core Team Chat", icon: Shield, description: "Access leadership chat room" },
+      
+      { key: PERMISSIONS.DIRECT_MESSAGES, label: "Direct Messaging", icon: Mail, description: "Send/receive private messages" },
+      { key: PERMISSIONS.MODERATE_MESSAGES, label: "Message Moderation", icon: Eye, description: "Edit/delete others' messages across all channels" },
     ]
   },
   {
-    id: "admin",
-    label: "Administrative",
-    description: "System administration capabilities",
-    type: "admin",
+    id: "navigation_control",
+    label: "Navigation Control", 
+    description: "Which tabs and features appear in user's interface",
+    type: "navigation",
+    permissions: [
+      { key: PERMISSIONS.ACCESS_CHAT, label: "Chat Tab", icon: MessageCircle, description: "Show Chat tab in navigation" },
+      { key: PERMISSIONS.ACCESS_MESSAGES, label: "Messages Tab", icon: Mail, description: "Show Messages tab in navigation" },
+      { key: PERMISSIONS.ACCESS_TOOLKIT, label: "Toolkit Tab", icon: Wrench, description: "Show Toolkit/Documents tab" },
+      { key: PERMISSIONS.ACCESS_MEETINGS, label: "Meetings Section", icon: Calendar, description: "Show Meetings in Operations" },
+      { key: PERMISSIONS.ACCESS_ANALYTICS, label: "Analytics Section", icon: TrendingUp, description: "Show Analytics in Operations" },
+      { key: PERMISSIONS.ACCESS_REPORTS, label: "Reports Section", icon: FileText, description: "Show Reports in Operations" },
+      { key: PERMISSIONS.ACCESS_SANDWICH_DATA, label: "Sandwich Data", icon: PieChart, description: "Access to sandwich totals data sheet" },
+    ]
+  },
+  {
+    id: "system_access",
+    label: "System Access",
+    description: "Administrative functions and system-level capabilities",
+    type: "system",
     permissions: [
       { key: PERMISSIONS.ADMIN_ACCESS, label: "Admin Panel", icon: Shield, description: "Access to admin interface" },
-      { key: PERMISSIONS.MANAGE_USERS, label: "Manage Users", icon: Users, description: "User management and permissions" },
-      { key: PERMISSIONS.MANAGE_ANNOUNCEMENTS, label: "Manage Announcements", icon: FileText, description: "System announcements" },
-      { key: PERMISSIONS.MODERATE_MESSAGES, label: "Moderate Messages", icon: Eye, description: "Message moderation across all channels" },
+      { key: PERMISSIONS.MANAGE_USERS, label: "User Management", icon: Users, description: "Manage users and permissions" },
+      { key: PERMISSIONS.MANAGE_ANNOUNCEMENTS, label: "System Announcements", icon: FileText, description: "Create/edit system announcements" },
+      { key: PERMISSIONS.MANAGE_MEETINGS, label: "Meeting Management", icon: Calendar, description: "Schedule and manage meetings" },
+    ]
+  },
+  {
+    id: "data_operations",
+    label: "Data Operations",
+    description: "Bulk operations and cross-content editing capabilities",
+    type: "operations",
+    permissions: [
+      { key: PERMISSIONS.EXPORT_DATA, label: "Export Data", icon: FileText, description: "Download data as files" },
+      { key: PERMISSIONS.IMPORT_DATA, label: "Import Data", icon: Database, description: "Upload bulk data from files" },
+      { key: PERMISSIONS.SCHEDULE_REPORTS, label: "Schedule Reports", icon: Calendar, description: "Set up automated reporting" },
+      // Note: Cross-content editing and permanent deletions would need new granular permissions
     ]
   }
 ];
@@ -170,22 +170,24 @@ const PERMISSION_GROUPS = [
 // Helper functions for visual organization
 function getCardColorForType(type: string) {
   switch (type) {
-    case "access": return "border-blue-200 bg-blue-50/50";
-    case "management": return "border-green-200 bg-green-50/50";
-    case "action": return "border-orange-200 bg-orange-50/50";
+    case "content": return "border-blue-200 bg-blue-50/50";
+    case "directory": return "border-green-200 bg-green-50/50";
     case "communication": return "border-purple-200 bg-purple-50/50";
-    case "admin": return "border-red-200 bg-red-50/50";
+    case "navigation": return "border-orange-200 bg-orange-50/50";
+    case "system": return "border-red-200 bg-red-50/50";
+    case "operations": return "border-indigo-200 bg-indigo-50/50";
     default: return "border-gray-200 bg-gray-50/50";
   }
 }
 
 function getIconForType(type: string) {
   switch (type) {
-    case "access": return <Eye className="h-4 w-4 text-blue-600" />;
-    case "management": return <Edit className="h-4 w-4 text-green-600" />;
-    case "action": return <Users className="h-4 w-4 text-orange-600" />;
+    case "content": return <Database className="h-4 w-4 text-blue-600" />;
+    case "directory": return <Phone className="h-4 w-4 text-green-600" />;
     case "communication": return <MessageCircle className="h-4 w-4 text-purple-600" />;
-    case "admin": return <Shield className="h-4 w-4 text-red-600" />;
+    case "navigation": return <Eye className="h-4 w-4 text-orange-600" />;
+    case "system": return <Shield className="h-4 w-4 text-red-600" />;
+    case "operations": return <Settings className="h-4 w-4 text-indigo-600" />;
     default: return <Settings className="h-4 w-4 text-gray-600" />;
   }
 }
@@ -288,11 +290,14 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    // Common viewer permissions
+                    // Common viewer permissions - view-only access
                     const viewerPermissions = [
                       PERMISSIONS.ACCESS_DIRECTORY,
                       PERMISSIONS.ACCESS_COLLECTIONS,
-                      PERMISSIONS.ACCESS_REPORTS,
+                      PERMISSIONS.ACCESS_HOSTS,
+                      PERMISSIONS.ACCESS_RECIPIENTS, 
+                      PERMISSIONS.ACCESS_DRIVERS,
+                      PERMISSIONS.ACCESS_PROJECTS,
                       PERMISSIONS.ACCESS_TOOLKIT,
                       PERMISSIONS.ACCESS_SANDWICH_DATA,
                       PERMISSIONS.GENERAL_CHAT
@@ -307,18 +312,24 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    // Common editor permissions
+                    // Common editor permissions - can submit/edit own content
                     const editorPermissions = [
                       PERMISSIONS.ACCESS_DIRECTORY,
                       PERMISSIONS.ACCESS_HOSTS,
                       PERMISSIONS.ACCESS_RECIPIENTS,
                       PERMISSIONS.ACCESS_DRIVERS,
                       PERMISSIONS.ACCESS_COLLECTIONS,
+                      PERMISSIONS.ACCESS_PROJECTS,
                       PERMISSIONS.ACCESS_REPORTS,
                       PERMISSIONS.ACCESS_TOOLKIT,
                       PERMISSIONS.MANAGE_COLLECTIONS,
+                      PERMISSIONS.MANAGE_HOSTS,
+                      PERMISSIONS.MANAGE_RECIPIENTS,
+                      PERMISSIONS.MANAGE_DRIVERS,
+                      PERMISSIONS.MANAGE_PROJECTS,
                       PERMISSIONS.EDIT_DATA,
                       PERMISSIONS.EXPORT_DATA,
+                      PERMISSIONS.SUBMIT_SUGGESTIONS,
                       PERMISSIONS.GENERAL_CHAT
                     ];
                     setSelectedPermissions(editorPermissions);
