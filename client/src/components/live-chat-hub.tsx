@@ -179,12 +179,36 @@ export default function LiveChatHub({ onChannelSelect, selectedChannel }: LiveCh
     }
   }, [channels, selectedChannel, onChannelSelect]);
 
-  const handleChannelClick = (channelId: string) => {
-    // Clear unread count for selected channel
+  const handleChannelClick = async (channelId: string) => {
+    // Clear unread count for selected channel immediately (optimistic update)
     setChannels(prev => prev.map(ch => 
       ch.id === channelId ? { ...ch, unreadCount: 0 } : ch
     ));
     onChannelSelect(channelId);
+
+    // Mark messages as read on server
+    try {
+      const response = await fetch('/api/message-notifications/mark-chat-read', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ channel: channelId }),
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        console.log(`Successfully marked ${channelId} chat messages as read`);
+        
+        // Trigger a refresh of notification counts to clear the bell icon
+        const notificationRefreshEvent = new CustomEvent('refreshNotifications');
+        window.dispatchEvent(notificationRefreshEvent);
+      } else {
+        console.error('Failed to mark chat messages as read:', response.status);
+      }
+    } catch (error) {
+      console.error('Error marking chat messages as read:', error);
+    }
   };
 
   const formatLastActivity = (lastMessage?: ChatMessage) => {

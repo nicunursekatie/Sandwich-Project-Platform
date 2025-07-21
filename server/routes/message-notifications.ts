@@ -67,13 +67,24 @@ const getUnreadCounts = async (req: Request, res: Response) => {
         const chatChannels = ['general', 'core-team', 'committee', 'host', 'driver', 'recipient'];
         
         for (const channel of chatChannels) {
+          // Check when user last read this channel
+          const readKey = `${userId}:${channel}`;
+          const lastReadTime = chatReadTracker.get(readKey);
+          
           // Get messages for this channel that are not from the current user
+          // and were created after the last read time
+          let whereCondition = sql`channel = ${channel} AND user_id != ${userId}`;
+          
+          if (lastReadTime) {
+            whereCondition = sql`channel = ${channel} AND user_id != ${userId} AND created_at > ${lastReadTime.toISOString()}`;
+          }
+
           const channelMessages = await db
             .select({
               count: sql<number>`count(*)`
             })
             .from(sql`chat_messages`)
-            .where(sql`channel = ${channel} AND user_id != ${userId}`);
+            .where(whereCondition);
           
           const count = Number(channelMessages[0]?.count || 0);
           
@@ -146,6 +157,39 @@ const getUnreadCounts = async (req: Request, res: Response) => {
     }
 };
 
+// Simple in-memory storage for chat read tracking
+// In production, this should use a proper database table
+const chatReadTracker = new Map<string, Date>();
+
+// Mark chat messages as read when user views a chat channel
+const markChatMessagesRead = async (req: Request, res: Response) => {
+    try {
+      const userId = (req as any).user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: "User not authenticated" });
+      }
+
+      const { channel } = req.body;
+
+      if (!channel) {
+        return res.status(400).json({ error: "Channel is required" });
+      }
+
+      console.log(`Marking chat messages as read for user ${userId} in channel ${channel}`);
+      
+      // Store the read timestamp for this user-channel combination
+      const readKey = `${userId}:${channel}`;
+      chatReadTracker.set(readKey, new Date());
+      
+      console.log(`Chat read status updated: ${readKey} at ${new Date()}`);
+      
+      res.json({ success: true, channel, userId, timestamp: new Date() });
+    } catch (error) {
+      console.error("Error marking chat messages as read:", error);
+      res.status(500).json({ error: "Failed to mark chat messages as read" });
+    }
+};
+
 // Mark messages as read when user views a chat
 const markMessagesRead = async (req: Request, res: Response) => {
     try {
@@ -189,6 +233,7 @@ export function registerMessageNotificationRoutes(app: Express) {
   // Use the proper unread counts function with the existing database schema
   app.get('/api/message-notifications/unread-counts', isAuthenticated, getUnreadCounts);
   app.post("/api/message-notifications/mark-read", isAuthenticated, markMessagesRead);
+  app.post("/api/message-notifications/mark-chat-read", isAuthenticated, markChatMessagesRead);
   app.post("/api/message-notifications/mark-all-read", isAuthenticated, markAllRead);
 }
 
@@ -196,5 +241,6 @@ export function registerMessageNotificationRoutes(app: Express) {
 export const messageNotificationRoutes = {
   getUnreadCounts,
   markMessagesRead,
+  markChatMessagesRead,
   markAllRead
 };

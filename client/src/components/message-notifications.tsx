@@ -48,6 +48,22 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
 
 
 
+  // Listen for custom refresh events from chat system
+  useEffect(() => {
+    if (!user) return;
+
+    const handleRefreshNotifications = () => {
+      console.log('Refreshing notification counts after chat read');
+      refetch();
+    };
+
+    window.addEventListener('refreshNotifications', handleRefreshNotifications);
+    
+    return () => {
+      window.removeEventListener('refreshNotifications', handleRefreshNotifications);
+    };
+  }, [user, refetch]);
+
   // Listen for WebSocket notifications
   useEffect(() => {
     if (!user) {
