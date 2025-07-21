@@ -51,10 +51,10 @@ router.get("/", requireAuth, async (req, res) => {
         messages = sentMessages.map(msg => ({
           id: msg.id.toString(),
           from: {
-            name: msg.sender || 'You',
-            email: msg.senderEmail || (req.user as any).email
+            name: msg.contextId || 'Unknown Recipient', // Show recipient name in sent folder
+            email: msg.contextId || 'unknown@example.com'  // Show recipient email
           },
-          to: [msg.contextId || ''],
+          to: [(req.user as any).email], // Current user is implied sender
           subject: msg.contextType || 'No Subject',
           content: msg.content,
           timestamp: msg.createdAt?.toISOString() || new Date().toISOString(),

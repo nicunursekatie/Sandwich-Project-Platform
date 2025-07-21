@@ -445,12 +445,19 @@ export default function InboxPage() {
                           <div className="flex items-center gap-2">
                             <Avatar className="h-8 w-8">
                               <AvatarFallback>
-                                {isGroupThread ? <Users className="h-4 w-4" /> : (message.senderName?.charAt(0) || '?')}
+                                {isGroupThread ? <Users className="h-4 w-4" /> : 
+                                  selectedTab === 'sent' 
+                                    ? (message?.from?.name?.charAt(0) || '?') 
+                                    : (message.senderName?.charAt(0) || '?')
+                                }
                               </AvatarFallback>
                             </Avatar>
                             <div>
                               <p className="font-medium text-sm">
-                                {message?.senderName || 'Unknown'}
+                                {selectedTab === 'sent' 
+                                  ? `To: ${message?.from?.name || 'Unknown Recipient'}` 
+                                  : (message?.senderName || 'Unknown')
+                                }
                               </p>
                               <p className="text-xs text-gray-500">
                                 {isGroupThread && message?.groupData?.lastMessage?.createdAt ? 
