@@ -10,62 +10,85 @@ export const USER_ROLES = {
   WORK_LOGGER: 'work_logger'
 } as const;
 
+// Granular yet intuitive permission system
 export const PERMISSIONS = {
-  // Management permissions
+  // Administrative permissions
+  ADMIN_ACCESS: 'admin_access',
   MANAGE_USERS: 'manage_users',
+  MANAGE_ANNOUNCEMENTS: 'manage_announcements',
+  
+  // Main tab access permissions
+  ACCESS_DIRECTORY: 'access_directory',
+  ACCESS_HOSTS: 'access_hosts', 
+  ACCESS_RECIPIENTS: 'access_recipients',
+  ACCESS_DRIVERS: 'access_drivers',
+  ACCESS_COLLECTIONS: 'access_collections',
+  ACCESS_CHAT: 'access_chat',
+  ACCESS_MESSAGES: 'access_messages',
+  ACCESS_TOOLKIT: 'access_toolkit',
+  
+  // Operations section permissions  
+  ACCESS_MEETINGS: 'access_meetings',
+  ACCESS_ANALYTICS: 'access_analytics',
+  ACCESS_REPORTS: 'access_reports',
+  ACCESS_PROJECTS: 'access_projects',
+  ACCESS_ROLE_DEMO: 'access_role_demo',
+  
+  // Resources section permissions
+  ACCESS_SUGGESTIONS: 'access_suggestions',
+  ACCESS_SANDWICH_DATA: 'access_sandwich_data',
+  
+  // Granular management permissions for each section
   MANAGE_HOSTS: 'manage_hosts',
-  MANAGE_RECIPIENTS: 'manage_recipients',
+  MANAGE_RECIPIENTS: 'manage_recipients', 
   MANAGE_DRIVERS: 'manage_drivers',
   MANAGE_COLLECTIONS: 'manage_collections',
-  MANAGE_ANNOUNCEMENTS: 'manage_announcements',
-  MANAGE_COMMITTEES: 'manage_committees',
   MANAGE_PROJECTS: 'manage_projects',
+  MANAGE_MEETINGS: 'manage_meetings',
+  MANAGE_SUGGESTIONS: 'manage_suggestions',
   
-  // View permissions
-  VIEW_PHONE_DIRECTORY: 'view_phone_directory',
-  VIEW_HOSTS: 'view_hosts',
-  VIEW_RECIPIENTS: 'view_recipients',
-  VIEW_DRIVERS: 'view_drivers',
-  VIEW_COMMITTEE: 'view_committee',
-  VIEW_USERS: 'view_users',
-  VIEW_COLLECTIONS: 'view_collections',
-  VIEW_REPORTS: 'view_reports',
-  VIEW_MEETINGS: 'view_meetings',
-  VIEW_ANALYTICS: 'view_analytics',
-  VIEW_PROJECTS: 'view_projects',
-  VIEW_ROLE_DEMO: 'view_role_demo',
-  
-  // Edit permissions
-  EDIT_COLLECTIONS: 'edit_data',
-  EDIT_MEETINGS: 'edit_meetings',
-  DELETE_COLLECTIONS: 'delete_data',
+  // Data action permissions
+  EDIT_DATA: 'edit_data',
+  DELETE_DATA: 'delete_data',
+  EXPORT_DATA: 'export_data',
+  IMPORT_DATA: 'import_data',
   SCHEDULE_REPORTS: 'schedule_reports',
   
-  // Chat permissions
+  // Message and communication permissions
+  SEND_MESSAGES: 'send_messages',
+  MODERATE_MESSAGES: 'moderate_messages',
+  DIRECT_MESSAGES: 'direct_messages',
+  GROUP_MESSAGES: 'group_messages',
+  
+  // Chat-specific permissions
   GENERAL_CHAT: 'general_chat',
   COMMITTEE_CHAT: 'committee_chat',
   HOST_CHAT: 'host_chat',
   DRIVER_CHAT: 'driver_chat',
   RECIPIENT_CHAT: 'recipient_chat',
   CORE_TEAM_CHAT: 'core_team_chat',
-  DIRECT_MESSAGES: 'direct_messages',
-  GROUP_MESSAGES: 'group_messages',
-  SEND_MESSAGES: 'send_messages',
-  MODERATE_MESSAGES: 'moderate_messages',
-  EXPORT_DATA: 'export_data',
-  IMPORT_DATA: 'import_data',
   
-  // Toolkit access
-  TOOLKIT_ACCESS: 'toolkit_access',
-  
-  // Suggestions portal permissions
-  VIEW_SUGGESTIONS: 'view_suggestions',
-  SUBMIT_SUGGESTIONS: 'submit_suggestions',
-  MANAGE_SUGGESTIONS: 'manage_suggestions',
-  RESPOND_TO_SUGGESTIONS: 'respond_to_suggestions',
-  
-  // Data sheet access
-  VIEW_SANDWICH_DATA: 'view_sandwich_data'
+  // Legacy support for existing components
+  VIEW_PHONE_DIRECTORY: 'access_directory',
+  VIEW_HOSTS: 'access_hosts',
+  VIEW_RECIPIENTS: 'access_recipients', 
+  VIEW_DRIVERS: 'access_drivers',
+  VIEW_COLLECTIONS: 'access_collections',
+  VIEW_REPORTS: 'access_reports',
+  VIEW_MEETINGS: 'access_meetings',
+  VIEW_ANALYTICS: 'access_analytics',
+  VIEW_PROJECTS: 'access_projects',
+  VIEW_ROLE_DEMO: 'access_role_demo',
+  VIEW_SUGGESTIONS: 'access_suggestions',
+  VIEW_SANDWICH_DATA: 'access_sandwich_data',
+  VIEW_USERS: 'manage_users',
+  VIEW_COMMITTEE: 'committee_chat',
+  TOOLKIT_ACCESS: 'access_toolkit',
+  EDIT_COLLECTIONS: 'edit_data',
+  DELETE_COLLECTIONS: 'delete_data',
+  EDIT_MEETINGS: 'manage_meetings',
+  SUBMIT_SUGGESTIONS: 'access_suggestions',
+  RESPOND_TO_SUGGESTIONS: 'manage_suggestions'
 } as const;
 
 export function getDefaultPermissionsForRole(role: string): string[] {
@@ -78,111 +101,97 @@ export function getDefaultPermissionsForRole(role: string): string[] {
     
     case USER_ROLES.COMMITTEE_MEMBER:
       return [
-        PERMISSIONS.VIEW_PHONE_DIRECTORY,
-        PERMISSIONS.VIEW_HOSTS,
-        PERMISSIONS.VIEW_RECIPIENTS,
-        PERMISSIONS.VIEW_DRIVERS,
-        PERMISSIONS.VIEW_COMMITTEE,
+        // Can view these sections but not manage them
+        PERMISSIONS.ACCESS_DIRECTORY,
+        PERMISSIONS.ACCESS_COLLECTIONS,
+        PERMISSIONS.ACCESS_CHAT,
+        PERMISSIONS.ACCESS_MESSAGES,
+        PERMISSIONS.ACCESS_TOOLKIT,
+        PERMISSIONS.ACCESS_MEETINGS,
+        PERMISSIONS.ACCESS_ANALYTICS,
+        PERMISSIONS.ACCESS_REPORTS,
+        PERMISSIONS.ACCESS_ROLE_DEMO,
+        PERMISSIONS.ACCESS_SUGGESTIONS,
+        PERMISSIONS.ACCESS_SANDWICH_DATA,
         PERMISSIONS.GENERAL_CHAT,
-        PERMISSIONS.COMMITTEE_CHAT,
-        PERMISSIONS.DIRECT_MESSAGES,
-        PERMISSIONS.GROUP_MESSAGES,
-        PERMISSIONS.TOOLKIT_ACCESS,
-        PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_MEETINGS,
-        PERMISSIONS.VIEW_ANALYTICS,
-        PERMISSIONS.VIEW_ROLE_DEMO,
-        PERMISSIONS.VIEW_SANDWICH_DATA,
-        PERMISSIONS.SEND_MESSAGES,
-        PERMISSIONS.VIEW_SUGGESTIONS,
-        PERMISSIONS.SUBMIT_SUGGESTIONS
+        PERMISSIONS.COMMITTEE_CHAT
       ];
     
     case USER_ROLES.HOST:
       return [
-        PERMISSIONS.VIEW_PHONE_DIRECTORY,
+        PERMISSIONS.ACCESS_DIRECTORY,
+        PERMISSIONS.ACCESS_COLLECTIONS,
+        PERMISSIONS.ACCESS_CHAT,
+        PERMISSIONS.ACCESS_MESSAGES,
+        PERMISSIONS.ACCESS_TOOLKIT,
+        PERMISSIONS.ACCESS_REPORTS,
+        PERMISSIONS.ACCESS_PROJECTS,
+        PERMISSIONS.ACCESS_SUGGESTIONS,
+        PERMISSIONS.ACCESS_SANDWICH_DATA,
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.HOST_CHAT,
-        PERMISSIONS.DIRECT_MESSAGES,
-        PERMISSIONS.GROUP_MESSAGES,
-        PERMISSIONS.TOOLKIT_ACCESS,
-        PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS,
-        PERMISSIONS.VIEW_SANDWICH_DATA,
-        PERMISSIONS.SEND_MESSAGES,
-        PERMISSIONS.VIEW_SUGGESTIONS,
-        PERMISSIONS.SUBMIT_SUGGESTIONS
+        PERMISSIONS.EDIT_DATA
       ];
     
     case USER_ROLES.DRIVER:
       return [
-        PERMISSIONS.VIEW_PHONE_DIRECTORY,
+        PERMISSIONS.ACCESS_DIRECTORY,
+        PERMISSIONS.ACCESS_COLLECTIONS,
+        PERMISSIONS.ACCESS_CHAT,
+        PERMISSIONS.ACCESS_MESSAGES,
+        PERMISSIONS.ACCESS_TOOLKIT,
+        PERMISSIONS.ACCESS_REPORTS,
+        PERMISSIONS.ACCESS_PROJECTS,
+        PERMISSIONS.ACCESS_SUGGESTIONS,
+        PERMISSIONS.ACCESS_SANDWICH_DATA,
         PERMISSIONS.GENERAL_CHAT,
-        PERMISSIONS.DRIVER_CHAT,
-        PERMISSIONS.DIRECT_MESSAGES,
-        PERMISSIONS.GROUP_MESSAGES,
-        PERMISSIONS.TOOLKIT_ACCESS,
-        PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS,
-        PERMISSIONS.VIEW_SANDWICH_DATA,
-        PERMISSIONS.SEND_MESSAGES,
-        PERMISSIONS.VIEW_SUGGESTIONS,
-        PERMISSIONS.SUBMIT_SUGGESTIONS
+        PERMISSIONS.DRIVER_CHAT
       ];
     
     case USER_ROLES.VOLUNTEER:
       return [
-        PERMISSIONS.VIEW_PHONE_DIRECTORY,  // Need this for navigation access
+        PERMISSIONS.ACCESS_COLLECTIONS,
+        PERMISSIONS.ACCESS_CHAT,
+        PERMISSIONS.ACCESS_MESSAGES,
+        PERMISSIONS.ACCESS_TOOLKIT,
+        PERMISSIONS.ACCESS_REPORTS,
+        PERMISSIONS.ACCESS_PROJECTS,
+        PERMISSIONS.ACCESS_SUGGESTIONS,
         PERMISSIONS.GENERAL_CHAT,
-        PERMISSIONS.DIRECT_MESSAGES,
-        PERMISSIONS.GROUP_MESSAGES,
-        PERMISSIONS.TOOLKIT_ACCESS,
-        PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS,
-        PERMISSIONS.EDIT_COLLECTIONS,  // For development tab access
-        PERMISSIONS.SEND_MESSAGES,
-        PERMISSIONS.SUBMIT_SUGGESTIONS
+        PERMISSIONS.EDIT_DATA
       ];
     
     case USER_ROLES.RECIPIENT:
       return [
+        PERMISSIONS.ACCESS_COLLECTIONS,
+        PERMISSIONS.ACCESS_CHAT,
+        PERMISSIONS.ACCESS_MESSAGES,
         PERMISSIONS.GENERAL_CHAT,
-        PERMISSIONS.RECIPIENT_CHAT,
-        PERMISSIONS.DIRECT_MESSAGES,
-        PERMISSIONS.GROUP_MESSAGES,
-        PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.SEND_MESSAGES
+        PERMISSIONS.RECIPIENT_CHAT
       ];
     
     case USER_ROLES.VIEWER:
       return [
-        PERMISSIONS.VIEW_PHONE_DIRECTORY,
-        PERMISSIONS.DIRECT_MESSAGES,
-        PERMISSIONS.GROUP_MESSAGES,
-        PERMISSIONS.TOOLKIT_ACCESS,
-        PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS,
-        PERMISSIONS.VIEW_SANDWICH_DATA,
-        PERMISSIONS.SEND_MESSAGES
+        PERMISSIONS.ACCESS_DIRECTORY,
+        PERMISSIONS.ACCESS_COLLECTIONS,
+        PERMISSIONS.ACCESS_MESSAGES,
+        PERMISSIONS.ACCESS_TOOLKIT,
+        PERMISSIONS.ACCESS_REPORTS,
+        PERMISSIONS.ACCESS_PROJECTS,
+        PERMISSIONS.ACCESS_SANDWICH_DATA
       ];
     
     case USER_ROLES.WORK_LOGGER:
       return [
-        PERMISSIONS.VIEW_PHONE_DIRECTORY,
+        PERMISSIONS.ACCESS_DIRECTORY,
+        PERMISSIONS.ACCESS_COLLECTIONS,
+        PERMISSIONS.ACCESS_CHAT,
+        PERMISSIONS.ACCESS_MESSAGES,
+        PERMISSIONS.ACCESS_TOOLKIT,
+        PERMISSIONS.ACCESS_REPORTS,
+        PERMISSIONS.ACCESS_PROJECTS,
         PERMISSIONS.GENERAL_CHAT,
-        PERMISSIONS.DIRECT_MESSAGES,
-        PERMISSIONS.GROUP_MESSAGES,
-        PERMISSIONS.TOOLKIT_ACCESS,
-        PERMISSIONS.VIEW_COLLECTIONS,
-        PERMISSIONS.VIEW_REPORTS,
-        PERMISSIONS.VIEW_PROJECTS,
-        PERMISSIONS.SEND_MESSAGES,
-        'log_work' // Custom permission for work logging
+        'log_work'
       ];
     
     default:

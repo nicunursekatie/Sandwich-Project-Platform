@@ -17,7 +17,7 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Users, Shield, Settings, Key, Award, Megaphone, Trash2, Bug } from "lucide-react";
 import AnnouncementManager from "@/components/announcement-manager";
 import AuthDebug from "@/components/auth-debug";
-import { UserPermissionsDialog } from "@/components/user-permissions-dialog";
+import { SimplePermissionsDialog } from "@/components/simple-permissions-dialog";
 
 interface User {
   id: string;
@@ -59,7 +59,7 @@ export default function UserManagement() {
 
   const { data: users = [], isLoading } = useQuery<User[]>({
     queryKey: ["/api/users"],
-    enabled: hasPermission(currentUser, PERMISSIONS.VIEW_USERS),
+    enabled: hasPermission(currentUser, PERMISSIONS.MANAGE_USERS),
   });
 
   const updateUserMutation = useMutation({
@@ -167,7 +167,7 @@ export default function UserManagement() {
     ];
     
     const randomAchievement = achievements[Math.floor(Math.random() * achievements.length)];
-    const congratsMessage = `${user.firstName} ${user.lastName} - ${randomAchievement}! From ${currentUser?.firstName || 'Admin'}`;
+    const congratsMessage = `${user.firstName} ${user.lastName} - ${randomAchievement}! From ${(currentUser as any)?.firstName || 'Admin'}`;
     
     triggerCelebration(congratsMessage);
     
@@ -447,7 +447,7 @@ export default function UserManagement() {
       />
       
       {/* User Permissions Dialog */}
-      <UserPermissionsDialog
+      <SimplePermissionsDialog
         user={selectedUser}
         open={!!selectedUser}
         onOpenChange={(open) => {
