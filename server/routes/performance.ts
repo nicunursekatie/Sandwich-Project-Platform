@@ -1,7 +1,6 @@
 import type { Express } from "express";
 import { QueryOptimizer } from "../performance/query-optimizer";
 import { CacheManager } from "../performance/cache-manager";
-import { logger } from "../utils/logger";
 
 export function registerPerformanceRoutes(app: Express) {
   // Performance health check endpoint
@@ -16,7 +15,7 @@ export function registerPerformanceRoutes(app: Express) {
         timestamp: new Date().toISOString()
       });
     } catch (error) {
-      logger.error('Performance health check failed:', error);
+      console.error('Performance health check failed:', error);
       res.status(500).json({ 
         error: 'Failed to get performance metrics',
         timestamp: new Date().toISOString()
@@ -47,7 +46,7 @@ export function registerPerformanceRoutes(app: Express) {
         res.status(400).json({ error: 'Invalid action' });
       }
     } catch (error) {
-      logger.error('Performance optimization failed:', error);
+      console.error('Performance optimization failed:', error);
       res.status(500).json({ 
         error: 'Failed to perform optimization',
         timestamp: new Date().toISOString()
@@ -75,7 +74,7 @@ export function registerPerformanceRoutes(app: Express) {
         res.json({ message: 'All caches cleared' });
       }
     } catch (error) {
-      logger.error('Cache invalidation failed:', error);
+      console.error('Cache invalidation failed:', error);
       res.status(500).json({ error: 'Failed to invalidate cache' });
     }
   });
@@ -89,7 +88,7 @@ export function registerPerformanceRoutes(app: Express) {
         timestamp: new Date().toISOString()
       });
     } catch (error) {
-      logger.error('Cache warming failed:', error);
+      console.error('Cache warming failed:', error);
       res.status(500).json({ error: 'Failed to warm caches' });
     }
   });
@@ -105,7 +104,7 @@ export function registerPerformanceRoutes(app: Express) {
         timestamp: new Date().toISOString()
       });
     } catch (error) {
-      logger.error('Cache maintenance failed:', error);
+      console.error('Cache maintenance failed:', error);
       res.status(500).json({ error: 'Failed to perform cache maintenance' });
     }
   });
@@ -141,7 +140,7 @@ export function registerPerformanceRoutes(app: Express) {
         timestamp: new Date().toISOString()
       });
     } catch (error) {
-      logger.error('Performance dashboard failed:', error);
+      console.error('Performance dashboard failed:', error);
       res.status(500).json({ 
         error: 'Failed to get performance dashboard data',
         timestamp: new Date().toISOString()

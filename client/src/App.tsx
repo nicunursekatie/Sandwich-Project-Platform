@@ -11,7 +11,6 @@ import { ErrorBoundary } from "@/components/error-boundary";
 
 import Dashboard from "@/pages/dashboard";
 import Landing from "@/pages/landing";
-
 import SignupPage from "@/pages/signup";
 import NotFound from "@/pages/not-found";
 
@@ -61,7 +60,7 @@ function Router() {
       <Route path="/google-sheets">{() => <Dashboard initialSection="google-sheets" />}</Route>
       <Route path="/dashboard">{() => <Dashboard />}</Route>
       <Route path="/dashboard/:section">{(params) => <Dashboard initialSection={params.section} />}</Route>
-      <Route path="/">{() => <Dashboard />}</Route>
+      <Route path="/" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
   );

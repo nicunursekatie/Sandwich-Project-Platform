@@ -1,10 +1,9 @@
 import { db } from "./db";
 import { sql } from "drizzle-orm";
-import { logger } from "./utils/logger";
 
 export async function ensureSessionsTable() {
   try {
-    logger.info("Checking sessions table...");
+    console.log("Checking sessions table...");
     
     // Create sessions table if it doesn't exist
     // This matches the schema expected by connect-pg-simple
@@ -22,9 +21,9 @@ export async function ensureSessionsTable() {
       CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON sessions (expire);
     `);
     
-    logger.info("Sessions table ready");
+    console.log("Sessions table ready");
   } catch (error) {
-    logger.error("Failed to create sessions table:", error);
+    console.error("Failed to create sessions table:", error);
     throw error;
   }
 }
@@ -33,11 +32,11 @@ export async function ensureSessionsTable() {
 if (import.meta.url === `file://${process.argv[1]}`) {
   ensureSessionsTable()
     .then(() => {
-      logger.info("Session migration complete");
+      console.log("Session migration complete");
       process.exit(0);
     })
     .catch((error) => {
-      logger.error("Session migration failed:", error);
+      console.error("Session migration failed:", error);
       process.exit(1);
     });
 }

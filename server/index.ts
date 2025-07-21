@@ -1,14 +1,10 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { WebSocketServer } from "ws";
-import { registerModularRoutes } from "./routes/index";
+import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { initializeDatabase } from "./db-init";
 import { setupSocketChat } from "./socket-chat";
-import { logger } from "./utils/logger";
-
-// Make logger available globally for vite.ts compatibility  
-(global as any).logger = logger;
 
 const app = express();
 app.use(express.json());
@@ -46,7 +42,7 @@ app.use((req, res, next) => {
 
 async function startServer() {
   try {
-    logger.info("🚀 Starting The Sandwich Project server...");
+    console.log("🚀 Starting The Sandwich Project server...");
 
     // Health check route
     app.get("/health", (_req: Request, res: Response) => {
@@ -63,14 +59,14 @@ async function startServer() {
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
-      logger.error("Error:", err);
+      console.error("Error:", err);
       res.status(status).json({ message });
     });
 
     const port = process.env.PORT || 5000;
     const host = process.env.HOST || "0.0.0.0";
 
-    logger.info(`Starting server on ${host}:${port} in ${process.env.NODE_ENV || "development"} mode`);
+    console.log(`Starting server on ${host}:${port} in ${process.env.NODE_ENV || "development"} mode`);
 
     // Retry port allocation for deployment robustness
     const tryPort = async (basePort: number, maxRetries = 5): Promise<number> => {
@@ -88,7 +84,7 @@ async function startServer() {
           return testPort;
         } catch (err) {
           if (i === maxRetries - 1) {
-            logger.info(`⚠ All ports busy, using ${basePort} anyway`);
+            console.log(`⚠ All ports busy, using ${basePort} anyway`);
             return basePort;
           }
           continue;
@@ -120,7 +116,7 @@ async function startServer() {
         res.sendFile(path.join(process.cwd(), "dist/public/index.html"));
       });
 
-      logger.info("✓ Static file serving and SPA routing configured for production");
+      console.log("✓ Static file serving and SPA routing configured for production");
     }
 
     // Use smart port selection in production
@@ -140,47 +136,47 @@ async function startServer() {
     const clients = new Map<string, any>();
 
     wss.on('connection', (ws, request) => {
-      logger.info('WebSocket client connected from:', request.socket.remoteAddress);
+      console.log('WebSocket client connected from:', request.socket.remoteAddress);
 
       ws.on('message', (data) => {
         try {
           const message = JSON.parse(data.toString());
           if (message.type === 'identify' && message.userId) {
             clients.set(message.userId, ws);
-            logger.info(`User ${message.userId} identified for notifications`);
+            console.log(`User ${message.userId} identified for notifications`);
           }
         } catch (error) {
-          logger.error('WebSocket message parse error:', error);
+          console.error('WebSocket message parse error:', error);
         }
       });
 
       ws.on('close', () => {
         // Remove client from map when disconnected
-        for (const [userId, client] of Array.from(clients.entries())) {
+        for (const [userId, client] of clients.entries()) {
           if (client === ws) {
             clients.delete(userId);
-            logger.info(`User ${userId} disconnected from notifications`);
+            console.log(`User ${userId} disconnected from notifications`);
             break;
           }
         }
       });
 
       ws.on('error', (error) => {
-        logger.error('WebSocket error:', error);
+        console.error('WebSocket error:', error);
       });
     });
 
     // Global broadcast function for messaging system
     (global as any).broadcastNewMessage = async (data: any) => {
-      logger.info(`Broadcasting message to ${clients.size} connected clients`);
+      console.log('Broadcasting message to', clients.size, 'connected clients');
       
       // Broadcast to all connected clients
-      for (const [userId, ws] of Array.from(clients.entries())) {
+      for (const [userId, ws] of clients.entries()) {
         if (ws.readyState === 1) { // WebSocket.OPEN
           try {
             ws.send(JSON.stringify(data));
           } catch (error) {
-            logger.error(`Error sending message to user ${userId}:`, error);
+            console.error(`Error sending message to user ${userId}:`, error);
             // Remove dead connection
             clients.delete(userId);
           }
@@ -192,39 +188,25 @@ async function startServer() {
     };
 
     httpServer.listen(finalPort, host, () => {
-      logger.info(`✓ Server is running on http://${host}:${finalPort}`);
-      logger.info(`✓ WebSocket server ready on ws://${host}:${finalPort}/notifications`);
-      logger.info(`✓ Environment: ${process.env.NODE_ENV || "development"}`);
-      logger.info("✓ Basic server ready - starting background initialization...");
+      console.log(`✓ Server is running on http://${host}:${finalPort}`);
+      console.log(`✓ WebSocket server ready on ws://${host}:${finalPort}/notifications`);
+      console.log(`✓ Environment: ${process.env.NODE_ENV || "development"}`);
+      console.log("✓ Basic server ready - starting background initialization...");
 
       // Signal deployment readiness to Replit
       if (process.env.NODE_ENV === "production") {
-        logger.info("🚀 PRODUCTION SERVER READY FOR TRAFFIC 🚀");
-        logger.info("Server is fully operational and accepting connections");
+        console.log("🚀 PRODUCTION SERVER READY FOR TRAFFIC 🚀");
+        console.log("Server is fully operational and accepting connections");
       }
 
       // Do heavy initialization in background after server is listening
       setImmediate(async () => {
         try {
           await initializeDatabase();
-          logger.info("✓ Database initialization complete");
+          console.log("✓ Database initialization complete");
 
-          // Register API routes FIRST, before Vite setup
-          registerModularRoutes(app);
-          logger.info("✓ Routes registered successfully");
-
-          if (process.env.NODE_ENV === "development") {
-            try {
-              const { setupVite } = await import("./vite");
-              await setupVite(app, httpServer);
-              logger.info("✓ Vite development server setup complete");
-            } catch (error) {
-              logger.info(
-                "⚠ Vite setup failed, continuing without it:",
-                error?.message || String(error),
-              );
-            }
-          }
+          const server = await registerRoutes(app);
+          console.log("✓ Routes registered successfully");
 
           // Update health check to reflect full init
           app.get("/health", (_req: Request, res: Response) => {
@@ -237,12 +219,48 @@ async function startServer() {
             });
           });
 
-          logger.info(
+          if (process.env.NODE_ENV === "development") {
+            try {
+              const { setupVite } = await import("./vite");
+              await setupVite(app, httpServer);
+              console.log("✓ Vite development server setup complete");
+            } catch (error) {
+              console.log(
+                "⚠ Vite setup failed, continuing without it:",
+                error.message,
+              );
+            }
+          } else {
+              // Add catch-all for unknown routes before SPA
+              app.use("*", (req, res, next) => {
+                console.log(`Catch-all route hit: ${req.method} ${req.originalUrl}`);
+                if (req.originalUrl.startsWith('/api')) {
+                  return res.status(404).json({ error: `API route not found: ${req.originalUrl}` });
+                }
+                next();
+              });
+
+              // In production, serve React app for all non-API routes
+              app.get("*", async (_req: Request, res: Response) => {
+                try {
+                  const path = await import("path");
+                  const indexPath = path.join(process.cwd(), "dist/public/index.html");
+                  console.log(`Serving SPA for route: ${_req.path}, file: ${indexPath}`);
+                  res.sendFile(indexPath);
+                } catch (error) {
+                  console.error("SPA serving error:", error);
+                  res.status(500).send("Error serving application");
+                }
+              });
+              console.log("✓ Production SPA routing configured");
+            }
+
+          console.log(
             "✓ The Sandwich Project server is fully ready to handle requests",
           );
         } catch (initError) {
-          logger.error("✗ Background initialization failed:", initError);
-          logger.info("Server continues to run with basic functionality...");
+          console.error("✗ Background initialization failed:", initError);
+          console.log("Server continues to run with basic functionality...");
         }
       });
     });
@@ -250,16 +268,16 @@ async function startServer() {
     // Graceful shutdown - disabled in production to prevent exit
     const shutdown = async (signal: string) => {
       if (process.env.NODE_ENV === "production") {
-        logger.info(`⚠ Ignoring ${signal} in production mode - server will continue running`);
+        console.log(`⚠ Ignoring ${signal} in production mode - server will continue running`);
         return;
       }
-      logger.info(`Received ${signal}, starting graceful shutdown...`);
+      console.log(`Received ${signal}, starting graceful shutdown...`);
       httpServer.close(() => {
-        logger.info("HTTP server closed gracefully");
+        console.log("HTTP server closed gracefully");
         setTimeout(() => process.exit(0), 1000);
       });
       setTimeout(() => {
-        logger.info("Forcing shutdown after timeout");
+        console.log("Forcing shutdown after timeout");
         process.exit(1);
       }, 10000);
     };
@@ -268,19 +286,19 @@ async function startServer() {
     process.on("SIGINT", () => shutdown("SIGINT"));
 
     process.on("uncaughtException", (error) => {
-      logger.error("Uncaught Exception:", error);
+      console.error("Uncaught Exception:", error);
       // Don't shutdown in production to keep deployment stable
       if (process.env.NODE_ENV !== "production") {
         shutdown("uncaughtException");
       } else {
-        logger.info("Production mode: continuing operation despite uncaught exception...");
+        console.log("Production mode: continuing operation despite uncaught exception...");
       }
     });
 
     process.on("unhandledRejection", (reason, promise) => {
-      logger.error("Unhandled Rejection at:", promise, "reason:", reason);
+      console.error("Unhandled Rejection at:", promise, "reason:", reason);
       // Never shutdown for unhandled rejections - just log them
-      logger.info("Continuing server operation despite unhandled rejection...");
+      console.log("Continuing server operation despite unhandled rejection...");
     });
 
     // Keep the process alive in production with multiple strategies
@@ -296,19 +314,19 @@ async function startServer() {
       // Strategy 3: Override process.exit in production
       const originalExit = process.exit;
       process.exit = ((code?: number) => {
-        logger.info(`⚠ Prevented process.exit(${code}) in production mode`);
-        logger.info("Server will continue running...");
+        console.log(`⚠ Prevented process.exit(${code}) in production mode`);
+        console.log("Server will continue running...");
         return undefined as never;
       }) as typeof process.exit;
 
-      logger.info("✓ Production process keep-alive strategies activated");
+      console.log("✓ Production process keep-alive strategies activated");
     }
 
     return httpServer;
   } catch (error) {
-    logger.error("✗ Server startup failed:", error);
+    console.error("✗ Server startup failed:", error);
     const fallbackServer = app.listen(5000, "0.0.0.0", () => {
-      logger.info("✓ Minimal fallback server listening on http://0.0.0.0:5000");
+      console.log("✓ Minimal fallback server listening on http://0.0.0.0:5000");
     });
     return fallbackServer;
   }
@@ -317,20 +335,20 @@ async function startServer() {
 // Final launch
 startServer()
   .then((server) => {
-    logger.info("✓ Server startup sequence completed successfully");
-    logger.info("✓ Server object:", server ? "EXISTS" : "NULL");
+    console.log("✓ Server startup sequence completed successfully");
+    console.log("✓ Server object:", server ? "EXISTS" : "NULL");
 
     setInterval(() => {
-      logger.info(
+      console.log(
         `✓ KEEPALIVE - Server still listening: ${server?.listening || "UNKNOWN"}`,
       );
     }, 30000);
   })
   .catch((error) => {
-    logger.error("✗ Failed to start server:", error);
+    console.error("✗ Failed to start server:", error);
     // Don't exit in production - try to start a minimal server instead
     if (process.env.NODE_ENV === "production") {
-      logger.info("Starting minimal fallback server for production...");
+      console.log("Starting minimal fallback server for production...");
       const express = require("express");
       const fallbackApp = express();
 
@@ -353,11 +371,11 @@ startServer()
       }));
 
       const fallbackServer = fallbackApp.listen(5000, "0.0.0.0", () => {
-        logger.info("✓ Minimal fallback server running on port 5000");
+        console.log("✓ Minimal fallback server running on port 5000");
 
         // Keep fallback server alive too
         setInterval(() => {
-          logger.info("✓ Fallback server heartbeat");
+          console.log("✓ Fallback server heartbeat");
         }, 30000);
       });
 

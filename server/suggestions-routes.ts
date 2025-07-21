@@ -4,7 +4,6 @@ import { storage } from './storage';
 import { insertSuggestionSchema, insertSuggestionResponseSchema } from "@shared/schema";
 import { isAuthenticated, requirePermission } from './temp-auth';
 import { PERMISSIONS } from "@shared/auth-utils";
-import { logger } from "./utils/logger";
 
 const router = Router();
 
@@ -16,7 +15,7 @@ router.get('/', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), async (req, r
     const suggestions = await storage.getAllSuggestions();
     res.json(suggestions);
   } catch (error) {
-    logger.error('Error fetching suggestions:', error);
+    console.error('Error fetching suggestions:', error);
     res.status(500).json({ error: 'Failed to fetch suggestions' });
   }
 });
@@ -31,7 +30,7 @@ router.get('/:id', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), async (req
     }
     res.json(suggestion);
   } catch (error) {
-    logger.error('Error fetching suggestion:', error);
+    console.error('Error fetching suggestion:', error);
     res.status(500).json({ error: 'Failed to fetch suggestion' });
   }
 });
@@ -39,11 +38,11 @@ router.get('/:id', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), async (req
 // Create new suggestion
 router.post('/', requirePermission([PERMISSIONS.SUBMIT_SUGGESTIONS]), async (req, res) => {
   try {
-    logger.info('=== SUGGESTION SUBMISSION DEBUG ===');
-    logger.info('Request body:', JSON.stringify(req.body, null, 2));
-    logger.info('User from request:', (req as any).user);
-    logger.info('Session:', req.session);
-    logger.info('Session user:', req.session?.user);
+    console.log('=== SUGGESTION SUBMISSION DEBUG ===');
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+    console.log('User from request:', (req as any).user);
+    console.log('Session:', req.session);
+    console.log('Session user:', req.session?.user);
     
     const validatedData = insertSuggestionSchema.parse(req.body);
     
@@ -62,14 +61,14 @@ router.post('/', requirePermission([PERMISSIONS.SUBMIT_SUGGESTIONS]), async (req
     res.status(201).json(suggestion);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      logger.info('=== VALIDATION ERROR ===');
-      logger.info('Zod validation errors:', JSON.stringify(error?.errors || "Unknown", null, 2));
+      console.log('=== VALIDATION ERROR ===');
+      console.log('Zod validation errors:', JSON.stringify(error.errors, null, 2));
       return res.status(400).json({ 
         error: 'Validation failed', 
-        details: error?.errors || "Unknown" 
+        details: error.errors 
       });
     }
-    logger.error('Error creating suggestion:', error);
+    console.error('Error creating suggestion:', error);
     res.status(500).json({ error: 'Failed to create suggestion' });
   }
 });
@@ -86,7 +85,7 @@ router.patch('/:id', requirePermission([PERMISSIONS.MANAGE_SUGGESTIONS]), async 
     }
     res.json(suggestion);
   } catch (error) {
-    logger.error('Error updating suggestion:', error);
+    console.error('Error updating suggestion:', error);
     res.status(500).json({ error: 'Failed to update suggestion' });
   }
 });
@@ -101,7 +100,7 @@ router.delete('/:id', requirePermission([PERMISSIONS.MANAGE_SUGGESTIONS]), async
     }
     res.json({ success: true });
   } catch (error) {
-    logger.error('Error deleting suggestion:', error);
+    console.error('Error deleting suggestion:', error);
     res.status(500).json({ error: 'Failed to delete suggestion' });
   }
 });
@@ -116,7 +115,7 @@ router.post('/:id/upvote', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), as
     }
     res.json({ success: true });
   } catch (error) {
-    logger.error('Error upvoting suggestion:', error);
+    console.error('Error upvoting suggestion:', error);
     res.status(500).json({ error: 'Failed to upvote suggestion' });
   }
 });
@@ -128,7 +127,7 @@ router.get('/:id/responses', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), 
     const responses = await storage.getSuggestionResponses(suggestionId);
     res.json(responses);
   } catch (error) {
-    logger.error('Error fetching suggestion responses:', error);
+    console.error('Error fetching suggestion responses:', error);
     res.status(500).json({ error: 'Failed to fetch responses' });
   }
 });
@@ -156,10 +155,10 @@ router.post('/:id/responses', requirePermission([PERMISSIONS.RESPOND_TO_SUGGESTI
     if (error instanceof z.ZodError) {
       return res.status(400).json({ 
         error: 'Validation failed', 
-        details: error?.errors || "Unknown" 
+        details: error.errors 
       });
     }
-    logger.error('Error creating suggestion response:', error);
+    console.error('Error creating suggestion response:', error);
     res.status(500).json({ error: 'Failed to create response' });
   }
 });
@@ -174,7 +173,7 @@ router.delete('/responses/:responseId', requirePermission([PERMISSIONS.RESPOND_T
     }
     res.json({ success: true });
   } catch (error) {
-    logger.error('Error deleting suggestion response:', error);
+    console.error('Error deleting suggestion response:', error);
     res.status(500).json({ error: 'Failed to delete response' });
   }
 });
@@ -208,7 +207,7 @@ router.post('/:id/clarification', requirePermission([PERMISSIONS.MANAGE_SUGGESTI
       return res.status(400).json({ error: 'Cannot send clarification to anonymous suggestion' });
     }
     
-    logger.info(`[CLARIFICATION] Sending clarification request from ${currentUser.id} to ${creatorUserId} for suggestion ${suggestionId}`);
+    console.log(`[CLARIFICATION] Sending clarification request from ${currentUser.id} to ${creatorUserId} for suggestion ${suggestionId}`);
     
     // Create or find direct conversation between current user and suggestion creator
     let conversation = await storage.getDirectConversation(currentUser.id, creatorUserId);
@@ -238,7 +237,7 @@ router.post('/:id/clarification', requirePermission([PERMISSIONS.MANAGE_SUGGESTI
         role: 'member'
       });
       
-      logger.info(`[CLARIFICATION] Created new direct conversation ${conversation.id}`);
+      console.log(`[CLARIFICATION] Created new direct conversation ${conversation.id}`);
     }
     
     // Send clarification message
@@ -252,7 +251,7 @@ router.post('/:id/clarification', requirePermission([PERMISSIONS.MANAGE_SUGGESTI
     };
     
     const sentMessage = await storage.createMessage(messageData);
-    logger.info(`[CLARIFICATION] Sent clarification message ${sentMessage.id} in conversation ${conversation.id}`);
+    console.log(`[CLARIFICATION] Sent clarification message ${sentMessage.id} in conversation ${conversation.id}`);
     
     res.json({ 
       success: true, 
@@ -262,7 +261,7 @@ router.post('/:id/clarification', requirePermission([PERMISSIONS.MANAGE_SUGGESTI
     });
     
   } catch (error) {
-    logger.error('Error sending clarification request:', error);
+    console.error('Error sending clarification request:', error);
     res.status(500).json({ error: 'Failed to send clarification request' });
   }
 });

@@ -9,7 +9,6 @@ import {
   hostContacts
 } from "@shared/schema";
 import { sql, ilike, or, and, gte, lte } from "drizzle-orm";
-import { logger } from "./utils/logger";
 
 export interface SearchFilters {
   dateRange?: {
@@ -97,7 +96,7 @@ export class SearchEngine {
         }
       }));
     } catch (error) {
-      logger.error('Collection search failed:', error);
+      console.error('Collection search failed:', error);
       return [];
     }
   }
@@ -145,7 +144,7 @@ export class SearchEngine {
         }
       }));
     } catch (error) {
-      logger.error('Host search failed:', error);
+      console.error('Host search failed:', error);
       return [];
     }
   }
@@ -200,7 +199,7 @@ export class SearchEngine {
         }
       }));
     } catch (error) {
-      logger.error('Project search failed:', error);
+      console.error('Project search failed:', error);
       return [];
     }
   }
@@ -247,7 +246,7 @@ export class SearchEngine {
         }
       }));
     } catch (error) {
-      logger.error('Contact search failed:', error);
+      console.error('Contact search failed:', error);
       return [];
     }
   }
@@ -293,7 +292,7 @@ export class SearchEngine {
         summary
       };
     } catch (error) {
-      logger.error('Global search failed:', error);
+      console.error('Global search failed:', error);
       return {
         results: [],
         summary: { collections: 0, hosts: 0, projects: 0, contacts: 0, total: 0 }
@@ -326,7 +325,7 @@ export class SearchEngine {
 
       return Array.from(suggestions).slice(0, 10);
     } catch (error) {
-      logger.error('Search suggestions failed:', error);
+      console.error('Search suggestions failed:', error);
       return [];
     }
   }

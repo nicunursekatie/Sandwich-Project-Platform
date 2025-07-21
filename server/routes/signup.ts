@@ -3,7 +3,6 @@ import { z } from "zod";
 import { storage } from "../storage-wrapper";
 import { db } from "../db";
 import { users } from "@shared/schema";
-import { logger } from "../utils/logger";
 
 const router = Router();
 
@@ -25,10 +24,10 @@ const signupSchema = z.object({
 });
 
 router.post("/auth/signup", async (req, res) => {
-  logger.info("=== SIGNUP ROUTE HIT ===");
-  logger.info("Request method:", req.method);
-  logger.info("Request URL:", req.url);
-  logger.info("Request body:", req.body);
+  console.log("=== SIGNUP ROUTE HIT ===");
+  console.log("Request method:", req.method);
+  console.log("Request URL:", req.url);
+  console.log("Request body:", req.body);
   try {
     // Validate request body
     const validatedData = signupSchema.parse(req.body);
@@ -45,7 +44,7 @@ router.post("/auth/signup", async (req, res) => {
     const userId = "user_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
     
     // Use direct database insert with explicit casting
-    logger.info("Creating user with ID:", userId);
+    console.log("Creating user with ID:", userId);
     const [newUser] = await db.insert(users).values({
       id: userId,
       email: validatedData.email,
@@ -60,10 +59,10 @@ router.post("/auth/signup", async (req, res) => {
         registrationDate: new Date().toISOString()
       } as any // Cast to any for metadata
     } as any).returning();
-    logger.info("User created successfully:", newUser);
+    console.log("User created successfully:", newUser);
 
     // Store registration details in a simple format for admin review
-    logger.info(`
+    console.log(`
 === NEW USER REGISTRATION ===
 Name: ${validatedData.firstName} ${validatedData.lastName}
 Email: ${validatedData.email}
@@ -85,12 +84,12 @@ Registration Date: ${new Date().toISOString()}
     });
 
   } catch (error) {
-    logger.error("Signup error:", error);
+    console.error("Signup error:", error);
     
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         message: "Invalid registration data",
-        errors: error?.errors || "Unknown"
+        errors: error.errors
       });
     }
 
@@ -111,7 +110,7 @@ router.get("/auth/pending-registrations", async (req, res) => {
 
     res.json(pendingUsers);
   } catch (error) {
-    logger.error("Error fetching pending registrations:", error);
+    console.error("Error fetching pending registrations:", error);
     res.status(500).json({ message: "Failed to fetch pending registrations" });
   }
 });
@@ -143,7 +142,7 @@ router.patch("/auth/approve-user/:userId", async (req, res) => {
     });
 
   } catch (error) {
-    logger.error("Error updating user approval:", error);
+    console.error("Error updating user approval:", error);
     res.status(500).json({ message: "Failed to update user status" });
   }
 });

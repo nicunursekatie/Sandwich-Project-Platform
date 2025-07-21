@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { logger as utilLogger } from "../utils/logger";
 
 export interface LogEntry {
   timestamp: string;
@@ -13,23 +12,6 @@ export interface LogEntry {
   responseTime?: number;
   error?: any;
   errors?: any; // For validation errors
-}
-
-// Forward declaration for logger (will be defined below)
-let logger: Logger;
-
-// Utility function to safely wrap async route handlers
-export function asyncHandler(fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch((error) => {
-      if (logger) {
-        logger.error(`Async handler error in ${req.method} ${req.url}`, error);
-      } else {
-        console.error(`Async handler error in ${req.method} ${req.url}`, error);
-      }
-      next(error);
-    });
-  };
 }
 
 class Logger {
@@ -58,13 +40,13 @@ class Logger {
     
     switch (entry.level) {
       case 'error':
-        utilLogger.error(logMessage, entry.error || '');
+        console.error(logMessage, entry.error || '');
         break;
       case 'warn':
-        utilLogger.warn(logMessage);
+        console.warn(logMessage);
         break;
       default:
-        utilLogger.info(logMessage);
+        console.log(logMessage);
     }
   }
 
@@ -90,8 +72,7 @@ class Logger {
   }
 }
 
-logger = new Logger();
-export { logger };
+export const logger = new Logger();
 
 // Express middleware for request logging
 export function requestLogger(req: Request, res: Response, next: NextFunction) {
@@ -116,7 +97,7 @@ export function requestLogger(req: Request, res: Response, next: NextFunction) {
 
 // Express error handling middleware
 export function errorLogger(err: Error, req: Request, res: Response, next: NextFunction) {
-  utilLogger.error(`Request failed: ${req.method} ${req.url}`, err, {
+  logger.error(`Request failed: ${req.method} ${req.url}`, err, {
     method: req.method,
     url: req.url,
     ip: req.ip,

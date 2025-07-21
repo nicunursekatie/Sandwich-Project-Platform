@@ -3,7 +3,6 @@ import { eq, sql, and } from "drizzle-orm";
 import { messages, conversations, conversationParticipants } from "../../shared/schema";
 import { db } from "../db";
 import { isAuthenticated } from "../temp-auth";
-import { logger } from "../utils/logger";
 
 // Helper function to check if user has permission for specific chat type
 function checkUserChatPermission(user: any, chatType: string): boolean {
@@ -36,15 +35,15 @@ function checkUserChatPermission(user: any, chatType: string): boolean {
 // Get unread message counts for a user
 const getUnreadCounts = async (req: Request, res: Response) => {
     try {
-      logger.info('=== UNREAD COUNTS REQUEST ===');
-      logger.info('req.user exists:', !!(req as any).user);
-      logger.info('req.user?.id:', (req as any).user?.id);
-      logger.info('req.session exists:', !!(req as any).session);
-      logger.info('req.session?.user exists:', !!(req as any).session?.user);
+      console.log('=== UNREAD COUNTS REQUEST ===');
+      console.log('req.user exists:', !!(req as any).user);
+      console.log('req.user?.id:', (req as any).user?.id);
+      console.log('req.session exists:', !!(req as any).session);
+      console.log('req.session?.user exists:', !!(req as any).session?.user);
       
       const userId = (req as any).user?.id;
       if (!userId) {
-        logger.info('Authentication failed: No user ID found');
+        console.log('Authentication failed: No user ID found');
         return res.status(401).json({ message: "Unauthorized" });
       }
 
@@ -136,13 +135,13 @@ const getUnreadCounts = async (req: Request, res: Response) => {
                            unreadCounts.direct + unreadCounts.groups;
 
       } catch (dbError) {
-        logger.error('Database query error in unread counts:', dbError);
+        console.error('Database query error in unread counts:', dbError);
         // Return fallback counts on database error
       }
 
       res.json(unreadCounts);
     } catch (error) {
-      logger.error("Error getting unread counts:", error);
+      console.error("Error getting unread counts:", error);
       res.status(500).json({ error: "Failed to get unread counts" });
     }
 };
@@ -164,7 +163,7 @@ const markMessagesRead = async (req: Request, res: Response) => {
       // TODO: Implement read tracking when messageReads table is added
       res.json({ success: true, markedCount: 0 });
     } catch (error) {
-      logger.error("Error marking messages as read:", error);
+      console.error("Error marking messages as read:", error);
       res.status(500).json({ error: "Failed to mark messages as read" });
     }
 };
@@ -180,7 +179,7 @@ const markAllRead = async (req: Request, res: Response) => {
       // TODO: Implement when messageReads table is added
       res.json({ success: true, markedCount: 0 });
     } catch (error) {
-      logger.error("Error marking all messages as read:", error);
+      console.error("Error marking all messages as read:", error);
       res.status(500).json({ error: "Failed to mark all messages as read" });
     }
 };

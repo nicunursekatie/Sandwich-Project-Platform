@@ -1,4 +1,3 @@
-import { logger } from "../utils/logger";
 import { Router } from 'express';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
@@ -25,7 +24,7 @@ router.get('/', async (req, res) => {
 
     res.json(sheets);
   } catch (error) {
-    logger.error('Error fetching Google Sheets:', error);
+    console.error('Error fetching Google Sheets:', error);
     res.status(500).json({ message: 'Failed to fetch Google Sheets' });
   }
 });
@@ -49,7 +48,7 @@ router.get('/:id', async (req, res) => {
 
     res.json(sheet);
   } catch (error) {
-    logger.error('Error fetching Google Sheet:', error);
+    console.error('Error fetching Google Sheet:', error);
     res.status(500).json({ message: 'Failed to fetch Google Sheet' });
   }
 });
@@ -78,11 +77,11 @@ router.post('/', isAuthenticated, async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ 
         message: 'Invalid input data',
-        errors: error?.errors || "Unknown" 
+        errors: error.errors 
       });
     }
     
-    logger.error('Error creating Google Sheet:', error);
+    console.error('Error creating Google Sheet:', error);
     res.status(500).json({ message: 'Failed to create Google Sheet' });
   }
 });
@@ -123,11 +122,11 @@ router.patch('/:id', isAuthenticated, async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ 
         message: 'Invalid input data',
-        errors: error?.errors || "Unknown" 
+        errors: error.errors 
       });
     }
     
-    logger.error('Error updating Google Sheet:', error);
+    console.error('Error updating Google Sheet:', error);
     res.status(500).json({ message: 'Failed to update Google Sheet' });
   }
 });
@@ -151,7 +150,7 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
 
     res.json({ message: 'Google Sheet deleted successfully' });
   } catch (error) {
-    logger.error('Error deleting Google Sheet:', error);
+    console.error('Error deleting Google Sheet:', error);
     res.status(500).json({ message: 'Failed to delete Google Sheet' });
   }
 });
@@ -182,7 +181,7 @@ router.post('/:id/test', async (req, res) => {
       message: response.ok ? 'Sheet is accessible' : 'Sheet may not be publicly accessible'
     });
   } catch (error) {
-    logger.error('Error testing Google Sheet accessibility:', error);
+    console.error('Error testing Google Sheet accessibility:', error);
     res.json({ 
       accessible: false,
       message: 'Unable to test sheet accessibility'
@@ -208,11 +207,11 @@ router.get('/sync/analyze', async (req, res) => {
       targetSpreadsheetId: '1mjx5o6boluo8mNx8tzAV76NBGS6tF0um2Rq9bIdxPo8'
     });
   } catch (error) {
-    logger.error('Error analyzing Google Sheet:', error);
+    console.error('Error analyzing Google Sheet:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Google Sheets analysis failed. Please check API credentials.',
-      error: error?.message || String(error) 
+      error: error.message 
     });
   }
 });
@@ -252,11 +251,11 @@ router.post('/sync/import', isAuthenticated, async (req, res) => {
         : `Import complete: ${result.imported} records imported, ${result.skipped} skipped`
     });
   } catch (error) {
-    logger.error('Error importing from Google Sheet:', error);
+    console.error('Error importing from Google Sheet:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Google Sheets import failed',
-      error: error?.message || String(error) 
+      error: error.message 
     });
   }
 });
@@ -278,11 +277,11 @@ router.post('/sync/export', isAuthenticated, async (req, res) => {
       message: `Export complete: ${result.exported} records exported to ${sheetName}`
     });
   } catch (error) {
-    logger.error('Error exporting to Google Sheet:', error);
+    console.error('Error exporting to Google Sheet:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Google Sheets export failed',
-      error: error?.message || String(error) 
+      error: error.message 
     });
   }
 });
@@ -313,11 +312,11 @@ router.post('/sync/bidirectional', isAuthenticated, async (req, res) => {
       message: `Sync complete: ${result.syncSummary}`
     });
   } catch (error) {
-    logger.error('Error syncing with Google Sheet:', error);
+    console.error('Error syncing with Google Sheet:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Google Sheets sync failed',
-      error: error?.message || String(error) 
+      error: error.message 
     });
   }
 });

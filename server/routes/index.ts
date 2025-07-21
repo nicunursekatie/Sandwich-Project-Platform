@@ -1,53 +1,47 @@
-import { Express } from "express";
-import authRoutes from "./auth";
-import usersRoutes from "./users";
-import projectsRoutes from "./projects";
-import collectionsRoutes from "./collections";
-import driversRoutes from "./drivers";
-import hostsRoutes from "./hosts";
-import recipientsRoutes from "./recipients";
-import analyticsRoutes from "./analytics";
-import dataManagementRoutes from "./data-management";
-import googleSheetsRoutes from "./google-sheets";
-import realTimeMessagesRoutes from "./real-time-messages";
-import chatRoutes from "./chat";
-import { registerMessageNotificationRoutes } from "./message-notifications";
-import { registerPerformanceRoutes } from "./performance";
-import suggestionsRoutes from "../suggestions-routes";
-import { logger } from "../utils/logger";
+import { Router } from "express";
+import { z } from "zod";
+import { isAuthenticated } from "../replitAuth";
 
-export function registerModularRoutes(app: Express) {
+const router = Router();
+
+// Example route, needs to be replaced with actual routes
+router.get("/conversations", isAuthenticated, async (_req, res) => {
   try {
-    logger.info("Registering routes...");
-    
-    // Authentication routes
-    app.use("/api/auth", authRoutes);
-    
-    // Core data management routes
-    app.use("/api/users", usersRoutes);
-    app.use("/api/projects", projectsRoutes);
-    app.use("/api/collections", collectionsRoutes);
-    app.use("/api/drivers", driversRoutes);
-    app.use("/api/hosts", hostsRoutes);
-    app.use("/api/recipients", recipientsRoutes);
-    
-    // Analytics and reporting routes
-    app.use("/api/analytics", analyticsRoutes);
-    
-    // Feature-specific routes
-    app.use("/api/data-management", dataManagementRoutes);
-    app.use("/api/google-sheets", googleSheetsRoutes);
-    app.use("/api/suggestions", suggestionsRoutes);
-    app.use("/api/real-time-messages", realTimeMessagesRoutes);
-    app.use("/api/chat", chatRoutes);
-    
-    // Register function-based routes
-    registerMessageNotificationRoutes(app);
-    registerPerformanceRoutes(app);
-    
-    logger.info("✓ Routes registered successfully");
+    // Placeholder logic, replace with actual data fetching
+    const conversations: any[] = [];
+    res.json({ conversations });
   } catch (error) {
-    logger.error("✗ Failed to register routes:", error);
-    throw error;
+    console.error("Error fetching conversations:", error);
+    res.status(500).json({ error: "Failed to fetch conversations" });
   }
-}
+});
+
+router.post("/conversations", isAuthenticated, async (req, res) => {
+  try {
+    const conversationSchema = z.object({
+      participantIds: z.array(z.string()),
+    });
+
+    const result = conversationSchema.safeParse(req.body);
+
+    if (!result.success) {
+      res.status(400).json({ error: result.error.message });
+      return;
+    }
+
+    const conversationId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    // Placeholder: Store conversation data when conversation functionality is implemented
+    // const { participantIds } = result.data;
+
+    res.status(201).json({ message: "Conversation created", conversationId: conversationId });
+
+  } catch (error) {
+    console.error("Error creating conversation:", error);
+    res.status(500).json({ error: "Failed to create conversation" });
+  }
+});
+
+// Export the router directly
+export { router as conversationsRoutes };
+export { router as apiRoutes };
+export default router;

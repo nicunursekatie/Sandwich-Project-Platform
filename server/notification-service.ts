@@ -3,10 +3,9 @@ import { NotificationTypes, type NotificationType, type ProjectNotificationData,
 import { db } from './database-storage';
 import { users } from '@shared/schema';
 import { eq } from 'drizzle-orm';
-import { logger } from "./utils/logger";
 
 if (!process.env.SENDGRID_API_KEY) {
-  logger.warn("SENDGRID_API_KEY environment variable not set. Email notifications will be disabled.");
+  console.warn("SENDGRID_API_KEY environment variable not set. Email notifications will be disabled.");
 }
 
 const mailService = new MailService();
@@ -27,7 +26,7 @@ export class NotificationService {
     contextType?: string
   ): Promise<boolean> {
     if (!process.env.SENDGRID_API_KEY) {
-      logger.info('Direct message email notification skipped - no SendGrid API key configured');
+      console.log('Direct message email notification skipped - no SendGrid API key configured');
       return false;
     }
 
@@ -60,10 +59,10 @@ export class NotificationService {
       };
 
       await mailService.send(emailData);
-      logger.info(`Direct message email notification sent to ${recipientEmail}`);
+      console.log(`Direct message email notification sent to ${recipientEmail}`);
       return true;
     } catch (error) {
-      logger.error('Failed to send direct message email notification:', error);
+      console.error('Failed to send direct message email notification:', error);
       return false;
     }
   }
@@ -78,7 +77,7 @@ export class NotificationService {
     assignedBy: string
   ): Promise<boolean> {
     if (!process.env.SENDGRID_API_KEY) {
-      logger.info('Project assignment email notification skipped - no SendGrid API key configured');
+      console.log('Project assignment email notification skipped - no SendGrid API key configured');
       return false;
     }
 
@@ -115,10 +114,10 @@ export class NotificationService {
       };
 
       await mailService.send(emailData);
-      logger.info(`Project assignment email notification sent to ${assigneeEmails.length} recipients`);
+      console.log(`Project assignment email notification sent to ${assigneeEmails.length} recipients`);
       return true;
     } catch (error) {
-      logger.error('Failed to send project assignment email notification:', error);
+      console.error('Failed to send project assignment email notification:', error);
       return false;
     }
   }
@@ -129,7 +128,7 @@ export class NotificationService {
     recipientEmails: string[]
   ): Promise<boolean> {
     if (!process.env.SENDGRID_API_KEY) {
-      logger.info('Email notification skipped - no SendGrid API key configured');
+      console.log('Email notification skipped - no SendGrid API key configured');
       return false;
     }
 
@@ -145,10 +144,10 @@ export class NotificationService {
       };
 
       await mailService.send(emailData);
-      logger.info(`Email notification sent: ${type} to ${recipientEmails.length} recipients`);
+      console.log(`Email notification sent: ${type} to ${recipientEmails.length} recipients`);
       return true;
     } catch (error) {
-      logger.error('Failed to send email notification:', error);
+      console.error('Failed to send email notification:', error);
       return false;
     }
   }

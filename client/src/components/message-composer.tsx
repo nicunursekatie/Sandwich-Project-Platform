@@ -69,7 +69,7 @@ export function MessageComposer({
     }
 
     console.log('Sending message:', {
-      recipientIds: selectedRecipients,
+      recipientIds: selectedRecipients.map(r => r.id),
       content: content.trim(),
       contextType,
       contextId,
@@ -91,7 +91,7 @@ export function MessageComposer({
       toast({
         description: "Message sent successfully",
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/messages'] }); // Refresh messages
+      queryClient.invalidateQueries(['/api/messages']); // Refresh messages
     } catch (error) {
       console.error("Failed to send message:", error);
       toast({ 

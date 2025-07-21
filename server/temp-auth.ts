@@ -1,7 +1,6 @@
 import type { Express, RequestHandler } from "express";
 import { storage } from "./storage-wrapper";
 import { getDefaultPermissionsForRole as getSharedPermissions } from "../shared/auth-utils";
-import { logger } from "./utils/logger";
 
 // Using shared permissions from auth-utils
 
@@ -31,7 +30,7 @@ export const requireCommitteeAccess = (committeeId?: string): RequestHandler => 
           return res.status(403).json({ message: "Access denied: Not a member of this committee" });
         }
       } catch (error) {
-        logger.error("Error checking committee membership:", error);
+        console.error("Error checking committee membership:", error);
         return res.status(500).json({ message: "Error verifying committee access" });
       }
     }
@@ -254,7 +253,7 @@ export function setupTempAuth(app: Express) {
               document.getElementById('login-error').textContent = result.message || 'Login failed';
             }
           } catch (error) {
-            document.getElementById('login-error').textContent = 'Login failed: ' + error?.message || String(error);
+            document.getElementById('login-error').textContent = 'Login failed: ' + error.message;
           }
         });
 
@@ -280,7 +279,7 @@ export function setupTempAuth(app: Express) {
               document.getElementById('register-error').textContent = result.message || 'Registration failed';
             }
           } catch (error) {
-            document.getElementById('register-error').textContent = 'Registration failed: ' + error?.message || String(error);
+            document.getElementById('register-error').textContent = 'Registration failed: ' + error.message;
           }
         });
       </script>
@@ -328,17 +327,53 @@ export function setupTempAuth(app: Express) {
 
       res.json({ success: true, message: "Registration successful" });
     } catch (error) {
-      logger.error("Registration failed", error, { email, role });
+      console.error("Registration error:", error);
       res.status(500).json({ success: false, message: "Registration failed" });
     }
   });
 
+  // Debug endpoint to check user permissions
+  app.get("/api/debug/user/:email", async (req: any, res) => {
+    try {
+      const email = req.params.email;
+      const user = await storage.getUserByEmail(email);
+      if (user) {
+        res.json({
+          email: user.email,
+          role: user.role,
+          permissions: user.permissions,
+          isActive: user.isActive
+        });
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    } catch (error) {
+      console.error("Debug user error:", error);
+      res.status(500).json({ error: "Failed to get user" });
+    }
+  });
 
+  // Debug endpoint to check specific user
+  app.get("/api/auth/debug-user/:email", async (req: any, res) => {
+    try {
+      const { email } = req.params;
+      const user = await storage.getUserByEmail(email);
+      res.json(user ? { 
+        email: user.email, 
+        role: user.role, 
+        permissions: user.permissions,
+        exists: true 
+      } : { exists: false });
+    } catch (error) {
+      console.error("Debug user error:", error);
+      res.status(500).json({ error: "Failed to get user" });
+    }
+  });
 
   // Fix existing users with empty permissions endpoint
   app.post("/api/auth/fix-permissions", async (req: any, res) => {
     try {
-      logger.info("Fixing permissions for existing users...");
+      console.log("Fixing permissions for existing users...");
 
       // Get all users and update their permissions to match the shared auth system
       const allUsers = await storage.getAllUsers();
@@ -350,11 +385,11 @@ export function setupTempAuth(app: Express) {
         if (user.email === "katielong2316@gmail.com") {
           if (!correctPermissions.includes("view_projects")) {
             correctPermissions = [...correctPermissions, "view_projects"];
-            logger.info("Adding VIEW_PROJECTS permission to Katie");
+            console.log("Adding VIEW_PROJECTS permission to Katie");
           }
           // Force update Katie regardless to ensure she gets projects access
-          logger.info(`Forcing Katie's permission update. Current: [${user.permissions.join(', ')}]`);
-          logger.info(`New: [${correctPermissions.join(', ')}]`);
+          console.log(`Forcing Katie's permission update. Current: [${user.permissions.join(', ')}]`);
+          console.log(`New: [${correctPermissions.join(', ')}]`);
         }
 
         // Update user with correct permissions if they differ, or force update for Katie
@@ -362,18 +397,18 @@ export function setupTempAuth(app: Express) {
                            user.email === "katielong2316@gmail.com";
 
         if (shouldUpdate) {
-          logger.info(`Updating permissions for ${user.email} (${user.role})`);
+          console.log(`Updating permissions for ${user.email} (${user.role})`);
           await storage.updateUser(user.id, {
             ...user,
             permissions: correctPermissions
           });
-          logger.info(`Updated ${user.email} permissions:`, correctPermissions);
+          console.log(`Updated ${user.email} permissions:`, correctPermissions);
         }
       }
 
       res.json({ success: true, message: "All user permissions fixed" });
     } catch (error) {
-      logger.error("Fix permissions error:", error);
+      console.error("Fix permissions error:", error);
       res.status(500).json({ success: false, message: "Failed to fix permissions" });
     }
   });
@@ -429,7 +464,7 @@ export function setupTempAuth(app: Express) {
 
       res.json({ success: true, user: sessionUser });
     } catch (error) {
-      logger.error("Login error:", error);
+      console.error("Login error:", error);
       res.status(500).json({ success: false, message: "Login failed" });
     }
   });
@@ -454,7 +489,7 @@ export function setupTempAuth(app: Express) {
 
       res.json({ success: true, user: testUser });
     } catch (error) {
-      logger.error("Temp login error:", error);
+      console.error("Temp login error:", error);
       res.status(500).json({ error: "Login failed" });
     }
   });
@@ -485,7 +520,7 @@ export function setupTempAuth(app: Express) {
           isActive: dbUser.isActive
         });
       } catch (error) {
-        logger.error("Error fetching user data:", error);
+        console.error("Error fetching user data:", error);
         res.status(500).json({ message: "Error fetching user data" });
       }
     } else {
@@ -499,7 +534,7 @@ export function setupTempAuth(app: Express) {
   app.post("/api/logout", (req: any, res) => {
     req.session.destroy((err: any) => {
       if (err) {
-        logger.error('Session destroy error:', err);
+        console.error('Session destroy error:', err);
         return res.status(500).json({ success: false, message: 'Logout failed' });
       }
       res.clearCookie('connect.sid');
@@ -525,7 +560,7 @@ export function setupTempAuth(app: Express) {
         res.status(404).json({ message: "User not found" });
       }
     } catch (error) {
-      logger.error("Profile fetch error:", error);
+      console.error("Profile fetch error:", error);
       res.status(500).json({ message: "Failed to fetch profile" });
     }
   });
@@ -562,7 +597,7 @@ export function setupTempAuth(app: Express) {
         profileImageUrl: updatedUser.profileImageUrl
       });
     } catch (error) {
-      logger.error("Profile update error:", error);
+      console.error("Profile update error:", error);
       res.status(500).json({ message: "Failed to update profile" });
     }
   });
@@ -591,7 +626,7 @@ export function setupTempAuth(app: Express) {
 
       res.json({ message: "Password changed successfully" });
     } catch (error) {
-      logger.error("Password change error:", error);
+      console.error("Password change error:", error);
       res.status(500).json({ message: "Failed to change password" });
     }
   });
@@ -628,7 +663,7 @@ export function setupTempAuth(app: Express) {
         newPassword: newPassword // Include for admin convenience
       });
     } catch (error) {
-      logger.error("Admin password reset error:", error);
+      console.error("Admin password reset error:", error);
       res.status(500).json({ message: "Failed to reset password" });
     }
   });
@@ -636,9 +671,9 @@ export function setupTempAuth(app: Express) {
 
 // Middleware to check if user is authenticated
 export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
-  logger.info('=== AUTHENTICATION MIDDLEWARE ===');
-  logger.info('req.session exists:', !!req.session);
-  logger.info('req.session.user exists:', !!req.session?.user);
+  console.log('=== AUTHENTICATION MIDDLEWARE ===');
+  console.log('req.session exists:', !!req.session);
+  console.log('req.session.user exists:', !!req.session?.user);
 
   if (!req.session || !req.session.user) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -664,13 +699,13 @@ export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
       }
       // Set req.user to the fresh database user data
       req.user = freshUser;
-      logger.info('Authentication successful, user attached to req.user with permissions:', freshUser.permissions?.length || 0);
+      console.log('Authentication successful, user attached to req.user with permissions:', freshUser.permissions?.length || 0);
     } else {
       // User not found in database
       return res.status(401).json({ message: "Unauthorized" });
     }
   } catch (error) {
-    logger.error("Error fetching fresh user data in isAuthenticated:", error);
+    console.error("Error fetching fresh user data in isAuthenticated:", error);
     // Fallback to session user if database fetch fails
     req.user = req.session.user;
   }
@@ -695,7 +730,7 @@ export const requirePermission = (permission: string): RequestHandler => {
           (req as any).user = dbUser;
         }
       } catch (error) {
-        logger.error("Error fetching dbUser in requirePermission:", error);
+        console.error("Error fetching dbUser in requirePermission:", error);
       }
       return next();
     }
@@ -724,7 +759,7 @@ export const requirePermission = (permission: string): RequestHandler => {
         (req as any).user = freshUser;
       }
     } catch (error) {
-      logger.error("Error fetching fresh user data:", error);
+      console.error("Error fetching fresh user data:", error);
     }
 
     // Check if user has the specific permission
@@ -742,7 +777,7 @@ export const requirePermission = (permission: string): RequestHandler => {
 
 // Initialize temporary auth system with default admin user and committees
 export async function initializeTempAuth() {
-  logger.info("Temporary authentication system initialized");
+  console.log("Temporary authentication system initialized");
 
   // Create default admin user if it doesn't exist
   try {
@@ -762,12 +797,12 @@ export async function initializeTempAuth() {
         profileImageUrl: null,
         metadata: { password: process.env.DEFAULT_ADMIN_PASSWORD || "admin123" } // Use env var or fallback
       });
-      logger.info("✅ Default admin user created: admin@sandwich.project / [password set from env or default]");
+      console.log("✅ Default admin user created: admin@sandwich.project / [password set from env or default]");
     } else {
-      logger.info("✅ Default admin user already exists: admin@sandwich.project");
+      console.log("✅ Default admin user already exists: admin@sandwich.project");
     }
   } catch (error) {
-    logger.info("❌ Could not create default admin user (using fallback):", error?.message || String(error));
+    console.log("❌ Could not create default admin user (using fallback):", error.message);
   }
 
   // Setup default committees and committee member user
@@ -779,10 +814,10 @@ export async function initializeTempAuth() {
         await storage.createCommittee({ name: "Finance", description: "Financial oversight and budgeting" });
         await storage.createCommittee({ name: "Operations", description: "Day-to-day operations management" });
         await storage.createCommittee({ name: "Outreach", description: "Community outreach and partnerships" });
-        logger.info("✅ Default committees created");
+        console.log("✅ Default committees created");
       }
     } catch (error) {
-      logger.warn("Committee creation failed:", error?.message || String(error));
+      console.warn("Committee creation failed:", error.message);
     }
 
     // Create committee member user and assign to specific committee
@@ -803,11 +838,11 @@ export async function initializeTempAuth() {
         profileImageUrl: null,
         metadata: { password: process.env.DEFAULT_COMMITTEE_PASSWORD || "committee123" }
       });
-      logger.info("✅ Committee member user created: katielong2316@gmail.com / [password set from env or default]");
+      console.log("✅ Committee member user created: katielong2316@gmail.com / [password set from env or default]");
     } else {
       // Use existing user without updating role (preserve current role and permissions)
       committeeMemberId = existingCommitteeMember.id;
-      logger.info("✅ Found existing user: katielong2316@gmail.com (preserving current role and permissions)");
+      console.log("✅ Found existing user: katielong2316@gmail.com (preserving current role and permissions)");
     }
 
     // Assign committee member to finance committee only
@@ -829,15 +864,15 @@ export async function initializeTempAuth() {
               role: "member"
             });
           }
-          logger.info("✅ Assigned katielong2316@gmail.com to Finance Committee only");
+          console.log("✅ Assigned katielong2316@gmail.com to Finance Committee only");
         }
       }
     } catch (error) {
-      logger.warn("Assigning committee member failed:", error?.message || String(error));
+      console.warn("Assigning committee member failed:", error.message);
     }
 
   } catch (error) {
-    logger.info("❌ Could not setup committees:", error?.message || String(error));
+    console.log("❌ Could not setup committees:", error.message);
   }
 
   // Setup driver user - kenig.ka@gmail.com with restricted permissions
@@ -858,12 +893,12 @@ export async function initializeTempAuth() {
         profileImageUrl: null,
         metadata: { password: process.env.DEFAULT_DRIVER_PASSWORD || "driver123" }
       });
-      logger.info("✅ Driver user created: kenig.ka@gmail.com / [password set from env or default]");
+      console.log("✅ Driver user created: kenig.ka@gmail.com / [password set from env or default]");
     } else {
       // Preserve existing user permissions - do not reset them
-      logger.info("✅ Found existing user: kenig.ka@gmail.com (preserving current role and permissions)");
+      console.log("✅ Found existing user: kenig.ka@gmail.com (preserving current role and permissions)");
     }
   } catch (error) {
-    logger.info("❌ Could not setup driver user:", error?.message || String(error));
+    console.log("❌ Could not setup driver user:", error.message);
   }
 }

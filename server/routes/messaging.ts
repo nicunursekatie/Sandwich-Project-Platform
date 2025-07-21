@@ -1,9 +1,7 @@
-import { logger } from "../utils/logger";
 import { Router } from "express";
 import { z } from "zod";
 import { messagingService } from "../services/messaging-service";
 import { isAuthenticated } from "../temp-auth";
-import { logger } from "../middleware/logger";
 
 const router = Router();
 
@@ -35,28 +33,28 @@ router.post("/send", async (req, res) => {
   try {
     const user = (req as any).user;
     if (!user) {
-      logger.error("Send message: User not authenticated");
+      console.error("Send message: User not authenticated");
       return res.status(401).json({ error: "User not authenticated" });
     }
 
-    logger.info("Send message request:", { userId: user.id, body: req.body });
+    console.log("Send message request:", { userId: user.id, body: req.body });
 
     const result = sendMessageSchema.safeParse(req.body);
     if (!result.success) {
-      logger.error("Send message validation failed:", result.error?.errors || "Unknown");
+      console.error("Send message validation failed:", result.error.errors);
       return res.status(400).json({ 
         error: "Invalid request", 
-        details: result.error?.errors || "Unknown" 
+        details: result.error.errors 
       });
     }
 
     if (!result.data.recipientIds || result.data.recipientIds.length === 0) {
-      logger.error("No recipients specified");
+      console.error("No recipients specified");
       return res.status(400).json({ error: "At least one recipient is required" });
     }
 
     if (!result.data.content || result.data.content.trim().length === 0) {
-      logger.error("No content specified");
+      console.error("No content specified");
       return res.status(400).json({ error: "Message content is required" });
     }
 
@@ -65,15 +63,15 @@ router.post("/send", async (req, res) => {
       ...result.data,
     });
 
-    logger.info("Message sent successfully:", message.id);
+    console.log("Message sent successfully:", message.id);
 
     res.status(201).json({ 
       success: true, 
       message 
     });
   } catch (error) {
-    logger.error("Error sending message:", error);
-    res.status(500).json({ error: "Failed to send message", details: error instanceof Error ? error?.message || String(error) : 'Unknown error' });
+    console.error("Error sending message:", error);
+    res.status(500).json({ error: "Failed to send message", details: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
@@ -91,7 +89,7 @@ router.post("/kudos", async (req, res) => {
     if (!result.success) {
       return res.status(400).json({ 
         error: "Invalid request", 
-        details: result.error?.errors || "Unknown" 
+        details: result.error.errors 
       });
     }
 
@@ -127,7 +125,7 @@ router.post("/kudos", async (req, res) => {
       alreadySent: kudosResult.alreadySent,
     });
   } catch (error) {
-    logger.error("Error sending kudos:", error);
+    console.error("Error sending kudos:", error);
     res.status(500).json({ error: "Failed to send kudos" });
   }
 });
@@ -159,7 +157,7 @@ router.get("/kudos/check", async (req, res) => {
 
     res.json({ sent });
   } catch (error) {
-    logger.error("Error checking kudos status:", error);
+    console.error("Error checking kudos status:", error);
     res.status(500).json({ error: "Failed to check kudos status" });
   }
 });
@@ -185,14 +183,14 @@ router.get("/unread", async (req, res) => {
     // Debug: Check for incomplete messages before sending
     const incompleteMessages = messages.filter(msg => !msg || !msg.senderName || !msg.content);
     if (incompleteMessages.length > 0) {
-      logger.error('Found incomplete messages being sent to frontend:', incompleteMessages);
+      console.error('Found incomplete messages being sent to frontend:', incompleteMessages);
     }
 
-    logger.info('Sending messages to frontend. Total:', messages.length, 'Valid:', messages.filter(msg => msg && msg.senderName && msg.content).length);
+    console.log('Sending messages to frontend. Total:', messages.length, 'Valid:', messages.filter(msg => msg && msg.senderName && msg.content).length);
 
     res.json({ messages });
   } catch (error) {
-    logger.error("Error getting unread messages:", error);
+    console.error("Error getting unread messages:", error);
     res.status(500).json({ error: "Failed to get unread messages" });
   }
 });
@@ -233,14 +231,14 @@ router.get("/context/:contextType/:contextId", async (req, res) => {
     // Debug: Check for incomplete messages before sending
     const incompleteMessages = messages.filter(msg => !msg || !msg.senderName || !msg.content);
     if (incompleteMessages.length > 0) {
-      logger.error('Found incomplete messages being sent to frontend:', incompleteMessages);
+      console.error('Found incomplete messages being sent to frontend:', incompleteMessages);
     }
 
-    logger.info('Sending messages to frontend. Total:', messages.length, 'Valid:', messages.filter(msg => msg && msg.senderName && msg.content).length);
+    console.log('Sending messages to frontend. Total:', messages.length, 'Valid:', messages.filter(msg => msg && msg.senderName && msg.content).length);
 
     res.json({ messages });
   } catch (error) {
-    logger.error("Error getting context messages:", error);
+    console.error("Error getting context messages:", error);
     res.status(500).json({ error: "Failed to get messages" });
   }
 });
@@ -263,7 +261,7 @@ router.post("/:messageId/read", async (req, res) => {
     const success = await messagingService.markMessageRead(user.id, messageId);
     res.json({ success });
   } catch (error) {
-    logger.error("Error marking message as read:", error);
+    console.error("Error marking message as read:", error);
     res.status(500).json({ error: "Failed to mark message as read" });
   }
 });
@@ -287,7 +285,7 @@ router.post("/mark-all-read", async (req, res) => {
 
     res.json({ success: true, count });
   } catch (error) {
-    logger.error("Error marking all messages as read:", error);
+    console.error("Error marking all messages as read:", error);
     res.status(500).json({ error: "Failed to mark messages as read" });
   }
 });
@@ -320,9 +318,9 @@ router.put("/:messageId", async (req, res) => {
 
     res.json({ success: true, message });
   } catch (error: any) {
-    logger.error("Error editing message:", error);
-    if (error?.message || String(error)?.includes("edit window") || error?.message || String(error)?.includes("sender")) {
-      res.status(403).json({ error: error?.message || String(error) });
+    console.error("Error editing message:", error);
+    if (error.message?.includes("edit window") || error.message?.includes("sender")) {
+      res.status(403).json({ error: error.message });
     } else {
       res.status(500).json({ error: "Failed to edit message" });
     }
@@ -351,9 +349,9 @@ router.delete("/:messageId", async (req, res) => {
 
     res.json({ success: true });
   } catch (error: any) {
-    logger.error("Error deleting message:", error);
-    if (error?.message || String(error)?.includes("sender")) {
-      res.status(403).json({ error: error?.message || String(error) });
+    console.error("Error deleting message:", error);
+    if (error.message?.includes("sender")) {
+      res.status(403).json({ error: error.message });
     } else {
       res.status(500).json({ error: "Failed to delete message" });
     }
@@ -398,7 +396,7 @@ router.get("/messages", async (req, res) => {
 
     res.json({ messages: validMessages });
   } catch (error) {
-    logger.error("Error fetching messages:", error);
+    console.error("Error fetching messages:", error);
     res.status(500).json({ error: "Failed to fetch messages" });
   }
 });

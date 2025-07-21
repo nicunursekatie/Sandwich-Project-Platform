@@ -200,7 +200,7 @@ export function MultiUserTaskCompletion({
       <div className="space-y-2">
         {assigneeIds && assigneeIds.length > 0 ? (
           assigneeIds.map((assigneeId, index) => 
-            getAssigneeStatus(assigneeId, (assigneeNames && assigneeNames[index]) || 'Unknown User')
+            getAssigneeStatus(assigneeId, assigneeNames[index] || 'Unknown User')
           )
         ) : (
           <div className="text-sm text-gray-500">No assignees found</div>

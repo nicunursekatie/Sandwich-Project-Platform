@@ -1,4 +1,3 @@
-import { logger } from "../utils/logger";
 import { Router } from "express";
 import { z } from "zod";
 import { storage } from "../storage-wrapper";
@@ -12,7 +11,7 @@ router.get("/messages", async (req, res) => {
   try {
     const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
 
-    logger.info(`🔍 API QUERY: /messages - limit: ${limit}`);
+    console.log(`🔍 API QUERY: /messages - limit: ${limit}`);
 
     let messages;
     if (limit) {
@@ -21,10 +20,10 @@ router.get("/messages", async (req, res) => {
       messages = await storage.getAllMessages();
     }
     
-    logger.info(`📤 API RESPONSE: Returning ${messages.length} messages`);
+    console.log(`📤 API RESPONSE: Returning ${messages.length} messages`);
     res.json(messages);
   } catch (error) {
-    logger.error("Error fetching messages:", error);
+    console.error("Error fetching messages:", error);
     res.status(500).json({ error: "Failed to fetch messages" });
   }
 });
@@ -35,7 +34,7 @@ router.get("/messages/:id/thread", async (req, res) => {
     const messages = await storage.getThreadMessages(id);
     res.json(messages);
   } catch (error) {
-    logger.error("Error fetching thread messages:", error);
+    console.error("Error fetching thread messages:", error);
     res.status(500).json({ error: "Failed to fetch thread messages" });
   }
 });
@@ -44,7 +43,7 @@ router.post("/messages", sanitizeMiddleware, async (req, res) => {
   try {
     const result = insertMessageSchema.safeParse(req.body);
     if (!result.success) {
-      return res.status(400).json({ error: result.error?.message || String(error) });
+      return res.status(400).json({ error: result.error.message });
     }
     
     const { parentId, ...messageData } = result.data;
@@ -57,17 +56,17 @@ router.post("/messages", sanitizeMiddleware, async (req, res) => {
     }
     
     // Broadcast notification for new messages
-    logger.info('Broadcasting new message notification:', message);
+    console.log('Broadcasting new message notification:', message);
     if ((global as any).broadcastNewMessage) {
       (global as any).broadcastNewMessage(message);
-      logger.info('Message broadcast sent successfully');
+      console.log('Message broadcast sent successfully');
     } else {
-      logger.error('broadcastNewMessage function not available');
+      console.error('broadcastNewMessage function not available');
     }
     
     res.status(201).json(message);
   } catch (error) {
-    logger.error("Error creating message:", error);
+    console.error("Error creating message:", error);
     res.status(500).json({ error: "Failed to create message" });
   }
 });
@@ -81,7 +80,7 @@ router.delete("/messages/:id", async (req, res) => {
     }
     res.status(204).send();
   } catch (error) {
-    logger.error("Error deleting message:", error);
+    console.error("Error deleting message:", error);
     res.status(500).json({ error: "Failed to delete message" });
   }
 });

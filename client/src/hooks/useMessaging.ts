@@ -40,7 +40,7 @@ interface Message {
 interface SendMessageParams {
   recipientIds: string[];
   content: string;
-  contextType?: "suggestion" | "project" | "task" | "direct";
+  contextType?: 'suggestion' | 'project' | 'task' | 'direct';
   contextId?: string;
   parentMessageId?: number;
 }
@@ -53,36 +53,27 @@ export function useMessaging() {
   const [wsConnection, setWsConnection] = useState<WebSocket | null>(null);
 
   // Get unread message counts
-  const {
-    data: unreadCounts = {
-      general: 0,
-      committee: 0,
-      hosts: 0,
-      drivers: 0,
-      recipients: 0,
-      core_team: 0,
-      direct: 0,
-      groups: 0,
-      total: 0,
-      suggestion: 0,
-      project: 0,
-      task: 0,
-    } as UnreadCounts,
-    refetch: refetchUnreadCounts,
-  } = useQuery({
-    queryKey: ["/api/message-notifications/unread-counts", user?.id],
+  const { data: unreadCounts = {
+    general: 0,
+    committee: 0,
+    hosts: 0,
+    drivers: 0,
+    recipients: 0,
+    core_team: 0,
+    direct: 0,
+    groups: 0,
+    total: 0,
+    suggestion: 0,
+    project: 0,
+    task: 0,
+  } as UnreadCounts, refetch: refetchUnreadCounts } = useQuery({
+    queryKey: ['/api/message-notifications/unread-counts', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
       try {
-        const response = await apiRequest(
-          "GET",
-          "/api/message-notifications/unread-counts",
-        );
+        const response = await apiRequest('GET', '/api/message-notifications/unread-counts');
         // Add context-specific counts
-        const contextCounts = await apiRequest(
-          "GET",
-          "/api/messaging/unread?groupByContext=true",
-        );
+        const contextCounts = await apiRequest('GET', '/api/messaging/unread?groupByContext=true');
         return {
           ...response,
           suggestion: contextCounts.suggestion || 0,
@@ -90,7 +81,7 @@ export function useMessaging() {
           task: contextCounts.task || 0,
         };
       } catch (error) {
-        console.error("Failed to fetch unread counts:", error);
+        console.error('Failed to fetch unread counts:', error);
         return {
           general: 0,
           committee: 0,
@@ -112,31 +103,30 @@ export function useMessaging() {
   });
 
   // Get unread messages
-  const { data: unreadMessages = [], refetch: refetchUnreadMessages } =
-    useQuery({
-      queryKey: ["/api/messaging/unread", user?.id],
-      queryFn: async () => {
-        if (!user?.id) return [];
-        const response = await apiRequest("GET", "/api/messaging/unread");
-        return response.messages || [];
-      },
-      enabled: !!user?.id,
-    });
+  const { data: unreadMessages = [], refetch: refetchUnreadMessages } = useQuery({
+    queryKey: ['/api/messaging/unread', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const response = await apiRequest('GET', '/api/messaging/unread');
+      return response.messages || [];
+    },
+    enabled: !!user?.id,
+  });
 
   // Send message mutation
   const sendMessageMutation = useMutation({
     mutationFn: async (params: SendMessageParams) => {
-      return await apiRequest("POST", "/api/messaging/send", params);
+      return await apiRequest('POST', '/api/messaging/send', params);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messaging"] });
-      toast({ description: "Message sent successfully" });
+      queryClient.invalidateQueries({ queryKey: ['/api/messaging'] });
+      toast({ description: 'Message sent successfully' });
     },
     onError: (error: any) => {
       toast({
-        title: "Failed to send message",
-        description: error.message || "Please try again",
-        variant: "destructive",
+        title: 'Failed to send message',
+        description: error.message || 'Please try again',
+        variant: 'destructive',
       });
     },
   });
@@ -144,27 +134,25 @@ export function useMessaging() {
   // Mark message as read mutation
   const markAsReadMutation = useMutation({
     mutationFn: async (messageId: number) => {
-      return await apiRequest("POST", `/api/messaging/${messageId}/read`);
+      return await apiRequest('POST', `/api/messaging/${messageId}/read`);
     },
     onSuccess: () => {
       refetchUnreadCounts();
       refetchUnreadMessages();
-      queryClient.invalidateQueries({ queryKey: ["/api/messaging"] });
+      queryClient.invalidateQueries({ queryKey: ['/api/messaging'] });
     },
   });
 
   // Mark all messages as read mutation
   const markAllAsReadMutation = useMutation({
     mutationFn: async (contextType?: string) => {
-      return await apiRequest("POST", "/api/messaging/mark-all-read", {
-        contextType,
-      });
+      return await apiRequest('POST', '/api/messaging/mark-all-read', { contextType });
     },
     onSuccess: () => {
       refetchUnreadCounts();
       refetchUnreadMessages();
-      queryClient.invalidateQueries({ queryKey: ["/api/messaging"] });
-      toast({ description: "All messages marked as read" });
+      queryClient.invalidateQueries({ queryKey: ['/api/messaging'] });
+      toast({ description: 'All messages marked as read' });
     },
   });
 
@@ -172,48 +160,29 @@ export function useMessaging() {
   useEffect(() => {
     if (!user?.id) return;
 
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-
-    // Robust WebSocket URL construction for different environments
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    
+    // Fix WebSocket URL construction for different environments
     let wsUrl: string;
-
-    if (
-      window.location.hostname.includes(".replit.dev") ||
-      window.location.hostname.includes(".replit.app") ||
-      window.location.hostname.includes(".spock.replit.dev")
-    ) {
+    
+    if (window.location.hostname.includes('.replit.dev') || window.location.hostname.includes('.replit.app')) {
       // Replit environment - use the full hostname without port
-      // Handle both old and new Replit domains
       wsUrl = `${protocol}//${window.location.hostname}/notifications`;
-    } else if (window.location.hostname === "localhost") {
-      // Local development - ensure we have a valid port
-      const port = window.location.port || "5000";
-      if (port && port !== "undefined") {
-        wsUrl = `${protocol}//${window.location.hostname}:${port}/notifications`;
-      } else {
-        wsUrl = `${protocol}//${window.location.hostname}:5000/notifications`;
-      }
+    } else if (window.location.hostname === 'localhost') {
+      // Local development - use the actual port from location
+      const port = window.location.port || '5000';
+      wsUrl = `${protocol}//${window.location.hostname}:${port}/notifications`;
     } else {
-      // Fallback for other environments - use window.location.host which includes port
+      // Fallback for other environments
       wsUrl = `${protocol}//${window.location.host}/notifications`;
     }
-
-    console.debug("Messaging WebSocket connecting to:", wsUrl);
-
-    // Validate the URL before creating WebSocket
-    try {
-      new URL(wsUrl);
-    } catch (error) {
-      console.error("Invalid WebSocket URL:", wsUrl);
-      return;
-    }
-
+    
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
-      console.log("Messaging WebSocket connected");
+      console.log('Messaging WebSocket connected');
       // Identify user
-      ws.send(JSON.stringify({ type: "identify", userId: user.id }));
+      ws.send(JSON.stringify({ type: 'identify', userId: user.id }));
       setWsConnection(ws);
     };
 
@@ -221,111 +190,79 @@ export function useMessaging() {
       try {
         const data = JSON.parse(event.data);
 
-        if (data.type === "new_message") {
+        if (data.type === 'new_message') {
           // Refetch unread counts and messages
           refetchUnreadCounts();
           refetchUnreadMessages();
 
           // Show toast notification
           toast({
-            title: "New message",
-            description: data.message.sender || "You have a new message",
+            title: 'New message',
+            description: data.message.sender || 'You have a new message',
           });
-        } else if (
-          data.type === "message_edited" ||
-          data.type === "message_deleted"
-        ) {
+        } else if (data.type === 'message_edited' || data.type === 'message_deleted') {
           // Refresh message lists
-          queryClient.invalidateQueries({ queryKey: ["/api/messaging"] });
+          queryClient.invalidateQueries({ queryKey: ['/api/messaging'] });
         }
       } catch (error) {
-        console.error("Failed to parse WebSocket message:", error);
+        console.error('Failed to parse WebSocket message:', error);
       }
     };
 
     ws.onerror = (error) => {
-      console.debug("Messaging WebSocket error:", error);
+      console.error('Messaging WebSocket error:', error);
     };
 
-    ws.onclose = (event) => {
-      console.debug(
-        "Messaging WebSocket disconnected:",
-        event.code,
-        event.reason,
-      );
+    ws.onclose = () => {
+      console.log('Messaging WebSocket disconnected');
       setWsConnection(null);
     };
 
     return () => {
       ws.close();
     };
-  }, [
-    user?.id,
-    refetchUnreadCounts,
-    refetchUnreadMessages,
-    queryClient,
-    toast,
-  ]);
+  }, [user?.id, refetchUnreadCounts, refetchUnreadMessages, queryClient, toast]);
 
   // Send a message
-  const sendMessage = useCallback(
-    async (params: SendMessageParams) => {
-      if (!user?.id) {
-        toast({
-          title: "Not authenticated",
-          description: "Please log in to send messages",
-          variant: "destructive",
-        });
-        return;
-      }
+  const sendMessage = useCallback(async (params: SendMessageParams) => {
+    if (!user?.id) {
+      toast({
+        title: 'Not authenticated',
+        description: 'Please log in to send messages',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-      return await sendMessageMutation.mutateAsync(params);
-    },
-    [user?.id, sendMessageMutation, toast],
-  );
+    return await sendMessageMutation.mutateAsync(params);
+  }, [user?.id, sendMessageMutation, toast]);
 
   // Mark message as read
-  const markAsRead = useCallback(
-    async (messageId: number) => {
-      return await markAsReadMutation.mutateAsync(messageId);
-    },
-    [markAsReadMutation],
-  );
+  const markAsRead = useCallback(async (messageId: number) => {
+    return await markAsReadMutation.mutateAsync(messageId);
+  }, [markAsReadMutation]);
 
   // Mark all messages as read
-  const markAllAsRead = useCallback(
-    async (contextType?: string) => {
-      return await markAllAsReadMutation.mutateAsync(contextType);
-    },
-    [markAllAsReadMutation],
-  );
+  const markAllAsRead = useCallback(async (contextType?: string) => {
+    return await markAllAsReadMutation.mutateAsync(contextType);
+  }, [markAllAsReadMutation]);
 
   // Get messages for a specific context
-  const getContextMessages = useCallback(
-    async (contextType: string, contextId: string) => {
-      try {
-        const response = await apiRequest(
-          "GET",
-          `/api/messaging/context/${contextType}/${contextId}`,
-        );
-        return response.messages || [];
-      } catch (error) {
-        console.error("Failed to fetch context messages:", error);
-        return [];
-      }
-    },
-    [],
-  );
+  const getContextMessages = useCallback(async (contextType: string, contextId: string) => {
+    try {
+      const response = await apiRequest('GET', `/api/messaging/context/${contextType}/${contextId}`);
+      return response.messages || [];
+    } catch (error) {
+      console.error('Failed to fetch context messages:', error);
+      return [];
+    }
+  }, []);
 
   return {
     // Data
     unreadCounts,
     unreadMessages,
-    totalUnread:
-      unreadCounts.total +
-      unreadCounts.suggestion +
-      unreadCounts.project +
-      unreadCounts.task,
+    totalUnread: unreadCounts.total + unreadCounts.suggestion + unreadCounts.project + unreadCounts.task,
 
     // Actions
     sendMessage,

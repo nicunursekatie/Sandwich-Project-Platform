@@ -1,5 +1,4 @@
 import { MailService } from '@sendgrid/mail';
-import { logger } from "./utils/logger";
 
 const mailService = new MailService();
 
@@ -18,7 +17,7 @@ interface EmailParams {
 export async function sendEmail(params: EmailParams): Promise<boolean> {
   try {
     if (!process.env.SENDGRID_API_KEY) {
-      logger.error('SendGrid API key not configured');
+      console.error('SendGrid API key not configured');
       return false;
     }
     
@@ -31,7 +30,7 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
     });
     return true;
   } catch (error) {
-    logger.error('SendGrid email error:', error);
+    console.error('SendGrid email error:', error);
     return false;
   }
 }

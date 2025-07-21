@@ -32,6 +32,6 @@ export function useAuth() {
     user,
     isLoading,
     isAuthenticated: !!user,
-    error: error && !error.message?.includes('401') ? error : null,
+    error,
   };
 }

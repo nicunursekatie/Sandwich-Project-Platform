@@ -1,4 +1,3 @@
-import { logger } from "../utils/logger";
 
 import { Router } from "express";
 import { z } from "zod";
@@ -14,7 +13,7 @@ router.get("/conversations", async (req, res) => {
   try {
     const userId = (req as any).user?.id;
     if (!userId) {
-      logger.info('DEBUG: No user ID found in request, user object:', (req as any).user);
+      console.log('DEBUG: No user ID found in request, user object:', (req as any).user);
       return res.status(401).json({ error: "User not authenticated" });
     }
     
@@ -39,7 +38,7 @@ router.get("/conversations", async (req, res) => {
     
     res.json(userConversations);
   } catch (error) {
-    logger.error("Error fetching conversations:", error);
+    console.error("Error fetching conversations:", error);
     res.status(500).json({ error: "Failed to fetch conversations" });
   }
 });
@@ -48,10 +47,10 @@ router.get("/conversations", async (req, res) => {
 router.post("/conversations", async (req, res) => {
   try {
     const userId = (req as any).user?.id;
-    logger.info('DEBUG: POST /conversations - User object:', (req as any).user);
-    logger.info('DEBUG: POST /conversations - User ID:', userId);
+    console.log('DEBUG: POST /conversations - User object:', (req as any).user);
+    console.log('DEBUG: POST /conversations - User ID:', userId);
     if (!userId) {
-      logger.info('DEBUG: POST /conversations - No user ID found, rejecting request');
+      console.log('DEBUG: POST /conversations - No user ID found, rejecting request');
       return res.status(401).json({ error: "User not authenticated" });
     }
     
@@ -65,7 +64,7 @@ router.post("/conversations", async (req, res) => {
     
     res.status(201).json(conversation);
   } catch (error) {
-    logger.error("Error creating conversation:", error);
+    console.error("Error creating conversation:", error);
     res.status(500).json({ error: "Failed to create conversation" });
   }
 });
@@ -75,7 +74,7 @@ router.get("/conversations/:id/messages", async (req, res) => {
   try {
     const userId = (req as any).user?.id;
     if (!userId) {
-      logger.info('DEBUG: No user ID found in get messages, user object:', (req as any).user);
+      console.log('DEBUG: No user ID found in get messages, user object:', (req as any).user);
       return res.status(401).json({ error: "User not authenticated" });
     }
     
@@ -83,7 +82,7 @@ router.get("/conversations/:id/messages", async (req, res) => {
     const messages = await storage.getConversationMessages(conversationId, userId);
     res.json(messages);
   } catch (error) {
-    logger.error("Error fetching conversation messages:", error);
+    console.error("Error fetching conversation messages:", error);
     res.status(500).json({ error: "Failed to fetch messages" });
   }
 });
@@ -93,7 +92,7 @@ router.post("/conversations/:id/messages", async (req, res) => {
   try {
     const userId = (req as any).user?.id;
     if (!userId) {
-      logger.info('DEBUG: No user ID found in send message, user object:', (req as any).user);
+      console.log('DEBUG: No user ID found in send message, user object:', (req as any).user);
       return res.status(401).json({ error: "User not authenticated" });
     }
     
@@ -131,7 +130,7 @@ router.post("/conversations/:id/messages", async (req, res) => {
     
     res.status(201).json(message);
   } catch (error) {
-    logger.error("Error sending message:", error);
+    console.error("Error sending message:", error);
     res.status(500).json({ error: "Failed to send message" });
   }
 });
@@ -161,7 +160,7 @@ router.patch("/conversations/:id/messages/:messageId", async (req, res) => {
     
     res.json(updatedMessage);
   } catch (error) {
-    logger.error("Error updating conversation message:", error);
+    console.error("Error updating conversation message:", error);
     res.status(500).json({ error: "Failed to update message" });
   }
 });
@@ -184,7 +183,7 @@ router.delete("/conversations/:id/messages/:messageId", async (req, res) => {
     
     res.status(204).send();
   } catch (error) {
-    logger.error("Error deleting conversation message:", error);
+    console.error("Error deleting conversation message:", error);
     res.status(500).json({ error: "Failed to delete message" });
   }
 });
@@ -194,16 +193,16 @@ router.get("/conversations/:id/participants", async (req, res) => {
   try {
     const userId = (req as any).user?.id;
     if (!userId) {
-      logger.info('DEBUG: No user ID found in get participants, user object:', (req as any).user);
+      console.log('DEBUG: No user ID found in get participants, user object:', (req as any).user);
       return res.status(401).json({ error: "User not authenticated" });
     }
     
     const conversationId = parseInt(req.params.id);
     const participants = await storage.getConversationParticipants(conversationId);
-    logger.info(`[PARTICIPANTS] Found ${participants.length} participants for conversation ${conversationId}`);
+    console.log(`[PARTICIPANTS] Found ${participants.length} participants for conversation ${conversationId}`);
     res.json(participants);
   } catch (error) {
-    logger.error("Error fetching conversation participants:", error);
+    console.error("Error fetching conversation participants:", error);
     res.status(500).json({ error: "Failed to fetch participants" });
   }
 });

@@ -1,5 +1,4 @@
 import { LRUCache } from 'lru-cache';
-import { logger } from "../utils/logger";
 
 export interface CacheOptions {
   maxSize?: number;
@@ -91,7 +90,7 @@ export class CacheManager {
 
   // Smart cache warming for critical data
   static async warmCaches() {
-    logger.info('Warming critical caches...');
+    console.log('Warming critical caches...');
     
     // Pre-load frequently accessed data
     const warmingTasks = [
@@ -101,7 +100,7 @@ export class CacheManager {
     ];
 
     await Promise.allSettled(warmingTasks);
-    logger.info('Cache warming completed');
+    console.log('Cache warming completed');
   }
 
   private static async warmCollectionStats() {
@@ -113,7 +112,7 @@ export class CacheManager {
         this.stats.set('collection-stats', stats);
       }
     } catch (error) {
-      logger.warn('Failed to warm collection stats cache:', error);
+      console.warn('Failed to warm collection stats cache:', error);
     }
   }
 
@@ -125,7 +124,7 @@ export class CacheManager {
         this.hosts.set('active-hosts', hosts);
       }
     } catch (error) {
-      logger.warn('Failed to warm hosts cache:', error);
+      console.warn('Failed to warm hosts cache:', error);
     }
   }
 
@@ -137,7 +136,7 @@ export class CacheManager {
         this.projects.set('recent-projects', projects);
       }
     } catch (error) {
-      logger.warn('Failed to warm projects cache:', error);
+      console.warn('Failed to warm projects cache:', error);
     }
   }
 
@@ -159,7 +158,7 @@ export class CacheManager {
           const nextPageData = await fetcher(currentPage + 1);
           cache.set(nextPageKey, nextPageData);
         } catch (error) {
-          logger.warn('Failed to preload next page:', error);
+          console.warn('Failed to preload next page:', error);
         }
       }, 100);
     }
@@ -173,7 +172,7 @@ export class CacheManager {
       const sizeAfter = cache.size;
       
       if (sizeBefore > sizeAfter) {
-        logger.info(`Cache ${name}: cleaned ${sizeBefore - sizeAfter} stale entries`);
+        console.log(`Cache ${name}: cleaned ${sizeBefore - sizeAfter} stale entries`);
       }
     }
   }

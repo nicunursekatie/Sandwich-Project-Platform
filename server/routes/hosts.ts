@@ -1,146 +1,149 @@
 import { Router } from "express";
 import { z } from "zod";
 import { storage } from "../storage-wrapper";
-import { requirePermission, isAuthenticated, optionalAuth } from "../middleware/auth";
-import { insertHostSchema } from "@shared/schema";
-import { logger } from "../utils/logger";
+import { sanitizeMiddleware } from "../middleware/sanitizer";
+import { insertHostSchema, insertHostContactSchema } from "@shared/schema";
 
 const router = Router();
 
-// Get all hosts
-router.get("/", optionalAuth, async (req: any, res) => {
+// Host management routes
+router.get("/hosts", async (req, res) => {
   try {
     const hosts = await storage.getAllHosts();
     res.json(hosts);
   } catch (error) {
-    logger.error("Error fetching hosts:", error);
+    console.error("Error fetching hosts:", error);
     res.status(500).json({ error: "Failed to fetch hosts" });
   }
 });
 
-// Get single host
-router.get("/:id", optionalAuth, async (req: any, res) => {
+router.get("/hosts-with-contacts", async (req, res) => {
   try {
-    const hostId = parseInt(req.params.id);
-    const host = await storage.getHostById(hostId);
+    const hostsWithContacts = await storage.getAllHostsWithContacts();
+    res.json(hostsWithContacts);
+  } catch (error) {
+    console.error("Error fetching hosts with contacts:", error);
+    res.status(500).json({ error: "Failed to fetch hosts with contacts" });
+  }
+});
+
+router.get("/hosts/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const host = await storage.getHost(id);
     if (!host) {
       return res.status(404).json({ error: "Host not found" });
     }
     res.json(host);
   } catch (error) {
-    logger.error("Error fetching host:", error);
+    console.error("Error fetching host:", error);
     res.status(500).json({ error: "Failed to fetch host" });
   }
 });
 
-// Create new host
-router.post("/", requirePermission("edit_data"), async (req: any, res) => {
+router.post("/hosts", sanitizeMiddleware, async (req, res) => {
   try {
-    const validatedData = insertHostSchema.parse(req.body);
-    const host = await storage.createHost(validatedData);
+    const result = insertHostSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({ error: result.error.message });
+    }
+    const host = await storage.createHost(result.data);
     res.status(201).json(host);
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: "Invalid host data", details: error?.errors || "Unknown" });
-    }
-    logger.error("Error creating host:", error);
+    console.error("Error creating host:", error);
     res.status(500).json({ error: "Failed to create host" });
   }
 });
 
-// Update host
-router.patch("/:id", requirePermission("edit_data"), async (req: any, res) => {
+router.patch("/hosts/:id", sanitizeMiddleware, async (req, res) => {
   try {
-    const hostId = parseInt(req.params.id);
-    
-    // Validate host exists
-    const existingHost = await storage.getHostById(hostId);
-    if (!existingHost) {
+    const id = parseInt(req.params.id);
+    const updates = req.body;
+    const host = await storage.updateHost(id, updates);
+    if (!host) {
       return res.status(404).json({ error: "Host not found" });
     }
-
-    const updatedHost = await storage.updateHost(hostId, req.body);
-    res.json(updatedHost);
+    res.json(host);
   } catch (error) {
-    logger.error("Error updating host:", error);
+    console.error("Error updating host:", error);
     res.status(500).json({ error: "Failed to update host" });
   }
 });
 
-// Delete host
-router.delete("/:id", requirePermission("delete_data"), async (req: any, res) => {
+router.delete("/hosts/:id", async (req, res) => {
   try {
-    const hostId = parseInt(req.params.id);
-    
-    // Validate host exists
-    const existingHost = await storage.getHostById(hostId);
-    if (!existingHost) {
+    const id = parseInt(req.params.id);
+    const success = await storage.deleteHost(id);
+    if (!success) {
       return res.status(404).json({ error: "Host not found" });
     }
-
-    await storage.deleteHost(hostId);
-    res.json({ message: "Host deleted successfully" });
+    res.status(204).send();
   } catch (error) {
-    logger.error("Error deleting host:", error);
+    console.error("Error deleting host:", error);
     res.status(500).json({ error: "Failed to delete host" });
   }
 });
 
-// Host status (active/inactive)
-router.patch("/:id/status", requirePermission("edit_data"), async (req: any, res) => {
+// Host contact routes
+router.get("/host-contacts", async (req, res) => {
   try {
-    const hostId = parseInt(req.params.id);
-    const { isActive } = req.body;
-    
-    const updatedHost = await storage.updateHost(hostId, { isActive });
-    res.json(updatedHost);
+    const hostId = req.query.hostId ? parseInt(req.query.hostId as string) : undefined;
+    if (hostId) {
+      const contacts = await storage.getHostContacts(hostId);
+      res.json(contacts);
+    } else {
+      // Return all host contacts
+      const hosts = await storage.getAllHostsWithContacts();
+      const allContacts = hosts.flatMap(host => host.contacts);
+      res.json(allContacts);
+    }
   } catch (error) {
-    logger.error("Error updating host status:", error);
-    res.status(500).json({ error: "Failed to update host status" });
+    console.error("Error fetching host contacts:", error);
+    res.status(500).json({ error: "Failed to fetch host contacts" });
   }
 });
 
-// Get hosts by type
-router.get("/type/:type", optionalAuth, async (req: any, res) => {
+router.post("/host-contacts", sanitizeMiddleware, async (req, res) => {
   try {
-    const type = req.params.type;
-    const hosts = await storage.getHostsByType(type);
-    res.json(hosts);
+    const result = insertHostContactSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({ error: result.error.message });
+    }
+    const contact = await storage.createHostContact(result.data);
+    res.status(201).json(contact);
   } catch (error) {
-    logger.error("Error fetching hosts by type:", error);
-    res.status(500).json({ error: "Failed to fetch hosts by type" });
+    console.error("Error creating host contact:", error);
+    res.status(500).json({ error: "Failed to create host contact" });
   }
 });
 
-// Get host collections
-router.get("/:id/collections", optionalAuth, async (req: any, res) => {
+router.patch("/host-contacts/:id", sanitizeMiddleware, async (req, res) => {
   try {
-    const hostId = parseInt(req.params.id);
-    const { startDate, endDate } = req.query;
-    
-    const dateRange = startDate && endDate ? { 
-      startDate: new Date(startDate as string), 
-      endDate: new Date(endDate as string) 
-    } : undefined;
-    
-    const collections = await storage.getHostCollections(hostId, dateRange);
-    res.json(collections);
+    const id = parseInt(req.params.id);
+    const updates = req.body;
+    const contact = await storage.updateHostContact(id, updates);
+    if (!contact) {
+      return res.status(404).json({ error: "Host contact not found" });
+    }
+    res.json(contact);
   } catch (error) {
-    logger.error("Error fetching host collections:", error);
-    res.status(500).json({ error: "Failed to fetch host collections" });
+    console.error("Error updating host contact:", error);
+    res.status(500).json({ error: "Failed to update host contact" });
   }
 });
 
-// Get host performance statistics
-router.get("/:id/stats", optionalAuth, async (req: any, res) => {
+router.delete("/host-contacts/:id", async (req, res) => {
   try {
-    const hostId = parseInt(req.params.id);
-    const stats = await storage.getHostStats(hostId);
-    res.json(stats);
+    const id = parseInt(req.params.id);
+    const success = await storage.deleteHostContact(id);
+    if (!success) {
+      return res.status(404).json({ error: "Host contact not found" });
+    }
+    res.status(204).send();
   } catch (error) {
-    logger.error("Error fetching host stats:", error);
-    res.status(500).json({ error: "Failed to fetch host stats" });
+    console.error("Error deleting host contact:", error);
+    res.status(500).json({ error: "Failed to delete host contact" });
   }
 });
 
-export default router;
+export { router as hostsRoutes };

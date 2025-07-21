@@ -7,7 +7,6 @@ import type { Express, RequestHandler } from "express";
 import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
 import { storage } from "./storage-wrapper";
-import { logger } from "./utils/logger";
 
 if (!process.env.REPLIT_DOMAINS) {
   throw new Error("Environment variable REPLIT_DOMAINS not provided");
@@ -85,7 +84,7 @@ export async function setupAuth(app: Express) {
       await upsertUser(tokens.claims());
       verified(null, user);
     } catch (error) {
-      logger.error("Verification error:", error);
+      console.error("Verification error:", error);
       verified(error);
     }
   };
@@ -113,7 +112,7 @@ export async function setupAuth(app: Express) {
 
       // Check if strategy exists before attempting to authenticate
       if (!passport._strategy(strategyName)) {
-        logger.error(`Strategy ${strategyName} not found. Available strategies:`, Object.keys(passport._strategies || {}));
+        console.error(`Strategy ${strategyName} not found. Available strategies:`, Object.keys(passport._strategies || {}));
         return res.status(500).send(`
           <html>
             <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
@@ -130,7 +129,7 @@ export async function setupAuth(app: Express) {
         scope: ["openid", "email", "profile", "offline_access"],
       })(req, res, next);
     } catch (error) {
-      logger.error("Login error:", error);
+      console.error("Login error:", error);
       res.status(500).send(`
         <html>
           <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
@@ -146,19 +145,19 @@ export async function setupAuth(app: Express) {
   app.get("/api/callback", (req, res, next) => {
     passport.authenticate(`replitauth:${req.hostname}`, (err, user, info) => {
       if (err) {
-        logger.error("Authentication callback error:", err);
+        console.error("Authentication callback error:", err);
         return res.redirect("/api/login");
       }
       if (!user) {
-        logger.error("No user returned from authentication:", info);
+        console.error("No user returned from authentication:", info);
         return res.redirect("/api/login");
       }
       req.logIn(user, (loginErr) => {
         if (loginErr) {
-          logger.error("Login error:", loginErr);
+          console.error("Login error:", loginErr);
           return res.redirect("/api/login");
         }
-        logger.info("Authentication successful, redirecting to /");
+        console.log("Authentication successful, redirecting to /");
         return res.redirect("/");
       });
     })(req, res, next);

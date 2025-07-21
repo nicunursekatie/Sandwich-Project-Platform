@@ -1,6 +1,5 @@
 import { google } from 'googleapis';
 import type { SandwichCollection, InsertSandwichCollection } from '@shared/schema';
-import { logger } from "./utils/logger";
 
 // Create a minimal storage interface for the sync service
 interface SyncStorage {
@@ -33,7 +32,7 @@ export class GoogleSheetsSyncService {
 
       this.sheets = google.sheets({ version: 'v4', auth });
     } catch (error) {
-      logger.error('Google Sheets authentication failed:', error);
+      console.error('Google Sheets authentication failed:', error);
       throw new Error('Google Sheets service unavailable. Please configure API credentials.');
     }
   }
@@ -43,7 +42,7 @@ export class GoogleSheetsSyncService {
    */
   async readFromGoogleSheet(sheetName: string = 'Sheet1'): Promise<any[]> {
     try {
-      logger.info(`Reading data from Google Sheet: ${this.targetSpreadsheetId}, sheet: ${sheetName}`);
+      console.log(`Reading data from Google Sheet: ${this.targetSpreadsheetId}, sheet: ${sheetName}`);
       
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.targetSpreadsheetId,
@@ -53,20 +52,20 @@ export class GoogleSheetsSyncService {
       const rows = response.data.values || [];
       
       if (rows.length === 0) {
-        logger.info('No data found in Google Sheet');
+        console.log('No data found in Google Sheet');
         return [];
       }
 
       // Log the structure for debugging
-      logger.info(`Found ${rows.length} rows in Google Sheet`);
-      logger.info('First row (headers):', rows[0]);
+      console.log(`Found ${rows.length} rows in Google Sheet`);
+      console.log('First row (headers):', rows[0]);
       if (rows.length > 1) {
-        logger.info('Sample data row:', rows[1]);
+        console.log('Sample data row:', rows[1]);
       }
 
       return rows;
     } catch (error) {
-      logger.error('Error reading from Google Sheet:', error);
+      console.error('Error reading from Google Sheet:', error);
       throw new Error(`Unable to read from Google Sheet: ${error}`);
     }
   }
@@ -159,7 +158,7 @@ export class GoogleSheetsSyncService {
       const sandwichCol = options.sandwichColumn ?? analysis.sandwichColumns[0] ?? 2;
       const groupCol = options.groupColumn ?? 3;
 
-      logger.info(`Using columns - Date: ${dateCol}, Host: ${hostCol}, Sandwiches: ${sandwichCol}, Groups: ${groupCol}`);
+      console.log(`Using columns - Date: ${dateCol}, Host: ${hostCol}, Sandwiches: ${sandwichCol}, Groups: ${groupCol}`);
 
       let imported = 0;
       let skipped = 0;
@@ -242,11 +241,11 @@ export class GoogleSheetsSyncService {
 
             if (isDuplicate) {
               skipped++;
-              logger.info(`Skipping duplicate: ${collectionData.collectionDate} - ${collectionData.hostName}`);
+              console.log(`Skipping duplicate: ${collectionData.collectionDate} - ${collectionData.hostName}`);
             } else {
               await this.storage.createSandwichCollection(collectionData);
               imported++;
-              logger.info(`Imported: ${collectionData.collectionDate} - ${collectionData.hostName} (${collectionData.individualSandwiches} sandwiches)`);
+              console.log(`Imported: ${collectionData.collectionDate} - ${collectionData.hostName} (${collectionData.individualSandwiches} sandwiches)`);
             }
           }
 
@@ -264,7 +263,7 @@ export class GoogleSheetsSyncService {
       };
 
     } catch (error) {
-      logger.error('Error importing from Google Sheet:', error);
+      console.error('Error importing from Google Sheet:', error);
       throw error;
     }
   }
@@ -323,7 +322,7 @@ export class GoogleSheetsSyncService {
       };
 
     } catch (error) {
-      logger.error('Error exporting to Google Sheet:', error);
+      console.error('Error exporting to Google Sheet:', error);
       throw error;
     }
   }
@@ -353,7 +352,7 @@ export class GoogleSheetsSyncService {
       });
 
     } catch (error) {
-      logger.error('Error adding entry to Google Sheet:', error);
+      console.error('Error adding entry to Google Sheet:', error);
       throw error;
     }
   }
@@ -375,12 +374,12 @@ export class GoogleSheetsSyncService {
 
     try {
       if (direction === 'import' || direction === 'both') {
-        logger.info('Starting import from Google Sheet...');
+        console.log('Starting import from Google Sheet...');
         importResult = await this.importFromGoogleSheet(options.importFrom);
       }
 
       if (direction === 'export' || direction === 'both') {
-        logger.info('Starting export to Google Sheet...');
+        console.log('Starting export to Google Sheet...');
         exportResult = await this.exportToGoogleSheet(options.exportTo);
       }
 
@@ -397,7 +396,7 @@ export class GoogleSheetsSyncService {
       };
 
     } catch (error) {
-      logger.error('Sync operation failed:', error);
+      console.error('Sync operation failed:', error);
       throw error;
     }
   }
