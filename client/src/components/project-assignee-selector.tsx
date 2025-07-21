@@ -21,6 +21,7 @@ interface User {
   email: string;
   firstName: string | null;
   lastName: string | null;
+  role?: string;
 }
 
 interface SelectedUser {

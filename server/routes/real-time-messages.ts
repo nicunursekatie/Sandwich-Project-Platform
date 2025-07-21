@@ -54,26 +54,34 @@ router.get("/", requireAuth, async (req, res) => {
           let recipientName = 'Unknown Recipient';
           let recipientEmail = 'unknown@example.com';
           
-          // Try to look up recipient user information by contextId (which can be userId or email)
+          // Handle different context types
           if (msg.contextId && msg.contextId.trim()) {
             try {
-              let recipientUser = null;
-              
-              // Try to find by user ID first
-              try {
-                recipientUser = await storage.getUserById(msg.contextId);
-              } catch (error) {
-                // If lookup by ID fails, try lookup by email
+              // If it's a task-related message, show task context
+              if (msg.contextType === 'task') {
+                recipientName = `Task Notification (ID: ${msg.contextId})`;
+                recipientEmail = 'task@sandwich.project';
+              } else {
+                // For user messages (including empty contextType), try to look up recipient user information by contextId (which can be userId or email)
+                let recipientUser = null;
+                
+                // Try to find by user ID first
                 try {
-                  recipientUser = await storage.getUserByEmail(msg.contextId);
-                } catch (emailError) {
-                  console.error('Error looking up recipient by email:', emailError);
+                  recipientUser = await storage.getUserById(msg.contextId);
+                } catch (error) {
+                  // If lookup by ID fails, try lookup by email
+                  try {
+                    recipientUser = await storage.getUserByEmail(msg.contextId);
+                    console.log(`Successfully found user by email ${msg.contextId}:`, recipientUser?.firstName, recipientUser?.lastName);
+                  } catch (emailError) {
+                    console.error('Error looking up recipient by email:', emailError);
+                  }
                 }
-              }
-              
-              if (recipientUser) {
-                recipientName = `${recipientUser.firstName || ''} ${recipientUser.lastName || ''}`.trim() || recipientUser.email || 'Unknown User';
-                recipientEmail = recipientUser.email || 'unknown@example.com';
+                
+                if (recipientUser) {
+                  recipientName = `${recipientUser.firstName || ''} ${recipientUser.lastName || ''}`.trim() || recipientUser.email || 'Unknown User';
+                  recipientEmail = recipientUser.email || 'unknown@example.com';
+                }
               }
             } catch (error) {
               console.error('Error looking up recipient user:', error);
