@@ -389,6 +389,33 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
           <h1 className="text-lg font-semibold text-slate-900 hidden sm:block">The Sandwich Project</h1>
           <h1 className="text-sm font-semibold text-slate-900 sm:hidden">TSP</h1>
         </div>
+        
+        {/* Current User Indicator */}
+        <div className="flex items-center space-x-3">
+          {user && (
+            <div className="flex items-center space-x-2 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center">
+                <span className="text-xs font-medium text-teal-700">
+                  {user.firstName?.charAt(0) || user.email?.charAt(0) || 'U'}
+                </span>
+              </div>
+              <div className="hidden sm:flex flex-col">
+                <span className="text-xs font-medium text-slate-700">
+                  {user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email}
+                </span>
+                <span className="text-xs text-slate-500 capitalize">
+                  {user.role?.replace('_', ' ') || 'User'}
+                </span>
+              </div>
+              <div className="sm:hidden">
+                <span className="text-xs font-medium text-slate-700">
+                  {user.firstName ? `${user.firstName}` : user.email?.split('@')[0] || 'User'}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+        
         <div className="flex items-center space-x-2 sm:space-x-4 relative z-50">
           <button
             onClick={() => {
