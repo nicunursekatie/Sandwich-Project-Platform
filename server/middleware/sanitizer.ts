@@ -69,7 +69,7 @@ export function sanitizeMiddleware(req: Request, res: Response, next: NextFuncti
 
 function sanitizeObjectRecursively(obj: any): void {
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       if (typeof obj[key] === 'string') {
         // Sanitize based on field type
         if (isHtmlField(key)) {

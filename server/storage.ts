@@ -89,6 +89,8 @@ export interface IStorage {
   createReply(message: InsertMessage, parentId: number): Promise<Message>;
   updateReplyCount(messageId: number): Promise<void>;
   deleteMessage(id: number): Promise<boolean>;
+  getMessagesBySender(senderId: string): Promise<Message[]>;
+  getMessagesForRecipient(recipientId: string): Promise<Message[]>;
   
   // Group messaging with individual thread management
   getUserMessageGroups(userId: string): Promise<any[]>;

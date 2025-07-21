@@ -1,0 +1,103 @@
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=6Cb9I8aXJUIW' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=6Cb9I8aXJUIW' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+dashboard.tsx:53 Dashboard activeSection changed to: dashboard
+message-notifications.tsx:80 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ message-notifications.tsx:80
+useMessaging.ts:180 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ useMessaging.ts:180
+hook.js:608 Messaging WebSocket error: Event
+overrideMethod @ hook.js:608
+useMessaging.ts:217 Messaging WebSocket disconnected
+simple-nav.tsx:144 Navigation click: chat
+dashboard.tsx:471 Dashboard setActiveSection called with: chat
+dashboard.tsx:53 Dashboard activeSection changed to: chat
+enhanced-chat.tsx:106 Chat connected to Socket.IO
+enhanced-chat.tsx:181 Chat sending user data: Object
+socket__io-client.js?v=c6f482f7:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=AL5hlpXKSTH6wuqiAAAA' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=c6f482f7:1059
+enhanced-chat.tsx:118 Successfully joined channel: general
+socket__io-client.js?v=c6f482f7:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=VQRm1xuX-EGRWzicAAAB' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=c6f482f7:1059
+simple-nav.tsx:144 Navigation click: real-time-messages
+dashboard.tsx:471 Dashboard setActiveSection called with: real-time-messages
+enhanced-chat.tsx:112 Chat disconnected from Socket.IO
+dashboard.tsx:53 Dashboard activeSection changed to: real-time-messages
+simple-nav.tsx:144 Navigation click: chat
+dashboard.tsx:471 Dashboard setActiveSection called with: chat
+dashboard.tsx:53 Dashboard activeSection changed to: chat
+enhanced-chat.tsx:106 Chat connected to Socket.IO
+enhanced-chat.tsx:181 Chat sending user data: {displayName: 'Katie (Main)', firstName: 'Katie', email: 'katielong2316@gmail.com', finalName: 'Katie (Main)'}
+socket__io-client.js?v=c6f482f7:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=kniQUDrUAa2GN7aXAAAE' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=c6f482f7:1059
+doOpen @ socket__io-client.js?v=c6f482f7:986
+open @ socket__io-client.js?v=c6f482f7:503
+_probe @ socket__io-client.js?v=c6f482f7:1731
+onOpen @ socket__io-client.js?v=c6f482f7:1640
+onHandshake @ socket__io-client.js?v=c6f482f7:1399
+onHandshake @ socket__io-client.js?v=c6f482f7:1736
+_onPacket @ socket__io-client.js?v=c6f482f7:1365
+Emitter.emit @ socket__io-client.js?v=c6f482f7:354
+onPacket @ socket__io-client.js?v=c6f482f7:553
+callback @ socket__io-client.js?v=c6f482f7:663
+onData @ socket__io-client.js?v=c6f482f7:665
+Emitter.emit @ socket__io-client.js?v=c6f482f7:354
+_onLoad @ socket__io-client.js?v=c6f482f7:908
+xhr.onreadystatechange @ socket__io-client.js?v=c6f482f7:851
+enhanced-chat.tsx:118 Successfully joined channel: general
+socket__io-client.js?v=c6f482f7:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=G5L72fYUUOmDDiljAAAF' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=c6f482f7:1059
+doOpen @ socket__io-client.js?v=c6f482f7:986
+open @ socket__io-client.js?v=c6f482f7:503
+_probe @ socket__io-client.js?v=c6f482f7:1731
+onOpen @ socket__io-client.js?v=c6f482f7:1640
+onHandshake @ socket__io-client.js?v=c6f482f7:1399
+onHandshake @ socket__io-client.js?v=c6f482f7:1736
+_onPacket @ socket__io-client.js?v=c6f482f7:1365
+Emitter.emit @ socket__io-client.js?v=c6f482f7:354
+onPacket @ socket__io-client.js?v=c6f482f7:553
+callback @ socket__io-client.js?v=c6f482f7:663
+onData @ socket__io-client.js?v=c6f482f7:665
+Emitter.emit @ socket__io-client.js?v=c6f482f7:354
+_onLoad @ socket__io-client.js?v=c6f482f7:908
+xhr.onreadystatechange @ socket__io-client.js?v=c6f482f7:851
+enhanced-chat.tsx:112 Chat disconnected from Socket.IO
+enhanced-chat.tsx:181 Chat sending user data: {displayName: 'Katie (Main)', firstName: 'Katie', email: 'katielong2316@gmail.com', finalName: 'Katie (Main)'}
+enhanced-chat.tsx:106 Chat connected to Socket.IO
+enhanced-chat.tsx:181 Chat sending user data: {displayName: 'Katie (Main)', firstName: 'Katie', email: 'katielong2316@gmail.com', finalName: 'Katie (Main)'}
+socket__io-client.js?v=c6f482f7:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=ewRZpDh2HceUDkgvAAAI' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=c6f482f7:1059
+doOpen @ socket__io-client.js?v=c6f482f7:986
+open @ socket__io-client.js?v=c6f482f7:503
+_probe @ socket__io-client.js?v=c6f482f7:1731
+onOpen @ socket__io-client.js?v=c6f482f7:1640
+onHandshake @ socket__io-client.js?v=c6f482f7:1399
+onHandshake @ socket__io-client.js?v=c6f482f7:1736
+_onPacket @ socket__io-client.js?v=c6f482f7:1365
+Emitter.emit @ socket__io-client.js?v=c6f482f7:354
+onPacket @ socket__io-client.js?v=c6f482f7:553
+callback @ socket__io-client.js?v=c6f482f7:663
+onData @ socket__io-client.js?v=c6f482f7:665
+Emitter.emit @ socket__io-client.js?v=c6f482f7:354
+_onLoad @ socket__io-client.js?v=c6f482f7:908
+xhr.onreadystatechange @ socket__io-client.js?v=c6f482f7:851
+enhanced-chat.tsx:118 Successfully joined channel: driver
+socket__io-client.js?v=c6f482f7:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=atmNHlAJpMsZOkbvAAAJ' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=c6f482f7:1059
+doOpen @ socket__io-client.js?v=c6f482f7:986
+open @ socket__io-client.js?v=c6f482f7:503
+_probe @ socket__io-client.js?v=c6f482f7:1731
+onOpen @ socket__io-client.js?v=c6f482f7:1640
+onHandshake @ socket__io-client.js?v=c6f482f7:1399
+onHandshake @ socket__io-client.js?v=c6f482f7:1736
+_onPacket @ socket__io-client.js?v=c6f482f7:1365
+Emitter.emit @ socket__io-client.js?v=c6f482f7:354
+onPacket @ socket__io-client.js?v=c6f482f7:553
+callback @ socket__io-client.js?v=c6f482f7:663
+onData @ socket__io-client.js?v=c6f482f7:665
+Emitter.emit @ socket__io-client.js?v=c6f482f7:354
+_onLoad @ socket__io-client.js?v=c6f482f7:908
+xhr.onreadystatechange @ socket__io-client.js?v=c6f482f7:851

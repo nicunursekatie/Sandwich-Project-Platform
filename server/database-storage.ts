@@ -514,6 +514,36 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
+  async getMessagesBySender(senderId: string): Promise<Message[]> {
+    console.log(`[DEBUG] getMessagesBySender called with senderId: ${senderId}`);
+    try {
+      const result = await db.select()
+        .from(messages)
+        .where(eq(messages.senderId, senderId))
+        .orderBy(desc(messages.createdAt));
+      console.log(`[DEBUG] Found ${result.length} messages sent by ${senderId}`);
+      return result;
+    } catch (error) {
+      console.error(`[ERROR] getMessagesBySender failed for senderId ${senderId}:`, error);
+      return [];
+    }
+  }
+
+  async getMessagesForRecipient(recipientId: string): Promise<Message[]> {
+    console.log(`[DEBUG] getMessagesForRecipient called with recipientId: ${recipientId}`);
+    try {
+      const result = await db.select()
+        .from(messages)
+        .where(eq(messages.contextId, recipientId))
+        .orderBy(desc(messages.createdAt));
+      console.log(`[DEBUG] Found ${result.length} messages for recipient ${recipientId}`);
+      return result;
+    } catch (error) {
+      console.error(`[ERROR] getMessagesForRecipient failed for recipientId ${recipientId}:`, error);
+      return [];
+    }
+  }
+
   // Conversation management methods
   async getDirectConversation(userId1: string, userId2: string): Promise<any | undefined> {
     try {

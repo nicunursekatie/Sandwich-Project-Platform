@@ -112,6 +112,7 @@ export function setupChatSocket(io: SocketServer) {
 
 // Get messages for a channel
 router.get("/chat/:channel", async (req, res) => {
+  console.log("[DEBUG] Chat GET route hit for channel:", req.params.channel);
   try {
     const { channel } = req.params;
     const userId = (req as any).user?.id;
@@ -136,6 +137,7 @@ router.get("/chat/:channel", async (req, res) => {
 
 // Send a message to a channel
 router.post("/chat/:channel", async (req, res) => {
+  console.log("[DEBUG] Chat POST route hit for channel:", req.params.channel);
   try {
     const { channel } = req.params;
     const { content } = req.body;

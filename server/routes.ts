@@ -18,7 +18,7 @@ import { registerMessageNotificationRoutes } from "./routes/message-notification
 import googleSheetsRoutes from "./routes/google-sheets";
 import suggestionsRoutes from "./suggestions-routes";
 import realTimeMessagesRoutes from "./routes/real-time-messages";
-import chatRoutes from "./routes/chat";
+import chatRoutes from "./routes/chat-simple";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";

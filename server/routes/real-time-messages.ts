@@ -1,6 +1,6 @@
 import express from "express";
 import { z } from "zod";
-import { storage } from "../storage";
+import { storage } from "../storage-wrapper";
 import { isAuthenticated } from "../temp-auth";
 
 // Use the existing authentication middleware
@@ -43,9 +43,48 @@ router.get("/", requireAuth, async (req, res) => {
     
     let messages: RealTimeMessage[] = [];
     
-    // For now, return empty array since we'll implement proper message storage later
-    // This prevents errors while we set up the basic system
-    messages = [];
+    try {
+      // Get messages based on folder type
+      if (folder === 'sent') {
+        // For sent folder, get messages where current user is the sender
+        const sentMessages = await storage.getMessagesBySender(userId);
+        messages = sentMessages.map(msg => ({
+          id: msg.id.toString(),
+          from: {
+            name: msg.sender || 'You',
+            email: msg.senderEmail || (req.user as any).email
+          },
+          to: [msg.contextId || ''],
+          subject: msg.contextType || 'No Subject',
+          content: msg.content,
+          timestamp: msg.createdAt?.toISOString() || new Date().toISOString(),
+          read: true, // Sent messages are always "read" by sender
+          starred: false,
+          folder: 'sent'
+        }));
+      } else if (folder === 'inbox') {
+        // For inbox, get messages where current user is the recipient
+        const inboxMessages = await storage.getMessagesForRecipient(userId);
+        messages = inboxMessages.map(msg => ({
+          id: msg.id.toString(),
+          from: {
+            name: msg.sender || 'Unknown Sender',
+            email: msg.senderEmail || 'unknown@example.com'
+          },
+          to: [(req.user as any).email],
+          subject: msg.contextType || 'No Subject',
+          content: msg.content,
+          timestamp: msg.createdAt?.toISOString() || new Date().toISOString(),
+          read: false,
+          starred: false,
+          folder: 'inbox'
+        }));
+      }
+    } catch (storageError) {
+      console.error("Storage error when fetching messages:", storageError);
+      // Return empty array if storage fails
+      messages = [];
+    }
     
     res.json(messages);
   } catch (error) {
@@ -59,27 +98,29 @@ router.post("/", requireAuth, async (req, res) => {
   try {
     const { to, subject, content } = SendMessageSchema.parse(req.body);
     const senderId = (req.user as any).id;
+    const senderName = `${(req.user as any).firstName || ''} ${(req.user as any).lastName || ''}`.trim() || (req.user as any).email || 'User';
     
-    // For now, create a simple message object
-    // We'll implement proper storage integration later
-    const message = {
-      id: Date.now(),
+    // Create proper message object for database storage
+    const messageData = {
+      userId: senderId,
       senderId,
       content,
-      contextType: subject,
+      contextType: null,  // Try null to avoid constraint issue
       contextId: to,
-      senderEmail: (req.user as any).email,
-      createdAt: new Date()
+      sender: senderName
     };
     
-    // Broadcast real-time notification (if WebSocket system exists)
+    // Save message to database using storage interface
+    const savedMessage = await storage.createMessage(messageData);
+    
+    // Broadcast real-time notification
     if (typeof (global as any).broadcastNewMessage === 'function') {
       (global as any).broadcastNewMessage({
         type: 'new_message',
         message: {
-          id: message.id.toString(),
+          id: savedMessage.id.toString(),
           from: {
-            name: (req.user as any).firstName || (req.user as any).email || 'User',
+            name: senderName,
             email: (req.user as any).email || 'unknown@example.com'
           },
           to: [to],
@@ -95,8 +136,8 @@ router.post("/", requireAuth, async (req, res) => {
     }
     
     res.status(201).json({ 
-      id: message.id.toString(),
-      message: "Message sent and delivered instantly"
+      id: savedMessage.id.toString(),
+      message: "Message sent successfully"
     });
   } catch (error) {
     console.error("Error sending message:", error);
