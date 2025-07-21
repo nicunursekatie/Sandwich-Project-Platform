@@ -310,36 +310,7 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
                 >
                   Viewer Preset
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    // Common editor permissions - can submit/edit own content
-                    const editorPermissions = [
-                      PERMISSIONS.ACCESS_DIRECTORY,
-                      PERMISSIONS.ACCESS_HOSTS,
-                      PERMISSIONS.ACCESS_RECIPIENTS,
-                      PERMISSIONS.ACCESS_DRIVERS,
-                      PERMISSIONS.ACCESS_COLLECTIONS,
-                      PERMISSIONS.ACCESS_PROJECTS,
-                      PERMISSIONS.ACCESS_REPORTS,
-                      PERMISSIONS.ACCESS_TOOLKIT,
-                      PERMISSIONS.MANAGE_COLLECTIONS,
-                      PERMISSIONS.MANAGE_HOSTS,
-                      PERMISSIONS.MANAGE_RECIPIENTS,
-                      PERMISSIONS.MANAGE_DRIVERS,
-                      PERMISSIONS.MANAGE_PROJECTS,
-                      PERMISSIONS.EDIT_DATA,
-                      PERMISSIONS.EXPORT_DATA,
-                      PERMISSIONS.SUBMIT_SUGGESTIONS,
-                      PERMISSIONS.GENERAL_CHAT
-                    ];
-                    setSelectedPermissions(editorPermissions);
-                  }}
-                  className="text-xs"
-                >
-                  Editor Preset
-                </Button>
+
               </div>
             </div>
             <Select value={selectedRole} onValueChange={handleRoleChange}>
