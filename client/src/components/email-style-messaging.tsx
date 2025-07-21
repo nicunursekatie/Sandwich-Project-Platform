@@ -66,6 +66,7 @@ export default function EmailStyleMessaging() {
     subject: "",
     content: ""
   });
+  const [replyData, setReplyData] = useState<EmailMessage | null>(null);
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -108,10 +109,19 @@ export default function EmailStyleMessaging() {
       queryClient.invalidateQueries({ queryKey: ['/api/real-time-messages'] });
       toast({
         title: "Message sent",
-        description: "Your message has been delivered instantly."
+        description: "Your message has been delivered successfully."
       });
       setIsComposing(false);
+      setReplyData(null);
       setComposeData({ to: "", subject: "", content: "" });
+    },
+    onError: (error) => {
+      console.error('Send message error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive"
+      });
     }
   });
 
@@ -190,6 +200,37 @@ export default function EmailStyleMessaging() {
     sendMessageMutation.mutate(composeData);
   };
 
+  const handleReply = (message: EmailMessage) => {
+    setReplyData(message);
+    setComposeData({
+      to: message.from.email,
+      subject: message.subject.startsWith('Re:') ? message.subject : `Re: ${message.subject}`,
+      content: `\n\n--- Original Message ---\nFrom: ${message.from.name} <${message.from.email}>\nDate: ${formatDate(message.timestamp)}\nSubject: ${message.subject}\n\n${message.content}`
+    });
+    setIsComposing(true);
+  };
+
+  const handleReplyAll = (message: EmailMessage) => {
+    const allRecipients = [message.from.email, ...message.to.filter(email => email !== currentUser?.email)];
+    setReplyData(message);
+    setComposeData({
+      to: allRecipients.join(', '),
+      subject: message.subject.startsWith('Re:') ? message.subject : `Re: ${message.subject}`,
+      content: `\n\n--- Original Message ---\nFrom: ${message.from.name} <${message.from.email}>\nDate: ${formatDate(message.timestamp)}\nSubject: ${message.subject}\n\n${message.content}`
+    });
+    setIsComposing(true);
+  };
+
+  const handleForward = (message: EmailMessage) => {
+    setReplyData(message);
+    setComposeData({
+      to: "",
+      subject: message.subject.startsWith('Fwd:') ? message.subject : `Fwd: ${message.subject}`,
+      content: `\n\n--- Forwarded Message ---\nFrom: ${message.from.name} <${message.from.email}>\nDate: ${formatDate(message.timestamp)}\nSubject: ${message.subject}\n\n${message.content}`
+    });
+    setIsComposing(true);
+  };
+
   if (!user) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -263,7 +304,13 @@ export default function EmailStyleMessaging() {
           <div className="flex-1 flex flex-col">
             <div className="p-4 border-b">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold">New Message</h2>
+                <h2 className="text-lg font-semibold">
+                  {replyData ? (
+                    replyData.subject.startsWith('Re:') ? 'Reply to Message' :
+                    replyData.subject.startsWith('Fwd:') ? 'Forward Message' : 
+                    'Reply to Message'
+                  ) : 'New Message'}
+                </h2>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -277,18 +324,26 @@ export default function EmailStyleMessaging() {
             <div className="flex-1 p-4 space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">To:</label>
-                <select
-                  value={composeData.to}
-                  onChange={(e) => setComposeData(prev => ({ ...prev, to: e.target.value }))}
-                  className="w-full p-2 border rounded-md"
-                >
-                  <option value="">Select recipient...</option>
-                  {users.map((user: any) => (
-                    <option key={user.id} value={user.id}>
-                      {user.firstName || user.email} ({user.email})
-                    </option>
-                  ))}
-                </select>
+                {replyData ? (
+                  <Input
+                    value={composeData.to}
+                    onChange={(e) => setComposeData(prev => ({ ...prev, to: e.target.value }))}
+                    placeholder="Recipient email..."
+                  />
+                ) : (
+                  <select
+                    value={composeData.to}
+                    onChange={(e) => setComposeData(prev => ({ ...prev, to: e.target.value }))}
+                    className="w-full p-2 border rounded-md"
+                  >
+                    <option value="">Select recipient...</option>
+                    {users.map((user: any) => (
+                      <option key={user.id} value={user.email}>
+                        {user.firstName || user.email} ({user.email})
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
               
               <div>
@@ -323,12 +378,22 @@ export default function EmailStyleMessaging() {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" onClick={() => setIsComposing(false)}>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      setIsComposing(false);
+                      setReplyData(null);
+                      setComposeData({ to: "", subject: "", content: "" });
+                    }}
+                  >
                     Cancel
                   </Button>
-                  <Button onClick={handleCompose}>
+                  <Button 
+                    onClick={handleCompose}
+                    disabled={sendMessageMutation.isPending}
+                  >
                     <Send className="h-4 w-4 mr-2" />
-                    Send
+                    {sendMessageMutation.isPending ? "Sending..." : "Send"}
                   </Button>
                 </div>
               </div>
@@ -518,15 +583,27 @@ export default function EmailStyleMessaging() {
                   
                   <div className="p-4 border-t">
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleReply(selectedMessage)}
+                      >
                         <Reply className="h-4 w-4 mr-2" />
                         Reply
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleReplyAll(selectedMessage)}
+                      >
                         <ReplyAll className="h-4 w-4 mr-2" />
                         Reply All
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleForward(selectedMessage)}
+                      >
                         <Forward className="h-4 w-4 mr-2" />
                         Forward
                       </Button>
