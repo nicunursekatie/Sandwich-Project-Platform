@@ -205,6 +205,7 @@ export const messages = pgTable("messages", {
   sender: text("sender"), // Display name of sender
   contextType: text("context_type"), // 'suggestion', 'project', 'task', 'direct'
   contextId: text("context_id"),
+  read: boolean("read").notNull().default(false), // Simple read status for email-style messaging
   editedAt: timestamp("edited_at"),
   editedContent: text("edited_content"),
   deletedAt: timestamp("deleted_at"),

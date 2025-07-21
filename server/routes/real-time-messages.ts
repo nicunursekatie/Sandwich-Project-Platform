@@ -129,7 +129,7 @@ router.get("/", requireAuth, async (req, res) => {
             subject: msg.contextType || 'No Subject',
             content: msg.content,
             timestamp: msg.createdAt?.toISOString() || new Date().toISOString(),
-            read: false, // Always false for now - will be marked true when clicked
+            read: msg.read || false, // Use actual read status from database
             starred: false,
             folder: 'inbox'
           };
