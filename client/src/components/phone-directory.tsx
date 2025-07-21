@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -103,6 +103,26 @@ function PhoneDirectory() {
   // Auth and permissions
   const { user } = useAuth();
   const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
+  
+  // Permission-based tab visibility
+  const canViewHosts = hasPermission(user, PERMISSIONS.ACCESS_HOSTS);
+  const canViewRecipients = hasPermission(user, PERMISSIONS.ACCESS_RECIPIENTS);
+  const canViewDrivers = hasPermission(user, PERMISSIONS.ACCESS_DRIVERS);
+  
+  // Available tabs based on permissions
+  const availableTabs = [
+    { id: 'contacts', label: 'Contacts', icon: Phone, enabled: true }, // Always available with directory access
+    { id: 'hosts', label: 'Hosts', icon: Users, enabled: canViewHosts },
+    { id: 'recipients', label: 'Recipients', icon: User, enabled: canViewRecipients },
+    { id: 'drivers', label: 'Drivers', icon: User, enabled: canViewDrivers }
+  ].filter(tab => tab.enabled);
+  
+  // Auto-select first available tab if current tab isn't available
+  React.useEffect(() => {
+    if (!availableTabs.find(tab => tab.id === activeTab)) {
+      setActiveTab(availableTabs[0]?.id || 'contacts');
+    }
+  }, [availableTabs, activeTab]);
 
   // Optimized: Fetch hosts with contacts in single query
   const { data: hosts = [], isLoading, refetch: refetchHostsWithContacts } = useQuery<HostWithContacts[]>({
@@ -424,6 +444,17 @@ function PhoneDirectory() {
            (contact.address && contact.address.toLowerCase().includes(searchLower)) ||
            (contact.notes && contact.notes.toLowerCase().includes(searchLower)) ||
            contact.category.toLowerCase().includes(searchLower);
+  });
+
+  const filteredDrivers = drivers.filter((driver) => {
+    if (!searchTerm) return true;
+    const searchLower = searchTerm.toLowerCase();
+    
+    return driver.name.toLowerCase().includes(searchLower) ||
+           driver.phone.includes(searchTerm) ||
+           driver.email.toLowerCase().includes(searchLower) ||
+           driver.zone.toLowerCase().includes(searchLower) ||
+           (driver.notes && driver.notes.toLowerCase().includes(searchLower));
   });
 
   // Export functions
@@ -916,21 +947,29 @@ function PhoneDirectory() {
         </CardContent>
       </Card>
 
-      {/* Directory Tabs */}
+      {/* Directory Tabs - Permission-based visibility */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="contacts" className="flex items-center gap-2 font-semibold">
-            <Phone className="w-4 h-4" />
-            Contacts ({filteredContacts.length})
-          </TabsTrigger>
-          <TabsTrigger value="hosts" className="flex items-center gap-2">
-            <Users className="w-4 h-4" />
-            Hosts ({filteredHosts.length})
-          </TabsTrigger>
-          <TabsTrigger value="recipients" className="flex items-center gap-2">
-            <User className="w-4 h-4" />
-            Recipients ({filteredRecipients.length})
-          </TabsTrigger>
+        <TabsList className={`grid w-full grid-cols-${availableTabs.length}`}>
+          {availableTabs.map(tab => {
+            const Icon = tab.icon;
+            let count = 0;
+            
+            if (tab.id === 'contacts') count = filteredContacts.length;
+            else if (tab.id === 'hosts') count = filteredHosts.length;
+            else if (tab.id === 'recipients') count = filteredRecipients.length;
+            else if (tab.id === 'drivers') count = filteredDrivers.length;
+            
+            return (
+              <TabsTrigger 
+                key={tab.id}
+                value={tab.id} 
+                className={`flex items-center gap-2 ${tab.id === 'contacts' ? 'font-semibold' : ''}`}
+              >
+                <Icon className="w-4 h-4" />
+                {tab.label} ({count})
+              </TabsTrigger>
+            );
+          })}
         </TabsList>
 
         <TabsContent value="contacts" className="space-y-4">
@@ -991,7 +1030,8 @@ function PhoneDirectory() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="recipients" className="space-y-4">
+        {/* Only render TabsContent if user has permission */}
+        {canViewRecipients && <TabsContent value="recipients" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

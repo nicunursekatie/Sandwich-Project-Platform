@@ -1,5 +1,5 @@
 import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, Car, Building2, FileText, Phone } from "lucide-react";
-import PhoneDirectory from "@/components/phone-directory";
+import PhoneDirectoryFixed from "@/components/phone-directory-fixed";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { queryClient } from "@/lib/queryClient";
@@ -84,7 +84,7 @@ export default function PhoneDirectoryPage() {
 
       {/* Main Content */}
       <div className="flex-1 p-6">
-        <PhoneDirectory />
+        <PhoneDirectoryFixed />
       </div>
     </div>
   );
