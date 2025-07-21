@@ -1,0 +1,59 @@
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=3OkVWjCBistH' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) 
+ Dashboard activeSection changed to: dashboard
+ Dashboard activeSection changed to: projects
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ message-notifications.tsx:59
+ === canEditProject Debug ===
+ User: Object
+ Project: Object
+auth-utils.ts:276 User permissions: Array(38)
+auth-utils.ts:297 User has edit_own_projects permission, checking assignment...
+auth-utils.ts:301 Checking assigneeIds array: Array(1) for user ID: user_1751250351194_sdteqpzz5
+auth-utils.ts:311 Checking assigneeName: Christine Cooper Nowicki vs userDisplayName: Katie (alternate) Long vs email: kenig.ka@gmail.com
+auth-utils.ts:319 Checking creator ownership - project.createdBy: user_1751250351194_sdteqpzz5 project.created_by: undefined user.id: user_1751250351194_sdteqpzz5
+auth-utils.ts:321 Permission granted: user is creator/owner
+auth-utils.ts:273 === canEditProject Debug ===
+auth-utils.ts:274 User: Object
+auth-utils.ts:275 Project: Object
+auth-utils.ts:276 User permissions: Array(38)
+auth-utils.ts:297 User has edit_own_projects permission, checking assignment...
+auth-utils.ts:301 Checking assigneeIds array: Array(1) for user ID: user_1751250351194_sdteqpzz5
+auth-utils.ts:311 Checking assigneeName: Juliette vs userDisplayName: Katie (alternate) Long vs email: kenig.ka@gmail.com
+auth-utils.ts:319 Checking creator ownership - project.createdBy: user_1751250351194_sdteqpzz5 project.created_by: undefined user.id: user_1751250351194_sdteqpzz5
+auth-utils.ts:321 Permission granted: user is creator/owner
+auth-utils.ts:273 === canEditProject Debug ===
+auth-utils.ts:274 User: Object
+auth-utils.ts:275 Project: Object
+auth-utils.ts:276 User permissions: Array(38)
+auth-utils.ts:297 User has edit_own_projects permission, checking assignment...
+auth-utils.ts:301 Checking assigneeIds array: Array(1) for user ID: user_1751250351194_sdteqpzz5
+auth-utils.ts:311 Checking assigneeName: Marcy Louza vs userDisplayName: Katie (alternate) Long vs email: kenig.ka@gmail.com
+auth-utils.ts:319 Checking creator ownership - project.createdBy: user_1751250351194_sdteqpzz5 project.created_by: undefined user.id: user_1751250351194_sdteqpzz5
+auth-utils.ts:321 Permission granted: user is creator/owner
+auth-utils.ts:273 === canEditProject Debug ===
+auth-utils.ts:274 User: Object
+auth-utils.ts:275 Project: Object
+auth-utils.ts:276 User permissions: Array(38)
+auth-utils.ts:297 User has edit_own_projects permission, checking assignment...
+auth-utils.ts:301 Checking assigneeIds array: Array(0) for user ID: user_1751250351194_sdteqpzz5
+auth-utils.ts:311 Checking assigneeName: Marcy Louza vs userDisplayName: Katie (alternate) Long vs email: kenig.ka@gmail.com
+auth-utils.ts:319 Checking creator ownership - project.createdBy: user_1751250351194_sdteqpzz5 project.created_by: undefined user.id: user_1751250351194_sdteqpzz5
+auth-utils.ts:321 Permission granted: user is creator/owner
+auth-utils.ts:273 === canEditProject Debug ===
+auth-utils.ts:274 User: Object
+auth-utils.ts:275 Project: Object
+auth-utils.ts:276 User permissions: Array(38)
+auth-utils.ts:297 User has edit_own_projects permission, checking assignment...
+auth-utils.ts:301 Checking assigneeIds array: Array(0) for user ID: user_1751250351194_sdteqpzz5
+auth-utils.ts:311 Checking assigneeName: Katie Long vs userDisplayName: Katie (alternate) Long vs email: kenig.ka@gmail.com
+auth-utils.ts:319 Checking creator ownership - project.createdBy: user_1751250351194_sdteqpzz5 project.created_by: undefined user.id: user_1751250351194_sdteqpzz5
+auth-utils.ts:321 Permission granted: user is creator/owner
+useMessaging.ts:176 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ useMessaging.ts:176
+hook.js:608 Messaging WebSocket error: Event
+overrideMethod @ hook.js:608
+useMessaging.ts:213 Messaging WebSocket disconnected
+simple-nav.tsx:144 Navigation click: projects
+dashboard.tsx:498 Dashboard setActiveSection called with: projects

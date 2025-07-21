@@ -315,14 +315,7 @@ export function canEditProject(user: any, project: any): boolean {
       }
     }
     
-    // Fallback: check ownership (creator) only as last resort
-    console.log('Checking creator ownership - project.createdBy:', project?.createdBy, 'project.created_by:', project?.created_by, 'user.id:', user.id);
-    if (project?.createdBy === user.id || project?.created_by === user.id) {
-      console.log('Permission granted: user is creator/owner');
-      return true;
-    }
-    
-    console.log('Permission denied: user not assigned and not creator');
+    console.log('Permission denied: user not assigned to this project');
   } else {
     console.log('Permission denied: user does not have edit_own_projects permission');
   }
@@ -355,8 +348,7 @@ export function canDeleteProject(user: any, project: any): boolean {
       if (project.assigneeName === userDisplayName || project.assigneeName === user.email) return true;
     }
     
-    // Fallback: check ownership (creator) only as last resort
-    if (project?.createdBy === user.id || project?.created_by === user.id) return true;
+    // Creator ownership removed - projects can only be edited by assignees
   }
   
   return false;
