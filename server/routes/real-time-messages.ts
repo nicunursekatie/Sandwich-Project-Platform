@@ -95,10 +95,10 @@ router.get("/", requireAuth, async (req, res) => {
           return {
             id: msg.id.toString(),
             from: {
-              name: recipientName, // Show recipient name in sent folder
-              email: recipientEmail  // Show recipient email
+              name: (req.user as any).firstName ? `${(req.user as any).firstName} ${(req.user as any).lastName || ''}`.trim() : (req.user as any).email || 'You',
+              email: (req.user as any).email || 'unknown@sandwich.project'
             },
-            to: [(req.user as any).email], // Current user is implied sender
+            to: [recipientEmail], // Show actual recipient
             subject: msg.contextType || 'No Subject',
             content: msg.content,
             timestamp: msg.createdAt?.toISOString() || new Date().toISOString(),
