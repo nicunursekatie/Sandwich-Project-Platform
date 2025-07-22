@@ -45,7 +45,7 @@ import InboxPage from "@/pages/inbox";
 import MessagingSystem from "@/components/messaging-system";
 import RealTimeMessages from "@/pages/real-time-messages";
 import Governance from "@/pages/governance";
-// import StreamMessagesPage from "@/pages/stream-messages"; // Will be enabled once Stream credentials are added
+import StreamMessagesPage from "@/pages/stream-messages";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -154,37 +154,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "messages":
         return <InboxPage />;
       case "stream-messages":
-        return (
-          <div className="p-8">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-xl">
-                <MessageCircle className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-main-heading text-primary dark:text-secondary">Stream Messaging</h2>
-                <p className="font-body text-muted-foreground">Professional email-style messaging with Stream Chat</p>
-              </div>
-            </div>
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
-                <div>
-                  <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">Stream Chat Setup Required</h3>
-                  <p className="text-yellow-700 dark:text-yellow-300 mb-3">
-                    To enable real-time messaging, please add your Stream Chat API credentials:
-                  </p>
-                  <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                    <li>• STREAM_API_KEY (for client-side connection)</li>
-                    <li>• STREAM_API_SECRET (for server-side token generation)</li>
-                  </ul>
-                  <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-3">
-                    Once configured, this will provide an email-style interface with folders, starring, and conversation threads.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <StreamMessagesPage />;
       case "chat":
         return <EnhancedChat />;
       case "profile":

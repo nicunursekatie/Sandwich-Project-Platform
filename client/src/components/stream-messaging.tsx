@@ -106,7 +106,8 @@ export default function StreamMessaging() {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to get Stream credentials');
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Failed to get Stream credentials');
         }
 
         const { apiKey, userToken, streamUserId } = await response.json();
