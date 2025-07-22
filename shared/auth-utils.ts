@@ -89,7 +89,7 @@ export const PERMISSIONS = {
   VIEW_PROJECTS: 'access_projects',
   VIEW_ROLE_DEMO: 'access_role_demo',
   VIEW_SUGGESTIONS: 'access_suggestions',
-  VIEW_SANDWICH_DATA: 'access_sandbox_data', 
+  VIEW_SANDWICH_DATA: 'access_sandwich_data', 
   VIEW_GOVERNANCE: 'access_governance',
   VIEW_USERS: 'manage_users',
   VIEW_COMMITTEE: 'committee_chat',
