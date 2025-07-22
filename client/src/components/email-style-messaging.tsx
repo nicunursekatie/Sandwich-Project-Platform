@@ -502,13 +502,10 @@ export default function EmailStyleMessaging() {
                             <div className="flex items-center justify-between mb-1 gap-3">
                               <div className="flex items-center gap-2 min-w-0 flex-1">
                                 <span className={`text-sm truncate ${!message.read ? 'font-bold text-gray-900' : 'font-normal text-gray-600'}`}>
-                                  {message.from.name}
+                                  {activeFolder === 'sent' 
+                                    ? Array.isArray(message.to) ? message.to.join(', ') : message.to || 'Unknown Recipient'
+                                    : message.from.name}
                                 </span>
-                                {activeFolder === 'sent' && message.to && (
-                                  <span className="text-xs text-gray-500 truncate">
-                                    to: {Array.isArray(message.to) ? message.to.join(', ') : message.to}
-                                  </span>
-                                )}
                                 {!message.read && (
                                   <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
                                 )}
@@ -602,7 +599,7 @@ export default function EmailStyleMessaging() {
                       </Avatar>
                       <div className="flex-1">
                         {activeFolder === 'sent' ? (
-                          // For sent messages, show TO information
+                          // For sent messages, show TO information prominently, FROM minimized
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-red-600">TO:</span>
@@ -611,9 +608,6 @@ export default function EmailStyleMessaging() {
                                   ? selectedMessage.to.join(', ') 
                                   : selectedMessage.to || 'Unknown Recipient'}
                               </span>
-                            </div>
-                            <div className="text-sm text-muted-foreground mt-1">
-                              <span className="font-bold text-gray-600">FROM:</span> {selectedMessage.from.name} &lt;{selectedMessage.from.email}&gt;
                             </div>
                           </div>
                         ) : (
