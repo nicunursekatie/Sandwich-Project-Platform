@@ -474,8 +474,12 @@ export default function EmailStyleMessaging() {
                         className={`px-3 py-4 cursor-pointer transition-colors border-b border-gray-100 ${
                           selectedMessage?.id === message.id
                             ? 'bg-blue-50 border-l-4 border-l-blue-500'
-                            : 'hover:bg-gray-50'
-                        } ${selectedMessages.includes(message.id) ? 'bg-blue-25' : ''}`}
+                            : !message.read 
+                              ? 'bg-blue-25 hover:bg-blue-50' 
+                              : 'bg-white hover:bg-gray-50'
+                        } ${selectedMessages.includes(message.id) ? 'bg-blue-25' : ''} ${
+                          !message.read ? 'shadow-sm' : ''
+                        }`}
                         onClick={() => handleMessageClick(message)}
                       >
                         <div className="flex items-start gap-3">
@@ -497,7 +501,7 @@ export default function EmailStyleMessaging() {
                             {/* Header Row - Fix timestamp cutoff */}
                             <div className="flex items-center justify-between mb-1 gap-3">
                               <div className="flex items-center gap-2 min-w-0 flex-1">
-                                <span className={`text-sm truncate ${!message.read ? 'font-semibold text-gray-900' : 'font-medium text-gray-700'}`}>
+                                <span className={`text-sm truncate ${!message.read ? 'font-bold text-gray-900' : 'font-normal text-gray-600'}`}>
                                   {message.from.name}
                                 </span>
                                 {activeFolder === 'sent' && message.to && (
@@ -517,7 +521,7 @@ export default function EmailStyleMessaging() {
                                 {message.attachments && message.attachments.length > 0 && (
                                   <Paperclip className="h-4 w-4 text-gray-400 flex-shrink-0" />
                                 )}
-                                <span className="text-xs text-gray-500 whitespace-nowrap">
+                                <span className={`text-xs whitespace-nowrap ${!message.read ? 'text-gray-700 font-semibold' : 'text-gray-500 font-normal'}`}>
                                   {formatDate(message.timestamp)}
                                 </span>
                               </div>
@@ -525,13 +529,13 @@ export default function EmailStyleMessaging() {
                             
                             {/* Subject Line */}
                             <div className="mb-2">
-                              <h4 className={`text-sm truncate ${!message.read ? 'font-semibold text-gray-900' : 'font-medium text-gray-800'}`}>
+                              <h4 className={`text-sm truncate ${!message.read ? 'font-bold text-gray-900' : 'font-normal text-gray-700'}`}>
                                 {message.subject || '(No Subject)'}
                               </h4>
                             </div>
                             
                             {/* Message Preview */}
-                            <p className="text-xs text-gray-600 leading-relaxed line-clamp-2 pr-4">
+                            <p className={`text-xs leading-relaxed line-clamp-2 pr-4 ${!message.read ? 'text-gray-700 font-medium' : 'text-gray-500 font-normal'}`}>
                               {message.content}
                             </p>
                             
