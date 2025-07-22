@@ -41,7 +41,8 @@ export default function StreamMessagesPage() {
   // Initialize Stream Chat client
   useEffect(() => {
     console.log('StreamMessagesPage mounting...');
-    console.log('User data:', user);
+    console.log('User object:', user);
+    console.log('User truthy?', !!user);
     
     const initializeClient = async () => {
       if (!user) {
@@ -49,6 +50,8 @@ export default function StreamMessagesPage() {
         return;
       }
 
+      console.log('✅ User found, initializing Stream Chat');
+      
       try {
         console.log('Starting Stream Chat initialization...');
         setLoading(true);
