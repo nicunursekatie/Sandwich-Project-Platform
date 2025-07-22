@@ -469,6 +469,8 @@ export function setupTempAuth(app: Express) {
           return res.status(500).json({ success: false, message: "Session save failed" });
         }
         console.log("Session saved successfully for user:", sessionUser.email);
+        console.log("Session ID:", req.sessionID);
+        console.log("Session data:", req.session);
         res.json({ success: true, user: sessionUser });
       });
     } catch (error) {
@@ -682,8 +684,12 @@ export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
   console.log('=== AUTHENTICATION MIDDLEWARE ===');
   console.log('req.session exists:', !!req.session);
   console.log('req.session.user exists:', !!req.session?.user);
+  console.log('Session ID:', req.sessionID);
+  console.log('Session data:', req.session);
+  console.log('User data in session:', req.session?.user);
 
   if (!req.session || !req.session.user) {
+    console.log('Authentication failed - no session or user');
     return res.status(401).json({ message: "Unauthorized" });
   }
 

@@ -52,6 +52,25 @@ export function useMessaging() {
 
   const [wsConnection, setWsConnection] = useState<WebSocket | null>(null);
 
+  // Fix WebSocket URL construction
+  const getWebSocketUrl = () => {
+    if (typeof window === 'undefined') return '';
+    
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const host = window.location.host;
+    
+    // Handle different deployment scenarios
+    if (host.includes('replit')) {
+      return `${protocol}//${host}/notifications`;
+    } else if (host.includes('localhost')) {
+      // For localhost development, use the port from current location
+      return `${protocol}//localhost:5000/notifications`;
+    } else {
+      // Default case for other deployments
+      return `${protocol}//${host}/notifications`;
+    }
+  };
+
   // Get unread message counts
   const { data: unreadCounts = {
     general: 0,

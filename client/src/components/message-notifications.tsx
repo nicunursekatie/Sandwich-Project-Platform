@@ -74,23 +74,37 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
     let socket: WebSocket | null = null;
     let reconnectTimeoutId: NodeJS.Timeout | null = null;
 
-    const connectWebSocket = () => {
-      try {
-        // Construct WebSocket URL with proper port handling for different environments
-        const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-        const host = window.location.hostname;
+    try {
+      // Fix WebSocket URL construction for different environments
+      const getWebSocketUrl = () => {
+        if (typeof window === 'undefined') return '';
         
-        // Handle different port scenarios for Replit and localhost
-        let port = window.location.port;
-        if (!port) {
-          // In production/deployed environments, use standard ports
-          port = window.location.protocol === "https:" ? "443" : "80";
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const host = window.location.host;
+        
+        // Handle different deployment scenarios
+        if (host.includes('replit')) {
+          return `${protocol}//${host}/notifications`;
+        } else if (host.includes('localhost')) {
+          // For localhost development, use the port from current location
+          return `${protocol}//localhost:5000/notifications`;
+        } else {
+          // Default case for other deployments
+          return `${protocol}//${host}/notifications`;
         }
-        
-        const wsUrl = `${protocol}//${host}:${port}/notifications`;
-        console.log('Connecting to WebSocket:', wsUrl);
-        
-        socket = new WebSocket(wsUrl);
+      };
+
+      const wsUrl = getWebSocketUrl();
+      console.log('Connecting to WebSocket at:', wsUrl);
+      
+      if (!wsUrl) {
+        console.warn('Unable to construct WebSocket URL');
+        return;
+      }
+
+      const connectWebSocket = () => {
+        try {
+          socket = new WebSocket(wsUrl);
         
         socket.onopen = () => {
           console.log('WebSocket connected successfully');
@@ -137,10 +151,14 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
         // Retry after delay
         reconnectTimeoutId = setTimeout(connectWebSocket, 10000);
       }
-    };
+      };
 
-    // Initialize WebSocket connection
-    connectWebSocket();
+      // Initialize WebSocket connection
+      connectWebSocket();
+
+    } catch (error) {
+      console.error('Failed to initialize WebSocket:', error);
+    }
 
     return () => {
       if (reconnectTimeoutId) {
