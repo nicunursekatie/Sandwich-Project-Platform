@@ -51,11 +51,11 @@ export default function StreamMessagesPage() {
         console.log('Fetched real users from database:', data);
         // Filter out the current user and inactive users
         const activeUsers = Array.isArray(data) ? data : (data.users || []);
-        const filteredUsers = activeUsers.filter(dbUser => 
+        const filteredUsers = activeUsers.filter((dbUser: any) => 
           dbUser.isActive && 
           dbUser.id !== user?.id &&
           dbUser.email // Ensure user has email
-        ).map(dbUser => ({
+        ).map((dbUser: any) => ({
           id: dbUser.id,
           displayName: dbUser.firstName ? `${dbUser.firstName} ${dbUser.lastName || ''}`.trim() : dbUser.email,
           email: dbUser.email
@@ -74,14 +74,43 @@ export default function StreamMessagesPage() {
     }
   };
 
-  // Sync all database users to Stream automatically
+  // Sync all database users to Stream using server-side endpoint
   const syncUsersToStream = async () => {
+    console.log('🔄 Starting server-side user sync to Stream...');
+    
+    try {
+      const response = await fetch('/api/stream/sync-users', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        console.log(`✅ Server-side sync successful: ${result.syncedUsers} users synced`);
+        console.log('📋 Sync response:', result);
+        return true;
+      } else {
+        console.error('❌ Server-side sync failed:', result);
+        return false;
+      }
+    } catch (error) {
+      console.error('❌ Server-side sync error:', error);
+      return false;
+    }
+  };
+
+  // Old client-side sync (keeping for fallback but not using)
+  const oldSyncUsersToStream = async () => {
     if (!client) {
       console.log('❌ Stream client not ready for user sync');
       return false;
     }
     
-    console.log('🔄 Starting user sync to Stream...');
+    console.log('🔄 Starting client-side user sync to Stream...');
     
     try {
       const response = await fetch('/api/users', {
@@ -99,8 +128,8 @@ export default function StreamMessagesPage() {
         
         // Prepare users for batch upsert
         const streamUsers = users
-          .filter(dbUser => dbUser.isActive && dbUser.email)
-          .map(dbUser => ({
+          .filter((dbUser: any) => dbUser.isActive && dbUser.email)
+          .map((dbUser: any) => ({
             id: dbUser.id,
             name: dbUser.firstName ? `${dbUser.firstName} ${dbUser.lastName || ''}`.trim() : dbUser.email,
             email: dbUser.email

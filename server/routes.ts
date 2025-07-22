@@ -72,6 +72,7 @@ import { VersionControl } from "./middleware/version-control";
 import { BackupManager } from "./operations/backup-manager";
 import { QueryOptimizer } from "./performance/query-optimizer";
 import { db } from "./db";
+import { StreamChat } from "stream-chat";
 
 // Permission middleware to check user roles and permissions
 const requirePermission = (permission: string) => {
@@ -7143,6 +7144,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Socket.IO chat system
   app.use("/api", chatRoutes);
+
+  // Stream Chat user synchronization endpoint
+  app.post("/api/stream/sync-users", isAuthenticated, async (req, res) => {
+    try {
+      console.log('🔄 Server-side Stream user sync started...');
+      
+      // Initialize Stream Chat with server credentials
+      const serverClient = StreamChat.getInstance(
+        process.env.STREAM_API_KEY!,
+        process.env.STREAM_API_SECRET!
+      );
+      
+      console.log('✅ Stream server client initialized');
+      
+      // Get all active users from database
+      const allUsers = await db.select().from(users);
+      console.log(`📊 Found ${allUsers.length} users in database`);
+      
+      // Prepare users for Stream
+      const streamUsers = allUsers
+        .filter(user => user.isActive && user.email)
+        .map(user => ({
+          id: user.id,
+          name: user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email,
+          email: user.email,
+          role: user.role || 'user'
+        }));
+        
+      console.log(`🔄 Syncing ${streamUsers.length} active users to Stream...`);
+      
+      // Batch upsert users using server credentials
+      await serverClient.upsertUsers(streamUsers);
+      
+      console.log('✅ Successfully synced all users to Stream via server');
+      
+      res.json({ 
+        success: true, 
+        syncedUsers: streamUsers.length,
+        message: 'Users successfully synchronized to Stream' 
+      });
+    } catch (error) {
+      console.error('❌ Server-side Stream user sync failed:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: 'Failed to sync users to Stream',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
 
   // Make broadcast functions available globally for use in other routes
   (global as any).broadcastNewMessage = broadcastNewMessage;
