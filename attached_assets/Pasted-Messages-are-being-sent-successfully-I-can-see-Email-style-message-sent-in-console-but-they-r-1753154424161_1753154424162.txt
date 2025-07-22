@@ -1,0 +1,61 @@
+Messages are being sent successfully (I can see '✅ Email-style message sent' in console), but they're not showing up in the UI. This is because:
+
+The message list isn't connected to Stream Chat's channel data
+The sent/inbox folders aren't actually fetching messages
+
+Fix this by:
+1. Connect to Stream channels to get messages:
+javascript// In your component, watch for channel messages
+useEffect(() => {
+  if (!streamClient) return;
+
+  // Get all channels for the current user
+  const loadChannels = async () => {
+    const filter = { 
+      type: 'messaging', 
+      members: { $in: [currentUser.streamId] } 
+    };
+    
+    const channels = await streamClient.queryChannels(filter);
+    
+    // Extract messages from channels
+    const allMessages = [];
+    for (const channel of channels) {
+      const messages = await channel.query({ messages: { limit: 100 } });
+      allMessages.push(...messages.messages);
+    }
+    
+    setMessages(allMessages);
+  };
+
+  loadChannels();
+  
+  // Listen for new messages
+  streamClient.on('message.new', (event) => {
+    setMessages(prev => [...prev, event.message]);
+  });
+
+}, [streamClient, currentUser]);
+2. Update the folder views to show actual messages:
+javascript// In the messages display area, replace the welcome message with:
+{getFilteredMessages().length === 0 ? (
+  <div>No messages in {activeFolder}</div>
+) : (
+  <div className="space-y-2">
+    {getFilteredMessages().map(message => (
+      <div key={message.id} className="p-3 border rounded hover:bg-gray-50">
+        <div className="flex justify-between">
+          <span className="font-semibold">
+            {activeFolder === 'sent' ? `To: ${message.recipientName}` : `From: ${message.user.name}`}
+          </span>
+          <span className="text-gray-500">{formatTime(message.created_at)}</span>
+        </div>
+        <div className="text-gray-700">{message.subject || 'No subject'}</div>
+        <div className="text-gray-600 truncate">{message.text}</div>
+      </div>
+    ))}
+  </div>
+)}
+3. Make sure message metadata includes what we need:
+When sending a message, ensure you're storing the recipient info and subject so it displays properly in the folders.
+The core issue: You're creating channels and sending messages to Stream successfully, but you're not fetching and displaying them in the UI. The folder system needs to actually query Stream Chat for messages

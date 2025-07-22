@@ -180,6 +180,41 @@ export default function StreamMessagesPage() {
     console.log('Available users state updated:', availableUsers.length);
   }, [availableUsers]);
 
+  // Listen for new messages in real-time
+  useEffect(() => {
+    if (!client) return;
+
+    const handleNewMessage = (event: any) => {
+      console.log('📨 New message received:', event.message);
+      const newMessage = {
+        id: event.message.id,
+        from: event.message.user?.id,
+        fromName: event.message.user?.name || event.message.user?.id,
+        recipientNames: event.channel.state?.members ? Object.keys(event.channel.state.members).filter((m: string) => m !== event.message.user?.id) : [],
+        subject: (event.message as any).subject || 'Direct Message',
+        text: event.message.text,
+        timestamp: new Date(event.message.created_at!),
+        channelId: event.channel.id,
+        channel: event.channel
+      };
+      
+      setMessages(prev => {
+        // Avoid duplicates
+        const exists = prev.find(msg => msg.id === newMessage.id);
+        if (!exists) {
+          return [newMessage, ...prev];
+        }
+        return prev;
+      });
+    };
+
+    client.on('message.new', handleNewMessage);
+
+    return () => {
+      client.off('message.new', handleNewMessage);
+    };
+  }, [client]);
+
   // Gmail-style folder navigation
   const [activeFolder, setActiveFolder] = useState<'inbox' | 'sent' | 'conversations'>('inbox');
   const [messages, setMessages] = useState<any[]>([]);
@@ -187,15 +222,15 @@ export default function StreamMessagesPage() {
 
   // Filter messages based on folder
   const getFilteredMessages = () => {
-    if (!user) return [];
+    if (!user || !messages.length) return [];
     
     switch(activeFolder) {
       case 'inbox':
         return messages.filter(msg => 
-          msg.to && msg.to.includes(user.id) && msg.from !== user.id
+          msg.from && msg.from !== (user as any)?.id // Messages from others (received)
         );
       case 'sent':
-        return messages.filter(msg => msg.from === user.id);
+        return messages.filter(msg => msg.from === (user as any)?.id); // Messages from current user
       case 'conversations':
         return messages; // all messages
       default:
@@ -205,28 +240,40 @@ export default function StreamMessagesPage() {
 
   // Fetch messages from Stream channels
   const fetchMessages = async () => {
-    if (!client || !user) return;
+    if (!client || !user) {
+      console.log('Cannot fetch messages - missing client or user:', { client: !!client, user: !!user });
+      return;
+    }
     
     try {
+      console.log('📥 Fetching messages from Stream Chat for user:', (user as any)?.id);
+      
       // Get all channels the user is a member of
-      const filter = { members: { $in: [user.id] } };
+      const filter = { 
+        type: 'messaging',
+        members: { $in: [(user as any)?.id] } 
+      };
       const sort = [{ last_message_at: -1 }];
       const channelsResponse = await client.queryChannels(filter, sort);
+      
+      console.log('Found channels:', channelsResponse.length);
       
       const allMessages: any[] = [];
       
       for (const channel of channelsResponse) {
+        console.log('Processing channel:', channel.id);
         const messagesResponse = await channel.query({
-          messages: { limit: 50 }
+          messages: { limit: 100 }
         });
         
         if (messagesResponse.messages) {
+          console.log(`Channel ${channel.id} has ${messagesResponse.messages.length} messages`);
           const formattedMessages = messagesResponse.messages.map(msg => ({
             id: msg.id,
             from: msg.user?.id,
             fromName: msg.user?.name || msg.user?.id,
-            to: channel.data.members || [],
-            subject: msg.subject || 'Direct Message',
+            recipientNames: channel.state?.members ? Object.keys(channel.state.members).filter((m: string) => m !== msg.user?.id) : [],
+            subject: (msg as any).subject || 'Direct Message',
             text: msg.text,
             timestamp: new Date(msg.created_at!),
             channelId: channel.id,
@@ -239,6 +286,7 @@ export default function StreamMessagesPage() {
       // Sort by timestamp, newest first
       allMessages.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
       
+      console.log('📊 Total messages loaded:', allMessages.length);
       setMessages(allMessages);
       setConversations(channelsResponse);
     } catch (error) {
@@ -651,7 +699,7 @@ export default function StreamMessagesPage() {
               onClick={() => setActiveFolder('sent')}
             >
               <Send className="w-4 h-4" />
-              <span>📤 Sent ({messages.filter(msg => msg.from === user?.id).length})</span>
+              <span>📤 Sent ({messages.filter(msg => msg.from === (user as any)?.id).length})</span>
             </div>
             <div 
               className={`flex items-center gap-2 p-3 rounded-lg cursor-pointer text-sm ${
@@ -688,13 +736,13 @@ export default function StreamMessagesPage() {
                     <div className="flex items-start justify-between mb-1">
                       <div className="font-medium text-sm">
                         {activeFolder === 'sent' ? (
-                          <span className="text-gray-600">To: {msg.to.filter((id: string) => id !== user?.id).join(', ')}</span>
+                          <span className="text-gray-600">To: {msg.recipientNames.join(', ')}</span>
                         ) : (
                           <span className="text-gray-900">{msg.fromName}</span>
                         )}
                       </div>
                       <span className="text-xs text-gray-500">
-                        {msg.timestamp.toLocaleDateString()} {msg.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        {new Date(msg.timestamp).toLocaleDateString()} {new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                       </span>
                     </div>
                     <div className="text-sm font-medium text-gray-700 mb-1">{msg.subject}</div>
