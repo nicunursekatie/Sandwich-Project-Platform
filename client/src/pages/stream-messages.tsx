@@ -1,16 +1,6 @@
 import { useState, useEffect } from 'react';
 import { StreamChat } from 'stream-chat';
-import {
-  Chat,
-  Channel,
-  ChannelHeader,
-  ChannelList,
-  MessageList,
-  MessageInput,
-  Thread,
-  Window,
-  LoadingIndicator,
-} from 'stream-chat-react';
+// Removed Stream UI components - keeping only the client connection
 import 'stream-chat-react/dist/css/v2/index.css';
 
 import { useAuth } from '@/hooks/useAuth';
@@ -278,120 +268,133 @@ export default function StreamMessagesPage() {
         </div>
       </div>
 
-      {/* Main Chat Interface */}
-      <div className="flex-1 flex">
-        <Chat client={client}>
-          {/* Email-style Sidebar */}
-          <div className="w-80 border-r bg-background">
-            <div className="p-4 border-b">
-              <Dialog open={showCompose} onOpenChange={setShowCompose}>
-                <DialogTrigger asChild>
-                  <Button className="w-full mb-4">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Compose Message
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>New Message</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <Label className="text-sm font-medium">Recipients</Label>
-                      <div className="mt-2 space-y-2 max-h-32 overflow-y-auto border rounded p-2">
-                        {availableUsers.map((user) => (
-                          <div key={user.id} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={user.id}
-                              checked={selectedRecipients.includes(user.id)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  setSelectedRecipients([...selectedRecipients, user.id]);
-                                } else {
-                                  setSelectedRecipients(selectedRecipients.filter(id => id !== user.id));
-                                }
-                              }}
-                            />
-                            <Label htmlFor={user.id} className="text-sm font-normal">
-                              {user.name}
-                            </Label>
-                          </div>
-                        ))}
+      {/* Gmail-style Email Interface */}
+      <div className="flex h-full">
+        {/* Email folders sidebar */}
+        <div className="w-64 border-r bg-gray-50 dark:bg-gray-900/50 p-4">
+          <Dialog open={showCompose} onOpenChange={setShowCompose}>
+            <DialogTrigger asChild>
+              <Button className="w-full mb-4">
+                <Plus className="w-4 h-4 mr-2" />
+                Compose Message
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>New Message</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-sm font-medium">Recipients</Label>
+                  <div className="mt-2 space-y-2 max-h-32 overflow-y-auto border rounded p-2">
+                    {availableUsers.map((user) => (
+                      <div key={user.id} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={user.id}
+                          checked={selectedRecipients.includes(user.id)}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setSelectedRecipients([...selectedRecipients, user.id]);
+                            } else {
+                              setSelectedRecipients(selectedRecipients.filter(id => id !== user.id));
+                            }
+                          }}
+                        />
+                        <Label htmlFor={user.id} className="text-sm font-normal">
+                          {user.name}
+                        </Label>
                       </div>
-                    </div>
-                    {selectedRecipients.length > 0 && (
-                      <div className="text-sm text-muted-foreground">
-                        To: {selectedRecipients.map(id => 
-                          availableUsers.find(u => u.id === id)?.name
-                        ).join(', ')}
-                      </div>
-                    )}
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => {
-                          if (selectedRecipients.length > 0) {
-                            handleComposeMessage(selectedRecipients);
-                            setShowCompose(false);
-                            setSelectedRecipients([]);
-                          }
-                        }}
-                        disabled={selectedRecipients.length === 0}
-                        className="flex-1"
-                      >
-                        Start Conversation
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setShowCompose(false);
-                          setSelectedRecipients([]);
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
+                    ))}
                   </div>
-                </DialogContent>
-              </Dialog>
-              
-              {/* Email-style folders */}
-              <div className="space-y-1">
-                <Button variant="ghost" className="w-full justify-start">
-                  <Inbox className="w-4 h-4 mr-2" />
-                  Inbox
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
-                  <Send className="w-4 h-4 mr-2" />
-                  Sent
+                </div>
+                {selectedRecipients.length > 0 && (
+                  <div className="text-sm text-muted-foreground">
+                    To: {selectedRecipients.map(id => 
+                      availableUsers.find(u => u.id === id)?.name
+                    ).join(', ')}
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => {
+                      if (selectedRecipients.length > 0) {
+                        handleComposeMessage(selectedRecipients);
+                        setShowCompose(false);
+                        setSelectedRecipients([]);
+                      }
+                    }}
+                    disabled={selectedRecipients.length === 0}
+                    className="flex-1"
+                  >
+                    Start Conversation
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowCompose(false);
+                      setSelectedRecipients([]);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+          
+          <div className="space-y-1">
+            <button className="w-full text-left p-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg flex items-center">
+              📥 <span className="ml-2">Inbox</span>
+            </button>
+            <button className="w-full text-left p-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg flex items-center">
+              📤 <span className="ml-2">Sent</span>
+            </button>
+            <button className="w-full text-left p-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg flex items-center">
+              📂 <span className="ml-2">Conversations</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Message list and content area */}
+        <div className="flex-1 flex flex-col">
+          <div className="p-4 border-b">
+            <h3 className="font-semibold text-lg">Messages</h3>
+          </div>
+          
+          <div className="flex-1 p-4">
+            {selectedChannel ? (
+              <div className="bg-white dark:bg-gray-800 rounded-lg border p-4">
+                <div className="mb-4 pb-2 border-b">
+                  <p className="text-sm text-muted-foreground">
+                    Conversation with {selectedChannel.data?.name || 'Direct Message'}
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-center text-muted-foreground">
+                    Stream Chat connection established. Custom message interface coming soon.
+                  </p>
+                  <div className="text-center">
+                    <Button variant="outline" onClick={() => setSelectedChannel(null)}>
+                      Back to Message List
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Welcome to Direct Messages</h3>
+                <p className="text-muted-foreground mb-4">
+                  Select a conversation or compose a new message to get started.
+                </p>
+                <Button onClick={() => setShowCompose(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Compose New Message
                 </Button>
               </div>
-            </div>
-            
-            {/* Direct Messages List */}
-            <div className="flex-1">
-              <ChannelList 
-                filters={{ 
-                  members: { $in: [client.userID!] },
-                  type: 'messaging'
-                }}
-                sort={{ last_message_at: -1 }}
-                options={{ limit: 20 }}
-              />
-            </div>
+            )}
           </div>
-
-          {/* Chat Window */}
-          <div className="flex-1 flex flex-col">
-            <Channel>
-              <Window>
-                <ChannelHeader />
-                <MessageList />
-                <MessageInput />
-              </Window>
-              <Thread />
-            </Channel>
-          </div>
-        </Chat>
+        </div>
       </div>
     </div>
   );
