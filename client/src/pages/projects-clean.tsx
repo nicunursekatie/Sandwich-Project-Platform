@@ -670,10 +670,12 @@ export default function ProjectsClean() {
                   onChange={(value, userIds) => setNewProject(prev => ({ 
                     ...prev, 
                     assigneeName: value,
-                    assigneeIds: userIds?.length ? userIds : undefined
+                    assigneeIds: userIds?.length ? userIds : undefined,
+                    assigneeNames: value // Store the display names as well
                   }))}
-                  label="Assignee"
-                  placeholder="Select or enter person responsible"
+                  label="Team Members"
+                  placeholder="Add team members (multiple allowed)"
+                  multiple={true}
                 />
               </div>
               
@@ -833,10 +835,12 @@ export default function ProjectsClean() {
                   onChange={(value, userIds) => setEditingProject(prev => prev ? { 
                     ...prev, 
                     assigneeName: value,
-                    assigneeIds: userIds?.length ? userIds : undefined
+                    assigneeIds: userIds?.length ? userIds : undefined,
+                    assigneeNames: value // Store the display names as well
                   } : null)}
-                  label="Assignee"
-                  placeholder="Select or enter person responsible"
+                  label="Team Members"
+                  placeholder="Add team members (multiple allowed)"
+                  multiple={true}
                 />
               </div>
               
