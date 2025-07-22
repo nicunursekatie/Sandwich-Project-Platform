@@ -57,6 +57,7 @@ function Router() {
       <Route path="/messages">{() => <Dashboard initialSection="messages" />}</Route>
       <Route path="/inbox">{() => <Dashboard initialSection="inbox" />}</Route>
       <Route path="/suggestions">{() => <Dashboard initialSection="suggestions" />}</Route>
+      <Route path="/governance">{() => <Dashboard initialSection="governance" />}</Route>
       <Route path="/google-sheets">{() => <Dashboard initialSection="google-sheets" />}</Route>
       <Route path="/dashboard">{() => <Dashboard />}</Route>
       <Route path="/dashboard/:section">{(params) => <Dashboard initialSection={params.section} />}</Route>

@@ -17,7 +17,8 @@ import {
   Sheet,
   Lightbulb,
   Inbox,
-  Hash
+  Hash,
+  Scale
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
@@ -53,6 +54,7 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
     // WORKFLOW section
     { id: "work-log", label: "Work Log", icon: ListTodo, href: "work-log", group: "workflow" },
     { id: "toolkit", label: "Toolkit", icon: FolderOpen, href: "toolkit", group: "workflow" },
+    ...(hasPermission(user, PERMISSIONS.VIEW_GOVERNANCE) ? [{ id: "governance", label: "Governance", icon: Scale, href: "governance", group: "workflow" }] : []),
     ...(hasPermission(user, PERMISSIONS.VIEW_MEETINGS) ? [{ id: "meetings", label: "Meetings", icon: ClipboardList, href: "meetings", group: "workflow" }] : []),
     
     // PEOPLE section

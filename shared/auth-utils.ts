@@ -37,6 +37,7 @@ export const PERMISSIONS = {
   // Resources section permissions
   ACCESS_SUGGESTIONS: 'access_suggestions',
   ACCESS_SANDWICH_DATA: 'access_sandwich_data',
+  ACCESS_GOVERNANCE: 'access_governance',
   
   // Granular management permissions for each section
   MANAGE_HOSTS: 'manage_hosts',
@@ -85,7 +86,8 @@ export const PERMISSIONS = {
   VIEW_PROJECTS: 'access_projects',
   VIEW_ROLE_DEMO: 'access_role_demo',
   VIEW_SUGGESTIONS: 'access_suggestions',
-  VIEW_SANDWICH_DATA: 'access_sandwich_data',
+  VIEW_SANDWICH_DATA: 'access_sandwich_data', 
+  VIEW_GOVERNANCE: 'access_governance',
   VIEW_USERS: 'manage_users',
   VIEW_COMMITTEE: 'committee_chat',
   TOOLKIT_ACCESS: 'access_toolkit',
@@ -119,6 +121,7 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_ROLE_DEMO,
         PERMISSIONS.ACCESS_SUGGESTIONS,
         PERMISSIONS.ACCESS_SANDWICH_DATA,
+        PERMISSIONS.ACCESS_GOVERNANCE,
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.COMMITTEE_CHAT
       ];

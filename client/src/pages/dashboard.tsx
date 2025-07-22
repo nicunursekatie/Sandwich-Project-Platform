@@ -44,6 +44,7 @@ import GoogleSheetsPage from "@/pages/google-sheets";
 import InboxPage from "@/pages/inbox";
 import MessagingSystem from "@/components/messaging-system";
 import RealTimeMessages from "@/pages/real-time-messages";
+import Governance from "@/pages/governance";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -221,12 +222,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
                   path: "/documents/TSP Sandwich Inventory List for 3 ozs.xlsx",
                   category: "Operations"
                 },
-                {
-                  title: "501c3 Determination Letter",
-                  description: "Official nonprofit status documentation",
-                  path: "/documents/501c3-determination-letter.pdf",
-                  category: "Legal"
-                }
+
               ].map((doc, index) => (
                 <div
                   key={index}
@@ -313,6 +309,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <SuggestionsPortal />;
       case "google-sheets":
         return <GoogleSheetsPage />;
+      case "governance":
+        return <Governance />;
       case "real-time-messages":
         return <RealTimeMessages />;
 
