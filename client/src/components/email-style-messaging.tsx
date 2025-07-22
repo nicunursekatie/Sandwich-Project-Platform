@@ -543,20 +543,6 @@ export default function EmailStyleMessaging() {
                                   New
                                 </Badge>
                               )}
-                              {message.priority === 'high' && (
-                                <Badge variant="destructive" className="text-xs px-2 py-1">
-                                  High Priority
-                                </Badge>
-                              )}
-                              {message.labels && message.labels.length > 0 && (
-                                <div className="flex gap-1">
-                                  {message.labels.map((label: string) => (
-                                    <Badge key={label} variant="outline" className="text-xs px-2 py-1">
-                                      {label}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              )}
                             </div>
                           </div>
                         </div>
