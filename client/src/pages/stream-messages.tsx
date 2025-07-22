@@ -36,13 +36,48 @@ export default function StreamMessagesPage() {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Available users for recipient selection (in real app, this would come from API)
-  const availableUsers = [
-    { id: 'test-user-2', displayName: 'Test User', email: 'test@example.com' },
-    { id: 'admin-user', displayName: 'Admin User', email: 'admin@example.com' },
-    { id: 'demo-user-1', displayName: 'Demo User 1', email: 'demo1@example.com' },
-    { id: 'demo-user-2', displayName: 'Demo User 2', email: 'demo2@example.com' }
-  ];
+  // Fetch real users from database
+  useEffect(() => {
+    fetchAvailableUsers();
+  }, []);
+
+  const fetchAvailableUsers = async () => {
+    try {
+      const response = await fetch('/api/users', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Fetched real users from database:', data);
+        // Filter out the current user and inactive users
+        const activeUsers = Array.isArray(data) ? data : (data.users || []);
+        const filteredUsers = activeUsers.filter(dbUser => 
+          dbUser.isActive && 
+          dbUser.id !== user?.id &&
+          dbUser.email // Ensure user has email
+        ).map(dbUser => ({
+          id: dbUser.id,
+          displayName: dbUser.firstName ? `${dbUser.firstName} ${dbUser.lastName || ''}`.trim() : dbUser.email,
+          email: dbUser.email
+        }));
+        setAvailableUsers(filteredUsers);
+        console.log('Processed available users:', filteredUsers);
+      } else {
+        console.error('Failed to fetch users:', response.statusText);
+        // Fall back to empty array
+        setAvailableUsers([]);
+      }
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+      setAvailableUsers([]);
+    }
+  };
+
+  // Real users from database
+  const [availableUsers, setAvailableUsers] = useState<any[]>([]);
 
   // Create direct or group message channel (email-style)
   const createDirectMessage = async (recipientIds: string | string[]) => {

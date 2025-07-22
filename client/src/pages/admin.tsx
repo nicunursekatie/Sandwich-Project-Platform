@@ -95,7 +95,7 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Administrative Documents
+            Important Documents
           </h1>
           <p className="text-gray-600">
             Critical organizational documents including tax files, incorporation papers, 
