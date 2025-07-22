@@ -670,6 +670,34 @@ export type InsertGoogleSheet = z.infer<typeof insertGoogleSheetSchema>;
 // - messages
 
 // Stream Chat integration tables
+export const streamConversations = pgTable("stream_conversations", {
+  id: serial("id").primaryKey(),
+  streamChannelId: varchar("stream_channel_id").unique().notNull(), // Stream's channel ID
+  channelType: varchar("channel_type").notNull().default("messaging"), // Stream channel type
+  title: text("title"), // Conversation title/subject
+  members: jsonb("members").notNull().default('[]'), // Array of user IDs
+  isGroup: boolean("is_group").notNull().default(false),
+  lastMessageAt: timestamp("last_message_at"),
+  lastMessagePreview: text("last_message_preview"),
+  unreadCount: integer("unread_count").notNull().default(0),
+  metadata: jsonb("metadata").default('{}'), // Additional conversation data
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const streamThreads = pgTable("stream_threads", {
+  id: serial("id").primaryKey(),
+  streamThreadId: varchar("stream_thread_id").unique().notNull(), // Stream's thread ID
+  conversationId: integer("conversation_id").references(() => streamConversations.id, { onDelete: "cascade" }),
+  parentMessageId: integer("parent_message_id"), // Will be set after messages table is defined
+  title: text("title"), // Thread title (usually "Re: ...")
+  participants: jsonb("participants").notNull().default('[]'), // Array of user IDs in thread
+  lastReplyAt: timestamp("last_reply_at"),
+  replyCount: integer("reply_count").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const streamMessages = pgTable("stream_messages", {
   id: serial("id").primaryKey(),
   streamMessageId: varchar("stream_message_id").unique().notNull(), // Stream's message ID
@@ -691,33 +719,7 @@ export const streamMessages = pgTable("stream_messages", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const streamConversations = pgTable("stream_conversations", {
-  id: serial("id").primaryKey(),
-  streamChannelId: varchar("stream_channel_id").unique().notNull(), // Stream's channel ID
-  channelType: varchar("channel_type").notNull().default("messaging"), // Stream channel type
-  title: text("title"), // Conversation title/subject
-  members: jsonb("members").notNull().default('[]'), // Array of user IDs
-  isGroup: boolean("is_group").notNull().default(false),
-  lastMessageAt: timestamp("last_message_at"),
-  lastMessagePreview: text("last_message_preview"),
-  unreadCount: integer("unread_count").notNull().default(0),
-  metadata: jsonb("metadata").default('{}'), // Additional conversation data
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
 
-export const streamThreads = pgTable("stream_threads", {
-  id: serial("id").primaryKey(),
-  streamThreadId: varchar("stream_thread_id").unique().notNull(), // Stream's thread ID
-  conversationId: integer("conversation_id").references(() => streamConversations.id, { onDelete: "cascade" }),
-  parentMessageId: integer("parent_message_id").references(() => streamMessages.id, { onDelete: "cascade" }),
-  title: text("title"), // Thread title (usually "Re: ...")
-  participants: jsonb("participants").notNull().default('[]'), // Array of user IDs in thread
-  lastReplyAt: timestamp("last_reply_at"),
-  replyCount: integer("reply_count").notNull().default(0),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
 
 export const workLogs = pgTable("work_logs", {
   id: serial("id").primaryKey(),

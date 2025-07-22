@@ -55,6 +55,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/messages">{() => <Dashboard initialSection="messages" />}</Route>
+      <Route path="/stream-messages">{() => <Dashboard initialSection="stream-messages" />}</Route>
       <Route path="/inbox">{() => <Dashboard initialSection="inbox" />}</Route>
       <Route path="/suggestions">{() => <Dashboard initialSection="suggestions" />}</Route>
       <Route path="/governance">{() => <Dashboard initialSection="governance" />}</Route>
