@@ -71,6 +71,16 @@ streamRoutes.post("/credentials", async (req, res) => {
         role: user.role || 'user'
       });
 
+      // Also create a test user for multi-user conversations
+      await streamServerClient.upsertUser({
+        id: 'test-user-2',
+        name: 'Test User',
+        email: 'test@example.com',
+        role: 'user'
+      }).catch(() => {
+        // Ignore if user already exists
+      });
+
       // Generate user token
       const userToken = streamServerClient.createToken(streamUserId);
 

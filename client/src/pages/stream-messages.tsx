@@ -43,21 +43,21 @@ export default function StreamMessagesPage() {
     if (!client || !user) return;
 
     try {
-      console.log('Creating new channel...');
-      const channelId = `conversation-${Date.now()}`;
+      console.log('Creating new test channel...');
+      const channelId = `test-${Date.now()}`;
       const channel = client.channel('messaging', channelId, {
-        name: 'New Conversation',
-        members: [client.userID!],
+        name: 'Test Conversation',
+        members: [client.userID!, 'test-user-2'], // Add second test user for proper messaging flow
         created_by_id: client.userID!
       });
       
-      await channel.watch();
+      await channel.create();
       setSelectedChannel(channel);
-      console.log('✅ New channel created:', channelId);
+      console.log('✅ Test channel created with multiple users:', channelId);
       
       toast({
-        title: "Channel Created",
-        description: "New conversation started successfully",
+        title: "Test Channel Created",
+        description: "New conversation with test user created successfully",
       });
     } catch (error) {
       console.error('Error creating channel:', error);
