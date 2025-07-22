@@ -186,12 +186,29 @@ export default function StreamMessagesPage() {
 
     const handleNewMessage = (event: any) => {
       console.log('📨 New message received:', event.message);
+      
+      // Safe channel state update
+      if (event.channel && event.channel.state && event.channel.state.messages) {
+        event.channel.state.messages.push(event.message);
+      }
+      
+      // Get recipient names (other members in the channel)
+      const currentUserId = `user_${(user as any)?.id}`;
+      const recipientNames = event.channel.state?.members ? 
+        Object.keys(event.channel.state.members)
+          .filter((m: string) => m !== event.message.user?.id)
+          .map((memberId: string) => {
+            // Find the display name for this member
+            const memberUser = availableUsers.find(u => `user_${u.id}` === memberId);
+            return memberUser?.displayName || memberId;
+          }) : [];
+      
       const newMessage = {
         id: event.message.id,
         from: event.message.user?.id,
         fromName: event.message.user?.name || event.message.user?.id,
-        recipientNames: event.channel.state?.members ? Object.keys(event.channel.state.members).filter((m: string) => m !== event.message.user?.id) : [],
-        subject: (event.message as any).subject || 'Direct Message',
+        recipientNames: recipientNames,
+        subject: (event.message as any).custom?.subject || `Message to ${recipientNames.join(', ')}`,
         text: event.message.text,
         timestamp: new Date(event.message.created_at!),
         channelId: event.channel.id,
@@ -279,17 +296,29 @@ export default function StreamMessagesPage() {
         
         if (messagesResponse.messages) {
           console.log(`Channel ${channel.id} has ${messagesResponse.messages.length} messages`);
-          const formattedMessages = messagesResponse.messages.map(msg => ({
-            id: msg.id,
-            from: msg.user?.id,
-            fromName: msg.user?.name || msg.user?.id,
-            recipientNames: channel.state?.members ? Object.keys(channel.state.members).filter((m: string) => m !== msg.user?.id) : [],
-            subject: (msg as any).subject || 'Direct Message',
-            text: msg.text,
-            timestamp: new Date(msg.created_at!),
-            channelId: channel.id,
-            channel: channel
-          }));
+          const formattedMessages = messagesResponse.messages.map(msg => {
+            // Get recipient names (other members in the channel)
+            const recipientNames = channel.state?.members ? 
+              Object.keys(channel.state.members)
+                .filter((m: string) => m !== msg.user?.id)
+                .map((memberId: string) => {
+                  // Find the display name for this member
+                  const memberUser = availableUsers.find(u => `user_${u.id}` === memberId);
+                  return memberUser?.displayName || memberId.replace('user_', '');
+                }) : [];
+            
+            return {
+              id: msg.id,
+              from: msg.user?.id,
+              fromName: msg.user?.name || msg.user?.id,
+              recipientNames: recipientNames,
+              subject: (msg as any).custom?.subject || `Message to ${recipientNames.join(', ')}`,
+              text: msg.text,
+              timestamp: new Date(msg.created_at!),
+              channelId: channel.id,
+              channel: channel
+            };
+          });
           allMessages.push(...formattedMessages);
         }
       }
@@ -351,7 +380,7 @@ export default function StreamMessagesPage() {
           messageType: 'direct'
         }
       });
-      console.log('✅ Email-style message sent with metadata');
+      console.log('✅ Email-style message sent with subject:', subject);
     } catch (error) {
       console.error('Error sending message:', error);
     }
