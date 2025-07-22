@@ -19,11 +19,15 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { 
   MessageCircle, 
   Plus, 
   Inbox,
-  Send
+  Send,
+  X
 } from 'lucide-react';
 
 export default function StreamMessagesPage() {
@@ -31,23 +35,38 @@ export default function StreamMessagesPage() {
   const [selectedChannel, setSelectedChannel] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showCompose, setShowCompose] = useState(false);
+  const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Create direct message channel between two users (email-style)
-  const createDirectMessage = async (recipientId: string) => {
+  // Available users for recipient selection (in real app, this would come from API)
+  const availableUsers = [
+    { id: 'test-user-2', name: 'Test User' },
+    { id: 'admin-user', name: 'Admin User' },
+    { id: 'demo-user-1', name: 'Demo User 1' },
+    { id: 'demo-user-2', name: 'Demo User 2' }
+  ];
+
+  // Create direct or group message channel (email-style)
+  const createDirectMessage = async (recipientIds: string | string[]) => {
     if (!client) return null;
 
     try {
-      console.log('Creating direct message channel with:', recipientId);
+      // recipientIds can be a single ID or array of IDs
+      const recipients = Array.isArray(recipientIds) ? recipientIds : [recipientIds];
+      const members = [client.userID!, ...recipients];
+      
+      console.log('Creating message channel with recipients:', recipients);
       const channel = client.channel('messaging', {
-        members: [client.userID!, recipientId]
+        members: members,
+        name: members.length > 2 ? 'Group Message' : null // Only name groups
       });
       await channel.create();
-      console.log('✅ Direct message channel created');
+      console.log('✅ Message channel created for', members.length, 'participants');
       return channel;
     } catch (error) {
-      console.error('Error creating direct message:', error);
+      console.error('Error creating message channel:', error);
       return null;
     }
   };
@@ -73,21 +92,34 @@ export default function StreamMessagesPage() {
   };
 
   // Handle starting a new conversation (compose)
-  const handleComposeMessage = async () => {
+  const handleComposeMessage = async (recipientIds?: string | string[]) => {
     if (!client || !user) return;
 
     try {
-      // For testing, create conversation with test user
-      const channel = await createDirectMessage('test-user-2');
+      // Use provided recipients or default to test user for development
+      const recipients = recipientIds || ['test-user-2'];
+      const channel = await createDirectMessage(recipients);
+      
       if (channel) {
         setSelectedChannel(channel);
         
+        // Determine message type and recipients for welcome message
+        const recipientArray = Array.isArray(recipients) ? recipients : [recipients];
+        const isGroup = recipientArray.length > 1;
+        const recipientNames = isGroup ? 'Group Chat' : 'Test User';
+        
         // Send a welcome message with email-style metadata
-        await sendEmailStyleMessage(channel, 'This is a direct message conversation.', 'Welcome to Direct Messaging');
+        await sendEmailStyleMessage(
+          channel, 
+          isGroup 
+            ? 'This is a group message conversation.'
+            : 'This is a direct message conversation.',
+          `Welcome to ${isGroup ? 'Group' : 'Direct'} Messaging`
+        );
         
         toast({
-          title: "New Conversation",
-          description: "Started new conversation with Test User",
+          title: isGroup ? "Group Conversation Created" : "Direct Conversation Created",
+          description: `Started conversation with ${recipientNames}`,
         });
       }
     } catch (error) {
@@ -252,13 +284,75 @@ export default function StreamMessagesPage() {
           {/* Email-style Sidebar */}
           <div className="w-80 border-r bg-background">
             <div className="p-4 border-b">
-              <Button 
-                onClick={handleComposeMessage} 
-                className="w-full mb-4"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Compose Message
-              </Button>
+              <Dialog open={showCompose} onOpenChange={setShowCompose}>
+                <DialogTrigger asChild>
+                  <Button className="w-full mb-4">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Compose Message
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>New Message</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-sm font-medium">Recipients</Label>
+                      <div className="mt-2 space-y-2 max-h-32 overflow-y-auto border rounded p-2">
+                        {availableUsers.map((user) => (
+                          <div key={user.id} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={user.id}
+                              checked={selectedRecipients.includes(user.id)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedRecipients([...selectedRecipients, user.id]);
+                                } else {
+                                  setSelectedRecipients(selectedRecipients.filter(id => id !== user.id));
+                                }
+                              }}
+                            />
+                            <Label htmlFor={user.id} className="text-sm font-normal">
+                              {user.name}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {selectedRecipients.length > 0 && (
+                      <div className="text-sm text-muted-foreground">
+                        To: {selectedRecipients.map(id => 
+                          availableUsers.find(u => u.id === id)?.name
+                        ).join(', ')}
+                      </div>
+                    )}
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => {
+                          if (selectedRecipients.length > 0) {
+                            handleComposeMessage(selectedRecipients);
+                            setShowCompose(false);
+                            setSelectedRecipients([]);
+                          }
+                        }}
+                        disabled={selectedRecipients.length === 0}
+                        className="flex-1"
+                      >
+                        Start Conversation
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowCompose(false);
+                          setSelectedRecipients([]);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
               
               {/* Email-style folders */}
               <div className="space-y-1">
