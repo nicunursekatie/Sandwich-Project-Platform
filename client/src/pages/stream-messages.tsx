@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
@@ -53,7 +53,7 @@ export default function StreamMessagesPage() {
         const activeUsers = Array.isArray(data) ? data : (data.users || []);
         const filteredUsers = activeUsers.filter((dbUser: any) => 
           dbUser.isActive && 
-          dbUser.id !== user?.id &&
+          dbUser.id !== (user as any)?.id &&
           dbUser.email // Ensure user has email
         ).map((dbUser: any) => ({
           id: dbUser.id,
@@ -456,6 +456,9 @@ export default function StreamMessagesPage() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
               <DialogTitle>New Message</DialogTitle>
+              <DialogDescription>
+                Compose a new message to send to team members. Start typing names in the "To:" field to see available recipients.
+              </DialogDescription>
               <div className="p-6">
                 
                 {/* To field with autocomplete */}

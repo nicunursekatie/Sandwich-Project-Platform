@@ -7169,7 +7169,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: user.id,
           name: user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email,
           email: user.email,
-          role: user.role || 'user'
+          role: 'user' // Always use 'user' role for Stream compatibility
         }));
         
       console.log(`🔄 Syncing ${streamUsers.length} active users to Stream...`);
