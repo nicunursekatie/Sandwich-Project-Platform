@@ -21,13 +21,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
   MessageCircle, 
-  Users, 
   Plus, 
-  Star, 
-  Archive, 
-  Trash2,
-  Folder,
-  Search
+  Inbox,
+  Send
 } from 'lucide-react';
 
 export default function StreamMessagesPage() {
@@ -38,32 +34,67 @@ export default function StreamMessagesPage() {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Handle creating new channel
-  const handleCreateChannel = async () => {
+  // Create direct message channel between two users (email-style)
+  const createDirectMessage = async (recipientId: string) => {
+    if (!client) return null;
+
+    try {
+      console.log('Creating direct message channel with:', recipientId);
+      const channel = client.channel('messaging', {
+        members: [client.userID!, recipientId]
+      });
+      await channel.create();
+      console.log('✅ Direct message channel created');
+      return channel;
+    } catch (error) {
+      console.error('Error creating direct message:', error);
+      return null;
+    }
+  };
+
+  // Send email-style message with custom metadata
+  const sendEmailStyleMessage = async (channel: any, messageBody: string, subject: string = 'Direct Message') => {
+    if (!channel) return;
+
+    try {
+      await channel.sendMessage({
+        text: messageBody,
+        custom: {
+          subject: subject,
+          isRead: false,
+          folder: 'inbox',
+          messageType: 'direct'
+        }
+      });
+      console.log('✅ Email-style message sent with metadata');
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+
+  // Handle starting a new conversation (compose)
+  const handleComposeMessage = async () => {
     if (!client || !user) return;
 
     try {
-      console.log('Creating new test channel...');
-      const channelId = `test-${Date.now()}`;
-      const channel = client.channel('messaging', channelId, {
-        name: 'Test Conversation',
-        members: [client.userID!, 'test-user-2'], // Add second test user for proper messaging flow
-        created_by_id: client.userID!
-      });
-      
-      await channel.create();
-      setSelectedChannel(channel);
-      console.log('✅ Test channel created with multiple users:', channelId);
-      
-      toast({
-        title: "Test Channel Created",
-        description: "New conversation with test user created successfully",
-      });
+      // For testing, create conversation with test user
+      const channel = await createDirectMessage('test-user-2');
+      if (channel) {
+        setSelectedChannel(channel);
+        
+        // Send a welcome message with email-style metadata
+        await sendEmailStyleMessage(channel, 'This is a direct message conversation.', 'Welcome to Direct Messaging');
+        
+        toast({
+          title: "New Conversation",
+          description: "Started new conversation with Test User",
+        });
+      }
     } catch (error) {
-      console.error('Error creating channel:', error);
+      console.error('Error creating conversation:', error);
       toast({
         title: "Error",
-        description: "Failed to create new conversation",
+        description: "Failed to start new conversation",
         variant: "destructive",
       });
     }
@@ -122,17 +153,7 @@ export default function StreamMessagesPage() {
         
         console.log('✅ Stream Chat connection successful!');
 
-        // Create a general channel for testing
-        console.log('Creating general channel...');
-        const generalChannel = chatClient.channel('messaging', 'general', {
-          name: 'General Chat',
-          members: [streamUserId]
-        });
-        await generalChannel.watch();
-        console.log('✅ General channel created/connected');
-
         setClient(chatClient);
-        setSelectedChannel(generalChannel);
         setLoading(false);
 
         toast({
@@ -215,8 +236,8 @@ export default function StreamMessagesPage() {
           <MessageCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
         </div>
         <div>
-          <h1 className="text-2xl font-main-heading text-primary dark:text-secondary">Stream Messages</h1>
-          <p className="font-body text-muted-foreground">Professional messaging with Stream Chat</p>
+          <h1 className="text-2xl font-main-heading text-primary dark:text-secondary">Direct Messages</h1>
+          <p className="font-body text-muted-foreground">Email-style direct messaging system</p>
         </div>
         <div className="flex items-center gap-2 ml-auto">
           <Badge variant="secondary" className="bg-green-100 text-green-800">
@@ -228,29 +249,41 @@ export default function StreamMessagesPage() {
       {/* Main Chat Interface */}
       <div className="flex-1 flex">
         <Chat client={client}>
-          {/* Channel List Sidebar */}
+          {/* Email-style Sidebar */}
           <div className="w-80 border-r bg-background">
             <div className="p-4 border-b">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold">Conversations</h3>
-                <Button size="sm" variant="ghost" onClick={handleCreateChannel}>
-                  <Plus className="w-4 h-4" />
+              <Button 
+                onClick={handleComposeMessage} 
+                className="w-full mb-4"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Compose Message
+              </Button>
+              
+              {/* Email-style folders */}
+              <div className="space-y-1">
+                <Button variant="ghost" className="w-full justify-start">
+                  <Inbox className="w-4 h-4 mr-2" />
+                  Inbox
+                </Button>
+                <Button variant="ghost" className="w-full justify-start">
+                  <Send className="w-4 h-4 mr-2" />
+                  Sent
                 </Button>
               </div>
-              <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                <Input 
-                  placeholder="Search conversations..." 
-                  className="pl-9"
-                />
-              </div>
             </div>
-            <ChannelList 
-              filters={{ members: { $in: [client.userID!] } }}
-              sort={{ last_message_at: -1 }}
-              options={{ limit: 20 }}
-              showChannelSearch
-            />
+            
+            {/* Direct Messages List */}
+            <div className="flex-1">
+              <ChannelList 
+                filters={{ 
+                  members: { $in: [client.userID!] },
+                  type: 'messaging'
+                }}
+                sort={{ last_message_at: -1 }}
+                options={{ limit: 20 }}
+              />
+            </div>
           </div>
 
           {/* Chat Window */}
