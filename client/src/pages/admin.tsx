@@ -21,7 +21,7 @@ const adminDocuments: AdminDocument[] = [
   {
     id: 'tax-exempt-letter',
     name: 'IRS Tax Exempt Letter',
-    description: 'Official 501(c)(3) tax-exempt status documentation (Contains EIN)',
+    description: 'Our 501(c)(3) letter',
     category: 'Legal & Tax',
     path: '/attached_assets/IRS Tax Exempt Letter (Contains EIN).pdf',
     type: 'pdf',
@@ -30,7 +30,7 @@ const adminDocuments: AdminDocument[] = [
   {
     id: 'articles-incorporation',
     name: 'Articles of Incorporation',
-    description: 'Official corporate charter and founding documents',
+    description: 'Articles of Incorporation',
     category: 'Legal & Tax',
     path: '/attached_assets/Articles of Incorporation.pdf',
     type: 'pdf',
@@ -82,11 +82,11 @@ export default function AdminPage() {
   const getImportanceBadge = (importance: string) => {
     switch (importance) {
       case 'critical':
-        return <Badge variant="destructive" className="text-xs">CRITICAL</Badge>;
+        return <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-800">Important</Badge>;
       case 'high':
-        return <Badge variant="secondary" className="text-xs bg-orange-100 text-orange-800">HIGH</Badge>;
+        return <Badge variant="outline" className="text-xs">Reference</Badge>;
       default:
-        return <Badge variant="outline" className="text-xs">NORMAL</Badge>;
+        return null;
     }
   };
 
@@ -97,9 +97,8 @@ export default function AdminPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Important Documents
           </h1>
-          <p className="text-gray-600">
-            Critical organizational documents including tax files, incorporation papers, 
-            and governance documentation for The Sandwich Project.
+          <p className="text-gray-600 mb-6">
+            Key documents for The Sandwich Project, including our nonprofit paperwork and bylaws.
           </p>
         </div>
 
@@ -223,34 +222,6 @@ export default function AdminPage() {
             </div>
           </div>
         )}
-
-        {/* Security Notice */}
-        <Card className="mt-8 border-red-200 bg-red-50">
-          <CardHeader>
-            <CardTitle className="text-red-800 flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              Document Security Notice
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-red-700 space-y-2">
-              <p>
-                <strong>CONFIDENTIAL:</strong> These documents contain sensitive organizational 
-                information including tax identification numbers and legal incorporation details.
-              </p>
-              <p>
-                Access is restricted to authorized administrators only. Do not share, distribute, 
-                or discuss the contents of these documents outside of official organizational business.
-              </p>
-              <ul className="list-disc list-inside text-sm mt-3 space-y-1">
-                <li>IRS Tax Exempt Letter contains the official EIN number</li>
-                <li>Articles of Incorporation include founding details and registered addresses</li>
-                <li>Georgia Code provides legal reference for compliance requirements</li>
-                <li>Bylaws contain governance structure and operational procedures</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
