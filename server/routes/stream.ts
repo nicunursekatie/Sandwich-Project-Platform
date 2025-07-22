@@ -27,16 +27,19 @@ const initializeStreamServer = () => {
 // Get Stream Chat credentials and generate user token
 streamRoutes.post("/credentials", async (req, res) => {
   try {
-    console.log('Stream endpoint hit');
+    console.log('=== STREAM CREDENTIALS ENDPOINT ===');
     console.log('User from req.user:', req.user);
     console.log('User from session:', req.session?.user);
     console.log('Session exists:', !!req.session);
+    console.log('Session ID:', req.sessionID);
     
     const user = req.user || req.session?.user;
     if (!user) {
-      console.log('No user found in request or session');
+      console.log('❌ No user found in request or session');
       return res.status(401).json({ error: "Authentication required" });
     }
+    
+    console.log('✅ User authenticated:', user.email);
 
     const apiKey = process.env.STREAM_API_KEY;
     const apiSecret = process.env.STREAM_API_SECRET;
@@ -78,16 +81,19 @@ streamRoutes.post("/credentials", async (req, res) => {
       });
 
     } catch (streamError) {
-      console.error('Stream Chat user creation error:', streamError);
+      console.error('❌ Stream Chat user creation error:', streamError);
       res.status(500).json({ 
         error: "Failed to create Stream user",
-        message: "Check Stream Chat credentials and network connectivity"
+        message: streamError.message || "Check Stream Chat credentials and network connectivity"
       });
     }
 
   } catch (error) {
-    console.error('Stream credentials error:', error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('❌ Stream credentials error:', error);
+    res.status(500).json({ 
+      error: "Internal server error",
+      message: error.message 
+    });
   }
 });
 
