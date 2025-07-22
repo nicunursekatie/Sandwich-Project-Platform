@@ -31,7 +31,7 @@ interface ProjectAssignment {
 export default function ProjectUserManager({ project, onUpdate }: ProjectUserManagerProps) {
   const { toast } = useToast();
   const { user } = useAuth();
-  const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
+  const canEdit = hasPermission(user, PERMISSIONS.MANAGE_PROJECTS);
   
   const [isManageOpen, setIsManageOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
@@ -39,20 +39,20 @@ export default function ProjectUserManager({ project, onUpdate }: ProjectUserMan
   const [sendNotification, setSendNotification] = useState(true);
 
   // Fetch all users for assignment with fresh data
-  const { data: allUsers = [] } = useQuery<User[]>({
+  const { data: allUsers = [] } = useQuery({
     queryKey: ["/api/users"],
     enabled: canEdit,
     staleTime: 0,
-    cacheTime: 30000,
+    gcTime: 30000,
     refetchOnWindowFocus: true,
   });
 
   // Fetch current project assignments with fresh data
-  const { data: assignments = [], isLoading } = useQuery<ProjectAssignment[]>({
+  const { data: assignments = [], isLoading } = useQuery({
     queryKey: ["/api/projects", project.id, "assignments"],
     queryFn: () => fetch(`/api/projects/${project.id}/assignments`).then(res => res.json()),
     staleTime: 0,
-    cacheTime: 30000,
+    gcTime: 30000,
     refetchOnWindowFocus: true,
   });
 
@@ -137,8 +137,8 @@ export default function ProjectUserManager({ project, onUpdate }: ProjectUserMan
     }
   };
 
-  const availableUsers = allUsers.filter(u => 
-    !assignments.some(a => a.userId === u.id) && u.isActive
+  const availableUsers = (Array.isArray(allUsers) ? allUsers : []).filter((u: any) => 
+    !(Array.isArray(assignments) ? assignments : []).some((a: any) => a.userId === u.id) && u.isActive
   );
 
   if (isLoading) {
@@ -167,7 +167,7 @@ export default function ProjectUserManager({ project, onUpdate }: ProjectUserMan
               Project Team
             </CardTitle>
             <CardDescription>
-              {assignments.length} {assignments.length === 1 ? 'member' : 'members'} assigned
+              {Array.isArray(assignments) ? assignments.length : 0} {(Array.isArray(assignments) ? assignments.length : 0) === 1 ? 'member' : 'members'} assigned
             </CardDescription>
           </div>
           {canEdit && (
@@ -246,13 +246,13 @@ export default function ProjectUserManager({ project, onUpdate }: ProjectUserMan
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">Current Team Members</h3>
                     <div className="space-y-3">
-                      {assignments.length === 0 ? (
+                      {!(Array.isArray(assignments) && assignments.length > 0) ? (
                         <div className="text-center py-8 text-slate-500">
                           No team members assigned yet
                         </div>
                       ) : (
-                        assignments.map((assignment) => {
-                          const assignedUser = allUsers.find(u => u.id === assignment.userId);
+                        (Array.isArray(assignments) ? assignments : []).map((assignment: any) => {
+                          const assignedUser = (Array.isArray(allUsers) ? allUsers : []).find((u: any) => u.id === assignment.userId);
                           if (!assignedUser) return null;
                           
                           return (

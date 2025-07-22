@@ -39,23 +39,26 @@ export const PERMISSIONS = {
   ACCESS_SANDWICH_DATA: 'access_sandwich_data',
   ACCESS_GOVERNANCE: 'access_governance',
   
-  // Granular management permissions for each section
+  // Simplified management permissions for each section
   MANAGE_HOSTS: 'manage_hosts',
   MANAGE_RECIPIENTS: 'manage_recipients', 
   MANAGE_DRIVERS: 'manage_drivers',
-  MANAGE_COLLECTIONS: 'manage_collections',
   MANAGE_PROJECTS: 'manage_projects',
-  EDIT_OWN_PROJECTS: 'edit_own_projects',
-  EDIT_ALL_PROJECTS: 'edit_all_projects',
-  DELETE_OWN_PROJECTS: 'delete_own_projects',
-  DELETE_ALL_PROJECTS: 'delete_all_projects',
   MANAGE_MEETINGS: 'manage_meetings',
   MANAGE_SUGGESTIONS: 'manage_suggestions',
   SUBMIT_SUGGESTIONS: 'submit_suggestions',
   
+  // Content creation permissions (automatically grants edit/delete of own content)
+  CREATE_PROJECTS: 'create_projects',
+  CREATE_COLLECTIONS: 'create_collections',
+  
+  // Override permissions for editing/deleting others' content
+  EDIT_ALL_PROJECTS: 'edit_all_projects',
+  DELETE_ALL_PROJECTS: 'delete_all_projects',
+  EDIT_ALL_COLLECTIONS: 'edit_all_collections',
+  DELETE_ALL_COLLECTIONS: 'delete_all_collections',
+  
   // Data action permissions
-  EDIT_DATA: 'edit_data',
-  DELETE_DATA: 'delete_data',
   EXPORT_DATA: 'export_data',
   IMPORT_DATA: 'import_data',
   SCHEDULE_REPORTS: 'schedule_reports',
@@ -74,7 +77,7 @@ export const PERMISSIONS = {
   RECIPIENT_CHAT: 'recipient_chat',
   CORE_TEAM_CHAT: 'core_team_chat',
   
-  // Legacy support for existing components
+  // Legacy support for existing components (backwards compatibility)
   VIEW_PHONE_DIRECTORY: 'access_directory',
   VIEW_HOSTS: 'access_hosts',
   VIEW_RECIPIENTS: 'access_recipients', 
@@ -86,15 +89,11 @@ export const PERMISSIONS = {
   VIEW_PROJECTS: 'access_projects',
   VIEW_ROLE_DEMO: 'access_role_demo',
   VIEW_SUGGESTIONS: 'access_suggestions',
-  VIEW_SANDWICH_DATA: 'access_sandwich_data', 
+  VIEW_SANDWICH_DATA: 'access_sandbox_data', 
   VIEW_GOVERNANCE: 'access_governance',
   VIEW_USERS: 'manage_users',
   VIEW_COMMITTEE: 'committee_chat',
   TOOLKIT_ACCESS: 'access_toolkit',
-  EDIT_COLLECTIONS: 'edit_collections',
-  DELETE_COLLECTIONS: 'delete_collections',
-  EDIT_OWN_COLLECTIONS: 'edit_own_collections',
-  DELETE_OWN_COLLECTIONS: 'delete_own_collections',
   EDIT_MEETINGS: 'manage_meetings',
   RESPOND_TO_SUGGESTIONS: 'manage_suggestions'
 } as const;
@@ -139,8 +138,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_SANDWICH_DATA,
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.HOST_CHAT,
-        PERMISSIONS.EDIT_OWN_COLLECTIONS, // Hosts can only edit their own collections
-        PERMISSIONS.DELETE_OWN_COLLECTIONS // Hosts can only delete their own collections
+        PERMISSIONS.CREATE_COLLECTIONS, // Can create collections (automatically can edit/delete own)
+        PERMISSIONS.CREATE_PROJECTS // Can create projects (automatically can edit/delete own)
       ];
     
     case USER_ROLES.DRIVER:
@@ -168,8 +167,9 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_PROJECTS,
         PERMISSIONS.ACCESS_SUGGESTIONS,
         PERMISSIONS.GENERAL_CHAT,
-        PERMISSIONS.EDIT_OWN_COLLECTIONS, // Volunteers can only edit their own collections
-        PERMISSIONS.DELETE_OWN_COLLECTIONS // Volunteers can only delete their own collections
+        PERMISSIONS.CREATE_COLLECTIONS, // Can create collections (automatically can edit/delete own)
+        PERMISSIONS.CREATE_PROJECTS, // Can create projects (automatically can edit/delete own)
+        PERMISSIONS.SUBMIT_SUGGESTIONS
       ];
     
     case USER_ROLES.RECIPIENT:
@@ -242,14 +242,12 @@ export function hasPermission(user: any, permission: string): boolean {
 export function canEditCollection(user: any, collection: any): boolean {
   if (!user || !user.permissions) return false;
   
-  // Super admins and admins can edit all collections
-  if (user.role === 'super_admin' || user.role === 'admin') return true;
+  // Super admins and users with EDIT_ALL_COLLECTIONS can edit all collections
+  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.EDIT_ALL_COLLECTIONS)) return true;
   
-  // Check if user has edit_collections permission (can edit ALL collections)
-  if (user.permissions.includes('edit_collections') || user.permissions.includes('manage_collections')) return true;
-  
-  // Check if user has edit_own_collections permission AND owns this collection
-  if (user.permissions.includes('edit_own_collections') && (collection?.createdBy === user.id || collection?.created_by === user.id)) return true;
+  // Users with CREATE_COLLECTIONS can edit collections they created
+  if (user.permissions.includes(PERMISSIONS.CREATE_COLLECTIONS) && 
+      (collection?.createdBy === user.id || collection?.created_by === user.id)) return true;
   
   return false;
 }
@@ -258,72 +256,44 @@ export function canEditCollection(user: any, collection: any): boolean {
 export function canDeleteCollection(user: any, collection: any): boolean {
   if (!user || !user.permissions) return false;
   
-  // Super admins and admins can delete all collections
-  if (user.role === 'super_admin' || user.role === 'admin') return true;
+  // Super admins and users with DELETE_ALL_COLLECTIONS can delete all collections
+  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.DELETE_ALL_COLLECTIONS)) return true;
   
-  // Check if user has delete_collections permission (can delete ALL collections)
-  if (user.permissions.includes('delete_collections') || user.permissions.includes('manage_collections')) return true;
-  
-  // Check if user has delete_own_collections permission AND owns this collection
-  if (user.permissions.includes('delete_own_collections') && (collection?.createdBy === user.id || collection?.created_by === user.id)) return true;
+  // Users with CREATE_COLLECTIONS can delete collections they created
+  if (user.permissions.includes(PERMISSIONS.CREATE_COLLECTIONS) && 
+      (collection?.createdBy === user.id || collection?.created_by === user.id)) return true;
   
   return false;
 }
 
 // Function to check if user can edit a specific project
 export function canEditProject(user: any, project: any): boolean {
-  // Debug logging
-  console.log('=== canEditProject Debug ===');
-  console.log('User:', { id: user?.id, email: user?.email, firstName: user?.firstName, lastName: user?.lastName, role: user?.role });
-  console.log('Project:', { id: project?.id, title: project?.title, assigneeName: project?.assigneeName, assigneeIds: project?.assigneeIds, createdBy: project?.createdBy, created_by: project?.created_by });
-  console.log('User permissions:', user?.permissions);
-
-  if (!user || !user.permissions) {
-    console.log('Permission check failed: no user or permissions');
-    return false;
-  }
+  if (!user || !user.permissions) return false;
   
-  // Super admins and admins can edit all projects
-  if (user.role === 'super_admin' || user.role === 'admin') {
-    console.log('Permission granted: super admin or admin role');
-    return true;
-  }
+  // Super admins and users with EDIT_ALL_PROJECTS can edit all projects
+  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.EDIT_ALL_PROJECTS)) return true;
   
-  // Check if user has edit_all_projects permission (can edit ALL projects)
-  if (user.permissions.includes('edit_all_projects') || user.permissions.includes('manage_projects')) {
-    console.log('Permission granted: has edit_all_projects or manage_projects');
-    return true;
-  }
+  // Users with CREATE_PROJECTS can edit projects they created
+  if (user.permissions.includes(PERMISSIONS.CREATE_PROJECTS) && 
+      (project?.createdBy === user.id || project?.created_by === user.id)) return true;
   
-  // Check if user has edit_own_projects permission AND is assigned to this project
-  if (user.permissions.includes('edit_own_projects')) {
-    console.log('User has edit_own_projects permission, checking assignment...');
-    
-    // Check if user is the assignee of this project
+  // Users with CREATE_PROJECTS can edit projects they're assigned to
+  if (user.permissions.includes(PERMISSIONS.CREATE_PROJECTS)) {
+    // Check multi-assignee IDs
     if (project?.assigneeIds && Array.isArray(project.assigneeIds)) {
-      console.log('Checking assigneeIds array:', project.assigneeIds, 'for user ID:', user.id);
-      if (project.assigneeIds.includes(user.id)) {
-        console.log('Permission granted: user ID found in assigneeIds');
-        return true;
-      }
+      if (project.assigneeIds.includes(user.id)) return true;
     }
+    
+    // Check legacy single assignee ID
+    if (project?.assigneeId === user.id) return true;
     
     // Check assigneeName matches user's display name or email
     if (project?.assigneeName) {
       const userDisplayName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email;
-      console.log('Checking assigneeName:', project.assigneeName, 'vs userDisplayName:', userDisplayName, 'vs email:', user.email);
-      if (project.assigneeName === userDisplayName || project.assigneeName === user.email) {
-        console.log('Permission granted: assigneeName matches user');
-        return true;
-      }
+      if (project.assigneeName === userDisplayName || project.assigneeName === user.email) return true;
     }
-    
-    console.log('Permission denied: user not assigned to this project');
-  } else {
-    console.log('Permission denied: user does not have edit_own_projects permission');
   }
   
-  console.log('=== canEditProject Result: FALSE ===');
   return false;
 }
 
@@ -331,28 +301,12 @@ export function canEditProject(user: any, project: any): boolean {
 export function canDeleteProject(user: any, project: any): boolean {
   if (!user || !user.permissions) return false;
   
-  // Super admins and admins can delete all projects
-  if (user.role === 'super_admin' || user.role === 'admin') return true;
+  // Super admins and users with DELETE_ALL_PROJECTS can delete all projects
+  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.DELETE_ALL_PROJECTS)) return true;
   
-  // Check if user has delete_all_projects permission (can delete ALL projects)
-  if (user.permissions.includes('delete_all_projects') || user.permissions.includes('manage_projects')) return true;
-  
-  // Check if user has delete_own_projects permission AND is assigned to this project
-  if (user.permissions.includes('delete_own_projects')) {
-    // Check if user is the assignee of this project
-    if (project?.assigneeIds && Array.isArray(project.assigneeIds)) {
-      // Multi-assignee support - check if user ID is in assignee list
-      if (project.assigneeIds.includes(user.id)) return true;
-    }
-    
-    // Check assigneeName matches user's display name or email
-    if (project?.assigneeName) {
-      const userDisplayName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email;
-      if (project.assigneeName === userDisplayName || project.assigneeName === user.email) return true;
-    }
-    
-    // Creator ownership removed - projects can only be edited by assignees
-  }
+  // Users with CREATE_PROJECTS can only delete projects they created (not assigned ones)
+  if (user.permissions.includes(PERMISSIONS.CREATE_PROJECTS) && 
+      (project?.createdBy === user.id || project?.created_by === user.id)) return true;
   
   return false;
 }

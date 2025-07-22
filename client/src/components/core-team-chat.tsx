@@ -45,7 +45,7 @@ export default function CoreTeamChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Only allow users with core team chat access
-  const hasCoreTeamAccess = hasPermission(user, "core_team_chat");
+  const hasCoreTeamAccess = hasPermission(user, PERMISSIONS.CORE_TEAM_CHAT);
 
   // Initialize read tracking hook
   const { useAutoMarkAsRead } = useMessageReads();

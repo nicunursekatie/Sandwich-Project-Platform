@@ -237,7 +237,18 @@ export default function ProjectsClean() {
     if (editingProject) {
       editProjectMutation.mutate({ 
         id: editingProject.id, 
-        projectData: editingProject 
+        projectData: {
+          title: editingProject.title,
+          description: editingProject.description,
+          status: editingProject.status,
+          priority: editingProject.priority,
+          category: editingProject.category,
+          assigneeName: editingProject.assigneeName,
+          assigneeIds: editingProject.assigneeIds,
+          dueDate: editingProject.dueDate,
+          estimatedHours: editingProject.estimatedHours,
+          budget: editingProject.budget
+        }
       });
     }
   };
@@ -280,8 +291,8 @@ export default function ProjectsClean() {
       // Add creator information to the project
       const projectWithCreator = {
         ...newProject,
-        created_by: user?.id,
-        created_by_name: user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email
+        createdBy: user?.id || '',
+        createdByName: user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email || ''
       };
       createProjectMutation.mutate(projectWithCreator);
     }
@@ -470,7 +481,7 @@ export default function ProjectsClean() {
         </div>
         <Button 
           onClick={() => setShowCreateDialog(true)} 
-          disabled={!hasPermission(user, PERMISSIONS.EDIT_OWN_PROJECTS) && !hasPermission(user, PERMISSIONS.EDIT_ALL_PROJECTS)}
+          disabled={!hasPermission(user, PERMISSIONS.CREATE_PROJECTS)}
           className="w-full sm:w-auto"
         >
           <Plus className="w-4 h-4 mr-2" />

@@ -50,9 +50,10 @@ export default function SandwichCollectionLog() {
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Check user permissions for editing data
-  const canEditData = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
-  const canDeleteData = hasPermission(user, PERMISSIONS.DELETE_COLLECTIONS);
+  // Check user permissions for creating collections (automatically grants edit/delete of own)
+  const canCreateCollections = hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS);
+  const canEditAllCollections = hasPermission(user, PERMISSIONS.EDIT_ALL_COLLECTIONS);
+  const canDeleteAllCollections = hasPermission(user, PERMISSIONS.DELETE_ALL_COLLECTIONS);
   const [editingCollection, setEditingCollection] = useState<SandwichCollection | null>(null);
   const [showDuplicateAnalysis, setShowDuplicateAnalysis] = useState(false);
   const [duplicateAnalysis, setDuplicateAnalysis] = useState<DuplicateAnalysis | null>(null);
@@ -963,7 +964,7 @@ export default function SandwichCollectionLog() {
             )}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            {canEditData && (
+            {canCreateCollections && (
               <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
                 <DialogTrigger asChild>
                   <Button
@@ -1325,7 +1326,7 @@ export default function SandwichCollectionLog() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
-                    {canEditData && (
+                    {(canEditAllCollections || canEditCollection(user, collection)) && (
                       <button
                         onClick={() => handleSelectCollection(collection.id, !isSelected)}
                         className="flex items-center"

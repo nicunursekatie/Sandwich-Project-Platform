@@ -25,7 +25,7 @@ interface Recipient {
 export default function RecipientsManagement() {
   const { toast } = useToast();
   const { user } = useAuth();
-  const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
+  const canEdit = hasPermission(user, PERMISSIONS.MANAGE_RECIPIENTS);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingRecipient, setEditingRecipient] = useState<Recipient | null>(null);
@@ -46,10 +46,7 @@ export default function RecipientsManagement() {
   });
 
   const createRecipientMutation = useMutation({
-    mutationFn: (recipient: any) => apiRequest("/api/recipients", {
-      method: "POST",
-      body: JSON.stringify(recipient),
-    }),
+    mutationFn: (recipient: any) => apiRequest('POST', '/api/recipients', recipient),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
       setIsAddModalOpen(false);
@@ -76,10 +73,7 @@ export default function RecipientsManagement() {
   });
 
   const updateRecipientMutation = useMutation({
-    mutationFn: ({ id, ...updates }: any) => apiRequest(`/api/recipients/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(updates),
-    }),
+    mutationFn: ({ id, ...updates }: any) => apiRequest('PUT', `/api/recipients/${id}`, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
       setEditingRecipient(null);
@@ -98,9 +92,7 @@ export default function RecipientsManagement() {
   });
 
   const deleteRecipientMutation = useMutation({
-    mutationFn: (id: number) => apiRequest(`/api/recipients/${id}`, {
-      method: "DELETE",
-    }),
+    mutationFn: (id: number) => apiRequest('DELETE', `/api/recipients/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/recipients"] });
       toast({
