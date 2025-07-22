@@ -17,7 +17,8 @@ import {
   Plus, 
   Inbox,
   Send,
-  X
+  X,
+  Loader2
 } from 'lucide-react';
 
 export default function StreamMessagesPage() {
@@ -209,7 +210,7 @@ export default function StreamMessagesPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <LoadingIndicator size={40} />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <p className="mt-4 text-muted-foreground">Connecting to Stream Chat...</p>
         </div>
       </div>
