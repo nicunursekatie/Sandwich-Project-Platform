@@ -95,6 +95,19 @@ export default function InboxPage() {
   const [replyContent, setReplyContent] = useState("");
   const [showComposer, setShowComposer] = useState(false);
 
+  // Automatically close composer when switching tabs
+  const handleTabChange = (newTab: string) => {
+    if (showComposer) {
+      setShowComposer(false);
+      toast({
+        description: "Message composer closed due to tab switch",
+        variant: "default"
+      });
+    }
+    setSelectedTab(newTab);
+    setSelectedMessage(null); // Also clear selected message when switching tabs
+  };
+
   // Fetch group threads for the "groups" tab
   const { data: groupThreads = [] } = useQuery<GroupThread[]>({
     queryKey: ['/api/conversations/groups-with-preview'],
@@ -394,7 +407,7 @@ export default function InboxPage() {
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setSelectedTab(tab.id)}
+                  onClick={() => handleTabChange(tab.id)}
                   className={`
                     flex items-center justify-center gap-1 px-3 py-1.5 rounded-md font-medium text-sm transition-all
                     ${selectedTab === tab.id 

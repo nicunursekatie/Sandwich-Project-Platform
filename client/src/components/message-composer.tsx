@@ -69,7 +69,7 @@ export function MessageComposer({
     }
 
     console.log('Sending message:', {
-      recipientIds: selectedRecipients.map(r => r.id),
+      recipientIds: selectedRecipients,
       content: content.trim(),
       contextType,
       contextId,
@@ -91,7 +91,7 @@ export function MessageComposer({
       toast({
         description: "Message sent successfully",
       });
-      queryClient.invalidateQueries(['/api/messages']); // Refresh messages
+      queryClient.invalidateQueries({ queryKey: ['/api/messages'] }); // Refresh messages
     } catch (error) {
       console.error("Failed to send message:", error);
       toast({ 
@@ -101,7 +101,8 @@ export function MessageComposer({
       });
     }
   };
-return (
+
+  return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <div className="flex items-center justify-between">
