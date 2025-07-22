@@ -669,6 +669,56 @@ export type InsertGoogleSheet = z.infer<typeof insertGoogleSheetSchema>;
 // - conversationParticipants  
 // - messages
 
+// Stream Chat integration tables
+export const streamMessages = pgTable("stream_messages", {
+  id: serial("id").primaryKey(),
+  streamMessageId: varchar("stream_message_id").unique().notNull(), // Stream's message ID
+  conversationId: integer("conversation_id").references(() => streamConversations.id, { onDelete: "cascade" }),
+  threadId: integer("thread_id").references(() => streamThreads.id, { onDelete: "cascade" }),
+  senderId: varchar("sender_id").notNull(),
+  senderName: varchar("sender_name").notNull(),
+  subject: text("subject"), // For email-style messages
+  content: text("content").notNull(),
+  messageType: varchar("message_type").notNull().default("direct"), // 'direct', 'group'
+  folder: varchar("folder").notNull().default("inbox"), // 'inbox', 'sent', 'drafts', 'trash'
+  isRead: boolean("is_read").notNull().default(false),
+  isDraft: boolean("is_draft").notNull().default(false),
+  isDeleted: boolean("is_deleted").notNull().default(false), // soft delete
+  recipients: jsonb("recipients").default('[]'), // Array of recipient IDs for display
+  attachments: jsonb("attachments").default('[]'), // File attachments
+  customData: jsonb("custom_data").default('{}'), // Additional Stream custom fields
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const streamConversations = pgTable("stream_conversations", {
+  id: serial("id").primaryKey(),
+  streamChannelId: varchar("stream_channel_id").unique().notNull(), // Stream's channel ID
+  channelType: varchar("channel_type").notNull().default("messaging"), // Stream channel type
+  title: text("title"), // Conversation title/subject
+  members: jsonb("members").notNull().default('[]'), // Array of user IDs
+  isGroup: boolean("is_group").notNull().default(false),
+  lastMessageAt: timestamp("last_message_at"),
+  lastMessagePreview: text("last_message_preview"),
+  unreadCount: integer("unread_count").notNull().default(0),
+  metadata: jsonb("metadata").default('{}'), // Additional conversation data
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const streamThreads = pgTable("stream_threads", {
+  id: serial("id").primaryKey(),
+  streamThreadId: varchar("stream_thread_id").unique().notNull(), // Stream's thread ID
+  conversationId: integer("conversation_id").references(() => streamConversations.id, { onDelete: "cascade" }),
+  parentMessageId: integer("parent_message_id").references(() => streamMessages.id, { onDelete: "cascade" }),
+  title: text("title"), // Thread title (usually "Re: ...")
+  participants: jsonb("participants").notNull().default('[]'), // Array of user IDs in thread
+  lastReplyAt: timestamp("last_reply_at"),
+  replyCount: integer("reply_count").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const workLogs = pgTable("work_logs", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull(),
@@ -743,3 +793,29 @@ export type Suggestion = typeof suggestions.$inferSelect;
 export type InsertSuggestion = z.infer<typeof insertSuggestionSchema>;
 export type SuggestionResponse = typeof suggestionResponses.$inferSelect;
 export type InsertSuggestionResponse = z.infer<typeof insertSuggestionResponseSchema>;
+
+// Stream Chat schema types
+export const insertStreamMessageSchema = createInsertSchema(streamMessages).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export const insertStreamConversationSchema = createInsertSchema(streamConversations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export const insertStreamThreadSchema = createInsertSchema(streamThreads).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export type StreamMessage = typeof streamMessages.$inferSelect;
+export type InsertStreamMessage = z.infer<typeof insertStreamMessageSchema>;
+export type StreamConversation = typeof streamConversations.$inferSelect;
+export type InsertStreamConversation = z.infer<typeof insertStreamConversationSchema>;
+export type StreamThread = typeof streamThreads.$inferSelect;
+export type InsertStreamThread = z.infer<typeof insertStreamThreadSchema>;
