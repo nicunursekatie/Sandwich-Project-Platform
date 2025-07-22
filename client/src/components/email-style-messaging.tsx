@@ -83,21 +83,29 @@ export default function EmailStyleMessaging() {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
-  // Get messages from API
-  const { data: messages = [], isLoading } = useQuery({
+  // Get messages from API with error handling
+  const { data: messages = [], isLoading, error: messagesError } = useQuery({
     queryKey: ['/api/real-time-messages', activeFolder],
-    queryFn: () => apiRequest('GET', `/api/real-time-messages?folder=${activeFolder}`)
+    queryFn: () => apiRequest('GET', `/api/real-time-messages?folder=${activeFolder}`),
+    retry: false,
+    onError: (error) => {
+      if (error.message?.includes('401')) {
+        setShowAuthHelper(true);
+      }
+    }
   });
 
   // Get users for recipient selection
   const { data: users = [] } = useQuery({
     queryKey: ['/api/users'],
-    queryFn: () => apiRequest('GET', '/api/users')
+    queryFn: () => apiRequest('GET', '/api/users'),
+    retry: false
   });
 
   // Fetch current user for authentication
-  const { data: currentUser } = useQuery({
+  const { data: currentUser, error: authError } = useQuery({
     queryKey: ['/api/auth/user'],
+    retry: false
   });
 
   // Send message mutation
@@ -123,7 +131,8 @@ export default function EmailStyleMessaging() {
       // More detailed error handling
       let errorMessage = "Failed to send message. Please try again.";
       if (error.message?.includes('401')) {
-        errorMessage = "Authentication required. Please log in and try again.";
+        errorMessage = "Authentication required. Please log in first.";
+        setShowAuthHelper(true);
       } else if (error.message?.includes('403')) {
         errorMessage = "Permission denied. You may not have access to send messages.";
       }
