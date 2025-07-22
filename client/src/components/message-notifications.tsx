@@ -74,89 +74,73 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
     let socket: WebSocket | null = null;
     let reconnectTimeoutId: NodeJS.Timeout | null = null;
 
-    // Set up WebSocket connection for real-time notifications
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    
-    // Enhanced WebSocket URL construction with better error handling
-    let wsUrl: string;
-    
-    try {
-      if (window.location.hostname.includes('.replit.dev') || window.location.hostname.includes('.replit.app')) {
-        // Replit environment - use the full hostname without port but with correct protocol
-        wsUrl = `${protocol}//${window.location.hostname}/notifications`;
-      } else if (window.location.host && window.location.host !== 'undefined') {
-        // Local development or other environments - use window.location.host which includes port
-        wsUrl = `${protocol}//${window.location.host}/notifications`;
-      } else {
-        // Fallback for environments where window.location.host is undefined
-        const port = window.location.port || '5000';
-        wsUrl = `${protocol}//${window.location.hostname || 'localhost'}:${port}/notifications`;
-      }
-    } catch (error) {
-      console.error('Failed to construct WebSocket URL:', error);
-      // Last resort fallback
-      wsUrl = `ws://localhost:5000/notifications`;
-    }
-
-    try {
-      socket = new WebSocket(wsUrl);
-
-      socket.onopen = () => {
-        console.log("WebSocket connected for notifications");
-        // Send user identification with error handling
-        try {
-          if (socket && socket.readyState === WebSocket.OPEN) {
+    const connectWebSocket = () => {
+      try {
+        // Construct WebSocket URL with proper port handling for different environments
+        const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+        const host = window.location.hostname;
+        
+        // Handle different port scenarios for Replit and localhost
+        let port = window.location.port;
+        if (!port) {
+          // In production/deployed environments, use standard ports
+          port = window.location.protocol === "https:" ? "443" : "80";
+        }
+        
+        const wsUrl = `${protocol}//${host}:${port}/notifications`;
+        console.log('Connecting to WebSocket:', wsUrl);
+        
+        socket = new WebSocket(wsUrl);
+        
+        socket.onopen = () => {
+          console.log('WebSocket connected successfully');
+          // Send identification message
+          if (socket && user) {
             socket.send(JSON.stringify({
               type: 'identify',
-              userId: (user as any)?.id
+              userId: user.id
             }));
           }
-        } catch (error) {
-          console.debug('Failed to send identify message:', error);
-        }
-      };
-
-      socket.onerror = (error) => {
-        // Silently handle WebSocket errors to avoid console spam
-        console.debug('WebSocket error:', error);
-      };
-
-      socket.onclose = (event) => {
-        // Only attempt reconnection if not a normal closure
-        if (event.code !== 1000) {
-          reconnectTimeoutId = setTimeout(() => {
-            // The cleanup function will trigger re-initialization
-          }, 5000);
-        }
-      };
-
-      socket.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === 'new_message') {
-            // Refetch unread counts when new message arrives
-            refetch();
-
-            // Show browser notification if permission granted and available
-            if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-              try {
-                new Notification(`New message in ${data.committee || 'Messages'}`, {
-                  body: `${data.sender || 'Unknown'}: ${(data.content || 'New message').substring(0, 100)}...`,
-                  icon: '/favicon.ico'
-                });
-              } catch (notificationError) {
-                console.debug('Failed to show notification:', notificationError);
-              }
+        };
+        
+        socket.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            console.log('WebSocket notification received:', data);
+            
+            // Refresh counts when notifications are received
+            if (data.type === 'notification') {
+              refetch();
+              setLastCheck(Date.now());
             }
+          } catch (error) {
+            console.error('Error parsing WebSocket message:', error);
           }
-        } catch (error) {
-          // Silently handle parsing errors
-        }
-      };
+        };
+        
+        socket.onclose = (event) => {
+          console.log('WebSocket connection closed:', event.code, event.reason);
+          socket = null;
+          
+          // Attempt to reconnect after a delay if not intentionally closed
+          if (event.code !== 1000) {
+            reconnectTimeoutId = setTimeout(connectWebSocket, 5000);
+          }
+        };
+        
+        socket.onerror = (error) => {
+          console.error('WebSocket error:', error);
+        };
+        
+      } catch (error) {
+        console.error('Failed to create WebSocket connection:', error);
+        // Retry after delay
+        reconnectTimeoutId = setTimeout(connectWebSocket, 10000);
+      }
+    };
 
-    } catch (error) {
-      // Still allow component to function without real-time updates
-    }
+    // Initialize WebSocket connection
+    connectWebSocket();
 
     return () => {
       if (reconnectTimeoutId) {
