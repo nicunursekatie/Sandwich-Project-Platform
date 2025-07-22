@@ -468,9 +468,11 @@ export default function InboxPage() {
                             </Avatar>
                             <div>
                               <p className="font-medium text-sm">
-                                {selectedTab === 'sent' 
-                                  ? `To: ${message?.from?.name || 'Unknown Recipient'}` 
-                                  : (message?.senderName || 'Unknown')
+                                {isGroupThread 
+                                  ? `Group: ${message?.senderName || 'Unnamed Group'}`
+                                  : selectedTab === 'sent' 
+                                    ? `To: ${message?.recipientName || message?.contextTitle || 'Unknown Recipient'}` 
+                                    : `From: ${message?.senderName || 'Unknown Sender'}`
                                 }
                               </p>
                               <p className="text-xs text-gray-500">
@@ -587,9 +589,11 @@ export default function InboxPage() {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h3 className="font-semibold">{selectedMessage.senderName || 'Unknown'}</h3>
+                      <h3 className="font-semibold">
+                        Message from: {selectedMessage.senderName || 'Unknown Sender'}
+                      </h3>
                       <p className="text-sm text-gray-500">
-                        {formatDistanceToNow(new Date(selectedMessage.createdAt), { addSuffix: true })}
+                        Received {formatDistanceToNow(new Date(selectedMessage.createdAt), { addSuffix: true })}
                         {selectedMessage.editedAt && ' (edited)'}
                       </p>
                     </div>
@@ -633,33 +637,46 @@ export default function InboxPage() {
               <ScrollArea className="flex-1 p-4">
                 <div className="space-y-4">
                   {/* Original Message */}
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm whitespace-pre-wrap">
+                  <div className="bg-gray-50 border rounded-lg p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <p className="font-medium text-sm text-gray-900">
+                        From: {selectedMessage?.senderName || 'Unknown Sender'}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {selectedMessage?.createdAt ? formatDistanceToNow(new Date(selectedMessage.createdAt), { addSuffix: true }) : 'Unknown time'}
+                      </p>
+                    </div>
+                    <p className="text-sm whitespace-pre-wrap text-gray-700">
                       {selectedMessage.editedContent || selectedMessage.content}
                     </p>
                   </div>
 
                   {/* Thread Replies */}
-                  {threadMessages.filter((m: Message) => m.id !== selectedMessage.id).map((message: Message) => (
-                    <div 
-                      key={message.id} 
-                      className={`rounded-lg p-4 ${
-                        message.senderId === (user as any)?.id 
-                          ? 'bg-blue-50 ml-auto max-w-[80%]' 
-                          : 'bg-gray-50 mr-auto max-w-[80%]'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <p className="font-medium text-sm">{message.senderName}</p>
-                        <p className="text-xs text-gray-500">
-                          {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+                  {threadMessages.filter((m: Message) => m.id !== selectedMessage.id).map((message: Message) => {
+                    const isMyMessage = message.senderId === (user as any)?.id;
+                    return (
+                      <div 
+                        key={message.id} 
+                        className={`rounded-lg p-4 ${
+                          isMyMessage
+                            ? 'bg-[#236383] text-white ml-auto max-w-[80%]' 
+                            : 'bg-gray-50 border mr-auto max-w-[80%]'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <p className={`font-medium text-sm ${isMyMessage ? 'text-white' : 'text-gray-900'}`}>
+                            {isMyMessage ? 'You' : `${message.senderName || 'Unknown Sender'}`}
+                          </p>
+                          <p className={`text-xs ${isMyMessage ? 'text-blue-100' : 'text-gray-500'}`}>
+                            {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+                          </p>
+                        </div>
+                        <p className={`text-sm whitespace-pre-wrap ${isMyMessage ? 'text-white' : 'text-gray-700'}`}>
+                          {message.editedContent || message.content}
                         </p>
                       </div>
-                      <p className="text-sm whitespace-pre-wrap">
-                        {message.editedContent || message.content}
-                      </p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </ScrollArea>
 
