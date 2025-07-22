@@ -202,6 +202,7 @@ export default function StreamMessagesPage() {
         // Avoid duplicates
         const exists = prev.find(msg => msg.id === newMessage.id);
         if (!exists) {
+          console.log('✅ Adding new message to UI:', newMessage.subject);
           return [newMessage, ...prev];
         }
         return prev;
@@ -227,10 +228,10 @@ export default function StreamMessagesPage() {
     switch(activeFolder) {
       case 'inbox':
         return messages.filter(msg => 
-          msg.from && msg.from !== (user as any)?.id // Messages from others (received)
+          msg.from && msg.from !== `user_${(user as any)?.id}` // Messages from others (received)
         );
       case 'sent':
-        return messages.filter(msg => msg.from === (user as any)?.id); // Messages from current user
+        return messages.filter(msg => msg.from === `user_${(user as any)?.id}`); // Messages from current user
       case 'conversations':
         return messages; // all messages
       default:
@@ -246,17 +247,27 @@ export default function StreamMessagesPage() {
     }
     
     try {
-      console.log('📥 Fetching messages from Stream Chat for user:', (user as any)?.id);
+      const currentUserId = `user_${(user as any)?.id}`;
+      console.log('📥 Fetching messages from Stream Chat for user:', currentUserId);
       
-      // Get all channels the user is a member of
+      // Get all channels the user is a member of - use same format as channel creation
       const filter = { 
         type: 'messaging',
-        members: { $in: [(user as any)?.id] } 
+        members: { $in: [currentUserId] } 
       };
       const sort = [{ last_message_at: -1 }];
-      const channelsResponse = await client.queryChannels(filter, sort);
       
-      console.log('Found channels:', channelsResponse.length);
+      console.log('Querying channels with filter:', filter);
+      const channelsResponse = await client.queryChannels(filter, sort, {
+        watch: true,
+        state: true,
+        limit: 30
+      });
+      
+      console.log('Query returned channels:', channelsResponse.length, 'channels');
+      channelsResponse.forEach((channel, index) => {
+        console.log(`Channel ${index + 1}: ${channel.id}, members:`, channel.state?.members ? Object.keys(channel.state.members) : []);
+      });
       
       const allMessages: any[] = [];
       
@@ -287,6 +298,11 @@ export default function StreamMessagesPage() {
       allMessages.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
       
       console.log('📊 Total messages loaded:', allMessages.length);
+      console.log('Messages breakdown by folder:');
+      console.log('- All messages:', allMessages.length);
+      console.log('- From others (inbox):', allMessages.filter(msg => msg.from && msg.from !== currentUserId).length);
+      console.log('- From current user (sent):', allMessages.filter(msg => msg.from === currentUserId).length);
+      
       setMessages(allMessages);
       setConversations(channelsResponse);
     } catch (error) {
@@ -402,6 +418,10 @@ export default function StreamMessagesPage() {
         const recipientNames = selectedRecipients.map(id => 
           availableUsers.find(u => u.id === id)?.displayName
         ).join(', ');
+        
+        // Refresh message list to show newly sent message
+        console.log('🔄 Refreshing message list after send...');
+        await fetchMessages();
         
         toast({
           title: "Message Sent",
@@ -699,7 +719,7 @@ export default function StreamMessagesPage() {
               onClick={() => setActiveFolder('sent')}
             >
               <Send className="w-4 h-4" />
-              <span>📤 Sent ({messages.filter(msg => msg.from === (user as any)?.id).length})</span>
+              <span>📤 Sent ({messages.filter(msg => msg.from === `user_${(user as any)?.id}`).length})</span>
             </div>
             <div 
               className={`flex items-center gap-2 p-3 rounded-lg cursor-pointer text-sm ${
@@ -773,13 +793,14 @@ export default function StreamMessagesPage() {
                     Start Conversation
                   </Button>
                   
-                  {availableUsers.length > 0 && (
+                  {/* Only show user availability when compose dialog is open */}
+                  {showCompose && availableUsers.length > 0 && (
                     <div className="mt-4 text-center">
                       <p className="text-sm text-green-600 dark:text-green-400 font-medium">✅ {availableUsers.length} users available</p>
                     </div>
                   )}
                   
-                  {availableUsers.length === 0 && (
+                  {showCompose && availableUsers.length === 0 && (
                     <div className="mt-4 text-center">
                       <p className="text-sm text-yellow-600 dark:text-yellow-400 font-medium">⏳ Loading users...</p>
                     </div>
