@@ -45,6 +45,8 @@ import InboxPage from "@/pages/inbox";
 import MessagingSystem from "@/components/messaging-system";
 import RealTimeMessages from "@/pages/real-time-messages";
 import Governance from "@/pages/governance";
+import StreamMessagesPage from "@/pages/stream-messages";
+import StreamMessagesPage from "@/pages/stream-messages";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -152,6 +154,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <ProjectsClean />;
       case "messages":
         return <InboxPage />;
+      case "stream-messages":
+        return <StreamMessagesPage />;
       case "chat":
         return <EnhancedChat />;
       case "profile":

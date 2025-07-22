@@ -98,14 +98,23 @@ export default function StreamMessaging() {
       if (!user) return;
 
       try {
-        // Note: In production, you'll need to get these from your backend
-        const apiKey = import.meta.env.VITE_STREAM_API_KEY || 'demo-api-key';
-        const userToken = import.meta.env.VITE_STREAM_USER_TOKEN || 'demo-token';
+        // Get Stream credentials and user token from backend
+        const response = await fetch('/api/stream/credentials', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include'
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to get Stream credentials');
+        }
+
+        const { apiKey, userToken, streamUserId } = await response.json();
 
         const chatClient = StreamChat.getInstance(apiKey);
         
         await chatClient.connectUser({
-          id: user.id,
+          id: streamUserId,
           name: `${user.firstName} ${user.lastName}` || user.email,
           email: user.email,
         }, userToken);
@@ -114,8 +123,8 @@ export default function StreamMessaging() {
       } catch (error) {
         console.error('Failed to initialize Stream Chat:', error);
         toast({
-          title: "Chat Initialization Failed",
-          description: "Please contact support if this issue persists.",
+          title: "Stream Chat Setup Required",
+          description: "Please add your Stream Chat API key and secret to environment variables.",
           variant: "destructive"
         });
       }

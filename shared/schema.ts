@@ -669,18 +669,35 @@ export type InsertGoogleSheet = z.infer<typeof insertGoogleSheetSchema>;
 // - conversationParticipants  
 // - messages
 
-// Stream Chat integration tables
-export const streamConversations = pgTable("stream_conversations", {
+// Stream Chat integration tables - Track metadata for Stream messages
+export const streamUsers = pgTable("stream_users", {
   id: serial("id").primaryKey(),
-  streamChannelId: varchar("stream_channel_id").unique().notNull(), // Stream's channel ID
-  channelType: varchar("channel_type").notNull().default("messaging"), // Stream channel type
-  title: text("title"), // Conversation title/subject
-  members: jsonb("members").notNull().default('[]'), // Array of user IDs
-  isGroup: boolean("is_group").notNull().default(false),
-  lastMessageAt: timestamp("last_message_at"),
-  lastMessagePreview: text("last_message_preview"),
-  unreadCount: integer("unread_count").notNull().default(0),
-  metadata: jsonb("metadata").default('{}'), // Additional conversation data
+  userId: varchar("user_id").notNull(), // Your app's user ID
+  streamUserId: varchar("stream_user_id").unique().notNull(), // Stream's user ID
+  streamToken: text("stream_token"), // For authentication
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const streamChannels = pgTable("stream_channels", {
+  id: serial("id").primaryKey(),
+  channelId: varchar("channel_id").unique().notNull(), // Stream's channel ID
+  userId: varchar("user_id").notNull(), // Which user has access
+  folder: varchar("folder").notNull().default("inbox"), // 'inbox', 'sent', 'trash'
+  lastRead: timestamp("last_read"),
+  customData: jsonb("custom_data").default('{}'), // Subject lines, etc
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const streamMessages = pgTable("stream_messages", {
+  id: serial("id").primaryKey(),
+  streamMessageId: varchar("stream_message_id").unique().notNull(), // Reference to Stream's message
+  channelId: varchar("channel_id").notNull(), // Stream's channel ID
+  userId: varchar("user_id").notNull(), // User who this metadata belongs to
+  isStarred: boolean("is_starred").notNull().default(false),
+  isDraft: boolean("is_draft").notNull().default(false),
+  folder: varchar("folder").notNull().default("inbox"), // User's folder assignment
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -688,33 +705,11 @@ export const streamConversations = pgTable("stream_conversations", {
 export const streamThreads = pgTable("stream_threads", {
   id: serial("id").primaryKey(),
   streamThreadId: varchar("stream_thread_id").unique().notNull(), // Stream's thread ID
-  conversationId: integer("conversation_id").references(() => streamConversations.id, { onDelete: "cascade" }),
-  parentMessageId: integer("parent_message_id"), // Will be set after messages table is defined
+  parentMessageId: integer("parent_message_id").references(() => streamMessages.id, { onDelete: "set null" }),
   title: text("title"), // Thread title (usually "Re: ...")
   participants: jsonb("participants").notNull().default('[]'), // Array of user IDs in thread
   lastReplyAt: timestamp("last_reply_at"),
   replyCount: integer("reply_count").notNull().default(0),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
-export const streamMessages = pgTable("stream_messages", {
-  id: serial("id").primaryKey(),
-  streamMessageId: varchar("stream_message_id").unique().notNull(), // Stream's message ID
-  conversationId: integer("conversation_id").references(() => streamConversations.id, { onDelete: "cascade" }),
-  threadId: integer("thread_id").references(() => streamThreads.id, { onDelete: "cascade" }),
-  senderId: varchar("sender_id").notNull(),
-  senderName: varchar("sender_name").notNull(),
-  subject: text("subject"), // For email-style messages
-  content: text("content").notNull(),
-  messageType: varchar("message_type").notNull().default("direct"), // 'direct', 'group'
-  folder: varchar("folder").notNull().default("inbox"), // 'inbox', 'sent', 'drafts', 'trash'
-  isRead: boolean("is_read").notNull().default(false),
-  isDraft: boolean("is_draft").notNull().default(false),
-  isDeleted: boolean("is_deleted").notNull().default(false), // soft delete
-  recipients: jsonb("recipients").default('[]'), // Array of recipient IDs for display
-  attachments: jsonb("attachments").default('[]'), // File attachments
-  customData: jsonb("custom_data").default('{}'), // Additional Stream custom fields
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -797,13 +792,19 @@ export type SuggestionResponse = typeof suggestionResponses.$inferSelect;
 export type InsertSuggestionResponse = z.infer<typeof insertSuggestionResponseSchema>;
 
 // Stream Chat schema types
-export const insertStreamMessageSchema = createInsertSchema(streamMessages).omit({
+export const insertStreamUserSchema = createInsertSchema(streamUsers).omit({
   id: true,
   createdAt: true,
   updatedAt: true
 });
 
-export const insertStreamConversationSchema = createInsertSchema(streamConversations).omit({
+export const insertStreamChannelSchema = createInsertSchema(streamChannels).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export const insertStreamMessageSchema = createInsertSchema(streamMessages).omit({
   id: true,
   createdAt: true,
   updatedAt: true
@@ -815,9 +816,11 @@ export const insertStreamThreadSchema = createInsertSchema(streamThreads).omit({
   updatedAt: true
 });
 
+export type StreamUser = typeof streamUsers.$inferSelect;
+export type InsertStreamUser = z.infer<typeof insertStreamUserSchema>;
+export type StreamChannel = typeof streamChannels.$inferSelect;
+export type InsertStreamChannel = z.infer<typeof insertStreamChannelSchema>;
 export type StreamMessage = typeof streamMessages.$inferSelect;
 export type InsertStreamMessage = z.infer<typeof insertStreamMessageSchema>;
-export type StreamConversation = typeof streamConversations.$inferSelect;
-export type InsertStreamConversation = z.infer<typeof insertStreamConversationSchema>;
 export type StreamThread = typeof streamThreads.$inferSelect;
 export type InsertStreamThread = z.infer<typeof insertStreamThreadSchema>;
