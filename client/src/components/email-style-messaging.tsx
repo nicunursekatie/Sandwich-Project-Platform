@@ -58,6 +58,13 @@ export default function EmailStyleMessaging() {
   
   const [selectedMessage, setSelectedMessage] = useState<EmailMessage | null>(null);
   const [activeFolder, setActiveFolder] = useState<'inbox' | 'sent' | 'drafts' | 'trash'>('inbox');
+  
+  // Clear selected message when switching tabs
+  const handleTabChange = (folder: 'inbox' | 'sent' | 'drafts' | 'trash') => {
+    setActiveFolder(folder);
+    setSelectedMessage(null); // Clear selection when switching tabs
+    setSelectedMessages([]); // Clear bulk selections too
+  };
   const [searchQuery, setSearchQuery] = useState("");
   const [isComposing, setIsComposing] = useState(false);
   const [selectedMessages, setSelectedMessages] = useState<string[]>([]);
@@ -87,12 +94,7 @@ export default function EmailStyleMessaging() {
   const { data: messages = [], isLoading, error: messagesError } = useQuery({
     queryKey: ['/api/real-time-messages', activeFolder],
     queryFn: () => apiRequest('GET', `/api/real-time-messages?folder=${activeFolder}`),
-    retry: false,
-    onError: (error) => {
-      if (error.message?.includes('401')) {
-        setShowAuthHelper(true);
-      }
-    }
+    retry: false
   });
 
   // Get users for recipient selection
@@ -103,7 +105,7 @@ export default function EmailStyleMessaging() {
   });
 
   // Fetch current user for authentication
-  const { data: currentUser, error: authError } = useQuery({
+  const { data: currentUser } = useQuery({
     queryKey: ['/api/auth/user'],
     retry: false
   });
@@ -132,7 +134,6 @@ export default function EmailStyleMessaging() {
       let errorMessage = "Failed to send message. Please try again.";
       if (error.message?.includes('401')) {
         errorMessage = "Authentication required. Please log in first.";
-        setShowAuthHelper(true);
       } else if (error.message?.includes('403')) {
         errorMessage = "Permission denied. You may not have access to send messages.";
       }
@@ -144,11 +145,11 @@ export default function EmailStyleMessaging() {
     }
   });
 
-  const filteredMessages = messages.filter((msg: EmailMessage) => 
+  const filteredMessages = Array.isArray(messages) ? messages.filter((msg: EmailMessage) => 
     msg.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
     msg.from.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     msg.content.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  ) : [];
 
   // Bulk actions
   const toggleMessageSelection = (messageId: string) => {
@@ -230,7 +231,8 @@ export default function EmailStyleMessaging() {
   };
 
   const handleReplyAll = (message: EmailMessage) => {
-    const allRecipients = [message.from.email, ...message.to.filter(email => email !== currentUser?.email)];
+    const currentUserEmail = (currentUser as any)?.email || '';
+    const allRecipients = [message.from.email, ...message.to.filter(email => email !== currentUserEmail)];
     setReplyData(message);
     setComposeData({
       to: allRecipients.join(', '),
@@ -277,19 +279,19 @@ export default function EmailStyleMessaging() {
             <Button
               variant={activeFolder === 'inbox' ? 'default' : 'ghost'}
               className="w-full justify-start"
-              onClick={() => setActiveFolder('inbox')}
+              onClick={() => handleTabChange('inbox')}
             >
               <Inbox className="h-4 w-4 mr-2" />
               Inbox
               <Badge variant="secondary" className="ml-auto">
-                {messages.filter((m: EmailMessage) => m.folder === 'inbox' && !m.read).length}
+                {Array.isArray(messages) ? messages.filter((m: EmailMessage) => m.folder === 'inbox' && !m.read).length : 0}
               </Badge>
             </Button>
             
             <Button
               variant={activeFolder === 'sent' ? 'default' : 'ghost'}
               className="w-full justify-start"
-              onClick={() => setActiveFolder('sent')}
+              onClick={() => handleTabChange('sent')}
             >
               <Send className="h-4 w-4 mr-2" />
               Sent
@@ -298,7 +300,7 @@ export default function EmailStyleMessaging() {
             <Button
               variant={activeFolder === 'drafts' ? 'default' : 'ghost'}
               className="w-full justify-start"
-              onClick={() => setActiveFolder('drafts')}
+              onClick={() => handleTabChange('drafts')}
             >
               <Archive className="h-4 w-4 mr-2" />
               Drafts
@@ -307,7 +309,7 @@ export default function EmailStyleMessaging() {
             <Button
               variant={activeFolder === 'trash' ? 'default' : 'ghost'}
               className="w-full justify-start"
-              onClick={() => setActiveFolder('trash')}
+              onClick={() => handleTabChange('trash')}
             >
               <Trash2 className="h-4 w-4 mr-2" />
               Trash
@@ -492,9 +494,9 @@ export default function EmailStyleMessaging() {
                           </Avatar>
                           
                           <div className="flex-1 min-w-0">
-                            {/* Header Row */}
-                            <div className="flex items-center justify-between mb-1">
-                              <div className="flex items-center gap-2 min-w-0">
+                            {/* Header Row - Fix timestamp cutoff */}
+                            <div className="flex items-center justify-between mb-1 gap-3">
+                              <div className="flex items-center gap-2 min-w-0 flex-1">
                                 <span className={`text-sm truncate ${!message.read ? 'font-semibold text-gray-900' : 'font-medium text-gray-700'}`}>
                                   {message.from.name}
                                 </span>
@@ -508,14 +510,14 @@ export default function EmailStyleMessaging() {
                                 )}
                               </div>
                               
-                              <div className="flex items-center gap-1 flex-shrink-0">
+                              <div className="flex items-center gap-1 flex-shrink-0 min-w-0">
                                 {message.starred && (
-                                  <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                                  <Star className="h-4 w-4 text-yellow-500 fill-current flex-shrink-0" />
                                 )}
                                 {message.attachments && message.attachments.length > 0 && (
-                                  <Paperclip className="h-4 w-4 text-gray-400" />
+                                  <Paperclip className="h-4 w-4 text-gray-400 flex-shrink-0" />
                                 )}
-                                <span className="text-xs text-gray-500 ml-2">
+                                <span className="text-xs text-gray-500 whitespace-nowrap">
                                   {formatDate(message.timestamp)}
                                 </span>
                               </div>
@@ -596,12 +598,22 @@ export default function EmailStyleMessaging() {
                       </Avatar>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
+                          {activeFolder === 'sent' ? (
+                            <span className="font-bold text-red-600">TO:</span>
+                          ) : (
+                            <span className="font-bold text-blue-600">FROM:</span>
+                          )}
                           <span className="font-medium">{selectedMessage.from.name}</span>
                           <span className="text-sm text-muted-foreground">
                             &lt;{selectedMessage.from.email}&gt;
                           </span>
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        {activeFolder === 'sent' && selectedMessage.to && Array.isArray(selectedMessage.to) && selectedMessage.to.length > 0 && (
+                          <div className="text-sm text-muted-foreground mt-1">
+                            <span className="font-bold text-red-600">TO:</span> {selectedMessage.to.join(', ')}
+                          </div>
+                        )}
+                        <div className="text-sm text-muted-foreground mt-1">
                           {formatDate(selectedMessage.timestamp)}
                         </div>
                       </div>
