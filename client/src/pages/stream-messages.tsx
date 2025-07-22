@@ -27,16 +27,21 @@ export default function StreamMessagesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showCompose, setShowCompose] = useState(false);
+  const [recipientInput, setRecipientInput] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
+  const [subject, setSubject] = useState('');
+  const [messageBody, setMessageBody] = useState('');
   const { user } = useAuth();
   const { toast } = useToast();
 
   // Available users for recipient selection (in real app, this would come from API)
   const availableUsers = [
-    { id: 'test-user-2', name: 'Test User' },
-    { id: 'admin-user', name: 'Admin User' },
-    { id: 'demo-user-1', name: 'Demo User 1' },
-    { id: 'demo-user-2', name: 'Demo User 2' }
+    { id: 'test-user-2', displayName: 'Test User', email: 'test@example.com' },
+    { id: 'admin-user', displayName: 'Admin User', email: 'admin@example.com' },
+    { id: 'demo-user-1', displayName: 'Demo User 1', email: 'demo1@example.com' },
+    { id: 'demo-user-2', displayName: 'Demo User 2', email: 'demo2@example.com' }
   ];
 
   // Create direct or group message channel (email-style)
@@ -49,10 +54,14 @@ export default function StreamMessagesPage() {
       const members = [client.userID!, ...recipients];
       
       console.log('Creating message channel with recipients:', recipients);
-      const channel = client.channel('messaging', {
-        members: members,
-        name: members.length > 2 ? 'Group Message' : null // Only name groups
-      });
+      const channelData: any = {
+        members: members
+      };
+      if (members.length > 2) {
+        channelData.name = 'Group Message';
+      }
+      
+      const channel = client.channel('messaging', channelData);
       await channel.create();
       console.log('✅ Message channel created for', members.length, 'participants');
       return channel;
@@ -82,42 +91,71 @@ export default function StreamMessagesPage() {
     }
   };
 
-  // Handle starting a new conversation (compose)
-  const handleComposeMessage = async (recipientIds?: string | string[]) => {
-    if (!client || !user) return;
+  // Handle autocomplete recipient input
+  const handleRecipientInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setRecipientInput(input);
+    
+    if (input.length > 0) {
+      const filtered = availableUsers.filter(user => 
+        user.displayName.toLowerCase().includes(input.toLowerCase()) ||
+        user.email.toLowerCase().includes(input.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+      setShowSuggestions(true);
+    } else {
+      setShowSuggestions(false);
+    }
+  };
+
+  // Select recipient from autocomplete
+  const selectRecipient = (user: any) => {
+    if (!selectedRecipients.includes(user.id)) {
+      setSelectedRecipients([...selectedRecipients, user.id]);
+    }
+    setRecipientInput('');
+    setShowSuggestions(false);
+  };
+
+  // Remove selected recipient
+  const removeRecipient = (userId: string) => {
+    setSelectedRecipients(selectedRecipients.filter(id => id !== userId));
+  };
+
+  // Handle sending email-style message
+  const handleSendMessage = async () => {
+    if (!client || !user || selectedRecipients.length === 0 || !messageBody.trim()) return;
 
     try {
-      // Use provided recipients or default to test user for development
-      const recipients = recipientIds || ['test-user-2'];
-      const channel = await createDirectMessage(recipients);
+      const channel = await createDirectMessage(selectedRecipients);
       
       if (channel) {
+        // Send message with email-style metadata
+        await sendEmailStyleMessage(channel, messageBody, subject || 'Direct Message');
+        
         setSelectedChannel(channel);
+        setShowCompose(false);
         
-        // Determine message type and recipients for welcome message
-        const recipientArray = Array.isArray(recipients) ? recipients : [recipients];
-        const isGroup = recipientArray.length > 1;
-        const recipientNames = isGroup ? 'Group Chat' : 'Test User';
+        // Reset form
+        setSelectedRecipients([]);
+        setRecipientInput('');
+        setSubject('');
+        setMessageBody('');
         
-        // Send a welcome message with email-style metadata
-        await sendEmailStyleMessage(
-          channel, 
-          isGroup 
-            ? 'This is a group message conversation.'
-            : 'This is a direct message conversation.',
-          `Welcome to ${isGroup ? 'Group' : 'Direct'} Messaging`
-        );
+        const recipientNames = selectedRecipients.map(id => 
+          availableUsers.find(u => u.id === id)?.displayName
+        ).join(', ');
         
         toast({
-          title: isGroup ? "Group Conversation Created" : "Direct Conversation Created",
-          description: `Started conversation with ${recipientNames}`,
+          title: "Message Sent",
+          description: `Message sent to ${recipientNames}`,
         });
       }
     } catch (error) {
-      console.error('Error creating conversation:', error);
+      console.error('Error sending message:', error);
       toast({
         title: "Error",
-        description: "Failed to start new conversation",
+        description: "Failed to send message",
         variant: "destructive",
       });
     }
@@ -170,8 +208,8 @@ export default function StreamMessagesPage() {
         console.log('Connecting user to Stream Chat...');
         await chatClient.connectUser({
           id: streamUserId,
-          name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || 'User',
-          image: user.profileImageUrl || undefined,
+          name: `${(user as any).firstName || ''} ${(user as any).lastName || ''}`.trim() || (user as any).email || 'User',
+          image: (user as any).profileImageUrl || undefined,
         }, userToken);
         
         console.log('✅ Stream Chat connection successful!');
@@ -280,60 +318,96 @@ export default function StreamMessagesPage() {
                 Compose Message
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>New Message</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-sm font-medium">Recipients</Label>
-                  <div className="mt-2 space-y-2 max-h-32 overflow-y-auto border rounded p-2">
-                    {availableUsers.map((user) => (
-                      <div key={user.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={user.id}
-                          checked={selectedRecipients.includes(user.id)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setSelectedRecipients([...selectedRecipients, user.id]);
-                            } else {
-                              setSelectedRecipients(selectedRecipients.filter(id => id !== user.id));
-                            }
-                          }}
-                        />
-                        <Label htmlFor={user.id} className="text-sm font-normal">
-                          {user.name}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
+            <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+              <div className="p-6">
+                <h2 className="text-xl font-bold mb-4">New Message</h2>
+                
+                {/* To field with autocomplete */}
+                <div className="mb-4 relative">
+                  <label className="block text-sm font-medium mb-1">To:</label>
+                  
+                  {/* Selected recipients */}
+                  {selectedRecipients.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {selectedRecipients.map(recipientId => {
+                        const user = availableUsers.find(u => u.id === recipientId);
+                        return user ? (
+                          <span key={user.id} className="inline-flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm">
+                            {user.displayName}
+                            <X 
+                              className="w-3 h-3 cursor-pointer hover:text-blue-600" 
+                              onClick={() => removeRecipient(user.id)}
+                            />
+                          </span>
+                        ) : null;
+                      })}
+                    </div>
+                  )}
+                  
+                  <Input
+                    type="text"
+                    placeholder="Start typing a name..."
+                    value={recipientInput}
+                    onChange={handleRecipientInput}
+                    className="w-full"
+                  />
+                  
+                  {/* Autocomplete dropdown */}
+                  {showSuggestions && filteredUsers.length > 0 && (
+                    <div className="absolute z-10 bg-white border rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto w-full">
+                      {filteredUsers.map(user => (
+                        <div
+                          key={user.id}
+                          className="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
+                          onClick={() => selectRecipient(user)}
+                        >
+                          <div className="font-medium">{user.displayName}</div>
+                          <div className="text-sm text-gray-500">{user.email}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                {selectedRecipients.length > 0 && (
-                  <div className="text-sm text-muted-foreground">
-                    To: {selectedRecipients.map(id => 
-                      availableUsers.find(u => u.id === id)?.name
-                    ).join(', ')}
-                  </div>
-                )}
+
+                {/* Subject line */}
+                <div className="mb-4">
+                  <Label className="block text-sm font-medium mb-1">Subject:</Label>
+                  <Input
+                    type="text"
+                    placeholder="Subject"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+
+                {/* Message body */}
+                <div className="mb-4">
+                  <Label className="block text-sm font-medium mb-1">Message:</Label>
+                  <textarea
+                    className="w-full px-3 py-2 border rounded-md h-48 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Write your message..."
+                    value={messageBody}
+                    onChange={(e) => setMessageBody(e.target.value)}
+                  />
+                </div>
+
                 <div className="flex gap-2">
-                  <Button
-                    onClick={() => {
-                      if (selectedRecipients.length > 0) {
-                        handleComposeMessage(selectedRecipients);
-                        setShowCompose(false);
-                        setSelectedRecipients([]);
-                      }
-                    }}
-                    disabled={selectedRecipients.length === 0}
-                    className="flex-1"
+                  <Button 
+                    onClick={handleSendMessage}
+                    disabled={selectedRecipients.length === 0 || !messageBody.trim()}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-6"
                   >
-                    Start Conversation
+                    Send
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => {
                       setShowCompose(false);
                       setSelectedRecipients([]);
+                      setRecipientInput('');
+                      setSubject('');
+                      setMessageBody('');
                     }}
                   >
                     Cancel
