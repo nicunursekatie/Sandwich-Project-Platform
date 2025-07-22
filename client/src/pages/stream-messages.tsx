@@ -61,7 +61,8 @@ export default function StreamMessagesPage() {
           email: dbUser.email
         }));
         setAvailableUsers(filteredUsers);
-        console.log('Processed available users:', filteredUsers);
+        console.log('📊 Processed available users:', filteredUsers.length, 'users');
+        console.log('📋 Users data structure:', filteredUsers);
       } else {
         console.error('Failed to fetch users:', response.statusText);
         // Fall back to empty array
@@ -130,6 +131,7 @@ export default function StreamMessagesPage() {
         if (syncSuccess) {
           console.log('✅ User sync completed, now fetching available users...');
           await fetchAvailableUsers();
+          console.log('📊 Available users after fetch:', availableUsers.length, 'users');
         } else {
           console.error('❌ User sync failed, messaging may not work properly');
         }
@@ -193,16 +195,23 @@ export default function StreamMessagesPage() {
   const handleRecipientInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setRecipientInput(input);
+    console.log('📝 Input changed:', input);
+    console.log('👥 Available users:', availableUsers);
+    console.log('👥 Available users count:', availableUsers.length);
     
     if (input.length > 0) {
       const filtered = availableUsers.filter(user => 
-        user.displayName.toLowerCase().includes(input.toLowerCase()) ||
-        user.email.toLowerCase().includes(input.toLowerCase())
+        user.displayName?.toLowerCase().includes(input.toLowerCase()) ||
+        user.email?.toLowerCase().includes(input.toLowerCase())
       );
+      console.log('🔍 Filtered users:', filtered);
+      console.log('🔍 Filtered count:', filtered.length);
       setFilteredUsers(filtered);
       setShowSuggestions(true);
+      console.log('👁️ Show suggestions:', true);
     } else {
       setShowSuggestions(false);
+      console.log('👁️ Show suggestions:', false);
     }
   };
 
@@ -452,7 +461,7 @@ export default function StreamMessagesPage() {
                   
                   {/* Autocomplete dropdown */}
                   {showSuggestions && filteredUsers.length > 0 && (
-                    <div className="absolute z-10 bg-white border rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto w-full">
+                    <div className="absolute z-50 bg-white dark:bg-gray-800 border rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto w-full">
                       {filteredUsers.map(user => (
                         <div
                           key={user.id}
