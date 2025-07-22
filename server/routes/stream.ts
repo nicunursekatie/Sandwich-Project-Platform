@@ -27,8 +27,14 @@ const initializeStreamServer = () => {
 // Get Stream Chat credentials and generate user token
 streamRoutes.post("/credentials", async (req, res) => {
   try {
+    console.log('Stream endpoint hit');
+    console.log('User from req.user:', req.user);
+    console.log('User from session:', req.session?.user);
+    console.log('Session exists:', !!req.session);
+    
     const user = req.user || req.session?.user;
     if (!user) {
+      console.log('No user found in request or session');
       return res.status(401).json({ error: "Authentication required" });
     }
 
