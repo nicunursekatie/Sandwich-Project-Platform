@@ -38,6 +38,37 @@ export default function StreamMessagesPage() {
   const { user } = useAuth();
   const { toast } = useToast();
 
+  // Handle creating new channel
+  const handleCreateChannel = async () => {
+    if (!client || !user) return;
+
+    try {
+      console.log('Creating new channel...');
+      const channelId = `conversation-${Date.now()}`;
+      const channel = client.channel('messaging', channelId, {
+        name: 'New Conversation',
+        members: [client.userID!],
+        created_by_id: client.userID!
+      });
+      
+      await channel.watch();
+      setSelectedChannel(channel);
+      console.log('✅ New channel created:', channelId);
+      
+      toast({
+        title: "Channel Created",
+        description: "New conversation started successfully",
+      });
+    } catch (error) {
+      console.error('Error creating channel:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create new conversation",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Initialize Stream Chat client
   useEffect(() => {
     console.log('StreamMessagesPage mounting...');
@@ -91,7 +122,17 @@ export default function StreamMessagesPage() {
         
         console.log('✅ Stream Chat connection successful!');
 
+        // Create a general channel for testing
+        console.log('Creating general channel...');
+        const generalChannel = chatClient.channel('messaging', 'general', {
+          name: 'General Chat',
+          members: [streamUserId]
+        });
+        await generalChannel.watch();
+        console.log('✅ General channel created/connected');
+
         setClient(chatClient);
+        setSelectedChannel(generalChannel);
         setLoading(false);
 
         toast({
@@ -192,7 +233,7 @@ export default function StreamMessagesPage() {
             <div className="p-4 border-b">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold">Conversations</h3>
-                <Button size="sm" variant="ghost">
+                <Button size="sm" variant="ghost" onClick={handleCreateChannel}>
                   <Plus className="w-4 h-4" />
                 </Button>
               </div>
