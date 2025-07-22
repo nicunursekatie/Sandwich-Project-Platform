@@ -78,7 +78,12 @@ export default function StreamMessagesPage() {
 
   // Sync all database users to Stream automatically
   const syncUsersToStream = async () => {
-    if (!client) return;
+    if (!client) {
+      console.log('❌ Stream client not ready for user sync');
+      return;
+    }
+    
+    console.log('🔄 Starting user sync to Stream...');
     
     try {
       const response = await fetch('/api/users', {
@@ -91,27 +96,35 @@ export default function StreamMessagesPage() {
       if (response.ok) {
         const data = await response.json();
         const users = Array.isArray(data) ? data : (data.users || []);
-        console.log('Syncing users to Stream:', users.length, 'users');
+        console.log('📊 Syncing users to Stream:', users.length, 'total users found');
+        console.log('📋 Users data:', users);
         
         // Create all users in Stream automatically
         for (const dbUser of users) {
           if (dbUser.isActive && dbUser.email) {
             try {
-              await client.upsertUser({
-                id: dbUser.id,
+              const streamUser = {
+                id: dbUser.id,  // Make sure this matches what we use elsewhere!
                 name: dbUser.firstName ? `${dbUser.firstName} ${dbUser.lastName || ''}`.trim() : dbUser.email,
                 email: dbUser.email
-              });
-              console.log(`✅ Synced user to Stream: ${dbUser.email}`);
+              };
+              
+              console.log('🔄 Creating Stream user:', streamUser);
+              await client.upsertUser(streamUser);
+              console.log(`✅ Successfully synced user to Stream: ${dbUser.email} (ID: ${dbUser.id})`);
             } catch (error) {
-              console.error(`Failed to sync user ${dbUser.id}:`, error);
+              console.error(`❌ Failed to sync user ${dbUser.id} (${dbUser.email}):`, error);
             }
+          } else {
+            console.log(`⏭️  Skipping user ${dbUser.id}: inactive=${!dbUser.isActive}, no email=${!dbUser.email}`);
           }
         }
         console.log('✅ User synchronization to Stream completed');
+      } else {
+        console.error('❌ Failed to fetch users:', response.statusText);
       }
     } catch (error) {
-      console.error('Failed to sync users to Stream:', error);
+      console.error('❌ Failed to sync users to Stream:', error);
     }
   };
 
@@ -400,8 +413,8 @@ export default function StreamMessagesPage() {
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+              <DialogTitle>New Message</DialogTitle>
               <div className="p-6">
-                <h2 className="text-xl font-bold mb-4">New Message</h2>
                 
                 {/* To field with autocomplete */}
                 <div className="mb-4 relative">
