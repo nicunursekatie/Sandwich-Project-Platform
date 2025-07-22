@@ -36,10 +36,7 @@ export default function StreamMessagesPage() {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Fetch real users from database
-  useEffect(() => {
-    fetchAvailableUsers();
-  }, []);
+  // Note: fetchAvailableUsers is now called after user sync completes
 
   const fetchAvailableUsers = async () => {
     try {
@@ -80,7 +77,7 @@ export default function StreamMessagesPage() {
   const syncUsersToStream = async () => {
     if (!client) {
       console.log('❌ Stream client not ready for user sync');
-      return;
+      return false;
     }
     
     console.log('🔄 Starting user sync to Stream...');
@@ -96,43 +93,50 @@ export default function StreamMessagesPage() {
       if (response.ok) {
         const data = await response.json();
         const users = Array.isArray(data) ? data : (data.users || []);
-        console.log('📊 Syncing users to Stream:', users.length, 'total users found');
+        console.log('📊 Found users to sync:', users.length, 'total users');
         console.log('📋 Users data:', users);
         
-        // Create all users in Stream automatically
-        for (const dbUser of users) {
-          if (dbUser.isActive && dbUser.email) {
-            try {
-              const streamUser = {
-                id: dbUser.id,  // Make sure this matches what we use elsewhere!
-                name: dbUser.firstName ? `${dbUser.firstName} ${dbUser.lastName || ''}`.trim() : dbUser.email,
-                email: dbUser.email
-              };
-              
-              console.log('🔄 Creating Stream user:', streamUser);
-              await client.upsertUser(streamUser);
-              console.log(`✅ Successfully synced user to Stream: ${dbUser.email} (ID: ${dbUser.id})`);
-            } catch (error) {
-              console.error(`❌ Failed to sync user ${dbUser.id} (${dbUser.email}):`, error);
-            }
-          } else {
-            console.log(`⏭️  Skipping user ${dbUser.id}: inactive=${!dbUser.isActive}, no email=${!dbUser.email}`);
-          }
-        }
-        console.log('✅ User synchronization to Stream completed');
+        // Prepare users for batch upsert
+        const streamUsers = users
+          .filter(dbUser => dbUser.isActive && dbUser.email)
+          .map(dbUser => ({
+            id: dbUser.id,
+            name: dbUser.firstName ? `${dbUser.firstName} ${dbUser.lastName || ''}`.trim() : dbUser.email,
+            email: dbUser.email
+          }));
+        
+        console.log('🔄 Batch creating Stream users:', streamUsers.length, 'users');
+        
+        // Use upsertUsers (plural) for batch creation
+        await client.upsertUsers(streamUsers);
+        console.log('✅ Successfully synced all users to Stream');
+        return true;
       } else {
         console.error('❌ Failed to fetch users:', response.statusText);
+        return false;
       }
     } catch (error) {
       console.error('❌ Failed to sync users to Stream:', error);
+      return false;
     }
   };
 
-  // Auto-sync users when Stream client is ready
+  // Auto-sync users when Stream client is ready - this MUST complete before messaging
   useEffect(() => {
-    if (client) {
-      syncUsersToStream();
-    }
+    const initializeUsersAndFetchAvailable = async () => {
+      if (client) {
+        console.log('📡 Stream client ready, starting user sync...');
+        const syncSuccess = await syncUsersToStream();
+        if (syncSuccess) {
+          console.log('✅ User sync completed, now fetching available users...');
+          await fetchAvailableUsers();
+        } else {
+          console.error('❌ User sync failed, messaging may not work properly');
+        }
+      }
+    };
+    
+    initializeUsersAndFetchAvailable();
   }, [client]);
 
   // Real users from database
