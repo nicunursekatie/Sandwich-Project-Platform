@@ -40,35 +40,53 @@ export default function StreamMessagesPage() {
 
   // Initialize Stream Chat client
   useEffect(() => {
+    console.log('StreamMessagesPage mounting...');
+    console.log('User data:', user);
+    
     const initializeClient = async () => {
-      if (!user) return;
+      if (!user) {
+        console.log('No user found, skipping Stream initialization');
+        return;
+      }
 
       try {
+        console.log('Starting Stream Chat initialization...');
         setLoading(true);
         setError(null);
 
+        console.log('Fetching Stream credentials from /api/stream/credentials...');
         // Get Stream credentials and user token from backend
         const response = await fetch('/api/stream/credentials', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include'
         });
+        
+        console.log('Credentials response status:', response.status);
+        console.log('Credentials response:', response);
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           throw new Error(errorData.message || 'Failed to get Stream credentials');
         }
 
-        const { apiKey, userToken, streamUserId } = await response.json();
+        const responseData = await response.json();
+        console.log('Response data:', responseData);
+        
+        const { apiKey, userToken, streamUserId } = responseData;
+        console.log('Got credentials - API Key:', apiKey, 'Stream User ID:', streamUserId);
 
+        console.log('Creating StreamChat instance...');
         const chatClient = StreamChat.getInstance(apiKey);
         
+        console.log('Connecting user to Stream Chat...');
         await chatClient.connectUser({
           id: streamUserId,
-          name: `${user.firstName} ${user.lastName}` || user.email,
-          email: user.email,
+          name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || 'User',
           image: user.profileImageUrl || undefined,
         }, userToken);
+        
+        console.log('✅ Stream Chat connection successful!');
 
         setClient(chatClient);
         setLoading(false);
@@ -188,36 +206,19 @@ export default function StreamMessagesPage() {
               sort={{ last_message_at: -1 }}
               options={{ limit: 20 }}
               showChannelSearch
-              onSelect={(channel) => setSelectedChannel(channel)}
             />
           </div>
 
           {/* Chat Window */}
           <div className="flex-1 flex flex-col">
-            {selectedChannel ? (
-              <Channel channel={selectedChannel}>
-                <Window>
-                  <ChannelHeader />
-                  <MessageList />
-                  <MessageInput />
-                </Window>
-                <Thread />
-              </Channel>
-            ) : (
-              <div className="flex-1 flex items-center justify-center">
-                <div className="text-center">
-                  <MessageCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Select a Conversation</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Choose a conversation from the sidebar to start messaging
-                  </p>
-                  <Button>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Start New Conversation
-                  </Button>
-                </div>
-              </div>
-            )}
+            <Channel>
+              <Window>
+                <ChannelHeader />
+                <MessageList />
+                <MessageInput />
+              </Window>
+              <Thread />
+            </Channel>
           </div>
         </Chat>
       </div>
