@@ -60,17 +60,16 @@ export default function StreamMessagesPage() {
           displayName: dbUser.firstName ? `${dbUser.firstName} ${dbUser.lastName || ''}`.trim() : dbUser.email,
           email: dbUser.email
         }));
-        setAvailableUsers(filteredUsers);
         console.log('📊 Processed available users:', filteredUsers.length, 'users');
         console.log('📋 Users data structure:', filteredUsers);
+        return filteredUsers; // Return the users array
       } else {
         console.error('Failed to fetch users:', response.statusText);
-        // Fall back to empty array
-        setAvailableUsers([]);
+        return []; // Return empty array
       }
     } catch (error) {
       console.error('Failed to fetch users:', error);
-      setAvailableUsers([]);
+      return []; // Return empty array
     }
   };
 
@@ -159,8 +158,13 @@ export default function StreamMessagesPage() {
         const syncSuccess = await syncUsersToStream();
         if (syncSuccess) {
           console.log('✅ User sync completed, now fetching available users...');
-          await fetchAvailableUsers();
-          console.log('📊 Available users after fetch:', availableUsers.length, 'users');
+          const users = await fetchAvailableUsers();
+          console.log('Setting available users to state:', users);
+          setAvailableUsers(users); // Explicitly set state
+          console.log('📊 Available users after fetch:', users.length, 'users');
+          
+          // Also fetch existing messages
+          await fetchMessages();
         } else {
           console.error('❌ User sync failed, messaging may not work properly');
         }
@@ -170,8 +174,76 @@ export default function StreamMessagesPage() {
     initializeUsersAndFetchAvailable();
   }, [client]);
 
-  // Real users from database
-  const [availableUsers, setAvailableUsers] = useState<any[]>([]);
+  // Debug state updates
+  useEffect(() => {
+    console.log('Available users state updated:', availableUsers.length);
+  }, [availableUsers]);
+
+  // Gmail-style folder navigation
+  const [activeFolder, setActiveFolder] = useState<'inbox' | 'sent' | 'conversations'>('inbox');
+  const [messages, setMessages] = useState<any[]>([]);
+  const [conversations, setConversations] = useState<any[]>([]);
+
+  // Filter messages based on folder
+  const getFilteredMessages = () => {
+    if (!user) return [];
+    
+    switch(activeFolder) {
+      case 'inbox':
+        return messages.filter(msg => 
+          msg.to && msg.to.includes(user.id) && msg.from !== user.id
+        );
+      case 'sent':
+        return messages.filter(msg => msg.from === user.id);
+      case 'conversations':
+        return messages; // all messages
+      default:
+        return messages;
+    }
+  };
+
+  // Fetch messages from Stream channels
+  const fetchMessages = async () => {
+    if (!client || !user) return;
+    
+    try {
+      // Get all channels the user is a member of
+      const filter = { members: { $in: [user.id] } };
+      const sort = [{ last_message_at: -1 }];
+      const channelsResponse = await client.queryChannels(filter, sort);
+      
+      const allMessages: any[] = [];
+      
+      for (const channel of channelsResponse) {
+        const messagesResponse = await channel.query({
+          messages: { limit: 50 }
+        });
+        
+        if (messagesResponse.messages) {
+          const formattedMessages = messagesResponse.messages.map(msg => ({
+            id: msg.id,
+            from: msg.user?.id,
+            fromName: msg.user?.name || msg.user?.id,
+            to: channel.data.members || [],
+            subject: msg.subject || 'Direct Message',
+            text: msg.text,
+            timestamp: new Date(msg.created_at!),
+            channelId: channel.id,
+            channel: channel
+          }));
+          allMessages.push(...formattedMessages);
+        }
+      }
+      
+      // Sort by timestamp, newest first
+      allMessages.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+      
+      setMessages(allMessages);
+      setConversations(channelsResponse);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
 
   // Create direct or group message channel (email-style)
   const createDirectMessage = async (recipientIds: string | string[]) => {
@@ -556,55 +628,114 @@ export default function StreamMessagesPage() {
             </DialogContent>
           </Dialog>
           
-          <div className="space-y-1">
-            <button className="w-full text-left p-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg flex items-center">
-              📥 <span className="ml-2">Inbox</span>
-            </button>
-            <button className="w-full text-left p-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg flex items-center">
-              📤 <span className="ml-2">Sent</span>
-            </button>
-            <button className="w-full text-left p-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg flex items-center">
-              📂 <span className="ml-2">Conversations</span>
-            </button>
+          {/* Folder navigation */}
+          <div className="space-y-2">
+            <div 
+              className={`flex items-center gap-2 p-3 rounded-lg cursor-pointer text-sm font-medium ${
+                activeFolder === 'inbox' 
+                  ? 'bg-blue-50 dark:bg-blue-900/10 text-blue-700 dark:text-blue-300'
+                  : 'hover:bg-gray-100 text-gray-600'
+              }`}
+              onClick={() => setActiveFolder('inbox')}
+            >
+              <Inbox className="w-4 h-4" />
+              <span>📥 Inbox ({getFilteredMessages().length})</span>
+            </div>
+            <div 
+              className={`flex items-center gap-2 p-3 rounded-lg cursor-pointer text-sm ${
+                activeFolder === 'sent' 
+                  ? 'bg-blue-50 dark:bg-blue-900/10 text-blue-700 dark:text-blue-300 font-medium'
+                  : 'hover:bg-gray-100 text-gray-600'
+              }`}
+              onClick={() => setActiveFolder('sent')}
+            >
+              <Send className="w-4 h-4" />
+              <span>📤 Sent ({messages.filter(msg => msg.from === user?.id).length})</span>
+            </div>
+            <div 
+              className={`flex items-center gap-2 p-3 rounded-lg cursor-pointer text-sm ${
+                activeFolder === 'conversations' 
+                  ? 'bg-blue-50 dark:bg-blue-900/10 text-blue-700 dark:text-blue-300 font-medium'
+                  : 'hover:bg-gray-100 text-gray-600'
+              }`}
+              onClick={() => setActiveFolder('conversations')}
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>💬 All Messages ({messages.length})</span>
+            </div>
           </div>
         </div>
 
         {/* Message list and content area */}
         <div className="flex-1 flex flex-col">
-          <div className="p-4 border-b">
-            <h3 className="font-semibold text-lg">Messages</h3>
+          <div className="border-b p-4">
+            <h2 className="text-lg font-semibold capitalize">
+              {activeFolder === 'conversations' ? 'All Messages' : activeFolder}
+              <span className="ml-2 text-sm text-gray-500">({getFilteredMessages().length})</span>
+            </h2>
           </div>
           
-          <div className="flex-1 p-4">
-            {selectedChannel ? (
-              <div className="bg-white dark:bg-gray-800 rounded-lg border p-4">
-                <div className="mb-4 pb-2 border-b">
-                  <p className="text-sm text-muted-foreground">
-                    Conversation with {selectedChannel.data?.name || 'Direct Message'}
-                  </p>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-center text-muted-foreground">
-                    Stream Chat connection established. Custom message interface coming soon.
-                  </p>
-                  <div className="text-center">
-                    <Button variant="outline" onClick={() => setSelectedChannel(null)}>
-                      Back to Message List
-                    </Button>
+          <div className="flex-1 overflow-y-auto">
+            {getFilteredMessages().length > 0 ? (
+              <div className="divide-y">
+                {getFilteredMessages().map((msg) => (
+                  <div 
+                    key={msg.id} 
+                    className="p-4 hover:bg-gray-50 cursor-pointer border-l-4 border-transparent hover:border-blue-300"
+                    onClick={() => setSelectedChannel(msg.channel)}
+                  >
+                    <div className="flex items-start justify-between mb-1">
+                      <div className="font-medium text-sm">
+                        {activeFolder === 'sent' ? (
+                          <span className="text-gray-600">To: {msg.to.filter((id: string) => id !== user?.id).join(', ')}</span>
+                        ) : (
+                          <span className="text-gray-900">{msg.fromName}</span>
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        {msg.timestamp.toLocaleDateString()} {msg.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                      </span>
+                    </div>
+                    <div className="text-sm font-medium text-gray-700 mb-1">{msg.subject}</div>
+                    <div className="text-sm text-gray-600 truncate">{msg.text}</div>
                   </div>
-                </div>
+                ))}
               </div>
             ) : (
-              <div className="text-center py-8">
-                <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Welcome to Direct Messages</h3>
-                <p className="text-muted-foreground mb-4">
-                  Select a conversation or compose a new message to get started.
-                </p>
-                <Button onClick={() => setShowCompose(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Compose New Message
-                </Button>
+              <div className="p-8 text-center">
+                <div className="text-center max-w-md mx-auto">
+                  <MessageCircle className="w-16 h-16 text-blue-500 mx-auto mb-6" />
+                  <h3 className="text-2xl font-main-heading text-primary mb-4">
+                    {activeFolder === 'inbox' && 'No Messages in Inbox'}
+                    {activeFolder === 'sent' && 'No Sent Messages'}
+                    {activeFolder === 'conversations' && 'No Conversations'}
+                  </h3>
+                  <p className="font-body text-muted-foreground mb-6">
+                    {activeFolder === 'inbox' && 'You haven\'t received any messages yet.'}
+                    {activeFolder === 'sent' && 'You haven\'t sent any messages yet.'}
+                    {activeFolder === 'conversations' && 'No conversations available.'}
+                  </p>
+                  
+                  <Button 
+                    onClick={() => setShowCompose(true)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Start Conversation
+                  </Button>
+                  
+                  {availableUsers.length > 0 && (
+                    <div className="mt-4 text-center">
+                      <p className="text-sm text-green-600 dark:text-green-400 font-medium">✅ {availableUsers.length} users available</p>
+                    </div>
+                  )}
+                  
+                  {availableUsers.length === 0 && (
+                    <div className="mt-4 text-center">
+                      <p className="text-sm text-yellow-600 dark:text-yellow-400 font-medium">⏳ Loading users...</p>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
