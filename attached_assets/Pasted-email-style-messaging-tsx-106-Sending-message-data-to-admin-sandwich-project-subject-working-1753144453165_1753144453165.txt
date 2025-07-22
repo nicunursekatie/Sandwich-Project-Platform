@@ -1,0 +1,54 @@
+email-style-messaging.tsx:106 Sending message data: {to: 'admin@sandwich.project', subject: 'working?', content: 'please work'}
+t.js:1  POST https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/real-time-messages 401 (Unauthorized)
+apply @ t.js:1
+apiRequest @ queryClient.ts:17
+mutationFn @ email-style-messaging.tsx:107
+fn @ @tanstack_react-query.js?v=c6f482f7:1236
+run @ @tanstack_react-query.js?v=c6f482f7:513
+start @ @tanstack_react-query.js?v=c6f482f7:555
+execute @ @tanstack_react-query.js?v=c6f482f7:1272
+await in execute
+mutate @ @tanstack_react-query.js?v=c6f482f7:2691
+(anonymous) @ @tanstack_react-query.js?v=c6f482f7:3414
+handleCompose @ email-style-messaging.tsx:210
+callCallback2 @ chunk-RPCDYKBN.js?v=c6f482f7:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=c6f482f7:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=c6f482f7:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=c6f482f7:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=c6f482f7:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=c6f482f7:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=c6f482f7:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=c6f482f7:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=c6f482f7:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=c6f482f7:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=c6f482f7:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=c6f482f7:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=c6f482f7:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=c6f482f7:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=c6f482f7:5449
+email-style-messaging.tsx:122 Send message error: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async Object.mutationFn (email-style-messaging.tsx:107:24)
+overrideMethod @ hook.js:608
+onError @ email-style-messaging.tsx:122
+execute @ @tanstack_react-query.js?v=c6f482f7:1301
+await in execute
+mutate @ @tanstack_react-query.js?v=c6f482f7:2691
+(anonymous) @ @tanstack_react-query.js?v=c6f482f7:3414
+handleCompose @ email-style-messaging.tsx:210
+callCallback2 @ chunk-RPCDYKBN.js?v=c6f482f7:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=c6f482f7:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=c6f482f7:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=c6f482f7:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=c6f482f7:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=c6f482f7:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=c6f482f7:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=c6f482f7:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=c6f482f7:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=c6f482f7:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=c6f482f7:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=c6f482f7:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=c6f482f7:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=c6f482f7:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=c6f482f7:5449

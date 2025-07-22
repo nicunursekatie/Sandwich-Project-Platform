@@ -481,12 +481,13 @@ export default function InboxPage() {
                             </Avatar>
                             <div>
                               <p className="font-medium text-sm">
-                                {isGroupThread 
-                                  ? `Group: ${message?.senderName || 'Unnamed Group'}`
-                                  : selectedTab === 'sent' 
-                                    ? `To: ${message?.recipientName || message?.contextTitle || 'Unknown Recipient'}` 
-                                    : `From: ${message?.senderName || 'Unknown Sender'}`
-                                }
+                                {isGroupThread ? (
+                                  <span className="text-purple-600">Group: {message?.senderName || 'Unnamed Group'}</span>
+                                ) : selectedTab === 'sent' ? (
+                                  <span><span className="text-red-600 font-bold">TO:</span> {message?.recipientName || message?.contextTitle || 'Unknown Recipient'}</span>
+                                ) : (
+                                  <span><span className="text-blue-600 font-bold">FROM:</span> {message?.senderName || 'Unknown Sender'}</span>
+                                )}
                               </p>
                               <p className="text-xs text-gray-500">
                                 {isGroupThread && message?.groupData?.lastMessage?.createdAt ? 
@@ -546,9 +547,18 @@ export default function InboxPage() {
                           </div>
                         ) : (
                           <div>
-                            <p className="text-sm text-gray-700 line-clamp-2 mb-2">
-                              {message?.editedContent || message?.content || 'No content'}
-                            </p>
+                            <div className="mb-2">
+                              <p className="text-xs text-gray-500 mb-1">
+                                {selectedTab === 'sent' ? (
+                                  <span className="text-red-600 font-semibold">You sent:</span>
+                                ) : (
+                                  <span className="text-blue-600 font-semibold">Message received:</span>
+                                )}
+                              </p>
+                              <p className="text-sm text-gray-700 line-clamp-2">
+                                {message?.editedContent || message?.content || 'No content'}
+                              </p>
+                            </div>
 
                             {message?.contextType && message.contextType !== 'group' && (
                               <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${getContextColor(message.contextType)}`}>
