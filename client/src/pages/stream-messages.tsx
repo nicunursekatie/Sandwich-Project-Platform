@@ -76,6 +76,52 @@ export default function StreamMessagesPage() {
     }
   };
 
+  // Sync all database users to Stream automatically
+  const syncUsersToStream = async () => {
+    if (!client) return;
+    
+    try {
+      const response = await fetch('/api/users', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const users = Array.isArray(data) ? data : (data.users || []);
+        console.log('Syncing users to Stream:', users.length, 'users');
+        
+        // Create all users in Stream automatically
+        for (const dbUser of users) {
+          if (dbUser.isActive && dbUser.email) {
+            try {
+              await client.upsertUser({
+                id: dbUser.id,
+                name: dbUser.firstName ? `${dbUser.firstName} ${dbUser.lastName || ''}`.trim() : dbUser.email,
+                email: dbUser.email
+              });
+              console.log(`✅ Synced user to Stream: ${dbUser.email}`);
+            } catch (error) {
+              console.error(`Failed to sync user ${dbUser.id}:`, error);
+            }
+          }
+        }
+        console.log('✅ User synchronization to Stream completed');
+      }
+    } catch (error) {
+      console.error('Failed to sync users to Stream:', error);
+    }
+  };
+
+  // Auto-sync users when Stream client is ready
+  useEffect(() => {
+    if (client) {
+      syncUsersToStream();
+    }
+  }, [client]);
+
   // Real users from database
   const [availableUsers, setAvailableUsers] = useState<any[]>([]);
 
@@ -333,7 +379,7 @@ export default function StreamMessagesPage() {
         </div>
         <div>
           <h1 className="text-2xl font-main-heading text-primary dark:text-secondary">Direct Messages</h1>
-          <p className="font-body text-muted-foreground">Email-style direct messaging system</p>
+          <p className="font-body text-muted-foreground">Email-style messaging - all database users auto-synced</p>
         </div>
         <div className="flex items-center gap-2 ml-auto">
           <Badge variant="secondary" className="bg-green-100 text-green-800">
