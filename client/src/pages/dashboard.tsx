@@ -46,6 +46,7 @@ import MessagingSystem from "@/components/messaging-system";
 import RealTimeMessages from "@/pages/real-time-messages";
 import Governance from "@/pages/governance";
 import StreamMessagesPage from "@/pages/stream-messages";
+import AdminPage from "@/pages/admin";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -337,6 +338,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <UserManagement />;
       case "development":
         return <Development />;
+      case "admin":
+        return <AdminPage />;
       default:
         // Handle project detail pages
         if (projectId) {
