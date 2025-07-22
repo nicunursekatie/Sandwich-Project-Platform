@@ -103,7 +103,10 @@ export default function EmailStyleMessaging() {
   // Send message mutation
   const sendMessageMutation = useMutation({
     mutationFn: async (messageData: any) => {
-      return apiRequest('POST', '/api/real-time-messages', messageData);
+      console.log('Sending message data:', messageData);
+      const response = await apiRequest('POST', '/api/real-time-messages', messageData);
+      console.log('Send message response:', response);
+      return response;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/real-time-messages'] });
@@ -117,9 +120,16 @@ export default function EmailStyleMessaging() {
     },
     onError: (error) => {
       console.error('Send message error:', error);
+      // More detailed error handling
+      let errorMessage = "Failed to send message. Please try again.";
+      if (error.message?.includes('401')) {
+        errorMessage = "Authentication required. Please log in and try again.";
+      } else if (error.message?.includes('403')) {
+        errorMessage = "Permission denied. You may not have access to send messages.";
+      }
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: errorMessage,
         variant: "destructive"
       });
     }

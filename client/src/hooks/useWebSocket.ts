@@ -10,7 +10,7 @@ export function useWebSocket() {
 
     // WebSocket is handled by MessageNotifications component
     // This is a placeholder hook for components that need to send messages
-  }, [user?.id]);
+  }, [(user as any)?.id]);
 
   const sendMessage = (message: any) => {
     // Messages are sent via API, not WebSocket

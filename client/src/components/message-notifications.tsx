@@ -77,15 +77,25 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
     // Set up WebSocket connection for real-time notifications
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     
-    // Simple WebSocket URL construction for Replit environment
+    // Enhanced WebSocket URL construction with better error handling
     let wsUrl: string;
     
-    if (window.location.hostname.includes('.replit.dev') || window.location.hostname.includes('.replit.app')) {
-      // Replit environment - use the full hostname without port but with correct protocol
-      wsUrl = `${protocol}//${window.location.hostname}/notifications`;
-    } else {
-      // Local development or other environments - use window.location.host which includes port
-      wsUrl = `${protocol}//${window.location.host}/notifications`;
+    try {
+      if (window.location.hostname.includes('.replit.dev') || window.location.hostname.includes('.replit.app')) {
+        // Replit environment - use the full hostname without port but with correct protocol
+        wsUrl = `${protocol}//${window.location.hostname}/notifications`;
+      } else if (window.location.host && window.location.host !== 'undefined') {
+        // Local development or other environments - use window.location.host which includes port
+        wsUrl = `${protocol}//${window.location.host}/notifications`;
+      } else {
+        // Fallback for environments where window.location.host is undefined
+        const port = window.location.port || '5000';
+        wsUrl = `${protocol}//${window.location.hostname || 'localhost'}:${port}/notifications`;
+      }
+    } catch (error) {
+      console.error('Failed to construct WebSocket URL:', error);
+      // Last resort fallback
+      wsUrl = `ws://localhost:5000/notifications`;
     }
 
     try {
