@@ -1,0 +1,410 @@
+Navigated to https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/login
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+Navigated to https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=HCr74YZaA1Gn' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531Understand this error
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=HCr74YZaA1Gn' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555Understand this error
+message-notifications.tsx:98 Connecting to WebSocket at: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/notifications
+dashboard.tsx:56 Dashboard activeSection changed to: dashboard
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1Understand this error
+message-notifications.tsx:110 WebSocket connected successfully
+useMessaging.ts:234 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ useMessaging.ts:234
+commitHookEffectListMount @ chunk-276SZO74.js?v=b447da99:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=b447da99:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=b447da99:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=b447da99:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=b447da99:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=b447da99:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=b447da99:19447
+commitRootImpl @ chunk-276SZO74.js?v=b447da99:19416
+commitRoot @ chunk-276SZO74.js?v=b447da99:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=b447da99:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=b447da99:9119
+(anonymous) @ chunk-276SZO74.js?v=b447da99:18627Understand this error
+useMessaging.ts:267 Messaging WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+overrideMethod @ hook.js:608
+ws.onerror @ useMessaging.ts:267Understand this error
+useMessaging.ts:271 Messaging WebSocket disconnected
+simple-nav.tsx:148 Navigation click: stream-messages
+dashboard.tsx:502 Dashboard setActiveSection called with: stream-messages
+stream-messages.tsx:180 Uncaught ReferenceError: availableUsers is not defined
+    at StreamMessagesPage (stream-messages.tsx:180:7)
+    at renderWithHooks (chunk-276SZO74.js?v=b447da99:11548:26)
+    at mountIndeterminateComponent (chunk-276SZO74.js?v=b447da99:14926:21)
+    at beginWork (chunk-276SZO74.js?v=b447da99:15914:22)
+    at HTMLUnknownElement.callCallback2 (chunk-276SZO74.js?v=b447da99:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-276SZO74.js?v=b447da99:3699:24)
+    at invokeGuardedCallback (chunk-276SZO74.js?v=b447da99:3733:39)
+    at beginWork$1 (chunk-276SZO74.js?v=b447da99:19765:15)
+    at performUnitOfWork (chunk-276SZO74.js?v=b447da99:19198:20)
+    at workLoopSync (chunk-276SZO74.js?v=b447da99:19137:13)
+StreamMessagesPage @ stream-messages.tsx:180
+renderWithHooks @ chunk-276SZO74.js?v=b447da99:11548
+mountIndeterminateComponent @ chunk-276SZO74.js?v=b447da99:14926
+beginWork @ chunk-276SZO74.js?v=b447da99:15914
+callCallback2 @ chunk-276SZO74.js?v=b447da99:3674
+invokeGuardedCallbackDev @ chunk-276SZO74.js?v=b447da99:3699
+invokeGuardedCallback @ chunk-276SZO74.js?v=b447da99:3733
+beginWork$1 @ chunk-276SZO74.js?v=b447da99:19765
+performUnitOfWork @ chunk-276SZO74.js?v=b447da99:19198
+workLoopSync @ chunk-276SZO74.js?v=b447da99:19137
+renderRootSync @ chunk-276SZO74.js?v=b447da99:19116
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=b447da99:18874
+flushSyncCallbacks @ chunk-276SZO74.js?v=b447da99:9119
+(anonymous) @ chunk-276SZO74.js?v=b447da99:18627Understand this error
+stream-messages.tsx:180 Uncaught ReferenceError: availableUsers is not defined
+    at StreamMessagesPage (stream-messages.tsx:180:7)
+    at renderWithHooks (chunk-276SZO74.js?v=b447da99:11548:26)
+    at mountIndeterminateComponent (chunk-276SZO74.js?v=b447da99:14926:21)
+    at beginWork (chunk-276SZO74.js?v=b447da99:15914:22)
+    at HTMLUnknownElement.callCallback2 (chunk-276SZO74.js?v=b447da99:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-276SZO74.js?v=b447da99:3699:24)
+    at invokeGuardedCallback (chunk-276SZO74.js?v=b447da99:3733:39)
+    at beginWork$1 (chunk-276SZO74.js?v=b447da99:19765:15)
+    at performUnitOfWork (chunk-276SZO74.js?v=b447da99:19198:20)
+    at workLoopSync (chunk-276SZO74.js?v=b447da99:19137:13)
+StreamMessagesPage @ stream-messages.tsx:180
+renderWithHooks @ chunk-276SZO74.js?v=b447da99:11548
+mountIndeterminateComponent @ chunk-276SZO74.js?v=b447da99:14926
+beginWork @ chunk-276SZO74.js?v=b447da99:15914
+callCallback2 @ chunk-276SZO74.js?v=b447da99:3674
+invokeGuardedCallbackDev @ chunk-276SZO74.js?v=b447da99:3699
+invokeGuardedCallback @ chunk-276SZO74.js?v=b447da99:3733
+beginWork$1 @ chunk-276SZO74.js?v=b447da99:19765
+performUnitOfWork @ chunk-276SZO74.js?v=b447da99:19198
+workLoopSync @ chunk-276SZO74.js?v=b447da99:19137
+renderRootSync @ chunk-276SZO74.js?v=b447da99:19116
+recoverFromConcurrentError @ chunk-276SZO74.js?v=b447da99:18736
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=b447da99:18879
+flushSyncCallbacks @ chunk-276SZO74.js?v=b447da99:9119
+(anonymous) @ chunk-276SZO74.js?v=b447da99:18627Understand this error
+hook.js:608 The above error occurred in the <StreamMessagesPage> component:
+
+    at StreamMessagesPage (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/pages/stream-messages.tsx:39:31)
+    at div
+    at div
+    at div
+    at div
+    at Dashboard (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/pages/dashboard.tsx:58:37)
+    at Route (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b447da99:206:16)
+    at Switch (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b447da99:262:17)
+    at Router (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/App.tsx?v=ZZ83t1HYkTJXSQNCYFf0s:32:49)
+    at Provider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-3RXG37ZK.js?v=b447da99:38:15)
+    at TooltipProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=b447da99:65:5)
+    at QueryClientProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=b447da99:2933:3)
+    at ErrorBoundary (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/error-boundary.tsx:10:5)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+overrideMethod @ hook.js:608
+logCapturedError @ chunk-276SZO74.js?v=b447da99:14032
+callback @ chunk-276SZO74.js?v=b447da99:14078
+callCallback @ chunk-276SZO74.js?v=b447da99:11248
+commitUpdateQueue @ chunk-276SZO74.js?v=b447da99:11265
+commitLayoutEffectOnFiber @ chunk-276SZO74.js?v=b447da99:17075
+commitLayoutMountEffects_complete @ chunk-276SZO74.js?v=b447da99:17980
+commitLayoutEffects_begin @ chunk-276SZO74.js?v=b447da99:17969
+commitLayoutEffects @ chunk-276SZO74.js?v=b447da99:17920
+commitRootImpl @ chunk-276SZO74.js?v=b447da99:19353
+commitRoot @ chunk-276SZO74.js?v=b447da99:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=b447da99:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=b447da99:9119
+(anonymous) @ chunk-276SZO74.js?v=b447da99:18627Understand this error
+error-boundary.tsx:28 Error caught by boundary: ReferenceError: availableUsers is not defined
+    at StreamMessagesPage (stream-messages.tsx:180:7)
+    at renderWithHooks (chunk-276SZO74.js?v=b447da99:11548:26)
+    at mountIndeterminateComponent (chunk-276SZO74.js?v=b447da99:14926:21)
+    at beginWork (chunk-276SZO74.js?v=b447da99:15914:22)
+    at beginWork$1 (chunk-276SZO74.js?v=b447da99:19753:22)
+    at performUnitOfWork (chunk-276SZO74.js?v=b447da99:19198:20)
+    at workLoopSync (chunk-276SZO74.js?v=b447da99:19137:13)
+    at renderRootSync (chunk-276SZO74.js?v=b447da99:19116:15)
+    at recoverFromConcurrentError (chunk-276SZO74.js?v=b447da99:18736:28)
+    at performSyncWorkOnRoot (chunk-276SZO74.js?v=b447da99:18879:28) {componentStack: '\n    at StreamMessagesPage (https://bb1d30f8-d852-…rc/components/error-boundary.tsx:10:5)\n    at App'} Error Component Stack
+    at ErrorBoundary (error-boundary.tsx:19:5)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+componentDidCatch @ error-boundary.tsx:28
+callback @ chunk-276SZO74.js?v=b447da99:14084
+callCallback @ chunk-276SZO74.js?v=b447da99:11248
+commitUpdateQueue @ chunk-276SZO74.js?v=b447da99:11265
+commitLayoutEffectOnFiber @ chunk-276SZO74.js?v=b447da99:17075
+commitLayoutMountEffects_complete @ chunk-276SZO74.js?v=b447da99:17980
+commitLayoutEffects_begin @ chunk-276SZO74.js?v=b447da99:17969
+commitLayoutEffects @ chunk-276SZO74.js?v=b447da99:17920
+commitRootImpl @ chunk-276SZO74.js?v=b447da99:19353
+commitRoot @ chunk-276SZO74.js?v=b447da99:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=b447da99:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=b447da99:9119
+(anonymous) @ chunk-276SZO74.js?v=b447da99:18627Understand this error
+message-notifications.tsx:136 WebSocket connection closed: 1000 Component unmounting

@@ -33,6 +33,7 @@ export default function StreamMessagesPage() {
   const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
   const [subject, setSubject] = useState('');
   const [messageBody, setMessageBody] = useState('');
+  const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const { user } = useAuth();
   const { toast } = useToast();
 
