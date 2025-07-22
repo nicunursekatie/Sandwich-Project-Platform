@@ -297,9 +297,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { signupRoutes } = await import("./routes/signup");
   app.use("/api", signupRoutes);
   
-  // Register Stream Chat routes
-  const { streamRoutes } = await import("./routes/stream");
-  app.use("/api/stream", streamRoutes);
+  // Register Stream Chat routes (commented out until API credentials are configured)
+  // const { streamRoutes } = await import("./routes/stream");
+  // app.use("/api/stream", streamRoutes);
 
   // Comprehensive debug endpoints for authentication troubleshooting
   app.get("/api/debug/session", async (req: any, res) => {
