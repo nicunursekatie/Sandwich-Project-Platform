@@ -177,16 +177,13 @@ export default function InboxPage() {
     },
   });
 
-  // Fetch sent messages
+  // Sent messages functionality temporarily disabled due to architectural incompatibility
+  // TODO: Implement proper sent messages when inbox system is fully separated from chat system
   const { data: sentMessages = [] } = useQuery({
     queryKey: ['/api/messaging/sent', selectedTab],
     queryFn: async () => {
-      if (selectedTab !== 'sent') {
-        return [];
-      }
-
-      const response = await apiRequest('GET', '/api/messaging/messages?sent=true');
-      return (response as any).messages || [];
+      // Return empty array since sent messages route has been removed
+      return [];
     },
     enabled: selectedTab === 'sent',
   });
@@ -429,7 +426,16 @@ export default function InboxPage() {
 
           <ScrollArea className="flex-1">
             <div className="p-2">
-              {filteredMessages.length === 0 ? (
+              {selectedTab === 'sent' ? (
+                <div className="text-center py-8 text-gray-500">
+                  <Send className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                  <h3 className="text-lg font-medium text-gray-700 mb-2">Sent Messages Temporarily Disabled</h3>
+                  <p className="text-sm text-gray-500 max-w-md mx-auto">
+                    Sent messages functionality is currently being restructured for better compatibility with the chat system. 
+                    This feature will be restored in a future update.
+                  </p>
+                </div>
+              ) : filteredMessages.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   No messages found
                 </div>
