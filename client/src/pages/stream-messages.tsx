@@ -192,15 +192,23 @@ export default function StreamMessagesPage() {
         event.channel.state.messages.push(event.message);
       }
       
-      // Get recipient names (other members in the channel)
-      const currentUserId = `user_${(user as any)?.id}`;
-      const recipientNames = event.channel.state?.members ? 
+      // Get recipient names (other members in the channel) - fix undefined state issue
+      const recipientNames = event.channel?.state?.members ? 
         Object.keys(event.channel.state.members)
           .filter((m: string) => m !== event.message.user?.id)
           .map((memberId: string) => {
-            // Find the display name for this member
-            const memberUser = availableUsers.find(u => `user_${u.id}` === memberId);
-            return memberUser?.displayName || memberId;
+            // Find the display name for this member - handle both formats
+            let memberUser = availableUsers.find(u => u.id === memberId);
+            if (!memberUser) {
+              // Try with user_ prefix stripped
+              const cleanId = memberId.replace('user_', '');
+              memberUser = availableUsers.find(u => u.id === cleanId);
+            }
+            if (!memberUser) {
+              // Try finding by the full user_id format
+              memberUser = availableUsers.find(u => `user_${u.id}` === memberId);
+            }
+            return memberUser?.displayName || memberId.replace('user_', '').replace('admin_', '').replace('_', ' ');
           }) : [];
       
       const newMessage = {
@@ -245,10 +253,10 @@ export default function StreamMessagesPage() {
     switch(activeFolder) {
       case 'inbox':
         return messages.filter(msg => 
-          msg.from && msg.from !== `user_${(user as any)?.id}` // Messages from others (received)
+          msg.from && msg.from !== (user as any)?.id // Messages from others (received)
         );
       case 'sent':
-        return messages.filter(msg => msg.from === `user_${(user as any)?.id}`); // Messages from current user
+        return messages.filter(msg => msg.from === (user as any)?.id); // Messages from current user
       case 'conversations':
         return messages; // all messages
       default:
@@ -264,10 +272,11 @@ export default function StreamMessagesPage() {
     }
     
     try {
-      const currentUserId = `user_${(user as any)?.id}`;
+      const currentUserId = (user as any)?.id; // Use the actual user ID without double prefix
       console.log('📥 Fetching messages from Stream Chat for user:', currentUserId);
+      console.log('📋 Available users for name lookup:', availableUsers.map(u => ({ id: u.id, name: u.displayName })));
       
-      // Get all channels the user is a member of - use same format as channel creation
+      // Get all channels the user is a member of - use the actual user ID format
       const filter = { 
         type: 'messaging',
         members: { $in: [currentUserId] } 
@@ -297,14 +306,23 @@ export default function StreamMessagesPage() {
         if (messagesResponse.messages) {
           console.log(`Channel ${channel.id} has ${messagesResponse.messages.length} messages`);
           const formattedMessages = messagesResponse.messages.map(msg => {
-            // Get recipient names (other members in the channel)
+            // Get recipient names (other members in the channel) - improved user lookup
             const recipientNames = channel.state?.members ? 
               Object.keys(channel.state.members)
                 .filter((m: string) => m !== msg.user?.id)
                 .map((memberId: string) => {
-                  // Find the display name for this member
-                  const memberUser = availableUsers.find(u => `user_${u.id}` === memberId);
-                  return memberUser?.displayName || memberId.replace('user_', '');
+                  // Find the display name for this member - handle multiple ID formats
+                  let memberUser = availableUsers.find(u => u.id === memberId);
+                  if (!memberUser) {
+                    // Try with user_ prefix stripped
+                    const cleanId = memberId.replace('user_', '').replace('admin_', '');
+                    memberUser = availableUsers.find(u => u.id === cleanId);
+                  }
+                  if (!memberUser) {
+                    // Try finding by the full user_id format
+                    memberUser = availableUsers.find(u => `user_${u.id}` === memberId);
+                  }
+                  return memberUser?.displayName || memberId.replace('user_', '').replace('admin_', '').replace('_', ' ');
                 }) : [];
             
             return {

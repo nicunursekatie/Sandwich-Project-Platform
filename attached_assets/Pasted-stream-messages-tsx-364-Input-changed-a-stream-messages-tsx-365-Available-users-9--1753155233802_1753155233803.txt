@@ -1,0 +1,665 @@
+stream-messages.tsx:364 📝 Input changed: a
+stream-messages.tsx:365 👥 Available users: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+stream-messages.tsx:366 👥 Available users count: 9
+stream-messages.tsx:373 🔍 Filtered users: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+stream-messages.tsx:374 🔍 Filtered count: 9
+stream-messages.tsx:377 👁️ Show suggestions: true
+stream-messages.tsx:322 Creating message channel with recipients: ['admin_1751065261945']
+stream-messages.tsx:332 ✅ Message channel created for 2 participants
+stream-messages.tsx:188 📨 New message received: {id: '1c0ed3e7-5a6d-4965-9d16-d5ef4b48188b', text: 'hi', html: '<p>hi</p>\n', type: 'regular', user: {…}, …}
+stream-messages.tsx:193 Uncaught TypeError: Cannot read properties of undefined (reading 'state')
+    at handleNewMessage (stream-messages.tsx:193:39)
+    at _StreamChat._callClientListeners (chunk-PPBPUNTR.js?v=b447da99:14395:9)
+    at _StreamChat.dispatchEvent (chunk-PPBPUNTR.js?v=b447da99:14299:12)
+    at _StreamChat.handleEvent (chunk-PPBPUNTR.js?v=b447da99:14311:12)
+    at StableWSConnection.onmessage (chunk-PPBPUNTR.js?v=b447da99:11338:19)
+handleNewMessage @ stream-messages.tsx:193
+_callClientListeners @ chunk-PPBPUNTR.js?v=b447da99:14395
+dispatchEvent @ chunk-PPBPUNTR.js?v=b447da99:14299
+handleEvent @ chunk-PPBPUNTR.js?v=b447da99:14311
+StableWSConnection.onmessage @ chunk-PPBPUNTR.js?v=b447da99:11338
+stream-messages.tsx:354 ✅ Email-style message sent with metadata
+stream-messages.tsx:423 🔄 Refreshing message list after send...
+stream-messages.tsx:251 📥 Fetching messages from Stream Chat for user: user_user_1751071509329_mrkw2z95z
+stream-messages.tsx:260 Querying channels with filter: {type: 'messaging', members: {…}}
+stream-messages.tsx:267 Query returned channels: 5 channels
+stream-messages.tsx:269 Channel 1: !members-bVe-Gu1Qjc_nxRtniTbtOj9RmLcxwbJZtmr5fmHsSgg, members: (2) ['admin_1751065261945', 'user_user_1751071509329_mrkw2z95z']
+stream-messages.tsx:269 Channel 2: !members-NXZA3oNRMF32Y4gGstgJgy-9pqzpvV50fVnn4q6nk44, members: (2) ['user_1751072243271_fc8jaxl6u', 'user_user_1751071509329_mrkw2z95z']
+stream-messages.tsx:269 Channel 3: !members-cldiViEO7h4LhPdli8745xCo_t45ao51CJEZixyNaKA, members: (2) ['test-user-2', 'user_user_1751071509329_mrkw2z95z']
+stream-messages.tsx:269 Channel 4: conversation-1753149864679, members: ['user_user_1751071509329_mrkw2z95z']
+stream-messages.tsx:269 Channel 5: general, members: ['user_user_1751071509329_mrkw2z95z']
+stream-messages.tsx:275 Processing channel: !members-bVe-Gu1Qjc_nxRtniTbtOj9RmLcxwbJZtmr5fmHsSgg
+stream-messages.tsx:281 Channel !members-bVe-Gu1Qjc_nxRtniTbtOj9RmLcxwbJZtmr5fmHsSgg has 3 messages
+stream-messages.tsx:275 Processing channel: !members-NXZA3oNRMF32Y4gGstgJgy-9pqzpvV50fVnn4q6nk44
+stream-messages.tsx:281 Channel !members-NXZA3oNRMF32Y4gGstgJgy-9pqzpvV50fVnn4q6nk44 has 2 messages
+stream-messages.tsx:275 Processing channel: !members-cldiViEO7h4LhPdli8745xCo_t45ao51CJEZixyNaKA
+stream-messages.tsx:281 Channel !members-cldiViEO7h4LhPdli8745xCo_t45ao51CJEZixyNaKA has 1 messages
+stream-messages.tsx:275 Processing channel: conversation-1753149864679
+stream-messages.tsx:281 Channel conversation-1753149864679 has 0 messages
+stream-messages.tsx:275 Processing channel: general
+stream-messages.tsx:281 Channel general has 0 messages
+stream-messages.tsx:300 📊 Total messages loaded: 6
+stream-messages.tsx:301 Messages breakdown by folder:
+stream-messages.tsx:302 - All messages: 6
+stream-messages.tsx:303 - From others (inbox): 0
+stream-messages.tsx:304 - From current user (sent): 6
+message-notifications.tsx:136 WebSocket connection closed: 1006 
+message-notifications.tsx:110 WebSocket connected successfully
+t.js:1  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/message-notifications/unread-counts 401 (Unauthorized)
+apply @ t.js:1
+(anonymous) @ queryClient.ts:42
+fetchFn @ @tanstack_react-query.js?v=b447da99:881
+run @ @tanstack_react-query.js?v=b447da99:513
+start @ @tanstack_react-query.js?v=b447da99:555
+fetch @ @tanstack_react-query.js?v=b447da99:969
+executeFetch_fn @ @tanstack_react-query.js?v=b447da99:2279
+(anonymous) @ @tanstack_react-query.js?v=b447da99:2313
+setInterval
+updateRefetchInterval_fn @ @tanstack_react-query.js?v=b447da99:2311
+updateTimers_fn @ @tanstack_react-query.js?v=b447da99:2318
+onQueryUpdate @ @tanstack_react-query.js?v=b447da99:2274
+(anonymous) @ @tanstack_react-query.js?v=b447da99:1042
+(anonymous) @ @tanstack_react-query.js?v=b447da99:1041
+batch @ @tanstack_react-query.js?v=b447da99:603
+dispatch_fn @ @tanstack_react-query.js?v=b447da99:1040
+setData @ @tanstack_react-query.js?v=b447da99:718
+onSuccess @ @tanstack_react-query.js?v=b447da99:940
+resolve @ @tanstack_react-query.js?v=b447da99:475
+Promise.then
+run @ @tanstack_react-query.js?v=b447da99:517
+start @ @tanstack_react-query.js?v=b447da99:555
+fetch @ @tanstack_react-query.js?v=b447da99:969
+executeFetch_fn @ @tanstack_react-query.js?v=b447da99:2279
+(anonymous) @ @tanstack_react-query.js?v=b447da99:2313
+setInterval
+updateRefetchInterval_fn @ @tanstack_react-query.js?v=b447da99:2311
+updateTimers_fn @ @tanstack_react-query.js?v=b447da99:2318
+onQueryUpdate @ @tanstack_react-query.js?v=b447da99:2274
+(anonymous) @ @tanstack_react-query.js?v=b447da99:1042
+(anonymous) @ @tanstack_react-query.js?v=b447da99:1041
+batch @ @tanstack_react-query.js?v=b447da99:603
+dispatch_fn @ @tanstack_react-query.js?v=b447da99:1040
+setData @ @tanstack_react-query.js?v=b447da99:718
+onSuccess @ @tanstack_react-query.js?v=b447da99:940
+resolve @ @tanstack_react-query.js?v=b447da99:475
+Promise.then
+run @ @tanstack_react-query.js?v=b447da99:517
+start @ @tanstack_react-query.js?v=b447da99:555
+fetch @ @tanstack_react-query.js?v=b447da99:969
+executeFetch_fn @ @tanstack_react-query.js?v=b447da99:2279
+onSubscribe @ @tanstack_react-query.js?v=b447da99:1983
+subscribe @ @tanstack_react-query.js?v=b447da99:24
+(anonymous) @ @tanstack_react-query.js?v=b447da99:3146
+subscribeToStore @ chunk-276SZO74.js?v=b447da99:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=b447da99:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=b447da99:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=b447da99:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=b447da99:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=b447da99:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=b447da99:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=b447da99:19447
+commitRootImpl @ chunk-276SZO74.js?v=b447da99:19416
+commitRoot @ chunk-276SZO74.js?v=b447da99:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=b447da99:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=b447da99:9119
+(anonymous) @ chunk-276SZO74.js?v=b447da99:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=b447da99:565
+flush @ @tanstack_react-query.js?v=b447da99:589
+batch @ @tanstack_react-query.js?v=b447da99:607
+dispatch_fn @ @tanstack_react-query.js?v=b447da99:1040
+setData @ @tanstack_react-query.js?v=b447da99:718
+onSuccess @ @tanstack_react-query.js?v=b447da99:940
+resolve @ @tanstack_react-query.js?v=b447da99:475
+Promise.then
+run @ @tanstack_react-query.js?v=b447da99:517
+start @ @tanstack_react-query.js?v=b447da99:555
+fetch @ @tanstack_react-query.js?v=b447da99:969
+executeFetch_fn @ @tanstack_react-query.js?v=b447da99:2279
+onSubscribe @ @tanstack_react-query.js?v=b447da99:1983
+subscribe @ @tanstack_react-query.js?v=b447da99:24
+(anonymous) @ @tanstack_react-query.js?v=b447da99:3146
+subscribeToStore @ chunk-276SZO74.js?v=b447da99:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=b447da99:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=b447da99:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=b447da99:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=b447da99:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=b447da99:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=b447da99:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=b447da99:19447
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=b447da99:18868
+flushSyncCallbacks @ chunk-276SZO74.js?v=b447da99:9119
+commitRootImpl @ chunk-276SZO74.js?v=b447da99:19432
+commitRoot @ chunk-276SZO74.js?v=b447da99:19277
+finishConcurrentRender @ chunk-276SZO74.js?v=b447da99:18805
+performConcurrentWorkOnRoot @ chunk-276SZO74.js?v=b447da99:18718
+workLoop @ chunk-276SZO74.js?v=b447da99:197
+flushWork @ chunk-276SZO74.js?v=b447da99:176
+performWorkUntilDeadline @ chunk-276SZO74.js?v=b447da99:384
+Navigated to https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/dashboard?section=stream-messages
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=GbgcbzZ48bEl' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=GbgcbzZ48bEl' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+t.js:1  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/auth/user 401 (Unauthorized)
+apply @ t.js:1
+(anonymous) @ queryClient.ts:42
+fetchFn @ @tanstack_react-query.js?v=b447da99:881
+run @ @tanstack_react-query.js?v=b447da99:513
+start @ @tanstack_react-query.js?v=b447da99:555
+fetch @ @tanstack_react-query.js?v=b447da99:969
+executeFetch_fn @ @tanstack_react-query.js?v=b447da99:2279
+onSubscribe @ @tanstack_react-query.js?v=b447da99:1983
+subscribe @ @tanstack_react-query.js?v=b447da99:24
+(anonymous) @ @tanstack_react-query.js?v=b447da99:3146
+subscribeToStore @ chunk-276SZO74.js?v=b447da99:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=b447da99:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=b447da99:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=b447da99:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=b447da99:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=b447da99:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=b447da99:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=b447da99:19447
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=b447da99:18868
+flushSyncCallbacks @ chunk-276SZO74.js?v=b447da99:9119
+commitRootImpl @ chunk-276SZO74.js?v=b447da99:19432
+commitRoot @ chunk-276SZO74.js?v=b447da99:19277
+finishConcurrentRender @ chunk-276SZO74.js?v=b447da99:18805
+performConcurrentWorkOnRoot @ chunk-276SZO74.js?v=b447da99:18718
+workLoop @ chunk-276SZO74.js?v=b447da99:197
+flushWork @ chunk-276SZO74.js?v=b447da99:176
+performWorkUntilDeadline @ chunk-276SZO74.js?v=b447da99:384
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+Navigated to https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/login
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+Navigated to https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=GbgcbzZ48bEl' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=GbgcbzZ48bEl' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+message-notifications.tsx:98 Connecting to WebSocket at: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/notifications
+dashboard.tsx:56 Dashboard activeSection changed to: dashboard
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+inject.bundle.js:1  GET chrome-extension://invalid/ net::ERR_FAILED
+n @ inject.bundle.js:1
+i @ inject.bundle.js:1
+await in i
+t.findInstalledCompetitors @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+run @ inject.bundle.js:1
+t.default @ inject.bundle.js:1
+await in t.default
+7263 @ inject.bundle.js:1
+r @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+(anonymous) @ inject.bundle.js:1
+message-notifications.tsx:110 WebSocket connected successfully
+useMessaging.ts:234 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ useMessaging.ts:234
+commitHookEffectListMount @ chunk-276SZO74.js?v=b447da99:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=b447da99:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=b447da99:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=b447da99:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=b447da99:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=b447da99:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=b447da99:19447
+commitRootImpl @ chunk-276SZO74.js?v=b447da99:19416
+commitRoot @ chunk-276SZO74.js?v=b447da99:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=b447da99:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=b447da99:9119
+(anonymous) @ chunk-276SZO74.js?v=b447da99:18627
+useMessaging.ts:267 Messaging WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+overrideMethod @ hook.js:608
+ws.onerror @ useMessaging.ts:267
+useMessaging.ts:271 Messaging WebSocket disconnected
+simple-nav.tsx:148 Navigation click: stream-messages
+dashboard.tsx:502 Dashboard setActiveSection called with: stream-messages
+stream-messages.tsx:180 Available users state updated: 0
+stream-messages.tsx:472 StreamMessagesPage mounting...
+stream-messages.tsx:473 User object: {id: 'user_1751071509329_mrkw2z95z', email: 'katielong2316@gmail.com', firstName: 'Katie (Main)', lastName: 'Long', displayName: 'Katie (Main) Long', …}
+stream-messages.tsx:474 User truthy? true
+stream-messages.tsx:482 ✅ User found, initializing Stream Chat
+stream-messages.tsx:485 Starting Stream Chat initialization...
+stream-messages.tsx:489 Fetching Stream credentials from /api/stream/credentials...
+dashboard.tsx:56 Dashboard activeSection changed to: stream-messages
+stream-messages.tsx:497 Credentials response status: 200
+stream-messages.tsx:498 Credentials response: Response {type: 'basic', url: 'https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9…nx51.spock.replit.dev:5000/api/stream/credentials', redirected: false, status: 200, ok: true, …}
+stream-messages.tsx:506 Response data: {apiKey: 'qsz9tew4cyjb', userToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkI…V6In0.CqabgVrHazR0NJOQoI2muND3UrOyyTXKk7BLbh3QXw8', streamUserId: 'user_user_1751071509329_mrkw2z95z'}
+stream-messages.tsx:509 Got credentials - API Key: qsz9tew4cyjb Stream User ID: user_user_1751071509329_mrkw2z95z
+stream-messages.tsx:511 Creating StreamChat instance...
+stream-messages.tsx:514 Connecting user to Stream Chat...
+stream-messages.tsx:521 ✅ Stream Chat connection successful!
+stream-messages.tsx:158 📡 Stream client ready, starting user sync...
+stream-messages.tsx:79 🔄 Starting server-side user sync to Stream...
+stream-messages.tsx:93 ✅ Server-side sync successful: 10 users synced
+stream-messages.tsx:94 📋 Sync response: {success: true, syncedUsers: 10, message: 'Users successfully synchronized to Stream'}
+stream-messages.tsx:161 ✅ User sync completed, now fetching available users...
+stream-messages.tsx:52 Fetched real users from database: (10) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+stream-messages.tsx:64 📊 Processed available users: 9 users
+stream-messages.tsx:65 📋 Users data structure: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+stream-messages.tsx:163 Setting available users to state: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+stream-messages.tsx:165 📊 Available users after fetch: 9 users
+stream-messages.tsx:268 📥 Fetching messages from Stream Chat for user: user_user_1751071509329_mrkw2z95z
+stream-messages.tsx:277 Querying channels with filter: {type: 'messaging', members: {…}}
+stream-messages.tsx:180 Available users state updated: 9
+stream-messages.tsx:284 Query returned channels: 5 channels
+stream-messages.tsx:286 Channel 1: !members-bVe-Gu1Qjc_nxRtniTbtOj9RmLcxwbJZtmr5fmHsSgg, members: (2) ['admin_1751065261945', 'user_user_1751071509329_mrkw2z95z']
+stream-messages.tsx:286 Channel 2: !members-NXZA3oNRMF32Y4gGstgJgy-9pqzpvV50fVnn4q6nk44, members: (2) ['user_1751072243271_fc8jaxl6u', 'user_user_1751071509329_mrkw2z95z']
+ Channel 3: !members-cldiViEO7h4LhPdli8745xCo_t45ao51CJEZixyNaKA, members: (2) ['test-user-2', 'user_user_1751071509329_mrkw2z95z']
+ Channel 4: conversation-1753149864679, members: ['user_user_1751071509329_mrkw2z95z']
+ Channel 5: general, members: ['user_user_1751071509329_mrkw2z95z']
+ Processing channel: !members-bVe-Gu1Qjc_nxRtniTbtOj9RmLcxwbJZtmr5fmHsSgg
+ Channel !members-bVe-Gu1Qjc_nxRtniTbtOj9RmLcxwbJZtmr5fmHsSgg has 3 messages
+ Processing channel: !members-NXZA3oNRMF32Y4gGstgJgy-9pqzpvV50fVnn4q6nk44
+ Channel !members-NXZA3oNRMF32Y4gGstgJgy-9pqzpvV50fVnn4q6nk44 has 2 messages
+ Processing channel: !members-cldiViEO7h4LhPdli8745xCo_t45ao51CJEZixyNaKA
+ Channel !members-cldiViEO7h4LhPdli8745xCo_t45ao51CJEZixyNaKA has 1 messages
+ Processing channel: conversation-1753149864679
+ Channel conversation-1753149864679 has 0 messages
+ Processing channel: general
+ Channel general has 0 messages
+ 📊 Total messages loaded: 6
+ Messages breakdown by folder:
+ - All messages: 6
+ - From others (inbox): 0
+ - From current user (sent): 6
