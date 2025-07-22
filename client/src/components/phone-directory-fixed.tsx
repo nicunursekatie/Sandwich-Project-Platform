@@ -251,7 +251,22 @@ function PhoneDirectoryFixed() {
                   {filteredHosts.map((host) => (
                     <div key={host.id} className="p-4 border rounded-lg">
                       <h3 className="font-medium text-gray-900">{host.name}</h3>
-                      {host.address && <p className="text-sm text-gray-600">{host.address}</p>}
+                      {host.address && <p className="text-sm text-gray-600 mb-2">{host.address}</p>}
+                      {host.contacts && host.contacts.length > 0 && (
+                        <div className="space-y-1">
+                          {host.contacts.map((contact, idx) => (
+                            <div key={idx} className="text-sm text-gray-700">
+                              <div className="font-medium">{contact.name}</div>
+                              <div className="text-gray-600">{contact.phone}</div>
+                              {contact.email && <div className="text-gray-600">{contact.email}</div>}
+                              {contact.role && <div className="text-gray-500 italic">{contact.role}</div>}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {(!host.contacts || host.contacts.length === 0) && (
+                        <p className="text-sm text-gray-500 italic">No contact information available</p>
+                      )}
                     </div>
                   ))}
                 </div>

@@ -61,11 +61,47 @@ interface UserPermissionsDialogProps {
   onSave: (userId: string, role: string, permissions: string[]) => void;
 }
 
-// Permission categories with icons and descriptions
+// Permission categories focused on managing OTHER people's content
+// Note: Users automatically own content they create - these permissions are for managing others' content
 const PERMISSION_CATEGORIES = [
   {
-    id: "chat",
-    label: "Chat & Messaging",
+    id: "content_management",
+    label: "Content Management Authority", 
+    icon: Shield,
+    description: "Authority to edit/delete other users' content (you automatically own your own content)",
+    permissions: [
+      { key: PERMISSIONS.EDIT_COLLECTIONS, label: "Edit Others' Collections", description: "Edit collection entries created by other users" },
+      { key: PERMISSIONS.DELETE_COLLECTIONS, label: "Delete Others' Collections", description: "Delete collection entries created by other users" },
+      { key: PERMISSIONS.MANAGE_PROJECTS, label: "Manage Others' Projects", description: "Edit and delete projects created by other users" },
+    ],
+  },
+  {
+    id: "organizational_management",
+    label: "Organizational Data Management",
+    icon: Database,
+    description: "Authority to manage organizational data (hosts, recipients, drivers)",
+    permissions: [
+      { key: PERMISSIONS.MANAGE_RECIPIENTS, label: "Manage Recipients", description: "Edit recipient information" },
+      { key: PERMISSIONS.MANAGE_HOSTS, label: "Manage Hosts", description: "Edit host information" },
+      { key: PERMISSIONS.MANAGE_DRIVERS, label: "Manage Drivers", description: "Edit driver information" },
+    ],
+  },
+  {
+    id: "access_control",
+    label: "Access & Visibility",
+    icon: Eye,
+    description: "Access to view different sections and data",
+    permissions: [
+      { key: PERMISSIONS.VIEW_COLLECTIONS, label: "View Collections", description: "Access collection logs" },
+      { key: PERMISSIONS.VIEW_PROJECTS, label: "View Projects", description: "Access project information" },
+      { key: PERMISSIONS.VIEW_ANALYTICS, label: "View Analytics", description: "Access analytics dashboards" },
+      { key: PERMISSIONS.VIEW_REPORTS, label: "View Reports", description: "Access and generate reports" },
+      { key: PERMISSIONS.VIEW_MEETINGS, label: "View Meetings", description: "Access meeting information" },
+    ],
+  },
+  {
+    id: "communication",
+    label: "Communication Access",
     icon: MessageCircle,
     description: "Access to chat rooms and messaging features",
     permissions: [
@@ -75,71 +111,20 @@ const PERMISSION_CATEGORIES = [
       { key: PERMISSIONS.DRIVER_CHAT, label: "Driver Chat", description: "Access to driver chat room" },
       { key: PERMISSIONS.RECIPIENT_CHAT, label: "Recipient Chat", description: "Access to recipient chat room" },
       { key: "core_team_chat", label: "Core Team Chat", description: "Access to core team chat room" },
-      { key: "direct_messages", label: "Direct Messages", description: "Send and receive direct messages" },
-      { key: "group_messages", label: "Group Messages", description: "Create and participate in group messages" },
     ],
   },
   {
-    id: "data",
-    label: "Data Management",
-    icon: Database,
-    description: "View and manage recipient, host, and driver data",
+    id: "system_administration",
+    label: "System Administration",
+    icon: UserCog,
+    description: "System management and advanced administrative functions",
     permissions: [
-      { key: PERMISSIONS.VIEW_RECIPIENTS, label: "View Recipients", description: "View recipient information" },
-      { key: PERMISSIONS.MANAGE_RECIPIENTS, label: "Manage Recipients", description: "Edit recipient details" },
-      { key: PERMISSIONS.VIEW_HOSTS, label: "View Hosts", description: "View host information" },
-      { key: PERMISSIONS.MANAGE_HOSTS, label: "Manage Hosts", description: "Edit host details" },
-      { key: PERMISSIONS.VIEW_DRIVERS, label: "View Drivers", description: "View driver information" },
-      { key: PERMISSIONS.MANAGE_DRIVERS, label: "Manage Drivers", description: "Edit driver details" },
-    ],
-  },
-  {
-    id: "collections",
-    label: "Collections & Operations",
-    icon: Settings,
-    description: "Manage sandwich collections and operational tasks",
-    permissions: [
-      { key: PERMISSIONS.VIEW_COLLECTIONS, label: "View Collections", description: "View collection logs" },
-      { key: PERMISSIONS.EDIT_COLLECTIONS, label: "Edit Collections", description: "Submit and edit collection data" },
-      { key: PERMISSIONS.VIEW_PROJECTS, label: "View Projects", description: "View project information" },
-      { key: PERMISSIONS.MANAGE_PROJECTS, label: "Manage Projects", description: "Create and manage projects" },
-      { key: PERMISSIONS.VIEW_MEETINGS, label: "View Meetings", description: "View meeting information" },
-      { key: PERMISSIONS.EDIT_MEETINGS, label: "Edit Meetings", description: "Create and edit meetings" },
-    ],
-  },
-  {
-    id: "analytics",
-    label: "Analytics & Reporting",
-    icon: TrendingUp,
-    description: "Access to analytics dashboards and reports",
-    permissions: [
-      { key: PERMISSIONS.VIEW_ANALYTICS, label: "View Analytics", description: "Access analytics dashboards" },
-      { key: PERMISSIONS.VIEW_REPORTS, label: "View Reports", description: "Access and generate reports" },
-      { key: PERMISSIONS.EXPORT_DATA, label: "Export Data", description: "Export data to external formats" },
-    ],
-  },
-  {
-    id: "suggestions",
-    label: "Suggestions & Feedback",
-    icon: FileText,
-    description: "Submit and manage suggestions",
-    permissions: [
-      { key: PERMISSIONS.VIEW_SUGGESTIONS, label: "View Suggestions", description: "View all suggestions" },
-      { key: PERMISSIONS.SUBMIT_SUGGESTIONS, label: "Submit Suggestions", description: "Create new suggestions" },
-      { key: PERMISSIONS.MANAGE_SUGGESTIONS, label: "Manage Suggestions", description: "Review and update suggestion status" },
-      { key: PERMISSIONS.RESPOND_TO_SUGGESTIONS, label: "Respond to Suggestions", description: "Post official responses" },
-    ],
-  },
-  {
-    id: "admin",
-    label: "Administration",
-    icon: Shield,
-    description: "System administration and user management",
-    permissions: [
-      { key: PERMISSIONS.VIEW_USERS, label: "View Users", description: "View user list and details" },
-      { key: PERMISSIONS.MANAGE_USERS, label: "Manage Users", description: "Edit user roles and permissions" },
-      { key: PERMISSIONS.VIEW_COMMITTEE, label: "View Committee", description: "View committee information" },
-      { key: PERMISSIONS.MANAGE_ANNOUNCEMENTS, label: "Manage Announcements", description: "Create and edit announcements" },
+      { key: PERMISSIONS.VIEW_USERS, label: "Manage Users", description: "View and edit user roles and permissions" },
+      { key: PERMISSIONS.MANAGE_USERS, label: "Full User Management", description: "Complete control over user accounts" },
+      { key: PERMISSIONS.MANAGE_ANNOUNCEMENTS, label: "Manage Announcements", description: "Create and edit system announcements" },
+      { key: PERMISSIONS.VIEW_SUGGESTIONS, label: "View All Suggestions", description: "Access all user suggestions" },
+      { key: PERMISSIONS.MANAGE_SUGGESTIONS, label: "Manage Suggestions", description: "Review and update suggestion workflow" },
+      { key: PERMISSIONS.RESPOND_TO_SUGGESTIONS, label: "Official Responses", description: "Post official organizational responses" },
     ],
   },
 ];
@@ -220,6 +205,12 @@ export function UserPermissionsDialog({
             </span>{" "}
             ({user.email})
           </DialogDescription>
+          <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg mt-3">
+            <p className="text-sm text-blue-800">
+              <strong>Note:</strong> Users automatically own content they create or are assigned to. 
+              These permissions control what they can do with <em>other people's</em> content and system access.
+            </p>
+          </div>
         </DialogHeader>
 
         <div className="flex-1 overflow-hidden">
