@@ -458,11 +458,19 @@ export function setupTempAuth(app: Express) {
       // Update last login time
       await storage.updateUser(user.id, { lastLoginAt: new Date() });
 
-      // Store user in session
+      // Store user in session with explicit save
       req.session.user = sessionUser;
       req.user = sessionUser;
 
-      res.json({ success: true, user: sessionUser });
+      // Force session save to ensure persistence
+      req.session.save((err: any) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.status(500).json({ success: false, message: "Session save failed" });
+        }
+        console.log("Session saved successfully for user:", sessionUser.email);
+        res.json({ success: true, user: sessionUser });
+      });
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ success: false, message: "Login failed" });
@@ -494,8 +502,8 @@ export function setupTempAuth(app: Express) {
     }
   });
 
-  // Get current user endpoint
-  app.get("/api/auth/user", async (req: any, res) => {
+  // Get current user endpoint - TEMP AUTH VERSION
+  app.get("/api/temp-auth/current-user", async (req: any, res) => {
     if (req.session.user) {
       try {
         // Get fresh user data from database to ensure permissions are current

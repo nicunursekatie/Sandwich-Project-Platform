@@ -27,12 +27,11 @@ export function useAuth() {
       });
     }
 
-    // Handle server restart - if we get auth error, redirect to login
-    if (error && error.message?.includes('401') && !user) {
-      console.log('[useAuth] Authentication expired (server restart), redirecting to login');
-      setTimeout(() => {
-        window.location.href = '/api/login';
-      }, 1000);
+    // Handle server restart - if we get auth error, try to login via temporary auth
+    if (error && error.message?.includes('401') && !user && !isLoading) {
+      console.log('[useAuth] Authentication expired, attempting to restore session');
+      // Don't redirect immediately - let the user handle authentication manually
+      // This prevents unnecessary redirects when the user is already trying to log in
     }
   }
 

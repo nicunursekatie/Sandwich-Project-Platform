@@ -102,12 +102,17 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
       socket = new WebSocket(wsUrl);
 
       socket.onopen = () => {
-        // Send user identification
-        if (socket) {
-          socket.send(JSON.stringify({
-            type: 'identify',
-            userId: (user as any)?.id
-          }));
+        console.log("WebSocket connected for notifications");
+        // Send user identification with error handling
+        try {
+          if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({
+              type: 'identify',
+              userId: (user as any)?.id
+            }));
+          }
+        } catch (error) {
+          console.debug('Failed to send identify message:', error);
         }
       };
 
@@ -134,10 +139,14 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
 
             // Show browser notification if permission granted and available
             if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-              new Notification(`New message in ${data.committee}`, {
-                body: `${data.sender}: ${data.content.substring(0, 100)}...`,
-                icon: '/favicon.ico'
-              });
+              try {
+                new Notification(`New message in ${data.committee || 'Messages'}`, {
+                  body: `${data.sender || 'Unknown'}: ${(data.content || 'New message').substring(0, 100)}...`,
+                  icon: '/favicon.ico'
+                });
+              } catch (notificationError) {
+                console.debug('Failed to show notification:', notificationError);
+              }
             }
           }
         } catch (error) {
