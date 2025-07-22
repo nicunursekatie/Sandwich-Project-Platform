@@ -601,20 +601,29 @@ export default function EmailStyleMessaging() {
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          {activeFolder === 'sent' ? (
-                            <span className="font-bold text-red-600">TO:</span>
-                          ) : (
+                        {activeFolder === 'sent' ? (
+                          // For sent messages, show TO information
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-red-600">TO:</span>
+                              <span className="font-medium">
+                                {selectedMessage.to && Array.isArray(selectedMessage.to) 
+                                  ? selectedMessage.to.join(', ') 
+                                  : selectedMessage.to || 'Unknown Recipient'}
+                              </span>
+                            </div>
+                            <div className="text-sm text-muted-foreground mt-1">
+                              <span className="font-bold text-gray-600">FROM:</span> {selectedMessage.from.name} &lt;{selectedMessage.from.email}&gt;
+                            </div>
+                          </div>
+                        ) : (
+                          // For received messages, show FROM information
+                          <div className="flex items-center gap-2">
                             <span className="font-bold text-blue-600">FROM:</span>
-                          )}
-                          <span className="font-medium">{selectedMessage.from.name}</span>
-                          <span className="text-sm text-muted-foreground">
-                            &lt;{selectedMessage.from.email}&gt;
-                          </span>
-                        </div>
-                        {activeFolder === 'sent' && selectedMessage.to && Array.isArray(selectedMessage.to) && selectedMessage.to.length > 0 && (
-                          <div className="text-sm text-muted-foreground mt-1">
-                            <span className="font-bold text-red-600">TO:</span> {selectedMessage.to.join(', ')}
+                            <span className="font-medium">{selectedMessage.from.name}</span>
+                            <span className="text-sm text-muted-foreground">
+                              &lt;{selectedMessage.from.email}&gt;
+                            </span>
                           </div>
                         )}
                         <div className="text-sm text-muted-foreground mt-1">
