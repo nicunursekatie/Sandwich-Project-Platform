@@ -1756,14 +1756,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         duplicateGroups.get(key).push(collection);
 
-        // Check for suspicious patterns (improved detection)
+        // Check for suspicious patterns - ONLY truly problematic entries
         const hostName = (collection.hostName || "").toLowerCase().trim();
         if (
           hostName.startsWith("loc ") ||
-          hostName.startsWith("group ") ||
           hostName.match(/^group \d+(-\d+)?$/) ||
           hostName.match(/^loc\d+$/) ||
-          hostName === "groups" ||
           hostName === "test" ||
           hostName.includes("test") ||
           hostName.includes("duplicate") ||
