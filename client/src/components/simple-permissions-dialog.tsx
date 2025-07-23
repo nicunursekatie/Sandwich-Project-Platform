@@ -79,8 +79,8 @@ const PERMISSION_GROUPS = [
       { key: PERMISSIONS.MANAGE_COLLECTIONS, label: "Submit Own Collections", icon: Database, description: "Submit your own collection data" },
       { key: PERMISSIONS.EDIT_OWN_COLLECTIONS, label: "Edit Own Collections", icon: Edit, description: "Modify your own collection records" },
       { key: PERMISSIONS.DELETE_OWN_COLLECTIONS, label: "Delete Own Collections", icon: Edit, description: "Delete your own collection records" },
-      { key: PERMISSIONS.EDIT_COLLECTIONS, label: "Edit All Collections", icon: Shield, description: "Edit any collection record" },
-      { key: PERMISSIONS.DELETE_COLLECTIONS, label: "Delete All Collections", icon: Shield, description: "Delete any collection record" },
+      { key: PERMISSIONS.EDIT_ALL_COLLECTIONS, label: "Edit All Collections", icon: Shield, description: "Edit any collection record" },
+      { key: PERMISSIONS.DELETE_ALL_COLLECTIONS, label: "Delete All Collections", icon: Shield, description: "Delete any collection record" },
       
       { key: PERMISSIONS.ACCESS_PROJECTS, label: "View Projects", icon: Eye, description: "View project information" },
       { key: PERMISSIONS.EDIT_OWN_PROJECTS, label: "Edit Own Projects", icon: Edit, description: "Edit projects you created" },
@@ -214,6 +214,18 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
     if (user && open) {
       setSelectedRole(user.role);
       setSelectedPermissions(user.permissions || []);
+      // Debug: log all available permissions vs defined permissions
+      console.log("Available PERMISSIONS object:", PERMISSIONS);
+      console.log("User permissions:", user.permissions);
+      console.log("Work log permissions check:", {
+        ACCESS_WORK_LOGS: PERMISSIONS.ACCESS_WORK_LOGS,
+        CREATE_WORK_LOGS: PERMISSIONS.CREATE_WORK_LOGS,
+        EDIT_OWN_WORK_LOGS: PERMISSIONS.EDIT_OWN_WORK_LOGS,
+        DELETE_OWN_WORK_LOGS: PERMISSIONS.DELETE_OWN_WORK_LOGS,
+        VIEW_ALL_WORK_LOGS: PERMISSIONS.VIEW_ALL_WORK_LOGS,
+        EDIT_ALL_WORK_LOGS: PERMISSIONS.EDIT_ALL_WORK_LOGS,
+        DELETE_ALL_WORK_LOGS: PERMISSIONS.DELETE_ALL_WORK_LOGS
+      });
     }
   }, [user, open]);
 
