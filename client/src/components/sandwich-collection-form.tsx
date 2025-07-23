@@ -82,6 +82,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       collectionDate: string;
       hostName: string;
       individualSandwiches: number;
+      groupSandwiches: number; // Add the new field to the type
       groupCollections: string;
       createdBy?: string;
       createdByName?: string;
@@ -253,10 +254,14 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       finalGroupCollections = groupCollectionsString; // Keep the group breakdown for reference
     }
 
+    // Calculate total group sandwiches for the new numeric field
+    const totalGroupSandwiches = validGroupCollections.reduce((sum, group) => sum + group.sandwichCount, 0);
+
     submitCollectionMutation.mutate({
       collectionDate,
       hostName: finalHostName,
       individualSandwiches: finalIndividualSandwiches,
+      groupSandwiches: totalGroupSandwiches, // Add the new numeric field
       groupCollections: finalGroupCollections,
       createdBy: user?.id,
       createdByName: user && typeof user === 'object' && 'firstName' in user && 'lastName' in user && user.firstName && user.lastName 

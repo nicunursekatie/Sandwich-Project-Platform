@@ -784,7 +784,7 @@ export class MemStorage implements IStorage {
 
   async getCollectionStats(): Promise<{ totalEntries: number; totalSandwiches: number; }> {
     const collections = Array.from(this.sandwichCollections.values());
-    const totalSandwiches = collections.reduce((sum, collection) => sum + (collection.individualSandwiches || 0), 0);
+    const totalSandwiches = collections.reduce((sum, collection) => sum + (collection.individualSandwiches || 0) + (collection.groupSandwiches || 0), 0);
     return {
       totalEntries: collections.length,
       totalSandwiches
