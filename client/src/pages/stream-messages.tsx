@@ -18,7 +18,8 @@ import {
   Inbox,
   Send,
   X,
-  Loader2
+  Loader2,
+  ArrowLeft
 } from 'lucide-react';
 
 export default function StreamMessagesPage() {
@@ -784,39 +785,118 @@ export default function StreamMessagesPage() {
 
         {/* Message list and content area */}
         <div className="flex-1 flex flex-col">
-          <div className="border-b p-4">
-            <h2 className="text-lg font-semibold capitalize">
-              {activeFolder === 'conversations' ? 'All Messages' : activeFolder}
-              <span className="ml-2 text-sm text-gray-500">({getFilteredMessages().length})</span>
-            </h2>
-          </div>
-          
-          <div className="flex-1 overflow-y-auto">
-            {getFilteredMessages().length > 0 ? (
-              <div className="divide-y">
-                {getFilteredMessages().map((msg) => (
-                  <div 
-                    key={msg.id} 
-                    className="p-4 hover:bg-gray-50 cursor-pointer border-l-4 border-transparent hover:border-blue-300"
-                    onClick={() => setSelectedChannel(msg.channel)}
-                  >
-                    <div className="flex items-start justify-between mb-1">
-                      <div className="font-medium text-sm">
-                        {activeFolder === 'sent' ? (
-                          <span className="text-gray-600">To: {msg.recipientNames.join(', ')}</span>
-                        ) : (
-                          <span className="text-gray-900">{msg.fromName}</span>
-                        )}
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        {new Date(msg.timestamp).toLocaleDateString()} {new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                      </span>
+          {selectedChannel ? (
+            /* Message detail view when a channel is selected */
+            <div className="flex flex-col h-full">
+              {/* Message thread header */}
+              <div className="border-b p-4 flex items-center gap-4">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setSelectedChannel(null)}
+                  className="flex items-center gap-2"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to {activeFolder}
+                </Button>
+                <div className="flex-1">
+                  <h2 className="text-lg font-semibold">
+                    {selectedChannel.data?.name || 'Direct Message'}
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    {selectedChannel.state?.members ? Object.keys(selectedChannel.state.members).length : 0} participants
+                  </p>
+                </div>
+              </div>
+
+              {/* Messages in the selected channel */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                {selectedChannel.state?.messages?.map((message: any) => (
+                  <div key={message.id} className="flex gap-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-sm font-medium">
+                      {message.user?.name?.charAt(0)?.toUpperCase() || '?'}
                     </div>
-                    <div className="text-sm font-medium text-gray-700 mb-1">{msg.subject}</div>
-                    <div className="text-sm text-gray-600 truncate">{msg.text}</div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-sm">{message.user?.name || 'Unknown User'}</span>
+                        <span className="text-xs text-gray-500">
+                          {new Date(message.created_at).toLocaleString()}
+                        </span>
+                      </div>
+                      {message.custom?.subject && (
+                        <div className="text-sm font-medium text-gray-700 mb-1">
+                          Subject: {message.custom.subject}
+                        </div>
+                      )}
+                      <div className="text-sm text-gray-900 whitespace-pre-wrap">
+                        {message.text}
+                      </div>
+                    </div>
                   </div>
                 ))}
+                
+                {(!selectedChannel.state?.messages || selectedChannel.state.messages.length === 0) && (
+                  <div className="text-center text-gray-500 py-8">
+                    No messages in this conversation yet.
+                  </div>
+                )}
               </div>
+
+              {/* Reply input area */}
+              <div className="border-t p-4">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Type a reply..."
+                    className="flex-1"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                        selectedChannel.sendMessage({ text: e.currentTarget.value.trim() });
+                        e.currentTarget.value = '';
+                      }
+                    }}
+                  />
+                  <Button size="sm">
+                    <Send className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Message list view when no channel is selected */
+            <div className="flex flex-col h-full">
+              <div className="border-b p-4">
+                <h2 className="text-lg font-semibold capitalize">
+                  {activeFolder === 'conversations' ? 'All Messages' : activeFolder}
+                  <span className="ml-2 text-sm text-gray-500">({getFilteredMessages().length})</span>
+                </h2>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto">
+                {getFilteredMessages().length > 0 ? (
+                  <div className="divide-y">
+                    {getFilteredMessages().map((msg) => (
+                      <div 
+                        key={msg.id} 
+                        className="p-4 hover:bg-gray-50 cursor-pointer border-l-4 border-transparent hover:border-blue-300"
+                        onClick={() => setSelectedChannel(msg.channel)}
+                      >
+                        <div className="flex items-start justify-between mb-1">
+                          <div className="font-medium text-sm">
+                            {activeFolder === 'sent' ? (
+                              <span className="text-gray-600">To: {msg.recipientNames.join(', ')}</span>
+                            ) : (
+                              <span className="text-gray-900">{msg.fromName}</span>
+                            )}
+                          </div>
+                          <span className="text-xs text-gray-500">
+                            {new Date(msg.timestamp).toLocaleDateString()} {new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                          </span>
+                        </div>
+                        <div className="text-sm font-medium text-gray-700 mb-1">{msg.subject}</div>
+                        <div className="text-sm text-gray-600 truncate">{msg.text}</div>
+                      </div>
+                    ))}
+                  </div>
             ) : (
               <div className="p-8 text-center">
                 <div className="text-center max-w-md mx-auto">
