@@ -1168,7 +1168,7 @@ export default function SandwichCollectionLog() {
                       <div key={group.id} className="flex items-center space-x-2 mt-2">
                         <Input
                           placeholder="Group name"
-                          value={group.groupName}
+                          value={group.groupName || ""}
                           onChange={(e) => updateNewGroupCollection(group.id, 'groupName', e.target.value)}
                           className="flex-1"
                           required
@@ -1177,7 +1177,7 @@ export default function SandwichCollectionLog() {
                           type="number"
                           min="0"
                           placeholder="Count"
-                          value={group.sandwichCount}
+                          value={group.sandwichCount?.toString() || ""}
                           onChange={(e) => updateNewGroupCollection(group.id, 'sandwichCount', parseInt(e.target.value) || 0)}
                           className="w-24"
                         />
@@ -1697,7 +1697,7 @@ export default function SandwichCollectionLog() {
                   <div key={group.id} className="flex gap-3 items-center">
                     <Input
                       placeholder="Group name"
-                      value={group.groupName}
+                      value={group.groupName || ""}
                       onChange={(e) => updateEditGroupCollection(group.id, "groupName", e.target.value)}
                       className="flex-1"
                       required
@@ -1706,7 +1706,7 @@ export default function SandwichCollectionLog() {
                       type="number"
                       min="0"
                       placeholder="Count"
-                      value={group.sandwichCount || ""}
+                      value={group.sandwichCount?.toString() || ""}
                       onChange={(e) => updateEditGroupCollection(group.id, "sandwichCount", parseInt(e.target.value) || 0)}
                       className="w-24"
                     />
