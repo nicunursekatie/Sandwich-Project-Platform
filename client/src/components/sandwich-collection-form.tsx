@@ -381,9 +381,6 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               Add Group
             </Button>
           </div>
-          <p className="text-xs text-gray-600">
-            💡 Tip: If you only enter group collections (and leave host/individual fields empty), the form will automatically handle it as a group-only entry.
-          </p>
 
           <div className="space-y-3">
             {groupCollections.map((group) => (
