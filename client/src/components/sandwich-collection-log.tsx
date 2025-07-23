@@ -511,10 +511,12 @@ export default function SandwichCollectionLog() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      return await apiRequest('DELETE', `/api/sandwich-collections/${id}`);
+      const result = await apiRequest('DELETE', `/api/sandwich-collections/${id}`);
+      return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections/stats"] });
       toast({
         title: "Collection deleted",
         description: "Sandwich collection has been deleted successfully.",
@@ -522,11 +524,26 @@ export default function SandwichCollectionLog() {
     },
     onError: (error: any) => {
       console.error("Delete collection error:", error);
-      toast({
-        title: "Error",
-        description: "Cannot delete collection. Please try again.",
-        variant: "destructive",
-      });
+      
+      // Check if it's just an auth error but the deletion might have worked
+      // We'll refresh the data to see if it actually got deleted
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      
+      // Show a more helpful error message
+      const errorMessage = error?.message || "Unknown error occurred";
+      if (errorMessage.includes("401") || errorMessage.includes("Unauthorized")) {
+        toast({
+          title: "Authentication Error",
+          description: "Your session may have expired. Please refresh the page and try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Delete Error",
+          description: "Failed to delete collection. Please refresh the page to check if it was actually deleted.",
+          variant: "destructive",
+        });
+      }
     }
   });
 
