@@ -430,34 +430,11 @@ export default function SandwichCollectionLog() {
 
   const calculateTotal = (collection: SandwichCollection) => {
     const individual = Number(collection.individualSandwiches || 0);
-    let groupTotal = 0;
+    const groupSandwiches = Number(collection.groupSandwiches || 0);
     
-    try {
-      // Handle different formats in groupCollections
-      if (!collection.groupCollections || collection.groupCollections === "[]" || collection.groupCollections === "") {
-        return individual;
-      }
-      
-      // Try to parse as JSON first
-      const groupData = JSON.parse(collection.groupCollections);
-      if (Array.isArray(groupData)) {
-        groupTotal = groupData.reduce((sum: number, group: any) => sum + (Number(group.sandwichCount) || 0), 0);
-      } else if (typeof groupData === 'number') {
-        groupTotal = Number(groupData);
-      } else if (typeof groupData === 'object' && groupData.sandwichCount) {
-        groupTotal = Number(groupData.sandwichCount);
-      }
-    } catch (error) {
-      // Handle text format like "Marketing Team: 8, Development: 6"
-      if (collection.groupCollections && collection.groupCollections !== "[]") {
-        const matches = collection.groupCollections.match(/(\d+)/g);
-        if (matches) {
-          groupTotal = matches.reduce((sum, num) => sum + parseInt(num), 0);
-        }
-      }
-    }
-    
-    return individual + groupTotal;
+    // Use the new numeric groupSandwiches field to avoid double counting
+    // For group-only entries, individual contains the total and groupSandwiches is 0
+    return individual + groupSandwiches;
   };
 
   const parseGroupCollections = (groupCollectionsJson: string) => {
@@ -1519,9 +1496,7 @@ export default function SandwichCollectionLog() {
                         <span className="text-sm font-medium text-slate-700">Groups</span>
                       </div>
                       <span className="text-lg font-bold text-slate-900">
-                        {Array.isArray(groupData) 
-                          ? groupData.reduce((sum: number, group: any) => sum + (group.sandwichCount || 0), 0)
-                          : 0}
+                        {Number(collection.groupSandwiches || 0)}
                       </span>
                     </div>
                     {Array.isArray(groupData) && groupData.length > 0 && (
