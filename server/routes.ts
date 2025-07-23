@@ -582,7 +582,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const completionData = insertTaskCompletionSchema.parse({
         taskId: taskId,
         userId: user.id,
-        userName: user.displayName || user.email,
+        userName: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email,
         notes: notes,
       });
 
@@ -684,7 +684,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const updates = req.body;
 
         // Get the existing project to check ownership
-        const existingProject = await storage.getProjectById(id);
+        const existingProject = await storage.getProject(id);
         if (!existingProject) {
           return res.status(404).json({ message: "Project not found" });
         }
@@ -731,7 +731,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
 
         // Get the existing project to check ownership
-        const existingProject = await storage.getProjectById(id);
+        const existingProject = await storage.getProject(id);
         if (!existingProject) {
           return res.status(404).json({ message: "Project not found" });
         }
@@ -884,21 +884,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           );
 
           // TEMPORARILY DISABLED: Verify user is member of this group
-          // groupMemberships table does not exist in current schema
+          // conversation_participants table does not exist in current schema
           const membership = [] as any[]; // Temporary bypass
           // const membership = await db
           //   .select()
-          //   .from(groupMemberships)
+          //   .from(conversation_participants)
           //   .where(
           //     and(
-          //       eq(groupMemberships.groupId, groupId),
-          //       eq(groupMemberships.userId, currentUserId),
-          //       eq(groupMemberships.isActive, true),
+          //       eq(conversation_participants.groupId, groupId),
+          //       eq(conversation_participants.userId, currentUserId),
+          //       eq(conversation_participants.isActive, true),
           //     ),
           //   )
           //   .limit(1);
 
-          // TEMPORARILY BYPASS membership check since groupMemberships table doesn't exist
+          // TEMPORARILY BYPASS membership check since conversation_participants table doesn't exist
           if (membership.length === 0) {
             console.log(
               `[DEBUG] BYPASSING membership check for user ${currentUserId} in group ${groupId}`,
@@ -916,12 +916,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // TEMPORARILY DISABLED: Get the conversation thread ID for this group
           // const thread = await db
           //   .select()
-          //   .from(conversationThreads)
+          //   .from(conversations)
           //   .where(
           //     and(
-          //       eq(conversationThreads.type, "group"),
-          //       eq(conversationThreads.referenceId, groupId.toString()),
-          //       eq(conversationThreads.isActive, true)
+          //       eq(conversations.type, "group"),
+          //       eq(conversations.referenceId, groupId.toString()),
+          //       eq(conversations.isActive, true)
           //     )
           //   )
           //   .limit(1);
@@ -938,8 +938,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .where(
               and(
                 eq(conversations.type, "group"),
-                eq(conversations.referenceId, groupId.toString()),
-                eq(conversations.isActive, true),
+                eq(conversations.name, `Group ${groupId}`),
               ),
             )
             .limit(1);
@@ -984,12 +983,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // TEMPORARILY DISABLED: For chat types, use thread-based filtering
           // const thread = await db
           //   .select()
-          //   .from(conversationThreads)
+          //   .from(conversations)
           //   .where(
           //     and(
-          //       eq(conversationThreads.type, "chat"),
-          //       eq(conversationThreads.referenceId, messageContext),
-          //       eq(conversationThreads.isActive, true)
+          //       eq(conversations.type, "chat"),
+          //       eq(conversations.referenceId, messageContext),
+          //       eq(conversations.isActive, true)
           //     )
           //   )
           //   .limit(1);
@@ -1013,7 +1012,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // }
 
           // Temporarily use storage layer for all chat messages
-          messages = await storage.getMessages(messageContext, limit);
+          messages = await storage.getAllMessages();
         } else {
           // Default to General Chat when no parameters are provided
           const [generalConversation] = await db
@@ -5100,7 +5099,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Create the group
       const [group] = await db
-        .insert(messageGroups)
+        .insert(conversations)
         .values({
           name: name.trim(),
           description: description?.trim() || null,
@@ -5108,15 +5107,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         })
         .returning();
 
-      // Create a conversation thread for this group
+      // Create a conversation for this group
       const [thread] = await db
-        .insert(conversationThreads)
+        .insert(conversations)
         .values({
-          type: "group",
-          referenceId: group.id.toString(),
-          title: name.trim(),
-          isActive: true,
-          createdBy: userId,
+          type: "group", 
+          name: name.trim(),
+          createdAt: new Date(),
         })
         .returning();
 
@@ -5125,14 +5122,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       // Add creator as admin to group membership
-      await db.insert(groupMemberships).values({
+      await db.insert(conversation_participants).values({
         groupId: group.id,
         userId: userId,
         role: "admin",
       });
 
       // Add creator as participant to thread
-      await db.insert(groupMessageParticipants).values({
+      await db.insert(conversation_participants).values({
         threadId: thread.id,
         userId: userId,
         status: "active",
@@ -5159,8 +5156,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }));
 
         if (memberships.length > 0) {
-          await db.insert(groupMemberships).values(memberships);
-          await db.insert(groupMessageParticipants).values(participants);
+          await db.insert(conversation_participants).values(memberships);
+          await db.insert(conversation_participants).values(participants);
         }
       }
 
@@ -5199,13 +5196,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Check if user is admin of the group
           const userMembership = await db
             .select()
-            .from(groupMemberships)
+            .from(conversation_participants)
             .where(
               and(
-                eq(groupMemberships.groupId, parseInt(groupId)),
-                eq(groupMemberships.userId, userId),
-                eq(groupMemberships.role, "admin"),
-                eq(groupMemberships.isActive, true),
+                eq(conversation_participants.groupId, parseInt(groupId)),
+                eq(conversation_participants.userId, userId),
+                eq(conversation_participants.role, "admin"),
+                eq(conversation_participants.isActive, true),
               ),
             )
             .limit(1);
@@ -5223,12 +5220,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Get existing members to avoid duplicates
         const existingMembers = await db
-          .select({ userId: groupMemberships.userId })
-          .from(groupMemberships)
+          .select({ userId: conversation_participants.userId })
+          .from(conversation_participants)
           .where(
             and(
-              eq(groupMemberships.groupId, parseInt(groupId)),
-              eq(groupMemberships.isActive, true),
+              eq(conversation_participants.groupId, parseInt(groupId)),
+              eq(conversation_participants.isActive, true),
             ),
           );
 
@@ -5250,7 +5247,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           role: "member" as const,
         }));
 
-        await db.insert(groupMemberships).values(memberships);
+        await db.insert(conversation_participants).values(memberships);
 
         res.json({
           message: "Members added successfully",
@@ -5289,12 +5286,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // Regular users need to be members of the group
             const membership = await db
               .select()
-              .from(groupMemberships)
+              .from(conversation_participants)
               .where(
                 and(
-                  eq(groupMemberships.groupId, groupId),
-                  eq(groupMemberships.userId, userId),
-                  eq(groupMemberships.isActive, true),
+                  eq(conversation_participants.groupId, groupId),
+                  eq(conversation_participants.userId, userId),
+                  eq(conversation_participants.isActive, true),
                 ),
               )
               .limit(1);
@@ -5309,7 +5306,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               `[ERROR] Error checking membership:`,
               membershipError,
             );
-            // If groupMemberships table doesn't exist, allow super admins to proceed
+            // If conversation_participants table doesn't exist, allow super admins to proceed
             if (!canModerateMessages) {
               return res
                 .status(500)
@@ -5322,19 +5319,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Get all group members with user details
           const members = await db
             .select({
-              userId: groupMemberships.userId,
-              role: groupMemberships.role,
-              joinedAt: groupMemberships.joinedAt,
+              userId: conversation_participants.userId,
+              role: conversation_participants.role,
+              joinedAt: conversation_participants.joinedAt,
               firstName: users.firstName,
               lastName: users.lastName,
               email: users.email,
             })
-            .from(groupMemberships)
-            .leftJoin(users, eq(groupMemberships.userId, users.id))
+            .from(conversation_participants)
+            .leftJoin(users, eq(conversation_participants.userId, users.id))
             .where(
               and(
-                eq(groupMemberships.groupId, groupId),
-                eq(groupMemberships.isActive, true),
+                eq(conversation_participants.groupId, groupId),
+                eq(conversation_participants.isActive, true),
               ),
             );
 
@@ -5344,7 +5341,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           res.json(members);
         } catch (membersError) {
           console.error(`[ERROR] Error fetching group members:`, membersError);
-          // If groupMemberships table doesn't exist, return empty array for now
+          // If conversation_participants table doesn't exist, return empty array for now
           res.json([]);
         }
       } catch (error) {
@@ -5397,12 +5394,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
 
         const result = await db
-          .update(groupMessageParticipants)
+          .update(conversation_participants)
           .set(updates)
           .where(
             and(
-              eq(groupMessageParticipants.threadId, threadId),
-              eq(groupMessageParticipants.userId, userId),
+              eq(conversation_participants.threadId, threadId),
+              eq(conversation_participants.userId, userId),
             ),
           );
 
@@ -5428,12 +5425,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const userId = (req as any).user?.id;
 
         const result = await db
-          .update(groupMessageParticipants)
+          .update(conversation_participants)
           .set({ lastReadAt: new Date() })
           .where(
             and(
-              eq(groupMessageParticipants.threadId, threadId),
-              eq(groupMessageParticipants.userId, userId),
+              eq(conversation_participants.threadId, threadId),
+              eq(conversation_participants.userId, userId),
             ),
           );
 
@@ -5454,15 +5451,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         const [participant] = await db
           .select({
-            status: groupMessageParticipants.status,
-            lastReadAt: groupMessageParticipants.lastReadAt,
-            joinedAt: groupMessageParticipants.joinedAt,
+            status: conversation_participants.status,
+            lastReadAt: conversation_participants.lastReadAt,
+            joinedAt: conversation_participants.joinedAt,
           })
-          .from(groupMessageParticipants)
+          .from(conversation_participants)
           .where(
             and(
-              eq(groupMessageParticipants.threadId, threadId),
-              eq(groupMessageParticipants.userId, userId),
+              eq(conversation_participants.threadId, threadId),
+              eq(conversation_participants.userId, userId),
             ),
           );
 
@@ -5495,13 +5492,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         try {
           // Get the thread ID for this group
           const [thread] = await db
-            .select({ threadId: conversationThreads.id })
-            .from(conversationThreads)
+            .select({ threadId: conversations.id })
+            .from(conversations)
             .where(
               and(
-                eq(conversationThreads.type, "group"),
-                eq(conversationThreads.referenceId, groupId.toString()),
-                eq(conversationThreads.isActive, true),
+                eq(conversations.type, "group"),
+                eq(conversations.referenceId, groupId.toString()),
+                eq(conversations.isActive, true),
               ),
             );
 
@@ -5512,12 +5509,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           // Check if user has access to this thread (not left)
           const participantStatus = await db
-            .select({ status: groupMessageParticipants.status })
-            .from(groupMessageParticipants)
+            .select({ status: conversation_participants.status })
+            .from(conversation_participants)
             .where(
               and(
-                eq(groupMessageParticipants.threadId, thread.threadId),
-                eq(groupMessageParticipants.userId, userId),
+                eq(conversation_participants.threadId, thread.threadId),
+                eq(conversation_participants.userId, userId),
               ),
             );
 
@@ -5596,13 +5593,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Get the thread ID for this group
         const [thread] = await db
-          .select({ threadId: conversationThreads.id })
-          .from(conversationThreads)
+          .select({ threadId: conversations.id })
+          .from(conversations)
           .where(
             and(
-              eq(conversationThreads.type, "group"),
-              eq(conversationThreads.referenceId, groupId.toString()),
-              eq(conversationThreads.isActive, true),
+              eq(conversations.type, "group"),
+              eq(conversations.referenceId, groupId.toString()),
+              eq(conversations.isActive, true),
             ),
           );
 
@@ -5612,12 +5609,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Check if user has access to this thread
         const participantStatus = await db
-          .select({ status: groupMessageParticipants.status })
-          .from(groupMessageParticipants)
+          .select({ status: conversation_participants.status })
+          .from(conversation_participants)
           .where(
             and(
-              eq(groupMessageParticipants.threadId, thread.threadId),
-              eq(groupMessageParticipants.userId, userId),
+              eq(conversation_participants.threadId, thread.threadId),
+              eq(conversation_participants.userId, userId),
             ),
           );
 
@@ -5644,9 +5641,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Update thread's last message timestamp
         await db
-          .update(conversationThreads)
+          .update(conversations)
           .set({ lastMessageAt: new Date() })
-          .where(eq(conversationThreads.id, thread.threadId));
+          .where(eq(conversations.id, thread.threadId));
 
         console.log(
           `[DEBUG] Message sent to group ${groupId} thread ${thread.threadId}`,
@@ -5698,13 +5695,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         if (!isPlatformSuperAdmin) {
           const membership = await db
-            .select({ role: groupMemberships.role })
-            .from(groupMemberships)
+            .select({ role: conversation_participants.role })
+            .from(conversation_participants)
             .where(
               and(
-                eq(groupMemberships.groupId, groupId),
-                eq(groupMemberships.userId, currentUserId),
-                eq(groupMemberships.isActive, true),
+                eq(conversation_participants.groupId, groupId),
+                eq(conversation_participants.userId, currentUserId),
+                eq(conversation_participants.isActive, true),
               ),
             );
 
@@ -5718,13 +5715,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Only prevent removing other admins if current user is not a platform super admin
         if (!isPlatformSuperAdmin) {
           const targetMembership = await db
-            .select({ role: groupMemberships.role })
-            .from(groupMemberships)
+            .select({ role: conversation_participants.role })
+            .from(conversation_participants)
             .where(
               and(
-                eq(groupMemberships.groupId, groupId),
-                eq(groupMemberships.userId, targetUserId),
-                eq(groupMemberships.isActive, true),
+                eq(conversation_participants.groupId, groupId),
+                eq(conversation_participants.userId, targetUserId),
+                eq(conversation_participants.isActive, true),
               ),
             );
 
@@ -5740,37 +5737,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Get the thread for this group
         const [thread] = await db
-          .select({ threadId: conversationThreads.id })
-          .from(conversationThreads)
+          .select({ threadId: conversations.id })
+          .from(conversations)
           .where(
             and(
-              eq(conversationThreads.type, "group"),
-              eq(conversationThreads.referenceId, groupId.toString()),
-              eq(conversationThreads.isActive, true),
+              eq(conversations.type, "group"),
+              eq(conversations.referenceId, groupId.toString()),
+              eq(conversations.isActive, true),
             ),
           );
 
         if (thread) {
           // Update thread participant status to 'left'
           await db
-            .update(groupMessageParticipants)
+            .update(conversation_participants)
             .set({ status: "left" })
             .where(
               and(
-                eq(groupMessageParticipants.threadId, thread.threadId),
-                eq(groupMessageParticipants.userId, targetUserId),
+                eq(conversation_participants.threadId, thread.threadId),
+                eq(conversation_participants.userId, targetUserId),
               ),
             );
         }
 
         // Remove from group membership
         await db
-          .update(groupMemberships)
+          .update(conversation_participants)
           .set({ isActive: false })
           .where(
             and(
-              eq(groupMemberships.groupId, groupId),
-              eq(groupMemberships.userId, targetUserId),
+              eq(conversation_participants.groupId, groupId),
+              eq(conversation_participants.userId, targetUserId),
             ),
           );
 
@@ -5808,13 +5805,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         if (!isPlatformSuperAdmin) {
           const membership = await db
-            .select({ role: groupMemberships.role })
-            .from(groupMemberships)
+            .select({ role: conversation_participants.role })
+            .from(conversation_participants)
             .where(
               and(
-                eq(groupMemberships.groupId, groupId),
-                eq(groupMemberships.userId, currentUserId),
-                eq(groupMemberships.isActive, true),
+                eq(conversation_participants.groupId, groupId),
+                eq(conversation_participants.userId, currentUserId),
+                eq(conversation_participants.isActive, true),
               ),
             );
 
@@ -5827,13 +5824,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Update the member's role
         await db
-          .update(groupMemberships)
+          .update(conversation_participants)
           .set({ role })
           .where(
             and(
-              eq(groupMemberships.groupId, groupId),
-              eq(groupMemberships.userId, targetUserId),
-              eq(groupMemberships.isActive, true),
+              eq(conversation_participants.groupId, groupId),
+              eq(conversation_participants.userId, targetUserId),
+              eq(conversation_participants.isActive, true),
             ),
           );
 
@@ -5874,13 +5871,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // 1. Get the conversation thread for this group
         const [thread] = await db
-          .select({ threadId: conversationThreads.id })
-          .from(conversationThreads)
+          .select({ threadId: conversations.id })
+          .from(conversations)
           .where(
             and(
-              eq(conversationThreads.type, "group"),
-              eq(conversationThreads.referenceId, groupId.toString()),
-              eq(conversationThreads.isActive, true),
+              eq(conversations.type, "group"),
+              eq(conversations.referenceId, groupId.toString()),
+              eq(conversations.isActive, true),
             ),
           );
 
@@ -5895,31 +5892,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           // 3. Delete all thread participants
           const deletedParticipants = await db
-            .delete(groupMessageParticipants)
-            .where(eq(groupMessageParticipants.threadId, thread.threadId));
+            .delete(conversation_participants)
+            .where(eq(conversation_participants.threadId, thread.threadId));
           console.log(
             `[DEBUG] Deleted participants for thread ${thread.threadId}`,
           );
 
           // 4. Mark conversation thread as inactive
           await db
-            .update(conversationThreads)
+            .update(conversations)
             .set({ isActive: false })
-            .where(eq(conversationThreads.id, thread.threadId));
+            .where(eq(conversations.id, thread.threadId));
           console.log(`[DEBUG] Marked thread ${thread.threadId} as inactive`);
         }
 
         // 5. Delete all group memberships
         const deletedMemberships = await db
-          .delete(groupMemberships)
-          .where(eq(groupMemberships.groupId, groupId));
+          .delete(conversation_participants)
+          .where(eq(conversation_participants.groupId, groupId));
         console.log(`[DEBUG] Deleted memberships for group ${groupId}`);
 
         // 6. Mark the group as inactive
         await db
-          .update(messageGroups)
+          .update(conversations)
           .set({ isActive: false })
-          .where(eq(messageGroups.id, groupId));
+          .where(eq(conversations.id, groupId));
         console.log(`[DEBUG] Marked group ${groupId} as inactive`);
 
         console.log(
