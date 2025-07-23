@@ -1887,6 +1887,8 @@ export default function SandwichCollectionLog() {
           <BulkDataManager 
             onExportCSV={exportToCSV}
             onImportCSV={() => fileInputRef.current?.click()}
+            onCheckDuplicates={() => analyzeDuplicatesMutation.mutate()}
+            onCleanOGDuplicates={() => cleanDuplicatesMutation.mutate('og-duplicates')}
           />
         </DialogContent>
       </Dialog>
