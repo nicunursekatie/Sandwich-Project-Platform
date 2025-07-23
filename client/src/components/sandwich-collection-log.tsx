@@ -1038,40 +1038,54 @@ export default function SandwichCollectionLog() {
       </div>
       
       <div className="px-3 sm:px-6 py-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
-          <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-            <p className="text-xs sm:text-sm text-slate-500">{totalItems} total entries</p>
+        <div className="flex flex-col gap-3 mb-4">
+          {/* Stats - Mobile optimized */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-slate-500">{totalItems} entries</p>
+              {totalStats && (
+                <div className="text-right">
+                  <div className="text-lg font-bold text-amber-600">{totalStats.completeTotalSandwiches.toLocaleString()}</div>
+                  <div className="text-xs text-slate-500">sandwiches</div>
+                </div>
+              )}
+            </div>
             {totalStats && (
-              <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4 text-sm">
-                <span className="text-slate-600">
-                  <span className="font-medium text-amber-600">{totalStats.completeTotalSandwiches.toLocaleString()}</span> total sandwiches
-                </span>
-                <span className="text-slate-400 hidden sm:inline">|</span>
-                <span className="text-slate-500">
-                  {totalStats.individualSandwiches.toLocaleString()} individual + {totalStats.groupSandwiches.toLocaleString()} group
-                </span>
+              <div className="flex justify-center gap-6 text-sm bg-slate-50 rounded-lg py-2 px-3">
+                <div className="text-center">
+                  <div className="font-medium text-slate-900">{totalStats.individualSandwiches.toLocaleString()}</div>
+                  <div className="text-xs text-slate-500">individual</div>
+                </div>
+                <div className="w-px bg-slate-300"></div>
+                <div className="text-center">
+                  <div className="font-medium text-slate-900">{totalStats.groupSandwiches.toLocaleString()}</div>
+                  <div className="text-xs text-slate-500">group</div>
+                </div>
               </div>
             )}
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          
+          {/* Action buttons - Mobile optimized */}
+          <div className="flex flex-col sm:flex-row gap-2">
             {canCreateCollections && (
               <Button
                 onClick={() => setShowSubmitForm(true)}
                 variant="default"
                 size="sm"
-                className="flex items-center space-x-1 w-full sm:w-auto bg-[#236383] hover:bg-[#1d5470]"
+                className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-[#236383] hover:bg-[#1d5470] py-2.5"
               >
                 <Sandwich className="w-4 h-4" />
-                <span>Submit Collection</span>
+                <span className="font-medium">Submit Collection</span>
               </Button>
             )}
-            {canCreateCollections && (
+            <div className="flex gap-2 w-full sm:w-auto">
+              {canCreateCollections && (
               <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
                   <DialogTrigger asChild>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex items-center space-x-1 w-full sm:w-auto"
+                      className="flex items-center space-x-1 flex-1 sm:flex-none justify-center py-2.5"
                     >
                       <Plus className="w-4 h-4" />
                       <span>Quick Add</span>
@@ -1229,39 +1243,53 @@ export default function SandwichCollectionLog() {
                 </form>
               </DialogContent>
               </Dialog>
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center space-x-1 w-full sm:w-auto"
-            >
-              <Filter className="w-4 h-4" />
-              <span>Filter</span>
-            </Button>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center space-x-1 flex-1 sm:flex-none justify-center py-2.5"
+              >
+                <Filter className="w-4 h-4" />
+                <span>Filter</span>
+              </Button>
+              {canEditData && (
+                <Button
+                  onClick={() => setShowDataManagement(true)}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center space-x-2 flex-1 sm:flex-none justify-center py-2.5 btn-outline-tsp"
+                  style={{borderColor: 'var(--tsp-teal)', color: 'var(--tsp-teal)'}}
+                >
+                  <Database className="w-4 h-4" />
+                  <span className="hidden sm:inline">Data</span>
+                  <span className="sm:hidden">Data</span>
+                </Button>
+              )}
+            </div>
             {selectedCollections.size > 0 && canEditData && (
-              <>
+              <div className="flex gap-2 w-full mt-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handleBatchEdit}
-                  className="flex items-center"
+                  className="flex items-center flex-1 justify-center py-2.5"
                 >
                   <Edit className="w-4 h-4 mr-2" />
-                  Edit ({selectedCollections.size})
+                  <span>Edit ({selectedCollections.size})</span>
                 </Button>
                 {canDeleteData && (
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={handleBatchDelete}
-                    className="flex items-center text-red-600 hover:text-red-700"
+                    className="flex items-center flex-1 justify-center py-2.5 text-red-600 hover:text-red-700"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
-                    Delete ({selectedCollections.size})
+                    <span>Delete ({selectedCollections.size})</span>
                   </Button>
                 )}
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -1428,103 +1456,127 @@ export default function SandwichCollectionLog() {
                       : 'border-slate-200'
                 }`}
               >
-                {/* Header */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-3">
-                    {(canEditAllCollections || canEditCollection(user, collection)) && (
-                      <button
-                        onClick={() => handleSelectCollection(collection.id, !isSelected)}
-                        className="flex items-center"
-                      >
-                        {isSelected ? (
-                          <CheckSquare className="w-4 h-4 text-blue-600" />
-                        ) : (
-                          <Square className="w-4 h-4 text-slate-400 hover:text-slate-600" />
-                        )}
-                      </button>
-                    )}
-                    <div className={`flex items-center ${isInactiveHost ? 'text-gray-600' : 'text-slate-700'}`}>
-                      <Calendar className={`w-4 h-4 mr-1 ${isInactiveHost ? 'text-gray-500' : ''}`} />
-                      <span className="font-medium">{formatDate(collection.collectionDate)}</span>
+                {/* Mobile-first Header */}
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    {/* Date and Host on mobile */}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                      {(canEditAllCollections || canEditCollection(user, collection)) && (
+                        <button
+                          onClick={() => handleSelectCollection(collection.id, !isSelected)}
+                          className="flex items-center w-4 h-4 shrink-0"
+                        >
+                          {isSelected ? (
+                            <CheckSquare className="w-4 h-4 text-blue-600" />
+                          ) : (
+                            <Square className="w-4 h-4 text-slate-400 hover:text-slate-600" />
+                          )}
+                        </button>
+                      )}
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 flex-1">
+                        <div className={`flex items-center ${isInactiveHost ? 'text-gray-600' : 'text-slate-700'}`}>
+                          <Calendar className={`w-4 h-4 mr-1 ${isInactiveHost ? 'text-gray-500' : ''}`} />
+                          <span className="font-medium text-sm sm:text-base">{formatDate(collection.collectionDate)}</span>
+                        </div>
+                        <div className={`flex items-center ${isInactiveHost ? 'text-gray-500' : 'text-slate-600'}`}>
+                          <User className={`w-4 h-4 mr-1 ${isInactiveHost ? 'text-gray-400' : ''}`} />
+                          <span className="text-sm sm:text-base truncate max-w-[200px] sm:max-w-none">{collection.hostName}</span>
+                          {collection.hostName === 'OG Sandwich Project' && (
+                            <span className="ml-2 text-xs bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 px-2 py-0.5 rounded-full font-medium border border-amber-300 hidden sm:inline">
+                              👑 HISTORICAL
+                            </span>
+                          )}
+                          {isInactiveHost && (
+                            <span className="ml-2 text-xs bg-gray-300 text-gray-800 px-2 py-0.5 rounded-full font-medium hidden sm:inline">
+                              INACTIVE HOST
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <div className={`flex items-center ${isInactiveHost ? 'text-gray-500' : 'text-slate-600'}`}>
-                      <User className={`w-4 h-4 mr-1 ${isInactiveHost ? 'text-gray-400' : ''}`} />
-                      <span>{collection.hostName}</span>
+                    {/* Mobile badges */}
+                    <div className="flex gap-1 mt-1 sm:hidden">
                       {collection.hostName === 'OG Sandwich Project' && (
-                        <span className="ml-2 text-xs bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 px-2 py-0.5 rounded-full font-medium border border-amber-300">
+                        <span className="text-xs bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 px-2 py-0.5 rounded-full font-medium border border-amber-300">
                           👑 HISTORICAL
                         </span>
                       )}
                       {isInactiveHost && (
-                        <span className="ml-2 text-xs bg-gray-300 text-gray-800 px-2 py-0.5 rounded-full font-medium">
+                        <span className="text-xs bg-gray-300 text-gray-800 px-2 py-0.5 rounded-full font-medium">
                           INACTIVE HOST
                         </span>
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="text-right mr-3">
-                      <div className={`text-lg font-semibold ${isInactiveHost ? 'text-gray-700' : 'text-slate-900'}`}>{totalSandwiches}</div>
-                      <div className={`text-xs ${isInactiveHost ? 'text-gray-500' : 'text-slate-500'}`}>total sandwiches</div>
+                  {/* Total count and actions - mobile responsive */}
+                  <div className="flex flex-col items-end gap-2 ml-3 shrink-0">
+                    <div className="text-right">
+                      <div className={`text-xl sm:text-2xl font-bold ${isInactiveHost ? 'text-gray-700' : 'text-slate-900'}`}>{totalSandwiches}</div>
+                      <div className={`text-xs ${isInactiveHost ? 'text-gray-500' : 'text-slate-500'}`}>total</div>
                     </div>
-                    {canEditCollection(user, collection) && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEdit(collection)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                    )}
-                    {canDeleteCollection(user, collection) && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDelete(collection.id)}
-                        className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    )}
+                    <div className="flex items-center gap-1">
+                      {canEditCollection(user, collection) && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEdit(collection)}
+                          className="h-7 w-7 p-0 sm:h-8 sm:w-8"
+                        >
+                          <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </Button>
+                      )}
+                      {canDeleteCollection(user, collection) && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDelete(collection.id)}
+                          className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 sm:h-8 sm:w-8"
+                        >
+                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                {/* Details */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Details - Mobile optimized */}
+                <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                   {/* Individual Collections */}
                   <div className="bg-slate-50 rounded-lg p-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-slate-700">Individual Collections</span>
-                      <span className="text-sm font-semibold text-slate-900">{collection.individualSandwiches}</span>
+                      <div className="flex items-center">
+                        <User className="w-4 h-4 mr-2 text-slate-500" />
+                        <span className="text-sm font-medium text-slate-700">Individual</span>
+                      </div>
+                      <span className="text-lg font-bold text-slate-900">{collection.individualSandwiches}</span>
                     </div>
                   </div>
 
                   {/* Group Collections */}
                   <div className="bg-slate-50 rounded-lg p-3">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-slate-700">Group Collections</span>
-                      <span className="text-sm font-semibold text-slate-900">
+                      <div className="flex items-center">
+                        <Users className="w-4 h-4 mr-2 text-slate-500" />
+                        <span className="text-sm font-medium text-slate-700">Groups</span>
+                      </div>
+                      <span className="text-lg font-bold text-slate-900">
                         {Array.isArray(groupData) 
                           ? groupData.reduce((sum: number, group: any) => sum + (group.sandwichCount || 0), 0)
                           : 0}
                       </span>
                     </div>
                     {Array.isArray(groupData) && groupData.length > 0 && (
-                      <div className="space-y-1">
+                      <div className="space-y-1 max-h-16 overflow-y-auto">
                         {groupData.map((group: any, index: number) => (
-                          <div key={index} className="flex items-center justify-between text-xs">
-                            <span className="text-slate-600 flex items-center">
-                              <Users className="w-3 h-3 mr-1" />
-                              {group.groupName}
-                            </span>
-                            <span className="text-slate-700 font-medium">{group.sandwichCount}</span>
+                          <div key={index} className="flex items-center justify-between text-xs bg-white rounded px-2 py-1">
+                            <span className="text-slate-600 truncate max-w-[120px] sm:max-w-none">{group.groupName}</span>
+                            <span className="text-slate-700 font-medium ml-2">{group.sandwichCount}</span>
                           </div>
                         ))}
                       </div>
                     )}
                     {(!Array.isArray(groupData) || groupData.length === 0) && (
-                      <div className="text-xs text-slate-500">No group collections</div>
+                      <div className="text-xs text-slate-500 italic">No group collections</div>
                     )}
                   </div>
                 </div>
