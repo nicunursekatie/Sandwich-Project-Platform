@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import BulkDataManager from "@/components/bulk-data-manager";
+import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
@@ -61,6 +62,7 @@ export default function SandwichCollectionLog() {
   const [duplicateAnalysis, setDuplicateAnalysis] = useState<DuplicateAnalysis | null>(null);
   const [selectedCollections, setSelectedCollections] = useState<Set<number>>(new Set());
   const [showBatchEdit, setShowBatchEdit] = useState(false);
+  const [showSubmitForm, setShowSubmitForm] = useState(false);
   const [batchEditData, setBatchEditData] = useState({
     hostName: "",
     collectionDate: ""
@@ -273,7 +275,86 @@ export default function SandwichCollectionLog() {
   const totalPages = pagination?.totalPages || 1;
   const paginatedCollections = filteredCollections;
 
+  // Pagination Component
+  const PaginationControls = ({ position }: { position: 'top' | 'bottom' }) => (
+    <div className={`flex flex-col sm:flex-row items-center justify-between px-2 py-4 ${position === 'top' ? 'border-b' : 'border-t'} border-slate-200 gap-4`}>
+      <div className="flex items-center space-x-4">
+        <Select value={itemsPerPage.toString()} onValueChange={(value) => {
+          setItemsPerPage(Number(value));
+          setCurrentPage(1);
+        }}>
+          <SelectTrigger className="w-32">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="25">25 per page</SelectItem>
+            <SelectItem value="50">50 per page</SelectItem>
+            <SelectItem value="100">100 per page</SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="text-sm text-slate-600">
+          Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} entries
+        </div>
+      </div>
 
+      {totalPages > 1 && (
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(1)}
+            disabled={currentPage === 1}
+          >
+            First
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+
+          <div className="flex items-center space-x-1">
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              const pageNumber = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+              if (pageNumber > totalPages) return null;
+
+              return (
+                <Button
+                  key={pageNumber}
+                  variant={pageNumber === currentPage ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setCurrentPage(pageNumber)}
+                  className="w-10"
+                >
+                  {pageNumber}
+                </Button>
+              );
+            })}
+          </div>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(totalPages)}
+            disabled={currentPage === totalPages}
+          >
+            Last
+          </Button>
+        </div>
+      )}
+    </div>
+  );
 
   // Reset to first page when filters change
   React.useEffect(() => {
@@ -903,6 +984,8 @@ export default function SandwichCollectionLog() {
     setCurrentPage(1);
   };
 
+
+
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
@@ -967,18 +1050,29 @@ export default function SandwichCollectionLog() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {canCreateCollections && (
+              <Button
+                onClick={() => setShowSubmitForm(true)}
+                variant="default"
+                size="sm"
+                className="flex items-center space-x-1 w-full sm:w-auto bg-[#236383] hover:bg-[#1d5470]"
+              >
+                <Sandwich className="w-4 h-4" />
+                <span>Submit Collection</span>
+              </Button>
+            )}
+            {canCreateCollections && (
               <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center space-x-1 w-full sm:w-auto"
-                  >
-                    <Plus className="w-4 h-4" />
-                    <span>Add Collection</span>
-                  </Button>
-                </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center space-x-1 w-full sm:w-auto"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Quick Add</span>
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl">
                 <DialogHeader>
                   <DialogTitle>Add New Collection</DialogTitle>
                 </DialogHeader>
@@ -1283,6 +1377,10 @@ export default function SandwichCollectionLog() {
           </div>
         </div>
       )}
+      
+      {/* Top Pagination Controls */}
+      {totalItems > 0 && <PaginationControls position="top" />}
+
       <div className="p-6">
         {paginatedCollections.length > 0 && (
           <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-slate-200">
@@ -1448,89 +1546,11 @@ export default function SandwichCollectionLog() {
             </div>
           )}
         </div>
-
-        {/* Pagination Controls */}
-        {totalItems > 0 && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200">
-            <div className="flex items-center space-x-4">
-              <Select value={itemsPerPage.toString()} onValueChange={(value) => {
-                setItemsPerPage(Number(value));
-                setCurrentPage(1);
-              }}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="25">25 per page</SelectItem>
-                  <SelectItem value="50">50 per page</SelectItem>
-                  <SelectItem value="100">100 per page</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {totalPages > 1 && (
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(1)}
-                  disabled={currentPage === 1}
-                >
-                  First
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </Button>
-
-                <div className="flex items-center space-x-1">
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    const pageNumber = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
-                    if (pageNumber > totalPages) return null;
-
-                    return (
-                      <Button
-                        key={pageNumber}
-                        variant={pageNumber === currentPage ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setCurrentPage(pageNumber)}
-                        className="w-10"
-                      >
-                        {pageNumber}
-                      </Button>
-                    );
-                  })}
-                </div>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(totalPages)}
-                  disabled={currentPage === totalPages}
-                >
-                  Last
-                </Button>
-              </div>
-            )}
-
-            <div className="text-sm text-slate-600 text-center sm:text-left">
-              Page {currentPage} of {totalPages}
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Bottom Pagination Controls */}
+      {totalItems > 0 && <PaginationControls position="bottom" />}
+
 
       {/* Duplicate Analysis Modal */}
       <Dialog open={showDuplicateAnalysis} onOpenChange={setShowDuplicateAnalysis}>
@@ -1776,6 +1796,26 @@ export default function SandwichCollectionLog() {
             onExportCSV={exportToCSV}
             onImportCSV={() => fileInputRef.current?.click()}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Submit Collection Form Dialog */}
+      <Dialog open={showSubmitForm} onOpenChange={setShowSubmitForm}>
+        <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center">
+              <Sandwich className="w-5 h-5 mr-2 text-teal-600" />
+              Submit New Collection
+            </DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <SandwichCollectionForm 
+              onSuccess={() => {
+                setShowSubmitForm(false);
+                queryClient.invalidateQueries({ queryKey: ['/api/sandwich-collections'] });
+              }}
+            />
+          </div>
         </DialogContent>
       </Dialog>
     </div>

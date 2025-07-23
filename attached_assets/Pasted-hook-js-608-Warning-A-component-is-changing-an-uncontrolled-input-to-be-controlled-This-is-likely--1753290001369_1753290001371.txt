@@ -1,0 +1,139 @@
+hook.js:608 Warning: A component is changing an uncontrolled input to be controlled. This is likely caused by the value changing from undefined to a defined value, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components Error Component Stack
+    at input (<anonymous>)
+    at _c (input.tsx:6:6)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at _c3 (dialog.tsx:35:6)
+    at SandwichCollectionLog (sandwich-collection-log.tsx:49:21)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (dashboard.tsx:52:37)
+    at Router (App.tsx:18:49)
+    at ErrorBoundary (error-boundary.tsx:19:5)
+    at App (<anonymous>)
+overrideMethod	@	hook.js:608
+printWarning	@	chunk-276SZO74.js?v=88ca342b:521
+error	@	chunk-276SZO74.js?v=88ca342b:505
+updateWrapper	@	chunk-276SZO74.js?v=88ca342b:1968
+updateProperties	@	chunk-276SZO74.js?v=88ca342b:7762
+commitUpdate	@	chunk-276SZO74.js?v=88ca342b:8419
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17763
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17737
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17737
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17737
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17737
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17896
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17737
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17813
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17896
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17896
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17737
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17737
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17737
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17737
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17737
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17737
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17896
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17896
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17896
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17727
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17699
+recursivelyTraverseMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17685
+commitMutationEffectsOnFiber	@	chunk-276SZO74.js?v=88ca342b:17794
+commitMutationEffects	@	chunk-276SZO74.js?v=88ca342b:17663
+commitRootImpl	@	chunk-276SZO74.js?v=88ca342b:19347
+commitRoot	@	chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot	@	chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks	@	chunk-276SZO74.js?v=88ca342b:9119
+flushSync	@	chunk-276SZO74.js?v=88ca342b:18959
+finishEventHandler	@	chunk-276SZO74.js?v=88ca342b:3569
+batchedUpdates	@	chunk-276SZO74.js?v=88ca342b:3582
+dispatchEventForPluginEventSystem	@	chunk-276SZO74.js?v=88ca342b:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay	@	chunk-276SZO74.js?v=88ca342b:5478
+dispatchEvent	@	chunk-276SZO74.js?v=88ca342b:5472
+dispatchDiscreteEvent	@	chunk-276SZO74.js?v=88ca342b:5449
+Turn on 
