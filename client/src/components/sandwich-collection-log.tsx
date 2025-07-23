@@ -52,7 +52,7 @@ export default function SandwichCollectionLog() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Check user permissions for creating collections (automatically grants edit/delete of own)
-  const canCreateCollections = hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS);
+  const canCreateCollections = hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS);
   const canEditAllCollections = hasPermission(user, PERMISSIONS.EDIT_ALL_COLLECTIONS);
   const canDeleteAllCollections = hasPermission(user, PERMISSIONS.DELETE_ALL_COLLECTIONS);
   const canEditData = hasPermission(user, PERMISSIONS.EDIT_OWN_COLLECTIONS) || hasPermission(user, PERMISSIONS.EDIT_ALL_COLLECTIONS);
