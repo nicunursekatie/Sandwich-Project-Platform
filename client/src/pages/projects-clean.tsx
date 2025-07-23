@@ -28,7 +28,8 @@ import {
   Award,
   Trash2,
   Edit,
-  Settings
+  Settings,
+  Archive
 } from "lucide-react";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -78,6 +79,11 @@ export default function ProjectsClean() {
     refetchOnWindowFocus: true, // Refetch when user returns to tab
   });
 
+  // Fetch archived projects data
+  const { data: archivedProjects = [], isLoading: archiveLoading } = useQuery({
+    queryKey: ["/api/projects/archived"],
+  });
+
   // Filter and sort projects
   const filteredAndSortedProjects = allProjects
     .filter(project => {
@@ -85,10 +91,11 @@ export default function ProjectsClean() {
       let statusMatch = false;
       if (activeTab === "active") {
         statusMatch = project.status === "available" || project.status === "in_progress";
-      } else if (activeTab === "waiting") {
-        statusMatch = project.status === "waiting";
       } else if (activeTab === "completed") {
         statusMatch = project.status === "completed";
+      } else if (activeTab === "archived") {
+        // Archived projects are handled separately, don't show in regular filter
+        return false;
       }
       
       // Filter by category
@@ -243,6 +250,29 @@ export default function ProjectsClean() {
       toast({ 
         title: "Error", 
         description: "Failed to delete project.",
+        variant: "destructive" 
+      });
+    },
+  });
+
+  // Archive project mutation
+  const archiveProjectMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return await apiRequest('POST', `/api/projects/${id}/archive`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projects/archived"] });
+      toast({ 
+        title: "Project archived successfully!", 
+        description: "The completed project has been moved to archives." 
+      });
+    },
+    onError: (error: any) => {
+      console.error('Project archive failed:', error);
+      toast({ 
+        title: "Error", 
+        description: "Failed to archive project.",
         variant: "destructive" 
       });
     },
@@ -470,15 +500,15 @@ export default function ProjectsClean() {
   };
 
   const filterProjectsByStatus = (status: string) => {
-    if (status === "active") {
+    if (status === "in_progress") {
       return projects.filter((project: Project) => project.status === "in_progress");
     }
     return projects.filter((project: Project) => project.status === status);
   };
 
-  const activeProjects = filterProjectsByStatus("active");
-  const availableProjects = filterProjectsByStatus("available");
-  const waitingProjects = filterProjectsByStatus("waiting");
+  const activeProjects = projects.filter((project: Project) => 
+    project.status === "available" || project.status === "in_progress"
+  );
   const completedProjects = filterProjectsByStatus("completed");
 
   const renderProjectCard = (project: Project) => (
@@ -552,12 +582,7 @@ export default function ProjectsClean() {
                       <Play className="w-4 h-4 mr-2 text-blue-600" />
                       In Progress
                     </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={(e) => handleStatusQuickChange(project.id, 'waiting', e)}
-                    >
-                      <Pause className="w-4 h-4 mr-2 text-gray-600" />
-                      Waiting
-                    </DropdownMenuItem>
+
                     <DropdownMenuItem 
                       onClick={(e) => handleStatusQuickChange(project.id, 'completed', e)}
                     >
@@ -614,40 +639,62 @@ export default function ProjectsClean() {
             Due: {project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No date'}
           </div>
           
-          {/* Add kudos button for completed projects with assignees */}
+          {/* Add kudos and archive buttons for completed projects */}
           {project.status === 'completed' ? (
-            <div className="flex gap-1">
-              {/* Handle multiple assignees from assigneeIds array */}
-              {project.assigneeIds && project.assigneeIds.length > 0 ? (
-                project.assigneeIds.map((assigneeId, index) => {
-                  const assigneeName = project.assigneeNames?.[index] || `User ${assigneeId}`;
-                  return user?.id !== assigneeId ? (
+            <div className="flex gap-2 items-center">
+              {/* Archive button for completed projects */}
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (confirm('Archive this completed project? It will be moved to the archived projects section.')) {
+                    archiveProjectMutation.mutate(project.id);
+                  }
+                }}
+                disabled={archiveProjectMutation.isPending}
+                className="h-8 px-3 text-xs"
+              >
+                {archiveProjectMutation.isPending ? (
+                  <div className="animate-spin rounded-full h-3 w-3 border-b border-purple-600"></div>
+                ) : (
+                  <Archive className="w-3 h-3 mr-1" />
+                )}
+                Archive
+              </Button>
+              
+              {/* Kudos buttons */}
+              <div className="flex gap-1">
+                {/* Handle multiple assignees from assigneeIds array */}
+                {project.assigneeIds && project.assigneeIds.length > 0 ? (
+                  project.assigneeIds.map((assigneeId, index) => {
+                    const assigneeName = project.assigneeNames?.[index] || `User ${assigneeId}`;
+                    return user?.id !== assigneeId ? (
+                      <SendKudosButton
+                        key={assigneeId}
+                        recipientId={assigneeId}
+                        recipientName={assigneeName}
+                        contextType="project"
+                        contextId={project.id.toString()}
+                        entityName={project.title}
+                        size="sm"
+                      />
+                    ) : null;
+                  })
+                ) : (
+                  /* Handle single assignee from legacy assigneeId field */
+                  project.assigneeId && project.assigneeName && user?.id !== project.assigneeId ? (
                     <SendKudosButton
-                      key={assigneeId}
-                      recipientId={assigneeId}
-                      recipientName={assigneeName}
+                      recipientId={project.assigneeId}
+                      recipientName={project.assigneeName}
                       contextType="project"
                       contextId={project.id.toString()}
                       entityName={project.title}
                       size="sm"
                     />
-                  ) : null;
-                })
-              ) : (
-                /* Handle single assignee from legacy assigneeId field */
-                project.assigneeId && project.assigneeName && user?.id !== project.assigneeId ? (
-                  <SendKudosButton
-                    recipientId={project.assigneeId}
-                    recipientName={project.assigneeName}
-                    contextType="project"
-                    contextId={project.id.toString()}
-                    entityName={project.title}
-                    size="sm"
-                  />
-                ) : (
-                  <ArrowRight className="w-4 h-4 text-slate-400" />
-                )
-              )}
+                  ) : null
+                )}
+              </div>
             </div>
           ) : (
             <ArrowRight className="w-4 h-4 text-slate-400" />
@@ -787,45 +834,43 @@ export default function ProjectsClean() {
         </div>
       </div>
 
-      {/* Simple Mobile-First Tab Navigation */}
-      <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-2 w-full">
-          <Button
-            variant={activeTab === "active" ? "default" : "outline"}
-            onClick={() => setActiveTab("active")}
-            className="flex flex-col items-center p-4 h-16 text-xs"
-          >
-            <Play className="w-4 h-4 mb-1" />
-            <span>Active ({activeProjects.length})</span>
-          </Button>
-          <Button
-            variant={activeTab === "available" ? "default" : "outline"}
-            onClick={() => setActiveTab("available")}
-            className="flex flex-col items-center p-4 h-16 text-xs"
-          >
-            <Circle className="w-4 h-4 mb-1" />
-            <span>Available ({availableProjects.length})</span>
-          </Button>
-        </div>
+      {/* Big Category Buttons */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Button
+          variant={activeTab === "active" ? "default" : "outline"}
+          onClick={() => setActiveTab("active")}
+          className="h-24 flex flex-col items-center justify-center gap-2 text-base font-medium bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-blue-200"
+        >
+          <Play className="w-8 h-8 text-blue-600" />
+          <div className="text-center">
+            <div className="font-semibold text-blue-900">Active Projects</div>
+            <div className="text-sm text-blue-700">{activeProjects.length} projects in progress</div>
+          </div>
+        </Button>
         
-        <div className="grid grid-cols-2 gap-2 w-full">
-          <Button
-            variant={activeTab === "waiting" ? "default" : "outline"}
-            onClick={() => setActiveTab("waiting")}
-            className="flex flex-col items-center p-4 h-16 text-xs"
-          >
-            <Pause className="w-4 h-4 mb-1" />
-            <span>Waiting ({waitingProjects.length})</span>
-          </Button>
-          <Button
-            variant={activeTab === "completed" ? "default" : "outline"}
-            onClick={() => setActiveTab("completed")}
-            className="flex flex-col items-center p-4 h-16 text-xs"
-          >
-            <CheckCircle2 className="w-4 h-4 mb-1" />
-            <span>Done ({completedProjects.length})</span>
-          </Button>
-        </div>
+        <Button
+          variant={activeTab === "completed" ? "default" : "outline"}
+          onClick={() => setActiveTab("completed")}
+          className="h-24 flex flex-col items-center justify-center gap-2 text-base font-medium bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 border-green-200"
+        >
+          <CheckCircle2 className="w-8 h-8 text-green-600" />
+          <div className="text-center">
+            <div className="font-semibold text-green-900">Completed</div>
+            <div className="text-sm text-green-700">{completedProjects.length} ready to archive</div>
+          </div>
+        </Button>
+        
+        <Button
+          variant={activeTab === "archived" ? "default" : "outline"}
+          onClick={() => setActiveTab("archived")}
+          className="h-24 flex flex-col items-center justify-center gap-2 text-base font-medium bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-purple-200"
+        >
+          <Award className="w-8 h-8 text-purple-600" />
+          <div className="text-center">
+            <div className="font-semibold text-purple-900">Completed & Archived</div>
+            <div className="text-sm text-purple-700">View completed projects</div>
+          </div>
+        </Button>
       </div>
       
       {/* Project Content */}
@@ -836,43 +881,11 @@ export default function ProjectsClean() {
               <div className="text-center py-12">
                 <Play className="w-12 h-12 text-slate-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-slate-900 mb-2">No active projects</h3>
-                <p className="text-slate-500">Start working on available projects or create a new one.</p>
+                <p className="text-slate-500">Create new projects or start working on existing ones.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-4">
                 {activeProjects.map(renderProjectCard)}
-              </div>
-            )}
-          </>
-        )}
-        
-        {activeTab === "available" && (
-          <>
-            {availableProjects.length === 0 ? (
-              <div className="text-center py-12">
-                <Circle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-slate-900 mb-2">No available projects</h3>
-                <p className="text-slate-500">All projects are either active or completed.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4">
-                {availableProjects.map(renderProjectCard)}
-              </div>
-            )}
-          </>
-        )}
-        
-        {activeTab === "waiting" && (
-          <>
-            {waitingProjects.length === 0 ? (
-              <div className="text-center py-12">
-                <Pause className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-slate-900 mb-2">No waiting projects</h3>
-                <p className="text-slate-500">No projects are currently on hold.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4">
-                {waitingProjects.map(renderProjectCard)}
               </div>
             )}
           </>
@@ -884,11 +897,65 @@ export default function ProjectsClean() {
               <div className="text-center py-12">
                 <CheckCircle2 className="w-12 h-12 text-slate-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-slate-900 mb-2">No completed projects</h3>
-                <p className="text-slate-500">Completed projects will appear here.</p>
+                <p className="text-slate-500">Completed projects will appear here ready for archiving.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-4">
                 {completedProjects.map(renderProjectCard)}
+              </div>
+            )}
+          </>
+        )}
+        
+        {activeTab === "archived" && (
+          <>
+            {archiveLoading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
+                <p className="text-slate-500">Loading archived projects...</p>
+              </div>
+            ) : archivedProjects.length === 0 ? (
+              <div className="text-center py-12">
+                <Award className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-slate-900 mb-2">No Archived Projects</h3>
+                <p className="text-slate-500">Completed projects that have been archived will appear here.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {archivedProjects.map((project: any) => (
+                  <Card key={project.id} className="opacity-75 border-purple-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h3 className="text-base font-semibold text-slate-900 mb-1">
+                            {project.title}
+                          </h3>
+                          <p className="text-sm text-slate-600 mb-2">
+                            {project.description}
+                          </p>
+                          <div className="flex items-center gap-2 text-xs text-slate-500">
+                            <span>Completed: {project.completionDate}</span>
+                            <span>•</span>
+                            <span>Archived: {new Date(project.archivedAt).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Badge className="bg-purple-500 text-white text-xs">
+                            Archived
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {project.category}
+                          </Badge>
+                        </div>
+                      </div>
+                      {project.assigneeNames && (
+                        <div className="text-sm text-slate-600">
+                          <span className="font-medium">Completed by:</span> {project.assigneeNames}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             )}
           </>
@@ -1094,7 +1161,6 @@ export default function ProjectsClean() {
                   <SelectContent>
                     <SelectItem value="available">Available</SelectItem>
                     <SelectItem value="in_progress">In Progress</SelectItem>
-                    <SelectItem value="waiting">Waiting</SelectItem>
                     <SelectItem value="completed">Completed</SelectItem>
                   </SelectContent>
                 </Select>

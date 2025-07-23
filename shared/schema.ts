@@ -103,6 +103,41 @@ export const projects = pgTable("projects", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+// Archived projects table for completed projects
+export const archivedProjects = pgTable("archived_projects", {
+  id: serial("id").primaryKey(),
+  originalProjectId: integer("original_project_id").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  priority: text("priority").notNull().default("medium"),
+  category: text("category").notNull().default("technology"),
+  assigneeId: integer("assignee_id"),
+  assigneeName: text("assignee_name"),
+  assigneeIds: jsonb("assignee_ids").default('[]'),
+  assigneeNames: text("assignee_names"),
+  dueDate: text("due_date"),
+  startDate: text("start_date"),
+  completionDate: text("completion_date").notNull(),
+  progressPercentage: integer("progress_percentage").notNull().default(100),
+  notes: text("notes"),
+  requirements: text("requirements"),
+  deliverables: text("deliverables"),
+  resources: text("resources"),
+  blockers: text("blockers"),
+  tags: text("tags"),
+  estimatedHours: integer("estimated_hours"),
+  actualHours: integer("actual_hours"),
+  budget: varchar("budget"),
+  color: text("color").notNull().default("blue"),
+  createdBy: varchar("created_by"),
+  createdByName: varchar("created_by_name"),
+  createdAt: timestamp("created_at").notNull(),
+  completedAt: timestamp("completed_at").notNull().defaultNow(),
+  archivedAt: timestamp("archived_at").notNull().defaultNow(),
+  archivedBy: varchar("archived_by"),
+  archivedByName: varchar("archived_by_name"),
+});
+
 export const projectTasks = pgTable("project_tasks", {
   id: serial("id").primaryKey(),
   projectId: integer("project_id").notNull(),
@@ -426,6 +461,7 @@ export const projectDocuments = pgTable("project_documents", {
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertProjectSchema = createInsertSchema(projects).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertArchivedProjectSchema = createInsertSchema(archivedProjects).omit({ id: true, archivedAt: true });
 export const insertMessageSchema = createInsertSchema(messages).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertMessageRecipientSchema = createInsertSchema(messageRecipients).omit({ id: true, createdAt: true });
 export const insertMessageThreadSchema = createInsertSchema(messageThreads).omit({ id: true, createdAt: true });
@@ -457,6 +493,8 @@ export type InsertUser = z.infer<typeof insertUserSchema>;
 export type UpsertUser = typeof users.$inferInsert;
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = z.infer<typeof insertProjectSchema>;
+export type ArchivedProject = typeof archivedProjects.$inferSelect;
+export type InsertArchivedProject = z.infer<typeof insertArchivedProjectSchema>;
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type MessageRecipient = typeof messageRecipients.$inferSelect;

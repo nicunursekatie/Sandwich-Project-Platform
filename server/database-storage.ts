@@ -1,5 +1,5 @@
 import { 
-  users, projects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, suggestions, suggestionResponses, chatMessages,
+  users, projects, archivedProjects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, suggestions, suggestionResponses, chatMessages,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -132,6 +132,59 @@ export class DatabaseStorage implements IStorage {
   async deleteProject(id: number): Promise<boolean> {
     const result = await db.delete(projects).where(eq(projects.id, id));
     return (result.rowCount ?? 0) > 0;
+  }
+
+  // Archive functionality for completed projects
+  async archiveProject(id: number): Promise<boolean> {
+    const project = await this.getProject(id);
+    if (!project) return false;
+
+    // Create archived version
+    const archiveData = {
+      originalProjectId: project.id,
+      title: project.title,
+      description: project.description,
+      priority: project.priority,
+      category: project.category,
+      assigneeId: project.assigneeId,
+      assigneeName: project.assigneeName,
+      assigneeIds: project.assigneeIds,
+      assigneeNames: project.assigneeNames,
+      dueDate: project.dueDate,
+      startDate: project.startDate,
+      completionDate: project.completionDate || new Date().toISOString(),
+      progressPercentage: 100,
+      notes: project.notes,
+      requirements: project.requirements,
+      deliverables: project.deliverables,
+      resources: project.resources,
+      blockers: project.blockers,
+      tags: project.tags,
+      estimatedHours: project.estimatedHours,
+      actualHours: project.actualHours,
+      budget: project.budget,
+      createdBy: project.createdBy,
+      createdByName: project.createdByName,
+      originalCreatedAt: project.createdAt,
+      originalUpdatedAt: project.updatedAt,
+    };
+
+    // Insert into archived table
+    await db.insert(archivedProjects).values(archiveData);
+    
+    // Delete from active projects
+    await this.deleteProject(id);
+    
+    return true;
+  }
+
+  async getArchivedProjects(): Promise<any[]> {
+    return await db.select().from(archivedProjects).orderBy(desc(archivedProjects.createdAt));
+  }
+
+  async getArchivedProject(id: number): Promise<any | undefined> {
+    const [project] = await db.select().from(archivedProjects).where(eq(archivedProjects.id, id));
+    return project || undefined;
   }
 
   // Project Tasks

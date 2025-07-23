@@ -786,6 +786,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
+  // Archive project route
+  app.post(
+    "/api/projects/:id/archive",
+    isAuthenticated,
+    async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+          return res.status(400).json({ message: "Invalid project ID" });
+        }
+
+        // Check if project exists and is completed
+        const project = await storage.getProject(id);
+        if (!project) {
+          return res.status(404).json({ message: "Project not found" });
+        }
+
+        if (project.status !== "completed") {
+          return res.status(400).json({ message: "Only completed projects can be archived" });
+        }
+
+        // Check permissions
+        const canArchive = req.user?.permissions?.includes('manage_projects') ||
+                          req.user?.role === 'admin' || req.user?.role === 'super_admin';
+        
+        if (!canArchive) {
+          return res.status(403).json({ 
+            message: "Permission denied. Admin privileges required to archive projects." 
+          });
+        }
+
+        const archived = await storage.archiveProject(id);
+        if (!archived) {
+          return res.status(500).json({ message: "Failed to archive project" });
+        }
+
+        res.json({ message: "Project archived successfully" });
+      } catch (error) {
+        logger.error("Failed to archive project", error);
+        res.status(500).json({ message: "Failed to archive project" });
+      }
+    }
+  );
+
+  // Get archived projects
+  app.get("/api/projects/archived", async (req, res) => {
+    try {
+      const archivedProjects = await storage.getArchivedProjects();
+      res.json(archivedProjects);
+    } catch (error) {
+      logger.error("Failed to fetch archived projects", error);
+      res.status(500).json({ message: "Failed to fetch archived projects" });
+    }
+  });
+
   // Project Files
   app.post(
     "/api/projects/:id/files",
