@@ -98,6 +98,30 @@ export default function BulkDataManager({
     }
   });
 
+  // Fix data corruption mutation
+  const fixDataMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest('PATCH', '/api/sandwich-collections/fix-data-corruption');
+      return response;
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Data Issues Fixed",
+        description: `Successfully fixed ${data.fixedCount} data corruption issues out of ${data.totalChecked} records checked.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/collection-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/sandwich-collections'] });
+    },
+    onError: (error) => {
+      console.error("Data fix failed:", error);
+      toast({
+        title: "Fix Failed",
+        description: "There was an error fixing data issues. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   // Calculate progress percentage
   const progress = stats ? 
     Math.round((stats.mappedRecords / stats.totalRecords) * 100) : 0;
@@ -323,6 +347,35 @@ export default function BulkDataManager({
                   >
                     <span className="mr-2">👑</span>
                     <span>Clean OG Duplicates</span>
+                  </Button>
+                </div>
+
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="font-medium">Fix Data Issues</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Fix duplicated totals and misplaced group data
+                      </p>
+                    </div>
+                  </div>
+                  <Button 
+                    onClick={() => fixDataMutation.mutate()}
+                    disabled={fixDataMutation.isPending}
+                    className="w-full flex items-center space-x-2 bg-blue-50 border-blue-300 text-blue-700 hover:bg-blue-100"
+                    variant="outline"
+                  >
+                    {fixDataMutation.isPending ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        <span>Fixing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Database className="w-4 h-4" />
+                        <span>Fix Data Issues</span>
+                      </>
+                    )}
                   </Button>
                 </div>
               </div>

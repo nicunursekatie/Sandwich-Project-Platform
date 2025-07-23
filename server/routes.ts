@@ -1855,9 +1855,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
             individual > 0 && groupTotal === 0) {
           // Move individual count to group data
           const newGroupData = [{
-            name: "Groups Collection",
+            name: "Group",
             count: individual,
-            groupName: "Groups Collection", 
+            groupName: "Group", 
             sandwichCount: individual
           }];
           updates.individualSandwiches = 0;
