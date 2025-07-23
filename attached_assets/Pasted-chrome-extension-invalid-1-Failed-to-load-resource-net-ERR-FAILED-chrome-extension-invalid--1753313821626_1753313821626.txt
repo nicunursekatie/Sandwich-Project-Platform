@@ -1,0 +1,22 @@
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+index-Czempa_k.js:708 Connecting to WebSocket at: wss://sandwich-project-platform-katielong2316.replit.app/notifications
+index-Czempa_k.js:779 Dashboard activeSection changed to: dashboard
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+index-Czempa_k.js:708 WebSocket connected successfully
+index-Czempa_k.js:705 Messaging WebSocket connected
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+index-Czempa_k.js:708 Navigation click: collections
+index-Czempa_k.js:779 Dashboard setActiveSection called with: collections
+index-Czempa_k.js:779 Dashboard activeSection changed to: collections
