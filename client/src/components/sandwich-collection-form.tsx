@@ -252,9 +252,9 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     
     if (isAutoGroupOnlyMode) {
       finalHostName = "Groups";
-      // In group-only mode, put all sandwiches in individual field and zero out group field to avoid double counting
-      finalIndividualSandwiches = totalGroupSandwiches;
-      finalGroupSandwiches = 0; // Avoid double counting - sandwiches already in individual field
+      // In group-only mode, put all sandwiches in group field and zero out individual field
+      finalIndividualSandwiches = 0; // No individual sandwiches for group-only entries
+      finalGroupSandwiches = totalGroupSandwiches; // All sandwiches are from groups
       finalGroupCollections = groupCollectionsString; // Keep the group breakdown for reference
     }
 
