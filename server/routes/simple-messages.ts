@@ -66,18 +66,29 @@ router.get("/sent", requireAuth, async (req, res) => {
     // Get messages where user is sender
     const messages = await storage.getUserMessages(userId, 'sent');
     
-    // Transform to simple message format
-    const simpleMessages: SimpleMessage[] = messages.map(msg => ({
-      id: msg.id,
-      senderId: userId,
-      senderName: (req.user as any).email || 'Unknown User',
-      recipientId: msg.contextId || 'unknown',
-      recipientName: 'Unknown User', // Would need to lookup recipient
-      subject: msg.contextType || 'No Subject',
-      content: msg.content,
-      createdAt: msg.createdAt?.toISOString() || new Date().toISOString(),
-      read: true // Sent messages are always "read" by sender
-    }));
+    // Get all users to lookup recipient names
+    const allUsers = await storage.getAllUsers();
+    const userMap = new Map(allUsers.map(user => [user.id, user]));
+    
+    // Transform to simple message format with proper recipient names
+    const simpleMessages: SimpleMessage[] = messages.map(msg => {
+      const recipient = userMap.get(msg.contextId || '');
+      const recipientName = recipient 
+        ? `${recipient.firstName || ''} ${recipient.lastName || ''}`.trim() || recipient.email
+        : 'Unknown Recipient';
+        
+      return {
+        id: msg.id,
+        senderId: userId,
+        senderName: (req.user as any).email || 'Unknown User',
+        recipientId: msg.contextId || 'unknown',
+        recipientName,
+        subject: msg.contextType || 'No Subject',
+        content: msg.content,
+        createdAt: msg.createdAt?.toISOString() || new Date().toISOString(),
+        read: true // Sent messages are always "read" by sender
+      };
+    });
     
     res.json(simpleMessages);
   } catch (error) {

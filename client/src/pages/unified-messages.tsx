@@ -91,9 +91,9 @@ export default function UnifiedMessagesPage() {
         ...(sentData.messages || []).map((msg: any) => ({
           ...msg,
           type: 'sent',
-          // For sent messages, we need to get recipient info from the message recipients
-          recipientId: 'unknown', // Will be filled in by backend if available
-          recipientName: 'Recipients'
+          // Use actual recipient data from the message
+          recipientId: msg.recipientId || 'unknown',
+          recipientName: msg.recipientName || msg.recipient || 'Unknown Recipient'
         }))
       ];
       
