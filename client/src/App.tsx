@@ -41,11 +41,34 @@ function Router() {
     );
   }
 
-  // If not authenticated, show public routes
+  // If not authenticated, show public routes with login option
   if (!isAuthenticated) {
     return (
       <Switch>
         <Route path="/signup" component={SignupPage} />
+        <Route path="/login">
+          {() => {
+            // Redirect to the backend login page
+            window.location.href = "/api/login";
+            return <LoadingState text="Redirecting to login..." size="lg" className="min-h-screen" />;
+          }}
+        </Route>
+        <Route path="/stream-messages">
+          {() => (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+              <div className="max-w-md p-6 bg-white rounded-lg shadow-lg text-center">
+                <h2 className="text-xl font-semibold text-blue-600 mb-2">Authentication Required</h2>
+                <p className="text-gray-600 mb-4">Please log in to access the messaging system.</p>
+                <button 
+                  onClick={() => window.location.href = "/api/login"}
+                  className="px-6 py-2 bg-[#236383] text-white rounded hover:bg-[#1a4d61] transition-colors"
+                >
+                  Login to Continue
+                </button>
+              </div>
+            </div>
+          )}
+        </Route>
         <Route path="/" component={Landing} />
         <Route component={Landing} />
       </Switch>
