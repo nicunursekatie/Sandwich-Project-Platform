@@ -277,21 +277,36 @@ export default function StreamMessagesPage() {
       console.log('📥 Fetching messages from Stream Chat for user:', currentUserId);
       console.log('📋 Available users for name lookup:', availableUsers.map(u => ({ id: u.id, name: u.displayName })));
       
-      // Get all channels the user is a member of - use the actual user ID format
-      const filter = { 
-        type: 'messaging',
-        members: { $in: [currentUserId] } 
-      };
-      const sort = [{ last_message_at: -1 }];
+      // Get all channels the user is a member of - try multiple filter variations
+      const filters = [
+        { members: { $in: [currentUserId] } },
+        { members: { $in: [`user_${currentUserId}`] } },
+        { members: { $in: [currentUserId, `user_${currentUserId}`] } },
+        {} // Get all channels as fallback
+      ];
       
-      console.log('Querying channels with filter:', filter);
-      const channelsResponse = await client.queryChannels(filter, sort, {
-        watch: true,
-        state: true,
-        limit: 30
-      });
-      
-      console.log('Query returned channels:', channelsResponse.length, 'channels');
+      let channelsResponse: any[] = [];
+      for (let i = 0; i < filters.length; i++) {
+        const filter = filters[i];
+        console.log(`Trying filter ${i + 1}:`, filter);
+        const sort = [{ last_message_at: -1 }];
+        
+        try {
+          channelsResponse = await client.queryChannels(filter, sort, {
+            watch: true,
+            state: true,
+            limit: 30
+          });
+          
+          console.log(`Filter ${i + 1} returned channels:`, channelsResponse.length, 'channels');
+          if (channelsResponse.length > 0) {
+            console.log('✅ Found channels with filter:', filter);
+            break; // Use the first filter that returns results
+          }
+        } catch (error: any) {
+          console.log(`Filter ${i + 1} failed:`, error?.message || 'Unknown error');
+        }
+      }
       channelsResponse.forEach((channel, index) => {
         console.log(`Channel ${index + 1}: ${channel.id}, members:`, channel.state?.members ? Object.keys(channel.state.members) : []);
       });
@@ -306,7 +321,7 @@ export default function StreamMessagesPage() {
         
         if (messagesResponse.messages) {
           console.log(`Channel ${channel.id} has ${messagesResponse.messages.length} messages`);
-          const formattedMessages = messagesResponse.messages.map(msg => {
+          const formattedMessages = messagesResponse.messages.map((msg: any) => {
             // Get recipient names (other members in the channel) - improved user lookup
             const recipientNames = channel.state?.members ? 
               Object.keys(channel.state.members)
@@ -467,9 +482,12 @@ export default function StreamMessagesPage() {
           availableUsers.find(u => u.id === id)?.displayName
         ).join(', ');
         
-        // Refresh message list to show newly sent message
+        // Refresh message list to show newly sent message with delay to allow Stream processing
         console.log('🔄 Refreshing message list after send...');
-        await fetchMessages();
+        setTimeout(async () => {
+          console.log('📡 Delayed fetch after message send...');
+          await fetchMessages();
+        }, 1500);
         
         toast({
           title: "Message Sent",
