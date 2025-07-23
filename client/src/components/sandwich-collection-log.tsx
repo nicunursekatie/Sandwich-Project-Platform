@@ -270,10 +270,14 @@ export default function SandwichCollectionLog() {
       return sortConfig.direction === 'asc' ? comparison : -comparison;
     });
 
-  // Use server-side pagination data
-  const totalItems = pagination?.total || 0;
-  const totalPages = pagination?.totalPages || 1;
-  const paginatedCollections = filteredCollections;
+  // For filtered/sorted data, use actual filtered count; otherwise use server pagination
+  const totalItems = filteredCollections.length > 0 ? filteredCollections.length : pagination?.total || 0;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+  // Apply pagination to filtered results
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedCollections = filteredCollections.slice(startIndex, endIndex);
 
   // Pagination Component
   const PaginationControls = ({ position }: { position: 'top' | 'bottom' }) => (
