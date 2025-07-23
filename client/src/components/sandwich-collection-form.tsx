@@ -423,7 +423,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
 
           <p className="text-sm text-gray-600 mt-3">
-            If you collected sandwiches from a group record their totals along with their group name in the group collections field. Do not include them in your weekly total.
+            List any groups/organizations and their counts here. Don't add these to your individual total.
           </p>
         </div>
 
