@@ -1126,13 +1126,13 @@ export default function SandwichCollectionLog() {
           <div className="flex flex-col sm:flex-row gap-2">
             {canCreateCollections && (
               <Button
-                onClick={() => setShowSubmitForm(true)}
+                onClick={() => setShowSubmitForm(!showSubmitForm)}
                 variant="default"
                 size="sm"
                 className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-[#236383] hover:bg-[#1d5470] py-2.5"
               >
                 <Sandwich className="w-4 h-4" />
-                <span className="font-medium">Submit Collection</span>
+                <span className="font-medium">{showSubmitForm ? 'Hide Form' : 'Submit Collection'}</span>
               </Button>
             )}
             <div className="flex gap-2 w-full sm:w-auto">
@@ -1465,6 +1465,22 @@ export default function SandwichCollectionLog() {
               <span>Clear Filters</span>
             </Button>
           </div>
+        </div>
+      )}
+      
+      {/* Embedded Submit Collection Form */}
+      {showSubmitForm && (
+        <div className="mx-6 mb-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+          <div className="flex items-center mb-4">
+            <Sandwich className="w-5 h-5 mr-2 text-teal-600" />
+            <h3 className="text-lg font-semibold text-slate-900">Submit New Collection</h3>
+          </div>
+          <SandwichCollectionForm 
+            onSuccess={() => {
+              setShowSubmitForm(false);
+              queryClient.invalidateQueries({ queryKey: ['/api/sandwich-collections'] });
+            }}
+          />
         </div>
       )}
       
@@ -1994,25 +2010,7 @@ export default function SandwichCollectionLog() {
         </DialogContent>
       </Dialog>
 
-      {/* Submit Collection Form Dialog */}
-      <Dialog open={showSubmitForm} onOpenChange={setShowSubmitForm}>
-        <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center">
-              <Sandwich className="w-5 h-5 mr-2 text-teal-600" />
-              Submit New Collection
-            </DialogTitle>
-          </DialogHeader>
-          <div className="mt-4">
-            <SandwichCollectionForm 
-              onSuccess={() => {
-                setShowSubmitForm(false);
-                queryClient.invalidateQueries({ queryKey: ['/api/sandwich-collections'] });
-              }}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
+
     </div>
   );
 }
