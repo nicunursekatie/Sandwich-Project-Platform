@@ -48,6 +48,7 @@ import Governance from "@/pages/governance";
 import UnifiedMessagesPage from "@/pages/unified-messages";
 import AdminPage from "@/pages/admin";
 import StreamMessagesPage from "@/pages/stream-messages-clean";
+import DirectMessages from "@/pages/direct-messages";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -156,8 +157,9 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "projects":
         return <ProjectsClean />;
       case "real-time-messages":
+        return <RealTimeMessages />;
       case "messages":
-        return <UnifiedMessagesPage />;
+        return <DirectMessages />;
       case "stream-messages":
         return <StreamMessagesPage />;
       case "chat":
