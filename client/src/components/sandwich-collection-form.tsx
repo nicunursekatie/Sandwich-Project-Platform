@@ -298,7 +298,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                   id="hostName"
                   value={hostName}
                   onChange={(e) => setHostName(e.target.value)}
-                  placeholder="Enter custom host name (optional if group data provided)"
+                  placeholder="Enter custom host name"
                 />
                 <Button
                   type="button"
@@ -364,7 +364,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               min="0"
               value={individualSandwiches}
               onChange={(e) => setIndividualSandwiches(e.target.value)}
-              placeholder="Number of individual sandwiches (optional if group data provided)"
+              placeholder="Number of individual sandwiches"
             />
         </div>
 
