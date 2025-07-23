@@ -934,10 +934,9 @@ export default function StreamMessagesPage() {
                   )}
                 </div>
               </div>
-              )}
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
