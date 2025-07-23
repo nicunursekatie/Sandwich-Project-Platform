@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import type { Project, Message, MeetingMinutes, DriveLink, WeeklyReport, SandwichCollection, Meeting } from "@shared/schema";
@@ -94,8 +93,7 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
         </div>
       </div>
 
-      {/* Sandwich Collection Form */}
-      <SandwichCollectionForm />
+
 
 
 
