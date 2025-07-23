@@ -277,8 +277,6 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
             </div>
           </div>
         );
-      case "collections":
-        return <SandwichCollectionLog />;
       case "hosts":
         return <HostsManagement />;
       case "recipients":

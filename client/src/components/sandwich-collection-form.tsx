@@ -259,9 +259,9 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       individualSandwiches: finalIndividualSandwiches,
       groupCollections: finalGroupCollections,
       createdBy: user?.id,
-      createdByName: user?.firstName && user?.lastName 
+      createdByName: user && 'firstName' in user && 'lastName' in user && user.firstName && user.lastName 
         ? `${user.firstName} ${user.lastName}` 
-        : user?.displayName || user?.email || 'Unknown User',
+        : user && 'displayName' in user && user.displayName || user?.email || 'Unknown User',
     });
   };
 

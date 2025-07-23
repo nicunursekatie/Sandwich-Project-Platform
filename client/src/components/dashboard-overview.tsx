@@ -99,7 +99,7 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
 
       {/* Quick Collection Entry - Only show if user has permission */}
-      {hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) && (
+      {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
         <div className="bg-card rounded-lg border border-border">
           <div className="px-4 py-3 border-b border-border flex justify-between items-center">
             <h2 className="text-base font-sub-heading text-primary">Quick Collection Entry</h2>
@@ -234,7 +234,7 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
                   <div className="flex justify-between items-start mb-1">
                     <span className="text-sm font-medium text-slate-900">{message.sender}</span>
                     <span className="text-xs text-slate-500">
-                      {new Date(message.timestamp).toLocaleDateString()}
+                      {message.createdAt ? new Date(message.createdAt).toLocaleDateString() : 'Recent'}
                     </span>
                   </div>
                   <p className="text-xs text-slate-600">
