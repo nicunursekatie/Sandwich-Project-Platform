@@ -38,6 +38,7 @@ export const PERMISSIONS = {
   ACCESS_SUGGESTIONS: 'access_suggestions',
   ACCESS_SANDWICH_DATA: 'access_sandwich_data',
   ACCESS_GOVERNANCE: 'access_governance',
+  ACCESS_WORK_LOGS: 'access_work_logs',
   
   // Simplified management permissions for each section
   MANAGE_HOSTS: 'manage_hosts',
@@ -47,16 +48,29 @@ export const PERMISSIONS = {
   MANAGE_MEETINGS: 'manage_meetings',
   MANAGE_SUGGESTIONS: 'manage_suggestions',
   SUBMIT_SUGGESTIONS: 'submit_suggestions',
+  MANAGE_COLLECTIONS: 'manage_collections',
   
   // Content creation permissions (automatically grants edit/delete of own content)
   CREATE_PROJECTS: 'create_projects',
   CREATE_COLLECTIONS: 'create_collections',
+  CREATE_WORK_LOGS: 'create_work_logs',
+  EDIT_OWN_PROJECTS: 'edit_own_projects',
+  DELETE_OWN_PROJECTS: 'delete_own_projects',
+  EDIT_OWN_COLLECTIONS: 'edit_own_collections',
+  DELETE_OWN_COLLECTIONS: 'delete_own_collections',
   
   // Override permissions for editing/deleting others' content
   EDIT_ALL_PROJECTS: 'edit_all_projects',
   DELETE_ALL_PROJECTS: 'delete_all_projects',
   EDIT_ALL_COLLECTIONS: 'edit_all_collections',
   DELETE_ALL_COLLECTIONS: 'delete_all_collections',
+  
+  // Work log specific permissions
+  EDIT_OWN_WORK_LOGS: 'edit_own_work_logs',
+  DELETE_OWN_WORK_LOGS: 'delete_own_work_logs',
+  VIEW_ALL_WORK_LOGS: 'view_all_work_logs',
+  EDIT_ALL_WORK_LOGS: 'edit_all_work_logs',
+  DELETE_ALL_WORK_LOGS: 'delete_all_work_logs',
   
   // Data action permissions
   EXPORT_DATA: 'export_data',

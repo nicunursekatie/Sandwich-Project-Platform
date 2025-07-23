@@ -6,9 +6,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 
 export default function WorkLogPage() {
   const { user } = useAuth();
+
+  // Check permissions
+  const canCreateLogs = hasPermission(user, PERMISSIONS.CREATE_WORK_LOGS);
+  const canEditOwnLogs = hasPermission(user, PERMISSIONS.EDIT_OWN_WORK_LOGS);
+  const canDeleteOwnLogs = hasPermission(user, PERMISSIONS.DELETE_OWN_WORK_LOGS);
+  const canViewAllLogs = hasPermission(user, PERMISSIONS.VIEW_ALL_WORK_LOGS);
+  const canEditAllLogs = hasPermission(user, PERMISSIONS.EDIT_ALL_WORK_LOGS);
+  const canDeleteAllLogs = hasPermission(user, PERMISSIONS.DELETE_ALL_WORK_LOGS);
   const [description, setDescription] = useState("");
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -62,17 +71,18 @@ export default function WorkLogPage() {
 
   return (
     <div className="max-w-2xl mx-auto py-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Log Your Work</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={e => {
-              e.preventDefault();
-              createLog.mutate();
-            }}
-            className="space-y-4"
+      {canCreateLogs && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Log Your Work</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form
+              onSubmit={e => {
+                e.preventDefault();
+                createLog.mutate();
+              }}
+              className="space-y-4"
           >
             <Textarea
               value={description}
@@ -111,11 +121,14 @@ export default function WorkLogPage() {
           </form>
         </CardContent>
       </Card>
+      )}
 
       <div className="mt-8">
         <Card>
           <CardHeader>
-            <CardTitle>My Work Logs</CardTitle>
+            <CardTitle>
+              {canViewAllLogs ? "All Work Logs" : "My Work Logs"}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading && <div className="py-4 text-gray-500">Loading work logs...</div>}
@@ -138,7 +151,7 @@ export default function WorkLogPage() {
                       {log.userId !== user?.id && <span className="ml-2 text-blue-600">(by other user)</span>}
                     </div>
                   </div>
-                  {(user?.role === "super_admin" || user?.email === 'mdlouza@gmail.com' || log.userId === user?.id) && (
+                  {((canDeleteOwnLogs && log.userId === user?.id) || canDeleteAllLogs) && (
                     <Button
                       variant="destructive"
                       size="sm"

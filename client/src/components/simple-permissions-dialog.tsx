@@ -92,6 +92,14 @@ const PERMISSION_GROUPS = [
       { key: PERMISSIONS.ACCESS_SUGGESTIONS, label: "View Suggestions", icon: Eye, description: "View suggestion portal" },
       { key: PERMISSIONS.SUBMIT_SUGGESTIONS, label: "Submit Suggestions", icon: Lightbulb, description: "Submit your own suggestions" },
       { key: PERMISSIONS.MANAGE_SUGGESTIONS, label: "Manage All Suggestions", icon: Shield, description: "Review and respond to all suggestions" },
+      
+      { key: PERMISSIONS.ACCESS_WORK_LOGS, label: "View Work Logs", icon: Eye, description: "Access work logs section" },
+      { key: PERMISSIONS.CREATE_WORK_LOGS, label: "Create Work Logs", icon: Edit, description: "Submit your own work log entries" },
+      { key: PERMISSIONS.EDIT_OWN_WORK_LOGS, label: "Edit Own Work Logs", icon: Edit, description: "Edit your own work log entries" },
+      { key: PERMISSIONS.DELETE_OWN_WORK_LOGS, label: "Delete Own Work Logs", icon: Edit, description: "Delete your own work log entries" },
+      { key: PERMISSIONS.VIEW_ALL_WORK_LOGS, label: "View All Work Logs", icon: Eye, description: "View everyone's work logs (admin/supervisor)" },
+      { key: PERMISSIONS.EDIT_ALL_WORK_LOGS, label: "Edit All Work Logs", icon: Shield, description: "Edit any work log entry (admin level)" },
+      { key: PERMISSIONS.DELETE_ALL_WORK_LOGS, label: "Delete All Work Logs", icon: Shield, description: "Delete any work log entry (admin level)" },
     ]
   },
   {
@@ -144,6 +152,7 @@ const PERMISSION_GROUPS = [
       { key: PERMISSIONS.ACCESS_ANALYTICS, label: "Analytics Section", icon: TrendingUp, description: "Show Analytics in Operations" },
       { key: PERMISSIONS.ACCESS_REPORTS, label: "Reports Section", icon: FileText, description: "Show Reports in Operations" },
       { key: PERMISSIONS.ACCESS_SANDWICH_DATA, label: "Sandwich Data", icon: PieChart, description: "Access to sandwich totals data sheet" },
+      { key: PERMISSIONS.ACCESS_WORK_LOGS, label: "Work Logs Section", icon: Calendar, description: "Show Work Logs in navigation" },
     ]
   },
   {

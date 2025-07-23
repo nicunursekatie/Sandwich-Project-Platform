@@ -152,7 +152,7 @@ async function startServer() {
 
       ws.on('close', () => {
         // Remove client from map when disconnected
-        for (const [userId, client] of clients.entries()) {
+        for (const [userId, client] of Array.from(clients.entries())) {
           if (client === ws) {
             clients.delete(userId);
             console.log(`User ${userId} disconnected from notifications`);
@@ -171,7 +171,7 @@ async function startServer() {
       console.log('Broadcasting message to', clients.size, 'connected clients');
       
       // Broadcast to all connected clients
-      for (const [userId, ws] of clients.entries()) {
+      for (const [userId, ws] of Array.from(clients.entries())) {
         if (ws.readyState === 1) { // WebSocket.OPEN
           try {
             ws.send(JSON.stringify(data));
@@ -187,7 +187,7 @@ async function startServer() {
       }
     };
 
-    httpServer.listen(finalPort, host, () => {
+    httpServer.listen(Number(finalPort), host, () => {
       console.log(`✓ Server is running on http://${host}:${finalPort}`);
       console.log(`✓ WebSocket server ready on ws://${host}:${finalPort}/notifications`);
       console.log(`✓ Environment: ${process.env.NODE_ENV || "development"}`);
@@ -227,12 +227,12 @@ async function startServer() {
             } catch (error) {
               console.log(
                 "⚠ Vite setup failed, continuing without it:",
-                error.message,
+                (error as Error).message,
               );
             }
           } else {
               // Add catch-all for unknown routes before SPA
-              app.use("*", (req, res, next) => {
+              app.use("*", (req: Request, res: Response, next: NextFunction) => {
                 console.log(`Catch-all route hit: ${req.method} ${req.originalUrl}`);
                 if (req.originalUrl.startsWith('/api')) {
                   return res.status(404).json({ error: `API route not found: ${req.originalUrl}` });
