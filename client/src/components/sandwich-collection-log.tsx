@@ -600,9 +600,7 @@ export default function SandwichCollectionLog() {
 
   const analyzeDuplicatesMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch("/api/sandwich-collections/analyze-duplicates");
-      if (!response.ok) throw new Error('Failed to analyze duplicates');
-      return response.json() as Promise<DuplicateAnalysis>;
+      return apiRequest('GET', '/api/sandwich-collections/analyze-duplicates') as Promise<DuplicateAnalysis>;
     },
     onSuccess: (result: DuplicateAnalysis) => {
       setDuplicateAnalysis(result);
@@ -623,13 +621,7 @@ export default function SandwichCollectionLog() {
 
   const cleanDuplicatesMutation = useMutation({
     mutationFn: async (mode: 'exact' | 'suspicious' | 'og-duplicates') => {
-      const response = await fetch("/api/sandwich-collections/clean-duplicates", {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode })
-      });
-      if (!response.ok) throw new Error('Failed to clean duplicates');
-      return response.json();
+      return apiRequest('DELETE', '/api/sandwich-collections/clean-duplicates', { mode });
     },
     onSuccess: (result: any) => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
@@ -1691,10 +1683,13 @@ export default function SandwichCollectionLog() {
               {duplicateAnalysis.suspiciousPatterns > 0 && (
                 <div className="space-y-3">
                   <h3 className="font-medium text-slate-900">Suspicious Patterns ({duplicateAnalysis.suspiciousPatterns})</h3>
+                  <div className="text-sm text-slate-600 mb-2">
+                    These entries have problematic host names like "Groups", "Test", empty names, or obvious data entry errors.
+                  </div>
                   <div className="max-h-32 overflow-y-auto space-y-1">
                     {duplicateAnalysis.suspiciousEntries.slice(0, 10).map((entry) => (
                       <div key={entry.id} className="text-sm text-slate-600 border-l-2 border-amber-300 pl-2">
-                        {entry.hostName} - {entry.collectionDate} (ID: {entry.id})
+                        "{entry.hostName}" - {entry.collectionDate || 'No Date'} ({entry.individualSandwiches} sandwiches, ID: {entry.id})
                       </div>
                     ))}
                     {duplicateAnalysis.suspiciousEntries.length > 10 && (
@@ -1713,9 +1708,9 @@ export default function SandwichCollectionLog() {
                     variant="outline"
                     onClick={() => cleanDuplicatesMutation.mutate('suspicious')}
                     disabled={cleanDuplicatesMutation.isPending}
-                    className="text-amber-600 hover:text-amber-700 w-full sm:w-auto"
+                    className="text-amber-600 hover:text-amber-700 border-amber-300 w-full sm:w-auto"
                   >
-                    Clean Suspicious ({duplicateAnalysis.suspiciousPatterns})
+                    {cleanDuplicatesMutation.isPending ? "Cleaning..." : `Clean Suspicious Entries (${duplicateAnalysis.suspiciousPatterns})`}
                   </Button>
                 )}
                 {duplicateAnalysis.totalDuplicateEntries > 0 && (

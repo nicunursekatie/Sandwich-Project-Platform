@@ -1673,13 +1673,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         duplicateGroups.get(key).push(collection);
 
-        // Check for suspicious patterns
-        const hostName = collection.hostName.toLowerCase();
+        // Check for suspicious patterns (improved detection)
+        const hostName = (collection.hostName || "").toLowerCase().trim();
         if (
           hostName.startsWith("loc ") ||
-          hostName.match(/^group \d-\d$/) ||
+          hostName.startsWith("group ") ||
+          hostName.match(/^group \d+(-\d+)?$/) ||
+          hostName.match(/^loc\d+$/) ||
+          hostName === "groups" ||
+          hostName === "test" ||
           hostName.includes("test") ||
-          hostName.includes("duplicate")
+          hostName.includes("duplicate") ||
+          hostName.includes("unknown") ||
+          hostName.includes("no location") ||
+          hostName === "" ||
+          hostName === "null" ||
+          // Check for obviously incorrect host names
+          hostName.length < 3 ||
+          hostName.match(/^\d+$/) || // Pure numbers
+          hostName.match(/^[a-z]{1,2}$/) // Single/double letters
         ) {
           suspiciousPatterns.push(collection);
         }
@@ -1772,7 +1784,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Clean duplicates from sandwich collections
-  app.delete("/api/sandwich-collections/clean-duplicates", async (req, res) => {
+  app.delete("/api/sandwich-collections/clean-duplicates", 
+    requirePermission("delete_data"),
+    async (req, res) => {
     try {
       const { mode = "exact" } = req.body; // 'exact', 'suspicious', or 'og-duplicates'
       const collections = await storage.getAllSandwichCollections();
@@ -1804,15 +1818,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         });
       } else if (mode === "suspicious") {
-        // Remove entries with suspicious patterns
+        // Remove entries with suspicious patterns (improved detection)
         collectionsToDelete = collections.filter((collection) => {
-          const hostName = collection.hostName.toLowerCase();
+          const hostName = (collection.hostName || "").toLowerCase().trim();
           return (
             hostName.startsWith("loc ") ||
-            hostName.match(/^group \d-\d$/) ||
-            hostName.match(/^group \d+$/) || // Matches "Group 8", "Group 1", etc.
+            hostName.startsWith("group ") ||
+            hostName.match(/^group \d+(-\d+)?$/) ||
+            hostName.match(/^loc\d+$/) ||
+            hostName === "groups" ||
+            hostName === "test" ||
             hostName.includes("test") ||
-            hostName.includes("duplicate")
+            hostName.includes("duplicate") ||
+            hostName.includes("unknown") ||
+            hostName.includes("no location") ||
+            hostName === "" ||
+            hostName === "null" ||
+            // Check for obviously incorrect host names
+            hostName.length < 3 ||
+            hostName.match(/^\d+$/) || // Pure numbers
+            hostName.match(/^[a-z]{1,2}$/) // Single/double letters
           );
         });
       }
