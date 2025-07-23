@@ -270,8 +270,8 @@ export default function SandwichCollectionLog() {
       return sortConfig.direction === 'asc' ? comparison : -comparison;
     });
 
-  // For filtered/sorted data, use actual filtered count; otherwise use server pagination
-  const totalItems = filteredCollections.length > 0 ? filteredCollections.length : pagination?.total || 0;
+  // Always use the actual filtered collection count for accurate pagination
+  const totalItems = filteredCollections.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   
   // Apply pagination to filtered results
@@ -1024,7 +1024,9 @@ export default function SandwichCollectionLog() {
       createdAtFrom: "",
       createdAtTo: ""
     });
+    setSortConfig({ field: 'collectionDate', direction: 'desc' });
     setCurrentPage(1);
+    setShowFilters(false);
   };
 
 
