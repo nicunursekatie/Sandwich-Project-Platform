@@ -155,6 +155,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <SandwichCollectionLog />;
       case "projects":
         return <ProjectsClean />;
+      case "real-time-messages":
       case "messages":
         return <UnifiedMessagesPage />;
       case "stream-messages":
@@ -316,9 +317,6 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <GoogleSheetsPage />;
       case "governance":
         return <Governance />;
-      case "real-time-messages":
-        return <RealTimeMessages />;
-
       case "committee":
       case "committee-chat":
         return (
