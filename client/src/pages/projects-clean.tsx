@@ -1125,7 +1125,7 @@ export default function ProjectsClean() {
                   onValueChange={(value) => setEditingProject(prev => prev ? { ...prev, category: value } : null)}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select category..." />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="technology">💻 Technology</SelectItem>
