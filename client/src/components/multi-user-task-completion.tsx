@@ -149,7 +149,12 @@ export function MultiUserTaskCompletion({
   const isCurrentUserCompleted = !!currentUserCompletion;
   const completedCount = (completions || []).length;
   const totalAssignees = (assigneeIds || []).length;
-  const isFullyCompleted = completedCount >= totalAssignees;
+  
+  // If task is marked as "completed" but has no assignees, treat it as fully completed
+  // If task has assignees, use individual completion tracking
+  const isFullyCompleted = totalAssignees === 0 ? 
+    (taskStatus === 'completed') : 
+    (completedCount >= totalAssignees);
   
   // Team progress calculation is working properly
 
@@ -204,7 +209,11 @@ export function MultiUserTaskCompletion({
       <div className="flex items-center gap-2">
         <Users className="w-4 h-4 text-gray-500" />
         <span className="text-sm font-medium">
-          Team Progress: {completions?.length || 0}/{totalAssignees || 0}
+          {totalAssignees === 0 ? (
+            `Task Status: ${taskStatus}`
+          ) : (
+            `Team Progress: ${completions?.length || 0}/${totalAssignees || 0}`
+          )}
         </span>
         {isFullyCompleted && (
           <Badge className="bg-green-600 hover:bg-green-700 text-white font-bold">
@@ -220,7 +229,11 @@ export function MultiUserTaskCompletion({
             getAssigneeStatus(assigneeId, assigneeNames[index] || 'Unknown User')
           )
         ) : (
-          <div className="text-sm text-gray-500">No assignees found</div>
+          <div className="text-sm text-gray-500">
+            {taskStatus === 'completed' ? 
+              'Task completed without individual tracking' : 
+              'No team members assigned'}
+          </div>
         )}
       </div>
 
