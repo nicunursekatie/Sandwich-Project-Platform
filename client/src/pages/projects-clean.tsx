@@ -973,22 +973,6 @@ export default function ProjectsClean() {
               </div>
               
               <div>
-                <Label htmlFor="category">Category</Label>
-                <Select value={newProject.category} onValueChange={(value) => setNewProject(prev => ({ ...prev, category: value }))}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="general">General</SelectItem>
-                    <SelectItem value="operations">Operations</SelectItem>
-                    <SelectItem value="outreach">Outreach</SelectItem>
-                    <SelectItem value="technology">Technology</SelectItem>
-                    <SelectItem value="fundraising">Fundraising</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
                 <ProjectAssigneeSelector
                   value={newProject.assigneeName || ''}
                   onChange={(value, userIds) => setNewProject(prev => ({ 
