@@ -897,8 +897,8 @@ export default function StreamMessagesPage() {
                       </div>
                     ))}
                   </div>
-            ) : (
-              <div className="p-8 text-center">
+                ) : (
+                  <div className="p-8 text-center">
                 <div className="text-center max-w-md mx-auto">
                   <MessageCircle className="w-16 h-16 text-blue-500 mx-auto mb-6" />
                   <h3 className="text-2xl font-main-heading text-primary mb-4">
@@ -934,8 +934,9 @@ export default function StreamMessagesPage() {
                   )}
                 </div>
               </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
