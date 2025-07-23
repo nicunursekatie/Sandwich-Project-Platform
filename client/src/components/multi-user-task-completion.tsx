@@ -82,8 +82,9 @@ export function MultiUserTaskCompletion({
       if (data.isFullyCompleted) {
         toast({
           title: "Task Fully Completed! 🎉",
-          description: "All team members have completed this task"
+          description: "All team members have completed this task - task automatically marked complete"
         });
+        onStatusChange?.(true);
       } else {
         const completedCount = (completions.length || 0) + 1; // Add 1 for the just-completed task
         const totalCount = assigneeIds.length;
@@ -91,16 +92,7 @@ export function MultiUserTaskCompletion({
           title: "Your portion completed",
           description: `${completedCount}/${totalCount} team members finished`
         });
-      }
-      
-      onStatusChange?.(data.isFullyCompleted);
-      
-      // Trigger kudos for task completion if fully completed
-      if (data.isFullyCompleted) {
-        toast({
-          title: "🎉 Task Fully Completed!",
-          description: "Time to celebrate this team achievement!"
-        });
+        onStatusChange?.(false);
       }
     },
     onError: (error: any) => {
@@ -157,7 +149,7 @@ export function MultiUserTaskCompletion({
   const isCurrentUserCompleted = !!currentUserCompletion;
   const completedCount = (completions || []).length;
   const totalAssignees = (assigneeIds || []).length;
-  const isFullyCompleted = completedCount >= totalAssignees && taskStatus === 'completed';
+  const isFullyCompleted = completedCount >= totalAssignees;
   
   // Team progress calculation is working properly
 
@@ -215,8 +207,8 @@ export function MultiUserTaskCompletion({
           Team Progress: {completions?.length || 0}/{totalAssignees || 0}
         </span>
         {isFullyCompleted && (
-          <Badge className="bg-green-600 hover:bg-green-700">
-            Fully Complete
+          <Badge className="bg-green-600 hover:bg-green-700 text-white font-bold">
+            ✓ Fully Complete
           </Badge>
         )}
       </div>

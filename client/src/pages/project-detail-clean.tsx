@@ -613,12 +613,15 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
             </div>
           ) : (
             tasks.map((task) => (
-              <Card key={task.id} className="relative">
+              <Card key={task.id} className={`relative ${task.status === 'completed' ? 'bg-green-50 border-green-200' : ''}`}>
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <CardTitle className="text-lg">{task.title}</CardTitle>
-                      <CardDescription className="mt-1">
+                      <CardTitle className={`text-lg ${task.status === 'completed' ? 'line-through text-gray-600' : ''}`}>
+                        {task.status === 'completed' && <CheckCircle2 className="inline w-5 h-5 mr-2 text-green-600" />}
+                        {task.title}
+                      </CardTitle>
+                      <CardDescription className={`mt-1 ${task.status === 'completed' ? 'line-through text-gray-500' : ''}`}>
                         {task.description}
                       </CardDescription>
                     </div>
@@ -690,12 +693,16 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                       <MultiUserTaskCompletion 
                         taskId={task.id}
                         projectId={project.id}
-                        assigneeIds={task.assigneeIds?.length > 0 ? task.assigneeIds : (task.assigneeId ? [task.assigneeId] : [])}
-                        assigneeNames={task.assigneeNames?.length > 0 ? task.assigneeNames : (task.assigneeName ? [task.assigneeName] : [])}
+                        assigneeIds={task.assigneeIds?.length > 0 ? task.assigneeIds : (task.assigneeId ? [task.assigneeId] : (task.assigneeName ? [user?.id || 'legacy'] : [user?.id || 'current']))}
+                        assigneeNames={task.assigneeNames?.length > 0 ? task.assigneeNames : (task.assigneeName ? [task.assigneeName] : ['Current User'])}
                         currentUserId={user?.id}
                         currentUserName={user?.firstName || user?.displayName}
                         taskStatus={task.status}
                         onStatusChange={(isCompleted) => {
+                          // Invalidate queries to refresh UI immediately
+                          queryClient.invalidateQueries({ queryKey: ['/api/projects', project.id, 'tasks'] });
+                          queryClient.invalidateQueries({ queryKey: ['/api/projects', project.id] });
+                          
                           // Trigger congratulations when task is completed by someone else
                           const assigneeIds = task.assigneeIds?.length > 0 ? task.assigneeIds : (task.assigneeId ? [task.assigneeId] : []);
                           const assigneeNames = task.assigneeNames?.length > 0 ? task.assigneeNames : (task.assigneeName ? [task.assigneeName] : []);
