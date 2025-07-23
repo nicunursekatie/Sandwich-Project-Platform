@@ -1814,6 +1814,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Fix data corruption in sandwich collections
+  app.patch("/api/sandwich-collections/fix-data-corruption", 
+    requirePermission("edit_data"),
+    async (req, res) => {
+    try {
+      const collections = await storage.getAllSandwichCollections();
+      let fixedCount = 0;
+      const fixes = [];
+
+      for (const collection of collections) {
+        let needsUpdate = false;
+        const updates: any = {};
+        const fixType = [];
+
+        // Parse group collections to check for data issues
+        let groupData = [];
+        try {
+          if (collection.groupCollections && collection.groupCollections !== "[]") {
+            groupData = JSON.parse(collection.groupCollections);
+          }
+        } catch (error) {
+          // Skip if can't parse group data
+          continue;
+        }
+
+        const individual = Number(collection.individualSandwiches) || 0;
+        const groupTotal = Array.isArray(groupData) ? 
+          groupData.reduce((sum, g) => sum + (Number(g.sandwichCount || g.count) || 0), 0) : 0;
+
+        // Fix 1: Check if individual count equals group total (duplication issue)
+        if (individual > 0 && groupTotal > 0 && individual === groupTotal) {
+          updates.individualSandwiches = 0;
+          needsUpdate = true;
+          fixType.push("removed duplicate individual count");
+        }
+
+        // Fix 2: Check if host name is "Groups" with individual count but no group data
+        if ((collection.hostName === "Groups" || collection.hostName === "groups") && 
+            individual > 0 && groupTotal === 0) {
+          // Move individual count to group data
+          const newGroupData = [{
+            name: "Groups Collection",
+            count: individual,
+            groupName: "Groups Collection", 
+            sandwichCount: individual
+          }];
+          updates.individualSandwiches = 0;
+          updates.groupCollections = JSON.stringify(newGroupData);
+          needsUpdate = true;
+          fixType.push("moved individual count to group data for Groups entry");
+        }
+
+        if (needsUpdate) {
+          try {
+            await storage.updateSandwichCollection(collection.id, updates);
+            fixedCount++;
+            fixes.push({
+              id: collection.id,
+              hostName: collection.hostName,
+              originalIndividual: individual,
+              originalGroup: groupTotal,
+              newIndividual: updates.individualSandwiches !== undefined ? updates.individualSandwiches : individual,
+              newGroupData: updates.groupCollections || collection.groupCollections,
+              fixType: fixType.join(", ")
+            });
+          } catch (updateError) {
+            logger.warn(`Failed to fix collection ${collection.id}:`, updateError);
+          }
+        }
+      }
+
+      res.json({
+        message: `Successfully fixed ${fixedCount} data corruption issues`,
+        fixedCount,
+        totalChecked: collections.length,
+        fixes: fixes.slice(0, 10) // Return first 10 fixes for review
+      });
+    } catch (error) {
+      logger.error("Failed to fix data corruption:", error);
+      res.status(500).json({ message: "Failed to fix data corruption" });
+    }
+  });
+
   // Clean duplicates from sandwich collections
   app.delete("/api/sandwich-collections/clean-duplicates", 
     requirePermission("delete_data"),
