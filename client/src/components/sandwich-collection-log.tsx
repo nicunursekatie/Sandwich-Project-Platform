@@ -511,9 +511,7 @@ export default function SandwichCollectionLog() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await apiRequest('DELETE', `/api/sandwich-collections/${id}`);
-      // Don't try to parse JSON for 204 responses
-      return response.status === 204 ? null : response.json();
+      return await apiRequest('DELETE', `/api/sandwich-collections/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
@@ -522,10 +520,11 @@ export default function SandwichCollectionLog() {
         description: "Sandwich collection has been deleted successfully.",
       });
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error("Delete collection error:", error);
       toast({
         title: "Error",
-        description: "Failed to delete collection. Please try again.",
+        description: "Cannot delete collection. Please try again.",
         variant: "destructive",
       });
     }
