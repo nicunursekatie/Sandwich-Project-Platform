@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { SendKudosButton } from "@/components/send-kudos-button";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, Circle, Users, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -93,6 +94,14 @@ export function MultiUserTaskCompletion({
       }
       
       onStatusChange?.(data.isFullyCompleted);
+      
+      // Trigger kudos for task completion if fully completed
+      if (data.isFullyCompleted) {
+        toast({
+          title: "🎉 Task Fully Completed!",
+          description: "Time to celebrate this team achievement!"
+        });
+      }
     },
     onError: (error: any) => {
       toast({
@@ -173,9 +182,23 @@ export function MultiUserTaskCompletion({
           {isCurrentUser && ' (You)'}
         </span>
         {isCompleted && (
-          <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">
-            ✓ Done
-          </Badge>
+          <>
+            <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">
+              ✓ Done
+            </Badge>
+            {/* Add kudos button for completed assignees */}
+            {!isCurrentUser && (
+              <SendKudosButton
+                recipientId={assigneeId}
+                recipientName={assigneeName}
+                contextType="task"
+                contextId={taskId.toString()}
+                entityName={`task completion`}
+                size="sm"
+                className="ml-2"
+              />
+            )}
+          </>
         )}
       </div>
     );

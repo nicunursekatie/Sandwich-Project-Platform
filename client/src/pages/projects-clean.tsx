@@ -38,6 +38,7 @@ import { useCelebration, CelebrationToast } from "@/components/celebration-toast
 import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
 import { hasPermission, PERMISSIONS, canEditProject, canDeleteProject } from "@shared/auth-utils";
 import type { Project, InsertProject } from "@shared/schema";
+import { SendKudosButton } from "@/components/send-kudos-button";
 
 export default function ProjectsClean() {
   const [, setLocation] = useLocation();
@@ -267,9 +268,12 @@ export default function ProjectsClean() {
     if (project && canEditProject(user, project) && confirm(`Mark "${projectTitle}" as completed?`)) {
       updateProjectMutation.mutate({ id: projectId, status: 'completed' });
       toast({
-        title: "Project completed!",
-        description: `"${projectTitle}" has been marked as completed.`
+        title: "🎉 Project completed!",
+        description: `"${projectTitle}" has been marked as completed. Time to celebrate!`
       });
+      
+      // Trigger celebration for project completion
+      triggerCelebration();
     }
   };
 
@@ -455,7 +459,20 @@ export default function ProjectsClean() {
           <div className="text-xs text-slate-500">
             Due: {project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No date'}
           </div>
-          <ArrowRight className="w-4 h-4 text-slate-400" />
+          
+          {/* Add kudos button for completed projects with assignees */}
+          {project.status === 'completed' && project.assigneeId && project.assigneeName && user?.id !== project.assigneeId ? (
+            <SendKudosButton
+              recipientId={project.assigneeId}
+              recipientName={project.assigneeName}
+              contextType="project"
+              contextId={project.id.toString()}
+              entityName={project.title}
+              size="sm"
+            />
+          ) : (
+            <ArrowRight className="w-4 h-4 text-slate-400" />
+          )}
         </div>
       </CardContent>
     </Card>
