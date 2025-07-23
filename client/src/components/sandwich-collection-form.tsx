@@ -24,7 +24,11 @@ interface GroupCollection {
   sandwichCount: number;
 }
 
-export default function SandwichCollectionForm() {
+interface SandwichCollectionFormProps {
+  onSuccess?: () => void;
+}
+
+export default function SandwichCollectionForm({ onSuccess }: SandwichCollectionFormProps = {}) {
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -114,6 +118,11 @@ export default function SandwichCollectionForm() {
         title: "Collection submitted",
         description: "Sandwich collection has been logged and synced to Google Sheets.",
       });
+      
+      // Call onSuccess callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
     },
     onError: () => {
       toast({

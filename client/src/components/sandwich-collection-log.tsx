@@ -277,13 +277,14 @@ export default function SandwichCollectionLog() {
 
   // Pagination Component
   const PaginationControls = ({ position }: { position: 'top' | 'bottom' }) => (
-    <div className={`flex flex-col sm:flex-row items-center justify-between px-2 py-4 ${position === 'top' ? 'border-b' : 'border-t'} border-slate-200 gap-4`}>
-      <div className="flex items-center space-x-4">
+    <div className={`flex flex-col sm:flex-row items-center justify-between px-4 py-4 ${position === 'top' ? 'border-b' : 'border-t'} border-slate-200 gap-4 bg-white`}>
+      {/* Per page selector and info */}
+      <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
         <Select value={itemsPerPage.toString()} onValueChange={(value) => {
           setItemsPerPage(Number(value));
           setCurrentPage(1);
         }}>
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-full sm:w-32">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -292,65 +293,98 @@ export default function SandwichCollectionLog() {
             <SelectItem value="100">100 per page</SelectItem>
           </SelectContent>
         </Select>
-        <div className="text-sm text-slate-600">
+        <div className="text-sm text-slate-600 text-center sm:text-left">
           Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} entries
         </div>
       </div>
 
+      {/* Pagination controls */}
       {totalPages > 1 && (
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage(1)}
-            disabled={currentPage === 1}
-          >
-            First
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </Button>
-
-          <div className="flex items-center space-x-1">
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              const pageNumber = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
-              if (pageNumber > totalPages) return null;
-
-              return (
-                <Button
-                  key={pageNumber}
-                  variant={pageNumber === currentPage ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCurrentPage(pageNumber)}
-                  className="w-10"
-                >
-                  {pageNumber}
-                </Button>
-              );
-            })}
+        <div className="flex items-center justify-center w-full sm:w-auto">
+          {/* Mobile view - simplified controls */}
+          <div className="flex sm:hidden items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-2 min-h-[40px]"
+            >
+              Previous
+            </Button>
+            <span className="px-3 py-2 text-sm font-medium bg-slate-100 rounded border">
+              {currentPage} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-2 min-h-[40px]"
+            >
+              Next
+            </Button>
           </div>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage(totalPages)}
-            disabled={currentPage === totalPages}
-          >
-            Last
-          </Button>
+          {/* Desktop view - full controls */}
+          <div className="hidden sm:flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(1)}
+              disabled={currentPage === 1}
+              className="px-3 py-2"
+            >
+              First
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-2"
+            >
+              Previous
+            </Button>
+
+            <div className="flex items-center space-x-1">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                const pageNumber = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+                if (pageNumber > totalPages) return null;
+
+                return (
+                  <Button
+                    key={pageNumber}
+                    variant={pageNumber === currentPage ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(pageNumber)}
+                    className="w-10 h-10"
+                  >
+                    {pageNumber}
+                  </Button>
+                );
+              })}
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-2"
+            >
+              Next
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(totalPages)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-2"
+            >
+              Last
+            </Button>
+          </div>
         </div>
       )}
     </div>
