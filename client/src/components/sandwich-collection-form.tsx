@@ -259,9 +259,9 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       individualSandwiches: finalIndividualSandwiches,
       groupCollections: finalGroupCollections,
       createdBy: user?.id,
-      createdByName: user && 'firstName' in user && 'lastName' in user && user.firstName && user.lastName 
+      createdByName: user && typeof user === 'object' && 'firstName' in user && 'lastName' in user && user.firstName && user.lastName 
         ? `${user.firstName} ${user.lastName}` 
-        : user && 'displayName' in user && user.displayName || user?.email || 'Unknown User',
+        : user && typeof user === 'object' && 'displayName' in user && user.displayName || user?.email || 'Unknown User',
     });
   };
 
@@ -374,98 +374,103 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
         </div>
 
-        {/* Individual Collections Section */}
-        <div className="bg-gray-50/50 rounded-lg p-4 sm:p-6 space-y-4">
-          <h3 className="text-lg font-semibold text-slate-900 mb-4" style={{ fontSize: '18px', fontWeight: '600' }}>
-            Individual Collections
-          </h3>
-          
-          <div className="space-y-3">
-            <Label htmlFor="individualSandwiches" className="text-base font-medium text-slate-700">
-              Number of Individual Sandwiches
-            </Label>
-            <Input
-              id="individualSandwiches"
-              type="number"
-              min="0"
-              value={individualSandwiches}
-              onChange={(e) => setIndividualSandwiches(e.target.value)}
-              placeholder="Enter number"
-              className="min-h-[44px] text-base px-4 py-3 border-2 border-slate-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors max-w-xs"
-              style={{ fontSize: '16px' }}
-            />
-          </div>
-        </div>
-
-        {/* Group Collections Section */}
-        <div className="bg-blue-50/30 rounded-lg p-4 sm:p-6 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2" style={{ fontSize: '18px', fontWeight: '600' }}>
-                Group Collections
+        {/* Collections Section - Side by Side */}
+        <div className="bg-gray-50/50 rounded-lg p-4 sm:p-6 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Individual Collections */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-slate-900" style={{ fontSize: '18px', fontWeight: '600' }}>
+                Individual Collections
               </h3>
-              <p className="text-sm italic text-gray-600" style={{ fontSize: '14px', color: '#666' }}>
-                List any groups/organizations and their counts here. Don't add these to your individual total.
-              </p>
-            </div>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={addGroupRow}
-              className="min-h-[44px] px-4 py-2 border-2 hover:bg-blue-100 shrink-0"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Group
-            </Button>
-          </div>
-
-          <div className="space-y-4">
-            {groupCollections.map((group) => (
-              <div key={group.id} className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center bg-white p-4 rounded-md border border-slate-200">
-                <div className="flex-1 space-y-2">
-                  <Label className="text-sm font-medium text-slate-700">Group Name</Label>
-                  <Input
-                    placeholder="e.g., Local Church, Elementary School"
-                    value={group.groupName}
-                    onChange={(e) =>
-                      updateGroupCollection(group.id, "groupName", e.target.value)
-                    }
-                    className="min-h-[44px] text-base px-4 py-3 border-2 border-slate-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
-                    style={{ fontSize: '16px' }}
-                  />
-                </div>
-                <div className="w-full sm:w-32 space-y-2">
-                  <Label className="text-sm font-medium text-slate-700">Count</Label>
-                  <Input
-                    type="number"
-                    min="0"
-                    placeholder="0"
-                    value={group.sandwichCount || ""}
-                    onChange={(e) =>
-                      updateGroupCollection(
-                        group.id,
-                        "sandwichCount",
-                        parseInt(e.target.value) || 0,
-                      )
-                    }
-                    className="min-h-[44px] text-base px-4 py-3 border-2 border-slate-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
-                    style={{ fontSize: '16px' }}
-                  />
-                </div>
-                {groupCollections.length > 1 && (
-                  <div className="flex sm:flex-col justify-end sm:justify-center">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => removeGroupRow(group.id)}
-                      className="min-h-[44px] w-[44px] p-0 text-red-600 hover:text-red-700 hover:bg-red-50 border-2 border-red-200 hover:border-red-300"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                )}
+              
+              <div className="space-y-3">
+                <Label htmlFor="individualSandwiches" className="text-base font-medium text-slate-700">
+                  Number of Individual Sandwiches
+                </Label>
+                <Input
+                  id="individualSandwiches"
+                  type="number"
+                  min="0"
+                  value={individualSandwiches}
+                  onChange={(e) => setIndividualSandwiches(e.target.value)}
+                  placeholder="Enter number"
+                  className="min-h-[44px] text-base px-4 py-3 border-2 border-slate-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                  style={{ fontSize: '16px' }}
+                />
               </div>
-            ))}
+            </div>
+
+            {/* Group Collections */}
+            <div className="space-y-4">
+              <div className="flex flex-col gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2" style={{ fontSize: '18px', fontWeight: '600' }}>
+                    Group Collections
+                  </h3>
+                  <p className="text-sm italic text-gray-600" style={{ fontSize: '14px', color: '#666' }}>
+                    List any groups/organizations and their counts here. Don't add these to your individual total.
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addGroupRow}
+                  className="min-h-[44px] px-4 py-2 border-2 hover:bg-blue-100 self-start"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Group
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                {groupCollections.map((group) => (
+                  <div key={group.id} className="flex flex-col gap-3 bg-white p-4 rounded-md border border-slate-200">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-slate-700">Group Name</Label>
+                      <Input
+                        placeholder="e.g., Local Church, Elementary School"
+                        value={group.groupName}
+                        onChange={(e) =>
+                          updateGroupCollection(group.id, "groupName", e.target.value)
+                        }
+                        className="min-h-[44px] text-base px-4 py-3 border-2 border-slate-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                        style={{ fontSize: '16px' }}
+                      />
+                    </div>
+                    <div className="flex gap-3 items-end">
+                      <div className="flex-1 space-y-2">
+                        <Label className="text-sm font-medium text-slate-700">Count</Label>
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="0"
+                          value={group.sandwichCount || ""}
+                          onChange={(e) =>
+                            updateGroupCollection(
+                              group.id,
+                              "sandwichCount",
+                              parseInt(e.target.value) || 0,
+                            )
+                          }
+                          className="min-h-[44px] text-base px-4 py-3 border-2 border-slate-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                          style={{ fontSize: '16px' }}
+                        />
+                      </div>
+                      {groupCollections.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => removeGroupRow(group.id)}
+                          className="min-h-[44px] w-[44px] p-0 text-red-600 hover:text-red-700 hover:bg-red-50 border-2 border-red-200 hover:border-red-300"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
