@@ -58,6 +58,14 @@ export function setupSocketChat(httpServer: HttpServer) {
             timestamp: new Date(msg.createdAt)
           })).reverse();
           socket.emit("message-history", formattedMessages);
+          
+          // Auto-mark all messages in this channel as read for the joining user
+          try {
+            await storage.markChannelMessagesAsRead(userId, channel);
+            console.log(`Marked all messages in ${channel} as read for user ${userId}`);
+          } catch (markReadError) {
+            console.error("Error marking messages as read:", markReadError);
+          }
         } catch (error) {
           console.error("Error loading message history:", error);
           socket.emit("message-history", []);

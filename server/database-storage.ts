@@ -1683,4 +1683,19 @@ export class DatabaseStorage implements IStorage {
   async deleteChatMessage(id: number): Promise<void> {
     await db.delete(chatMessages).where(eq(chatMessages.id, id));
   }
+
+  async markChannelMessagesAsRead(userId: string, channel: string): Promise<void> {
+    // Insert read records for all messages in this channel that the user hasn't read yet
+    const { chatMessageReads } = await import("@shared/schema");
+    await db.execute(sql`
+      INSERT INTO chat_message_reads (message_id, user_id, channel, read_at, created_at)
+      SELECT cm.id, ${userId}, cm.channel, NOW(), NOW()
+      FROM chat_messages cm
+      WHERE cm.channel = ${channel}
+        AND NOT EXISTS (
+          SELECT 1 FROM chat_message_reads cmr 
+          WHERE cmr.message_id = cm.id AND cmr.user_id = ${userId}
+        )
+    `);
+  }
 }

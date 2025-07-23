@@ -224,6 +224,7 @@ export interface IStorage {
   getChatMessages(channel: string, limit?: number): Promise<any[]>;
   updateChatMessage(id: number, updates: { content: string }): Promise<void>;
   deleteChatMessage(id: number): Promise<void>;
+  markChannelMessagesAsRead(userId: string, channel: string): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -1407,6 +1408,11 @@ export class MemStorage implements IStorage {
 
   async deleteChatMessage(id: number): Promise<void> {
     // No-op for memory storage
+  }
+
+  async markChannelMessagesAsRead(userId: string, channel: string): Promise<void> {
+    // No-op for memory storage since it doesn't persist anyway
+    console.log(`[MemStorage] Marked all messages in ${channel} as read for user ${userId}`);
   }
 }
 
