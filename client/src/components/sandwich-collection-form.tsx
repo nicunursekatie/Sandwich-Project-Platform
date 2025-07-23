@@ -241,27 +241,28 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           )
         : "[]";
 
+    // Calculate total group sandwiches for the new numeric field
+    const totalGroupSandwiches = validGroupCollections.reduce((sum, group) => sum + group.sandwichCount, 0);
+    
     // In group-only mode (manual or auto-detected), use "Groups" as host name and move group totals to individual sandwiches
     let finalHostName = hostName.trim();
     let finalIndividualSandwiches = parseInt(individualSandwiches) || 0;
+    let finalGroupSandwiches = totalGroupSandwiches;
     let finalGroupCollections = groupCollectionsString;
     
     if (isAutoGroupOnlyMode) {
       finalHostName = "Groups";
-      // In group-only mode, sum all group collections and put in individual sandwiches field
-      const totalGroupSandwiches = validGroupCollections.reduce((sum, group) => sum + group.sandwichCount, 0);
+      // In group-only mode, put all sandwiches in individual field and zero out group field to avoid double counting
       finalIndividualSandwiches = totalGroupSandwiches;
+      finalGroupSandwiches = 0; // Avoid double counting - sandwiches already in individual field
       finalGroupCollections = groupCollectionsString; // Keep the group breakdown for reference
     }
-
-    // Calculate total group sandwiches for the new numeric field
-    const totalGroupSandwiches = validGroupCollections.reduce((sum, group) => sum + group.sandwichCount, 0);
 
     submitCollectionMutation.mutate({
       collectionDate,
       hostName: finalHostName,
       individualSandwiches: finalIndividualSandwiches,
-      groupSandwiches: totalGroupSandwiches, // Add the new numeric field
+      groupSandwiches: finalGroupSandwiches, // Use the corrected variable to avoid double counting
       groupCollections: finalGroupCollections,
       createdBy: user?.id,
       createdByName: user && typeof user === 'object' && 'firstName' in user && 'lastName' in user && user.firstName && user.lastName 
