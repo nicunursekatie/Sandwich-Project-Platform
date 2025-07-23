@@ -390,7 +390,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               min="0"
               value={individualSandwiches}
               onChange={(e) => setIndividualSandwiches(e.target.value)}
-              placeholder="Enter number (leave blank if none)"
+              placeholder="Enter number"
               className="min-h-[44px] text-base px-4 py-3 border-2 border-slate-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors max-w-xs"
               style={{ fontSize: '16px' }}
             />
