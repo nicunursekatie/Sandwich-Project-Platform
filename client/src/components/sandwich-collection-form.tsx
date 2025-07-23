@@ -448,7 +448,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
 
           <p className="text-sm text-gray-600 mt-3">
-            Add group collections if you have specific group donations to record.
+            If you collected sandwiches from a group record their totals along with their group name in the group collections field. Do not include them in your weekly total.
           </p>
         </div>
 
