@@ -83,13 +83,14 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
         const host = window.location.host;
         
         // Handle different deployment scenarios
-        if (host.includes('replit')) {
+        if (host.includes('replit.dev') || host.includes('replit.com')) {
           return `${protocol}//${host}/notifications`;
-        } else if (host.includes('localhost')) {
-          // For localhost development, use the port from current location
-          return `${protocol}//localhost:5000/notifications`;
+        } else if (host.includes('localhost') || host.startsWith('127.0.0.1')) {
+          // For localhost development, always use port 5000 explicitly
+          const port = window.location.port || '5000';
+          return `${protocol}//localhost:${port}/notifications`;
         } else {
-          // Default case for other deployments
+          // Default case for other deployments - use current host
           return `${protocol}//${host}/notifications`;
         }
       };
