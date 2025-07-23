@@ -147,13 +147,13 @@ export default function SandwichCollectionLog() {
         
         if (searchFilters.createdAtFrom) {
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
-            c.submittedAt >= searchFilters.createdAtFrom
+            new Date(c.submittedAt) >= new Date(searchFilters.createdAtFrom)
           );
         }
         
         if (searchFilters.createdAtTo) {
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
-            c.submittedAt <= searchFilters.createdAtTo
+            new Date(c.submittedAt) <= new Date(searchFilters.createdAtTo)
           );
         }
         
@@ -210,7 +210,7 @@ export default function SandwichCollectionLog() {
 
   // Filter and sort collections
   const filteredCollections = collections
-    .filter(collection => {
+    .filter((collection: SandwichCollection) => {
       // Host name filter
       if (searchFilters.hostName && !collection.hostName.toLowerCase().includes(searchFilters.hostName.toLowerCase())) {
         return false;
@@ -246,7 +246,7 @@ export default function SandwichCollectionLog() {
 
       return true;
     })
-    .sort((a, b) => {
+    .sort((a: SandwichCollection, b: SandwichCollection) => {
       const aValue = a[sortConfig.field];
       const bValue = b[sortConfig.field];
 
@@ -281,7 +281,7 @@ export default function SandwichCollectionLog() {
   }, [searchFilters, sortConfig]);
 
   // Get unique host names from collections for filtering
-  const uniqueHostNames = Array.from(new Set(collections.map(c => c.hostName))).sort();
+  const uniqueHostNames = Array.from(new Set(collections.map((c: SandwichCollection) => c.hostName))).sort();
 
   // Include all hosts (active and inactive) for collection assignment
   const hostOptions = [...hostsList.map(host => host.name), "Other"];
@@ -659,7 +659,7 @@ export default function SandwichCollectionLog() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedCollections(new Set(filteredCollections.map(c => c.id)));
+      setSelectedCollections(new Set(filteredCollections.map((c: SandwichCollection) => c.id)));
     } else {
       setSelectedCollections(new Set());
     }
@@ -923,15 +923,15 @@ export default function SandwichCollectionLog() {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-      <div className="px-6 py-4 border-b border-slate-200">
+    <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+      <div className="px-3 sm:px-6 py-4 border-b border-slate-200">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-lg font-semibold text-slate-900 flex items-center">
-              <img src={sandwichLogo} alt="Sandwich Logo" className="mr-2 w-5 h-5" />
-              Collections
+          <div className="min-w-0">
+            <h2 className="text-base sm:text-lg font-semibold text-slate-900 flex items-center">
+              <img src={sandwichLogo} alt="Sandwich Logo" className="mr-2 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+              <span className="truncate">Collections</span>
             </h2>
-            <p className="text-sm text-slate-500 mt-1">Manage collection data and bulk operations</p>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">Manage collection data and bulk operations</p>
           </div>
           {canEditData && (
             <Button
@@ -949,10 +949,10 @@ export default function SandwichCollectionLog() {
         </div>
       </div>
       
-      <div className="px-6 py-4">
+      <div className="px-3 sm:px-6 py-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
           <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-            <p className="text-sm text-slate-500">{totalItems} total entries</p>
+            <p className="text-xs sm:text-sm text-slate-500">{totalItems} total entries</p>
             {totalStats && (
               <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4 text-sm">
                 <span className="text-slate-600">
@@ -1304,8 +1304,8 @@ export default function SandwichCollectionLog() {
             )}
           </div>
         )}
-        <div className="space-y-4">
-          {paginatedCollections.map((collection) => {
+        <div className="space-y-3 sm:space-y-4">
+          {paginatedCollections.map((collection: SandwichCollection) => {
             const groupData = parseGroupCollections(collection.groupCollections);
             const totalSandwiches = calculateTotal(collection);
             const isSelected = selectedCollections.has(collection.id);
@@ -1317,7 +1317,7 @@ export default function SandwichCollectionLog() {
             return (
               <div 
                 key={collection.id} 
-                className={`border rounded-lg p-4 ${
+                className={`border rounded-lg p-3 sm:p-4 ${
                   isSelected 
                     ? 'bg-blue-50 border-blue-200' 
                     : isInactiveHost 

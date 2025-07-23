@@ -225,10 +225,8 @@ async function startServer() {
               await setupVite(app, httpServer);
               console.log("✓ Vite development server setup complete");
             } catch (error) {
-              console.log(
-                "⚠ Vite setup failed, continuing without it:",
-                (error as Error).message,
-              );
+              console.error("❌ Vite setup failed:", error);
+              console.log("⚠ Vite setup failed, continuing without it:", (error as Error).message);
             }
           } else {
               // Add catch-all for unknown routes before SPA
