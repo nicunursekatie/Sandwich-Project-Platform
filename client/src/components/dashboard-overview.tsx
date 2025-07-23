@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, Users, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import type { Project, Message, MeetingMinutes, DriveLink, WeeklyReport, SandwichCollection, Meeting } from "@shared/schema";
@@ -96,6 +97,26 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
 
 
+
+      {/* Quick Collection Entry - Only show if user has permission */}
+      {hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) && (
+        <div className="bg-card rounded-lg border border-border">
+          <div className="px-4 py-3 border-b border-border flex justify-between items-center">
+            <h2 className="text-base font-sub-heading text-primary">Quick Collection Entry</h2>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => onSectionChange("collections")}
+              className="text-xs px-2 py-1"
+            >
+              View All Collections
+            </Button>
+          </div>
+          <div className="p-4">
+            <SandwichCollectionForm onSuccess={() => onSectionChange("collections")} />
+          </div>
+        </div>
+      )}
 
       {/* Active Projects - Only show if user has permission */}
       {hasPermission(user, PERMISSIONS.VIEW_PROJECTS) && (

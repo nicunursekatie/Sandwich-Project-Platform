@@ -151,6 +151,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
     switch (activeSection) {
       case "dashboard":
         return <DashboardOverview onSectionChange={setActiveSection} />;
+      case "collections":
+        return <SandwichCollectionLog />;
       case "projects":
         return <ProjectsClean />;
       case "messages":
