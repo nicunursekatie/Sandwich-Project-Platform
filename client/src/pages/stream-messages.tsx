@@ -251,13 +251,35 @@ export default function StreamMessagesPage() {
   const getFilteredMessages = () => {
     if (!user || !messages.length) return [];
     
+    const currentUserId = (user as any)?.id;
+    
+    // Helper function to check if message is from current user
+    const isFromCurrentUser = (msg: any) => {
+      if (!msg.from || !currentUserId) return false;
+      
+      // Direct match
+      if (msg.from === currentUserId) return true;
+      
+      // Check with user_ prefix
+      if (msg.from === `user_${currentUserId}`) return true;
+      
+      // Check with admin_ prefix  
+      if (msg.from === `admin_${currentUserId}`) return true;
+      
+      // Strip prefixes and compare
+      const cleanMsgFrom = msg.from.replace(/^(user_|admin_)/, '');
+      if (cleanMsgFrom === currentUserId.toString()) return true;
+      
+      return false;
+    };
+    
     switch(activeFolder) {
       case 'inbox':
         return messages.filter(msg => 
-          msg.from && msg.from !== (user as any)?.id // Messages from others (received)
+          msg.from && !isFromCurrentUser(msg) // Messages from others (received)
         );
       case 'sent':
-        return messages.filter(msg => msg.from === (user as any)?.id); // Messages from current user
+        return messages.filter(msg => isFromCurrentUser(msg)); // Messages from current user
       case 'conversations':
         return messages; // all messages
       default:
