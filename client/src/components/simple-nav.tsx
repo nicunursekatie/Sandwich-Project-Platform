@@ -104,14 +104,14 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
   };
 
   return (
-    <nav className="space-y-1 p-4 pb-8">
+    <nav className="space-y-1 p-3 sm:p-4 pb-6 sm:pb-8">
       {groupedItems.map((item, index) => {
         if (item.type === 'separator') {
           return (
-            <div key={`sep-${index}`} className="pt-4 pb-2">
+            <div key={`sep-${index}`} className="pt-3 sm:pt-4 pb-2">
               <div className="flex items-center text-xs font-medium text-slate-500 uppercase tracking-wider">
-                <div className="h-px bg-slate-200 flex-1 mr-3" />
-                {getGroupLabel(item.group)}
+                <div className="h-px bg-slate-200 flex-1 mr-2 sm:mr-3" />
+                <span className="text-[10px] sm:text-xs">{getGroupLabel(item.group)}</span>
               </div>
             </div>
           );
@@ -136,7 +136,7 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
             key={item.id}
             variant={isCurrentlyActive ? "default" : "ghost"}
             className={`
-              w-full justify-start text-left h-10 px-3
+              w-full justify-start text-left h-10 sm:h-11 px-2 sm:px-3 touch-manipulation
               ${isCurrentlyActive 
                 ? "bg-primary text-primary-foreground shadow-sm" 
                 : "hover:bg-slate-100 text-slate-700"
@@ -149,12 +149,12 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
               onSectionChange(item.href);
             }}
           >
-            <item.icon className="h-4 w-4 mr-3 flex-shrink-0" />
-            <span className="truncate flex-1">{item.label}</span>
+            <item.icon className="h-4 w-4 mr-2 sm:mr-3 flex-shrink-0" />
+            <span className="truncate flex-1 text-sm sm:text-base">{item.label}</span>
             {unreadCount > 0 && (
               <Badge 
                 variant={isCurrentlyActive ? "secondary" : "destructive"} 
-                className="ml-auto h-5 px-1.5 min-w-[20px] flex items-center justify-center"
+                className="ml-auto h-4 sm:h-5 px-1 sm:px-1.5 min-w-[16px] sm:min-w-[20px] flex items-center justify-center text-xs"
               >
                 {unreadCount > 99 ? '99+' : unreadCount}
               </Badge>

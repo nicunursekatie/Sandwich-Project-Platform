@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import { StreamChat } from 'stream-chat';
-// Removed Stream UI components - keeping only the client connection
+import {
+  Chat,
+  Channel,
+  Window,
+  ChannelHeader,
+  MessageList,
+  MessageInput,
+  Thread,
+  LoadingIndicator,
+  ChannelList
+} from 'stream-chat-react';
 import 'stream-chat-react/dist/css/v2/index.css';
 
 import { useAuth } from '@/hooks/useAuth';
@@ -19,99 +29,167 @@ import {
   Send,
   X,
   Loader2,
-  ArrowLeft
+  ArrowLeft,
+  Users,
+  Hash
 } from 'lucide-react';
 
 export default function StreamMessagesPage() {
   const [client, setClient] = useState<StreamChat | null>(null);
-  const [selectedChannel, setSelectedChannel] = useState<any>(null);
+  const [activeChannel, setActiveChannel] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showCompose, setShowCompose] = useState(false);
-  const [recipientInput, setRecipientInput] = useState('');
-  const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
-  const [subject, setSubject] = useState('');
-  const [messageBody, setMessageBody] = useState('');
+  const [showNewChannel, setShowNewChannel] = useState(false);
+  const [channelName, setChannelName] = useState('');
+  const [channelType, setChannelType] = useState<'messaging' | 'team'>('messaging');
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const { user } = useAuth();
   const { toast } = useToast();
-
-  // Note: fetchAvailableUsers is now called after user sync completes
 
   const fetchAvailableUsers = async () => {
     try {
       const response = await fetch('/api/users', {
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
       if (response.ok) {
         const data = await response.json();
-        console.log('Fetched real users from database:', data);
-        // Filter out the current user and inactive users
         const activeUsers = Array.isArray(data) ? data : (data.users || []);
         const filteredUsers = activeUsers.filter((dbUser: any) => 
           dbUser.isActive && 
           dbUser.id !== (user as any)?.id &&
-          dbUser.email // Ensure user has email
+          dbUser.email
         ).map((dbUser: any) => ({
-          id: dbUser.id,
-          displayName: dbUser.firstName ? `${dbUser.firstName} ${dbUser.lastName || ''}`.trim() : dbUser.email,
+          id: dbUser.id.toString(),
+          name: dbUser.firstName ? `${dbUser.firstName} ${dbUser.lastName || ''}`.trim() : dbUser.email,
           email: dbUser.email
         }));
-        console.log('📊 Processed available users:', filteredUsers.length, 'users');
-        console.log('📋 Users data structure:', filteredUsers);
-        return filteredUsers; // Return the users array
-      } else {
-        console.error('Failed to fetch users:', response.statusText);
-        return []; // Return empty array
+        console.log('Stream Chat - Available users:', filteredUsers.length);
+        return filteredUsers;
       }
+      return [];
     } catch (error) {
       console.error('Failed to fetch users:', error);
-      return []; // Return empty array
+      return [];
     }
   };
 
-  // Sync all database users to Stream using server-side endpoint
-  const syncUsersToStream = async () => {
-    console.log('🔄 Starting server-side user sync to Stream...');
-    
-    try {
-      const response = await fetch('/api/stream/sync-users', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
+  // Initialize Stream Chat client
+  useEffect(() => {
+    const initializeStreamChat = async () => {
+      if (!user?.id) return;
+
+      try {
+        setLoading(true);
+        console.log('🚀 Initializing Stream Chat...');
+
+        // First sync users to Stream
+        const syncResponse = await fetch('/api/stream/sync-users', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!syncResponse.ok) {
+          throw new Error('Failed to sync users to Stream');
         }
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok && result.success) {
-        console.log(`✅ Server-side sync successful: ${result.syncedUsers} users synced`);
-        console.log('📋 Sync response:', result);
-        return true;
-      } else {
-        console.error('❌ Server-side sync failed:', result);
-        return false;
+
+        console.log('✅ Users synced to Stream successfully');
+
+        // Get Stream token for current user
+        const tokenResponse = await fetch('/api/stream/token', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id.toString() })
+        });
+
+        if (!tokenResponse.ok) {
+          throw new Error('Failed to get Stream token');
+        }
+
+        const { token, apiKey } = await tokenResponse.json();
+        console.log('✅ Stream token received');
+
+        // Initialize Stream Chat client
+        const chatClient = StreamChat.getInstance(apiKey);
+        
+        // Connect user to Stream
+        await chatClient.connectUser(
+          {
+            id: user.id.toString(),
+            name: user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email,
+            email: user.email
+          },
+          token
+        );
+
+        console.log('✅ Connected to Stream Chat');
+        setClient(chatClient);
+
+        // Fetch available users for creating channels
+        const users = await fetchAvailableUsers();
+        setAvailableUsers(users);
+
+        setError(null);
+      } catch (err: any) {
+        console.error('Stream Chat initialization failed:', err);
+        setError(err.message);
+        toast({
+          title: 'Connection Failed',
+          description: 'Unable to connect to messaging service. Please try again.',
+          variant: 'destructive'
+        });
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('❌ Server-side sync error:', error);
-      return false;
+    };
+
+    initializeStreamChat();
+
+    // Cleanup on unmount
+    return () => {
+      if (client) {
+        client.disconnectUser();
+      }
+    };
+  }, [user?.id]);
+
+  const createChannel = async () => {
+    if (!client || !channelName.trim()) return;
+
+    try {
+      setLoading(true);
+
+      const channel = client.channel(channelType, {
+        name: channelName,
+        members: [user.id.toString(), ...selectedUsers]
+      });
+
+      await channel.create();
+      setActiveChannel(channel);
+      setShowNewChannel(false);
+      setChannelName('');
+      setSelectedUsers([]);
+
+      toast({
+        title: 'Channel Created',
+        description: `${channelName} has been created successfully.`
+      });
+    } catch (err: any) {
+      console.error('Failed to create channel:', err);
+      toast({
+        title: 'Creation Failed',
+        description: 'Unable to create channel. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Old client-side sync (keeping for fallback but not using)
-  const oldSyncUsersToStream = async () => {
-    if (!client) {
-      console.log('❌ Stream client not ready for user sync');
-      return false;
-    }
-    
-    console.log('🔄 Starting client-side user sync to Stream...');
+
     
     try {
       const response = await fetch('/api/users', {

@@ -12,6 +12,50 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  
+  /* TSP Brand Button Styles */
+  .btn-tsp-primary {
+    background-color: #236383;
+    color: white;
+    border: 2px solid #236383;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-tsp-primary:hover {
+    background-color: #1e5470;
+    border-color: #1e5470;
+  }
+  
+  .btn-tsp-secondary {
+    background-color: #FBAD3F;
+    color: white;
+    border: 2px solid #FBAD3F;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-tsp-secondary:hover {
+    background-color: #f09f2b;
+    border-color: #f09f2b;
+  }
+  
+  /* Tab styling fixes for TSP brand */
+  .tsp-tab-active {
+    background-color: #236383 !important;
+    color: white !important;
+  }
+  
+  .tsp-tab-inactive {
+    color: #646464 !important;
+  }
+  
+  .tsp-tab-inactive:hover {
+    color: #236383 !important;
+    background-color: rgba(35, 99, 131, 0.1) !important;
+  }
 }
 
 /* Increased base font sizes for better readability */

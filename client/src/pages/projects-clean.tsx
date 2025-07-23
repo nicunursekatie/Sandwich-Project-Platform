@@ -76,12 +76,21 @@ export default function ProjectsClean() {
     mutationFn: async ({ id, status }: { id: number; status: string }) => {
       return await apiRequest('PATCH', `/api/projects/${id}`, { status });
     },
-    onSuccess: () => {
+    onSuccess: async (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
       toast({ 
         title: "Project updated", 
         description: "Project status has been updated successfully." 
       });
+      
+      // If project was marked as completed, send kudos to all assignees
+      if (variables.status === 'completed') {
+        const project = projects?.find(p => p.id === variables.id);
+        if (project) {
+          await sendKudosForProjectCompletion(project, project.title);
+          triggerCelebration();
+        }
+      }
     },
     onError: () => {
       toast({ 
@@ -262,11 +271,70 @@ export default function ProjectsClean() {
     }
   };
 
-  const handleMarkComplete = (projectId: number, projectTitle: string, e: React.MouseEvent) => {
+  // Function to send kudos to all project assignees when project is completed
+  const sendKudosForProjectCompletion = async (project: Project, projectTitle: string) => {
+    if (!user?.id) return;
+
+    try {
+      // Get all assignees for this project
+      const assigneesToNotify = [];
+      
+      // Handle multiple assignees from assigneeIds array
+      if (project.assigneeIds && project.assigneeIds.length > 0) {
+        for (let i = 0; i < project.assigneeIds.length; i++) {
+          const assigneeId = project.assigneeIds[i];
+          const assigneeName = project.assigneeNames?.[i] || `User ${assigneeId}`;
+          
+          // Don't send kudos to yourself
+          if (assigneeId !== user.id) {
+            assigneesToNotify.push({ id: assigneeId, name: assigneeName });
+          }
+        }
+      } 
+      // Handle single assignee from legacy assigneeId field
+      else if (project.assigneeId && project.assigneeId !== user.id) {
+        assigneesToNotify.push({ 
+          id: project.assigneeId, 
+          name: project.assigneeName || `User ${project.assigneeId}` 
+        });
+      }
+
+      // Send kudos to each assignee
+      for (const assignee of assigneesToNotify) {
+        try {
+          await apiRequest("POST", "/api/messaging/kudos", {
+            recipientId: assignee.id,
+            recipientName: assignee.name,
+            contextType: "project",
+            contextId: project.id.toString(),
+            entityName: projectTitle,
+            customMessage: `🎉 Congratulations on completing "${projectTitle}"! Amazing work!`
+          });
+
+          console.log(`Kudos sent to ${assignee.name} for project completion`);
+        } catch (error) {
+          console.error(`Failed to send kudos to ${assignee.name}:`, error);
+        }
+      }
+
+      if (assigneesToNotify.length > 0) {
+        toast({
+          title: "🎉 Kudos sent!",
+          description: `Congratulations sent to ${assigneesToNotify.length} team member${assigneesToNotify.length > 1 ? 's' : ''} for completing "${projectTitle}"`,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to send project completion kudos:', error);
+    }
+  };
+
+  const handleMarkComplete = async (projectId: number, projectTitle: string, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click navigation
     const project = projects?.find(p => p.id === projectId);
     if (project && canEditProject(user, project) && confirm(`Mark "${projectTitle}" as completed?`)) {
+      // Update project status first
       updateProjectMutation.mutate({ id: projectId, status: 'completed' });
+      
       toast({
         title: "🎉 Project completed!",
         description: `"${projectTitle}" has been marked as completed. Time to celebrate!`
@@ -274,10 +342,13 @@ export default function ProjectsClean() {
       
       // Trigger celebration for project completion
       triggerCelebration();
+      
+      // Send kudos to all assignees
+      await sendKudosForProjectCompletion(project, projectTitle);
     }
   };
 
-  const handleStatusQuickChange = (projectId: number, newStatus: string, e: React.MouseEvent) => {
+  const handleStatusQuickChange = async (projectId: number, newStatus: string, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click navigation
     const project = projects?.find(p => p.id === projectId);
     if (project && canEditProject(user, project)) {
@@ -286,6 +357,12 @@ export default function ProjectsClean() {
         title: "Status updated",
         description: `Project status changed to ${newStatus.replace('_', ' ')}`
       });
+      
+      // If project is being completed, send kudos to all assignees
+      if (newStatus === 'completed') {
+        await sendKudosForProjectCompletion(project, project.title);
+        triggerCelebration();
+      }
     }
   };
 
@@ -461,15 +538,40 @@ export default function ProjectsClean() {
           </div>
           
           {/* Add kudos button for completed projects with assignees */}
-          {project.status === 'completed' && project.assigneeId && project.assigneeName && user?.id !== project.assigneeId ? (
-            <SendKudosButton
-              recipientId={project.assigneeId}
-              recipientName={project.assigneeName}
-              contextType="project"
-              contextId={project.id.toString()}
-              entityName={project.title}
-              size="sm"
-            />
+          {project.status === 'completed' ? (
+            <div className="flex gap-1">
+              {/* Handle multiple assignees from assigneeIds array */}
+              {project.assigneeIds && project.assigneeIds.length > 0 ? (
+                project.assigneeIds.map((assigneeId, index) => {
+                  const assigneeName = project.assigneeNames?.[index] || `User ${assigneeId}`;
+                  return user?.id !== assigneeId ? (
+                    <SendKudosButton
+                      key={assigneeId}
+                      recipientId={assigneeId}
+                      recipientName={assigneeName}
+                      contextType="project"
+                      contextId={project.id.toString()}
+                      entityName={project.title}
+                      size="sm"
+                    />
+                  ) : null;
+                })
+              ) : (
+                /* Handle single assignee from legacy assigneeId field */
+                project.assigneeId && project.assigneeName && user?.id !== project.assigneeId ? (
+                  <SendKudosButton
+                    recipientId={project.assigneeId}
+                    recipientName={project.assigneeName}
+                    contextType="project"
+                    contextId={project.id.toString()}
+                    entityName={project.title}
+                    size="sm"
+                  />
+                ) : (
+                  <ArrowRight className="w-4 h-4 text-slate-400" />
+                )
+              )}
+            </div>
           ) : (
             <ArrowRight className="w-4 h-4 text-slate-400" />
           )}

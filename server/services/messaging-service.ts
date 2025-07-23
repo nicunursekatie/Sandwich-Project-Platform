@@ -840,7 +840,105 @@ export class MessagingService {
     }
   }
 
-  // getSentMessages method removed - architecturally incompatible with current inbox/chat separation
+  /**
+   * Get sent messages for a user
+   */
+  async getSentMessages(userId: string, options: {
+    contextType?: string;
+    limit?: number;
+    offset?: number;
+  } = {}): Promise<MessageWithSender[]> {
+    const { contextType, limit = 50, offset = 0 } = options;
+
+    try {
+      let query = db
+        .select({
+          id: messages.id,
+          senderId: messages.senderId,
+          content: messages.content,
+          contextType: messages.contextType,
+          contextId: messages.contextId,
+          createdAt: messages.createdAt,
+          editedAt: messages.editedAt,
+          editedContent: messages.editedContent,
+          senderName: users.displayName,
+          senderEmail: users.email,
+        })
+        .from(messages)
+        .leftJoin(users, eq(messages.senderId, users.id))
+        .where(eq(messages.senderId, userId));
+
+      if (contextType && contextType !== 'all') {
+        query = query.where(eq(messages.contextType, contextType));
+      }
+
+      const result = await query
+        .orderBy(desc(messages.createdAt))
+        .limit(limit)
+        .offset(offset);
+
+      return result.map(msg => ({
+        ...msg,
+        senderName: msg.senderName || msg.senderEmail || `User ${msg.senderId}` || 'Unknown User',
+        read: true, // All sent messages are "read" from sender's perspective
+      }));
+    } catch (error) {
+      console.error('Failed to get sent messages:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get inbox messages for a user (received messages only)
+   */
+  async getInboxMessages(userId: string, options: {
+    contextType?: string;
+    limit?: number;
+    offset?: number;
+  } = {}): Promise<MessageWithSender[]> {
+    const { contextType, limit = 50, offset = 0 } = options;
+
+    try {
+      let query = db
+        .select({
+          id: messages.id,
+          senderId: messages.senderId,
+          content: messages.content,
+          contextType: messages.contextType,
+          contextId: messages.contextId,
+          createdAt: messages.createdAt,
+          editedAt: messages.editedAt,
+          editedContent: messages.editedContent,
+          senderName: users.displayName,
+          senderEmail: users.email,
+          read: messageRecipients.read,
+          readAt: messageRecipients.readAt,
+        })
+        .from(messages)
+        .innerJoin(messageRecipients, eq(messages.id, messageRecipients.messageId))
+        .leftJoin(users, eq(messages.senderId, users.id))
+        .where(eq(messageRecipients.recipientId, userId));
+
+      if (contextType && contextType !== 'all') {
+        query = query.where(eq(messages.contextType, contextType));
+      }
+
+      const result = await query
+        .orderBy(desc(messages.createdAt))
+        .limit(limit)
+        .offset(offset);
+
+      return result.map(msg => ({
+        ...msg,
+        senderName: msg.senderName || msg.senderEmail || `User ${msg.senderId}` || 'Unknown User',
+        read: !!msg.read,
+        readAt: msg.readAt || undefined,
+      }));
+    } catch (error) {
+      console.error('Failed to get inbox messages:', error);
+      throw error;
+    }
+  }
   // TODO: Implement proper sent messages when inbox system is fully separated from chat system
 
 

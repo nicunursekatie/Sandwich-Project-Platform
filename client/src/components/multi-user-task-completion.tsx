@@ -145,6 +145,8 @@ export function MultiUserTaskCompletion({
     removeCompletionMutation.mutate();
   };
 
+
+
   if (isLoading) {
     return <div className="text-sm text-gray-500">Loading completion status...</div>;
   }

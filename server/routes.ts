@@ -7165,6 +7165,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Socket.IO chat system
   app.use("/api", chatRoutes);
 
+  // Stream Chat token generation endpoint
+  app.post("/api/stream/token", isAuthenticated, async (req, res) => {
+    try {
+      const { userId } = req.body;
+      const requestingUserId = (req as any).user?.id;
+
+      // Verify user is requesting their own token or is admin
+      if (userId !== requestingUserId.toString() && (req as any).user?.role !== 'admin') {
+        return res.status(403).json({ error: "Unauthorized to get token for other users" });
+      }
+
+      // Initialize Stream Chat with server credentials
+      const serverClient = StreamChat.getInstance(
+        process.env.STREAM_API_KEY!,
+        process.env.STREAM_API_SECRET!
+      );
+
+      // Generate token for user
+      const token = serverClient.createToken(userId);
+
+      res.json({
+        token,
+        apiKey: process.env.STREAM_API_KEY!,
+        userId
+      });
+    } catch (error) {
+      console.error('Error generating Stream token:', error);
+      res.status(500).json({ error: 'Failed to generate Stream token' });
+    }
+  });
+
   // Stream Chat user synchronization endpoint
   app.post("/api/stream/sync-users", isAuthenticated, async (req, res) => {
     try {
@@ -7186,7 +7217,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const streamUsers = allUsers
         .filter(user => user.isActive && user.email)
         .map(user => ({
-          id: user.id,
+          id: user.id.toString(),
           name: user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email,
           email: user.email,
           role: 'user' // Always use 'user' role for Stream compatibility

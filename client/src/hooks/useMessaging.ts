@@ -52,6 +52,11 @@ export function useMessaging() {
 
   const [wsConnection, setWsConnection] = useState<WebSocket | null>(null);
 
+  // Type guard for user object
+  const isValidUser = (u: any): u is { id: string; email: string } => {
+    return u && typeof u === 'object' && 'id' in u && 'email' in u;
+  };
+
   // Fix WebSocket URL construction
   const getWebSocketUrl = () => {
     if (typeof window === 'undefined') return '';
@@ -86,9 +91,9 @@ export function useMessaging() {
     project: 0,
     task: 0,
   } as UnreadCounts, refetch: refetchUnreadCounts } = useQuery({
-    queryKey: ['/api/message-notifications/unread-counts', user?.id],
+    queryKey: ['/api/message-notifications/unread-counts', isValidUser(user) ? user.id : null],
     queryFn: async () => {
-      if (!user?.id) return {
+      if (!isValidUser(user)) return {
         general: 0,
         committee: 0,
         hosts: 0,
@@ -130,7 +135,7 @@ export function useMessaging() {
         };
       }
     },
-    enabled: !!user?.id,
+    enabled: isValidUser(user),
     staleTime: 30000, // Data remains fresh for 30 seconds
     gcTime: 60000,
     refetchInterval: 30000, // Refetch every 30 seconds
@@ -138,13 +143,13 @@ export function useMessaging() {
 
   // Get unread messages
   const { data: unreadMessages = [], refetch: refetchUnreadMessages } = useQuery({
-    queryKey: ['/api/messaging/unread', user?.id],
+    queryKey: ['/api/messaging/unread', isValidUser(user) ? user.id : null],
     queryFn: async () => {
-      if (!user?.id) return [];
+      if (!isValidUser(user)) return [];
       const response = await apiRequest('GET', '/api/messaging/unread');
       return response.messages || [];
     },
-    enabled: !!user?.id,
+    enabled: isValidUser(user),
   });
 
   // Send message mutation
@@ -206,7 +211,7 @@ export function useMessaging() {
 
   // Setup WebSocket connection for real-time updates
   useEffect(() => {
-    if (!user?.id) return;
+    if (!isValidUser(user)) return;
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     
@@ -236,7 +241,9 @@ export function useMessaging() {
     ws.onopen = () => {
       console.log('Messaging WebSocket connected');
       // Identify user
-      ws.send(JSON.stringify({ type: 'identify', userId: user.id }));
+      if (isValidUser(user)) {
+        ws.send(JSON.stringify({ type: 'identify', userId: user.id }));
+      }
       setWsConnection(ws);
     };
 
@@ -275,11 +282,11 @@ export function useMessaging() {
     return () => {
       ws.close();
     };
-  }, [user?.id, refetchUnreadCounts, refetchUnreadMessages, queryClient, toast]);
+  }, [isValidUser(user) ? user.id : null, refetchUnreadCounts, refetchUnreadMessages, queryClient, toast]);
 
   // Send a message
   const sendMessage = useCallback(async (params: SendMessageParams) => {
-    if (!user?.id) {
+    if (!isValidUser(user)) {
       toast({
         title: 'Not authenticated',
         description: 'Please log in to send messages',
@@ -289,7 +296,7 @@ export function useMessaging() {
     }
 
     return await sendMessageMutation.mutateAsync(params);
-  }, [user?.id, sendMessageMutation, toast]);
+  }, [isValidUser(user) ? user.id : null, sendMessageMutation, toast]);
 
   // Mark message as read
   const markAsRead = useCallback(async (messageId: number) => {

@@ -401,7 +401,79 @@ router.get("/messages", async (req, res) => {
   }
 });
 
-// Sent messages route removed - architecturally incompatible with current inbox/chat separation
-// TODO: Implement proper sent messages when inbox system is fully separated from chat system
+/**
+ * Get all messages (inbox and sent combined)
+ */
+router.get("/all", async (req, res) => {
+  try {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const { contextType, limit = "50", offset = "0" } = req.query;
+
+    const messages = await messagingService.getAllMessages(user.id, {
+      contextType: contextType as string | undefined,
+      limit: parseInt(limit as string),
+      offset: parseInt(offset as string),
+    });
+
+    res.json({ messages });
+  } catch (error) {
+    console.error("Error fetching all messages:", error);
+    res.status(500).json({ error: "Failed to fetch messages" });
+  }
+});
+
+/**
+ * Get sent messages only
+ */
+router.get("/sent", async (req, res) => {
+  try {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const { contextType, limit = "50", offset = "0" } = req.query;
+
+    const messages = await messagingService.getSentMessages(user.id, {
+      contextType: contextType as string | undefined,
+      limit: parseInt(limit as string),
+      offset: parseInt(offset as string),
+    });
+
+    res.json({ messages });
+  } catch (error) {
+    console.error("Error fetching sent messages:", error);
+    res.status(500).json({ error: "Failed to fetch sent messages" });
+  }
+});
+
+/**
+ * Get inbox messages (received messages only)
+ */
+router.get("/inbox", async (req, res) => {
+  try {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const { contextType, limit = "50", offset = "0" } = req.query;
+
+    const messages = await messagingService.getInboxMessages(user.id, {
+      contextType: contextType as string | undefined,
+      limit: parseInt(limit as string),
+      offset: parseInt(offset as string),
+    });
+
+    res.json({ messages });
+  } catch (error) {
+    console.error("Error fetching inbox messages:", error);
+    res.status(500).json({ error: "Failed to fetch inbox messages" });
+  }
+});
 
 export { router as messagingRoutes };

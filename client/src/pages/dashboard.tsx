@@ -45,8 +45,9 @@ import InboxPage from "@/pages/inbox";
 import MessagingSystem from "@/components/messaging-system";
 import RealTimeMessages from "@/pages/real-time-messages";
 import Governance from "@/pages/governance";
-import StreamMessagesPage from "@/pages/stream-messages";
+import UnifiedMessagesPage from "@/pages/unified-messages";
 import AdminPage from "@/pages/admin";
+import StreamMessagesPage from "@/pages/stream-messages-clean";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -153,7 +154,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "projects":
         return <ProjectsClean />;
       case "messages":
-        return <InboxPage />;
+        return <UnifiedMessagesPage />;
       case "stream-messages":
         return <StreamMessagesPage />;
       case "chat":
@@ -182,7 +183,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
                 <p className="font-body text-muted-foreground">Essential training documents and resources</p>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {[
                 {
                   title: "Summer Food Safety Guidelines",
@@ -292,9 +293,9 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
               <p className="font-body text-muted-foreground">Data insights and impact visualization</p>
             </div>
             <Tabs defaultValue="data" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="data">Data Analytics</TabsTrigger>
-                <TabsTrigger value="impact">Impact Dashboard</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 h-9 sm:h-10">
+                <TabsTrigger value="data" className="text-xs sm:text-sm">Data Analytics</TabsTrigger>
+                <TabsTrigger value="impact" className="text-xs sm:text-sm">Impact Dashboard</TabsTrigger>
               </TabsList>
               <TabsContent value="data" className="mt-6">
                 <AnalyticsDashboard />
@@ -380,17 +381,18 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       <AnnouncementBanner />
       
       {/* Top Header */}
-      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex justify-between items-center relative z-50">
-        <div className="flex items-center space-x-3">
+      <div className="bg-white border-b border-slate-200 px-3 sm:px-4 md:px-6 py-3 flex justify-between items-center relative z-50">
+        <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+            className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors touch-manipulation"
+            aria-label="Toggle navigation menu"
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
-          <img src={sandwichLogo} alt="Sandwich Logo" className="w-6 h-6" />
-          <h1 className="text-lg font-semibold text-slate-900 hidden sm:block">The Sandwich Project</h1>
+          <img src={sandwichLogo} alt="Sandwich Logo" className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+          <h1 className="text-base sm:text-lg font-semibold text-slate-900 hidden sm:block truncate">The Sandwich Project</h1>
           <h1 className="text-sm font-semibold text-slate-900 sm:hidden">TSP</h1>
         </div>
         
@@ -420,20 +422,22 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
           )}
         </div>
         
-        <div className="flex items-center space-x-2 sm:space-x-4 relative z-50">
+        <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4 relative z-50 flex-shrink-0">
           <button
             onClick={() => {
               console.log('Messages button clicked');
               setActiveSection("messages");
+              setIsMobileMenuOpen(false);
             }}
-            className={`p-2 rounded-lg transition-colors relative z-50 pointer-events-auto ${
+            className={`p-2 rounded-lg transition-colors relative z-50 pointer-events-auto touch-manipulation ${
               activeSection === "messages"
                 ? "bg-blue-50 text-blue-700 border border-blue-200"
                 : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
             }`}
             title="Messages"
+            aria-label="Messages"
           >
-            <MessageCircle className="w-5 h-5" />
+            <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           <MessageNotifications user={user} />
           <button
@@ -447,14 +451,15 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
               // Close mobile menu if open
               setIsMobileMenuOpen(false);
             }}
-            className={`p-2 rounded-lg transition-colors relative z-50 pointer-events-auto ${
+            className={`p-2 rounded-lg transition-colors relative z-50 pointer-events-auto touch-manipulation ${
               activeSection === "profile"
                 ? "bg-blue-50 text-blue-700 border border-blue-200"
                 : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
             }`}
             title="Account Settings"
+            aria-label="Account Settings"
           >
-            <UserCog className="w-5 h-5" />
+            <UserCog className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           <button 
             onClick={async () => {
@@ -475,10 +480,11 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
                 window.location.href = "/";
               }
             }}
-            className="flex items-center space-x-2 px-2 sm:px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors"
+            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors touch-manipulation"
+            aria-label="Logout"
           >
             <LogOut className="w-4 h-4" />
-            <span className="text-sm hidden sm:block">Logout</span>
+            <span className="text-xs sm:text-sm hidden sm:block">Logout</span>
           </button>
         </div>
       </div>
@@ -495,9 +501,9 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         {/* Sidebar */}
         <div className={`${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 fixed md:relative z-50 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out h-screen max-h-screen`}>
+        } md:translate-x-0 fixed md:relative z-50 w-64 sm:w-72 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out h-screen max-h-screen`}>
           {/* Simple Navigation with enhanced mobile scrolling */}
-          <div className="flex-1 overflow-y-auto pb-6 touch-pan-y">
+          <div className="flex-1 overflow-y-auto pb-6 touch-pan-y overscroll-contain">
             <SimpleNav onSectionChange={(section) => {
               console.log('Dashboard setActiveSection called with:', section);
               setActiveSection(section);
@@ -512,8 +518,10 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto w-full md:w-auto relative z-10">
-          <div className="p-4 sm:p-6 pb-20">
-            {renderContent()}
+          <div className="p-3 sm:p-4 md:p-6 pb-20 min-h-full">
+            <div className="max-w-full overflow-x-hidden">
+              {renderContent()}
+            </div>
           </div>
         </div>
       </div>

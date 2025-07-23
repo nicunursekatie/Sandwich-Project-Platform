@@ -1,0 +1,113 @@
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=qCvz_8j9WAnb' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=qCvz_8j9WAnb' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+message-notifications.tsx:98 Connecting to WebSocket at: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/notifications
+dashboard.tsx:56 Dashboard activeSection changed to: dashboard
+message-notifications.tsx:110 WebSocket connected successfully
+useMessaging.ts:234 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ useMessaging.ts:234
+hook.js:608 Messaging WebSocket error: Event
+overrideMethod @ hook.js:608
+useMessaging.ts:271 Messaging WebSocket disconnected
+simple-nav.tsx:148 Navigation click: user-management
+dashboard.tsx:502 Dashboard setActiveSection called with: user-management
+dashboard.tsx:56 Dashboard activeSection changed to: user-management
+simple-nav.tsx:148 Navigation click: admin
+dashboard.tsx:502 Dashboard setActiveSection called with: admin
+dashboard.tsx:56 Dashboard activeSection changed to: admin
+message-notifications.tsx:136 WebSocket connection closed: 1006 
+message-notifications.tsx:110 WebSocket connected successfully
+simple-nav.tsx:148 Navigation click: phone-directory
+dashboard.tsx:502 Dashboard setActiveSection called with: phone-directory
+dashboard.tsx:56 Dashboard activeSection changed to: phone-directory
+:5000/api/message-notifications/unread-counts:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+:5000/api/message-notifications/unread-counts:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Failed to fetch unread counts: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async queryFn (useMessaging.ts:106:26)
+overrideMethod @ hook.js:608
+:5000/api/message-notifications/unread-counts:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+:5000/api/message-notifications/unread-counts:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Failed to fetch unread counts: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async queryFn (useMessaging.ts:106:26)
+overrideMethod @ hook.js:608
+simple-nav.tsx:148 Navigation click: recipients
+dashboard.tsx:502 Dashboard setActiveSection called with: recipients
+dashboard.tsx:56 Dashboard activeSection changed to: recipients
+message-notifications.tsx:136 WebSocket connection closed: 1006 
+simple-nav.tsx:148 Navigation click: phone-directory
+dashboard.tsx:502 Dashboard setActiveSection called with: phone-directory
+dashboard.tsx:56 Dashboard activeSection changed to: phone-directory
+:5000/favicon.ico:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+simple-nav.tsx:148 Navigation click: suggestions
+dashboard.tsx:502 Dashboard setActiveSection called with: suggestions
+dashboard.tsx:56 Dashboard activeSection changed to: suggestions
+:5000/api/suggestions:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+:5000/favicon.ico:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+message-notifications.tsx:110 WebSocket connected successfully
+simple-nav.tsx:148 Navigation click: chat
+dashboard.tsx:502 Dashboard setActiveSection called with: chat
+dashboard.tsx:56 Dashboard activeSection changed to: chat
+enhanced-chat.tsx:106 Chat connected to Socket.IO
+enhanced-chat.tsx:181 Chat sending user data: Object
+socket__io-client.js?v=04a0e5bf:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=GRZlcRWbMHeN72_gAAAA' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=04a0e5bf:1059
+socket__io-client.js?v=04a0e5bf:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=pUi_tTzel7RhmVFnAAAB' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=04a0e5bf:1059
+enhanced-chat.tsx:118 Successfully joined channel: general
+enhanced-chat.tsx:112 Chat disconnected from Socket.IO
+enhanced-chat.tsx:181 Chat sending user data: Object
+:5000/api/message-notifications/mark-chat-read:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Failed to mark chat messages as read: 401
+overrideMethod @ hook.js:608
+enhanced-chat.tsx:106 Chat connected to Socket.IO
+enhanced-chat.tsx:181 Chat sending user data: Object
+socket__io-client.js?v=04a0e5bf:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=C_PNIOGfek5bxYMsAAAE' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=04a0e5bf:1059
+enhanced-chat.tsx:118 Successfully joined channel: core-team
+socket__io-client.js?v=04a0e5bf:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=7r0omQgVXYLCO61sAAAF' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=04a0e5bf:1059
+enhanced-chat.tsx:112 Chat disconnected from Socket.IO
+enhanced-chat.tsx:181 Chat sending user data: Object
+:5000/api/message-notifications/mark-chat-read:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Failed to mark chat messages as read: 401
+overrideMethod @ hook.js:608
+enhanced-chat.tsx:106 Chat connected to Socket.IO
+enhanced-chat.tsx:181 Chat sending user data: Object
+socket__io-client.js?v=04a0e5bf:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=rcJho14wPDpoARTpAAAI' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=04a0e5bf:1059
+enhanced-chat.tsx:118 Successfully joined channel: general
+socket__io-client.js?v=04a0e5bf:1059 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=qMNW_B20drUzQBaEAAAJ' failed: Invalid frame header
+createSocket @ socket__io-client.js?v=04a0e5bf:1059
+simple-nav.tsx:148 Navigation click: stream-messages
+dashboard.tsx:502 Dashboard setActiveSection called with: stream-messages
+enhanced-chat.tsx:112 Chat disconnected from Socket.IO
+dashboard.tsx:56 Dashboard activeSection changed to: stream-messages
+:5000/api/messaging/sent:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+:5000/api/messaging/inbox:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+unified-messages.tsx:100 Fetched messages: Object
+:5000/api/users:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+:5000/api/message-notifications/unread-counts:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+:5000/api/message-notifications/unread-counts:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Failed to fetch unread counts: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async queryFn (useMessaging.ts:106:26)
+overrideMethod @ hook.js:608
+simple-nav.tsx:148 Navigation click: real-time-messages
+dashboard.tsx:502 Dashboard setActiveSection called with: real-time-messages
+dashboard.tsx:56 Dashboard activeSection changed to: real-time-messages
+:5000/api/real-time-messages?folder=inbox:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+email-style-messaging.tsx:116 Sending message data: Object
+:5000/api/real-time-messages:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Send message error: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async Object.mutationFn (email-style-messaging.tsx:117:24)
+overrideMethod @ hook.js:608
