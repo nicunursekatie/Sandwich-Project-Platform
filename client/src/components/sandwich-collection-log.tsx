@@ -423,7 +423,12 @@ export default function SandwichCollectionLog() {
 
   const parseGroupCollections = (groupCollectionsJson: string) => {
     try {
-      return JSON.parse(groupCollectionsJson || "[]");
+      const parsed = JSON.parse(groupCollectionsJson || "[]");
+      // Convert database format {name, count} to form format {groupName, sandwichCount}
+      return parsed.map((group: any) => ({
+        groupName: group.name || group.groupName || "",
+        sandwichCount: group.count || group.sandwichCount || 0
+      }));
     } catch {
       // Handle text format by converting to array
       if (groupCollectionsJson && groupCollectionsJson !== "[]") {
