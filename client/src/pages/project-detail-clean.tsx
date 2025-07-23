@@ -848,6 +848,28 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                 </Select>
               </div>
               <div>
+                <Label htmlFor="edit-project-category">Category</Label>
+                <Select 
+                  value={editingProject?.category || ''} 
+                  onValueChange={(value) => setEditingProject(prev => prev ? { ...prev, category: value } : null)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="operations">Operations</SelectItem>
+                    <SelectItem value="development">Development</SelectItem>
+                    <SelectItem value="marketing">Marketing</SelectItem>
+                    <SelectItem value="fundraising">Fundraising</SelectItem>
+                    <SelectItem value="volunteer">Volunteer</SelectItem>
+                    <SelectItem value="community">Community</SelectItem>
+                    <SelectItem value="strategic">Strategic</SelectItem>
+                    <SelectItem value="administrative">Administrative</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
                 <ProjectAssigneeSelector
                   value={editingProject?.assigneeName || ''}
                   onChange={(value, userIds) => setEditingProject(prev => prev ? { 
