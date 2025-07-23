@@ -354,6 +354,19 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
             </p>
           </div>
 
+          {/* DEBUG: Show all available permissions */}
+          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <h4 className="font-medium text-sm mb-2">DEBUG: All Available Permissions ({Object.keys(PERMISSIONS).length} total)</h4>
+            <div className="text-xs text-gray-600 max-h-32 overflow-y-auto">
+              {Object.entries(PERMISSIONS).map(([key, value]) => (
+                <div key={key} className="flex justify-between">
+                  <span>{key}:</span>
+                  <span className="font-mono">{value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Permission Categories */}
           <ScrollArea className="h-[400px] pr-4">
             <div className="space-y-6">
