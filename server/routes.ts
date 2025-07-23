@@ -264,6 +264,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   console.log("Using memory-based session store for stability");
   const sessionStore = new session.MemoryStore();
 
+  // Add CORS middleware before session middleware
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    
+    // Allow requests from same domain (Replit environment)
+    if (origin && (origin.includes('.replit.dev') || origin.includes('localhost'))) {
+      res.header('Access-Control-Allow-Origin', origin);
+    } else {
+      res.header('Access-Control-Allow-Origin', '*');
+    }
+    
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH');
+    res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma');
+    
+    if (req.method === 'OPTIONS') {
+      res.sendStatus(200);
+    } else {
+      next();
+    }
+  });
+
   // Add session middleware with enhanced stability
   app.use(
     session({
@@ -273,9 +295,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       saveUninitialized: false,
       cookie: {
         secure: false, // Should be true in production with HTTPS, false for development
-        httpOnly: true, // Prevent XSS attacks
+        httpOnly: false, // Allow frontend to access cookies for debugging in Replit
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days for better persistence
         sameSite: "lax", // CSRF protection
+        domain: undefined, // Let Express auto-detect domain for Replit
       },
       name: "tsp.session", // Custom session name
       rolling: true, // Reset maxAge on every request to keep active sessions alive
