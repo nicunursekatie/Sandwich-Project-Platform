@@ -78,7 +78,7 @@ export const projects = pgTable("projects", {
   description: text("description"),
   status: text("status").notNull(), // 'waiting', 'available', 'in_progress', 'completed'
   priority: text("priority").notNull().default("medium"), // 'low', 'medium', 'high', 'urgent'
-  category: text("category").notNull().default("general"), // 'general', 'marketing', 'operations', 'grants', 'events'
+  category: text("category").notNull().default("technology"), // 'technology', 'events', 'grants', 'outreach'
   assigneeId: integer("assignee_id"),
   assigneeName: text("assignee_name"),
   assigneeIds: jsonb("assignee_ids").default('[]'), // Array of user IDs for multiple assignees

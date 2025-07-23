@@ -50,12 +50,19 @@ export default function ProjectsClean() {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [activeTab, setActiveTab] = useState("active");
+  
+  // Filter and sort state
+  const [sortBy, setSortBy] = useState("title"); // 'title', 'priority', 'dueDate', 'status'
+  const [sortOrder, setSortOrder] = useState("asc"); // 'asc', 'desc'
+  const [filterCategory, setFilterCategory] = useState("all"); // 'all', 'technology', 'events', 'grants', 'outreach'
+  const [showMyProjects, setShowMyProjects] = useState(false);
+  
   const [newProject, setNewProject] = useState<Partial<InsertProject>>({
     title: '',
     description: '',
     status: 'available',
     priority: 'medium',
-    category: 'general',
+    category: 'technology',
     assigneeName: '',
     dueDate: '',
     startDate: '',
@@ -65,11 +72,68 @@ export default function ProjectsClean() {
   });
 
   // Fetch all projects
-  const { data: projects = [], isLoading } = useQuery<Project[]>({
+  const { data: allProjects = [], isLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
     staleTime: 30000, // Consider data fresh for 30 seconds
     refetchOnWindowFocus: true, // Refetch when user returns to tab
   });
+
+  // Filter and sort projects
+  const filteredAndSortedProjects = allProjects
+    .filter(project => {
+      // Filter by tab (status)
+      let statusMatch = false;
+      if (activeTab === "active") {
+        statusMatch = project.status === "available" || project.status === "in_progress";
+      } else if (activeTab === "waiting") {
+        statusMatch = project.status === "waiting";
+      } else if (activeTab === "completed") {
+        statusMatch = project.status === "completed";
+      }
+      
+      // Filter by category
+      const categoryMatch = filterCategory === "all" || project.category === filterCategory;
+      
+      // Filter by ownership (My Projects)
+      const ownershipMatch = !showMyProjects || 
+        (project.assigneeIds && project.assigneeIds.includes(user?.id)) ||
+        project.assigneeId === user?.id ||
+        project.createdBy === user?.id;
+      
+      return statusMatch && categoryMatch && ownershipMatch;
+    })
+    .sort((a, b) => {
+      let aValue: any, bValue: any;
+      
+      switch (sortBy) {
+        case "title":
+          aValue = a.title.toLowerCase();
+          bValue = b.title.toLowerCase();
+          break;
+        case "priority":
+          const priorityOrder = { low: 1, medium: 2, high: 3, urgent: 4 };
+          aValue = priorityOrder[a.priority as keyof typeof priorityOrder] || 0;
+          bValue = priorityOrder[b.priority as keyof typeof priorityOrder] || 0;
+          break;
+        case "dueDate":
+          aValue = a.dueDate ? new Date(a.dueDate).getTime() : 0;
+          bValue = b.dueDate ? new Date(b.dueDate).getTime() : 0;
+          break;
+        case "status":
+          aValue = a.status;
+          bValue = b.status;
+          break;
+        default:
+          aValue = a.title.toLowerCase();
+          bValue = b.title.toLowerCase();
+      }
+      
+      if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+
+  const projects = filteredAndSortedProjects;
 
   // Update project status mutation
   const updateProjectMutation = useMutation({
@@ -211,6 +275,16 @@ export default function ProjectsClean() {
       case "available": return <Circle className="w-4 h-4" />;
       case "waiting": return <Pause className="w-4 h-4" />;
       default: return <Circle className="w-4 h-4" />;
+    }
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'technology': return '💻';
+      case 'events': return '📅';
+      case 'grants': return '💰';
+      case 'outreach': return '🤝';
+      default: return '📁';
     }
   };
 
@@ -385,7 +459,7 @@ export default function ProjectsClean() {
       description: '',
       status: 'available',
       priority: 'medium',
-      category: 'general',
+      category: 'technology',
       assigneeName: '',
       dueDate: '',
       startDate: '',
@@ -432,6 +506,9 @@ export default function ProjectsClean() {
               <Badge variant="outline" className={`${getStatusColor(project.status)} text-xs px-2 py-1 badge`}>
                 {getStatusIcon(project.status)}
                 <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
+              </Badge>
+              <Badge variant="secondary" className="text-xs px-2 py-1 badge">
+                {getCategoryIcon(project.category)} {project.category}
               </Badge>
             </div>
             {canEditProject(user, project) && (
@@ -608,6 +685,108 @@ export default function ProjectsClean() {
         </Button>
       </div>
 
+      {/* Filter and Sort Controls */}
+      <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-4">
+        <div className="flex flex-wrap gap-4">
+          {/* Category Filter */}
+          <div className="flex-1 min-w-48">
+            <Label htmlFor="category-filter" className="text-sm font-medium">Category</Label>
+            <Select value={filterCategory} onValueChange={setFilterCategory}>
+              <SelectTrigger id="category-filter" className="mt-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="technology">Technology</SelectItem>
+                <SelectItem value="events">Events</SelectItem>
+                <SelectItem value="grants">Grants</SelectItem>
+                <SelectItem value="outreach">Outreach/Networking</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Sort Options */}
+          <div className="flex-1 min-w-48">
+            <Label htmlFor="sort-by" className="text-sm font-medium">Sort By</Label>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger id="sort-by" className="mt-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="title">Alphabetical</SelectItem>
+                <SelectItem value="priority">Priority</SelectItem>
+                <SelectItem value="dueDate">Due Date</SelectItem>
+                <SelectItem value="status">Status</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Sort Direction */}
+          <div className="flex-1 min-w-32">
+            <Label htmlFor="sort-order" className="text-sm font-medium">Order</Label>
+            <Select value={sortOrder} onValueChange={setSortOrder}>
+              <SelectTrigger id="sort-order" className="mt-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="asc">A-Z / Low-High</SelectItem>
+                <SelectItem value="desc">Z-A / High-Low</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Quick Filter Buttons */}
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={showMyProjects ? "default" : "outline"}
+            size="sm"
+            onClick={() => setShowMyProjects(!showMyProjects)}
+            className="flex items-center gap-2"
+          >
+            <User className="w-4 h-4" />
+            My Projects Only
+          </Button>
+          
+          {/* Quick category filters */}
+          <Button
+            variant={filterCategory === "technology" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterCategory(filterCategory === "technology" ? "all" : "technology")}
+          >
+            💻 Tech
+          </Button>
+          <Button
+            variant={filterCategory === "events" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterCategory(filterCategory === "events" ? "all" : "events")}
+          >
+            📅 Events
+          </Button>
+          <Button
+            variant={filterCategory === "grants" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterCategory(filterCategory === "grants" ? "all" : "grants")}
+          >
+            💰 Grants
+          </Button>
+          <Button
+            variant={filterCategory === "outreach" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterCategory(filterCategory === "outreach" ? "all" : "outreach")}
+          >
+            🤝 Outreach
+          </Button>
+        </div>
+
+        {/* Results Summary */}
+        <div className="text-sm text-gray-600">
+          Showing {projects.length} of {allProjects.length} projects
+          {showMyProjects && " (your projects only)"}
+          {filterCategory !== "all" && ` in ${filterCategory}`}
+        </div>
+      </div>
+
       {/* Simple Mobile-First Tab Navigation */}
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-2 w-full">
@@ -774,6 +953,21 @@ export default function ProjectsClean() {
                     <SelectItem value="medium">Medium</SelectItem>
                     <SelectItem value="high">High</SelectItem>
                     <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="category">Category</Label>
+                <Select value={newProject.category} onValueChange={(value) => setNewProject(prev => ({ ...prev, category: value }))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="technology">💻 Technology</SelectItem>
+                    <SelectItem value="events">📅 Events</SelectItem>
+                    <SelectItem value="grants">💰 Grants</SelectItem>
+                    <SelectItem value="outreach">🤝 Outreach/Networking</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -950,11 +1144,10 @@ export default function ProjectsClean() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="general">General</SelectItem>
-                    <SelectItem value="operations">Operations</SelectItem>
-                    <SelectItem value="outreach">Outreach</SelectItem>
-                    <SelectItem value="technology">Technology</SelectItem>
-                    <SelectItem value="fundraising">Fundraising</SelectItem>
+                    <SelectItem value="technology">💻 Technology</SelectItem>
+                    <SelectItem value="events">📅 Events</SelectItem>
+                    <SelectItem value="grants">💰 Grants</SelectItem>
+                    <SelectItem value="outreach">🤝 Outreach/Networking</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
