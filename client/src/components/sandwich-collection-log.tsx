@@ -723,6 +723,25 @@ export default function SandwichCollectionLog() {
         return;
       }
 
+      // Helper function to format group collections for CSV
+      const formatGroupCollections = (groupCollectionsStr: string) => {
+        if (!groupCollectionsStr || groupCollectionsStr === "[]") return "";
+        try {
+          const groups = JSON.parse(groupCollectionsStr);
+          if (Array.isArray(groups) && groups.length > 0) {
+            return groups.map((group: any) => {
+              const name = group.name || group.groupName || '';
+              const count = group.count || group.sandwichCount || 0;
+              return `${name}: ${count}`;
+            }).join('; ');
+          }
+        } catch (e) {
+          // If parsing fails, return the original string cleaned up
+          return groupCollectionsStr.replace(/"/g, '');
+        }
+        return "";
+      };
+
       const headers = ["ID", "Host Name", "Individual Sandwiches", "Collection Date", "Group Collections", "Submitted At"];
       const csvData = [
         headers.join(","),
@@ -731,7 +750,7 @@ export default function SandwichCollectionLog() {
           `"${collection.hostName}"`,
           collection.individualSandwiches,
           `"${collection.collectionDate}"`,
-          `"${collection.groupCollections}"`,
+          `"${formatGroupCollections(collection.groupCollections || '')}"`,
           `"${new Date(collection.submittedAt).toLocaleString()}"`
         ].join(","))
       ].join("\n");
