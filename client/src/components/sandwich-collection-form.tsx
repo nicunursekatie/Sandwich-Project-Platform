@@ -41,7 +41,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   const [groupCollections, setGroupCollections] = useState<GroupCollection[]>([
     { id: "1", groupName: "", sandwichCount: 0 },
   ]);
-  const [groupOnlyMode, setGroupOnlyMode] = useState(false);
+
 
   // Fetch active hosts from the database
   const { data: hosts = [] } = useQuery<Host[]>({
@@ -113,7 +113,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       setIsCustomHost(false);
       setIndividualSandwiches("");
       setGroupCollections([{ id: "1", groupName: "", sandwichCount: 0 }]);
-      setGroupOnlyMode(false);
+
       toast({
         title: "Collection submitted",
         description: "Sandwich collection has been logged and synced to Google Sheets.",
@@ -182,7 +182,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     const hasGroupCollections = validGroupCollections.length > 0;
     const isAutoGroupOnlyMode = hasGroupCollections && !hasIndividualSandwiches && !hasHostName;
 
-    if (isAutoGroupOnlyMode || groupOnlyMode) {
+    if (isAutoGroupOnlyMode) {
       // Group-only mode validation - just need groups
       if (validGroupCollections.length === 0) {
         toast({
@@ -244,7 +244,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     let finalIndividualSandwiches = parseInt(individualSandwiches) || 0;
     let finalGroupCollections = groupCollectionsString;
     
-    if (isAutoGroupOnlyMode || groupOnlyMode) {
+    if (isAutoGroupOnlyMode) {
       finalHostName = "Groups";
       // In group-only mode, sum all group collections and put in individual sandwiches field
       const totalGroupSandwiches = validGroupCollections.reduce((sum, group) => sum + group.sandwichCount, 0);
@@ -277,28 +277,6 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       </div>
 
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
-        {/* Group-only mode toggle */}
-        <div className="flex items-center space-x-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <Checkbox
-            id="groupOnlyMode"
-            checked={groupOnlyMode}
-            onCheckedChange={(checked) => {
-              setGroupOnlyMode(checked as boolean);
-              // Reset form when switching modes
-              if (checked) {
-                setHostName("");
-                setIndividualSandwiches("");
-                setIsCustomHost(false);
-              }
-            }}
-          />
-          <Label htmlFor="groupOnlyMode" className="text-sm font-medium text-blue-900">
-            Group Collections Only Mode
-          </Label>
-          <span className="text-xs text-blue-700 ml-2">
-            (For logging group collections without specifying a host)
-          </span>
-        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -312,17 +290,15 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
             />
           </div>
 
-          {!groupOnlyMode && (
-            <div className="space-y-2">
-              <Label htmlFor="hostName">Host Name</Label>
+          <div className="space-y-2">
+            <Label htmlFor="hostName">Host Name</Label>
             {isCustomHost ? (
               <div className="flex gap-2">
                 <Input
                   id="hostName"
                   value={hostName}
                   onChange={(e) => setHostName(e.target.value)}
-                  placeholder="Enter custom host name"
-                  required
+                  placeholder="Enter custom host name (optional if group data provided)"
                 />
                 <Button
                   type="button"
@@ -377,24 +353,20 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 )}
               </div>
             )}
-            </div>
-          )}
+          </div>
         </div>
 
-        {!groupOnlyMode && (
-          <div className="space-y-2">
-            <Label htmlFor="individualSandwiches">Individual Sandwiches</Label>
+        <div className="space-y-2">
+          <Label htmlFor="individualSandwiches">Individual Sandwiches</Label>
             <Input
               id="individualSandwiches"
               type="number"
               min="0"
               value={individualSandwiches}
               onChange={(e) => setIndividualSandwiches(e.target.value)}
-              placeholder="Number of individual sandwiches"
-              required
+              placeholder="Number of individual sandwiches (optional if group data provided)"
             />
-          </div>
-        )}
+        </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
