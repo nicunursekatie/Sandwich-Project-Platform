@@ -116,6 +116,7 @@ This is a full-stack sandwich collection management application built for The Sa
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+UI Design: Button labels and interface text must be extremely clear about their function - avoid ambiguous labels like "Submit" in favor of specific action descriptions like "Enter New Data".
 
 ## Recent Changes
 
