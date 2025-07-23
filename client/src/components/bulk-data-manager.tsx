@@ -101,7 +101,7 @@ export default function BulkDataManager({
   // Fix data corruption mutation
   const fixDataMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest('PATCH', '/api/sandwich-collections/fix-data-corruption');
+      const response = await apiRequest('PATCH', '/api/sandwich-collections/fix-data-corruption', {});
       return response;
     },
     onSuccess: (data) => {
