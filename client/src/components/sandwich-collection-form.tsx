@@ -162,36 +162,42 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // In group-only mode, we only require collection date and group collections
-    if (groupOnlyMode) {
-      if (!collectionDate) {
-        toast({
-          title: "Missing information",
-          description: "Please fill in the collection date.",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      const validGroupCollections = groupCollections.filter(
-        (g) => g.sandwichCount > 0,
-      );
-      
+    if (!collectionDate) {
+      toast({
+        title: "Missing collection date",
+        description: "Please select a collection date.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check for valid group collections
+    const validGroupCollections = groupCollections.filter(
+      (g) => g.sandwichCount > 0 && g.groupName.trim() !== "",
+    );
+    
+    // Auto-detect if this is group-only entry (has groups but no individual/host data)
+    const hasIndividualSandwiches = individualSandwiches && parseInt(individualSandwiches) > 0;
+    const hasHostName = hostName && hostName.trim() !== "";
+    const hasGroupCollections = validGroupCollections.length > 0;
+    const isAutoGroupOnlyMode = hasGroupCollections && !hasIndividualSandwiches && !hasHostName;
+
+    if (isAutoGroupOnlyMode || groupOnlyMode) {
+      // Group-only mode validation - just need groups
       if (validGroupCollections.length === 0) {
         toast({
           title: "Missing group collections",
-          description: "Please add at least one group collection with a sandwich count.",
+          description: "Please add at least one group collection with a name and sandwich count.",
           variant: "destructive",
         });
         return;
       }
     } else {
       // Regular mode requires host name and individual sandwiches
-      if (!collectionDate || !hostName || !individualSandwiches) {
+      if (!hasHostName || !hasIndividualSandwiches) {
         toast({
           title: "Missing information",
-          description:
-            "Please fill in the collection date, host name, and individual sandwiches.",
+          description: "Please fill in the host name and individual sandwiches, or just add group collections.",
           variant: "destructive",
         });
         return;
@@ -222,10 +228,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       }
     }
 
-    // Filter for valid group collections (only those with sandwich counts > 0)
-    const validGroupCollections = groupCollections.filter(
-      (g) => g.sandwichCount > 0 && g.groupName.trim() !== "",
-    );
+    // validGroupCollections already defined above for validation
     const groupCollectionsString =
       validGroupCollections.length > 0
         ? JSON.stringify(
@@ -236,12 +239,12 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           )
         : "[]";
 
-    // In group-only mode, use "Groups" as host name and move group totals to individual sandwiches
+    // In group-only mode (manual or auto-detected), use "Groups" as host name and move group totals to individual sandwiches
     let finalHostName = hostName.trim();
     let finalIndividualSandwiches = parseInt(individualSandwiches) || 0;
     let finalGroupCollections = groupCollectionsString;
     
-    if (groupOnlyMode) {
+    if (isAutoGroupOnlyMode || groupOnlyMode) {
       finalHostName = "Groups";
       // In group-only mode, sum all group collections and put in individual sandwiches field
       const totalGroupSandwiches = validGroupCollections.reduce((sum, group) => sum + group.sandwichCount, 0);
@@ -406,6 +409,9 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               Add Group
             </Button>
           </div>
+          <p className="text-xs text-gray-600">
+            💡 Tip: If you only enter group collections (and leave host/individual fields empty), the form will automatically handle it as a group-only entry.
+          </p>
 
           <div className="space-y-3">
             {groupCollections.map((group) => (
