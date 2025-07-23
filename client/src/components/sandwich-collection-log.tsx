@@ -61,6 +61,7 @@ export default function SandwichCollectionLog() {
   const [showDuplicateAnalysis, setShowDuplicateAnalysis] = useState(false);
   const [duplicateAnalysis, setDuplicateAnalysis] = useState<DuplicateAnalysis | null>(null);
   const [selectedCollections, setSelectedCollections] = useState<Set<number>>(new Set());
+  const [selectedSuspiciousIds, setSelectedSuspiciousIds] = useState<Set<number>>(new Set());
   const [showBatchEdit, setShowBatchEdit] = useState(false);
   const [showSubmitForm, setShowSubmitForm] = useState(false);
   const [batchEditData, setBatchEditData] = useState({
@@ -627,6 +628,7 @@ export default function SandwichCollectionLog() {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
       setShowDuplicateAnalysis(false);
       setDuplicateAnalysis(null);
+      setSelectedSuspiciousIds(new Set());
       toast({
         title: "Cleanup completed",
         description: `Successfully cleaned ${result.deletedCount} duplicate entries.`,
@@ -636,6 +638,29 @@ export default function SandwichCollectionLog() {
       toast({
         title: "Cleanup failed",
         description: "Failed to clean duplicates. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const cleanSelectedSuspiciousMutation = useMutation({
+    mutationFn: async (ids: number[]) => {
+      return apiRequest('DELETE', '/api/sandwich-collections/clean-selected', { ids });
+    },
+    onSuccess: (result: any) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      setShowDuplicateAnalysis(false);
+      setDuplicateAnalysis(null);
+      setSelectedSuspiciousIds(new Set());
+      toast({
+        title: "Selected entries deleted",
+        description: `Successfully deleted ${result.deletedCount} selected entries.`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Deletion failed",
+        description: "Failed to delete selected entries. Please try again.",
         variant: "destructive",
       });
     }
@@ -1682,27 +1707,103 @@ export default function SandwichCollectionLog() {
 
               {duplicateAnalysis.suspiciousPatterns > 0 && (
                 <div className="space-y-3">
-                  <h3 className="font-medium text-slate-900">Suspicious Patterns ({duplicateAnalysis.suspiciousPatterns})</h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-medium text-slate-900">Suspicious Patterns ({duplicateAnalysis.suspiciousPatterns})</h3>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const allIds = new Set(duplicateAnalysis.suspiciousEntries.map(entry => entry.id));
+                          setSelectedSuspiciousIds(selectedSuspiciousIds.size === allIds.size ? new Set() : allIds);
+                        }}
+                        className="text-xs"
+                      >
+                        {selectedSuspiciousIds.size === duplicateAnalysis.suspiciousEntries.length ? "Deselect All" : "Select All"}
+                      </Button>
+                    </div>
+                  </div>
                   <div className="text-sm text-slate-600 mb-2">
-                    These entries have problematic host names like "Groups", "Test", empty names, or obvious data entry errors.
+                    Review and select specific entries to delete. These entries have problematic host names or data entry errors.
                   </div>
-                  <div className="max-h-32 overflow-y-auto space-y-1">
-                    {duplicateAnalysis.suspiciousEntries.slice(0, 10).map((entry) => (
-                      <div key={entry.id} className="text-sm text-slate-600 border-l-2 border-amber-300 pl-2">
-                        "{entry.hostName}" - {entry.collectionDate || 'No Date'} ({entry.individualSandwiches} sandwiches, ID: {entry.id})
+                  <div className="max-h-64 overflow-y-auto border border-slate-200 rounded-lg">
+                    <div className="space-y-1 p-2">
+                      {duplicateAnalysis.suspiciousEntries.map((entry) => {
+                        const groupData = parseGroupCollections(entry.groupCollections || "[]");
+                        const totalSandwiches = calculateTotal(entry);
+                        return (
+                          <div key={entry.id} className="flex items-center space-x-3 p-2 border border-slate-100 rounded hover:bg-slate-50">
+                            <Checkbox
+                              id={`suspicious-${entry.id}`}
+                              checked={selectedSuspiciousIds.has(entry.id)}
+                              onCheckedChange={(checked) => {
+                                const newSet = new Set(selectedSuspiciousIds);
+                                if (checked) {
+                                  newSet.add(entry.id);
+                                } else {
+                                  newSet.delete(entry.id);
+                                }
+                                setSelectedSuspiciousIds(newSet);
+                              }}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-2">
+                                  <span className="font-medium text-sm">"{entry.hostName || 'No Host'}"</span>
+                                  <span className="text-xs text-slate-500">ID: {entry.id}</span>
+                                </div>
+                                <div className="text-sm font-medium text-slate-900">{totalSandwiches} sandwiches</div>
+                              </div>
+                              <div className="flex items-center justify-between text-xs text-slate-600 mt-1">
+                                <div>
+                                  <Calendar className="w-3 h-3 inline mr-1" />
+                                  {entry.collectionDate || 'No Date'}
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <span>{entry.individualSandwiches} individual</span>
+                                  {groupData.length > 0 && (
+                                    <span>{groupData.reduce((sum: number, g: any) => sum + (Number(g.sandwichCount) || 0), 0)} group</span>
+                                  )}
+                                </div>
+                              </div>
+                              {groupData.length > 0 && (
+                                <div className="text-xs text-slate-500 mt-1">
+                                  Groups: {groupData.map((g: any) => `${g.groupName || g.name}: ${g.sandwichCount || g.count}`).join(', ')}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  {selectedSuspiciousIds.size > 0 && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                      <div className="text-sm text-amber-800">
+                        {selectedSuspiciousIds.size} entr{selectedSuspiciousIds.size === 1 ? 'y' : 'ies'} selected for deletion
                       </div>
-                    ))}
-                    {duplicateAnalysis.suspiciousEntries.length > 10 && (
-                      <div className="text-sm text-slate-500">... and {duplicateAnalysis.suspiciousEntries.length - 10} more</div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               )}
 
               <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 pt-4 border-t">
-                <Button variant="outline" onClick={() => setShowDuplicateAnalysis(false)} className="w-full sm:w-auto">
+                <Button variant="outline" onClick={() => {
+                  setShowDuplicateAnalysis(false);
+                  setSelectedSuspiciousIds(new Set());
+                }} className="w-full sm:w-auto">
                   Cancel
                 </Button>
+                {selectedSuspiciousIds.size > 0 && (
+                  <Button 
+                    variant="outline"
+                    onClick={() => cleanSelectedSuspiciousMutation.mutate(Array.from(selectedSuspiciousIds))}
+                    disabled={cleanSelectedSuspiciousMutation.isPending}
+                    className="text-red-600 hover:text-red-700 border-red-300 w-full sm:w-auto"
+                  >
+                    {cleanSelectedSuspiciousMutation.isPending ? "Deleting..." : `Delete Selected (${selectedSuspiciousIds.size})`}
+                  </Button>
+                )}
                 {duplicateAnalysis.suspiciousPatterns > 0 && (
                   <Button 
                     variant="outline"
@@ -1710,7 +1811,7 @@ export default function SandwichCollectionLog() {
                     disabled={cleanDuplicatesMutation.isPending}
                     className="text-amber-600 hover:text-amber-700 border-amber-300 w-full sm:w-auto"
                   >
-                    {cleanDuplicatesMutation.isPending ? "Cleaning..." : `Clean Suspicious Entries (${duplicateAnalysis.suspiciousPatterns})`}
+                    {cleanDuplicatesMutation.isPending ? "Cleaning..." : `Delete All Suspicious (${duplicateAnalysis.suspiciousPatterns})`}
                   </Button>
                 )}
                 {duplicateAnalysis.totalDuplicateEntries > 0 && (

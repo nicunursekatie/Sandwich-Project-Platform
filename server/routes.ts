@@ -1783,6 +1783,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Clean selected suspicious entries from sandwich collections
+  app.delete("/api/sandwich-collections/clean-selected", 
+    requirePermission("delete_data"),
+    async (req, res) => {
+    try {
+      const { ids } = req.body;
+      
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ message: "Invalid or empty IDs array" });
+      }
+
+      let deletedCount = 0;
+      for (const id of ids) {
+        try {
+          await storage.deleteSandwichCollection(id);
+          deletedCount++;
+        } catch (error) {
+          logger.warn(`Failed to delete collection ${id}:`, error);
+        }
+      }
+
+      res.json({ 
+        message: `Successfully deleted ${deletedCount} selected entries`,
+        deletedCount 
+      });
+    } catch (error) {
+      logger.error("Failed to delete selected suspicious entries:", error);
+      res.status(500).json({ message: "Failed to delete selected entries" });
+    }
+  });
+
   // Clean duplicates from sandwich collections
   app.delete("/api/sandwich-collections/clean-duplicates", 
     requirePermission("delete_data"),

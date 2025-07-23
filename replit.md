@@ -119,6 +119,7 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+- July 23, 2025: COMPLETED comprehensive duplicate analysis enhancement: implemented detailed suspicious entry display with individual checkboxes for precise deletion control, Select All/Deselect All functionality, complete collection information including host names, dates, individual/group sandwich counts and group collection breakdowns, real-time selection feedback showing count of selected entries, new selective deletion API endpoint (/api/sandwich-collections/clean-selected) with proper authentication, enhanced user workflow allowing granular review and selective deletion of suspicious entries instead of bulk operations
 - June 24, 2025: Fixed Reports section 404 error: replaced redirect with direct ReportingDashboard component rendering, reports now load properly within dashboard navigation
 - June 24, 2025: Resolved Projects navigation conflict: created clean content-only version that renders properly when embedded in dashboard without duplicate navigation structures
 - June 24, 2025: Fixed project detail page routing and API issues: resolved parameter extraction from URL, updated query client usage to work with default queryFn, project details now load correctly
