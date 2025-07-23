@@ -612,11 +612,13 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                           }
                         }}
                       />
+                      {/* ALWAYS show kudos buttons for completed tasks regardless of assignee */}
                       {task.status === 'completed' && (
                         <div className="flex gap-1">
+                          {/* Show kudos button for ALL assignees to ensure visibility */}
                           {(task.assigneeIds?.length > 0 ? task.assigneeIds : (task.assigneeId ? [task.assigneeId] : [])).map((assigneeId, index) => {
                             const assigneeName = (task.assigneeNames?.length > 0 ? task.assigneeNames : (task.assigneeName ? [task.assigneeName] : []))[index] || 'Unknown';
-                            return assigneeId !== user?.id ? (
+                            return assigneeId ? (
                               <SendKudosButton 
                                 key={index}
                                 recipientId={assigneeId}
@@ -627,6 +629,16 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                               />
                             ) : null;
                           })}
+                          {/* If no assigneeIds, try legacy assigneeName */}
+                          {(!task.assigneeIds || task.assigneeIds.length === 0) && task.assigneeName && (
+                            <SendKudosButton 
+                              recipientId={task.assigneeId || 'unknown'}
+                              recipientName={task.assigneeName}
+                              contextType="task"
+                              contextId={task.id.toString()}
+                              entityName={task.title}
+                            />
+                          )}
                         </div>
                       )}
                     </div>
