@@ -899,44 +899,46 @@ export default function StreamMessagesPage() {
                   </div>
                 ) : (
                   <div className="p-8 text-center">
-                <div className="text-center max-w-md mx-auto">
-                  <MessageCircle className="w-16 h-16 text-blue-500 mx-auto mb-6" />
-                  <h3 className="text-2xl font-main-heading text-primary mb-4">
-                    {activeFolder === 'inbox' && 'No Messages in Inbox'}
-                    {activeFolder === 'sent' && 'No Sent Messages'}
-                    {activeFolder === 'conversations' && 'No Conversations'}
-                  </h3>
-                  <p className="font-body text-muted-foreground mb-6">
-                    {activeFolder === 'inbox' && 'You haven\'t received any messages yet.'}
-                    {activeFolder === 'sent' && 'You haven\'t sent any messages yet.'}
-                    {activeFolder === 'conversations' && 'No conversations available.'}
-                  </p>
-                  
-                  <Button 
-                    onClick={() => setShowCompose(true)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Start Conversation
-                  </Button>
-                  
-                  {/* Only show user availability when compose dialog is open */}
-                  {showCompose && availableUsers.length > 0 && (
-                    <div className="mt-4 text-center">
-                      <p className="text-sm text-green-600 dark:text-green-400 font-medium">✅ {availableUsers.length} users available</p>
+                    <div className="text-center max-w-md mx-auto">
+                      <MessageCircle className="w-16 h-16 text-blue-500 mx-auto mb-6" />
+                      <h3 className="text-2xl font-main-heading text-primary mb-4">
+                        {activeFolder === 'inbox' && 'No Messages in Inbox'}
+                        {activeFolder === 'sent' && 'No Sent Messages'}
+                        {activeFolder === 'conversations' && 'No Conversations'}
+                      </h3>
+                      <p className="font-body text-muted-foreground mb-6">
+                        {activeFolder === 'inbox' && 'You haven\'t received any messages yet.'}
+                        {activeFolder === 'sent' && 'You haven\'t sent any messages yet.'}
+                        {activeFolder === 'conversations' && 'No conversations available.'}
+                      </p>
+                      
+                      <Button 
+                        onClick={() => setShowCompose(true)}
+                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Start Conversation
+                      </Button>
+                      
+                      {/* Only show user availability when compose dialog is open */}
+                      {showCompose && availableUsers.length > 0 && (
+                        <div className="mt-4 text-center">
+                          <p className="text-sm text-green-600 dark:text-green-400 font-medium">✅ {availableUsers.length} users available</p>
+                        </div>
+                      )}
+                      
+                      {showCompose && availableUsers.length === 0 && (
+                        <div className="mt-4 text-center">
+                          <p className="text-sm text-yellow-600 dark:text-yellow-400 font-medium">⏳ Loading users...</p>
+                        </div>
+                      )}
                     </div>
-                  )}
-                  
-                  {showCompose && availableUsers.length === 0 && (
-                    <div className="mt-4 text-center">
-                      <p className="text-sm text-yellow-600 dark:text-yellow-400 font-medium">⏳ Loading users...</p>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
