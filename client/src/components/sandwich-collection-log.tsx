@@ -1136,171 +1136,6 @@ export default function SandwichCollectionLog() {
               </Button>
             )}
             <div className="flex gap-2 w-full sm:w-auto">
-              {canCreateCollections && (
-              <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center space-x-1 flex-1 sm:flex-none justify-center py-2.5"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span>Quick Add</span>
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Add New Collection</DialogTitle>
-                </DialogHeader>
-                <form onSubmit={handleNewCollectionSubmit} className="space-y-4">
-                  {/* Group-only mode toggle */}
-                  <div className="flex items-center space-x-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <Checkbox
-                      id="newCollectionGroupOnlyMode"
-                      checked={newCollectionGroupOnlyMode}
-                      onCheckedChange={(checked) => {
-                        setNewCollectionGroupOnlyMode(checked as boolean);
-                        // Reset form when switching modes
-                        if (checked) {
-                          setNewCollectionData(prev => ({
-                            ...prev,
-                            hostName: "",
-                            individualSandwiches: ""
-                          }));
-                        }
-                      }}
-                    />
-                    <Label htmlFor="newCollectionGroupOnlyMode" className="text-sm font-medium text-blue-900">
-                      Group Collections Only Mode
-                    </Label>
-                    <span className="text-xs text-blue-700 ml-2">
-                      (For logging group collections without specifying a host)
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="collectionDate">Collection Date *</Label>
-                      <Input
-                        id="collectionDate"
-                        type="date"
-                        value={newCollectionData.collectionDate}
-                        onChange={(e) => setNewCollectionData(prev => ({
-                          ...prev,
-                          collectionDate: e.target.value
-                        }))}
-                        required
-                      />
-                    </div>
-                    {!newCollectionGroupOnlyMode && (
-                      <div>
-                        <Label htmlFor="hostName">Host Name *</Label>
-                        <Select
-                          value={newCollectionData.hostName}
-                          onValueChange={(value) => setNewCollectionData(prev => ({
-                            ...prev,
-                            hostName: value
-                          }))}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a host" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {hostOptions.map((hostName, index) => (
-                              <SelectItem key={index} value={hostName}>
-                                {hostName}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    )}
-                  </div>
-
-                  {!newCollectionGroupOnlyMode && (
-                    <div>
-                      <Label htmlFor="individualSandwiches">Individual Sandwiches</Label>
-                      <Input
-                        id="individualSandwiches"
-                        type="number"
-                        min="0"
-                        value={newCollectionData.individualSandwiches}
-                        onChange={(e) => setNewCollectionData(prev => ({
-                          ...prev,
-                          individualSandwiches: e.target.value
-                        }))}
-                        placeholder="0"
-                      />
-                    </div>
-                  )}
-
-                  <div>
-                    <Label>Group Collections</Label>
-                    {newGroupCollections.map((group, index) => (
-                      <div key={group.id} className="flex items-center space-x-2 mt-2">
-                        <Input
-                          placeholder="Group name"
-                          value={group.groupName || ""}
-                          onChange={(e) => updateNewGroupCollection(group.id, 'groupName', e.target.value)}
-                          className="flex-1"
-                          required
-                        />
-                        <Input
-                          type="number"
-                          min="0"
-                          placeholder="Count"
-                          value={group.sandwichCount?.toString() || ""}
-                          onChange={(e) => updateNewGroupCollection(group.id, 'sandwichCount', parseInt(e.target.value) || 0)}
-                          className="w-24"
-                        />
-                        {newGroupCollections.length > 1 && (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => removeNewGroupRow(group.id)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        )}
-                      </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={addNewGroupRow}
-                      className="mt-2"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Group
-                    </Button>
-                    <p className="text-sm text-gray-600 mt-3">
-                      Record group collections with sandwich counts. Group names are optional - 
-                      entries without names will be listed as "Unnamed Group".
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 pt-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setShowAddForm(false)}
-                      className="w-full sm:w-auto"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={createMutation.isPending}
-                      className="w-full sm:w-auto"
-                    >
-                      {createMutation.isPending ? "Adding..." : "Add Collection"}
-                    </Button>
-                  </div>
-                </form>
-              </DialogContent>
-              </Dialog>
-              )}
               <Button
                 variant="outline"
                 size="sm"
@@ -1351,6 +1186,22 @@ export default function SandwichCollectionLog() {
           </div>
         </div>
       </div>
+
+      {/* Embedded Submit Collection Form */}
+      {showSubmitForm && (
+        <div className="mx-6 mb-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+          <div className="flex items-center mb-4">
+            <Sandwich className="w-5 h-5 mr-2 text-teal-600" />
+            <h3 className="text-lg font-semibold text-slate-900">Submit New Collection</h3>
+          </div>
+          <SandwichCollectionForm 
+            onSuccess={() => {
+              setShowSubmitForm(false);
+              queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+            }} 
+          />
+        </div>
+      )}
 
       {/* Filter Panel */}
       {showFilters && (
