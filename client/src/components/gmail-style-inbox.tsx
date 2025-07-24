@@ -637,7 +637,7 @@ export default function GmailStyleInbox() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium">{selectedMessage.senderName}</p>
+                    <p className="font-medium">From: {selectedMessage.senderName}</p>
                     <p className="text-sm text-gray-600">{selectedMessage.senderEmail}</p>
                   </div>
                   <div className="ml-auto text-sm text-gray-500">
