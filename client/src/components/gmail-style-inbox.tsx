@@ -497,21 +497,21 @@ export default function GmailStyleInbox() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => markAsReadMutation.mutate(Array.from(selectedMessages))}
+                  onClick={() => console.log('Mark Read not implemented for conversation messages')}
                 >
                   Mark Read
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => archiveMutation.mutate(Array.from(selectedMessages))}
+                  onClick={() => console.log('Archive not implemented for conversation messages')}
                 >
                   Archive
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => trashMutation.mutate(Array.from(selectedMessages))}
+                  onClick={() => console.log('Trash not implemented for conversation messages')}
                 >
                   Trash
                 </Button>
@@ -529,7 +529,7 @@ export default function GmailStyleInbox() {
                   className={`
                     p-4 cursor-pointer transition-colors hover:bg-amber-50 font-['Roboto']
                     ${selectedMessage?.id === message.id ? 'bg-amber-100 border-r-4 border-amber-500 shadow-sm' : ''}
-                    ${!message.isRead ? 'font-semibold bg-amber-25' : ''}
+                    bg-white
                   `}
                 >
                   <div className="flex items-start gap-3">
@@ -545,15 +545,12 @@ export default function GmailStyleInbox() {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        toggleStarMutation.mutate({ 
-                          messageId: message.id, 
-                          isStarred: !message.isStarred 
-                        });
+                        console.log('Star clicked for message', message.id);
                       }}
                       className="mt-1"
                     >
                       <Star 
-                        className={`h-4 w-4 ${message.isStarred ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                        className="h-4 w-4 text-gray-300"
                       />
                     </button>
                     <Avatar className="h-8 w-8">
@@ -579,7 +576,7 @@ export default function GmailStyleInbox() {
                           })()}
                         </span>
                       </div>
-                      <p className="text-sm font-medium truncate mt-1">{message.subject}</p>
+                      <p className="text-sm font-medium truncate mt-1">Conversation #{message.conversationId}</p>
                       <p className="text-sm text-gray-600 truncate">{message.content}</p>
                     </div>
                   </div>
@@ -602,7 +599,7 @@ export default function GmailStyleInbox() {
               {/* Message Header */}
               <div className="border-b p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-semibold">{selectedMessage.subject}</h3>
+                  <h3 className="text-lg font-semibold">Conversation #{selectedMessage.conversationId}</h3>
                   <div className="flex items-center gap-2">
                     <Button variant="ghost" size="sm" onClick={() => setShowReply(true)}>
                       <Reply className="h-4 w-4" />
@@ -610,26 +607,23 @@ export default function GmailStyleInbox() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => toggleStarMutation.mutate({ 
-                        messageId: selectedMessage.id, 
-                        isStarred: !selectedMessage.isStarred 
-                      })}
+                      onClick={() => console.log('Star clicked for message', selectedMessage.id)}
                     >
                       <Star 
-                        className={`h-4 w-4 ${selectedMessage.isStarred ? 'fill-yellow-400 text-yellow-400' : ''}`} 
+                        className="h-4 w-4 text-gray-300"
                       />
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => archiveMutation.mutate([selectedMessage.id])}
+                      onClick={() => console.log('Archive not implemented for conversation messages')}
                     >
                       <Archive className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => trashMutation.mutate([selectedMessage.id])}
+                      onClick={() => console.log('Trash not implemented for conversation messages')}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
