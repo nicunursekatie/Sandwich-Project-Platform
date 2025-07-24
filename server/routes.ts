@@ -1126,10 +1126,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   isRead: messagesTable.isRead,
                   isStarred: messagesTable.isStarred,
                   folder: messagesTable.folder,
-                  senderEmail: users.email,
                 })
                 .from(messagesTable)
-                .leftJoin(users, eq(messagesTable.userId, users.id))
                 .where(
                   and(
                     inArray(messagesTable.conversationId, conversationIds),
