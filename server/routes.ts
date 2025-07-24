@@ -6368,7 +6368,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   }
 
-  // Gmail-style inbox endpoints - properly handle all folders
+  // Gmail-style inbox endpoints - using emailMessages table with proper Gmail fields
   app.get("/api/messages", isAuthenticated, async (req, res) => {
     console.log("=== GMAIL INBOX DEBUG ===");
     console.log("User:", (req as any).user?.email, "ID:", (req as any).user?.id);
@@ -6383,42 +6383,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const chatType = req.query.chatType as string;
       console.log("Chat type requested:", chatType);
 
-      // Handle different Gmail folder types with proper queries
+      // Handle different Gmail folder types using emailMessages table
       if (chatType === "starred") {
-        console.log("Starred folder requested - showing starred messages");
+        console.log("Starred folder requested - showing starred email messages");
         
-        // Get starred messages for this user with full conversation context
-        const starredMessages = await db
-          .select({
-            id: messagesTable.id,
-            content: messagesTable.content,
-            userId: messagesTable.user_id,
-            senderId: messagesTable.sender_id,
-            sender: messagesTable.sender,
-            createdAt: messagesTable.created_at,
-            conversationId: messagesTable.conversationId,
-            senderFirstName: users.firstName,
-            senderLastName: users.lastName,
-            senderEmail: users.email,
-            senderDisplayName: users.displayName,
-            conversationType: conversations.type,
-            conversationName: conversations.name,
-          })
-          .from(messagesTable)
-          .leftJoin(users, eq(messagesTable.sender_id, users.id))
-          .innerJoin(conversationParticipants, eq(messagesTable.conversationId, conversationParticipants.conversationId))
-          .innerJoin(conversations, eq(messagesTable.conversationId, conversations.id))
+        // Get starred email messages for this user
+        const starredEmails = await db
+          .select()
+          .from(emailMessages)
           .where(and(
-            isNotNull(messagesTable.conversationId),
-            eq(conversationParticipants.userId, user.id),
-            eq(messagesTable.isStarred, true),
-            isNull(messagesTable.deletedAt)
+            or(
+              eq(emailMessages.senderId, user.id),
+              eq(emailMessages.recipientId, user.id)
+            ),
+            eq(emailMessages.isStarred, true),
+            eq(emailMessages.isTrashed, false)
           ))
-          .orderBy(desc(messagesTable.created_at))
+          .orderBy(desc(emailMessages.createdAt))
           .limit(50);
           
-        const formattedStarred = await formatMessagesForGmail(starredMessages, user, db);
-        console.log(`Found ${formattedStarred.length} starred messages`);
+        const formattedStarred = formatEmailMessagesForGmail(starredEmails);
+        console.log(`Found ${formattedStarred.length} starred email messages`);
         return res.json(formattedStarred);
       }
       
