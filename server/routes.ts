@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { z } from "zod";
-import { eq, and, or, sql, desc, isNull, ne } from "drizzle-orm";
+import { eq, and, or, sql, desc, isNull, isNotNull, ne } from "drizzle-orm";
 import express from "express";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
@@ -6580,8 +6580,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       else if (chatType === "recipient") conversationName = "Recipient Chat";
       else if (chatType === "host") conversationName = "Host Chat";
 
-      // For Gmail inbox, get ALL messages (both conversation-based and standalone)
-      // This includes messages with NULL conversation_id as well
+      // For Gmail inbox, get ONLY messages with valid conversation_ids
+      // Filter out orphaned messages (kudos/system messages)
       const allMessages = await db
         .select({
           id: messagesTable.id,
@@ -6599,20 +6599,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         })
         .from(messagesTable)
         .leftJoin(users, eq(messagesTable.user_id, users.id))
+        .where(isNotNull(messagesTable.conversationId)) // FIXED: Only get messages with conversations
         .orderBy(desc(messagesTable.created_at))
         .limit(50); // Limit for performance
 
       // Transform to match Gmail inbox expected format with proper user data
       const formattedMessages = allMessages.map((msg) => {
-        // Debug logging to see what data we have
-        console.log('Message data:', {
-          id: msg.id,
-          sender: msg.sender,
-          senderFirstName: msg.senderFirstName,
-          senderLastName: msg.senderLastName,
-          senderDisplayName: msg.senderDisplayName,
-          senderEmail: msg.senderEmail
-        });
+        // Removed debug logging - data model is now fixed
         
         // Construct sender name from available data with proper null checks
         let senderName = "Unknown User";
