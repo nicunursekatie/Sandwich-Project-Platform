@@ -19,6 +19,7 @@ import googleSheetsRoutes from "./routes/google-sheets";
 import suggestionsRoutes from "./suggestions-routes";
 import realTimeMessagesRoutes from "./routes/real-time-messages";
 import chatRoutes from "./routes/chat-simple";
+import emailRoutes from "./routes/email-routes";
 
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
@@ -7615,6 +7616,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register message notification routes
   registerMessageNotificationRoutes(app);
+
+  // Register email routes (completely separate from chat)
+  app.use("/api/emails", emailRoutes);
 
   // Register real-time messages routes
   const { default: realTimeMessagesRoutes } = await import("./routes/real-time-messages");

@@ -131,32 +131,23 @@ export default function GmailStyleInbox() {
     queryKey: ["/api/users"],
   });
 
+  // Determine if we're in email mode
+  const isEmailMode = ["inbox", "sent", "drafts", "starred", "archived", "trash"].includes(activeFolder);
+  const apiBase = isEmailMode ? "/api/emails" : "/api/messages";
+
   // Fetch messages based on folder
   const { data: messages = [], refetch: refetchMessages } = useQuery<Message[]>({
-    queryKey: ["/api/messages", activeFolder],
+    queryKey: [apiBase, activeFolder],
     queryFn: async () => {
-      let endpoint = "/api/messages";
+      let endpoint = apiBase;
       const params = new URLSearchParams();
       
-      switch (activeFolder) {
-        case "inbox":
-          params.append("chatType", "inbox");
-          break;
-        case "sent":
-          params.append("chatType", "sent");
-          break;
-        case "drafts":
-          params.append("chatType", "drafts");
-          break;
-        case "starred":
-          params.append("chatType", "starred");
-          break;
-        case "archived":
-          params.append("chatType", "archived");
-          break;
-        case "trash":
-          params.append("chatType", "trash");
-          break;
+      if (isEmailMode) {
+        // Email mode - use folder parameter
+        params.append("folder", activeFolder);
+      } else {
+        // Chat mode - use chatType parameter (for any future chat tabs)
+        params.append("chatType", activeFolder);
       }
       
       if (params.toString()) {
@@ -191,10 +182,10 @@ export default function GmailStyleInbox() {
   // Send message mutation
   const sendMessageMutation = useMutation({
     mutationFn: async (messageData: any) => {
-      return await apiRequest('POST', '/api/messages', messageData);
+      return await apiRequest('POST', apiBase, messageData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
+      queryClient.invalidateQueries({ queryKey: [apiBase] });
       setShowCompose(false);
       resetCompose();
       toast({ description: "Message sent successfully" });
@@ -207,13 +198,13 @@ export default function GmailStyleInbox() {
     }
   });
 
-  // Reply mutation - use same endpoint as compose (POST /api/messages)
+  // Reply mutation - use same endpoint as compose
   const replyMutation = useMutation({
     mutationFn: async (replyData: any) => {
-      return await apiRequest('POST', '/api/messages', replyData);
+      return await apiRequest('POST', apiBase, replyData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
+      queryClient.invalidateQueries({ queryKey: [apiBase] });
       setShowReply(false);
       setReplyContent("");
       toast({ description: "Reply sent successfully" });
@@ -230,30 +221,30 @@ export default function GmailStyleInbox() {
   // Mark as read mutation
   const markAsReadMutation = useMutation({
     mutationFn: async (messageIds: number[]) => {
-      return await apiRequest('PATCH', '/api/messages/mark-read', { messageIds });
+      return await apiRequest('PATCH', `${apiBase}/mark-read`, { messageIds });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
+      queryClient.invalidateQueries({ queryKey: [apiBase] });
     }
   });
 
   // Star/unstar mutation
   const toggleStarMutation = useMutation({
     mutationFn: async ({ messageId, isStarred }: { messageId: number; isStarred: boolean }) => {
-      return await apiRequest('PATCH', `/api/messages/${messageId}/star`, { isStarred });
+      return await apiRequest('PATCH', `${apiBase}/${messageId}`, { isStarred });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
+      queryClient.invalidateQueries({ queryKey: [apiBase] });
     }
   });
 
   // Archive mutation
   const archiveMutation = useMutation({
     mutationFn: async (messageIds: number[]) => {
-      return await apiRequest('PATCH', '/api/messages/archive', { messageIds });
+      return await apiRequest('PATCH', `${apiBase}/archive`, { messageIds });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
+      queryClient.invalidateQueries({ queryKey: [apiBase] });
       setSelectedMessages(new Set());
       toast({ description: "Messages archived" });
     }
@@ -262,10 +253,10 @@ export default function GmailStyleInbox() {
   // Trash mutation
   const trashMutation = useMutation({
     mutationFn: async (messageIds: number[]) => {
-      return await apiRequest('PATCH', '/api/messages/trash', { messageIds });
+      return await apiRequest('PATCH', `${apiBase}/trash`, { messageIds });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
+      queryClient.invalidateQueries({ queryKey: [apiBase] });
       setSelectedMessages(new Set());
       toast({ description: "Messages moved to trash" });
     }
@@ -274,10 +265,10 @@ export default function GmailStyleInbox() {
   // Delete permanently mutation
   const deleteMutation = useMutation({
     mutationFn: async (messageIds: number[]) => {
-      return await apiRequest('DELETE', '/api/messages', { messageIds });
+      return await apiRequest('DELETE', apiBase, { messageIds });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
+      queryClient.invalidateQueries({ queryKey: [apiBase] });
       setSelectedMessages(new Set());
       toast({ description: "Messages deleted permanently" });
     }
@@ -358,12 +349,27 @@ export default function GmailStyleInbox() {
       return;
     }
 
-    sendMessageMutation.mutate({
-      content: composeContent,
-      sender: null, // Let backend use authenticated user info
-      recipientId: composeRecipient,
-      conversationName: composeSubject || null // Use subject as conversation name if provided, null for direct messages
-    });
+    const recipient = users.find(u => u.id === composeRecipient);
+    
+    if (isEmailMode) {
+      // Email mode - send email format
+      sendMessageMutation.mutate({
+        recipientId: composeRecipient,
+        recipientName: recipient ? `${recipient.firstName} ${recipient.lastName}`.trim() : '',
+        recipientEmail: recipient?.email || '',
+        subject: composeSubject || 'No Subject',
+        content: composeContent,
+        isDraft: false
+      });
+    } else {
+      // Chat mode - send conversation format
+      sendMessageMutation.mutate({
+        content: composeContent,
+        sender: null, // Let backend use authenticated user info
+        recipientId: composeRecipient,
+        conversationName: composeSubject || null // Use subject as conversation name if provided, null for direct messages
+      });
+    }
   };
 
   const handleReply = () => {
