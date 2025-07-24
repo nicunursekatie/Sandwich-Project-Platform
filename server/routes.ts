@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { z } from "zod";
-import { eq, and, or, sql, desc, isNull, isNotNull, ne, inArray } from "drizzle-orm";
+import { eq, and, or, sql, desc, isNull, isNotNull, ne, inArray, not } from "drizzle-orm";
 import express from "express";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
@@ -1113,7 +1113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               console.log(`[DEBUG] User ${currentUserId} has no conversations`);
               messages = [];
             } else {
-              // Get messages with proper user data joined
+              // Get messages with proper field mapping
               messages = await db
                 .select({
                   id: messagesTable.id,
@@ -1126,33 +1126,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   isRead: messagesTable.isRead,
                   isStarred: messagesTable.isStarred,
                   folder: messagesTable.folder,
-                  // Join with users table to get sender information
-                  senderName: users.firstName,
                   senderEmail: users.email,
-                  senderLastName: users.lastName,
                 })
                 .from(messagesTable)
                 .leftJoin(users, eq(messagesTable.userId, users.id))
                 .where(
                   and(
                     inArray(messagesTable.conversationId, conversationIds),
-                    // Exclude old team chat messages that shouldn't be in inbox
+                    // Exclude old team chat messages and specific old conversations
                     or(
                       isNull(messagesTable.contextType),
                       ne(messagesTable.contextType, 'team_chat')
-                    )
+                    ),
+                    // Exclude old team chat conversations by ID
+                    not(inArray(messagesTable.conversationId, [2, 3, 5, 6]))
                   )
                 )
                 .orderBy(desc(messagesTable.createdAt));
               
               console.log(`[DEBUG] Found ${messages.length} messages for user ${currentUserId} in their conversations`);
               
-              // Transform messages to include proper sender names
+              // Map sender field to senderName for frontend compatibility
               messages = messages.map(msg => ({
                 ...msg,
-                senderName: msg.senderName && msg.senderLastName 
-                  ? `${msg.senderName} ${msg.senderLastName}` 
-                  : msg.senderName || msg.senderEmail || msg.sender || 'Unknown User'
+                senderName: msg.sender || msg.senderEmail || 'Unknown User'
               }));
             }
           } else {
