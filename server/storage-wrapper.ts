@@ -181,6 +181,20 @@ class StorageWrapper implements IStorage {
     );
   }
 
+  async getArchivedProjects() {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getArchivedProjects(),
+      () => this.fallbackStorage.getArchivedProjects()
+    );
+  }
+
+  async archiveProject(id: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.archiveProject(id),
+      () => this.fallbackStorage.archiveProject(id)
+    );
+  }
+
   // Project Task methods
   async getProjectTasks(projectId: number) {
     return this.executeWithFallback(

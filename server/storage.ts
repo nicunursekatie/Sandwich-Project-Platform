@@ -43,6 +43,8 @@ export interface IStorage {
   createProject(project: InsertProject): Promise<Project>;
   updateProject(id: number, updates: Partial<Project>): Promise<Project | undefined>;
   deleteProject(id: number): Promise<boolean>;
+  getArchivedProjects(): Promise<any[]>;
+  archiveProject(id: number): Promise<any>;
   
   // Project Tasks
   getProjectTasks(projectId: number): Promise<ProjectTask[]>;
