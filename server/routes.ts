@@ -1091,8 +1091,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
           //   messages = await storage.getMessagesByThreadId(threadId);
           // }
 
-          // Temporarily use storage layer for all chat messages
-          messages = await storage.getAllMessages();
+          // FIXED: Inbox filter - only return messages where user is a participant
+          if (messageContext === "inbox") {
+            const currentUserId = (req as any).user?.id;
+            if (!currentUserId) {
+              return res.status(401).json({ message: "Authentication required for inbox" });
+            }
+            
+            console.log(`[DEBUG] Inbox requested for user ${currentUserId}`);
+            
+            // Get all conversations where user is a participant
+            const userConversations = await db
+              .select({ conversationId: conversationParticipants.conversationId })
+              .from(conversationParticipants)
+              .where(eq(conversationParticipants.userId, currentUserId));
+            
+            const conversationIds = userConversations.map(c => c.conversationId);
+            console.log(`[DEBUG] User participates in conversations: ${conversationIds.join(', ')}`);
+            
+            if (conversationIds.length === 0) {
+              console.log(`[DEBUG] User ${currentUserId} has no conversations`);
+              messages = [];
+            } else {
+              // Get messages only from conversations where user is a participant
+              messages = await db
+                .select()
+                .from(messagesTable)
+                .where(inArray(messagesTable.conversationId, conversationIds))
+                .orderBy(desc(messagesTable.createdAt));
+              
+              console.log(`[DEBUG] Found ${messages.length} messages for user ${currentUserId} in their conversations`);
+            }
+          } else {
+            // For other message contexts, use storage layer (but this should be filtered properly)
+            console.log(`[DEBUG] Non-inbox message context: ${messageContext}`);
+            messages = await storage.getAllMessages();
+          }
         } else {
           // Default to General Chat when no parameters are provided
           const [generalConversation] = await db
