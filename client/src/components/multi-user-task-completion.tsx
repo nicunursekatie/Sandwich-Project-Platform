@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { SendKudosButton } from "@/components/send-kudos-button";
+import SendKudosButton from "@/components/send-kudos-button";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, Circle, Users, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";

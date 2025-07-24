@@ -42,7 +42,6 @@ import WorkLogPage from "@/pages/work-log";
 import SuggestionsPortal from "@/pages/suggestions";
 import GoogleSheetsPage from "@/pages/google-sheets";
 import InboxPage from "@/pages/inbox";
-import DirectMessages from "@/pages/direct-messages";
 import MessagingSystem from "@/components/messaging-system";
 import RealTimeMessages from "@/pages/real-time-messages";
 import Governance from "@/pages/governance";
@@ -407,20 +406,20 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
             <div className="flex items-center space-x-2 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200">
               <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center">
                 <span className="text-xs font-medium text-teal-700">
-                  {user.firstName?.charAt(0) || user.email?.charAt(0) || 'U'}
+                  {(user as any)?.firstName?.charAt(0) || (user as any)?.email?.charAt(0) || 'U'}
                 </span>
               </div>
               <div className="hidden sm:flex flex-col">
                 <span className="text-xs font-medium text-slate-700">
-                  {user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email}
+                  {(user as any)?.firstName ? `${(user as any).firstName} ${(user as any)?.lastName || ''}`.trim() : (user as any)?.email}
                 </span>
                 <span className="text-xs text-slate-500">
-                  {user.email}
+                  {(user as any)?.email}
                 </span>
               </div>
               <div className="sm:hidden">
                 <span className="text-xs font-medium text-slate-700">
-                  {user.firstName ? `${user.firstName}` : user.email?.split('@')[0] || 'User'}
+                  {(user as any)?.firstName ? `${(user as any).firstName}` : (user as any)?.email?.split('@')[0] || 'User'}
                 </span>
               </div>
             </div>

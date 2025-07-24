@@ -39,7 +39,7 @@ import { useCelebration, CelebrationToast } from "@/components/celebration-toast
 import { ProjectAssigneeSelector } from "@/components/project-assignee-selector";
 import { hasPermission, PERMISSIONS, canEditProject, canDeleteProject } from "@shared/auth-utils";
 import type { Project, InsertProject } from "@shared/schema";
-import { SendKudosButton } from "@/components/send-kudos-button";
+import SendKudosButton from "@/components/send-kudos-button";
 
 export default function ProjectsClean() {
   const [, setLocation] = useLocation();
