@@ -229,9 +229,7 @@ async function startServer() {
         await initializeDatabase();
         console.log("✓ Database initialization complete");
 
-        const server = await registerRoutes(app);
-        console.log("✓ Routes registered successfully");
-
+        // Setup Vite BEFORE registering routes in development
         if (process.env.NODE_ENV === "development") {
           try {
             const { setupVite } = await import("./vite");
@@ -244,7 +242,10 @@ async function startServer() {
               (error as Error).message,
             );
           }
-        } else {
+        }
+
+        const server = await registerRoutes(app);
+        console.log("✓ Routes registered successfully"); else {
           // Add catch-all for unknown routes before SPA
           app.use("*", (req: Request, res: Response, next: NextFunction) => {
             console.log(
