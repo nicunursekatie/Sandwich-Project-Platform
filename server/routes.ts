@@ -6402,211 +6402,187 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .orderBy(desc(emailMessages.createdAt))
           .limit(50);
           
-        const formattedStarred = formatEmailMessagesForGmail(starredEmails);
-        console.log(`Found ${formattedStarred.length} starred email messages`);
-        return res.json(formattedStarred);
+        console.log(`Found ${starredEmails.length} starred email messages`);
+        return res.json(starredEmails.map(email => ({
+          id: email.id,
+          senderId: email.senderId,
+          senderName: email.senderName,
+          senderEmail: email.senderEmail,
+          recipientId: email.recipientId,
+          recipientName: email.recipientName,
+          recipientEmail: email.recipientEmail,
+          content: email.content,
+          subject: email.subject,
+          createdAt: email.createdAt,
+          threadId: email.parentMessageId || email.id,
+          isRead: email.isRead,
+          isStarred: email.isStarred,
+          folder: "starred",
+          committee: email.contextType || "email"
+        })));
       }
       
       if (chatType === "drafts") {
-        console.log("Drafts folder requested - showing draft messages");
+        console.log("Drafts folder requested - showing draft email messages");
         
-        // Get draft messages for this user
-        const draftMessages = await db
-          .select({
-            id: messagesTable.id,
-            content: messagesTable.content,
-            userId: messagesTable.user_id,
-            senderId: messagesTable.sender_id,
-            sender: messagesTable.sender,
-            createdAt: messagesTable.created_at,
-            conversationId: messagesTable.conversationId,
-            senderFirstName: users.firstName,
-            senderLastName: users.lastName,
-            senderEmail: users.email,
-            senderDisplayName: users.displayName,
-            conversationType: conversations.type,
-            conversationName: conversations.name,
-          })
-          .from(messagesTable)
-          .leftJoin(users, eq(messagesTable.sender_id, users.id))
-          .leftJoin(conversationParticipants, eq(messagesTable.conversationId, conversationParticipants.conversationId))
-          .leftJoin(conversations, eq(messagesTable.conversationId, conversations.id))
+        // Get draft email messages for this user
+        const draftEmails = await db
+          .select()
+          .from(emailMessages)
           .where(and(
-            eq(messagesTable.user_id, user.id),
-            eq(messagesTable.isDraft, true),
-            isNull(messagesTable.deletedAt)
+            eq(emailMessages.senderId, user.id),
+            eq(emailMessages.isDraft, true)
           ))
-          .orderBy(desc(messagesTable.created_at))
+          .orderBy(desc(emailMessages.createdAt))
           .limit(50);
           
-        const formattedDrafts = await formatMessagesForGmail(draftMessages, user, db);
-        console.log(`Found ${formattedDrafts.length} draft messages`);
-        return res.json(formattedDrafts);
+        console.log(`Found ${draftEmails.length} draft email messages`);
+        return res.json(draftEmails.map(email => ({
+          id: email.id,
+          senderId: email.senderId,
+          senderName: email.senderName,
+          senderEmail: email.senderEmail,
+          recipientId: email.recipientId,
+          recipientName: email.recipientName,
+          recipientEmail: email.recipientEmail,
+          content: email.content,
+          subject: email.subject,
+          createdAt: email.createdAt,
+          threadId: email.parentMessageId || email.id,
+          isRead: email.isRead,
+          isStarred: email.isStarred,
+          folder: "drafts",
+          committee: email.contextType || "email"
+        })));
       }
       
       if (chatType === "sent") {
-        console.log("Sent folder requested - showing messages sent by this user");
+        console.log("Sent folder requested - showing email messages sent by this user");
         
-        // Get messages sent BY this user with full conversation context
-        const sentMessages = await db
-          .select({
-            id: messagesTable.id,
-            content: messagesTable.content,
-            userId: messagesTable.user_id,
-            senderId: messagesTable.sender_id,
-            sender: messagesTable.sender,
-            createdAt: messagesTable.created_at,
-            conversationId: messagesTable.conversationId,
-            senderFirstName: users.firstName,
-            senderLastName: users.lastName,
-            senderEmail: users.email,
-            senderDisplayName: users.displayName,
-            conversationType: conversations.type,
-            conversationName: conversations.name,
-          })
-          .from(messagesTable)
-          .leftJoin(users, eq(messagesTable.sender_id, users.id))
-          .innerJoin(conversationParticipants, eq(messagesTable.conversationId, conversationParticipants.conversationId))
-          .innerJoin(conversations, eq(messagesTable.conversationId, conversations.id))
+        // Get email messages sent BY this user
+        const sentEmails = await db
+          .select()
+          .from(emailMessages)
           .where(and(
-            isNotNull(messagesTable.conversationId),
-            eq(messagesTable.sender_id, user.id), // Messages sent BY this user
-            isNull(messagesTable.deletedAt)
+            eq(emailMessages.senderId, user.id),
+            eq(emailMessages.isDraft, false),
+            eq(emailMessages.isTrashed, false)
           ))
-          .orderBy(desc(messagesTable.created_at))
+          .orderBy(desc(emailMessages.createdAt))
           .limit(50);
           
-        const formattedSent = await formatMessagesForGmail(sentMessages, user, db);
-        console.log(`Found ${formattedSent.length} sent messages`);
-        return res.json(formattedSent);
+        console.log(`Found ${sentEmails.length} sent email messages`);
+        return res.json(sentEmails.map(email => ({
+          id: email.id,
+          senderId: email.senderId,
+          senderName: email.senderName,
+          senderEmail: email.senderEmail,
+          recipientId: email.recipientId,
+          recipientName: email.recipientName,
+          recipientEmail: email.recipientEmail,
+          content: email.content,
+          subject: email.subject,
+          createdAt: email.createdAt,
+          threadId: email.parentMessageId || email.id,
+          isRead: email.isRead,
+          isStarred: email.isStarred,
+          folder: "sent",
+          committee: email.contextType || "email"
+        })));
       }
       
       if (chatType === "archived") {
-        console.log("Archived folder requested - showing archived messages");
+        console.log("Archived folder requested - showing archived email messages");
         
-        // Get archived messages for this user
-        const archivedMessages = await db
-          .select({
-            id: messagesTable.id,
-            content: messagesTable.content,
-            userId: messagesTable.user_id,
-            senderId: messagesTable.sender_id,
-            sender: messagesTable.sender,
-            createdAt: messagesTable.created_at,
-            conversationId: messagesTable.conversationId,
-            senderFirstName: users.firstName,
-            senderLastName: users.lastName,
-            senderEmail: users.email,
-            senderDisplayName: users.displayName,
-            conversationType: conversations.type,
-            conversationName: conversations.name,
-          })
-          .from(messagesTable)
-          .leftJoin(users, eq(messagesTable.sender_id, users.id))
-          .innerJoin(conversationParticipants, eq(messagesTable.conversationId, conversationParticipants.conversationId))
-          .innerJoin(conversations, eq(messagesTable.conversationId, conversations.id))
+        // Get archived email messages for this user
+        const archivedEmails = await db
+          .select()
+          .from(emailMessages)
           .where(and(
-            isNotNull(messagesTable.conversationId),
-            eq(conversationParticipants.userId, user.id),
-            eq(messagesTable.isArchived, true),
-            isNull(messagesTable.deletedAt)
+            or(
+              eq(emailMessages.senderId, user.id),
+              eq(emailMessages.recipientId, user.id)
+            ),
+            eq(emailMessages.isArchived, true),
+            eq(emailMessages.isTrashed, false)
           ))
-          .orderBy(desc(messagesTable.created_at))
+          .orderBy(desc(emailMessages.createdAt))
           .limit(50);
           
-        const formattedArchived = await formatMessagesForGmail(archivedMessages, user, db);
-        console.log(`Found ${formattedArchived.length} archived messages`);
-        return res.json(formattedArchived);
+        console.log(`Found ${archivedEmails.length} archived email messages`);
+        return res.json(archivedEmails.map(email => ({
+          id: email.id,
+          senderId: email.senderId,
+          senderName: email.senderName,
+          senderEmail: email.senderEmail,
+          recipientId: email.recipientId,
+          recipientName: email.recipientName,
+          recipientEmail: email.recipientEmail,
+          content: email.content,
+          subject: email.subject,
+          createdAt: email.createdAt,
+          threadId: email.parentMessageId || email.id,
+          isRead: email.isRead,
+          isStarred: email.isStarred,
+          folder: "archived",
+          committee: email.contextType || "email"
+        })));
       }
       
       if (chatType === "trash") {
-        console.log("Trash folder requested - showing deleted messages");
+        console.log("Trash folder requested - showing trashed email messages");
         
-        // Get deleted/trashed messages for this user
-        const trashedMessages = await db
-          .select({
-            id: messagesTable.id,
-            content: messagesTable.content,
-            userId: messagesTable.user_id,
-            senderId: messagesTable.sender_id,
-            sender: messagesTable.sender,
-            createdAt: messagesTable.created_at,
-            conversationId: messagesTable.conversationId,
-            senderFirstName: users.firstName,
-            senderLastName: users.lastName,
-            senderEmail: users.email,
-            senderDisplayName: users.displayName,
-            conversationType: conversations.type,
-            conversationName: conversations.name,
-          })
-          .from(messagesTable)
-          .leftJoin(users, eq(messagesTable.sender_id, users.id))
-          .innerJoin(conversationParticipants, eq(messagesTable.conversationId, conversationParticipants.conversationId))
-          .innerJoin(conversations, eq(messagesTable.conversationId, conversations.id))
+        // Get trashed email messages for this user
+        const trashedEmails = await db
+          .select()
+          .from(emailMessages)
           .where(and(
-            isNotNull(messagesTable.conversationId),
-            eq(conversationParticipants.userId, user.id),
-            isNotNull(messagesTable.deletedAt)
+            or(
+              eq(emailMessages.senderId, user.id),
+              eq(emailMessages.recipientId, user.id)
+            ),
+            eq(emailMessages.isTrashed, true)
           ))
-          .orderBy(desc(messagesTable.created_at))
+          .orderBy(desc(emailMessages.createdAt))
           .limit(50);
           
-        const formattedTrash = await formatMessagesForGmail(trashedMessages, user, db);
-        console.log(`Found ${formattedTrash.length} trashed messages`);
-        return res.json(formattedTrash);
+        console.log(`Found ${trashedEmails.length} trashed email messages`);
+        return res.json(trashedEmails.map(email => ({
+          id: email.id,
+          senderId: email.senderId,
+          senderName: email.senderName,
+          senderEmail: email.senderEmail,
+          recipientId: email.recipientId,
+          recipientName: email.recipientName,
+          recipientEmail: email.recipientEmail,
+          content: email.content,
+          subject: email.subject,
+          createdAt: email.createdAt,
+          threadId: email.parentMessageId || email.id,
+          isRead: email.isRead,
+          isStarred: email.isStarred,
+          folder: "trash",
+          committee: email.contextType || "email"
+        })));
       }
 
-      // For inbox and any other context, show direct messages and project conversations
-      const chatTypeParam = req.query.chatType as string;
-      let conversationName = "General Chat";
-      if (chatType === "driver") conversationName = "Driver Chat";
-      else if (chatType === "recipient") conversationName = "Recipient Chat";
-      else if (chatType === "host") conversationName = "Host Chat";
-
-      // For Gmail inbox, only show direct messages and project conversations
-      // Exclude team chat channels by filtering conversation types
-      const allMessages = await db
-        .select({
-          id: messagesTable.id,
-          content: messagesTable.content,
-          userId: messagesTable.user_id,
-          senderId: messagesTable.sender_id,
-          sender: messagesTable.sender,
-          createdAt: messagesTable.created_at,
-          conversationId: messagesTable.conversationId,
-          senderFirstName: users.firstName,
-          senderLastName: users.lastName,
-          senderEmail: users.email,
-          senderDisplayName: users.displayName,
-          conversationType: conversations.type,
-          conversationName: conversations.name,
-        })
-        .from(messagesTable)
-        .leftJoin(users, eq(messagesTable.sender_id, users.id))
-        .innerJoin(conversationParticipants, eq(messagesTable.conversationId, conversationParticipants.conversationId))
-        .innerJoin(conversations, eq(messagesTable.conversationId, conversations.id))
+      // For inbox and any other context (default case), show inbox email messages
+      console.log("Inbox folder requested - showing inbox email messages");
+      
+      // Get inbox email messages for this user (not drafts, not trashed, not archived)
+      const inboxEmails = await db
+        .select()
+        .from(emailMessages)
         .where(and(
-          isNotNull(messagesTable.conversationId),
-          eq(conversationParticipants.userId, user.id),
-          // Only show direct messages or named project conversations
-          // Exclude team channels and general broadcasts
           or(
-            eq(conversations.type, 'direct'),
-            and(
-              eq(conversations.type, 'channel'),
-              isNotNull(conversations.name),
-              ne(conversations.name, 'team-chat'),
-              ne(conversations.name, 'general'),
-              ne(conversations.name, 'General Chat'),
-              ne(conversations.name, 'Driver Chat'),
-              ne(conversations.name, 'Host Chat'),
-              ne(conversations.name, 'Recipient Chat'),
-              ne(conversations.name, 'Committee Chat'),
-              ne(conversations.name, 'Core Team Chat')
-            )
-          )
+            eq(emailMessages.senderId, user.id),
+            eq(emailMessages.recipientId, user.id)
+          ),
+          eq(emailMessages.isDraft, false),
+          eq(emailMessages.isTrashed, false),
+          eq(emailMessages.isArchived, false)
         ))
-        .orderBy(desc(messagesTable.created_at))
+        .orderBy(desc(emailMessages.createdAt))
         .limit(50);
 
       console.log(`FOUND ${allMessages.length} messages for ${user.email}:`);
