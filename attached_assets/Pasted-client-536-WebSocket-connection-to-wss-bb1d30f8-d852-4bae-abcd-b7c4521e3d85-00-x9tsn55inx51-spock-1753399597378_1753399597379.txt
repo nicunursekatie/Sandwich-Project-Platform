@@ -1,0 +1,101 @@
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=qLvbPLSOtMm7' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=qLvbPLSOtMm7' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+message-notifications.tsx:98 Connecting to WebSocket at: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/notifications
+dashboard.tsx:59 Dashboard activeSection changed to: dashboard
+message-notifications.tsx:110 WebSocket connected successfully
+useMessaging.ts:239 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ useMessaging.ts:239
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+useMessaging.ts:274 Messaging WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+overrideMethod @ hook.js:608
+ws.onerror @ useMessaging.ts:274
+useMessaging.ts:278 Messaging WebSocket disconnected
+simple-nav.tsx:148 Navigation click: gmail-inbox
+dashboard.tsx:515 Dashboard setActiveSection called with: gmail-inbox
+dashboard.tsx:59 Dashboard activeSection changed to: gmail-inbox
+gmail-style-inbox.tsx:546 Warning: Each child in a list should have a unique "key" prop.
+
+Check the render method of `GmailStyleInbox`. See https://reactjs.org/link/warning-keys for more information.
+    at div
+    at GmailStyleInbox (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/gmail-style-inbox.tsx:60:20)
+    at div
+    at div
+    at div
+    at div
+    at div
+    at Dashboard (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/pages/dashboard.tsx:60:37)
+    at Route (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=88ca342b:206:16)
+    at Switch (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=88ca342b:262:17)
+    at Router (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/App.tsx?v=-i_ag5hJYiX0oTYZ8KxCO:32:49)
+    at Provider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-3RXG37ZK.js?v=88ca342b:38:15)
+    at TooltipProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=88ca342b:65:5)
+    at QueryClientProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b:2933:3)
+    at ErrorBoundary (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/error-boundary.tsx:10:5)
+    at App
+overrideMethod @ hook.js:608
+printWarning @ react_jsx-dev-runtime.js?v=88ca342b:64
+error @ react_jsx-dev-runtime.js?v=88ca342b:48
+validateExplicitKey @ react_jsx-dev-runtime.js?v=88ca342b:724
+validateChildKeys @ react_jsx-dev-runtime.js?v=88ca342b:737
+jsxWithValidation @ react_jsx-dev-runtime.js?v=88ca342b:846
+GmailStyleInbox @ gmail-style-inbox.tsx:546
+renderWithHooks @ chunk-276SZO74.js?v=88ca342b:11548
+updateFunctionComponent @ chunk-276SZO74.js?v=88ca342b:14582
+beginWork @ chunk-276SZO74.js?v=88ca342b:15924
+beginWork$1 @ chunk-276SZO74.js?v=88ca342b:19753
+performUnitOfWork @ chunk-276SZO74.js?v=88ca342b:19198
+workLoopSync @ chunk-276SZO74.js?v=88ca342b:19137
+renderRootSync @ chunk-276SZO74.js?v=88ca342b:19116
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18874
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=88ca342b:565
+flush @ @tanstack_react-query.js?v=88ca342b:589
+batch @ @tanstack_react-query.js?v=88ca342b:607
+dispatch_fn @ @tanstack_react-query.js?v=88ca342b:1040
+setData @ @tanstack_react-query.js?v=88ca342b:718
+onSuccess @ @tanstack_react-query.js?v=88ca342b:940
+resolve @ @tanstack_react-query.js?v=88ca342b:475
+Promise.then
+run @ @tanstack_react-query.js?v=88ca342b:517
+start @ @tanstack_react-query.js?v=88ca342b:555
+fetch @ @tanstack_react-query.js?v=88ca342b:969
+executeFetch_fn @ @tanstack_react-query.js?v=88ca342b:2279
+onSubscribe @ @tanstack_react-query.js?v=88ca342b:1983
+subscribe @ @tanstack_react-query.js?v=88ca342b:24
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3146
+subscribeToStore @ chunk-276SZO74.js?v=88ca342b:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+message-notifications.tsx:136 WebSocket connection closed: 1006 
+message-notifications.tsx:110 WebSocket connected successfully
