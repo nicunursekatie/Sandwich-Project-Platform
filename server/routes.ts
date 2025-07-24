@@ -1113,14 +1113,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
               console.log(`[DEBUG] User ${currentUserId} has no conversations`);
               messages = [];
             } else {
-              // Get messages only from conversations where user is a participant
+              // Get messages with proper user data joined
               messages = await db
-                .select()
+                .select({
+                  id: messagesTable.id,
+                  content: messagesTable.content,
+                  userId: messagesTable.userId,
+                  sender: messagesTable.sender,
+                  conversationId: messagesTable.conversationId,
+                  createdAt: messagesTable.createdAt,
+                  subject: messagesTable.subject,
+                  isRead: messagesTable.isRead,
+                  isStarred: messagesTable.isStarred,
+                  folder: messagesTable.folder,
+                  // Join with users table to get sender information
+                  senderName: users.firstName,
+                  senderEmail: users.email,
+                  senderLastName: users.lastName,
+                })
                 .from(messagesTable)
-                .where(inArray(messagesTable.conversationId, conversationIds))
+                .leftJoin(users, eq(messagesTable.userId, users.id))
+                .where(
+                  and(
+                    inArray(messagesTable.conversationId, conversationIds),
+                    // Exclude old team chat messages that shouldn't be in inbox
+                    or(
+                      isNull(messagesTable.contextType),
+                      ne(messagesTable.contextType, 'team_chat')
+                    )
+                  )
+                )
                 .orderBy(desc(messagesTable.createdAt));
               
               console.log(`[DEBUG] Found ${messages.length} messages for user ${currentUserId} in their conversations`);
+              
+              // Transform messages to include proper sender names
+              messages = messages.map(msg => ({
+                ...msg,
+                senderName: msg.senderName && msg.senderLastName 
+                  ? `${msg.senderName} ${msg.senderLastName}` 
+                  : msg.senderName || msg.senderEmail || msg.sender || 'Unknown User'
+              }));
             }
           } else {
             // For other message contexts, use storage layer (but this should be filtered properly)
