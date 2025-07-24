@@ -733,12 +733,12 @@ export default function GmailStyleInbox() {
             </div>
             
             <div>
-              <Label htmlFor="subject">Subject</Label>
+              <Label htmlFor="subject">Project/Task name (optional)</Label>
               <Input
                 id="subject"
                 value={composeSubject}
                 onChange={(e) => setComposeSubject(e.target.value)}
-                placeholder="Enter subject..."
+                placeholder="e.g., Budget Review, Website Updates, Event Planning..."
               />
             </div>
             
