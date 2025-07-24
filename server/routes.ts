@@ -19,6 +19,7 @@ import googleSheetsRoutes from "./routes/google-sheets";
 import suggestionsRoutes from "./suggestions-routes";
 import realTimeMessagesRoutes from "./routes/real-time-messages";
 import chatRoutes from "./routes/chat-simple";
+import emailMessagesRoutes from "./routes/email-messages";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
@@ -6260,6 +6261,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Register Suggestions Portal routes
   app.use("/api/suggestions", suggestionsRoutes);
+  
+  // Register Email-style messaging routes
+  app.use("/api/messages", emailMessagesRoutes);
   
   // Register Messaging routes
   const { messagingRoutes } = await import("./routes/messaging");

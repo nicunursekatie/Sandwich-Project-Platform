@@ -1,200 +1,119 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { apiRequest } from "@/lib/queryClient";
-import { Heart, Loader2 } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { Heart, Star, Trophy, Sparkles, Target } from "lucide-react";
 
 interface SendKudosButtonProps {
   recipientId: string;
-  recipientName?: string;
+  recipientName: string;
   contextType: "project" | "task";
   contextId: string;
-  entityName: string;
+  contextTitle: string;
   className?: string;
-  size?: "default" | "sm" | "lg" | "icon" | "xs";
+  size?: "sm" | "default" | "lg";
+  variant?: "default" | "secondary" | "outline";
 }
 
-export function SendKudosButton({
+export default function SendKudosButton({
   recipientId,
   recipientName,
   contextType,
   contextId,
-  entityName,
-  className,
+  contextTitle,
+  className = "",
   size = "sm",
+  variant = "outline"
 }: SendKudosButtonProps) {
-  const { toast } = useToast();
   const { user } = useAuth();
-  const [isSending, setIsSending] = useState(false);
-  const [kudosSent, setKudosSent] = useState(false);
-  const [showDialog, setShowDialog] = useState(false);
-  const [customMessage, setCustomMessage] = useState("");
+  const { toast } = useToast();
+  const [hasSentKudos, setHasSentKudos] = useState(false);
 
-  // Check if kudos already sent on mount
-  useEffect(() => {
-    if (!user?.id || !recipientId) return;
-
-    const checkKudosStatus = async () => {
-      try {
-        const response = await apiRequest(
-          "GET",
-          `/api/messaging/kudos/check?recipientId=${recipientId}&contextType=${contextType}&contextId=${contextId}`
-        );
-        setKudosSent(response.sent);
-      } catch (error) {
-        console.error("Failed to check kudos status:", error);
-      }
-    };
-
-    checkKudosStatus();
-  }, [user?.id, recipientId, contextType, contextId]);
-
-  const handleSendKudos = async () => {
-    if (!user?.id) {
-      toast({
-        title: "Not authenticated",
-        description: "Please log in to send kudos",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (user.id === recipientId) {
-      toast({
-        title: "Cannot send kudos to yourself",
-        description: "Kudos are meant for others!",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSending(true);
-
-    try {
-      const content = customMessage.trim() 
-        ? `🎉 ${customMessage}`
-        : `🎉 Kudos! Great job completing ${entityName}!`;
-
-      const response = await apiRequest("POST", "/api/messaging/kudos", {
+  const sendKudosMutation = useMutation({
+    mutationFn: async () => {
+      const kudosMessage = generateKudosMessage(recipientName, contextType, contextTitle);
+      
+      return await apiRequest('POST', '/api/messages', {
         recipientId,
+        subject: `Kudos for ${contextTitle}!`,
+        content: kudosMessage,
         contextType,
         contextId,
-        entityName,
-        content,
+        contextTitle
       });
-
-      if (response.alreadySent) {
-        toast({
-          title: "Kudos already sent",
-          description: "You've already sent kudos for this achievement",
-        });
-      } else {
-        toast({
-          title: "Kudos sent! 🎉",
-          description: `Your appreciation has been sent to ${recipientName || "the user"}`,
-        });
-        setKudosSent(true);
-      }
-      
-      setShowDialog(false);
-      setCustomMessage("");
-    } catch (error: any) {
-      if (error.status === 409) {
-        toast({
-          title: "Kudos already sent",
-          description: "You've already sent kudos for this achievement",
-        });
-        setKudosSent(true);
-      } else {
-        toast({
-          title: "Failed to send kudos",
-          description: error.message || "Please try again later",
-          variant: "destructive",
-        });
-      }
-    } finally {
-      setIsSending(false);
+    },
+    onSuccess: () => {
+      setHasSentKudos(true);
+      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
+      toast({
+        description: `Kudos sent to ${recipientName}!`,
+        duration: 3000
+      });
+    },
+    onError: () => {
+      toast({
+        description: "Failed to send kudos",
+        variant: "destructive"
+      });
     }
+  });
+
+  const generateKudosMessage = (name: string, type: string, title: string) => {
+    const messages = [
+      `🎉 Fantastic work on ${title}, ${name}! Your dedication really shows.`,
+      `⭐ Great job completing ${title}! Thanks for your excellent contribution.`,
+      `🏆 Outstanding work on ${title}, ${name}! Keep up the amazing effort.`,
+      `✨ Excellent completion of ${title}! Your work makes a real difference.`,
+      `🎯 Awesome job with ${title}, ${name}! Thanks for being such a valuable team member.`,
+      `🌟 Brilliant work on ${title}! Your contribution is truly appreciated.`,
+      `🚀 Amazing job completing ${title}, ${name}! Your effort doesn't go unnoticed.`,
+      `💫 Wonderful work on ${title}! Thanks for your commitment to excellence.`
+    ];
+    
+    return messages[Math.floor(Math.random() * messages.length)];
   };
 
-  // Don't show button if user is the recipient
-  if (user?.id === recipientId) {
-    return null;
+  const getRandomIcon = () => {
+    const icons = [Heart, Star, Trophy, Sparkles, Target];
+    const IconComponent = icons[Math.floor(Math.random() * icons.length)];
+    return <IconComponent className="h-3 w-3" />;
+  };
+
+  if (!user || (user as any).id === recipientId) {
+    return null; // Don't show kudos button for yourself
+  }
+
+  if (hasSentKudos) {
+    return (
+      <Badge variant="secondary" className={`gap-1 ${className}`}>
+        <Heart className="h-3 w-3 fill-red-400 text-red-400" />
+        Kudos Sent
+      </Badge>
+    );
   }
 
   return (
-    <>
-      <Button
-        variant={kudosSent ? "secondary" : "outline"}
-        size={size}
-        className={className}
-        onClick={() => setShowDialog(true)}
-        disabled={kudosSent || isSending}
-      >
-        {isSending ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <>
-            <Heart className={`h-4 w-4 ${kudosSent ? "fill-current" : ""}`} />
-            <span className="ml-2">
-              {kudosSent ? "Kudos Sent" : "Send Kudos"}
-            </span>
-          </>
-        )}
-      </Button>
-
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Send Kudos 🎉</DialogTitle>
-            <DialogDescription>
-              Send a congratulatory message to {recipientName || "the user"} for completing {entityName}
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="py-4">
-            <Textarea
-              placeholder={`Great job completing ${entityName}! (optional custom message)`}
-              value={customMessage}
-              onChange={(e) => setCustomMessage(e.target.value)}
-              rows={3}
-              className="resize-none"
-            />
-            <p className="text-sm text-muted-foreground mt-2">
-              Leave blank for default message or write your own
-            </p>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDialog(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSendKudos} disabled={isSending}>
-              {isSending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                <>
-                  <Heart className="mr-2 h-4 w-4" />
-                  Send Kudos
-                </>
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+    <Button
+      onClick={() => sendKudosMutation.mutate()}
+      disabled={sendKudosMutation.isPending}
+      size={size}
+      variant={variant}
+      className={`gap-1 ${className}`}
+    >
+      {sendKudosMutation.isPending ? (
+        <>
+          <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-current" />
+          Sending...
+        </>
+      ) : (
+        <>
+          {getRandomIcon()}
+          Send Kudos
+        </>
+      )}
+    </Button>
   );
 }

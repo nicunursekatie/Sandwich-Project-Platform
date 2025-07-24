@@ -309,6 +309,51 @@ export const kudosTracking = pgTable("kudos_tracking", {
 
 // All complex messaging tables removed - using enhanced messaging system above
 
+// Email-style messaging table for Gmail-like inbox functionality
+export const emailMessages = pgTable("email_messages", {
+  id: serial("id").primaryKey(),
+  senderId: varchar("sender_id").notNull(),
+  senderName: varchar("sender_name").notNull(),
+  senderEmail: varchar("sender_email").notNull(),
+  recipientId: varchar("recipient_id").notNull(),
+  recipientName: varchar("recipient_name").notNull(),
+  recipientEmail: varchar("recipient_email").notNull(),
+  subject: text("subject").notNull(),
+  content: text("content").notNull(),
+  isRead: boolean("is_read").notNull().default(false),
+  isStarred: boolean("is_starred").notNull().default(false),
+  isArchived: boolean("is_archived").notNull().default(false),
+  isTrashed: boolean("is_trashed").notNull().default(false),
+  isDraft: boolean("is_draft").notNull().default(false),
+  parentMessageId: integer("parent_message_id"), // For replies/threading
+  contextType: varchar("context_type"), // 'project', 'task', 'suggestion', etc.
+  contextId: varchar("context_id"), // ID of the related entity
+  contextTitle: varchar("context_title"), // Display name of related entity
+  readAt: timestamp("read_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => ({
+  senderIdx: index("idx_email_sender").on(table.senderId),
+  recipientIdx: index("idx_email_recipient").on(table.recipientId),
+  readIdx: index("idx_email_read").on(table.isRead),
+  trashedIdx: index("idx_email_trashed").on(table.isTrashed),
+  draftIdx: index("idx_email_draft").on(table.isDraft),
+}));
+
+// Drafts table for email-style drafts functionality
+export const emailDrafts = pgTable("email_drafts", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  recipientId: varchar("recipient_id").notNull(),
+  recipientName: varchar("recipient_name").notNull(),
+  subject: text("subject").notNull(),
+  content: text("content").notNull(),
+  lastSaved: timestamp("last_saved").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => ({
+  userIdx: index("idx_drafts_user").on(table.userId),
+}));
+
 export const weeklyReports = pgTable("weekly_reports", {
   id: serial("id").primaryKey(),
   weekEnding: text("week_ending").notNull(), // date string
@@ -669,6 +714,24 @@ export type Conversation = typeof conversations.$inferSelect;
 export type InsertConversation = z.infer<typeof insertConversationSchema>;
 export type ConversationParticipant = typeof conversationParticipants.$inferSelect;
 export type InsertConversationParticipant = z.infer<typeof insertConversationParticipantSchema>;
+
+// Email messaging schemas
+export const insertEmailMessageSchema = createInsertSchema(emailMessages).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertEmailDraftSchema = createInsertSchema(emailDrafts).omit({
+  id: true,
+  createdAt: true,
+  lastSaved: true,
+});
+
+export type EmailMessage = typeof emailMessages.$inferSelect;
+export type EmailDraft = typeof emailDrafts.$inferSelect;
+export type InsertEmailMessage = z.infer<typeof insertEmailMessageSchema>;
+export type InsertEmailDraft = z.infer<typeof insertEmailDraftSchema>;
 
 // Google Sheets integration table
 export const googleSheets = pgTable("google_sheets", {

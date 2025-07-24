@@ -42,6 +42,7 @@ import WorkLogPage from "@/pages/work-log";
 import SuggestionsPortal from "@/pages/suggestions";
 import GoogleSheetsPage from "@/pages/google-sheets";
 import InboxPage from "@/pages/inbox";
+import DirectMessages from "@/pages/direct-messages";
 import MessagingSystem from "@/components/messaging-system";
 import RealTimeMessages from "@/pages/real-time-messages";
 import Governance from "@/pages/governance";
@@ -124,6 +125,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
     ...(hasPermission(user, PERMISSIONS.VIEW_PROJECTS) ? [{ id: "projects", label: "Projects", icon: ListTodo }] : []),
     
     // Communication section
+    { id: "inbox", label: "Inbox", icon: MessageCircle },
+    { id: "chat", label: "Chat", icon: MessageCircle },
     ...(hasPermission(user, PERMISSIONS.VIEW_COMMITTEE) ? [{ id: "committee", label: "Committee", icon: MessageCircle }] : []),
     { id: "directory", label: "Directory", icon: Phone },
     ...(hasPermission(user, PERMISSIONS.VIEW_SUGGESTIONS) ? [{ id: "suggestions", label: "Suggestions", icon: Lightbulb }] : []),
@@ -160,6 +163,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <RealTimeMessages />;
       case "messages":
         return <DirectMessages />;
+      case "inbox":
+        return <InboxPage />;
       case "stream-messages":
         return <StreamMessagesPage />;
       case "chat":
