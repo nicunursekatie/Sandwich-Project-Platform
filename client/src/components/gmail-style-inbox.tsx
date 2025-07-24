@@ -415,11 +415,11 @@ export default function GmailStyleInbox() {
   return (
     <div className="flex h-[calc(100vh-64px)]">
       {/* Sidebar */}
-      <div className="w-64 border-r bg-slate-50 flex flex-col">
+      <div className="w-64 border-r bg-gray-50 flex flex-col">
         <div className="p-4">
           <Button 
             onClick={() => setShowCompose(true)} 
-            className="w-full gap-2"
+            className="w-full gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-['Roboto'] font-medium shadow-lg hover:shadow-xl transition-all duration-200"
           >
             <Plus className="h-4 w-4" />
             Compose
@@ -433,10 +433,10 @@ export default function GmailStyleInbox() {
                 key={folder.id}
                 onClick={() => setActiveFolder(folder.id)}
                 className={`
-                  w-full flex items-center justify-between px-3 py-2 mb-1 rounded-lg text-left transition-colors
+                  w-full flex items-center justify-between px-3 py-2 mb-1 rounded-lg text-left transition-colors font-['Roboto']
                   ${activeFolder === folder.id 
-                    ? 'bg-[#236383] text-white' 
-                    : 'hover:bg-slate-200 text-slate-700'
+                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md' 
+                    : 'hover:bg-amber-50 hover:border-amber-200 text-gray-700'
                   }
                 `}
               >
@@ -530,9 +530,9 @@ export default function GmailStyleInbox() {
                   key={message.id}
                   onClick={() => handleSelectMessage(message)}
                   className={`
-                    p-4 cursor-pointer transition-colors hover:bg-slate-50
-                    ${selectedMessage?.id === message.id ? 'bg-blue-50 border-r-2 border-blue-500' : ''}
-                    ${!message.isRead ? 'font-semibold bg-blue-25' : ''}
+                    p-4 cursor-pointer transition-colors hover:bg-amber-50 font-['Roboto']
+                    ${selectedMessage?.id === message.id ? 'bg-amber-100 border-r-4 border-amber-500 shadow-sm' : ''}
+                    ${!message.isRead ? 'font-semibold bg-amber-25' : ''}
                   `}
                 >
                   <div className="flex items-start gap-3">
@@ -705,30 +705,35 @@ export default function GmailStyleInbox() {
         </div>
       </div>
 
-      {/* Compose Dialog - TSP Branded */}
+      {/* Compose Dialog - Subtle TSP Branding */}
       <Dialog open={showCompose} onOpenChange={setShowCompose}>
-        <DialogContent className="max-w-2xl bg-gradient-to-br from-white to-orange-50 border-2 border-orange-200 rounded-2xl shadow-2xl">
-          <DialogHeader className="text-center pb-6 border-b border-orange-100">
-            <DialogTitle className="text-2xl font-bold text-teal-800 font-['Roboto']">
-              New Message
-            </DialogTitle>
-            <DialogDescription className="text-gray-600 font-['Roboto']">
-              Send a message to your team member
-            </DialogDescription>
+        <DialogContent className="max-w-2xl bg-white border border-gray-200 rounded-xl shadow-xl">
+          <DialogHeader className="pb-4 border-b border-gray-100">
+            <div className="flex items-center gap-3">
+              <div className="w-1 h-8 bg-gradient-to-b from-amber-400 to-amber-500 rounded-full"></div>
+              <div>
+                <DialogTitle className="text-xl font-bold text-gray-800 font-['Roboto']">
+                  New Message
+                </DialogTitle>
+                <DialogDescription className="text-gray-600 font-['Roboto']">
+                  Send a message to your team member
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
           
-          <div className="space-y-6 py-6">
+          <div className="space-y-5 py-6">
             <div className="space-y-2">
-              <Label htmlFor="recipient" className="text-sm font-semibold text-teal-700 font-['Roboto']">
+              <Label htmlFor="recipient" className="text-sm font-semibold text-gray-700 font-['Roboto']">
                 To
               </Label>
               <Select value={composeRecipient} onValueChange={setComposeRecipient}>
-                <SelectTrigger className="rounded-xl border-2 border-orange-200 bg-white/80 focus:border-teal-400 focus:ring-2 focus:ring-teal-200 h-12">
+                <SelectTrigger className="rounded-lg border border-gray-300 bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-200 h-11 transition-colors">
                   <SelectValue placeholder="Choose team member..." />
                 </SelectTrigger>
-                <SelectContent className="rounded-xl border-2 border-orange-200 bg-white">
+                <SelectContent className="rounded-lg border border-gray-200 bg-white">
                   {users.filter(u => u.id !== (user as any)?.id).map((user) => (
-                    <SelectItem key={user.id} value={user.id} className="rounded-lg hover:bg-orange-50">
+                    <SelectItem key={user.id} value={user.id} className="rounded hover:bg-amber-50">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
                         {user.firstName} {user.lastName} ({user.email})
@@ -740,7 +745,7 @@ export default function GmailStyleInbox() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="subject" className="text-sm font-semibold text-amber-700 font-['Roboto'] flex items-center gap-2">
+              <Label htmlFor="subject" className="text-sm font-semibold text-gray-700 font-['Roboto'] flex items-center gap-2">
                 <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
                 Project/Task name (optional)
               </Label>
@@ -749,15 +754,15 @@ export default function GmailStyleInbox() {
                 value={composeSubject}
                 onChange={(e) => setComposeSubject(e.target.value)}
                 placeholder="Budget Review, Website Updates, Event Planning..."
-                className="rounded-xl border-2 border-amber-200 bg-amber-50/50 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 h-12 font-['Roboto'] placeholder:text-amber-600/70"
+                className="rounded-lg border border-gray-300 bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-200 h-11 font-['Roboto'] placeholder:text-gray-500 transition-colors"
               />
-              <p className="text-xs text-amber-600 font-['Roboto'] italic">
+              <p className="text-xs text-gray-500 font-['Roboto'] italic">
                 Leave blank for general conversation
               </p>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="content" className="text-sm font-semibold text-teal-700 font-['Roboto']">
+              <Label htmlFor="content" className="text-sm font-semibold text-gray-700 font-['Roboto']">
                 Message
               </Label>
               <Textarea
@@ -766,30 +771,30 @@ export default function GmailStyleInbox() {
                 onChange={(e) => setComposeContent(e.target.value)}
                 placeholder="Type your message here..."
                 rows={6}
-                className="rounded-xl border-2 border-orange-200 bg-white/80 focus:border-teal-400 focus:ring-2 focus:ring-teal-200 font-['Roboto'] placeholder:text-gray-500 resize-none"
+                className="rounded-lg border border-gray-300 bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-200 font-['Roboto'] placeholder:text-gray-500 resize-none transition-colors"
               />
             </div>
             
             {saveDraftMutation.isPending && (
-              <div className="flex items-center gap-2 text-sm text-amber-600 bg-amber-50 p-3 rounded-xl">
+              <div className="flex items-center gap-2 text-sm text-amber-700 bg-amber-50 border border-amber-200 p-3 rounded-lg">
                 <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
                 Auto-saving draft...
               </div>
             )}
           </div>
           
-          <DialogFooter className="pt-6 border-t border-orange-100 gap-3">
+          <DialogFooter className="pt-4 border-t border-gray-100 gap-3">
             <Button 
               variant="ghost" 
               onClick={() => setShowCompose(false)}
-              className="rounded-xl px-6 py-3 text-gray-600 hover:bg-gray-100 font-['Roboto'] font-medium"
+              className="rounded-lg px-6 py-2 text-gray-600 hover:bg-gray-100 font-['Roboto'] font-medium transition-colors"
             >
               Cancel
             </Button>
             <Button 
               onClick={handleSendMessage}
               disabled={sendMessageMutation.isPending}
-              className="rounded-xl px-8 py-3 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-['Roboto'] font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
+              className="rounded-lg px-8 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-['Roboto'] font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
             >
               {sendMessageMutation.isPending ? (
                 <div className="flex items-center gap-2">

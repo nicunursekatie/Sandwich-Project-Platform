@@ -6762,7 +6762,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       let targetConversation;
       let conversationType = "channel";
-      let finalConversationName = conversationName && conversationName.trim() ? conversationName.trim() : "team-chat";
+      let finalConversationName = conversationName && conversationName.trim() ? conversationName.trim() : null;
 
       // If recipientId is provided, create/find direct conversation
       if (recipientId && recipientId !== user.id) {
@@ -6805,7 +6805,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           throw dbError;
         }
       } else {
-        // Look for named channel conversation
+        // Look for named channel conversation (or default "team-chat" if no name provided)
+        if (!finalConversationName) {
+          finalConversationName = "team-chat";
+        }
         try {
           const existingConversations = await db
             .select()
