@@ -738,16 +738,17 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                         }}
                       />
                       {/* Show kudos buttons for completed tasks */}
-                      {task.status === 'completed' && task.assigneeIds && task.assigneeIds.length > 0 && (
+                      {task.status === 'completed' && (
                         <div className="flex gap-1 flex-wrap">
-                          {task.assigneeIds.map((assigneeId, index) => {
+                          {/* Handle new format with assigneeIds array */}
+                          {task.assigneeIds && task.assigneeIds.length > 0 && task.assigneeIds.map((assigneeId, index) => {
                             const assigneeName = task.assigneeNames && task.assigneeNames[index] 
                               ? task.assigneeNames[index] 
                               : `Team Member ${index + 1}`;
                             
                             return (
                               <SendKudosButton 
-                                key={`${task.id}-${assigneeId}`}
+                                key={`${task.id}-new-${assigneeId}`}
                                 recipientId={assigneeId}
                                 recipientName={assigneeName}
                                 contextType="task"
@@ -757,6 +758,13 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                               />
                             );
                           })}
+                          
+                          {/* Handle legacy format with single assignee but no proper user ID */}
+                          {(!task.assigneeIds || task.assigneeIds.length === 0) && task.assigneeName && (
+                            <div className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded border border-orange-200">
+                              ⚠️ Legacy assignment: {task.assigneeName}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
