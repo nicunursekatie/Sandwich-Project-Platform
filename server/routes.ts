@@ -1148,37 +1148,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.post(
-    "/api/messages",
-    requirePermission("send_messages"),
-    async (req, res) => {
-      try {
-        const messageData = insertMessageSchema.parse(req.body);
-        // Add user ID to message data if user is authenticated
-        // ENHANCED: Add debug logging for message creation
-        const messageWithUser = {
-          ...messageData,
-          userId: req.user?.id || null,
-        };
-        console.log(
-          `📤 CREATING MESSAGE: committee=${messageData.committee}, conversationId=${messageData.conversationId}, userId=${req.user?.id}`,
-        );
-        const message = await storage.createMessage(messageWithUser);
-        console.log(
-          `✅ MESSAGE CREATED: id=${message.id}, conversationId=${message.conversationId}`,
-        );
-
-        // Broadcast new message notification to connected clients
-        if (typeof (global as any).broadcastNewMessage === "function") {
-          await (global as any).broadcastNewMessage(message);
-        }
-
-        res.status(201).json(message);
-      } catch (error) {
-        res.status(400).json({ message: "Invalid message data" });
-      }
-    },
-  );
+  // REMOVED: Duplicate POST /api/messages endpoint that was causing 400 errors
+  // The conversation-based endpoint below handles message creation properly
 
   // REMOVED OLD ENDPOINT - using new conversation system instead
 
