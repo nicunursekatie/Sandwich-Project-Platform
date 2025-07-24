@@ -6631,6 +6631,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Transform to match Gmail inbox expected format with proper user data
       const formattedMessages = allMessages.map((msg) => {
+        // Debug logging for troubleshooting
+        console.log(`[DEBUG] Processing message ${msg.id}:`);
+        console.log(`  - sender_id: ${msg.senderId}`);
+        console.log(`  - sender field: ${msg.sender}`);
+        console.log(`  - senderFirstName: ${msg.senderFirstName}`);
+        console.log(`  - senderLastName: ${msg.senderLastName}`);
+        console.log(`  - senderDisplayName: ${msg.senderDisplayName}`);
+        console.log(`  - conversationId: ${msg.conversationId}`);
+        
         // Construct sender name from available data with proper null checks
         let senderName = "Unknown User";
         if (msg.senderDisplayName) {
