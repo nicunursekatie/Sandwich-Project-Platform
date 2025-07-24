@@ -4,7 +4,7 @@ import { isAuthenticated } from '../temp-auth';
 
 const router = Router();
 
-// Get emails by folder
+// Get emails by folder with optional threading
 router.get('/', isAuthenticated, async (req: any, res) => {
   try {
     const user = req.user;
@@ -13,31 +13,40 @@ router.get('/', isAuthenticated, async (req: any, res) => {
     }
 
     const folder = (req.query.folder as string) || 'inbox';
-    console.log(`[Email API] Getting emails for folder: ${folder}, user: ${user.email}`);
+    const threaded = req.query.threaded === 'true';
+    console.log(`[Email API] Getting emails for folder: ${folder}, user: ${user.email}, threaded: ${threaded}`);
 
-    const emails = await emailService.getEmailsByFolder(user.id, folder);
-    
-    // Format emails for Gmail interface
-    const formattedEmails = emails.map(email => ({
-      id: email.id,
-      senderId: email.senderId,
-      senderName: email.senderName,
-      senderEmail: email.senderEmail,
-      recipientId: email.recipientId,
-      recipientName: email.recipientName,
-      recipientEmail: email.recipientEmail,
-      content: email.content,
-      subject: email.subject,
-      createdAt: email.createdAt,
-      threadId: email.parentMessageId || email.id,
-      isRead: email.isRead,
-      isStarred: email.isStarred,
-      folder: folder,
-      committee: email.contextType || 'email'
-    }));
+    if (threaded) {
+      // Return emails grouped by subject/project name
+      const threads = await emailService.getEmailThreads(user.id, folder);
+      console.log(`[Email API] Found ${threads.length} threads in ${folder}`);
+      res.json(threads);
+    } else {
+      // Return flat list of emails
+      const emails = await emailService.getEmailsByFolder(user.id, folder);
+      
+      // Format emails for Gmail interface
+      const formattedEmails = emails.map(email => ({
+        id: email.id,
+        senderId: email.senderId,
+        senderName: email.senderName,
+        senderEmail: email.senderEmail,
+        recipientId: email.recipientId,
+        recipientName: email.recipientName,
+        recipientEmail: email.recipientEmail,
+        content: email.content,
+        subject: email.subject,
+        createdAt: email.createdAt,
+        threadId: email.parentMessageId || email.id,
+        isRead: email.isRead,
+        isStarred: email.isStarred,
+        folder: folder,
+        committee: email.contextType || 'email'
+      }));
 
-    console.log(`[Email API] Found ${formattedEmails.length} emails in ${folder}`);
-    res.json(formattedEmails);
+      console.log(`[Email API] Found ${formattedEmails.length} emails in ${folder}`);
+      res.json(formattedEmails);
+    }
   } catch (error) {
     console.error('[Email API] Error fetching emails:', error);
     res.status(500).json({ message: 'Failed to fetch emails' });

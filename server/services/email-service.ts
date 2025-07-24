@@ -52,7 +52,7 @@ export class EmailService {
   }
 
   /**
-   * Get emails for a specific folder
+   * Get emails for a specific folder with thread grouping by subject
    */
   async getEmailsByFolder(userId: string, folder: string): Promise<EmailMessage[]> {
     try {
@@ -328,6 +328,58 @@ export class EmailService {
     } catch (error) {
       console.error('Failed to get email by ID:', error);
       return null;
+    }
+  }
+
+  /**
+   * Get emails grouped by subject (thread view)
+   */
+  async getEmailThreads(userId: string, folder: string): Promise<any[]> {
+    try {
+      const emails = await this.getEmailsByFolder(userId, folder);
+      
+      // Group emails by subject
+      const threadMap = new Map<string, EmailMessage[]>();
+      
+      emails.forEach(email => {
+        const subject = email.subject || 'No Subject';
+        if (!threadMap.has(subject)) {
+          threadMap.set(subject, []);
+        }
+        threadMap.get(subject)!.push(email);
+      });
+      
+      // Convert to array of threads
+      const threads = Array.from(threadMap.entries()).map(([subject, messages]) => {
+        // Sort messages in thread by date (newest first)
+        messages.sort((a, b) => {
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA;
+        });
+        
+        return {
+          subject,
+          messageCount: messages.length,
+          lastMessage: messages[0], // Most recent message
+          messages: messages,
+          participants: Array.from(new Set(messages.flatMap(m => [m.senderEmail, m.recipientEmail]))).filter(Boolean),
+          hasUnread: messages.some(m => !m.isRead),
+          lastMessageDate: messages[0].createdAt
+        };
+      });
+      
+      // Sort threads by last message date (newest first)
+      threads.sort((a, b) => {
+        const dateA = a.lastMessageDate ? new Date(a.lastMessageDate).getTime() : 0;
+        const dateB = b.lastMessageDate ? new Date(b.lastMessageDate).getTime() : 0;
+        return dateB - dateA;
+      });
+      
+      return threads;
+    } catch (error) {
+      console.error('Failed to get email threads:', error);
+      throw error;
     }
   }
 
