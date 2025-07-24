@@ -640,14 +640,26 @@ export default function GmailStyleInbox() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => console.log('Archive not implemented for conversation messages')}
+                      onClick={() => {
+                        if (selectedMessage) {
+                          archiveMutation.mutate([selectedMessage.id]);
+                          setSelectedMessage(null);
+                        }
+                      }}
+                      disabled={archiveMutation.isPending}
                     >
                       <Archive className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => console.log('Trash not implemented for conversation messages')}
+                      onClick={() => {
+                        if (selectedMessage) {
+                          trashMutation.mutate([selectedMessage.id]);
+                          setSelectedMessage(null);
+                        }
+                      }}
+                      disabled={trashMutation.isPending}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

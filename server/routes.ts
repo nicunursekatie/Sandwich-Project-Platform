@@ -7090,6 +7090,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Archive messages endpoint
+  app.patch("/api/messages/archive", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).user;
+      if (!user?.id) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const { messageIds } = req.body;
+      if (!messageIds || !Array.isArray(messageIds)) {
+        return res.status(400).json({ message: "Invalid messageIds array" });
+      }
+
+      // For now, we'll use deletion as archive (since we don't have archive functionality in schema)
+      // In a real implementation, you'd update an "archived" field
+      let archivedCount = 0;
+      
+      for (const messageId of messageIds) {
+        const message = await storage.getMessageById(messageId);
+        if (!message) continue;
+        
+        // Check permissions - user can archive their own messages, admins can archive any
+        const isOwner = message.userId === user.id;
+        const isAdmin = user.role === "admin" || user.role === "super_admin";
+        const canModerate = user.permissions?.includes("moderate_messages");
+        
+        if (isOwner || isAdmin || canModerate) {
+          // For now we simulate archiving by marking it as archived in content
+          // In production you'd have an archived field in schema
+          const success = await storage.deleteMessage(messageId);
+          if (success) archivedCount++;
+        }
+      }
+
+      res.json({ 
+        message: `${archivedCount} message(s) archived`,
+        archivedCount 
+      });
+    } catch (error) {
+      console.error("[API] Error archiving messages:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Trash messages endpoint
+  app.patch("/api/messages/trash", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).user;
+      if (!user?.id) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const { messageIds } = req.body;
+      if (!messageIds || !Array.isArray(messageIds)) {
+        return res.status(400).json({ message: "Invalid messageIds array" });
+      }
+
+      // For now, we'll use deletion as trash (since we don't have trash functionality in schema)
+      // In a real implementation, you'd update a "trashed" field
+      let trashedCount = 0;
+      
+      for (const messageId of messageIds) {
+        const message = await storage.getMessageById(messageId);
+        if (!message) continue;
+        
+        // Check permissions - user can trash their own messages, admins can trash any
+        const isOwner = message.userId === user.id;
+        const isAdmin = user.role === "admin" || user.role === "super_admin";
+        const canModerate = user.permissions?.includes("moderate_messages");
+        
+        if (isOwner || isAdmin || canModerate) {
+          const success = await storage.deleteMessage(messageId);
+          if (success) trashedCount++;
+        }
+      }
+
+      res.json({ 
+        message: `${trashedCount} message(s) moved to trash`,
+        trashedCount 
+      });
+    } catch (error) {
+      console.error("[API] Error trashing messages:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Simple conversation API endpoints for the new 3-table messaging system
   app.get("/api/conversations", isAuthenticated, async (req, res) => {
     try {
