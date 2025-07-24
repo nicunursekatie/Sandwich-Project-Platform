@@ -6604,18 +6604,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Transform to match Gmail inbox expected format with proper user data
       const formattedMessages = allMessages.map((msg) => {
-        // Construct sender name from available data
-        const senderName = msg.senderDisplayName || 
-          msg.sender || 
-          `${msg.senderFirstName || ''} ${msg.senderLastName || ''}`.trim() || 
-          msg.senderEmail || 
-          "Unknown User";
+        // Debug logging to see what data we have
+        console.log('Message data:', {
+          id: msg.id,
+          sender: msg.sender,
+          senderFirstName: msg.senderFirstName,
+          senderLastName: msg.senderLastName,
+          senderDisplayName: msg.senderDisplayName,
+          senderEmail: msg.senderEmail
+        });
         
-        // Construct recipient name (current user)
-        const recipientName = user.displayName ||
-          `${user.firstName || ''} ${user.lastName || ''}`.trim() || 
-          user.email || 
-          "Unknown Recipient";
+        // Construct sender name from available data with proper null checks
+        let senderName = "Unknown User";
+        if (msg.senderDisplayName) {
+          senderName = msg.senderDisplayName;
+        } else if (msg.sender) {
+          senderName = msg.sender;
+        } else if (msg.senderFirstName || msg.senderLastName) {
+          senderName = `${msg.senderFirstName || ''} ${msg.senderLastName || ''}`.trim();
+        } else if (msg.senderEmail) {
+          senderName = msg.senderEmail;
+        }
+        
+        // Construct recipient name (current user) with proper null checks
+        let recipientName = "Unknown Recipient";
+        if (user.displayName) {
+          recipientName = user.displayName;
+        } else if (user.firstName || user.lastName) {
+          recipientName = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+        } else if (user.email) {
+          recipientName = user.email;
+        }
 
         return {
           id: msg.id,
