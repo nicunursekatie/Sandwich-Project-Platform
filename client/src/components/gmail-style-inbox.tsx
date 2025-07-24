@@ -345,9 +345,9 @@ export default function GmailStyleInbox() {
   };
 
   const handleSendMessage = () => {
-    if (!composeRecipient || !composeSubject || !composeContent) {
+    if (!composeRecipient || !composeContent) {
       toast({ 
-        description: "Please fill in all required fields", 
+        description: "Please select a recipient and enter a message", 
         variant: "destructive" 
       });
       return;
@@ -357,7 +357,7 @@ export default function GmailStyleInbox() {
       content: composeContent,
       sender: null, // Let backend use authenticated user info
       recipientId: composeRecipient,
-      conversationName: composeSubject ? `Direct: ${composeSubject}` : null
+      conversationName: composeSubject || null // Use subject as conversation name if provided, null for direct messages
     });
   };
 
