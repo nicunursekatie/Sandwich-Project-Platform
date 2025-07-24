@@ -153,20 +153,28 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/login", (req, res, next) => {
     try {
-      const strategyName = `replitauth:${req.hostname}`;
-
-      // Check if strategy exists before attempting to authenticate
-      if (!(passport as any)._strategy(strategyName)) {
-        console.error(`Strategy ${strategyName} not found. Available strategies:`, Object.keys((passport as any)._strategies || {}));
-        return res.status(500).send(`
-          <html>
-            <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
-              <h2>Authentication Error</h2>
-              <p>Authentication system is not properly configured. Please contact an administrator.</p>
-              <a href="/" style="color: #236383;">Return to home page</a>
-            </body>
-          </html>
-        `);
+      // Find the correct strategy - for local development, use the first available Replit strategy
+      const availableStrategies = Object.keys((passport as any)._strategies || {});
+      let strategyName = `replitauth:${req.hostname}`;
+      
+      // If localhost strategy doesn't exist, use the first replitauth strategy available
+      if (!availableStrategies.includes(strategyName)) {
+        const replitStrategy = availableStrategies.find(s => s.startsWith('replitauth:'));
+        if (replitStrategy) {
+          strategyName = replitStrategy;
+          console.log("🔄 Login using fallback strategy:", strategyName);
+        } else {
+          console.error(`No replitauth strategy found. Available strategies:`, availableStrategies);
+          return res.status(500).send(`
+            <html>
+              <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
+                <h2>Authentication Error</h2>
+                <p>Authentication system is not properly configured. Please contact an administrator.</p>
+                <a href="/" style="color: #236383;">Return to home page</a>
+              </body>
+            </html>
+          `);
+        }
       }
 
       passport.authenticate(strategyName, {

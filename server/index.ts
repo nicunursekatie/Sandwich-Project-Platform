@@ -10,6 +10,19 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Add cache control headers to prevent browser caching issues
+app.use((req, res, next) => {
+  // Prevent caching for HTML responses
+  if (req.path === '/' || req.path.endsWith('.html')) {
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+  }
+  next();
+});
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
