@@ -69,7 +69,7 @@ export class MessagingService {
 
       // Create the message
       const [message] = await db.insert(messages).values({
-        userId: senderId, // Keep for backward compatibility
+        userId: senderId, // Keep for backward compatibility - this should be senderId
         senderId,
         content,
         sender: senderName,
@@ -432,6 +432,18 @@ export class MessagingService {
     const { senderId, recipientId, content, contextType, contextId, entityName } = params;
 
     try {
+      // Validate recipient exists in users table
+      const recipientExists = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.id, recipientId))
+        .limit(1);
+
+      if (recipientExists.length === 0) {
+        console.error(`Kudos recipient not found in users table: ${recipientId}`);
+        throw new Error(`Invalid recipient: ${recipientId}. User does not exist in the system.`);
+      }
+
       // Check if kudos already sent
       const existing = await db
         .select()
