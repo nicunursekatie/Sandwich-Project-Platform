@@ -572,7 +572,13 @@ export default function GmailStyleInbox() {
                           {activeFolder === 'sent' ? (message.recipientName || 'Unknown') : (message.senderName || 'Unknown')}
                         </p>
                         <span className="text-xs text-gray-500">
-                          {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+                          {(() => {
+                            try {
+                              return message.createdAt ? formatDistanceToNow(new Date(message.createdAt), { addSuffix: true }) : 'No date';
+                            } catch (error) {
+                              return 'Invalid date';
+                            }
+                          })()}
                         </span>
                       </div>
                       <p className="text-sm font-medium truncate mt-1">{message.subject}</p>
@@ -643,7 +649,13 @@ export default function GmailStyleInbox() {
                     <p className="text-sm text-gray-600">{selectedMessage.senderEmail}</p>
                   </div>
                   <div className="ml-auto text-sm text-gray-500">
-                    {new Date(selectedMessage.createdAt).toLocaleString()}
+                    {(() => {
+                      try {
+                        return selectedMessage.createdAt ? new Date(selectedMessage.createdAt).toLocaleString() : 'No date';
+                      } catch (error) {
+                        return 'Invalid date';
+                      }
+                    })()}
                   </div>
                 </div>
               </div>
