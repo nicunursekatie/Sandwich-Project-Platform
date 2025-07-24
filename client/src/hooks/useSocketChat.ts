@@ -42,7 +42,7 @@ export function useSocketChat() {
     if (window.location.hostname.includes('.replit.dev') || window.location.hostname.includes('.replit.app')) {
       socketUrl = `${protocol}//${window.location.hostname}`;
     } else {
-      const port = window.location.port || '5000';
+      const port = window.location.port || '';
       socketUrl = `${protocol}//${window.location.hostname}:${port}`;
     }
 

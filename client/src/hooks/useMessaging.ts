@@ -69,7 +69,7 @@ export function useMessaging() {
       return `${protocol}//${host}/notifications`;
     } else if (host.includes('localhost')) {
       // For localhost development, use the port from current location
-      return `${protocol}//localhost:5000/notifications`;
+      return `${protocol}//${window.location.host}/notifications`;
     } else {
       // Default case for other deployments
       return `${protocol}//${host}/notifications`;
@@ -227,13 +227,13 @@ export function useMessaging() {
         wsUrl = `${protocol}//${window.location.host}/notifications`;
       } else {
         // Fallback for environments where window.location.host is undefined
-        const port = window.location.port || '5000';
+        const port = window.location.port || '';
         wsUrl = `${protocol}//${window.location.hostname || 'localhost'}:${port}/notifications`;
       }
     } catch (error) {
       console.error('Failed to construct WebSocket URL:', error);
       // Last resort fallback
-      wsUrl = `ws://localhost:5000/notifications`;
+      wsUrl = `ws://${window.location.host}/notifications`;
     }
     
     const ws = new WebSocket(wsUrl);

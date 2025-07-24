@@ -87,7 +87,7 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
           return `${protocol}//${host}/notifications`;
         } else if (host.includes('localhost') || host.startsWith('127.0.0.1')) {
           // For localhost development, always use port 5000 explicitly
-          return `${protocol}//localhost:5000/notifications`;
+          return `${protocol}//${window.location.host}/notifications`;
         } else {
           // Default case for other deployments - use current host
           return `${protocol}//${host}/notifications`;
