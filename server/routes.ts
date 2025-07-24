@@ -894,162 +894,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Gmail-style inbox endpoint - handles different folder types
-  app.get("/api/gmail-messages", isAuthenticated, async (req, res) => {
-    try {
-      const chatType = req.query.chatType as string;
-      const currentUserId = (req as any).user?.id;
-      
-      if (!currentUserId) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
-      
-      console.log(`[GMAIL] ${chatType} folder requested for user ${currentUserId}`);
-      
-      // Get all conversations where user is a participant  
-      const userConversations = await db
-        .select({ conversationId: conversationParticipants.conversationId })
-        .from(conversationParticipants)
-        .where(eq(conversationParticipants.userId, currentUserId));
-      
-      const conversationIds = userConversations.map(c => c.conversationId);
-      
-      if (conversationIds.length === 0) {
-        console.log(`[GMAIL] User ${currentUserId} has no conversations`);
-        return res.json([]);
-      }
-      
-      let messages;
-      
-      // Filter messages based on folder type - using correct field names from schema
-      switch (chatType) {
-        case "inbox":
-          // Inbox: All direct messages and project conversations
-          messages = await db
-            .select({
-              id: messages.id,
-              content: messages.content,
-              userId: messages.userId,
-              sender: messages.sender,
-              conversationId: messages.conversationId,
-              createdAt: messages.createdAt,
-              contextType: messages.contextType,
-            })
-            .from(messages)
-            .where(
-              and(
-                inArray(messages.conversationId, conversationIds),
-                // Exclude old team chat messages
-                or(
-                  isNull(messages.contextType),
-                  ne(messages.contextType, 'team_chat')
-                ),
-                // Only show non-deleted messages
-                isNull(messages.deletedAt)
-              )
-            )
-            .orderBy(desc(messages.createdAt));
-          break;
-          
-        case "sent":
-          // Sent: Messages sent BY this user
-          messages = await db
-            .select({
-              id: messages.id,
-              content: messages.content,
-              userId: messages.userId,
-              sender: messages.sender,
-              conversationId: messages.conversationId,
-              createdAt: messages.createdAt,
-              contextType: messages.contextType,
-            })
-            .from(messages)
-            .where(
-              and(
-                eq(messages.userId, currentUserId),
-                isNull(messages.deletedAt)
-              )
-            )
-            .orderBy(desc(messages.createdAt));
-          break;
-          
-        case "starred":
-          // Starred: Return empty for now (no starred field in current schema)
-          messages = [];
-          break;
-          
-        case "archived":
-          // Archived: Return empty for now (no archived field in current schema)
-          messages = [];
-          break;
-          
-        case "trash":
-          // Trash: Messages that are deleted but not permanently removed
-          messages = await db
-            .select({
-              id: messages.id,
-              content: messages.content,
-              userId: messages.userId,
-              sender: messages.sender,
-              conversationId: messages.conversationId,
-              createdAt: messages.createdAt,
-              contextType: messages.contextType,
-            })
-            .from(messages)
-            .where(
-              and(
-                inArray(messages.conversationId, conversationIds),
-                isNotNull(messages.deletedAt)
-              )
-            )
-            .orderBy(desc(messages.createdAt));
-          break;
-          
-        case "drafts":
-          // Drafts are handled by separate /api/drafts endpoint
-          return res.json([]);
-          
-        default:
-          // Default to inbox behavior
-          messages = await db
-            .select({
-              id: messages.id,
-              content: messages.content,
-              userId: messages.userId,
-              sender: messages.sender,
-              conversationId: messages.conversationId,
-              createdAt: messages.createdAt,
-              contextType: messages.contextType,
-            })
-            .from(messages)
-            .where(
-              and(
-                inArray(messages.conversationId, conversationIds),
-                or(
-                  isNull(messages.contextType),
-                  ne(messages.contextType, 'team_chat')
-                ),
-                isNull(messages.deletedAt)
-              )
-            )
-            .orderBy(desc(messages.createdAt));
-      }
-      
-      // Add sender name for frontend compatibility
-      const messagesWithSender = messages.map(msg => ({
-        ...msg,
-        senderName: msg.sender || 'Unknown User',
-        timestamp: msg.createdAt
-      }));
-      
-      console.log(`[GMAIL] Found ${messagesWithSender.length} messages for ${chatType} folder`);
-      res.json(messagesWithSender);
-      
-    } catch (error) {
-      console.error(`[GMAIL] Error fetching messages:`, error);
-      res.status(500).json({ message: "Failed to fetch messages" });
-    }
-  });
+  // OLD CONFLICTING ENDPOINT COMPLETELY REMOVED - existing /api/messages at line 6283 handles Gmail folders
 
   app.delete(
     "/api/messages/:id",
@@ -6449,35 +6294,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const chatType = req.query.chatType as string;
       console.log("Chat type requested:", chatType);
 
-      // Handle different Gmail folder types
+      // Handle different Gmail folder types with proper queries
       if (chatType === "starred") {
-        // For starred messages - this should be empty until we implement starring
-        console.log("Starred folder requested - returning empty array");
+        console.log("Starred folder requested - returning empty array (not implemented)");
         return res.json([]);
       }
       
       if (chatType === "drafts") {
-        // For drafts - this should be empty until we implement drafts  
-        console.log("Drafts folder requested - returning empty array");
+        console.log("Drafts folder requested - returning empty array (handled by /api/drafts)");
         return res.json([]);
       }
       
       if (chatType === "sent") {
-        // For sent messages - show messages sent by this user
-        console.log("Sent folder requested - returning empty array");
-        return res.json([]);
+        console.log("Sent folder requested - showing messages sent by this user");
+        
+        // Get messages sent BY this user
+        const sentMessages = await db
+          .select({
+            id: messages.id,
+            content: messages.content,
+            userId: messages.userId,
+            senderId: messages.senderId,
+            sender: messages.sender,
+            createdAt: messages.createdAt,
+            conversationId: messages.conversationId,
+            contextType: messages.contextType,
+          })
+          .from(messages)
+          .where(
+            and(
+              eq(messages.userId, user.id),
+              isNull(messages.deletedAt)
+            )
+          )
+          .orderBy(desc(messages.createdAt));
+          
+        const formattedSent = sentMessages.map(msg => ({
+          ...msg,
+          senderName: msg.sender || user.firstName || user.email || 'You',
+          timestamp: msg.createdAt
+        }));
+        
+        console.log(`Found ${formattedSent.length} sent messages`);
+        return res.json(formattedSent);
       }
       
       if (chatType === "archived") {
-        // For archived messages - this should be empty until we implement archiving
-        console.log("Archived folder requested - returning empty array");
+        console.log("Archived folder requested - returning empty array (not implemented)");
         return res.json([]);
       }
       
       if (chatType === "trash") {
-        // For trash messages - this should be empty until we implement trash
-        console.log("Trash folder requested - returning empty array");
-        return res.json([]);
+        console.log("Trash folder requested - showing deleted messages");
+        
+        // Get all conversations where user is a participant
+        const userConversations = await db
+          .select({ conversationId: conversationParticipants.conversationId })
+          .from(conversationParticipants)
+          .where(eq(conversationParticipants.userId, user.id));
+        
+        const conversationIds = userConversations.map(c => c.conversationId);
+        
+        if (conversationIds.length === 0) {
+          return res.json([]);
+        }
+        
+        // Get deleted messages
+        const trashedMessages = await db
+          .select({
+            id: messages.id,
+            content: messages.content,
+            userId: messages.userId,
+            senderId: messages.senderId,
+            sender: messages.sender,
+            createdAt: messages.createdAt,
+            conversationId: messages.conversationId,
+            contextType: messages.contextType,
+          })
+          .from(messages)
+          .where(
+            and(
+              inArray(messages.conversationId, conversationIds),
+              isNotNull(messages.deletedAt)
+            )
+          )
+          .orderBy(desc(messages.createdAt));
+          
+        const formattedTrash = trashedMessages.map(msg => ({
+          ...msg,
+          senderName: msg.sender || 'Unknown User',
+          timestamp: msg.createdAt
+        }));
+        
+        console.log(`Found ${formattedTrash.length} trashed messages`);
+        return res.json(formattedTrash);
       }
 
       // For inbox and any other context, show direct messages and project conversations
