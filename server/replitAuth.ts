@@ -55,45 +55,60 @@ function updateUserSession(
 }
 
 async function upsertUser(claims: any) {
+  console.log("🔄 Starting user upsert for claims:", JSON.stringify(claims, null, 2));
+  
   // Check if user exists by email for migration
   let existingUser = null;
   try {
     if (claims["email"]) {
+      console.log("🔍 Looking for existing user with email:", claims["email"]);
       existingUser = await storage.getUserByEmail(claims["email"]);
+      if (existingUser) {
+        console.log("✅ Found existing user:", existingUser.email, "with role:", existingUser.role);
+      }
     }
   } catch (error) {
-    console.log("No existing user found with email:", claims["email"]);
+    console.log("ℹ️ No existing user found with email:", claims["email"]);
   }
 
-  if (existingUser) {
-    // Update existing user with Replit ID and profile info
-    await storage.upsertUser({
-      id: claims["sub"], // New Replit ID
-      email: claims["email"],
-      firstName: claims["first_name"] || existingUser.firstName,
-      lastName: claims["last_name"] || existingUser.lastName,
-      profileImageUrl: claims["profile_image_url"],
-      role: existingUser.role, // Keep existing role
-      permissions: existingUser.permissions, // Keep existing permissions
-      metadata: existingUser.metadata || {},
-      isActive: existingUser.isActive,
-      displayName: existingUser.displayName,
-    });
-    console.log("✅ Migrated existing user:", claims["email"], "to Replit ID:", claims["sub"]);
-  } else {
-    // New user - create with default volunteer permissions
-    await storage.upsertUser({
-      id: claims["sub"],
-      email: claims["email"],
-      firstName: claims["first_name"],
-      lastName: claims["last_name"],
-      profileImageUrl: claims["profile_image_url"],
-      role: "volunteer",
-      permissions: ["view_collections", "general_chat"],
-      metadata: {},
-      isActive: true,
-    });
-    console.log("✅ Created new user:", claims["email"], "with Replit ID:", claims["sub"]);
+  try {
+    if (existingUser) {
+      // Update existing user with Replit ID and profile info
+      const updateData = {
+        id: claims["sub"], // New Replit ID
+        email: claims["email"],
+        firstName: claims["first_name"] || existingUser.firstName,
+        lastName: claims["last_name"] || existingUser.lastName,
+        profileImageUrl: claims["profile_image_url"],
+        role: existingUser.role, // Keep existing role
+        permissions: existingUser.permissions, // Keep existing permissions
+        metadata: existingUser.metadata || {},
+        isActive: existingUser.isActive,
+        displayName: existingUser.displayName,
+      };
+      console.log("🔄 Updating existing user with data:", JSON.stringify(updateData, null, 2));
+      await storage.upsertUser(updateData);
+      console.log("✅ Migrated existing user:", claims["email"], "to Replit ID:", claims["sub"]);
+    } else {
+      // New user - create with default volunteer permissions
+      const newUserData = {
+        id: claims["sub"],
+        email: claims["email"],
+        firstName: claims["first_name"],
+        lastName: claims["last_name"],
+        profileImageUrl: claims["profile_image_url"],
+        role: "volunteer",
+        permissions: ["view_collections", "general_chat"],
+        metadata: {},
+        isActive: true,
+      };
+      console.log("🔄 Creating new user with data:", JSON.stringify(newUserData, null, 2));
+      await storage.upsertUser(newUserData);
+      console.log("✅ Created new user:", claims["email"], "with Replit ID:", claims["sub"]);
+    }
+  } catch (error) {
+    console.error("❌ Database error during user upsert:", error);
+    throw error; // Re-throw to be handled by the verification function
   }
 }
 
@@ -142,8 +157,8 @@ export async function setupAuth(app: Express) {
       const strategyName = `replitauth:${req.hostname}`;
 
       // Check if strategy exists before attempting to authenticate
-      if (!passport._strategy(strategyName)) {
-        console.error(`Strategy ${strategyName} not found. Available strategies:`, Object.keys(passport._strategies || {}));
+      if (!(passport as any)._strategy(strategyName)) {
+        console.error(`Strategy ${strategyName} not found. Available strategies:`, Object.keys((passport as any)._strategies || {}));
         return res.status(500).send(`
           <html>
             <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
@@ -174,24 +189,70 @@ export async function setupAuth(app: Express) {
   });
 
   app.get("/api/callback", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, (err, user, info) => {
-      if (err) {
-        console.error("Authentication callback error:", err);
-        return res.redirect("/api/login");
-      }
-      if (!user) {
-        console.error("No user returned from authentication:", info);
-        return res.redirect("/api/login");
-      }
-      req.logIn(user, (loginErr) => {
-        if (loginErr) {
-          console.error("Login error:", loginErr);
-          return res.redirect("/api/login");
+    console.log("🔄 Callback route hit with query:", req.query);
+    try {
+      const strategyName = `replitauth:${req.hostname}`;
+      console.log("🔄 Using strategy:", strategyName);
+      
+      passport.authenticate(strategyName, (err: any, user: any, info: any) => {
+        console.log("🔄 Authentication result - err:", !!err, "user:", !!user, "info:", info);
+        
+        if (err) {
+          console.error("❌ Authentication callback error:", JSON.stringify(err, null, 2));
+          return res.status(500).send(`
+            <html>
+              <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
+                <h2>Authentication Failed</h2>
+                <p>There was an error during authentication. Please try again.</p>
+                <a href="/api/login" style="color: #236383;">Try Again</a>
+              </body>
+            </html>
+          `);
         }
-        console.log("Authentication successful, redirecting to /");
-        return res.redirect("/");
-      });
-    })(req, res, next);
+        
+        if (!user) {
+          console.error("❌ No user returned from authentication:", info);
+          return res.status(500).send(`
+            <html>
+              <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
+                <h2>Authentication Failed</h2>
+                <p>Unable to authenticate user. Please try again.</p>
+                <a href="/api/login" style="color: #236383;">Try Again</a>
+              </body>
+            </html>
+          `);
+        }
+        
+        console.log("✅ User authenticated, attempting login...");
+        req.logIn(user, (loginErr) => {
+          if (loginErr) {
+            console.error("❌ Login error:", JSON.stringify(loginErr, null, 2));
+            return res.status(500).send(`
+              <html>
+                <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
+                  <h2>Login Failed</h2>
+                  <p>Session setup failed. Please try again.</p>
+                  <a href="/api/login" style="color: #236383;">Try Again</a>
+                </body>
+              </html>
+            `);
+          }
+          console.log("✅ Authentication successful, redirecting to /");
+          return res.redirect("/");
+        });
+      })(req, res, next);
+    } catch (error) {
+      console.error("❌ Callback route error:", error);
+      return res.status(500).send(`
+        <html>
+          <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
+            <h2>Server Error</h2>
+            <p>An unexpected error occurred. Please try again.</p>
+            <a href="/api/login" style="color: #236383;">Try Again</a>
+          </body>
+        </html>
+      `);
+    }
   });
 
   app.get("/api/logout", (req, res) => {
