@@ -693,8 +693,8 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                       <MultiUserTaskCompletion 
                         taskId={task.id}
                         projectId={project.id}
-                        assigneeIds={task.assigneeIds?.length > 0 ? task.assigneeIds : (task.assigneeId ? [task.assigneeId] : (task.assigneeName ? [user?.id || 'legacy'] : [user?.id || 'current']))}
-                        assigneeNames={task.assigneeNames?.length > 0 ? task.assigneeNames : (task.assigneeName ? [task.assigneeName] : ['Current User'])}
+                        assigneeIds={task.assigneeIds?.length > 0 ? task.assigneeIds : (task.assigneeId ? [task.assigneeId] : [])}
+                        assigneeNames={task.assigneeNames?.length > 0 ? task.assigneeNames : (task.assigneeName ? [task.assigneeName] : [])}
                         currentUserId={user?.id}
                         currentUserName={user?.firstName || user?.displayName}
                         taskStatus={task.status}
