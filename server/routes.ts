@@ -6603,6 +6603,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .orderBy(desc(messagesTable.created_at))
         .limit(50); // Limit for performance
 
+      // Get conversation participants for each message to determine recipients
+      const conversationIds = [...new Set(allMessages.map(msg => msg.conversationId))].filter(id => id);
+      let participantsByConversation = {};
+      
+      if (conversationIds.length > 0) {
+        const participantsData = await db
+          .select({
+            conversationId: conversationParticipants.conversationId,
+            userId: conversationParticipants.userId,
+            firstName: users.firstName,
+            lastName: users.lastName,
+            email: users.email,
+            displayName: users.displayName,
+          })
+          .from(conversationParticipants)
+          .leftJoin(users, eq(conversationParticipants.userId, users.id))
+          .where(sql`${conversationParticipants.conversationId} = ANY(${conversationIds})`);
+
+        // Group participants by conversation
+        participantsByConversation = participantsData.reduce((acc, p) => {
+          if (!acc[p.conversationId]) acc[p.conversationId] = [];
+          acc[p.conversationId].push(p);
+          return acc;
+        }, {} as Record<number, any[]>);
+      }
+
       // Transform to match Gmail inbox expected format with proper user data
       const formattedMessages = allMessages.map((msg) => {
         // Construct sender name from available data with proper null checks
@@ -6617,14 +6643,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
           senderName = msg.senderEmail;
         }
         
-        // Construct recipient name (current user) with proper null checks
-        let recipientName = "Unknown Recipient";
-        if (user.displayName) {
-          recipientName = user.displayName;
-        } else if (user.firstName || user.lastName) {
-          recipientName = `${user.firstName || ''} ${user.lastName || ''}`.trim();
-        } else if (user.email) {
-          recipientName = user.email;
+        // Get participants for this conversation
+        const participants = participantsByConversation[msg.conversationId] || [];
+        
+        // Filter out current user and sender from recipients list
+        const recipients = participants.filter(p => 
+          p.userId !== user.id && p.userId !== msg.senderId
+        );
+        
+        // Construct recipient names list for "To:" field
+        let recipientNames = "Unknown Recipients";
+        if (recipients.length > 0) {
+          recipientNames = recipients.map(r => {
+            if (r.displayName) return r.displayName;
+            if (r.firstName || r.lastName) return `${r.firstName || ''} ${r.lastName || ''}`.trim();
+            return r.email || "Unknown";
+          }).join(", ");
+        } else if (participants.length > 1) {
+          // Group conversation - show all other participants
+          recipientNames = participants
+            .filter(p => p.userId !== user.id)
+            .map(r => {
+              if (r.displayName) return r.displayName;
+              if (r.firstName || r.lastName) return `${r.firstName || ''} ${r.lastName || ''}`.trim();
+              return r.email || "Unknown";
+            }).join(", ");
         }
 
         return {
@@ -6633,16 +6676,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
           senderId: msg.senderId,
           senderName: senderName,
           senderEmail: msg.senderEmail || "unknown@example.com",
-          recipientId: user.id,
-          recipientName: recipientName,
-          recipientEmail: user.email || "unknown@example.com",
-          subject: "Conversation Message", // More accurate subject
+          recipientId: recipients.length > 0 ? recipients[0].userId : user.id,
+          recipientName: recipientNames, // This will show "John, Sarah" for group conversations
+          recipientEmail: recipients.length > 0 ? recipients[0].email : user.email,
+          subject: participants.length > 2 ? `Group Chat (${participants.length} people)` : "Direct Message",
           createdAt: msg.createdAt,
-          threadId: msg.conversationId, // Use conversation as thread
+          threadId: msg.conversationId,
           isRead: true,
           isStarred: false,
           folder: "inbox",
-          committee: "conversation", // More accurate
+          committee: "conversation",
         };
       });
 
