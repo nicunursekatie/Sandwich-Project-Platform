@@ -6556,8 +6556,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       else if (chatType === "recipient") conversationName = "Recipient Chat";
       else if (chatType === "host") conversationName = "Host Chat";
 
-      // All users (including admins) only see messages from conversations they participate in
-      // This ensures proper inbox filtering for Gmail-style messaging
+      // For Gmail inbox, only show direct messages and project conversations
+      // Exclude team chat channels by filtering conversation types
       const allMessages = await db
         .select({
           id: messagesTable.id,
@@ -6571,20 +6571,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
           senderLastName: users.lastName,
           senderEmail: users.email,
           senderDisplayName: users.displayName,
+          conversationType: conversationsTable.type,
+          conversationName: conversationsTable.name,
         })
         .from(messagesTable)
         .leftJoin(users, eq(messagesTable.sender_id, users.id))
         .innerJoin(conversationParticipants, eq(messagesTable.conversationId, conversationParticipants.conversationId))
+        .innerJoin(conversationsTable, eq(messagesTable.conversationId, conversationsTable.id))
         .where(and(
           isNotNull(messagesTable.conversationId),
-          eq(conversationParticipants.userId, user.id)
+          eq(conversationParticipants.userId, user.id),
+          // Only show direct messages or named project conversations
+          // Exclude team channels and general broadcasts
+          or(
+            eq(conversationsTable.type, 'direct'),
+            and(
+              eq(conversationsTable.type, 'channel'),
+              isNotNull(conversationsTable.name),
+              ne(conversationsTable.name, 'team-chat'),
+              ne(conversationsTable.name, 'general'),
+              ne(conversationsTable.name, 'General Chat'),
+              ne(conversationsTable.name, 'Driver Chat'),
+              ne(conversationsTable.name, 'Host Chat'),
+              ne(conversationsTable.name, 'Recipient Chat'),
+              ne(conversationsTable.name, 'Committee Chat'),
+              ne(conversationsTable.name, 'Core Team Chat')
+            )
+          )
         ))
         .orderBy(desc(messagesTable.created_at))
         .limit(50);
 
       console.log(`FOUND ${allMessages.length} messages for ${user.email}:`);
       allMessages.forEach(msg => {
-        console.log(`  - Message ${msg.id}: "${msg.content.substring(0, 30)}..." from ${msg.senderEmail}`);
+        console.log(`  - Message ${msg.id}: "${msg.content.substring(0, 30)}..." from ${msg.senderEmail} in ${msg.conversationType}:${msg.conversationName || 'direct'}`);
       });
 
       // Get conversation participants for each message to determine recipients
