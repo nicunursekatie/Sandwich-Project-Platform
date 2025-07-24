@@ -142,6 +142,14 @@ export default function ProjectsClean() {
 
   const projects = filteredAndSortedProjects;
 
+  // Calculate project counts for tab buttons
+  const activeProjects = allProjects.filter(project => 
+    project.status === "available" || project.status === "in_progress"
+  );
+  const completedProjects = allProjects.filter(project => 
+    project.status === "completed"
+  );
+
   // Update project status mutation
   const updateProjectMutation = useMutation({
     mutationFn: async ({ id, status }: { id: number; status: string }) => {
@@ -505,11 +513,6 @@ export default function ProjectsClean() {
     }
     return projects.filter((project: Project) => project.status === status);
   };
-
-  const activeProjects = projects.filter((project: Project) => 
-    project.status === "available" || project.status === "in_progress"
-  );
-  const completedProjects = filterProjectsByStatus("completed");
 
   const renderProjectCard = (project: Project) => (
     <Card 
@@ -877,7 +880,7 @@ export default function ProjectsClean() {
       <div className="mt-6">
         {activeTab === "active" && (
           <>
-            {activeProjects.length === 0 ? (
+            {projects.length === 0 ? (
               <div className="text-center py-12">
                 <Play className="w-12 h-12 text-slate-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-slate-900 mb-2">No active projects</h3>
@@ -885,7 +888,7 @@ export default function ProjectsClean() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-4">
-                {activeProjects.map(renderProjectCard)}
+                {projects.map(renderProjectCard)}
               </div>
             )}
           </>
@@ -893,7 +896,7 @@ export default function ProjectsClean() {
         
         {activeTab === "completed" && (
           <>
-            {completedProjects.length === 0 ? (
+            {projects.length === 0 ? (
               <div className="text-center py-12">
                 <CheckCircle2 className="w-12 h-12 text-slate-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-slate-900 mb-2">No completed projects</h3>
@@ -901,7 +904,7 @@ export default function ProjectsClean() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-4">
-                {completedProjects.map(renderProjectCard)}
+                {projects.map(renderProjectCard)}
               </div>
             )}
           </>
