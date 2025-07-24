@@ -24,13 +24,12 @@ const getOidcConfig = memoize(
 
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
-  const pgStore = connectPg(session);
-  const sessionStore = new pgStore({
-    conString: process.env.DATABASE_URL,
-    createTableIfMissing: false,
-    ttl: sessionTtl,
-    tableName: "sessions",
-  });
+  
+  // Use memory store for stability during development
+  // PostgreSQL sessions can be problematic during authentication setup
+  console.log("🔧 Using memory-based session store for Replit Auth");
+  const sessionStore = new session.MemoryStore();
+  
   return session({
     secret: process.env.SESSION_SECRET!,
     store: sessionStore,
@@ -190,8 +189,23 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/callback", (req, res, next) => {
     console.log("🔄 Callback route hit with query:", req.query);
+    console.log("🔄 Request hostname:", req.hostname);
+    console.log("🔄 Request host header:", req.headers.host);
+    console.log("🔄 Available strategies:", Object.keys((passport as any)._strategies || {}));
     try {
-      const strategyName = `replitauth:${req.hostname}`;
+      // Find the correct strategy - for local development, use the first available Replit strategy
+      const availableStrategies = Object.keys((passport as any)._strategies || {});
+      let strategyName = `replitauth:${req.hostname}`;
+      
+      // If localhost strategy doesn't exist, use the first replitauth strategy available
+      if (!availableStrategies.includes(strategyName)) {
+        const replitStrategy = availableStrategies.find(s => s.startsWith('replitauth:'));
+        if (replitStrategy) {
+          strategyName = replitStrategy;
+          console.log("🔄 Using fallback strategy:", strategyName);
+        }
+      }
+      
       console.log("🔄 Using strategy:", strategyName);
       
       passport.authenticate(strategyName, (err: any, user: any, info: any) => {
