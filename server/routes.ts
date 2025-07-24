@@ -1143,11 +1143,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               // Map sender field to senderName for frontend compatibility
               messages = messages.map(msg => ({
                 ...msg,
-                senderName: msg.sender || 'Unknown User',
-                subject: '', // Gmail-style fields for frontend compatibility
-                isRead: false,
-                isStarred: false,
-                folder: 'inbox'
+                senderName: msg.sender || 'Unknown User'
               }));
             }
           } else {
