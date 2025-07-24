@@ -286,36 +286,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Add session middleware with enhanced stability
-  app.use(
-    session({
-      store: sessionStore,
-      secret: process.env.SESSION_SECRET || "temp-secret-key-for-development",
-      resave: true, // Force session save on every request to prevent data loss
-      saveUninitialized: false,
-      cookie: {
-        secure: false, // Should be true in production with HTTPS, false for development
-        httpOnly: false, // Allow frontend to access cookies for debugging in Replit
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days for better persistence
-        sameSite: "lax", // CSRF protection
-        domain: undefined, // Let Express auto-detect domain for Replit
-      },
-      name: "tsp.session", // Custom session name
-      rolling: true, // Reset maxAge on every request to keep active sessions alive
-    }),
-  );
+  // Add session middleware for Replit Auth
+  const { getSession } = await import("./replitAuth");
+  app.use(getSession());
 
-  // Setup temporary authentication (stable and crash-free)
-  const {
-    setupTempAuth,
-    isAuthenticated,
-    requirePermission,
-    initializeTempAuth,
-  } = await import("./temp-auth");
-  setupTempAuth(app);
-
-  // Initialize with default admin user for persistent login
-  await initializeTempAuth();
+  // Setup Replit Authentication
+  const { setupAuth, isAuthenticated, requirePermission } = await import("./replitAuth");
+  await setupAuth(app);
 
   // Import and register signup routes
   const { signupRoutes } = await import("./routes/signup");
@@ -384,47 +361,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Auth routes - Fixed to work with temp auth system
-  app.get("/api/auth/user", async (req: any, res) => {
+  // Auth route - Works with Replit Auth system
+  app.get("/api/auth/user", isAuthenticated, async (req: any, res) => {
     try {
-      // Get user from session (temp auth) or req.user (Replit auth)
-      const user = req.session?.user || req.user;
-
-      if (!user) {
-        return res.status(401).json({ message: "No user in session" });
+      const user = req.user;
+      
+      if (!user?.claims?.sub) {
+        return res.status(401).json({ message: "No user claims in request" });
       }
 
-      // For temp auth, user is directly in session, but get fresh data from database
-      if (req.session?.user) {
-        try {
-          const dbUser = await storage.getUserByEmail(req.session.user.email);
-          if (dbUser && dbUser.isActive) {
-            // Return fresh user data with updated permissions
-            res.json({
-              id: dbUser.id,
-              email: dbUser.email,
-              firstName: dbUser.firstName,
-              lastName: dbUser.lastName,
-              displayName: `${dbUser.firstName} ${dbUser.lastName}`,
-              profileImageUrl: dbUser.profileImageUrl,
-              role: dbUser.role,
-              permissions: dbUser.permissions,
-              isActive: dbUser.isActive
-            });
-            return;
-          }
-        } catch (error) {
-          console.error("Error getting fresh user data:", error);
-          // Fallback to session user if database error
-          res.json(user);
-          return;
-        }
-      }
-
-      // For Replit auth, get user from database
-      const userId = req.user.claims?.sub || req.user.id;
+      // Get user from database using Replit ID
+      const userId = user.claims.sub;
       const dbUser = await storage.getUser(userId);
-      res.json(dbUser || user);
+      
+      if (!dbUser || !dbUser.isActive) {
+        return res.status(401).json({ message: "User account not found or inactive" });
+      }
+
+      // Update last login time
+      await storage.upsertUser({
+        ...dbUser,
+        lastLoginAt: new Date(),
+      });
+
+      res.json({
+        id: dbUser.id,
+        email: dbUser.email,
+        firstName: dbUser.firstName,
+        lastName: dbUser.lastName,
+        displayName: dbUser.displayName || `${dbUser.firstName} ${dbUser.lastName}`,
+        profileImageUrl: dbUser.profileImageUrl,
+        role: dbUser.role,
+        permissions: dbUser.permissions,
+        isActive: dbUser.isActive
+      });
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });

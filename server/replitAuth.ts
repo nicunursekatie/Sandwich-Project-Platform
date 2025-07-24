@@ -54,16 +54,47 @@ function updateUserSession(
   user.expires_at = user.claims?.exp;
 }
 
-async function upsertUser(
-  claims: any,
-) {
-  await storage.upsertUser({
-    id: claims["sub"],
-    email: claims["email"],
-    firstName: claims["first_name"],
-    lastName: claims["last_name"],
-    profileImageUrl: claims["profile_image_url"],
-  });
+async function upsertUser(claims: any) {
+  // Check if user exists by email for migration
+  let existingUser = null;
+  try {
+    if (claims["email"]) {
+      existingUser = await storage.getUserByEmail(claims["email"]);
+    }
+  } catch (error) {
+    console.log("No existing user found with email:", claims["email"]);
+  }
+
+  if (existingUser) {
+    // Update existing user with Replit ID and profile info
+    await storage.upsertUser({
+      id: claims["sub"], // New Replit ID
+      email: claims["email"],
+      firstName: claims["first_name"] || existingUser.firstName,
+      lastName: claims["last_name"] || existingUser.lastName,
+      profileImageUrl: claims["profile_image_url"],
+      role: existingUser.role, // Keep existing role
+      permissions: existingUser.permissions, // Keep existing permissions
+      metadata: existingUser.metadata || {},
+      isActive: existingUser.isActive,
+      displayName: existingUser.displayName,
+    });
+    console.log("✅ Migrated existing user:", claims["email"], "to Replit ID:", claims["sub"]);
+  } else {
+    // New user - create with default volunteer permissions
+    await storage.upsertUser({
+      id: claims["sub"],
+      email: claims["email"],
+      firstName: claims["first_name"],
+      lastName: claims["last_name"],
+      profileImageUrl: claims["profile_image_url"],
+      role: "volunteer",
+      permissions: ["view_collections", "general_chat"],
+      metadata: {},
+      isActive: true,
+    });
+    console.log("✅ Created new user:", claims["email"], "with Replit ID:", claims["sub"]);
+  }
 }
 
 export async function setupAuth(app: Express) {
