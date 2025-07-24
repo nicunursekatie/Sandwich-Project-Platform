@@ -224,6 +224,9 @@ async function startServer() {
               const { setupVite } = await import("./vite");
               await setupVite(app, httpServer);
               console.log("✓ Vite development server setup complete");
+              // Add small delay to ensure Vite is fully ready
+              await new Promise(resolve => setTimeout(resolve, 200));
+              console.log("✓ Vite stabilization delay complete");
             } catch (error) {
               console.error("✗ Vite setup failed:", error);
               console.log("⚠ Server continuing without Vite - frontend may not work properly");
