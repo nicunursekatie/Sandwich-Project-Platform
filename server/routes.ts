@@ -6743,57 +6743,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("  - req.body:", req.body);
       console.log("  - content:", req.body?.content);
       console.log("  - sender:", req.body?.sender);
+      console.log("  - conversationName:", req.body?.conversationName);
+      console.log("  - recipientId:", req.body?.recipientId);
 
       if (!user?.id) {
         console.log("[ERROR] No user.id found, returning 401");
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      const { content, sender } = req.body;
+      const { content, sender, conversationName, recipientId } = req.body;
 
       if (!content || !content.trim()) {
         console.log("[ERROR] No content provided, returning 400");
         return res.status(400).json({ message: "Message content is required" });
       }
 
-      console.log("[STEP 3] Looking for existing team-chat conversation...");
+      console.log("[STEP 3] Finding or creating conversation...");
 
-      // Get or create general team chat conversation
-      let generalConversation;
-      try {
-        const existingConversations = await db
-          .select()
-          .from(conversations)
-          .where(
-            and(
-              eq(conversations.type, "channel"),
-              eq(conversations.name, "team-chat"),
-            ),
-          );
+      let targetConversation;
+      let conversationType = "channel";
+      let finalConversationName = conversationName || "team-chat";
 
-        console.log(
-          "  - Found existing conversations:",
-          existingConversations.length,
-        );
-        generalConversation = existingConversations[0];
+      // If recipientId is provided, create/find direct conversation
+      if (recipientId && recipientId !== user.id) {
+        console.log("  - Creating/finding direct conversation with user:", recipientId);
+        conversationType = "direct";
+        finalConversationName = null; // Direct messages don't have names
+        
+        // Look for existing direct conversation between these two users
+        try {
+          const existingDirectConversations = await db
+            .select()
+            .from(conversations)
+            .innerJoin(conversationParticipants, eq(conversations.id, conversationParticipants.conversationId))
+            .where(
+              and(
+                eq(conversations.type, "direct"),
+                or(
+                  eq(conversationParticipants.userId, user.id),
+                  eq(conversationParticipants.userId, recipientId)
+                )
+              )
+            );
 
-        if (generalConversation) {
-          console.log("  - Using existing conversation:", generalConversation);
+          // Check if we found a conversation with both participants
+          for (const conv of existingDirectConversations) {
+            const participants = await db
+              .select()
+              .from(conversationParticipants)
+              .where(eq(conversationParticipants.conversationId, conv.conversations.id));
+            
+            const participantIds = participants.map(p => p.userId);
+            if (participantIds.includes(user.id) && participantIds.includes(recipientId) && participantIds.length === 2) {
+              targetConversation = conv.conversations;
+              console.log("  - Found existing direct conversation:", targetConversation);
+              break;
+            }
+          }
+        } catch (dbError) {
+          console.error("[ERROR] Database query for direct conversations failed:", dbError);
+          throw dbError;
         }
-      } catch (dbError) {
-        console.error(
-          "[ERROR] Database query for conversations failed:",
-          dbError,
-        );
-        throw dbError;
+      } else {
+        // Look for named channel conversation
+        try {
+          const existingConversations = await db
+            .select()
+            .from(conversations)
+            .where(
+              and(
+                eq(conversations.type, "channel"),
+                eq(conversations.name, finalConversationName),
+              ),
+            );
+
+          console.log("  - Found existing conversations:", existingConversations.length);
+          targetConversation = existingConversations[0];
+
+          if (targetConversation) {
+            console.log("  - Using existing conversation:", targetConversation);
+          }
+        } catch (dbError) {
+          console.error("[ERROR] Database query for conversations failed:", dbError);
+          throw dbError;
+        }
       }
 
-      if (!generalConversation) {
-        console.log("[STEP 4] Creating new team-chat conversation...");
+      if (!targetConversation) {
+        console.log("[STEP 4] Creating new conversation...");
         try {
           const newConversationData = {
-            type: "channel",
-            name: "team-chat",
+            type: conversationType,
+            name: finalConversationName,
           };
           console.log("  - Conversation data to insert:", newConversationData);
 
@@ -6802,13 +6843,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .values(newConversationData)
             .returning();
 
-          generalConversation = newConversations[0];
-          console.log("  - Created new conversation:", generalConversation);
+          targetConversation = newConversations[0];
+          console.log("  - Created new conversation:", targetConversation);
+
+          // Add participants to the conversation
+          if (conversationType === "direct" && recipientId) {
+            // Add both sender and recipient to direct conversation
+            await db.insert(conversationParticipants).values([
+              { conversationId: targetConversation.id, userId: user.id },
+              { conversationId: targetConversation.id, userId: recipientId }
+            ]);
+            console.log("  - Added participants to direct conversation");
+          } else {
+            // Add sender to channel conversation
+            await db.insert(conversationParticipants).values({
+              conversationId: targetConversation.id,
+              userId: user.id
+            });
+            console.log("  - Added sender to channel conversation");
+          }
         } catch (dbError) {
-          console.error(
-            "[ERROR] Database insert for conversations failed:",
-            dbError,
-          );
+          console.error("[ERROR] Database insert for conversations failed:", dbError);
+          throw dbError;
+        }
+      } else {
+        // Ensure user is a participant in existing conversation
+        try {
+          const existingParticipant = await db
+            .select()
+            .from(conversationParticipants)
+            .where(
+              and(
+                eq(conversationParticipants.conversationId, targetConversation.id),
+                eq(conversationParticipants.userId, user.id)
+              )
+            );
+
+          if (existingParticipant.length === 0) {
+            await db.insert(conversationParticipants).values({
+              conversationId: targetConversation.id,
+              userId: user.id
+            });
+            console.log("  - Added user as participant to existing conversation");
+          }
+        } catch (dbError) {
+          console.error("[ERROR] Failed to add participant:", dbError);
           throw dbError;
         }
       }
@@ -6820,13 +6899,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "Unknown User";
       console.log("[STEP 5] Preparing message data:");
       console.log("  - userName:", userName);
-      console.log("  - conversationId:", generalConversation.id);
+      console.log("  - conversationId:", targetConversation.id);
       console.log("  - userId:", user.id);
       console.log("  - content:", content.trim());
 
       const messageData = {
-        conversationId: generalConversation.id,
+        conversationId: targetConversation.id,
         userId: user.id,
+        senderId: user.id,
         content: content.trim(),
         sender: userName,
       };
@@ -6858,14 +6938,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (broadcastNewMessage) {
         const broadcastData = {
           type: "new_message",
-          conversationId: generalConversation.id,
+          conversationId: targetConversation.id,
           message: {
             id: message.id,
             content: message.content,
             userId: message.userId,
             sender: userName,
             timestamp: message.createdAt,
-            committee: "general",
+            committee: conversationType === "direct" ? "direct" : finalConversationName || "general",
           },
         };
         console.log("  - Broadcasting data:", broadcastData);
@@ -6880,7 +6960,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userId: message.userId,
         sender: userName,
         timestamp: message.createdAt,
-        committee: "general",
+        conversationId: targetConversation.id,
+        conversationType: conversationType,
+        conversationName: finalConversationName,
+        committee: conversationType === "direct" ? "direct" : finalConversationName || "general",
       };
       console.log("[STEP 8] Sending response:", responseData);
       console.log("=== POST /api/messages SUCCESS ===");

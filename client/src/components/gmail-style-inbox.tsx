@@ -355,7 +355,9 @@ export default function GmailStyleInbox() {
 
     sendMessageMutation.mutate({
       content: composeContent,
-      sender: null // Let backend use authenticated user info
+      sender: null, // Let backend use authenticated user info
+      recipientId: composeRecipient,
+      conversationName: composeSubject ? `Direct: ${composeSubject}` : null
     });
   };
 
