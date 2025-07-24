@@ -6591,22 +6591,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
           sender: messagesTable.sender,
           createdAt: messagesTable.created_at,
           conversationId: messagesTable.conversationId,
-          // Join with users table to get complete sender info
+          // Join with users table to get complete sender info - JOIN ON SENDER_ID NOT USER_ID
           senderFirstName: users.firstName,
           senderLastName: users.lastName,
           senderEmail: users.email,
           senderDisplayName: users.displayName,
         })
         .from(messagesTable)
-        .leftJoin(users, eq(messagesTable.user_id, users.id))
-        .where(isNotNull(messagesTable.conversationId)) // FIXED: Only get messages with conversations
+        .leftJoin(users, eq(messagesTable.sender_id, users.id)) // FIXED: Join on sender_id
+        .where(isNotNull(messagesTable.conversationId)) // Only get messages with conversations
         .orderBy(desc(messagesTable.created_at))
         .limit(50); // Limit for performance
 
       // Transform to match Gmail inbox expected format with proper user data
       const formattedMessages = allMessages.map((msg) => {
-        // Removed debug logging - data model is now fixed
-        
         // Construct sender name from available data with proper null checks
         let senderName = "Unknown User";
         if (msg.senderDisplayName) {
@@ -6632,19 +6630,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return {
           id: msg.id,
           content: msg.content,
-          senderId: msg.senderId || msg.userId,
+          senderId: msg.senderId,
           senderName: senderName,
           senderEmail: msg.senderEmail || "unknown@example.com",
           recipientId: user.id,
           recipientName: recipientName,
           recipientEmail: user.email || "unknown@example.com",
-          subject: "General Chat Message", // Default subject for chat messages
+          subject: "Conversation Message", // More accurate subject
           createdAt: msg.createdAt,
-          threadId: null,
+          threadId: msg.conversationId, // Use conversation as thread
           isRead: true,
           isStarred: false,
           folder: "inbox",
-          committee: "general", // For compatibility
+          committee: "conversation", // More accurate
         };
       });
 
