@@ -6538,6 +6538,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Legacy message endpoints - redirect to conversation system
   app.get("/api/messages", isAuthenticated, async (req, res) => {
+    console.log("=== INBOX DEBUG ===");
+    console.log("User:", (req as any).user?.email, "ID:", (req as any).user?.id);
+    console.log("Query:", req.query);
+    
     try {
       const user = (req as any).user;
       if (!user?.id) {
@@ -6577,6 +6581,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ))
         .orderBy(desc(messagesTable.created_at))
         .limit(50);
+
+      console.log(`FOUND ${allMessages.length} messages for ${user.email}:`);
+      allMessages.forEach(msg => {
+        console.log(`  - Message ${msg.id}: "${msg.content.substring(0, 30)}..." from ${msg.senderEmail}`);
+      });
 
       // Get conversation participants for each message to determine recipients
       const conversationIds = [...new Set(allMessages.map(msg => msg.conversationId))].filter(id => id);
@@ -6664,6 +6673,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
       });
 
+      console.log(`SENDING ${formattedMessages.length} messages to frontend`);
+      console.log("=== INBOX DEBUG END ===");
+      
       res.json(formattedMessages);
     } catch (error) {
       console.error("[API] Error fetching messages:", error);
