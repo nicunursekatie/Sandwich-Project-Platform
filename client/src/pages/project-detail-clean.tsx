@@ -419,6 +419,40 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
               Edit Project
             </Button>
           )}
+          {/* Show kudos buttons for completed projects */}
+          {project.status === 'completed' && (
+            <div className="flex gap-1 flex-wrap">
+              {/* Handle multiple assignees */}
+              {project.assigneeIds?.length > 0 ? (
+                project.assigneeIds.map((assigneeId, index) => {
+                  const assigneeName = project.assigneeNames?.split(', ')?.[index] || `User ${assigneeId}`;
+                  return user?.id !== assigneeId ? (
+                    <SendKudosButton 
+                      key={assigneeId}
+                      recipientId={assigneeId}
+                      recipientName={assigneeName}
+                      contextType="project"
+                      contextId={project.id.toString()}
+                      entityName={project.title}
+                      size="sm"
+                    />
+                  ) : null;
+                })
+              ) : (
+                /* Handle single assignee */
+                project.assigneeId && project.assigneeName && user?.id !== project.assigneeId ? (
+                  <SendKudosButton 
+                    recipientId={project.assigneeId}
+                    recipientName={project.assigneeName}
+                    contextType="project"
+                    contextId={project.id.toString()}
+                    entityName={project.title}
+                    size="sm"
+                  />
+                ) : null
+              )}
+            </div>
+          )}
           <Badge className={getStatusColor(project.status)}>
             {project.status?.replace('_', ' ')}
           </Badge>
@@ -717,10 +751,21 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                       {/* Show kudos buttons for completed tasks */}
                       {task.status === 'completed' && (
                         <div className="flex gap-1 flex-wrap">
+                          {console.log('Completed task debug:', {
+                            taskId: task.id,
+                            taskTitle: task.title,
+                            taskStatus: task.status,
+                            assigneeIds: task.assigneeIds,
+                            assigneeNames: task.assigneeNames,
+                            assigneeId: task.assigneeId,
+                            assigneeName: task.assigneeName,
+                            currentUserId: user?.id
+                          })}
                           {/* Handle multiple assignees */}
                           {task.assigneeIds?.length > 0 ? (
                             task.assigneeIds.map((assigneeId, index) => {
                               const assigneeName = task.assigneeNames?.[index] || `User ${assigneeId}`;
+                              console.log('Multi-assignee kudos check:', { assigneeId, assigneeName, currentUserId: user?.id, shouldShow: user?.id !== assigneeId });
                               return user?.id !== assigneeId ? (
                                 <SendKudosButton 
                                   key={assigneeId}
@@ -733,45 +778,35 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                                 />
                               ) : null;
                             })
-                          ) : (
-                            /* Handle single assignee or unassigned tasks */
-                            task.assigneeId && task.assigneeName && user?.id !== task.assigneeId ? (
-                              <SendKudosButton 
-                                recipientId={task.assigneeId}
-                                recipientName={task.assigneeName}
-                                contextType="task"
-                                contextId={task.id.toString()}
-                                entityName={task.title}
-                                size="sm"
-                              />
-                            ) : !task.assigneeId && !task.assigneeName ? (
-                              /* For unassigned completed tasks, show kudos to project owner */
-                              project.assigneeIds?.length > 0 ? (
-                                project.assigneeIds.map((ownerId, index) => {
-                                  const ownerName = project.assigneeNames?.[index] || `Project Owner ${ownerId}`;
-                                  return user?.id !== ownerId ? (
-                                    <SendKudosButton 
-                                      key={ownerId}
-                                      recipientId={ownerId}
-                                      recipientName={ownerName}
-                                      contextType="task"
-                                      contextId={task.id.toString()}
-                                      entityName={task.title}
-                                      size="sm"
-                                    />
-                                  ) : null;
-                                })
-                              ) : project.assigneeId && user?.id !== project.assigneeId ? (
+                          ) : task.assigneeId && user?.id !== task.assigneeId ? (
+                            /* Handle single assignee */
+                            (() => {
+                              console.log('Single-assignee kudos check:', { 
+                                assigneeId: task.assigneeId, 
+                                assigneeName: task.assigneeName, 
+                                currentUserId: user?.id, 
+                                shouldShow: user?.id !== task.assigneeId 
+                              });
+                              return (
                                 <SendKudosButton 
-                                  recipientId={project.assigneeId}
-                                  recipientName={project.assigneeName || `Project Owner`}
+                                  recipientId={task.assigneeId}
+                                  recipientName={task.assigneeName || 'Task Assignee'}
                                   contextType="task"
                                   contextId={task.id.toString()}
                                   entityName={task.title}
                                   size="sm"
                                 />
-                              ) : null
-                            ) : null
+                              );
+                            })()
+                          ) : (
+                            (() => {
+                              console.log('No kudos shown because:', {
+                                hasAssigneeIds: !!task.assigneeIds?.length,
+                                hasAssigneeId: !!task.assigneeId,
+                                isCurrentUser: task.assigneeId === user?.id
+                              });
+                              return null;
+                            })()
                           )}
                         </div>
                       )}
