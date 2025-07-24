@@ -107,16 +107,8 @@ async function startServer() {
       `Starting server on ${host}:${port} in ${process.env.NODE_ENV || "development"} mode`,
     );
 
-    // Simplified port allocation for development
-    const getPort = (): number => {
-      // In development, always use the default port
-      if (process.env.NODE_ENV === "development") {
-        return Number(port);
-      }
-      
-      // In production, let the system assign a port if needed
-      return Number(port);
-    };
+    // Use consistent port allocation
+    const finalPort = Number(port);
 
     // Set up basic routes BEFORE starting server
     app.use("/attached_assets", express.static("attached_assets"));
@@ -146,8 +138,7 @@ async function startServer() {
       );
     }
 
-    // Use simple port selection
-    const finalPort = getPort();
+
 
     const httpServer = createServer(app);
 
@@ -218,26 +209,8 @@ async function startServer() {
       }
     };
 
-    // Add error handling for server binding issues
-    httpServer.on("error", (error: any) => {
-      console.error("❌ SERVER ERROR:", error);
-      if (error.code === "EADDRINUSE") {
-        console.error(`❌ Port ${finalPort} is already in use`);
-        console.error("Trying to find available port...");
-
-        // Try alternative ports
-        const altPort = Number(finalPort) + 1;
-        httpServer.listen(altPort, host, () => {
-          console.log(
-            `✓ Server started on alternative port: http://${host}:${altPort}`,
-          );
-        });
-      } else if (error.code === "EACCES") {
-        console.error(`❌ Permission denied for port ${finalPort}`);
-      }
-    });
-
-    httpServer.listen(Number(finalPort), host, () => {
+    // Start the server with simplified error handling
+    httpServer.listen(finalPort, host, () => {
       console.log(`✓ Server is running on http://${host}:${finalPort}`);
       console.log(
         `✓ WebSocket server ready on ws://${host}:${finalPort}/notifications`,
@@ -401,10 +374,7 @@ async function startServer() {
     return httpServer;
   } catch (error) {
     console.error("✗ Server startup failed:", error);
-    const fallbackServer = app.listen(5000, "0.0.0.0", () => {
-      console.log("✓ Minimal fallback server listening on http://0.0.0.0:5000");
-    });
-    return fallbackServer;
+    throw error; // Let the main catch block handle it
   }
 }
 
@@ -422,46 +392,5 @@ startServer()
   })
   .catch((error) => {
     console.error("✗ Failed to start server:", error);
-    // Don't exit in production - try to start a minimal server instead
-    if (process.env.NODE_ENV === "production") {
-      console.log("Starting minimal fallback server for production...");
-      const express = require("express");
-      const fallbackApp = express();
-
-      fallbackApp.get("/", (req: any, res: any) =>
-        res.status(200).send(`
-        <!DOCTYPE html>
-        <html>
-          <head><title>The Sandwich Project</title></head>
-          <body>
-            <h1>The Sandwich Project - Fallback Mode</h1>
-            <p>Server is running in fallback mode</p>
-            <p>Timestamp: ${new Date().toISOString()}</p>
-          </body>
-        </html>
-      `),
-      );
-
-      fallbackApp.get("/health", (req: any, res: any) =>
-        res.status(200).json({
-          status: "fallback",
-          timestamp: Date.now(),
-          mode: "production-fallback",
-        }),
-      );
-
-      const fallbackServer = fallbackApp.listen(5000, "0.0.0.0", () => {
-        console.log("✓ Minimal fallback server running on port 5000");
-
-        // Keep fallback server alive too
-        setInterval(() => {
-          console.log("✓ Fallback server heartbeat");
-        }, 30000);
-      });
-
-      // Prevent fallback server from exiting
-      process.stdin.resume();
-    } else {
-      process.exit(1);
-    }
+    process.exit(1);
   });
