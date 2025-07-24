@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { z } from "zod";
-import { eq, and, or, sql, desc, isNull, isNotNull, ne } from "drizzle-orm";
+import { eq, and, or, sql, desc, isNull, isNotNull, ne, inArray } from "drizzle-orm";
 import express from "express";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
@@ -6604,7 +6604,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           })
           .from(conversationParticipants)
           .leftJoin(users, eq(conversationParticipants.userId, users.id))
-          .where(sql`${conversationParticipants.conversationId} = ANY(${conversationIds})`);
+          .where(inArray(conversationParticipants.conversationId, conversationIds));
 
         // Group participants by conversation
         participantsByConversation = participantsData.reduce((acc, p) => {
