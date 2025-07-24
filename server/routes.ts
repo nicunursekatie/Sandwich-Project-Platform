@@ -6613,13 +6613,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .where(eq(messagesTable.conversation_id, generalConversation.id))
         .orderBy(messagesTable.created_at);
 
-      // Transform to match expected format
+      // Transform to match Gmail inbox expected format
       const formattedMessages = conversationMessages.map((msg) => ({
         id: msg.id,
         content: msg.content,
-        userId: msg.userId,
-        sender: msg.sender || "Unknown User",
-        timestamp: msg.createdAt,
+        senderId: msg.userId,
+        senderName: msg.sender || "Unknown User",
+        senderEmail: "user@example.com", // Placeholder
+        recipientId: user.id,
+        recipientName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email,
+        recipientEmail: user.email,
+        subject: "General Chat Message", // Default subject
+        createdAt: msg.createdAt,
+        threadId: null,
+        isRead: true,
+        isStarred: false,
+        folder: "inbox",
         committee: "general", // For compatibility
       }));
 

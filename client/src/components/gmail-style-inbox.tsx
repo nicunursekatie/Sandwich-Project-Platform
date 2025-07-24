@@ -561,15 +561,15 @@ export default function GmailStyleInbox() {
                     <Avatar className="h-8 w-8">
                       <AvatarFallback className="text-xs">
                         {activeFolder === 'sent' 
-                          ? message.recipientName.split(' ').map(n => n[0]).join('').toUpperCase()
-                          : message.senderName.split(' ').map(n => n[0]).join('').toUpperCase()
+                          ? (message.recipientName || 'U').split(' ').map(n => n[0]).join('').toUpperCase()
+                          : (message.senderName || 'U').split(' ').map(n => n[0]).join('').toUpperCase()
                         }
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-medium truncate">
-                          {activeFolder === 'sent' ? message.recipientName : message.senderName}
+                          {activeFolder === 'sent' ? (message.recipientName || 'Unknown') : (message.senderName || 'Unknown')}
                         </p>
                         <span className="text-xs text-gray-500">
                           {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
