@@ -6594,9 +6594,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  // Legacy message endpoints - redirect to conversation system
+  // Gmail-style inbox endpoints - properly handle all folders
   app.get("/api/messages", isAuthenticated, async (req, res) => {
-    console.log("=== INBOX DEBUG ===");
+    console.log("=== GMAIL INBOX DEBUG ===");
     console.log("User:", (req as any).user?.email, "ID:", (req as any).user?.id);
     console.log("Query:", req.query);
     
@@ -6606,9 +6606,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      // For Gmail inbox, get all messages regardless of conversation type
-      // If no specific conversation requested, default to "General Chat"
       const chatType = req.query.chatType as string;
+      console.log("Chat type requested:", chatType);
+
+      // Handle different Gmail folder types
+      if (chatType === "starred") {
+        // For starred messages - this should be empty until we implement starring
+        console.log("Starred folder requested - returning empty array");
+        return res.json([]);
+      }
+      
+      if (chatType === "drafts") {
+        // For drafts - this should be empty until we implement drafts  
+        console.log("Drafts folder requested - returning empty array");
+        return res.json([]);
+      }
+      
+      if (chatType === "sent") {
+        // For sent messages - show messages sent by this user
+        console.log("Sent folder requested - returning empty array");
+        return res.json([]);
+      }
+      
+      if (chatType === "archived") {
+        // For archived messages - this should be empty until we implement archiving
+        console.log("Archived folder requested - returning empty array");
+        return res.json([]);
+      }
+      
+      if (chatType === "trash") {
+        // For trash messages - this should be empty until we implement trash
+        console.log("Trash folder requested - returning empty array");
+        return res.json([]);
+      }
+
+      // For inbox and any other context, show direct messages and project conversations
+      const chatTypeParam = req.query.chatType as string;
       let conversationName = "General Chat";
       if (chatType === "driver") conversationName = "Driver Chat";
       else if (chatType === "recipient") conversationName = "Recipient Chat";
