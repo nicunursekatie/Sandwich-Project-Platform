@@ -286,21 +286,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Add session middleware for authentication
-  app.use(session({
-    secret: process.env.SESSION_SECRET || "sandwich_secret_key_2025",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: false, // Set to true in production with HTTPS
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
-  }));
-
-  // Setup Simple Authentication (replacing Replit Auth)
-  const { setupSimpleAuth, isAuthenticated, requirePermission } = await import("./simple-auth");
-  setupSimpleAuth(app);
+  // Setup temporary authentication system (working version)
+  const { setupTempAuth, isAuthenticated, requirePermission } = await import("./temp-auth");
+  setupTempAuth(app);
 
   // Import and register signup routes
   const { signupRoutes } = await import("./routes/signup");
