@@ -476,4 +476,117 @@ router.get("/inbox", async (req, res) => {
   }
 });
 
+/**
+ * Get sent messages
+ */
+router.get("/sent", async (req, res) => {
+  try {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const { limit = "50", offset = "0" } = req.query;
+
+    const messages = await messagingService.getSentMessages(user.id, {
+      limit: parseInt(limit as string),
+      offset: parseInt(offset as string),
+    });
+
+    res.json({ messages });
+  } catch (error) {
+    console.error("Error getting sent messages:", error);
+    res.status(500).json({ error: "Failed to get sent messages" });
+  }
+});
+
+/**
+ * Get draft messages
+ */
+router.get("/drafts", async (req, res) => {
+  try {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const { limit = "50", offset = "0" } = req.query;
+
+    const messages = await messagingService.getDraftMessages(user.id, {
+      limit: parseInt(limit as string),
+      offset: parseInt(offset as string),
+    });
+
+    res.json({ messages });
+  } catch (error) {
+    console.error("Error getting draft messages:", error);
+    res.status(500).json({ error: "Failed to get draft messages" });
+  }
+});
+
+/**
+ * Save draft message
+ */
+router.post("/drafts", async (req, res) => {
+  try {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const { recipientIds, content, subject, contextType, contextId } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({ error: "Content is required for draft" });
+    }
+
+    const draft = await messagingService.saveDraft({
+      senderId: user.id,
+      recipientIds: recipientIds || [],
+      content,
+      subject,
+      contextType,
+      contextId,
+    });
+
+    res.status(201).json({ success: true, draft });
+  } catch (error) {
+    console.error("Error saving draft:", error);
+    res.status(500).json({ error: "Failed to save draft" });
+  }
+});
+
+/**
+ * Reply to message
+ */
+router.post("/:messageId/reply", async (req, res) => {
+  try {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const messageId = parseInt(req.params.messageId);
+    if (isNaN(messageId)) {
+      return res.status(400).json({ error: "Invalid message ID" });
+    }
+
+    const { content } = req.body;
+    if (!content || !content.trim()) {
+      return res.status(400).json({ error: "Reply content is required" });
+    }
+
+    const reply = await messagingService.replyToMessage({
+      senderId: user.id,
+      originalMessageId: messageId,
+      content: content.trim(),
+    });
+
+    res.status(201).json({ success: true, reply });
+  } catch (error) {
+    console.error("Error sending reply:", error);
+    res.status(500).json({ error: "Failed to send reply" });
+  }
+});
+
 export { router as messagingRoutes };

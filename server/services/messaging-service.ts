@@ -939,7 +939,243 @@ export class MessagingService {
       throw error;
     }
   }
-  // TODO: Implement proper sent messages when inbox system is fully separated from chat system
+  /**
+   * Get sent messages for a user
+   */
+  async getSentMessages(
+    senderId: string,
+    options?: {
+      limit?: number;
+      offset?: number;
+    }
+  ): Promise<MessageWithSender[]> {
+    const { limit = 50, offset = 0 } = options || {};
+
+    try {
+      const result = await db
+        .select({
+          id: messages.id,
+          senderId: messages.senderId,
+          content: messages.content,
+          contextType: messages.contextType,
+          contextId: messages.contextId,
+          createdAt: messages.createdAt,
+          editedAt: messages.editedAt,
+          editedContent: messages.editedContent,
+          senderName: sql<string>`COALESCE(${users.displayName}, ${users.email}, 'Unknown User')`,
+          senderEmail: users.email,
+        })
+        .from(messages)
+        .leftJoin(users, eq(messages.senderId, users.id))
+        .where(eq(messages.senderId, senderId))
+        .orderBy(desc(messages.createdAt))
+        .limit(limit)
+        .offset(offset);
+
+      return result.map(msg => ({
+        ...msg,
+        senderName: msg.senderName || `User ${msg.senderId}` || 'Unknown User',
+      }));
+    } catch (error) {
+      console.error('Failed to get sent messages:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get draft messages for a user
+   */
+  async getDraftMessages(
+    userId: string,
+    options?: {
+      limit?: number;
+      offset?: number;
+    }
+  ): Promise<MessageWithSender[]> {
+    const { limit = 50, offset = 0 } = options || {};
+
+    try {
+      const result = await db
+        .select({
+          id: messages.id,
+          senderId: messages.senderId,
+          content: messages.content,
+          contextType: messages.contextType,
+          contextId: messages.contextId,
+          createdAt: messages.createdAt,
+          editedAt: messages.editedAt,
+          editedContent: messages.editedContent,
+          senderName: sql<string>`COALESCE(${users.displayName}, ${users.email}, 'Unknown User')`,
+          senderEmail: users.email,
+        })
+        .from(messages)
+        .leftJoin(users, eq(messages.senderId, users.id))
+        .where(
+          and(
+            eq(messages.senderId, userId),
+            eq(messages.isDraft, true)
+          )
+        )
+        .orderBy(desc(messages.createdAt))
+        .limit(limit)
+        .offset(offset);
+
+      return result.map(msg => ({
+        ...msg,
+        senderName: msg.senderName || `User ${msg.senderId}` || 'Unknown User',
+      }));
+    } catch (error) {
+      console.error('Failed to get draft messages:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Save draft message
+   */
+  async saveDraft(params: {
+    senderId: string;
+    recipientIds: string[];
+    content: string;
+    subject?: string;
+    contextType?: string;
+    contextId?: string;
+  }): Promise<Message> {
+    const { senderId, recipientIds, content, subject, contextType, contextId } = params;
+
+    try {
+      // Get sender details
+      const sender = await db.select({
+        displayName: users.displayName,
+        email: users.email,
+      })
+      .from(users)
+      .where(eq(users.id, senderId))
+      .limit(1);
+
+      const senderName = sender[0] 
+        ? sender[0].displayName || sender[0].email || 'Unknown User'
+        : 'Unknown User';
+
+      // Create the draft message
+      const [message] = await db.insert(messages).values({
+        userId: senderId, // Keep for backward compatibility
+        senderId,
+        content,
+        sender: senderName,
+        contextType,
+        contextId,
+        isDraft: true,
+      }).returning();
+
+      // Create recipient entries for drafts (optional for tracking)
+      if (recipientIds.length > 0) {
+        const recipientValues: InsertMessageRecipient[] = recipientIds.map(recipientId => ({
+          messageId: message.id,
+          recipientId,
+          read: false,
+          notificationSent: false,
+        }));
+
+        await db.insert(messageRecipients).values(recipientValues);
+      }
+
+      return message;
+    } catch (error) {
+      console.error('Failed to save draft:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Reply to a message
+   */
+  async replyToMessage(params: {
+    senderId: string;
+    originalMessageId: number;
+    content: string;
+  }): Promise<Message> {
+    const { senderId, originalMessageId, content } = params;
+
+    try {
+      // Get original message to determine recipients and context
+      const [originalMessage] = await db
+        .select()
+        .from(messages)
+        .where(eq(messages.id, originalMessageId))
+        .limit(1);
+
+      if (!originalMessage) {
+        throw new Error('Original message not found');
+      }
+
+      // Get all participants in the original message (sender + recipients)
+      const originalRecipients = await db
+        .select({ recipientId: messageRecipients.recipientId })
+        .from(messageRecipients)
+        .where(eq(messageRecipients.messageId, originalMessageId));
+
+      // Build recipient list (all original participants except current sender)
+      const recipientIds = [
+        originalMessage.senderId,
+        ...originalRecipients.map(r => r.recipientId)
+      ].filter(id => id !== senderId);
+
+      // Send the reply
+      const reply = await this.sendMessage({
+        senderId,
+        recipientIds,
+        content,
+        contextType: originalMessage.contextType || 'direct',
+        contextId: originalMessage.contextId,
+        parentMessageId: originalMessageId,
+      });
+
+      return reply;
+    } catch (error) {
+      console.error('Failed to reply to message:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a message (soft delete with permissions)
+   */
+  async deleteMessage(messageId: number, userId: string): Promise<boolean> {
+    try {
+      // Get the message to check permissions
+      const [message] = await db
+        .select()
+        .from(messages)
+        .where(eq(messages.id, messageId))
+        .limit(1);
+
+      if (!message) {
+        return false;
+      }
+
+      // Check if user can delete (message sender or has moderation permissions)
+      const canDelete = message.senderId === userId;
+      
+      if (!canDelete) {
+        throw new Error('You can only delete your own messages');
+      }
+
+      // Soft delete the message
+      await db
+        .update(messages)
+        .set({ 
+          deletedAt: new Date(),
+          content: '[Message deleted]'
+        })
+        .where(eq(messages.id, messageId));
+
+      return true;
+    } catch (error) {
+      console.error('Failed to delete message:', error);
+      throw error;
+    }
+  }
 
 
 }
