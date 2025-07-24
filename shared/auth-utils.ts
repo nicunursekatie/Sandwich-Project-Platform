@@ -325,6 +325,12 @@ export function canDeleteProject(user: any, project: any): boolean {
   return false;
 }
 
+// Function to get user permissions from user object
+export function getUserPermissions(user: any): string[] {
+  if (!user) return [];
+  return user.permissions || [];
+}
+
 // Function to get human-readable role display name
 export function getRoleDisplayName(role: string): string {
   switch (role) {

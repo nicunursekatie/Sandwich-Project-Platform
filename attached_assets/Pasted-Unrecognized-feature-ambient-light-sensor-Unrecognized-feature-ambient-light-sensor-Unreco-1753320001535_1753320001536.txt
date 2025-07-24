@@ -1,0 +1,237 @@
+Unrecognized feature: 'ambient-light-sensor'.
+Unrecognized feature: 'ambient-light-sensor'.
+Unrecognized feature: 'ambient-light-sensor'.
+Unrecognized feature: 'ambient-light-sensor'.
+Unrecognized feature: 'ambient-light-sensor'.
+Unrecognized feature: 'ambient-light-sensor'.
+Unrecognized feature: 'battery'.
+Unrecognized feature: 'battery'.
+Unrecognized feature: 'battery'.
+Unrecognized feature: 'battery'.
+Unrecognized feature: 'battery'.
+Unrecognized feature: 'battery'.
+Unrecognized feature: 'execution-while-not-rendered'.
+Unrecognized feature: 'execution-while-not-rendered'.
+Unrecognized feature: 'execution-while-not-rendered'.
+Unrecognized feature: 'execution-while-not-rendered'.
+Unrecognized feature: 'execution-while-not-rendered'.
+Unrecognized feature: 'execution-while-not-rendered'.
+Unrecognized feature: 'execution-while-out-of-viewport'.
+Unrecognized feature: 'execution-while-out-of-viewport'.
+Unrecognized feature: 'execution-while-out-of-viewport'.
+Unrecognized feature: 'execution-while-out-of-viewport'.
+Unrecognized feature: 'execution-while-out-of-viewport'.
+Unrecognized feature: 'execution-while-out-of-viewport'.
+Unrecognized feature: 'layout-animations'.
+Unrecognized feature: 'layout-animations'.
+Unrecognized feature: 'layout-animations'.
+Unrecognized feature: 'layout-animations'.
+Unrecognized feature: 'layout-animations'.
+Unrecognized feature: 'layout-animations'.
+Unrecognized feature: 'legacy-image-formats'.
+Unrecognized feature: 'legacy-image-formats'.
+Unrecognized feature: 'legacy-image-formats'.
+Unrecognized feature: 'legacy-image-formats'.
+Unrecognized feature: 'legacy-image-formats'.
+Unrecognized feature: 'legacy-image-formats'.
+Unrecognized feature: 'navigation-override'.
+Unrecognized feature: 'navigation-override'.
+Unrecognized feature: 'navigation-override'.
+Unrecognized feature: 'navigation-override'.
+Unrecognized feature: 'navigation-override'.
+Unrecognized feature: 'navigation-override'.
+Unrecognized feature: 'oversized-images'.
+Unrecognized feature: 'oversized-images'.
+Unrecognized feature: 'oversized-images'.
+Unrecognized feature: 'oversized-images'.
+Unrecognized feature: 'oversized-images'.
+Unrecognized feature: 'oversized-images'.
+Unrecognized feature: 'publickey-credentials'.
+Unrecognized feature: 'publickey-credentials'.
+Unrecognized feature: 'publickey-credentials'.
+Unrecognized feature: 'publickey-credentials'.
+Unrecognized feature: 'publickey-credentials'.
+Unrecognized feature: 'publickey-credentials'.
+Unrecognized feature: 'speaker-selection'.
+Unrecognized feature: 'speaker-selection'.
+Unrecognized feature: 'speaker-selection'.
+Unrecognized feature: 'speaker-selection'.
+Unrecognized feature: 'speaker-selection'.
+Unrecognized feature: 'speaker-selection'.
+Unrecognized feature: 'unoptimized-images'.
+Unrecognized feature: 'unoptimized-images'.
+Unrecognized feature: 'unoptimized-images'.
+Unrecognized feature: 'unoptimized-images'.
+Unrecognized feature: 'unoptimized-images'.
+Unrecognized feature: 'unoptimized-images'.
+Unrecognized feature: 'unsized-media'.
+Unrecognized feature: 'unsized-media'.
+Unrecognized feature: 'unsized-media'.
+Unrecognized feature: 'unsized-media'.
+Unrecognized feature: 'unsized-media'.
+Unrecognized feature: 'unsized-media'.
+9511-7035dd4ae4ca4505.js:1 Unrecognized feature: 'pointer-lock'.
+(anonymous) @ 9511-7035dd4ae4ca4505.js:1
+(anonymous) @ main-3446dd294add8f00.js:1
+n @ main-3446dd294add8f00.js:1
+u @ main-3446dd294add8f00.js:1
+(anonymous) @ main-3446dd294add8f00.js:1
+(anonymous) @ main-3446dd294add8f00.js:1
+(anonymous) @ 9511-7035dd4ae4ca4505.js:1
+(anonymous) @ 9511-7035dd4ae4ca4505.js:1
+(anonymous) @ main-3446dd294add8f00.js:1
+n @ main-3446dd294add8f00.js:1
+u @ main-3446dd294add8f00.js:1
+(anonymous) @ main-3446dd294add8f00.js:1
+(anonymous) @ main-3446dd294add8f00.js:1
+(anonymous) @ 9511-7035dd4ae4ca4505.js:1
+navigateTo @ 9511-7035dd4ae4ca4505.js:1
+refresh @ 9511-7035dd4ae4ca4505.js:1
+(anonymous) @ 9511-7035dd4ae4ca4505.js:1
+(anonymous) @ _app-c4f3a108347f3bbc.js:11
+(anonymous) @ _app-c4f3a108347f3bbc.js:6
+onClick @ _app-c4f3a108347f3bbc.js:11
+(anonymous) @ _app-c4f3a108347f3bbc.js:1
+eB @ framework-d75b4538513a3228.js:1
+eH @ framework-d75b4538513a3228.js:1
+(anonymous) @ framework-d75b4538513a3228.js:1
+re @ framework-d75b4538513a3228.js:1
+rt @ framework-d75b4538513a3228.js:1
+(anonymous) @ framework-d75b4538513a3228.js:1
+uT @ framework-d75b4538513a3228.js:1
+eM @ framework-d75b4538513a3228.js:1
+ru @ framework-d75b4538513a3228.js:1
+tB @ framework-d75b4538513a3228.js:1
+tD @ framework-d75b4538513a3228.js:1
+n @ _app-c4f3a108347f3bbc.js:38
+Allow attribute will take precedence over 'allowfullscreen'.
+Allow attribute will take precedence over 'allowfullscreen'.
+Allow attribute will take precedence over 'allowfullscreen'.
+Allow attribute will take precedence over 'allowfullscreen'.
+Allow attribute will take precedence over 'allowfullscreen'.
+Allow attribute will take precedence over 'allowfullscreen'.
+Allow attribute will take precedence over 'allowpaymentrequest'.
+Allow attribute will take precedence over 'allowpaymentrequest'.
+Allow attribute will take precedence over 'allowpaymentrequest'.
+Allow attribute will take precedence over 'allowpaymentrequest'.
+Allow attribute will take precedence over 'allowpaymentrequest'.
+Allow attribute will take precedence over 'allowpaymentrequest'.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+workspace_iframe.html:151  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/ 502 (Bad Gateway)
+(anonymous) @ workspace_iframe.html?initialPath=%2F&id=%3Arvrg%3A:151
+app:1 The resource https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+app:1 The resource https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+workspace_iframe.html:151  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/ 502 (Bad Gateway)
+(anonymous) @ workspace_iframe.html?initialPath=%2F&id=%3Arvtb%3A:151
+workspace_iframe.html:151  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/ 502 (Bad Gateway)
+(anonymous) @ workspace_iframe.html?initialPath=%2F&id=%3Arvuj%3A:151
+workspace_iframe.html?initialPath=%2F&id=%3Ar10cr%3A:151  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/ 404 (Not Found)
+(anonymous) @ workspace_iframe.html?initialPath=%2F&id=%3Ar10cr%3A:151
+  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/ 404 (Not Found)
+(anonymous) @ bb1d30f8-d852-4bae-a…&id=%3Ar10cr%3A:151
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/:1 Refused to execute inline event handler because it violates the following Content Security Policy directive: "default-src 'none'". Either the 'unsafe-inline' keyword, a hash ('sha256-...'), or a nonce ('nonce-...') is required to enable inline execution. Note that hashes do not apply to event handlers, style attributes and javascript: navigations unless the 'unsafe-hashes' keyword is present. Note also that 'script-src' was not explicitly set, so 'default-src' is used as a fallback.
+
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/:1 Refused to execute inline event handler because it violates the following Content Security Policy directive: "default-src 'none'". Either the 'unsafe-inline' keyword, a hash ('sha256-...'), or a nonce ('nonce-...') is required to enable inline execution. Note that hashes do not apply to event handlers, style attributes and javascript: navigations unless the 'unsafe-hashes' keyword is present. Note also that 'script-src' was not explicitly set, so 'default-src' is used as a fallback.
+
+VM3718 eruda.js:2 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=gXENjvm0f_iX' failed: 
+t @ VM3718 eruda.js:2
+setupWebSocket @ VM3719 client:536
+(anonymous) @ VM3719 client:531
+VM3718 eruda.js:2 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=gXENjvm0f_iX' is invalid.
+    at new t (VM3718 eruda.js:2:218737)
+    at setupWebSocket (VM3719 client:536:19)
+    at fallback (VM3719 client:509:16)
+    at WebSocket.<anonymous> (VM3719 client:555:7)
+t @ VM3718 eruda.js:2
+setupWebSocket @ VM3719 client:536
+fallback @ VM3719 client:509
+(anonymous) @ VM3719 client:555
+VM3718 eruda.js:2 [App] Authentication error: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON
+Mt.forEach.n.<computed> @ VM3718 eruda.js:2
+Router @ VM3749 App.tsx:41
+renderWithHooks @ VM3744 chunk-276SZO74.js:11548
+updateFunctionComponent @ VM3744 chunk-276SZO74.js:14582
+beginWork @ VM3744 chunk-276SZO74.js:15924
+beginWork$1 @ VM3744 chunk-276SZO74.js:19753
+performUnitOfWork @ VM3744 chunk-276SZO74.js:19198
+workLoopSync @ VM3744 chunk-276SZO74.js:19137
+renderRootSync @ VM3744 chunk-276SZO74.js:19116
+performSyncWorkOnRoot @ VM3744 chunk-276SZO74.js:18874
+flushSyncCallbacks @ VM3744 chunk-276SZO74.js:9119
+(anonymous) @ VM3744 chunk-276SZO74.js:18627
+setTimeout
+defaultScheduler @ VM3752 @tanstack_react-query.js:565
+flush @ VM3752 @tanstack_react-query.js:589
+batch @ VM3752 @tanstack_react-query.js:607
+dispatch_fn @ VM3752 @tanstack_react-query.js:1040
+onError @ VM3752 @tanstack_react-query.js:904
+reject @ VM3752 @tanstack_react-query.js:484
+(anonymous) @ VM3752 @tanstack_react-query.js:527
+Promise.catch
+run @ VM3752 @tanstack_react-query.js:517
+start @ VM3752 @tanstack_react-query.js:555
+fetch @ VM3752 @tanstack_react-query.js:969
+executeFetch_fn @ VM3752 @tanstack_react-query.js:2279
+onSubscribe @ VM3752 @tanstack_react-query.js:1983
+subscribe @ VM3752 @tanstack_react-query.js:24
+(anonymous) @ VM3752 @tanstack_react-query.js:3146
+subscribeToStore @ VM3744 chunk-276SZO74.js:11984
+commitHookEffectListMount @ VM3744 chunk-276SZO74.js:16915
+commitPassiveMountOnFiber @ VM3744 chunk-276SZO74.js:18156
+commitPassiveMountEffects_complete @ VM3744 chunk-276SZO74.js:18129
+commitPassiveMountEffects_begin @ VM3744 chunk-276SZO74.js:18119
+commitPassiveMountEffects @ VM3744 chunk-276SZO74.js:18109
+flushPassiveEffectsImpl @ VM3744 chunk-276SZO74.js:19490
+flushPassiveEffects @ VM3744 chunk-276SZO74.js:19447
+performSyncWorkOnRoot @ VM3744 chunk-276SZO74.js:18868
+flushSyncCallbacks @ VM3744 chunk-276SZO74.js:9119
+commitRootImpl @ VM3744 chunk-276SZO74.js:19432
+commitRoot @ VM3744 chunk-276SZO74.js:19277
+finishConcurrentRender @ VM3744 chunk-276SZO74.js:18805
+performConcurrentWorkOnRoot @ VM3744 chunk-276SZO74.js:18718
+workLoop @ VM3744 chunk-276SZO74.js:197
+flushWork @ VM3744 chunk-276SZO74.js:176
+performWorkUntilDeadline @ VM3744 chunk-276SZO74.js:384
+main.tsx:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "text/html". Strict MIME type checking is enforced for module scripts per HTML spec.
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=gXENjvm0f_iX' failed: 
+t @ Network.js:227
+setupWebSocket @ client:536
+(anonymous) @ client:531
+Network.js:227 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=gXENjvm0f_iX' is invalid.
+    at new t (Network.js:227:18)
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+t @ Network.js:227
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+app:1 The resource https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+app:1 The resource https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
