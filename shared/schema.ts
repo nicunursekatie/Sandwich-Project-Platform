@@ -243,7 +243,7 @@ export const conversationParticipants = pgTable("conversation_participants", {
   pk: primaryKey({ columns: [table.conversationId, table.userId] }),
 }));
 
-// 3. Messages - enhanced with contextual linking
+// 3. Messages - for chat messages only
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
   conversationId: integer("conversation_id").references(() => conversations.id, { onDelete: "cascade" }),
@@ -253,10 +253,7 @@ export const messages = pgTable("messages", {
   sender: text("sender"), // Display name of sender
   contextType: text("context_type"), // 'suggestion', 'project', 'task', 'direct'
   contextId: text("context_id"),
-  read: boolean("read").notNull().default(false), // Simple read status for email-style messaging
-  isStarred: boolean("is_starred").notNull().default(false), // Gmail-style starred status
-  isDraft: boolean("is_draft").notNull().default(false), // Draft status for unsent messages
-  isArchived: boolean("is_archived").notNull().default(false), // Archive status for organizing
+  read: boolean("read").notNull().default(false), // Simple read status
   editedAt: timestamp("edited_at"),
   editedContent: text("edited_content"),
   deletedAt: timestamp("deleted_at"),

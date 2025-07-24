@@ -135,16 +135,17 @@ export default function GmailStyleInbox() {
   const isEmailMode = ["inbox", "sent", "drafts", "starred", "archived", "trash"].includes(activeFolder);
   const apiBase = isEmailMode ? "/api/emails" : "/api/messages";
 
-  // Fetch messages based on folder
-  const { data: messages = [], refetch: refetchMessages } = useQuery<Message[]>({
-    queryKey: [apiBase, activeFolder],
+  // Fetch messages based on folder with threading for emails
+  const { data: messages = [], refetch: refetchMessages } = useQuery<any[]>({
+    queryKey: [apiBase, activeFolder, "threaded"],
     queryFn: async () => {
       let endpoint = apiBase;
       const params = new URLSearchParams();
       
       if (isEmailMode) {
-        // Email mode - use folder parameter
+        // Email mode - use folder parameter and enable threading
         params.append("folder", activeFolder);
+        params.append("threaded", "true");
       } else {
         // Chat mode - use chatType parameter (for any future chat tabs)
         params.append("chatType", activeFolder);
