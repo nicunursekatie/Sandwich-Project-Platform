@@ -6412,31 +6412,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
           senderLastName: users.lastName,
           senderEmail: users.email,
           senderDisplayName: users.displayName,
-          conversationType: conversationsTable.type,
-          conversationName: conversationsTable.name,
+          conversationType: conversations.type,
+          conversationName: conversations.name,
         })
         .from(messagesTable)
         .leftJoin(users, eq(messagesTable.sender_id, users.id))
         .innerJoin(conversationParticipants, eq(messagesTable.conversationId, conversationParticipants.conversationId))
-        .innerJoin(conversationsTable, eq(messagesTable.conversationId, conversationsTable.id))
+        .innerJoin(conversations, eq(messagesTable.conversationId, conversations.id))
         .where(and(
           isNotNull(messagesTable.conversationId),
           eq(conversationParticipants.userId, user.id),
           // Only show direct messages or named project conversations
           // Exclude team channels and general broadcasts
           or(
-            eq(conversationsTable.type, 'direct'),
+            eq(conversations.type, 'direct'),
             and(
-              eq(conversationsTable.type, 'channel'),
-              isNotNull(conversationsTable.name),
-              ne(conversationsTable.name, 'team-chat'),
-              ne(conversationsTable.name, 'general'),
-              ne(conversationsTable.name, 'General Chat'),
-              ne(conversationsTable.name, 'Driver Chat'),
-              ne(conversationsTable.name, 'Host Chat'),
-              ne(conversationsTable.name, 'Recipient Chat'),
-              ne(conversationsTable.name, 'Committee Chat'),
-              ne(conversationsTable.name, 'Core Team Chat')
+              eq(conversations.type, 'channel'),
+              isNotNull(conversations.name),
+              ne(conversations.name, 'team-chat'),
+              ne(conversations.name, 'general'),
+              ne(conversations.name, 'General Chat'),
+              ne(conversations.name, 'Driver Chat'),
+              ne(conversations.name, 'Host Chat'),
+              ne(conversations.name, 'Recipient Chat'),
+              ne(conversations.name, 'Committee Chat'),
+              ne(conversations.name, 'Core Team Chat')
             )
           )
         ))
