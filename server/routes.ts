@@ -6779,13 +6779,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("  - sender:", req.body?.sender);
       console.log("  - conversationName:", req.body?.conversationName);
       console.log("  - recipientId:", req.body?.recipientId);
+      console.log("  - conversationId:", req.body?.conversationId);
 
       if (!user?.id) {
         console.log("[ERROR] No user.id found, returning 401");
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      const { content, sender, conversationName, recipientId } = req.body;
+      const { content, sender, conversationName, recipientId, conversationId } = req.body;
 
       if (!content || !content.trim()) {
         console.log("[ERROR] No content provided, returning 400");
@@ -6793,12 +6794,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       console.log("[STEP 3] Finding or creating conversation...");
+      console.log("  - conversationId:", req.body?.conversationId);
 
       let targetConversation;
       let conversationType = "channel";
       let finalConversationName = conversationName && conversationName.trim() ? conversationName.trim() : null;
 
+      // Check if this is a reply to an existing conversation
+      if (conversationId) {
+        console.log("  - Looking for existing conversation with ID:", conversationId);
+        try {
+          const existingConversations = await db
+            .select()
+            .from(conversations)
+            .where(eq(conversations.id, conversationId))
+            .limit(1);
+          
+          if (existingConversations.length > 0) {
+            targetConversation = existingConversations[0];
+            console.log("  - Found existing conversation for reply:", targetConversation);
+          } else {
+            console.log("  - No conversation found with ID:", conversationId);
+            return res.status(400).json({ message: "Conversation not found" });
+          }
+        } catch (dbError) {
+          console.error("[ERROR] Database query for conversation ID failed:", dbError);
+          throw dbError;
+        }
+      }
       // If recipientId is provided, create/find direct conversation
+      else
       if (recipientId && recipientId !== user.id) {
         console.log("  - Creating/finding direct conversation with user:", recipientId);
         conversationType = "direct";

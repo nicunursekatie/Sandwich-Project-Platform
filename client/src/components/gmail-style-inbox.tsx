@@ -68,21 +68,25 @@ interface User {
 
 interface Message {
   id: number;
-  senderId: string;
-  senderName: string;
-  senderEmail: string;
-  recipientId: string;
-  recipientName: string;
-  recipientEmail: string;
-  subject: string;
   content: string;
-  isRead: boolean;
-  isStarred: boolean;
-  isArchived: boolean;
-  isTrashed: boolean;
-  isDraft: boolean;
-  parentMessageId?: number;
+  userId: string;
+  sender: string;
+  senderName: string;
+  conversationId: number;
   createdAt: string;
+  // Legacy email fields (might not be present in conversation-based messages)
+  senderId?: string;
+  senderEmail?: string;
+  recipientId?: string;
+  recipientName?: string;
+  recipientEmail?: string;
+  subject?: string;
+  isRead?: boolean;
+  isStarred?: boolean;
+  isArchived?: boolean;
+  isTrashed?: boolean;
+  isDraft?: boolean;
+  parentMessageId?: number;
   readAt?: string;
   contextType?: string;
   contextId?: string;
@@ -203,10 +207,10 @@ export default function GmailStyleInbox() {
     }
   });
 
-  // Reply mutation
+  // Reply mutation - use same endpoint as compose (POST /api/messages)
   const replyMutation = useMutation({
     mutationFn: async (replyData: any) => {
-      return await apiRequest('POST', '/api/messages/reply', replyData);
+      return await apiRequest('POST', '/api/messages', replyData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
@@ -214,7 +218,8 @@ export default function GmailStyleInbox() {
       setReplyContent("");
       toast({ description: "Reply sent successfully" });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Reply error:', error);
       toast({ 
         description: "Failed to send reply", 
         variant: "destructive" 
@@ -370,10 +375,20 @@ export default function GmailStyleInbox() {
       return;
     }
 
-    replyMutation.mutate({
-      parentMessageId: selectedMessage.id,
+    console.log('Sending reply with data:', {
+      content: replyContent,
+      sender: null, // Let backend use authenticated user info
       recipientId: selectedMessage.userId,
-      content: replyContent
+      conversationName: null, // Reply to existing conversation
+      conversationId: selectedMessage.conversationId
+    });
+
+    replyMutation.mutate({
+      content: replyContent,
+      sender: null, // Let backend use authenticated user info
+      recipientId: selectedMessage.userId,
+      conversationName: null, // Reply to existing conversation
+      conversationId: selectedMessage.conversationId
     });
   };
 
