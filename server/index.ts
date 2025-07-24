@@ -81,14 +81,25 @@ async function startServer() {
   try {
     console.log("🚀 Starting The Sandwich Project server...");
 
-    // Health check route
+    const port = process.env.PORT || 5000;
+    const host = process.env.HOST || "0.0.0.0";
+    const finalPort = Number(port);
+
+    console.log(
+      `Starting server on ${host}:${finalPort} in ${process.env.NODE_ENV || "development"} mode`,
+    );
+
+    // Set up basic routes BEFORE starting server
+    app.use("/attached_assets", express.static("attached_assets"));
+
+    // Single health check route
     app.get("/health", (_req: Request, res: Response) => {
       res.status(200).json({
         status: "healthy",
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
         environment: process.env.NODE_ENV || "development",
-        initialized: false,
+        initialized: true,
       });
     });
 
@@ -98,29 +109,6 @@ async function startServer() {
       const message = err.message || "Internal Server Error";
       console.error("Error:", err);
       res.status(status).json({ message });
-    });
-
-    const port = process.env.PORT || 5000;
-    const host = process.env.HOST || "0.0.0.0";
-
-    console.log(
-      `Starting server on ${host}:${port} in ${process.env.NODE_ENV || "development"} mode`,
-    );
-
-    // Use consistent port allocation
-    const finalPort = Number(port);
-
-    // Set up basic routes BEFORE starting server
-    app.use("/attached_assets", express.static("attached_assets"));
-
-    // Health check route - available before full initialization
-    app.get("/health", (_req: Request, res: Response) => {
-      res.status(200).json({
-        status: "healthy",
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        environment: process.env.NODE_ENV || "development",
-      });
     });
 
     if (process.env.NODE_ENV === "production") {
@@ -243,17 +231,6 @@ async function startServer() {
 
         const server = await registerRoutes(app);
         console.log("✓ Routes registered successfully");
-
-        // Update health check to reflect full init
-        app.get("/health", (_req: Request, res: Response) => {
-          res.status(200).json({
-            status: "healthy",
-            timestamp: new Date().toISOString(),
-            uptime: process.uptime(),
-            environment: process.env.NODE_ENV || "development",
-            initialized: true,
-          });
-        });
 
         if (process.env.NODE_ENV === "development") {
           try {
