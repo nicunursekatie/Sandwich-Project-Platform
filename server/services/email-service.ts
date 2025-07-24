@@ -65,10 +65,7 @@ export class EmailService {
             .from(emailMessages)
             .where(
               and(
-                or(
-                  eq(emailMessages.senderId, userId),
-                  eq(emailMessages.recipientId, userId)
-                ),
+                eq(emailMessages.recipientId, userId), // Only show emails sent TO this user
                 eq(emailMessages.isDraft, false),
                 eq(emailMessages.isTrashed, false),
                 eq(emailMessages.isArchived, false)
