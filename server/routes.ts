@@ -47,6 +47,7 @@ import {
   conversations,
   conversationParticipants,
   messages as messagesTable,
+  emailMessages,
   users,
 } from "@shared/schema";
 
@@ -6585,101 +6586,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .orderBy(desc(emailMessages.createdAt))
         .limit(50);
 
-      console.log(`FOUND ${allMessages.length} messages for ${user.email}:`);
-      allMessages.forEach(msg => {
-        console.log(`  - Message ${msg.id}: "${msg.content.substring(0, 30)}..." from ${msg.senderEmail} in ${msg.conversationType}:${msg.conversationName || 'direct'}`);
-      });
+      console.log(`Found ${inboxEmails.length} inbox email messages`);
+      return res.json(inboxEmails.map(email => ({
+        id: email.id,
+        senderId: email.senderId,
+        senderName: email.senderName,
+        senderEmail: email.senderEmail,
+        recipientId: email.recipientId,
+        recipientName: email.recipientName,
+        recipientEmail: email.recipientEmail,
+        content: email.content,
+        subject: email.subject,
+        createdAt: email.createdAt,
+        threadId: email.parentMessageId || email.id,
+        isRead: email.isRead,
+        isStarred: email.isStarred,
+        folder: "inbox",
+        committee: email.contextType || "email"
+      })));
 
-      // Get conversation participants for each message to determine recipients
-      const conversationIds = [...new Set(allMessages.map(msg => msg.conversationId))].filter(id => id);
-      let participantsByConversation = {};
-      
-      if (conversationIds.length > 0) {
-        const participantsData = await db
-          .select({
-            conversationId: conversationParticipants.conversationId,
-            userId: conversationParticipants.userId,
-            firstName: users.firstName,
-            lastName: users.lastName,
-            email: users.email,
-            displayName: users.displayName,
-          })
-          .from(conversationParticipants)
-          .leftJoin(users, eq(conversationParticipants.userId, users.id))
-          .where(inArray(conversationParticipants.conversationId, conversationIds));
-
-        // Group participants by conversation
-        participantsByConversation = participantsData.reduce((acc, p) => {
-          if (!acc[p.conversationId]) acc[p.conversationId] = [];
-          acc[p.conversationId].push(p);
-          return acc;
-        }, {} as Record<number, any[]>);
-      }
-
-      // Transform to match Gmail inbox expected format with proper user data
-      const formattedMessages = allMessages.map((msg) => {
-        // Construct sender name from available data with proper null checks
-        let senderName = "Unknown User";
-        if (msg.senderDisplayName) {
-          senderName = msg.senderDisplayName;
-        } else if (msg.sender) {
-          senderName = msg.sender;
-        } else if (msg.senderFirstName || msg.senderLastName) {
-          senderName = `${msg.senderFirstName || ''} ${msg.senderLastName || ''}`.trim();
-        } else if (msg.senderEmail) {
-          senderName = msg.senderEmail;
-        }
-        
-        // Get participants for this conversation
-        const participants = participantsByConversation[msg.conversationId] || [];
-        
-        // Filter out current user and sender from recipients list
-        const recipients = participants.filter(p => 
-          p.userId !== user.id && p.userId !== msg.senderId
-        );
-        
-        // Construct recipient names list for "To:" field
-        let recipientNames = "Unknown Recipients";
-        if (recipients.length > 0) {
-          recipientNames = recipients.map(r => {
-            if (r.displayName) return r.displayName;
-            if (r.firstName || r.lastName) return `${r.firstName || ''} ${r.lastName || ''}`.trim();
-            return r.email || "Unknown";
-          }).join(", ");
-        } else if (participants.length > 1) {
-          // Group conversation - show all other participants
-          recipientNames = participants
-            .filter(p => p.userId !== user.id)
-            .map(r => {
-              if (r.displayName) return r.displayName;
-              if (r.firstName || r.lastName) return `${r.firstName || ''} ${r.lastName || ''}`.trim();
-              return r.email || "Unknown";
-            }).join(", ");
-        }
-
-        return {
-          id: msg.id,
-          content: msg.content,
-          senderId: msg.senderId,
-          senderName: senderName,
-          senderEmail: msg.senderEmail || "unknown@example.com",
-          recipientId: recipients.length > 0 ? recipients[0].userId : user.id,
-          recipientName: recipientNames, // This will show "John, Sarah" for group conversations
-          recipientEmail: recipients.length > 0 ? recipients[0].email : user.email,
-          subject: participants.length > 2 ? `Group Chat (${participants.length} people)` : "Direct Message",
-          createdAt: msg.createdAt,
-          threadId: msg.conversationId,
-          isRead: true,
-          isStarred: false,
-          folder: "inbox",
-          committee: "conversation",
-        };
-      });
-
-      console.log(`SENDING ${formattedMessages.length} messages to frontend`);
       console.log("=== INBOX DEBUG END ===");
-      
-      res.json(formattedMessages);
     } catch (error) {
       console.error("[API] Error fetching messages:", error);
       res.status(500).json({ message: "Internal server error" });
