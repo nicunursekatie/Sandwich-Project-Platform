@@ -705,68 +705,100 @@ export default function GmailStyleInbox() {
         </div>
       </div>
 
-      {/* Compose Dialog */}
+      {/* Compose Dialog - TSP Branded */}
       <Dialog open={showCompose} onOpenChange={setShowCompose}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Compose Message</DialogTitle>
-            <DialogDescription>
-              Send a new message to another user
+        <DialogContent className="max-w-2xl bg-gradient-to-br from-white to-orange-50 border-2 border-orange-200 rounded-2xl shadow-2xl">
+          <DialogHeader className="text-center pb-6 border-b border-orange-100">
+            <DialogTitle className="text-2xl font-bold text-teal-800 font-['Roboto']">
+              New Message
+            </DialogTitle>
+            <DialogDescription className="text-gray-600 font-['Roboto']">
+              Send a message to your team member
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="recipient">To</Label>
+          <div className="space-y-6 py-6">
+            <div className="space-y-2">
+              <Label htmlFor="recipient" className="text-sm font-semibold text-teal-700 font-['Roboto']">
+                To
+              </Label>
               <Select value={composeRecipient} onValueChange={setComposeRecipient}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select recipient..." />
+                <SelectTrigger className="rounded-xl border-2 border-orange-200 bg-white/80 focus:border-teal-400 focus:ring-2 focus:ring-teal-200 h-12">
+                  <SelectValue placeholder="Choose team member..." />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl border-2 border-orange-200 bg-white">
                   {users.filter(u => u.id !== (user as any)?.id).map((user) => (
-                    <SelectItem key={user.id} value={user.id}>
-                      {user.firstName} {user.lastName} ({user.email})
+                    <SelectItem key={user.id} value={user.id} className="rounded-lg hover:bg-orange-50">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                        {user.firstName} {user.lastName} ({user.email})
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             
-            <div>
-              <Label htmlFor="subject">Project/Task name (optional)</Label>
+            <div className="space-y-2">
+              <Label htmlFor="subject" className="text-sm font-semibold text-amber-700 font-['Roboto'] flex items-center gap-2">
+                <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
+                Project/Task name (optional)
+              </Label>
               <Input
                 id="subject"
                 value={composeSubject}
                 onChange={(e) => setComposeSubject(e.target.value)}
-                placeholder="e.g., Budget Review, Website Updates, Event Planning..."
+                placeholder="Budget Review, Website Updates, Event Planning..."
+                className="rounded-xl border-2 border-amber-200 bg-amber-50/50 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 h-12 font-['Roboto'] placeholder:text-amber-600/70"
               />
+              <p className="text-xs text-amber-600 font-['Roboto'] italic">
+                Leave blank for general conversation
+              </p>
             </div>
             
-            <div>
-              <Label htmlFor="content">Message</Label>
+            <div className="space-y-2">
+              <Label htmlFor="content" className="text-sm font-semibold text-teal-700 font-['Roboto']">
+                Message
+              </Label>
               <Textarea
                 id="content"
                 value={composeContent}
                 onChange={(e) => setComposeContent(e.target.value)}
-                placeholder="Type your message..."
-                rows={8}
+                placeholder="Type your message here..."
+                rows={6}
+                className="rounded-xl border-2 border-orange-200 bg-white/80 focus:border-teal-400 focus:ring-2 focus:ring-teal-200 font-['Roboto'] placeholder:text-gray-500 resize-none"
               />
             </div>
             
             {saveDraftMutation.isPending && (
-              <p className="text-sm text-gray-500">Auto-saving draft...</p>
+              <div className="flex items-center gap-2 text-sm text-amber-600 bg-amber-50 p-3 rounded-xl">
+                <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
+                Auto-saving draft...
+              </div>
             )}
           </div>
           
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setShowCompose(false)}>
+          <DialogFooter className="pt-6 border-t border-orange-100 gap-3">
+            <Button 
+              variant="ghost" 
+              onClick={() => setShowCompose(false)}
+              className="rounded-xl px-6 py-3 text-gray-600 hover:bg-gray-100 font-['Roboto'] font-medium"
+            >
               Cancel
             </Button>
             <Button 
               onClick={handleSendMessage}
               disabled={sendMessageMutation.isPending}
+              className="rounded-xl px-8 py-3 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-['Roboto'] font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
             >
-              {sendMessageMutation.isPending ? "Sending..." : "Send Message"}
+              {sendMessageMutation.isPending ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  Sending...
+                </div>
+              ) : (
+                "Send Message"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

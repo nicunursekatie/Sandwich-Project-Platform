@@ -6762,7 +6762,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       let targetConversation;
       let conversationType = "channel";
-      let finalConversationName = conversationName || "team-chat";
+      let finalConversationName = conversationName && conversationName.trim() ? conversationName.trim() : "team-chat";
 
       // If recipientId is provided, create/find direct conversation
       if (recipientId && recipientId !== user.id) {
