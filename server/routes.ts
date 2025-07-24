@@ -6572,65 +6572,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      // Determine which conversation to fetch based on chatType
+      // For Gmail inbox, get all messages regardless of conversation type
+      // If no specific conversation requested, default to "General Chat"
+      const chatType = req.query.chatType as string;
       let conversationName = "General Chat";
       if (chatType === "driver") conversationName = "Driver Chat";
       else if (chatType === "recipient") conversationName = "Recipient Chat";
       else if (chatType === "host") conversationName = "Host Chat";
 
-      // Get the existing conversation
-      let [generalConversation] = await db
-        .select()
-        .from(conversations)
-        .where(
-          and(
-            eq(conversations.type, "channel"),
-            eq(conversations.name, conversationName),
-          ),
-        );
-
-      if (!generalConversation) {
-        // Create conversation if it doesn't exist
-        [generalConversation] = await db
-          .insert(conversations)
-          .values({
-            type: "channel",
-            name: conversationName,
-          })
-          .returning();
-      }
-
-      // Get messages for general conversation
-      const conversationMessages = await db
+      // For Gmail inbox, get ALL messages (both conversation-based and standalone)
+      // This includes messages with NULL conversation_id as well
+      const allMessages = await db
         .select({
           id: messagesTable.id,
           content: messagesTable.content,
           userId: messagesTable.user_id,
+          senderId: messagesTable.sender_id,
           sender: messagesTable.sender,
           createdAt: messagesTable.created_at,
+          conversationId: messagesTable.conversationId,
+          // Join with users table to get complete sender info
+          senderFirstName: users.firstName,
+          senderLastName: users.lastName,
+          senderEmail: users.email,
+          senderDisplayName: users.displayName,
         })
         .from(messagesTable)
-        .where(eq(messagesTable.conversation_id, generalConversation.id))
-        .orderBy(messagesTable.created_at);
+        .leftJoin(users, eq(messagesTable.user_id, users.id))
+        .orderBy(desc(messagesTable.created_at))
+        .limit(50); // Limit for performance
 
-      // Transform to match Gmail inbox expected format
-      const formattedMessages = conversationMessages.map((msg) => ({
-        id: msg.id,
-        content: msg.content,
-        senderId: msg.userId,
-        senderName: msg.sender || "Unknown User",
-        senderEmail: "user@example.com", // Placeholder
-        recipientId: user.id,
-        recipientName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email,
-        recipientEmail: user.email,
-        subject: "General Chat Message", // Default subject
-        createdAt: msg.createdAt,
-        threadId: null,
-        isRead: true,
-        isStarred: false,
-        folder: "inbox",
-        committee: "general", // For compatibility
-      }));
+      // Transform to match Gmail inbox expected format with proper user data
+      const formattedMessages = allMessages.map((msg) => {
+        // Construct sender name from available data
+        const senderName = msg.senderDisplayName || 
+          msg.sender || 
+          `${msg.senderFirstName || ''} ${msg.senderLastName || ''}`.trim() || 
+          msg.senderEmail || 
+          "Unknown User";
+        
+        // Construct recipient name (current user)
+        const recipientName = user.displayName ||
+          `${user.firstName || ''} ${user.lastName || ''}`.trim() || 
+          user.email || 
+          "Unknown Recipient";
+
+        return {
+          id: msg.id,
+          content: msg.content,
+          senderId: msg.senderId || msg.userId,
+          senderName: senderName,
+          senderEmail: msg.senderEmail || "unknown@example.com",
+          recipientId: user.id,
+          recipientName: recipientName,
+          recipientEmail: user.email || "unknown@example.com",
+          subject: "General Chat Message", // Default subject for chat messages
+          createdAt: msg.createdAt,
+          threadId: null,
+          isRead: true,
+          isStarred: false,
+          folder: "inbox",
+          committee: "general", // For compatibility
+        };
+      });
 
       res.json(formattedMessages);
     } catch (error) {
