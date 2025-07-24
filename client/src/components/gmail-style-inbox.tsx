@@ -131,6 +131,10 @@ export default function GmailStyleInbox() {
   const { data: messages = [], refetch: refetchMessages } = useQuery<Message[]>({
     queryKey: ["/api/messages", activeFolder],
     queryFn: async () => {
+      console.log("=== FRONTEND MESSAGES QUERY ===");
+      console.log("Active folder:", activeFolder);
+      console.log("Current user:", user?.email);
+      
       let endpoint = "/api/messages";
       const params = new URLSearchParams();
       
@@ -159,8 +163,18 @@ export default function GmailStyleInbox() {
         endpoint += "?" + params.toString();
       }
       
+      console.log("Requesting endpoint:", endpoint);
+      
       const response = await apiRequest('GET', endpoint);
-      return Array.isArray(response) ? response : response.messages || [];
+      const finalMessages = Array.isArray(response) ? response : response.messages || [];
+      
+      console.log(`FRONTEND RECEIVED: ${finalMessages.length} messages`);
+      finalMessages.forEach(msg => {
+        console.log(`  - Message ${msg.id}: "${msg.content?.substring(0, 30)}..." from ${msg.senderName} to ${msg.recipientName}`);
+      });
+      console.log("=== FRONTEND MESSAGES QUERY END ===");
+      
+      return finalMessages;
     },
   });
 

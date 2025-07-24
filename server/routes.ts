@@ -6538,9 +6538,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Legacy message endpoints - redirect to conversation system
   app.get("/api/messages", isAuthenticated, async (req, res) => {
+    console.log("=== GET /api/messages DEBUG ===");
+    console.log("User requesting messages:", user?.email, "ID:", user?.id);
+    console.log("Query params:", req.query);
+    
     try {
       const user = (req as any).user;
       if (!user?.id) {
+        console.log("ERROR: No user ID found");
         return res.status(401).json({ message: "Unauthorized" });
       }
 
@@ -6577,6 +6582,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ))
         .orderBy(desc(messagesTable.created_at))
         .limit(50);
+
+      console.log(`QUERY RESULT: Found ${allMessages.length} messages for user ${user.email}`);
+      allMessages.forEach(msg => {
+        console.log(`  - Message ${msg.id}: "${msg.content.substring(0, 30)}..." from ${msg.senderEmail} in conversation ${msg.conversationId}`);
+      });
 
       // Get conversation participants for each message to determine recipients
       const conversationIds = [...new Set(allMessages.map(msg => msg.conversationId))].filter(id => id);
@@ -6664,6 +6674,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
       });
 
+      console.log(`SENDING TO FRONTEND: ${formattedMessages.length} formatted messages`);
+      console.log("=== GET /api/messages DEBUG END ===");
+      
       res.json(formattedMessages);
     } catch (error) {
       console.error("[API] Error fetching messages:", error);
