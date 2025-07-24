@@ -6552,58 +6552,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       else if (chatType === "recipient") conversationName = "Recipient Chat";
       else if (chatType === "host") conversationName = "Host Chat";
 
-      // Check if this is the superuser admin account
-      const isSuperAdmin = user?.email === 'admin@sandwich.project';
-      
-      // For Gmail inbox, get messages with proper participant filtering
-      let allMessages;
-      if (isSuperAdmin) {
-        // Super admin sees ALL messages regardless of participation
-        allMessages = await db
-          .select({
-            id: messagesTable.id,
-            content: messagesTable.content,
-            userId: messagesTable.user_id,
-            senderId: messagesTable.sender_id,
-            sender: messagesTable.sender,
-            createdAt: messagesTable.created_at,
-            conversationId: messagesTable.conversationId,
-            senderFirstName: users.firstName,
-            senderLastName: users.lastName,
-            senderEmail: users.email,
-            senderDisplayName: users.displayName,
-          })
-          .from(messagesTable)
-          .leftJoin(users, eq(messagesTable.sender_id, users.id))
-          .where(isNotNull(messagesTable.conversationId))
-          .orderBy(desc(messagesTable.created_at))
-          .limit(50);
-      } else {
-        // Regular users only see messages from conversations they participate in
-        allMessages = await db
-          .select({
-            id: messagesTable.id,
-            content: messagesTable.content,
-            userId: messagesTable.user_id,
-            senderId: messagesTable.sender_id,
-            sender: messagesTable.sender,
-            createdAt: messagesTable.created_at,
-            conversationId: messagesTable.conversationId,
-            senderFirstName: users.firstName,
-            senderLastName: users.lastName,
-            senderEmail: users.email,
-            senderDisplayName: users.displayName,
-          })
-          .from(messagesTable)
-          .leftJoin(users, eq(messagesTable.sender_id, users.id))
-          .innerJoin(conversationParticipants, eq(messagesTable.conversationId, conversationParticipants.conversationId))
-          .where(and(
-            isNotNull(messagesTable.conversationId),
-            eq(conversationParticipants.userId, user.id)
-          ))
-          .orderBy(desc(messagesTable.created_at))
-          .limit(50);
-      }
+      // All users (including admins) only see messages from conversations they participate in
+      // This ensures proper inbox filtering for Gmail-style messaging
+      const allMessages = await db
+        .select({
+          id: messagesTable.id,
+          content: messagesTable.content,
+          userId: messagesTable.user_id,
+          senderId: messagesTable.sender_id,
+          sender: messagesTable.sender,
+          createdAt: messagesTable.created_at,
+          conversationId: messagesTable.conversationId,
+          senderFirstName: users.firstName,
+          senderLastName: users.lastName,
+          senderEmail: users.email,
+          senderDisplayName: users.displayName,
+        })
+        .from(messagesTable)
+        .leftJoin(users, eq(messagesTable.sender_id, users.id))
+        .innerJoin(conversationParticipants, eq(messagesTable.conversationId, conversationParticipants.conversationId))
+        .where(and(
+          isNotNull(messagesTable.conversationId),
+          eq(conversationParticipants.userId, user.id)
+        ))
+        .orderBy(desc(messagesTable.created_at))
+        .limit(50);
 
       // Get conversation participants for each message to determine recipients
       const conversationIds = [...new Set(allMessages.map(msg => msg.conversationId))].filter(id => id);
