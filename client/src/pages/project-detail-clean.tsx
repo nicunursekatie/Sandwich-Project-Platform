@@ -422,38 +422,9 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
           {/* Show kudos buttons for completed projects */}
           {project.status === 'completed' && (
             <div className="flex gap-1 flex-wrap">
-              {/* Handle multiple assignees with IDs */}
-              {project.assigneeIds?.length > 0 ? (
-                project.assigneeIds.map((assigneeId, index) => {
-                  const assigneeName = project.assigneeNames?.split(', ')?.[index] || `User ${assigneeId}`;
-                  return user?.id !== assigneeId ? (
-                    <SendKudosButton 
-                      key={assigneeId}
-                      recipientId={assigneeId}
-                      recipientName={assigneeName}
-                      contextType="project"
-                      contextId={project.id.toString()}
-                      entityName={project.title}
-                      size="sm"
-                    />
-                  ) : null;
-                })
-              ) : project.assigneeId && user?.id !== project.assigneeId ? (
-                /* Handle single assignee with ID */
-                <SendKudosButton 
-                  recipientId={project.assigneeId}
-                  recipientName={project.assigneeName || 'Project Assignee'}
-                  contextType="project"
-                  contextId={project.id.toString()}
-                  entityName={project.title}
-                  size="sm"
-                />
-              ) : project.assigneeName && !project.assigneeId && !project.assigneeIds?.length ? (
-                /* Handle name-only assignments (show congratulations message) */
-                <div className="text-sm text-green-600 font-medium">
-                  🎉 Congratulations {project.assigneeName}!
-                </div>
-              ) : null}
+              <div className="text-sm text-green-600 font-medium bg-green-50 px-3 py-1 rounded-lg border border-green-200">
+                🎉 Project Completed! Send Kudos!
+              </div>
             </div>
           )}
           <Badge className={getStatusColor(project.status)}>
@@ -754,43 +725,9 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                       {/* Show kudos buttons for completed tasks */}
                       {task.status === 'completed' && (
                         <div className="flex gap-1 flex-wrap">
-                          {/* Handle multiple assignees with IDs */}
-                          {task.assigneeIds?.length > 0 ? (
-                            task.assigneeIds.map((assigneeId, index) => {
-                              const assigneeName = task.assigneeNames?.[index] || `User ${assigneeId}`;
-                              return user?.id !== assigneeId ? (
-                                <SendKudosButton 
-                                  key={assigneeId}
-                                  recipientId={assigneeId}
-                                  recipientName={assigneeName}
-                                  contextType="task"
-                                  contextId={task.id.toString()}
-                                  entityName={task.title}
-                                  size="sm"
-                                />
-                              ) : null;
-                            })
-                          ) : task.assigneeId && user?.id !== task.assigneeId ? (
-                            /* Handle single assignee with ID */
-                            <SendKudosButton 
-                              recipientId={task.assigneeId}
-                              recipientName={task.assigneeName || 'Task Assignee'}
-                              contextType="task"
-                              contextId={task.id.toString()}
-                              entityName={task.title}
-                              size="sm"
-                            />
-                          ) : task.assigneeName && !task.assigneeId && !task.assigneeIds?.length ? (
-                            /* Handle name-only assignments (show congratulations message) */
-                            <div className="text-sm text-green-600 font-medium">
-                              🎉 Great job, {task.assigneeName}!
-                            </div>
-                          ) : !task.assigneeName && !task.assigneeId && !task.assigneeIds?.length ? (
-                            /* For completed tasks with no assignees at all */
-                            <div className="text-sm text-green-600 font-medium">
-                              🎉 Task completed!
-                            </div>
-                          ) : null}
+                          <div className="text-sm text-green-600 font-medium bg-green-50 px-2 py-1 rounded border border-green-200">
+                            🎉 Task Done! Send Kudos!
+                          </div>
                         </div>
                       )}
                     </div>
