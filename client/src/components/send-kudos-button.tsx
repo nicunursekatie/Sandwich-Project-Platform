@@ -21,7 +21,7 @@ interface SendKudosButtonProps {
   contextId: string;
   entityName: string;
   className?: string;
-  size?: "default" | "sm" | "lg" | "icon";
+  size?: "default" | "sm" | "lg" | "icon" | "xs";
 }
 
 export function SendKudosButton({

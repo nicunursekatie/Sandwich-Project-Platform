@@ -421,10 +421,25 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
           )}
           {/* Show kudos buttons for completed projects */}
           {project.status === 'completed' && (
-            <div className="flex gap-1 flex-wrap">
-              <div className="text-sm text-green-600 font-medium bg-green-50 px-3 py-1 rounded-lg border border-green-200">
-                🎉 Project Completed! Send Kudos!
-              </div>
+            <div className="flex gap-2 flex-wrap">
+              <SendKudosButton 
+                recipientId="team"
+                recipientName="Project Team"
+                contextType="project"
+                contextId={project.id.toString()}
+                entityName={project.title}
+                size="sm"
+              />
+              {project.assigneeName && (
+                <SendKudosButton 
+                  recipientId="assignee"
+                  recipientName={project.assigneeName}
+                  contextType="project"
+                  contextId={project.id.toString()}
+                  entityName={project.title}
+                  size="sm"
+                />
+              )}
             </div>
           )}
           <Badge className={getStatusColor(project.status)}>
@@ -725,9 +740,14 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                       {/* Show kudos buttons for completed tasks */}
                       {task.status === 'completed' && (
                         <div className="flex gap-1 flex-wrap">
-                          <div className="text-sm text-green-600 font-medium bg-green-50 px-2 py-1 rounded border border-green-200">
-                            🎉 Task Done! Send Kudos!
-                          </div>
+                          <SendKudosButton 
+                            recipientId="task-team"
+                            recipientName={task.assigneeName || "Task Team"}
+                            contextType="task"
+                            contextId={task.id.toString()}
+                            entityName={task.title}
+                            size="xs"
+                          />
                         </div>
                       )}
                     </div>

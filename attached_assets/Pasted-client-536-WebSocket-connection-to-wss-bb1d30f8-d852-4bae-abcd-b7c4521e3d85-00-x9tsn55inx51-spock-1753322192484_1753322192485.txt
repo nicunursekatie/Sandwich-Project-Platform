@@ -1,0 +1,141 @@
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=J6VF0dtHIKPG' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=J6VF0dtHIKPG' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+message-notifications.tsx:98 Connecting to WebSocket at: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/notifications
+dashboard.tsx:58 Dashboard activeSection changed to: dashboard
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+useMessaging.ts:239 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ useMessaging.ts:239
+hook.js:608 Messaging WebSocket error: Event
+overrideMethod @ hook.js:608
+useMessaging.ts:278 Messaging WebSocket disconnected
+message-notifications.tsx:110 WebSocket connected successfully
+ops.js:48 Uncaught DataCloneError: Failed to execute 'postMessage' on 'Window': Port at index 0 is already neutered.
+    at o (ops.js:48:16)
+o @ ops.js:48
+setTimeout
+o @ ops.js:49
+connect @ ops.js:51
+connect @ IOClient.js:32
+(anonymous) @ client.tsx:92
+(anonymous) @ regenerator.js:52
+(anonymous) @ regeneratorDefine.js:17
+o @ asyncToGenerator.js:3
+s @ asyncToGenerator.js:17
+(anonymous) @ asyncToGenerator.js:22
+(anonymous) @ asyncToGenerator.js:14
+Nw @ client.tsx:93
+Dw @ client.tsx:90
+(anonymous) @ client.tsx:100
+(anonymous) @ regenerator.js:52
+(anonymous) @ regeneratorDefine.js:17
+o @ asyncToGenerator.js:3
+s @ asyncToGenerator.js:17
+(anonymous) @ asyncToGenerator.js:22
+(anonymous) @ asyncToGenerator.js:14
+Yw @ client.tsx:137
+Zw @ client.tsx:95
+(anonymous) @ client.tsx:208
+(anonymous) @ regenerator.js:52
+(anonymous) @ regeneratorDefine.js:17
+o @ asyncToGenerator.js:3
+s @ asyncToGenerator.js:17
+(anonymous) @ asyncToGenerator.js:22
+(anonymous) @ asyncToGenerator.js:14
+Gw @ client.tsx:274
+(anonymous) @ client.tsx:207
+2978 @ client.tsx:280
+a @ bootstrap:19
+(anonymous) @ startup:4
+a.O @ chunk loaded:23
+(anonymous) @ startup:5
+(anonymous) @ client.9c3c4b71.js:2
+simple-nav.tsx:148 Navigation click: projects
+dashboard.tsx:508 Dashboard setActiveSection called with: projects
+dashboard.tsx:58 Dashboard activeSection changed to: projects
+:5000/api/projects/archived:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+message-notifications.tsx:136 WebSocket connection closed: 1006 
+projects-clean.tsx:322 Navigating to project: 18
+dashboard.tsx:58 Dashboard activeSection changed to: project-18
+:5000/api/projects/18:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+:5000/api/projects/18/tasks:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+:5000/favicon.ico:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+simple-nav.tsx:148 Navigation click: projects
+dashboard.tsx:508 Dashboard setActiveSection called with: projects
+dashboard.tsx:58 Dashboard activeSection changed to: projects
+:5000/api/projects/archived:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+:5000/favicon.ico:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+:5000/api/messaging/kudos/check?recipientId=admin_1751065261945&contextType=project&contextId=25:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+hook.js:608 Failed to check kudos status: Error: 404: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /api/messaging/kudos/check</pre>
+</body>
+</html>
+
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async checkKudosStatus (send-kudos-button.tsx:49:26)
+overrideMethod @ hook.js:608
+message-notifications.tsx:110 WebSocket connected successfully
+projects-clean.tsx:322 Navigating to project: 18
+dashboard.tsx:58 Dashboard activeSection changed to: project-18
+:5000/api/messaging/kudos/check?recipientId=team&contextType=project&contextId=18:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Failed to check kudos status: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async checkKudosStatus (send-kudos-button.tsx:49:26)
+overrideMethod @ hook.js:608
+:5000/api/messaging/kudos/check?recipientId=assignee&contextType=project&contextId=18:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Failed to check kudos status: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async checkKudosStatus (send-kudos-button.tsx:49:26)
+overrideMethod @ hook.js:608
+:5000/api/messaging/kudos/check?recipientId=task-team&contextType=task&contextId=39:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Failed to check kudos status: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async checkKudosStatus (send-kudos-button.tsx:49:26)
+overrideMethod @ hook.js:608
+:5000/api/messaging/kudos/check?recipientId=task-team&contextType=task&contextId=49:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Failed to check kudos status: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async checkKudosStatus (send-kudos-button.tsx:49:26)
+overrideMethod @ hook.js:608
+:5000/api/messaging/kudos/check?recipientId=task-team&contextType=task&contextId=48:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Failed to check kudos status: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async checkKudosStatus (send-kudos-button.tsx:49:26)
+overrideMethod @ hook.js:608
+:5000/api/messaging/kudos/check?recipientId=task-team&contextType=task&contextId=50:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+hook.js:608 Failed to check kudos status: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async checkKudosStatus (send-kudos-button.tsx:49:26)
+overrideMethod @ hook.js:608
+:5000/api/messaging/kudos:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+message-notifications.tsx:136 WebSocket connection closed: 1006 
