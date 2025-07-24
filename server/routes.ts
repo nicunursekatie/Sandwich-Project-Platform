@@ -1122,10 +1122,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   sender: messagesTable.sender,
                   conversationId: messagesTable.conversationId,
                   createdAt: messagesTable.createdAt,
-                  subject: messagesTable.subject,
-                  isRead: messagesTable.isRead,
-                  isStarred: messagesTable.isStarred,
-                  folder: messagesTable.folder,
                 })
                 .from(messagesTable)
                 .where(
@@ -1147,7 +1143,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
               // Map sender field to senderName for frontend compatibility
               messages = messages.map(msg => ({
                 ...msg,
-                senderName: msg.sender || msg.senderEmail || 'Unknown User'
+                senderName: msg.sender || 'Unknown User',
+                subject: '', // Gmail-style fields for frontend compatibility
+                isRead: false,
+                isStarred: false,
+                folder: 'inbox'
               }));
             }
           } else {
