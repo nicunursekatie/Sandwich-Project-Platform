@@ -897,6 +897,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Messages - disable ALL caching middleware for this endpoint
   app.get(
     "/api/messages",
+    isAuthenticated,  // 🚨 CRITICAL SECURITY FIX: Added missing authentication middleware
     (req, res, next) => {
       // Completely disable caching at the Express level
       res.set("Cache-Control", "no-cache, no-store, must-revalidate");
