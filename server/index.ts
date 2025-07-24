@@ -218,11 +218,37 @@ async function startServer() {
       }
     };
 
+    // Add error handling for server binding issues
+    httpServer.on('error', (error: any) => {
+      console.error('❌ SERVER ERROR:', error);
+      if (error.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${finalPort} is already in use`);
+        console.error('Trying to find available port...');
+        
+        // Try alternative ports
+        const altPort = Number(finalPort) + 1;
+        httpServer.listen(altPort, host, () => {
+          console.log(`✓ Server started on alternative port: http://${host}:${altPort}`);
+        });
+      } else if (error.code === 'EACCES') {
+        console.error(`❌ Permission denied for port ${finalPort}`);
+      }
+    });
+
     httpServer.listen(Number(finalPort), host, () => {
       console.log(`✓ Server is running on http://${host}:${finalPort}`);
       console.log(`✓ WebSocket server ready on ws://${host}:${finalPort}/notifications`);
       console.log(`✓ Environment: ${process.env.NODE_ENV || "development"}`);
       console.log("✓ Basic server ready - starting background initialization...");
+      
+      // Verify server is actually listening
+      const address = httpServer.address();
+      if (address) {
+        console.log(`✓ CONFIRMED: Server actively listening on:`, address);
+      } else {
+        console.error("❌ ERROR: Server not listening despite callback");
+      }
+    });
 
       // Signal deployment readiness to Replit
       if (process.env.NODE_ENV === "production") {
@@ -292,7 +318,6 @@ async function startServer() {
           console.log("Server continues to run with basic functionality...");
         }
       });
-    });
 
     // Graceful shutdown - disabled in production to prevent exit
     const shutdown = async (signal: string) => {
