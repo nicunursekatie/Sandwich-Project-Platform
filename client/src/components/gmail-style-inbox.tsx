@@ -372,8 +372,7 @@ export default function GmailStyleInbox() {
 
     replyMutation.mutate({
       parentMessageId: selectedMessage.id,
-      recipientId: selectedMessage.senderId,
-      subject: `Re: ${selectedMessage.subject}`,
+      recipientId: selectedMessage.userId,
       content: replyContent
     });
   };
@@ -383,10 +382,8 @@ export default function GmailStyleInbox() {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return (
-      message.subject.toLowerCase().includes(query) ||
       message.content.toLowerCase().includes(query) ||
-      message.senderName.toLowerCase().includes(query) ||
-      message.recipientName.toLowerCase().includes(query)
+      message.senderName.toLowerCase().includes(query)
     );
   });
 
@@ -394,10 +391,10 @@ export default function GmailStyleInbox() {
   const getUnreadCount = (folder: string) => {
     return messages.filter(m => {
       switch (folder) {
-        case "inbox": return !m.isRead && !m.isArchived && !m.isTrashed;
-        case "starred": return m.isStarred && !m.isTrashed;
-        case "archived": return m.isArchived && !m.isTrashed;
-        case "trash": return m.isTrashed;
+        case "inbox": return true; // All conversation messages are in inbox
+        case "starred": return false; // No starred functionality yet
+        case "archived": return false; // No archived functionality yet  
+        case "trash": return false; // No trash functionality yet
         default: return false;
       }
     }).length;
