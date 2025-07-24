@@ -101,34 +101,15 @@ async function startServer() {
       `Starting server on ${host}:${port} in ${process.env.NODE_ENV || "development"} mode`,
     );
 
-    // Retry port allocation for deployment robustness
-    const tryPort = async (
-      basePort: number,
-      maxRetries = 5,
-    ): Promise<number> => {
-      for (let i = 0; i < maxRetries; i++) {
-        const testPort = basePort + i;
-        try {
-          const testServer = require("net").createServer();
-          await new Promise((resolve, reject) => {
-            testServer.once("error", reject);
-            testServer.once("listening", () => {
-              testServer.close(resolve);
-            });
-            testServer.listen(testPort, host);
-          });
-          return testPort;
-        } catch (err) {
-          if (i === maxRetries - 1) {
-            throw new Error(
-              `All ports from ${basePort} to ${basePort + maxRetries - 1} are in use`,
-            );
-          }
-
-          continue;
-        }
+    // Simplified port allocation for development
+    const getPort = (): number => {
+      // In development, always use the default port
+      if (process.env.NODE_ENV === "development") {
+        return Number(port);
       }
-      return basePort;
+      
+      // In production, let the system assign a port if needed
+      return Number(port);
     };
 
     // Set up basic routes BEFORE starting server
@@ -159,8 +140,8 @@ async function startServer() {
       );
     }
 
-    // Use smart port selection in production
-    const finalPort = await tryPort(Number(port));
+    // Use simple port selection
+    const finalPort = getPort();
 
     const httpServer = createServer(app);
 
@@ -441,7 +422,7 @@ startServer()
       const express = require("express");
       const fallbackApp = express();
 
-      fallbackApp.get("/", (req, res) =>
+      fallbackApp.get("/", (req: any, res: any) =>
         res.status(200).send(`
         <!DOCTYPE html>
         <html>
@@ -455,7 +436,7 @@ startServer()
       `),
       );
 
-      fallbackApp.get("/health", (req, res) =>
+      fallbackApp.get("/health", (req: any, res: any) =>
         res.status(200).json({
           status: "fallback",
           timestamp: Date.now(),
