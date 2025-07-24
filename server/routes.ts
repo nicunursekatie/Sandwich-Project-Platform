@@ -6613,42 +6613,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
         })));
       }
 
-      // For inbox and any other context (default case), show inbox email messages
-      console.log("Inbox folder requested - showing inbox email messages");
+      // For inbox and any other context (default case), show messages received by this user
+      console.log("Inbox folder requested - showing messages received by this user from messages table");
       
-      // Get inbox email messages for this user (not drafts, not trashed, not archived)
-      const inboxEmails = await db
-        .select()
-        .from(emailMessages)
-        .where(and(
-          or(
-            eq(emailMessages.senderId, user.id),
-            eq(emailMessages.recipientId, user.id)
-          ),
-          eq(emailMessages.isDraft, false),
-          eq(emailMessages.isTrashed, false),
-          eq(emailMessages.isArchived, false)
-        ))
-        .orderBy(desc(emailMessages.createdAt))
+      // Get messages where this user is a recipient
+      const inboxMessages = await db
+        .select({
+          id: messages.id,
+          content: messages.content,
+          senderId: messages.senderId,
+          sender: messages.sender,
+          createdAt: messages.createdAt,
+          contextType: messages.contextType,
+          contextId: messages.contextId,
+          conversationId: messages.conversationId,
+          // Get sender details
+          senderFirstName: users.firstName,
+          senderLastName: users.lastName,
+          senderEmail: users.email,
+          senderDisplayName: users.displayName,
+          // Get recipient details
+          isRead: messageRecipients.read,
+        })
+        .from(messages)
+        .leftJoin(users, eq(messages.senderId, users.id))
+        .innerJoin(messageRecipients, eq(messages.id, messageRecipients.messageId))
+        .where(eq(messageRecipients.recipientId, user.id))
+        .orderBy(desc(messages.createdAt))
         .limit(50);
 
-      console.log(`Found ${inboxEmails.length} inbox email messages`);
-      return res.json(inboxEmails.map(email => ({
-        id: email.id,
-        senderId: email.senderId,
-        senderName: email.senderName,
-        senderEmail: email.senderEmail,
-        recipientId: email.recipientId,
-        recipientName: email.recipientName,
-        recipientEmail: email.recipientEmail,
-        content: email.content,
-        subject: email.subject,
-        createdAt: email.createdAt,
-        threadId: email.parentMessageId || email.id,
-        isRead: email.isRead,
-        isStarred: email.isStarred,
+      console.log(`Found ${inboxMessages.length} inbox messages from messages table`);
+      return res.json(inboxMessages.map(msg => ({
+        id: msg.id,
+        senderId: msg.senderId,
+        senderName: msg.sender || `${msg.senderFirstName || ''} ${msg.senderLastName || ''}`.trim() || msg.senderEmail || "Unknown User",
+        senderEmail: msg.senderEmail || "unknown@example.com",
+        recipientId: user.id,
+        recipientName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || "You",
+        recipientEmail: user.email,
+        content: msg.content,
+        subject: msg.contextType === 'project' ? `Project: ${msg.contextId}` : (msg.contextType === 'task' ? `Task: ${msg.contextId}` : "Direct Message"),
+        createdAt: msg.createdAt,
+        threadId: msg.conversationId || msg.id,
+        isRead: msg.isRead || false,
+        isStarred: false, // Messages don't have starred functionality in messages table yet
         folder: "inbox",
-        committee: email.contextType || "email"
+        committee: msg.contextType || "direct"
       })));
 
       console.log("=== INBOX DEBUG END ===");
