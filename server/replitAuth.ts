@@ -47,10 +47,21 @@ function updateUserSession(
   user: any,
   tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers
 ) {
-  user.claims = tokens.claims();
-  user.access_token = tokens.access_token;
-  user.refresh_token = tokens.refresh_token;
-  user.expires_at = user.claims?.exp;
+  try {
+    console.log("🔄 Updating user session with token data...");
+    user.claims = tokens.claims();
+    user.access_token = tokens.access_token;
+    user.refresh_token = tokens.refresh_token;
+    user.expires_at = user.claims?.exp;
+    console.log("✅ User session updated successfully");
+  } catch (error) {
+    console.error("❌ Error updating user session:", error);
+    // Set minimal session data to prevent complete failure
+    user.claims = {};
+    user.access_token = tokens.access_token;
+    user.expires_at = Date.now() + 3600000; // 1 hour fallback
+    throw error;
+  }
 }
 
 async function upsertUser(claims: any) {
@@ -106,8 +117,17 @@ async function upsertUser(claims: any) {
       console.log("✅ Created new user:", claims["email"], "with Replit ID:", claims["sub"]);
     }
   } catch (error) {
-    console.error("❌ Database error during user upsert:", error);
-    throw error; // Re-throw to be handled by the verification function
+    console.error("❌ CRITICAL DATABASE ERROR during user upsert:", error);
+    console.error("❌ Error type:", typeof error);
+    console.error("❌ Error message:", error instanceof Error ? error.message : 'Unknown error');
+    console.error("❌ Error stack:", error instanceof Error ? error.stack : 'No stack available');
+    
+    // Log claims for debugging
+    console.error("❌ Claims that caused error:", JSON.stringify(claims, null, 2));
+    
+    // Don't throw the original error, create a safer one to prevent server crash
+    const safeError = new Error(`Authentication failed: ${error instanceof Error ? error.message : 'Database operation failed'}`);
+    throw safeError;
   }
 }
 
@@ -123,13 +143,27 @@ export async function setupAuth(app: Express) {
     tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
     verified: passport.AuthenticateCallback
   ) => {
+    console.log("🔄 Starting token verification process...");
     try {
+      console.log("🔄 Creating user session object...");
       const user = {};
+      
+      console.log("🔄 Updating user session with token data...");
       updateUserSession(user, tokens);
-      await upsertUser(tokens.claims());
+      
+      console.log("🔄 Starting user upsert operation...");
+      const claims = tokens.claims();
+      console.log("🔄 Claims received:", JSON.stringify(claims, null, 2));
+      
+      await upsertUser(claims);
+      console.log("✅ User upsert completed successfully");
+      
+      console.log("✅ Verification successful, calling verified callback");
       verified(null, user);
     } catch (error) {
-      console.error("Verification error:", error);
+      console.error("❌ CRITICAL ERROR in verification function:", error);
+      console.error("❌ Error stack:", error instanceof Error ? error.stack : 'No stack trace');
+      console.error("❌ Error details:", JSON.stringify(error, null, 2));
       verified(error);
     }
   };
@@ -195,11 +229,13 @@ export async function setupAuth(app: Express) {
     }
   });
 
-  app.get("/api/callback", (req, res, next) => {
+  app.get("/api/callback", async (req, res, next) => {
     console.log("🔄 Callback route hit with query:", req.query);
     console.log("🔄 Request hostname:", req.hostname);
     console.log("🔄 Request host header:", req.headers.host);
     console.log("🔄 Available strategies:", Object.keys((passport as any)._strategies || {}));
+    
+    // Wrap entire callback in comprehensive error handling
     try {
       // Find the correct strategy - for local development, use the first available Replit strategy
       const availableStrategies = Object.keys((passport as any)._strategies || {});

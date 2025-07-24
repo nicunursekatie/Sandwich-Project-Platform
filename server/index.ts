@@ -53,6 +53,24 @@ app.use((req, res, next) => {
   next();
 });
 
+// Add comprehensive error handling to catch server crashes
+process.on('uncaughtException', (err) => {
+  console.error('🚨 UNCAUGHT EXCEPTION - SERVER CRASH:', err);
+  console.error('Stack trace:', err.stack);
+  // Don't exit immediately, try to keep server alive for debugging
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('🚨 UNHANDLED REJECTION - POTENTIAL CRASH:', reason);
+  console.error('Promise:', promise);
+  // Don't exit immediately, try to keep server alive for debugging
+});
+
+process.on('SIGINT', () => {
+  console.log('🔄 Received SIGINT, starting graceful shutdown...');
+  process.exit(0);
+});
+
 async function startServer() {
   try {
     console.log("🚀 Starting The Sandwich Project server...");
