@@ -576,8 +576,12 @@ export default function GmailStyleInbox() {
                           })()}
                         </span>
                       </div>
-                      <p className="text-sm font-medium truncate mt-1">Conversation #{message.conversationId}</p>
-                      <p className="text-sm text-gray-600 truncate">{message.content}</p>
+                      <p className="text-sm font-medium truncate mt-1">
+                        {message.content.length > 40 
+                          ? `${message.content.substring(0, 40)}...`
+                          : message.content
+                        }
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -599,7 +603,12 @@ export default function GmailStyleInbox() {
               {/* Message Header */}
               <div className="border-b p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-semibold">Conversation #{selectedMessage.conversationId}</h3>
+                  <h3 className="text-lg font-semibold">
+                    {selectedMessage.content.length > 40 
+                      ? `${selectedMessage.content.substring(0, 40)}...`
+                      : selectedMessage.content
+                    }
+                  </h3>
                   <div className="flex items-center gap-2">
                     <Button variant="ghost" size="sm" onClick={() => setShowReply(true)}>
                       <Reply className="h-4 w-4" />
