@@ -7683,6 +7683,206 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ===========================================
+  // TEAM CHAT SYSTEM - Uses chatMessages table
+  // ===========================================
+  
+  // Get team chat messages (Socket.io real-time chat)
+  app.get("/api/team-chat/:channel/messages", isAuthenticated, async (req, res) => {
+    try {
+      const { channel } = req.params;
+      const user = (req as any).user;
+      
+      console.log(`=== TEAM CHAT GET /api/team-chat/${channel}/messages ===`);
+      console.log("User:", user?.email);
+      
+      // Validate channel access permissions
+      const validChannels = {
+        'general': 'general_chat',
+        'core-team': 'core_team_chat', 
+        'driver': 'driver_chat',
+        'host': 'host_chat',
+        'recipient': 'recipient_chat',
+        'committee': 'committee_chat'
+      };
+      
+      const requiredPermission = validChannels[channel];
+      if (!requiredPermission || !user.permissions?.includes(requiredPermission)) {
+        return res.status(403).json({ message: "Access denied to this channel" });
+      }
+      
+      // Get messages from chatMessages table
+      const { chatMessages } = await import("@shared/schema");
+      const messages = await db
+        .select()
+        .from(chatMessages)
+        .where(eq(chatMessages.channel, channel))
+        .orderBy(desc(chatMessages.createdAt))
+        .limit(50);
+      
+      console.log(`FOUND ${messages.length} team chat messages in ${channel}`);
+      res.json(messages);
+      
+    } catch (error) {
+      console.error("Team chat get messages error:", error);
+      res.status(500).json({ message: "Failed to get team chat messages" });
+    }
+  });
+  
+  // Post team chat message (Socket.io real-time chat)
+  app.post("/api/team-chat/:channel/messages", isAuthenticated, async (req, res) => {
+    try {
+      const { channel } = req.params;
+      const { content } = req.body;
+      const user = (req as any).user;
+      
+      console.log(`=== TEAM CHAT POST /api/team-chat/${channel}/messages ===`);
+      console.log("User:", user?.email);
+      console.log("Content:", content);
+      
+      if (!content?.trim()) {
+        return res.status(400).json({ message: "Message content required" });
+      }
+      
+      // Validate channel access permissions
+      const validChannels = {
+        'general': 'general_chat',
+        'core-team': 'core_team_chat', 
+        'driver': 'driver_chat',
+        'host': 'host_chat',
+        'recipient': 'recipient_chat',
+        'committee': 'committee_chat'
+      };
+      
+      const requiredPermission = validChannels[channel];
+      if (!requiredPermission || !user.permissions?.includes(requiredPermission)) {
+        return res.status(403).json({ message: "Access denied to this channel" });
+      }
+      
+      // Save to chatMessages table (NOT messages table)
+      const { chatMessages } = await import("@shared/schema");
+      const userName = user.displayName || user.firstName || user.email?.split('@')[0] || 'Team Member';
+      
+      const [newMessage] = await db
+        .insert(chatMessages)
+        .values({
+          channel,
+          userId: user.id,
+          userName,
+          content: content.trim()
+        })
+        .returning();
+      
+      console.log(`SAVED team chat message to chatMessages table:`, newMessage.id);
+      
+      // Broadcast via WebSocket to team chat users only
+      if (global.wss) {
+        const notification = {
+          type: 'team_chat_message',
+          channel,
+          message: newMessage,
+          timestamp: new Date().toISOString()
+        };
+        
+        global.wss.clients.forEach(client => {
+          if (client.readyState === 1) { // WebSocket.OPEN
+            try {
+              client.send(JSON.stringify(notification));
+            } catch (error) {
+              console.error('WebSocket broadcast error:', error);
+            }
+          }
+        });
+      }
+      
+      res.json(newMessage);
+      
+    } catch (error) {
+      console.error("Team chat post message error:", error);
+      res.status(500).json({ message: "Failed to send team chat message" });
+    }
+  });
+  
+  // Delete team chat message
+  app.delete("/api/team-chat/:channel/messages/:messageId", isAuthenticated, async (req, res) => {
+    try {
+      const { channel, messageId } = req.params;
+      const user = (req as any).user;
+      
+      console.log(`=== TEAM CHAT DELETE /api/team-chat/${channel}/messages/${messageId} ===`);
+      console.log("User:", user?.email);
+      
+      // Validate channel access permissions
+      const validChannels = {
+        'general': 'general_chat',
+        'core-team': 'core_team_chat', 
+        'driver': 'driver_chat',
+        'host': 'host_chat',
+        'recipient': 'recipient_chat',
+        'committee': 'committee_chat'
+      };
+      
+      const requiredPermission = validChannels[channel];
+      if (!requiredPermission || !user.permissions?.includes(requiredPermission)) {
+        return res.status(403).json({ message: "Access denied to this channel" });
+      }
+      
+      // Get message to check ownership
+      const { chatMessages } = await import("@shared/schema");
+      const [message] = await db
+        .select()
+        .from(chatMessages)
+        .where(eq(chatMessages.id, parseInt(messageId)))
+        .limit(1);
+      
+      if (!message) {
+        return res.status(404).json({ message: "Message not found" });
+      }
+      
+      // Check if user can delete (owner, admin, or super admin)
+      const isOwner = message.userId === user.id;
+      const isAdmin = user.role === "admin" || user.role === "super_admin";
+      const hasModeratePermission = user.permissions?.includes("moderate_messages");
+      
+      if (!isOwner && !isAdmin && !hasModeratePermission) {
+        return res.status(403).json({ message: "Cannot delete other users' messages" });
+      }
+      
+      // Delete the message
+      await db
+        .delete(chatMessages)
+        .where(eq(chatMessages.id, parseInt(messageId)));
+      
+      console.log(`DELETED team chat message ${messageId} from chatMessages table`);
+      
+      // Broadcast deletion via WebSocket
+      if (global.wss) {
+        const notification = {
+          type: 'team_chat_message_deleted',
+          channel,
+          messageId: parseInt(messageId),
+          timestamp: new Date().toISOString()
+        };
+        
+        global.wss.clients.forEach(client => {
+          if (client.readyState === 1) { // WebSocket.OPEN
+            try {
+              client.send(JSON.stringify(notification));
+            } catch (error) {
+              console.error('WebSocket broadcast error:', error);
+            }
+          }
+        });
+      }
+      
+      res.status(204).send();
+      
+    } catch (error) {
+      console.error("Team chat delete message error:", error);
+      res.status(500).json({ message: "Failed to delete team chat message" });
+    }
+  });
+
   // Make broadcast functions available globally for use in other routes
   (global as any).broadcastNewMessage = broadcastNewMessage;
   (global as any).broadcastTaskAssignment = broadcastTaskAssignment;

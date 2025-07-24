@@ -26,17 +26,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMessageReads } from "@/hooks/useMessageReads";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-
-interface Message {
-  id: number;
-  userId?: string;
-  user_id?: string;
-  content: string;
-  createdAt?: string;
-  timestamp?: string;
-  conversationId?: number;
-  sender?: string;
-}
+import { ChatMessage } from "@shared/schema";
 
 export default function CoreTeamChat() {
   const [message, setMessage] = useState("");
@@ -103,71 +93,28 @@ export default function CoreTeamChat() {
     );
   }
 
-  // Get or create Core Team conversation
-  const { data: coreTeamConversation } = useQuery({
-    queryKey: ["/api/conversations/core-team"],
-    queryFn: async () => {
-      console.log("[DEBUG] Core Team Chat: Starting conversation lookup...");
-
-      // First try to find existing Core Team conversation
-      const conversations = await apiRequest("GET", "/api/conversations");
-      console.log("[DEBUG] Core Team Chat: All conversations:", conversations);
-
-      const existing = conversations.find(
-        (c: any) => c.type === "channel" && c.name === "Core Team",
-      );
-      console.log(
-        "[DEBUG] Core Team Chat: Found existing conversation:",
-        existing,
-      );
-
-      if (existing) {
-        return existing;
-      }
-
-      console.log(
-        "[DEBUG] Core Team Chat: Creating new Core Team conversation...",
-      );
-      // Create Core Team conversation if it doesn't exist
-      const createResponse = await apiRequest("POST", "/api/conversations", {
-        type: "channel",
-        name: "Core Team",
-      });
-      console.log(
-        "[DEBUG] Core Team Chat: Created conversation:",
-        createResponse,
-      );
-      return createResponse;
-    },
-    enabled: !!user && hasCoreTeamAccess,
-  });
-
-  // Fetch core team messages from the new conversation system
+  // Fetch core team messages from team chat system (chatMessages table)
   const {
     data: messages = [],
     isLoading: messagesLoading,
     error: messagesError,
-  } = useQuery<Message[]>({
-    queryKey: ["/api/conversations", coreTeamConversation?.id, "messages"],
+  } = useQuery<ChatMessage[]>({
+    queryKey: ["/api/team-chat/core-team/messages"],
     queryFn: async () => {
-      if (!coreTeamConversation) return [];
-      const data = await apiRequest("GET", `/api/conversations/${coreTeamConversation.id}/messages`);
+      console.log("[DEBUG] Core Team Chat: Fetching from team chat API...");
+      const data = await apiRequest("GET", "/api/team-chat/core-team/messages");
       console.log("Core Team messages response:", data);
       return Array.isArray(data) ? data : [];
     },
-    enabled: !!coreTeamConversation,
+    enabled: !!user && hasCoreTeamAccess,
     refetchInterval: 3000,
   });
 
-  console.log(
-    "[DEBUG] Core Team Chat: Conversation ID:",
-    coreTeamConversation?.id,
-  );
   console.log("[DEBUG] Core Team Chat: Messages loading:", messagesLoading);
   console.log("[DEBUG] Core Team Chat: Messages error:", messagesError);
   console.log("[DEBUG] Core Team Chat: Messages count:", messages.length);
   const [optimisticMessages, setOptimisticMessages] = useState<
-    Message[] | null
+    ChatMessage[] | null
   >(null);
   const rawMessages = optimisticMessages || messages;
 
@@ -182,26 +129,25 @@ export default function CoreTeamChat() {
   console.log("Sample raw message:", rawMessages?.[0]);
   console.log("Sample displayed message:", displayedMessages?.[0]);
 
-  // Auto-mark messages as read when viewing
-  useAutoMarkAsRead("core_team", messages, hasCoreTeamAccess);
+  // Auto-mark messages as read when viewing - disabled for now since useAutoMarkAsRead expects Message[] not ChatMessage[]
+  // useAutoMarkAsRead("core_team", messages, hasCoreTeamAccess);
 
-  // Mark messages as read when conversation is selected
+  // Mark messages as read when messages are loaded
   useEffect(() => {
-    if (coreTeamConversation && messages.length > 0) {
+    if (messages.length > 0) {
       queryClient.invalidateQueries({
         queryKey: ["/api/messages/unread-counts"],
       });
     }
-  }, [coreTeamConversation, messages.length, queryClient]);
+  }, [messages.length, queryClient]);
 
-  // Send message mutation
+  // Send message mutation - uses team chat system
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
-      if (!coreTeamConversation)
-        throw new Error("Core Team conversation not found");
+      console.log("[DEBUG] Core Team Chat: Sending message via team chat API");
       return await apiRequest(
         "POST",
-        `/api/conversations/${coreTeamConversation.id}/messages`,
+        "/api/team-chat/core-team/messages",
         {
           content,
         },
@@ -209,7 +155,7 @@ export default function CoreTeamChat() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["/api/conversations", coreTeamConversation?.id, "messages"],
+        queryKey: ["/api/team-chat/core-team/messages"],
       });
       setMessage("");
     },
@@ -218,10 +164,10 @@ export default function CoreTeamChat() {
     },
   });
 
-  // Delete message mutation
+  // Delete message mutation - uses team chat system
   const deleteMessageMutation = useMutation({
     mutationFn: async (messageId: number) => {
-      return await apiRequest("DELETE", `/api/messages/${messageId}`);
+      return await apiRequest("DELETE", `/api/team-chat/core-team/messages/${messageId}`);
     },
     onMutate: async (messageId: number) => {
       setOptimisticMessages((prev) => {
@@ -231,7 +177,7 @@ export default function CoreTeamChat() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["/api/conversations", coreTeamConversation?.id, "messages"],
+        queryKey: ["/api/team-chat/core-team/messages"],
       });
       setOptimisticMessages(null);
       toast({
@@ -242,7 +188,7 @@ export default function CoreTeamChat() {
     onError: () => {
       setOptimisticMessages(null);
       queryClient.invalidateQueries({
-        queryKey: ["/api/conversations", coreTeamConversation?.id, "messages"],
+        queryKey: ["/api/team-chat/core-team/messages"],
       });
       toast({
         title: "Error",
@@ -259,19 +205,15 @@ export default function CoreTeamChat() {
 
   useEffect(() => {
     setOptimisticMessages(null);
-    if (coreTeamConversation?.id) {
-      console.log(
-        "🔥 INVALIDATING Core Team messages cache for conversation:",
-        coreTeamConversation.id,
-      );
-      queryClient.invalidateQueries({
-        queryKey: ["/api/conversations", coreTeamConversation.id, "messages"],
-      });
-    }
-  }, [coreTeamConversation?.id]);
+    // Reset optimistic messages when component mounts
+    console.log("🔥 INVALIDATING Core Team messages cache");
+    queryClient.invalidateQueries({
+      queryKey: ["/api/team-chat/core-team/messages"],
+    });
+  }, [queryClient]);
 
   const handleSendMessage = () => {
-    if (!message.trim() || !coreTeamConversation) return;
+    if (!message.trim()) return;
 
     sendMessageMutation.mutate(message.trim());
   };
@@ -307,9 +249,8 @@ export default function CoreTeamChat() {
 
   // Group messages by date using filtered displayedMessages
   const groupedMessages = displayedMessages.reduce(
-    (groups: { [key: string]: Message[] }, message) => {
-      const timestamp =
-        message.timestamp || message.createdAt || new Date().toISOString();
+    (groups: { [key: string]: ChatMessage[] }, message) => {
+      const timestamp = message.createdAt || new Date().toISOString();
       const date = formatDate(timestamp);
       if (!groups[date]) {
         groups[date] = [];
@@ -362,7 +303,7 @@ export default function CoreTeamChat() {
                   <div key={msg.id} className="flex items-start space-x-3 mb-4">
                     <Avatar className="w-8 h-8">
                       <AvatarFallback className="bg-orange-100 text-orange-700 text-xs">
-                        {getUserInitials(msg.userId || msg.user_id || "")}
+                        {getUserInitials(msg.userId || "")}
                       </AvatarFallback>
                     </Avatar>
 
@@ -370,19 +311,14 @@ export default function CoreTeamChat() {
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center space-x-2">
                           <span className="font-medium text-sm text-slate-900">
-                            {msg.sender ||
-                              getUserDisplayName(
-                                msg.userId || msg.user_id || "",
-                              )}
+                            {msg.userName || getUserDisplayName(msg.userId || "")}
                           </span>
                           <Badge variant="secondary" className="text-xs">
                             <Crown className="w-3 h-3 mr-1" />
                             Admin
                           </Badge>
                           <span className="text-xs text-slate-500">
-                            {new Date(
-                              msg.timestamp || msg.createdAt || new Date(),
-                            ).toLocaleTimeString("en-US", {
+                            {new Date(msg.createdAt || new Date()).toLocaleTimeString("en-US", {
                               hour: "numeric",
                               minute: "2-digit",
                               hour12: true,
@@ -391,7 +327,7 @@ export default function CoreTeamChat() {
                         </div>
 
                         {/* Show dropdown only for message owner or moderators */}
-                        {((msg.userId || msg.user_id) === user?.id ||
+                        {(msg.userId === user?.id ||
                           hasPermission(user, "moderate_messages")) && (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
