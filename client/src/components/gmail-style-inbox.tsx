@@ -131,31 +131,27 @@ export default function GmailStyleInbox() {
   const { data: messages = [], refetch: refetchMessages } = useQuery<Message[]>({
     queryKey: ["/api/messages", activeFolder],
     queryFn: async () => {
-      console.log("=== FRONTEND MESSAGES QUERY ===");
-      console.log("Active folder:", activeFolder);
-      console.log("Current user:", user?.email);
-      
       let endpoint = "/api/messages";
       const params = new URLSearchParams();
       
       switch (activeFolder) {
         case "inbox":
-          params.append("folder", "inbox");
+          params.append("chatType", "inbox");
           break;
         case "sent":
-          params.append("folder", "sent");
+          params.append("chatType", "sent");
           break;
         case "drafts":
-          params.append("folder", "drafts");
+          params.append("chatType", "drafts");
           break;
         case "starred":
-          params.append("folder", "starred");
+          params.append("chatType", "starred");
           break;
         case "archived":
-          params.append("folder", "archived");
+          params.append("chatType", "archived");
           break;
         case "trash":
-          params.append("folder", "trash");
+          params.append("chatType", "trash");
           break;
       }
       
@@ -163,18 +159,8 @@ export default function GmailStyleInbox() {
         endpoint += "?" + params.toString();
       }
       
-      console.log("Requesting endpoint:", endpoint);
-      
       const response = await apiRequest('GET', endpoint);
-      const finalMessages = Array.isArray(response) ? response : response.messages || [];
-      
-      console.log(`FRONTEND RECEIVED: ${finalMessages.length} messages`);
-      finalMessages.forEach(msg => {
-        console.log(`  - Message ${msg.id}: "${msg.content?.substring(0, 30)}..." from ${msg.senderName} to ${msg.recipientName}`);
-      });
-      console.log("=== FRONTEND MESSAGES QUERY END ===");
-      
-      return finalMessages;
+      return Array.isArray(response) ? response : response.messages || [];
     },
   });
 
