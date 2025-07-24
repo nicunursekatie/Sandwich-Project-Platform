@@ -30,7 +30,8 @@ import {
   Edit2,
   Plus,
   Users,
-  Info
+  Info,
+  Trophy
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -41,6 +42,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MessageComposer } from "@/components/message-composer";
 import { GroupConversation } from "@/components/group-conversation";
+import { KudosInbox } from "@/components/kudos-inbox";
 import { queryClient } from "@/lib/queryClient";
 
 interface GroupThread {
@@ -404,6 +406,7 @@ export default function InboxPage() {
                 { id: 'inbox', label: 'Inbox', icon: InboxIcon, count: allMessages.length + groupThreads.length },
                 { id: 'sent', label: 'Sent', icon: Send, count: sentMessages.length },
                 { id: 'groups', label: 'Groups', icon: Users, count: groupThreads.length },
+                { id: 'kudos', label: 'Kudos', icon: Trophy, count: 0 }, // Will be updated with actual count
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -439,7 +442,9 @@ export default function InboxPage() {
 
           <ScrollArea className="flex-1">
             <div className="p-2">
-              {selectedTab === 'sent' ? (
+              {selectedTab === 'kudos' ? (
+                <KudosInbox />
+              ) : selectedTab === 'sent' ? (
                 <div className="text-center py-8 text-gray-500">
                   <Send className="h-12 w-12 mx-auto mb-4 text-gray-300" />
                   <h3 className="text-lg font-medium text-gray-700 mb-2">Sent Messages Temporarily Disabled</h3>

@@ -163,6 +163,25 @@ router.get("/kudos/check", async (req, res) => {
 });
 
 /**
+ * Get received kudos for current user
+ */
+router.get("/kudos/received", async (req, res) => {
+  try {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const kudosMessages = await messagingService.getReceivedKudos(user.id);
+
+    res.status(200).json(kudosMessages);
+  } catch (error) {
+    console.error("Error fetching received kudos:", error);
+    res.status(500).json({ error: "Failed to fetch kudos", details: error instanceof Error ? error.message : 'Unknown error' });
+  }
+});
+
+/**
  * Get unread messages
  */
 router.get("/unread", async (req, res) => {

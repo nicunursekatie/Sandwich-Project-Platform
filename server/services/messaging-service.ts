@@ -515,6 +515,95 @@ export class MessagingService {
   }
 
   /**
+   * Get received kudos messages for a user
+   */
+  async getReceivedKudos(userId: string): Promise<any[]> {
+    try {
+      // Get kudos tracking entries where this user is the recipient
+      const kudosEntries = await db
+        .select({
+          messageId: kudosTracking.messageId,
+          contextType: kudosTracking.contextType,
+          contextId: kudosTracking.contextId,
+          senderId: kudosTracking.senderId,
+          createdAt: kudosTracking.createdAt,
+        })
+        .from(kudosTracking)
+        .where(eq(kudosTracking.recipientId, userId))
+        .orderBy(desc(kudosTracking.createdAt));
+
+      // Get the actual messages with sender information
+      const kudosMessages = await Promise.all(
+        kudosEntries.map(async (entry) => {
+          try {
+            const [messageResult] = await db
+              .select({
+                id: messages.id,
+                content: messages.content,
+                createdAt: messages.createdAt,
+                senderId: messages.senderId,
+                senderName: sql<string>`COALESCE(${users.firstName} || ' ' || ${users.lastName}, ${users.displayName}, ${users.email})`.as('senderName'),
+              })
+              .from(messages)
+              .leftJoin(users, eq(messages.senderId, users.id))
+              .where(eq(messages.id, entry.messageId))
+              .limit(1);
+
+            if (!messageResult) return null;
+
+            // Determine entity name based on context
+            let entityName = 'Unknown';
+            if (entry.contextType === 'task') {
+              try {
+                const [task] = await db
+                  .select({ title: sql<string>`title` })
+                  .from(sql`project_tasks`)
+                  .where(sql`id = ${entry.contextId}`)
+                  .limit(1);
+                entityName = task?.title || `Task ${entry.contextId}`;
+              } catch (error) {
+                entityName = `Task ${entry.contextId}`;
+              }
+            } else if (entry.contextType === 'project') {
+              try {
+                const [project] = await db
+                  .select({ title: sql<string>`title` })
+                  .from(sql`projects`)
+                  .where(sql`id = ${entry.contextId}`)
+                  .limit(1);
+                entityName = project?.title || `Project ${entry.contextId}`;
+              } catch (error) {
+                entityName = `Project ${entry.contextId}`;
+              }
+            }
+
+            return {
+              id: messageResult.id,
+              content: messageResult.content,
+              sender: messageResult.senderId,
+              senderName: messageResult.senderName || 'Unknown User',
+              contextType: entry.contextType,
+              contextId: entry.contextId,
+              entityName,
+              createdAt: messageResult.createdAt,
+              read: false // For now, all kudos are considered unread until we implement read tracking
+            };
+          } catch (error) {
+            console.error(`Error fetching kudos message ${entry.messageId}:`, error);
+            return null;
+          }
+        })
+      );
+
+      // Filter out null results and return
+      return kudosMessages.filter(Boolean);
+    } catch (error) {
+      console.error('Failed to get received kudos:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Trigger notifications for a message
    */
   private async triggerNotifications(message: Message, recipientIds: string[]): Promise<void> {
