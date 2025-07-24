@@ -6580,28 +6580,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
       else if (chatType === "recipient") conversationName = "Recipient Chat";
       else if (chatType === "host") conversationName = "Host Chat";
 
-      // For Gmail inbox, get ONLY messages with valid conversation_ids
-      // Filter out orphaned messages (kudos/system messages)
-      const allMessages = await db
-        .select({
-          id: messagesTable.id,
-          content: messagesTable.content,
-          userId: messagesTable.user_id,
-          senderId: messagesTable.sender_id,
-          sender: messagesTable.sender,
-          createdAt: messagesTable.created_at,
-          conversationId: messagesTable.conversationId,
-          // Join with users table to get complete sender info - JOIN ON SENDER_ID NOT USER_ID
-          senderFirstName: users.firstName,
-          senderLastName: users.lastName,
-          senderEmail: users.email,
-          senderDisplayName: users.displayName,
-        })
-        .from(messagesTable)
-        .leftJoin(users, eq(messagesTable.sender_id, users.id)) // FIXED: Join on sender_id
-        .where(isNotNull(messagesTable.conversationId)) // Only get messages with conversations
-        .orderBy(desc(messagesTable.created_at))
-        .limit(50); // Limit for performance
+      // Check if this is the superuser admin account
+      const isSuperAdmin = user?.email === 'admin@sandwich.project';
+      
+      // For Gmail inbox, get messages with proper participant filtering
+      let allMessages;
+      if (isSuperAdmin) {
+        // Super admin sees ALL messages regardless of participation
+        allMessages = await db
+          .select({
+            id: messagesTable.id,
+            content: messagesTable.content,
+            userId: messagesTable.user_id,
+            senderId: messagesTable.sender_id,
+            sender: messagesTable.sender,
+            createdAt: messagesTable.created_at,
+            conversationId: messagesTable.conversationId,
+            senderFirstName: users.firstName,
+            senderLastName: users.lastName,
+            senderEmail: users.email,
+            senderDisplayName: users.displayName,
+          })
+          .from(messagesTable)
+          .leftJoin(users, eq(messagesTable.sender_id, users.id))
+          .where(isNotNull(messagesTable.conversationId))
+          .orderBy(desc(messagesTable.created_at))
+          .limit(50);
+      } else {
+        // Regular users only see messages from conversations they participate in
+        allMessages = await db
+          .select({
+            id: messagesTable.id,
+            content: messagesTable.content,
+            userId: messagesTable.user_id,
+            senderId: messagesTable.sender_id,
+            sender: messagesTable.sender,
+            createdAt: messagesTable.created_at,
+            conversationId: messagesTable.conversationId,
+            senderFirstName: users.firstName,
+            senderLastName: users.lastName,
+            senderEmail: users.email,
+            senderDisplayName: users.displayName,
+          })
+          .from(messagesTable)
+          .leftJoin(users, eq(messagesTable.sender_id, users.id))
+          .innerJoin(conversationParticipants, eq(messagesTable.conversationId, conversationParticipants.conversationId))
+          .where(and(
+            isNotNull(messagesTable.conversationId),
+            eq(conversationParticipants.userId, user.id)
+          ))
+          .orderBy(desc(messagesTable.created_at))
+          .limit(50);
+      }
 
       // Get conversation participants for each message to determine recipients
       const conversationIds = [...new Set(allMessages.map(msg => msg.conversationId))].filter(id => id);
@@ -6631,15 +6661,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Transform to match Gmail inbox expected format with proper user data
       const formattedMessages = allMessages.map((msg) => {
-        // Debug logging for troubleshooting
-        console.log(`[DEBUG] Processing message ${msg.id}:`);
-        console.log(`  - sender_id: ${msg.senderId}`);
-        console.log(`  - sender field: ${msg.sender}`);
-        console.log(`  - senderFirstName: ${msg.senderFirstName}`);
-        console.log(`  - senderLastName: ${msg.senderLastName}`);
-        console.log(`  - senderDisplayName: ${msg.senderDisplayName}`);
-        console.log(`  - conversationId: ${msg.conversationId}`);
-        
         // Construct sender name from available data with proper null checks
         let senderName = "Unknown User";
         if (msg.senderDisplayName) {
