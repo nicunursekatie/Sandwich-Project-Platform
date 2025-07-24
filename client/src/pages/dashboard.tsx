@@ -49,6 +49,7 @@ import UnifiedMessagesPage from "@/pages/unified-messages";
 import AdminPage from "@/pages/admin";
 import StreamMessagesPage from "@/pages/stream-messages-clean";
 import DirectMessages from "@/pages/direct-messages";
+import GmailStyleInbox from "@/components/gmail-style-inbox";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -162,6 +163,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         return <RealTimeMessages />;
       case "messages":
         return <DirectMessages />;
+      case "gmail-inbox":
+        return <GmailStyleInbox />;
       case "inbox":
         return <InboxPage />;
       case "stream-messages":

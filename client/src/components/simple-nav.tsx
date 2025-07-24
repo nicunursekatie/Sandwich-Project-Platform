@@ -47,7 +47,7 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
     { id: "collections", label: "Collections Log", icon: Sandwich, href: "collections" },
     
     // COMMUNICATION section
-    { id: "messages", label: "Direct Messages", icon: MessageCircle, href: "messages", group: "communication" },
+    { id: "gmail-inbox", label: "Inbox", icon: Inbox, href: "gmail-inbox", group: "communication" },
     { id: "stream-messages", label: "Stream Chat", icon: Inbox, href: "stream-messages", group: "communication" },
     { id: "chat", label: "Team Chat", icon: Hash, href: "chat", group: "communication" },
     ...(hasPermission(user, PERMISSIONS.VIEW_SUGGESTIONS) ? [{ id: "suggestions", label: "Suggestions", icon: Lightbulb, href: "suggestions", group: "communication" }] : []),
