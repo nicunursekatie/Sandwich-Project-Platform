@@ -24,12 +24,13 @@ const getOidcConfig = memoize(
 
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
-  
-  // Use memory store for stability during development
-  // PostgreSQL sessions can be problematic during authentication setup
-  console.log("🔧 Using memory-based session store for Replit Auth");
-  const sessionStore = new session.MemoryStore();
-  
+  const pgStore = connectPg(session);
+  const sessionStore = new pgStore({
+    conString: process.env.DATABASE_URL,
+    createTableIfMissing: false,
+    ttl: sessionTtl,
+    tableName: "sessions",
+  });
   return session({
     secret: process.env.SESSION_SECRET!,
     store: sessionStore,
@@ -47,88 +48,22 @@ function updateUserSession(
   user: any,
   tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers
 ) {
-  try {
-    console.log("🔄 Updating user session with token data...");
-    user.claims = tokens.claims();
-    user.access_token = tokens.access_token;
-    user.refresh_token = tokens.refresh_token;
-    user.expires_at = user.claims?.exp;
-    console.log("✅ User session updated successfully");
-  } catch (error) {
-    console.error("❌ Error updating user session:", error);
-    // Set minimal session data to prevent complete failure
-    user.claims = {};
-    user.access_token = tokens.access_token;
-    user.expires_at = Date.now() + 3600000; // 1 hour fallback
-    throw error;
-  }
+  user.claims = tokens.claims();
+  user.access_token = tokens.access_token;
+  user.refresh_token = tokens.refresh_token;
+  user.expires_at = user.claims?.exp;
 }
 
-async function upsertUser(claims: any) {
-  console.log("🔄 Starting user upsert for claims:", JSON.stringify(claims, null, 2));
-  
-  // Check if user exists by email for migration
-  let existingUser = null;
-  try {
-    if (claims["email"]) {
-      console.log("🔍 Looking for existing user with email:", claims["email"]);
-      existingUser = await storage.getUserByEmail(claims["email"]);
-      if (existingUser) {
-        console.log("✅ Found existing user:", existingUser.email, "with role:", existingUser.role);
-      }
-    }
-  } catch (error) {
-    console.log("ℹ️ No existing user found with email:", claims["email"]);
-  }
-
-  try {
-    if (existingUser) {
-      // Update existing user with Replit ID and profile info
-      const updateData = {
-        id: claims["sub"], // New Replit ID
-        email: claims["email"],
-        firstName: claims["first_name"] || existingUser.firstName,
-        lastName: claims["last_name"] || existingUser.lastName,
-        profileImageUrl: claims["profile_image_url"],
-        role: existingUser.role, // Keep existing role
-        permissions: existingUser.permissions, // Keep existing permissions
-        metadata: existingUser.metadata || {},
-        isActive: existingUser.isActive,
-        displayName: existingUser.displayName,
-      };
-      console.log("🔄 Updating existing user with data:", JSON.stringify(updateData, null, 2));
-      await storage.upsertUser(updateData);
-      console.log("✅ Migrated existing user:", claims["email"], "to Replit ID:", claims["sub"]);
-    } else {
-      // New user - create with default volunteer permissions
-      const newUserData = {
-        id: claims["sub"],
-        email: claims["email"],
-        firstName: claims["first_name"],
-        lastName: claims["last_name"],
-        profileImageUrl: claims["profile_image_url"],
-        role: "volunteer",
-        permissions: ["view_collections", "general_chat"],
-        metadata: {},
-        isActive: true,
-      };
-      console.log("🔄 Creating new user with data:", JSON.stringify(newUserData, null, 2));
-      await storage.upsertUser(newUserData);
-      console.log("✅ Created new user:", claims["email"], "with Replit ID:", claims["sub"]);
-    }
-  } catch (error) {
-    console.error("❌ CRITICAL DATABASE ERROR during user upsert:", error);
-    console.error("❌ Error type:", typeof error);
-    console.error("❌ Error message:", error instanceof Error ? error.message : 'Unknown error');
-    console.error("❌ Error stack:", error instanceof Error ? error.stack : 'No stack available');
-    
-    // Log claims for debugging
-    console.error("❌ Claims that caused error:", JSON.stringify(claims, null, 2));
-    
-    // Don't throw the original error, create a safer one to prevent server crash
-    const safeError = new Error(`Authentication failed: ${error instanceof Error ? error.message : 'Database operation failed'}`);
-    throw safeError;
-  }
+async function upsertUser(
+  claims: any,
+) {
+  await storage.upsertUser({
+    id: claims["sub"],
+    email: claims["email"],
+    firstName: claims["first_name"],
+    lastName: claims["last_name"],
+    profileImageUrl: claims["profile_image_url"],
+  });
 }
 
 export async function setupAuth(app: Express) {
@@ -143,27 +78,13 @@ export async function setupAuth(app: Express) {
     tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
     verified: passport.AuthenticateCallback
   ) => {
-    console.log("🔄 Starting token verification process...");
     try {
-      console.log("🔄 Creating user session object...");
       const user = {};
-      
-      console.log("🔄 Updating user session with token data...");
       updateUserSession(user, tokens);
-      
-      console.log("🔄 Starting user upsert operation...");
-      const claims = tokens.claims();
-      console.log("🔄 Claims received:", JSON.stringify(claims, null, 2));
-      
-      await upsertUser(claims);
-      console.log("✅ User upsert completed successfully");
-      
-      console.log("✅ Verification successful, calling verified callback");
+      await upsertUser(tokens.claims());
       verified(null, user);
     } catch (error) {
-      console.error("❌ CRITICAL ERROR in verification function:", error);
-      console.error("❌ Error stack:", error instanceof Error ? error.stack : 'No stack trace');
-      console.error("❌ Error details:", JSON.stringify(error, null, 2));
+      console.error("Verification error:", error);
       verified(error);
     }
   };
@@ -187,28 +108,20 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/login", (req, res, next) => {
     try {
-      // Find the correct strategy - for local development, use the first available Replit strategy
-      const availableStrategies = Object.keys((passport as any)._strategies || {});
-      let strategyName = `replitauth:${req.hostname}`;
-      
-      // If localhost strategy doesn't exist, use the first replitauth strategy available
-      if (!availableStrategies.includes(strategyName)) {
-        const replitStrategy = availableStrategies.find(s => s.startsWith('replitauth:'));
-        if (replitStrategy) {
-          strategyName = replitStrategy;
-          console.log("🔄 Login using fallback strategy:", strategyName);
-        } else {
-          console.error(`No replitauth strategy found. Available strategies:`, availableStrategies);
-          return res.status(500).send(`
-            <html>
-              <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
-                <h2>Authentication Error</h2>
-                <p>Authentication system is not properly configured. Please contact an administrator.</p>
-                <a href="/" style="color: #236383;">Return to home page</a>
-              </body>
-            </html>
-          `);
-        }
+      const strategyName = `replitauth:${req.hostname}`;
+
+      // Check if strategy exists before attempting to authenticate
+      if (!passport._strategy(strategyName)) {
+        console.error(`Strategy ${strategyName} not found. Available strategies:`, Object.keys(passport._strategies || {}));
+        return res.status(500).send(`
+          <html>
+            <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
+              <h2>Authentication Error</h2>
+              <p>Authentication system is not properly configured. Please contact an administrator.</p>
+              <a href="/" style="color: #236383;">Return to home page</a>
+            </body>
+          </html>
+        `);
       }
 
       passport.authenticate(strategyName, {
@@ -229,88 +142,25 @@ export async function setupAuth(app: Express) {
     }
   });
 
-  app.get("/api/callback", async (req, res, next) => {
-    console.log("🔄 Callback route hit with query:", req.query);
-    console.log("🔄 Request hostname:", req.hostname);
-    console.log("🔄 Request host header:", req.headers.host);
-    console.log("🔄 Available strategies:", Object.keys((passport as any)._strategies || {}));
-    
-    // Wrap entire callback in comprehensive error handling
-    try {
-      // Find the correct strategy - for local development, use the first available Replit strategy
-      const availableStrategies = Object.keys((passport as any)._strategies || {});
-      let strategyName = `replitauth:${req.hostname}`;
-      
-      // If localhost strategy doesn't exist, use the first replitauth strategy available
-      if (!availableStrategies.includes(strategyName)) {
-        const replitStrategy = availableStrategies.find(s => s.startsWith('replitauth:'));
-        if (replitStrategy) {
-          strategyName = replitStrategy;
-          console.log("🔄 Using fallback strategy:", strategyName);
-        }
+  app.get("/api/callback", (req, res, next) => {
+    passport.authenticate(`replitauth:${req.hostname}`, (err, user, info) => {
+      if (err) {
+        console.error("Authentication callback error:", err);
+        return res.redirect("/api/login");
       }
-      
-      console.log("🔄 Using strategy:", strategyName);
-      
-      passport.authenticate(strategyName, (err: any, user: any, info: any) => {
-        console.log("🔄 Authentication result - err:", !!err, "user:", !!user, "info:", info);
-        
-        if (err) {
-          console.error("❌ Authentication callback error:", JSON.stringify(err, null, 2));
-          return res.status(500).send(`
-            <html>
-              <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
-                <h2>Authentication Failed</h2>
-                <p>There was an error during authentication. Please try again.</p>
-                <a href="/api/login" style="color: #236383;">Try Again</a>
-              </body>
-            </html>
-          `);
+      if (!user) {
+        console.error("No user returned from authentication:", info);
+        return res.redirect("/api/login");
+      }
+      req.logIn(user, (loginErr) => {
+        if (loginErr) {
+          console.error("Login error:", loginErr);
+          return res.redirect("/api/login");
         }
-        
-        if (!user) {
-          console.error("❌ No user returned from authentication:", info);
-          return res.status(500).send(`
-            <html>
-              <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
-                <h2>Authentication Failed</h2>
-                <p>Unable to authenticate user. Please try again.</p>
-                <a href="/api/login" style="color: #236383;">Try Again</a>
-              </body>
-            </html>
-          `);
-        }
-        
-        console.log("✅ User authenticated, attempting login...");
-        req.logIn(user, (loginErr) => {
-          if (loginErr) {
-            console.error("❌ Login error:", JSON.stringify(loginErr, null, 2));
-            return res.status(500).send(`
-              <html>
-                <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
-                  <h2>Login Failed</h2>
-                  <p>Session setup failed. Please try again.</p>
-                  <a href="/api/login" style="color: #236383;">Try Again</a>
-                </body>
-              </html>
-            `);
-          }
-          console.log("✅ Authentication successful, redirecting to /");
-          return res.redirect("/");
-        });
-      })(req, res, next);
-    } catch (error) {
-      console.error("❌ Callback route error:", error);
-      return res.status(500).send(`
-        <html>
-          <body style="font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px;">
-            <h2>Server Error</h2>
-            <p>An unexpected error occurred. Please try again.</p>
-            <a href="/api/login" style="color: #236383;">Try Again</a>
-          </body>
-        </html>
-      `);
-    }
+        console.log("Authentication successful, redirecting to /");
+        return res.redirect("/");
+      });
+    })(req, res, next);
   });
 
   app.get("/api/logout", (req, res) => {

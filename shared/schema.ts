@@ -19,6 +19,7 @@ export const sessions = pgTable(
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
   email: varchar("email").unique(),
+  password: varchar("password"), // For custom auth system
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   displayName: varchar("display_name"), // User-chosen display name for chat/activities

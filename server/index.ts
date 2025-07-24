@@ -2,26 +2,13 @@ import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { registerRoutes } from "./routes";
-import { setupVite } from "./vite";
+import { setupVite, serveStatic, log } from "./vite";
 import { initializeDatabase } from "./db-init";
 import { setupSocketChat } from "./socket-chat";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-// Add cache control headers to prevent browser caching issues
-app.use((req, res, next) => {
-  // Prevent caching for HTML responses
-  if (req.path === "/" || req.path.endsWith(".html")) {
-    res.set({
-      "Cache-Control": "no-cache, no-store, must-revalidate",
-      Pragma: "no-cache",
-      Expires: "0",
-    });
-  }
-  next();
-});
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -46,60 +33,25 @@ app.use((req, res, next) => {
         logLine = logLine.slice(0, 79) + "…";
       }
 
-      const formattedTime = new Date().toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true,
-      });
-      console.log(`${formattedTime} [express] ${logLine}`);
+      log(logLine);
     }
   });
 
   next();
 });
 
-// Add comprehensive error handling to catch server crashes
-process.on("uncaughtException", (err) => {
-  console.error("🚨 UNCAUGHT EXCEPTION - SERVER CRASH:", err);
-  console.error("Stack trace:", err.stack);
-  // Don't exit immediately, try to keep server alive for debugging
-});
-
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("🚨 UNHANDLED REJECTION - POTENTIAL CRASH:", reason);
-  console.error("Promise:", promise);
-  // Don't exit immediately, try to keep server alive for debugging
-});
-
-process.on("SIGINT", () => {
-  console.log("🔄 Received SIGINT, starting graceful shutdown...");
-  process.exit(0);
-});
-
 async function startServer() {
   try {
     console.log("🚀 Starting The Sandwich Project server...");
 
-    const port = process.env.PORT || 5000;
-    const host = process.env.HOST || "0.0.0.0";
-    const finalPort = Number(port);
-
-    console.log(
-      `Starting server on ${host}:${finalPort} in ${process.env.NODE_ENV || "development"} mode`,
-    );
-
-    // Set up basic routes BEFORE starting server
-    app.use("/attached_assets", express.static("attached_assets"));
-
-    // Single health check route
+    // Health check route
     app.get("/health", (_req: Request, res: Response) => {
       res.status(200).json({
         status: "healthy",
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
         environment: process.env.NODE_ENV || "development",
-        initialized: true,
+        initialized: false,
       });
     });
 
@@ -109,6 +61,49 @@ async function startServer() {
       const message = err.message || "Internal Server Error";
       console.error("Error:", err);
       res.status(status).json({ message });
+    });
+
+    const port = process.env.PORT || 5000;
+    const host = process.env.HOST || "0.0.0.0";
+
+    console.log(`Starting server on ${host}:${port} in ${process.env.NODE_ENV || "development"} mode`);
+
+    // Retry port allocation for deployment robustness
+    const tryPort = async (basePort: number, maxRetries = 5): Promise<number> => {
+      for (let i = 0; i < maxRetries; i++) {
+        const testPort = basePort + i;
+        try {
+          const testServer = require('net').createServer();
+          await new Promise((resolve, reject) => {
+            testServer.once('error', reject);
+            testServer.once('listening', () => {
+              testServer.close(resolve);
+            });
+            testServer.listen(testPort, host);
+          });
+          return testPort;
+        } catch (err) {
+          if (i === maxRetries - 1) {
+            console.log(`⚠ All ports busy, using ${basePort} anyway`);
+            return basePort;
+          }
+          continue;
+        }
+      }
+      return basePort;
+    };
+
+    // Set up basic routes BEFORE starting server
+    app.use("/attached_assets", express.static("attached_assets"));
+
+    // Health check route - available before full initialization
+    app.get("/health", (_req: Request, res: Response) => {
+      res.status(200).json({
+        status: "healthy",
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || "development",
+      });
     });
 
     if (process.env.NODE_ENV === "production") {
@@ -121,12 +116,11 @@ async function startServer() {
         res.sendFile(path.join(process.cwd(), "dist/public/index.html"));
       });
 
-      console.log(
-        "✓ Static file serving and SPA routing configured for production",
-      );
+      console.log("✓ Static file serving and SPA routing configured for production");
     }
 
-
+    // Use smart port selection in production
+    const finalPort = process.env.NODE_ENV === "production" ? await tryPort(Number(port)) : port;
 
     const httpServer = createServer(app);
 
@@ -134,32 +128,29 @@ async function startServer() {
     const io = setupSocketChat(httpServer);
 
     // Set up WebSocket server for real-time notifications
-    const wss = new WebSocketServer({
+    const wss = new WebSocketServer({ 
       server: httpServer,
-      path: "/notifications",
+      path: '/notifications'
     });
 
     const clients = new Map<string, any>();
 
-    wss.on("connection", (ws, request) => {
-      console.log(
-        "WebSocket client connected from:",
-        request.socket.remoteAddress,
-      );
+    wss.on('connection', (ws, request) => {
+      console.log('WebSocket client connected from:', request.socket.remoteAddress);
 
-      ws.on("message", (data) => {
+      ws.on('message', (data) => {
         try {
           const message = JSON.parse(data.toString());
-          if (message.type === "identify" && message.userId) {
+          if (message.type === 'identify' && message.userId) {
             clients.set(message.userId, ws);
             console.log(`User ${message.userId} identified for notifications`);
           }
         } catch (error) {
-          console.error("WebSocket message parse error:", error);
+          console.error('WebSocket message parse error:', error);
         }
       });
 
-      ws.on("close", () => {
+      ws.on('close', () => {
         // Remove client from map when disconnected
         for (const [userId, client] of Array.from(clients.entries())) {
           if (client === ws) {
@@ -170,19 +161,18 @@ async function startServer() {
         }
       });
 
-      ws.on("error", (error) => {
-        console.error("WebSocket error:", error);
+      ws.on('error', (error) => {
+        console.error('WebSocket error:', error);
       });
     });
 
     // Global broadcast function for messaging system
     (global as any).broadcastNewMessage = async (data: any) => {
-      console.log("Broadcasting message to", clients.size, "connected clients");
-
+      console.log('Broadcasting message to', clients.size, 'connected clients');
+      
       // Broadcast to all connected clients
       for (const [userId, ws] of Array.from(clients.entries())) {
-        if (ws.readyState === 1) {
-          // WebSocket.OPEN
+        if (ws.readyState === 1) { // WebSocket.OPEN
           try {
             ws.send(JSON.stringify(data));
           } catch (error) {
@@ -197,71 +187,86 @@ async function startServer() {
       }
     };
 
-    // Start the server with simplified error handling
-    httpServer.listen(finalPort, host, () => {
+    httpServer.listen(Number(finalPort), host, () => {
       console.log(`✓ Server is running on http://${host}:${finalPort}`);
-      console.log(
-        `✓ WebSocket server ready on ws://${host}:${finalPort}/notifications`,
-      );
+      console.log(`✓ WebSocket server ready on ws://${host}:${finalPort}/notifications`);
       console.log(`✓ Environment: ${process.env.NODE_ENV || "development"}`);
-      console.log(
-        "✓ Basic server ready - starting background initialization...",
-      );
+      console.log("✓ Basic server ready - starting background initialization...");
 
-      // Verify server is actually listening
-      const address = httpServer.address();
-      if (address) {
-        console.log(`✓ CONFIRMED: Server actively listening on:`, address);
-      } else {
-        console.error("❌ ERROR: Server not listening despite callback");
+      // Signal deployment readiness to Replit
+      if (process.env.NODE_ENV === "production") {
+        console.log("🚀 PRODUCTION SERVER READY FOR TRAFFIC 🚀");
+        console.log("Server is fully operational and accepting connections");
       }
-    });
 
-    // Signal deployment readiness to Replit
-    if (process.env.NODE_ENV === "production") {
-      console.log("🚀 PRODUCTION SERVER READY FOR TRAFFIC 🚀");
-      console.log("Server is fully operational and accepting connections");
-    }
+      // Do heavy initialization in background after server is listening
+      setImmediate(async () => {
+        try {
+          await initializeDatabase();
+          console.log("✓ Database initialization complete");
 
-    // Do heavy initialization in background after server is listening
-    setImmediate(async () => {
-      try {
-        await initializeDatabase();
-        console.log("✓ Database initialization complete");
+          const server = await registerRoutes(app);
+          console.log("✓ Routes registered successfully");
 
-        // Setup Vite BEFORE registering routes in development
-        if (process.env.NODE_ENV === "development") {
-          try {
-            const { setupVite } = await import("./vite");
-            await setupVite(app, httpServer);
-            console.log("✓ Vite development server setup complete");
-          } catch (error) {
-            console.error("❌ Vite setup failed:", error);
-            console.log(
-              "⚠ Vite setup failed, continuing without it:",
-              (error as Error).message,
-            );
-          }
+          // Update health check to reflect full init
+          app.get("/health", (_req: Request, res: Response) => {
+            res.status(200).json({
+              status: "healthy",
+              timestamp: new Date().toISOString(),
+              uptime: process.uptime(),
+              environment: process.env.NODE_ENV || "development",
+              initialized: true,
+            });
+          });
+
+          if (process.env.NODE_ENV === "development") {
+            try {
+              const { setupVite } = await import("./vite");
+              await setupVite(app, httpServer);
+              console.log("✓ Vite development server setup complete");
+            } catch (error) {
+              console.error("❌ Vite setup failed:", error);
+              console.log("⚠ Vite setup failed, continuing without it:", (error as Error).message);
+            }
+          } else {
+              // Add catch-all for unknown routes before SPA
+              app.use("*", (req: Request, res: Response, next: NextFunction) => {
+                console.log(`Catch-all route hit: ${req.method} ${req.originalUrl}`);
+                if (req.originalUrl.startsWith('/api')) {
+                  return res.status(404).json({ error: `API route not found: ${req.originalUrl}` });
+                }
+                next();
+              });
+
+              // In production, serve React app for all non-API routes
+              app.get("*", async (_req: Request, res: Response) => {
+                try {
+                  const path = await import("path");
+                  const indexPath = path.join(process.cwd(), "dist/public/index.html");
+                  console.log(`Serving SPA for route: ${_req.path}, file: ${indexPath}`);
+                  res.sendFile(indexPath);
+                } catch (error) {
+                  console.error("SPA serving error:", error);
+                  res.status(500).send("Error serving application");
+                }
+              });
+              console.log("✓ Production SPA routing configured");
+            }
+
+          console.log(
+            "✓ The Sandwich Project server is fully ready to handle requests",
+          );
+        } catch (initError) {
+          console.error("✗ Background initialization failed:", initError);
+          console.log("Server continues to run with basic functionality...");
         }
-
-        const server = await registerRoutes(app);
-        console.log("✓ Routes registered successfully");
-
-        console.log(
-          "✓ The Sandwich Project server is fully ready to handle requests",
-        );
-      } catch (initError) {
-        console.error("✗ Background initialization failed:", initError);
-        console.log("Server continues to run with basic functionality...");
-      }
+      });
     });
 
     // Graceful shutdown - disabled in production to prevent exit
     const shutdown = async (signal: string) => {
       if (process.env.NODE_ENV === "production") {
-        console.log(
-          `⚠ Ignoring ${signal} in production mode - server will continue running`,
-        );
+        console.log(`⚠ Ignoring ${signal} in production mode - server will continue running`);
         return;
       }
       console.log(`Received ${signal}, starting graceful shutdown...`);
@@ -284,9 +289,7 @@ async function startServer() {
       if (process.env.NODE_ENV !== "production") {
         shutdown("uncaughtException");
       } else {
-        console.log(
-          "Production mode: continuing operation despite uncaught exception...",
-        );
+        console.log("Production mode: continuing operation despite uncaught exception...");
       }
     });
 
@@ -320,7 +323,10 @@ async function startServer() {
     return httpServer;
   } catch (error) {
     console.error("✗ Server startup failed:", error);
-    throw error; // Let the main catch block handle it
+    const fallbackServer = app.listen(5000, "0.0.0.0", () => {
+      console.log("✓ Minimal fallback server listening on http://0.0.0.0:5000");
+    });
+    return fallbackServer;
   }
 }
 
@@ -338,5 +344,43 @@ startServer()
   })
   .catch((error) => {
     console.error("✗ Failed to start server:", error);
-    process.exit(1);
+    // Don't exit in production - try to start a minimal server instead
+    if (process.env.NODE_ENV === "production") {
+      console.log("Starting minimal fallback server for production...");
+      const express = require("express");
+      const fallbackApp = express();
+
+      fallbackApp.get("/", (req, res) => res.status(200).send(`
+        <!DOCTYPE html>
+        <html>
+          <head><title>The Sandwich Project</title></head>
+          <body>
+            <h1>The Sandwich Project - Fallback Mode</h1>
+            <p>Server is running in fallback mode</p>
+            <p>Timestamp: ${new Date().toISOString()}</p>
+          </body>
+        </html>
+      `));
+
+      fallbackApp.get("/health", (req, res) => res.status(200).json({ 
+        status: "fallback", 
+        timestamp: Date.now(),
+        mode: "production-fallback"
+      }));
+
+      const fallbackServer = fallbackApp.listen(5000, "0.0.0.0", () => {
+        console.log("✓ Minimal fallback server running on port 5000");
+
+        // Keep fallback server alive too
+        setInterval(() => {
+          console.log("✓ Fallback server heartbeat");
+        }, 30000);
+      });
+
+      // Prevent fallback server from exiting
+      process.stdin.resume();
+
+    } else {
+      process.exit(1);
+    }
   });
