@@ -1,0 +1,1825 @@
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+sendSession @ _app-c19eb5ab56f538a0.js:16
+captureSession @ _app-c19eb5ab56f538a0.js:16
+E @ _app-c19eb5ab56f538a0.js:40
+S @ _app-c19eb5ab56f538a0.js:40
+dsn @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+b @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+eO @ main-97e4ac9b7b9740ff.js:1
+eE @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+91729 @ main-97e4ac9b7b9740ff.js:1
+d @ webpack-49c20c18505f6d30.js:1
+t @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+d.O @ webpack-49c20c18505f6d30.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+a @ webpack-49c20c18505f6d30.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+_app-c19eb5ab56f538a0.js:18 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+_app-c19eb5ab56f538a0.js:18 [LaunchDarkly] LaunchDarkly client initialized
+load-script.ts:58  GET https://cdn.segment.com/next-integrations/actions/tiktok-pixel/920266289e7b08bf066b.js net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ load-script.ts:58
+i @ load-script.ts:32
+(anonymous) @ index.ts:247
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+Vt @ index.ts:227
+(anonymous) @ index.ts:281
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+(anonymous) @ index.ts:274
+(anonymous) @ index.ts:274
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+Gt @ index.ts:268
+(anonymous) @ index.ts:171
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+ne @ index.ts:116
+(anonymous) @ index.ts:304
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+re @ index.ts:239
+(anonymous) @ index.ts:338
+Promise.then
+(anonymous) @ index.ts:339
+t @ index.ts:307
+n @ index.ts:337
+n.load @ index.ts:389
+n.standalone @ index.ts:393
+(anonymous) @ standalone-analytics.ts:53
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+se @ standalone-analytics.ts:49
+(anonymous) @ standalone.ts:69
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+de @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+_app-c19eb5ab56f538a0.js:18 Failed to create PluginFactory {name: 'TikTok Pixel', creationName: 'TikTok Pixel', libraryName: 'tiktok-pixelDestination', url: 'https://cdn.segment.com/next-integrations/actions/tiktok-pixel/920266289e7b08bf066b.js', settings: {…}}
+overrideMethod @ hook.js:608
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ index.ts:256
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+u @ tslib.es6.js:74
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+Vt @ index.ts:227
+(anonymous) @ index.ts:281
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+(anonymous) @ index.ts:274
+(anonymous) @ index.ts:274
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+Gt @ index.ts:268
+(anonymous) @ index.ts:171
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+ne @ index.ts:116
+(anonymous) @ index.ts:304
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+re @ index.ts:239
+(anonymous) @ index.ts:338
+Promise.then
+(anonymous) @ index.ts:339
+t @ index.ts:307
+n @ index.ts:337
+n.load @ index.ts:389
+n.standalone @ index.ts:393
+(anonymous) @ standalone-analytics.ts:53
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+se @ standalone-analytics.ts:49
+(anonymous) @ standalone.ts:69
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+de @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+_app-c19eb5ab56f538a0.js:18 Failed to load Remote Plugin Error: Failed to load https://cdn.segment.com/next-integrations/actions/tiktok-pixel/920266289e7b08bf066b.js
+    at o.onerror (load-script.ts:53:24)
+overrideMethod @ hook.js:608
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ index.ts:311
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+u @ tslib.es6.js:74
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+(anonymous) @ index.ts:274
+(anonymous) @ index.ts:274
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+Gt @ index.ts:268
+(anonymous) @ index.ts:171
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+ne @ index.ts:116
+(anonymous) @ index.ts:304
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+s @ tslib.es6.js:73
+Promise.then
+a @ tslib.es6.js:76
+(anonymous) @ tslib.es6.js:76
+u @ tslib.es6.js:72
+re @ index.ts:239
+(anonymous) @ index.ts:338
+Promise.then
+(anonymous) @ index.ts:339
+t @ index.ts:307
+n @ index.ts:337
+n.load @ index.ts:389
+n.standalone @ index.ts:393
+(anonymous) @ standalone-analytics.ts:53
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+se @ standalone-analytics.ts:49
+(anonymous) @ standalone.ts:69
+(anonymous) @ tslib.es6.js:103
+(anonymous) @ tslib.es6.js:108
+(anonymous) @ tslib.es6.js:80
+u @ tslib.es6.js:72
+de @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+(anonymous) @ sdk.min.js:1
+~:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+~:1 Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <div.cm-content cm-lineWrapping>
+Ancestor with aria-hidden: <div. useView_view__C2mnv css-17qdd0f Surface_surfaceRoot__TeA2u> <div class=​" useView_view__C2mnv css-17qdd0f Surface_surfaceRoot__TeA2u" aria-hidden=​"true" style=​"--useView--gap:​ 4px;​ border-color:​ var(--outline-dimmer)​;​ --focusedBorderColor:​ var(--accent-primary-default)​;​ --hoverBorderColor:​ var(--accent-primary-default)​;​">​…​</div>​flex
+_app-c19eb5ab56f538a0.js:18  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+promise @ _app-c19eb5ab56f538a0.js:40
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+r.httpRequest @ _app-c19eb5ab56f538a0.js:40
+t @ _app-c19eb5ab56f538a0.js:40
+a.sendChunk @ _app-c19eb5ab56f538a0.js:40
+a.sendEvents @ _app-c19eb5ab56f538a0.js:40
+a.flush @ _app-c19eb5ab56f538a0.js:40
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+a.start @ _app-c19eb5ab56f538a0.js:40
+start @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:18  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+promise @ _app-c19eb5ab56f538a0.js:40
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+r.httpRequest @ _app-c19eb5ab56f538a0.js:40
+t @ _app-c19eb5ab56f538a0.js:40
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+Promise.catch
+t @ _app-c19eb5ab56f538a0.js:40
+a.sendChunk @ _app-c19eb5ab56f538a0.js:40
+a.sendEvents @ _app-c19eb5ab56f538a0.js:40
+a.flush @ _app-c19eb5ab56f538a0.js:40
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+a.start @ _app-c19eb5ab56f538a0.js:40
+start @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+~:1 Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <a.NavItem_root__DZrwo css-w3oj38>
+Ancestor with aria-hidden: <div> <div aria-hidden=​"true" style=​"position:​ absolute;​ inset:​ 0px auto auto 0px;​ z-index:​ 1001;​ transform:​ translate3d(244px, 172px, 0px)​;​" data-popper-reference-hidden=​"false" data-popper-escaped=​"true" data-popper-placement=​"right-start">​…​</div>​
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+sendSession @ _app-c19eb5ab56f538a0.js:16
+captureSession @ _app-c19eb5ab56f538a0.js:16
+E @ _app-c19eb5ab56f538a0.js:40
+y @ _app-c19eb5ab56f538a0.js:40
+v @ _app-c19eb5ab56f538a0.js:40
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+ey @ _app-c19eb5ab56f538a0.js:13
+(anonymous) @ _app-c19eb5ab56f538a0.js:16
+history.<computed> @ replEnvironmentDesktop-cadc4bc359f9e306.js:2
+value @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+value @ main-97e4ac9b7b9740ff.js:1
+value @ main-97e4ac9b7b9740ff.js:1
+t.<computed> @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:23
+(anonymous) @ _app-c19eb5ab56f538a0.js:23
+onClick @ _app-c19eb5ab56f538a0.js:23
+eB @ framework-34a6ec6253342aac.js:1
+eH @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+re @ framework-34a6ec6253342aac.js:1
+rt @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uT @ framework-34a6ec6253342aac.js:1
+eM @ framework-34a6ec6253342aac.js:1
+ru @ framework-34a6ec6253342aac.js:1
+tB @ framework-34a6ec6253342aac.js:1
+tD @ framework-34a6ec6253342aac.js:1
+n @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+sendSession @ _app-c19eb5ab56f538a0.js:16
+captureSession @ _app-c19eb5ab56f538a0.js:16
+E @ _app-c19eb5ab56f538a0.js:40
+S @ _app-c19eb5ab56f538a0.js:40
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+ey @ _app-c19eb5ab56f538a0.js:13
+(anonymous) @ _app-c19eb5ab56f538a0.js:16
+history.<computed> @ replEnvironmentDesktop-cadc4bc359f9e306.js:2
+value @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+Promise.then
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+value @ main-97e4ac9b7b9740ff.js:1
+value @ main-97e4ac9b7b9740ff.js:1
+t.<computed> @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:23
+(anonymous) @ _app-c19eb5ab56f538a0.js:23
+onClick @ _app-c19eb5ab56f538a0.js:23
+eB @ framework-34a6ec6253342aac.js:1
+eH @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+re @ framework-34a6ec6253342aac.js:1
+rt @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uT @ framework-34a6ec6253342aac.js:1
+eM @ framework-34a6ec6253342aac.js:1
+ru @ framework-34a6ec6253342aac.js:1
+tB @ framework-34a6ec6253342aac.js:1
+tD @ framework-34a6ec6253342aac.js:1
+n @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=8b6e340d-5bf2-4a7d-9b14-e55dacb4fdc7 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+framework-34a6ec6253342aac.js:1 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'battery'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'layout-animations'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'navigation-override'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'oversized-images'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'publickey-credentials'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'speaker-selection'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'unoptimized-images'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'unsized-media'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+framework-34a6ec6253342aac.js:1 Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'ambient-light-sensor'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'battery'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'execution-while-not-rendered'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'layout-animations'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'legacy-image-formats'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'navigation-override'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'oversized-images'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'publickey-credentials'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'speaker-selection'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'unoptimized-images'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Unrecognized feature: 'unsized-media'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Allow attribute will take precedence over 'allowfullscreen'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+_app-c19eb5ab56f538a0.js:18 Adding extension: Javascript Commands {extensionArgs: {…}, local: false, logLevel: 'info'}
+framework-34a6ec6253342aac.js:1 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+_app-c19eb5ab56f538a0.js:18 Command: javascript-root-command has unrecognized contributions: commandbar. Valid contributions are commandbar,filetree-context-menu,sidebar-search,editor-context-menu {logLevel: 'warn'}
+overrideMethod @ hook.js:608
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+s @ 9648-cdbde826275373a6.js:1
+warn @ 9648-cdbde826275373a6.js:1
+(anonymous) @ replEnvironmentDesktop-cadc4bc359f9e306.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+n @ main-97e4ac9b7b9740ff.js:1
+u @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+(anonymous) @ main-97e4ac9b7b9740ff.js:1
+commands.registerCreateCommand @ replEnvironmentDesktop-cadc4bc359f9e306.js:1
+r @ replEnvironmentDesktop-cadc4bc359f9e306.js:1
+n @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:18 Adding extension: ReplDB Export and Import {extensionArgs: {…}, local: false, logLevel: 'info'}
+_app-c19eb5ab56f538a0.js:18 Adding extension: repl.tv {extensionArgs: {…}, local: false, logLevel: 'info'}
+eruda.js:2 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=K6nu6xlZlYgP' failed: 
+t @ Network.js:227
+setupWebSocket @ client:536
+(anonymous) @ client:531
+eruda.js:2 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=K6nu6xlZlYgP' is invalid.
+    at new t (eruda.js:2:218737)
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+t @ Network.js:227
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+_app-c19eb5ab56f538a0.js:18 Adding extension: AI Playground {extensionArgs: {…}, local: false, logLevel: 'info'}
+workspace_iframe.html:142  GET https://replit.com/public/js/beacon.js net::ERR_BLOCKED_BY_CLIENT
+onIframeLoad @ workspace_iframe.html?initialPath=%2F&id=%3Aro7%3A:142
+eruda.js:2  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/auth/user 401 (Unauthorized)
+window.fetch @ Network.js:219
+(anonymous) @ queryClient.ts:42
+fetchFn @ @tanstack_react-query.js?v=88ca342b:881
+run @ @tanstack_react-query.js?v=88ca342b:513
+start @ @tanstack_react-query.js?v=88ca342b:555
+fetch @ @tanstack_react-query.js?v=88ca342b:969
+executeFetch_fn @ @tanstack_react-query.js?v=88ca342b:2279
+onSubscribe @ @tanstack_react-query.js?v=88ca342b:1983
+subscribe @ @tanstack_react-query.js?v=88ca342b:24
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3146
+subscribeToStore @ chunk-276SZO74.js?v=88ca342b:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18868
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19432
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+finishConcurrentRender @ chunk-276SZO74.js?v=88ca342b:18805
+performConcurrentWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18718
+workLoop @ chunk-276SZO74.js?v=88ca342b:197
+flushWork @ chunk-276SZO74.js?v=88ca342b:176
+performWorkUntilDeadline @ chunk-276SZO74.js?v=88ca342b:384
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=308d5aad-2029-4183-ac3b-e4ea5252e797 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=53a273d7-7a57-478c-a5cf-c59da7133d13 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=5e5d07b2-7391-43a8-82b9-ddf51d9d0fa4 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=e41e6556-78e2-4aac-adb8-23994d4c1f37 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=537959e5-7a12-4283-aa94-5c6f555f1ad8 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=67d96e3e-c944-4fd2-8f56-c93030cc359d net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=bc7515dd-ba59-4196-bbb3-fd6c65c684f5 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=f0a7392e-011c-471b-87fe-8e948acffd12 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=388d964b-cbb9-427c-bdbf-f09c891bd399 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:18  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+o @ _app-c19eb5ab56f538a0.js:20
+promise @ _app-c19eb5ab56f538a0.js:40
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+r.httpRequest @ _app-c19eb5ab56f538a0.js:40
+t @ _app-c19eb5ab56f538a0.js:40
+a.sendChunk @ _app-c19eb5ab56f538a0.js:40
+a.sendEvents @ _app-c19eb5ab56f538a0.js:40
+a.flush @ _app-c19eb5ab56f538a0.js:40
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:18  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+o @ _app-c19eb5ab56f538a0.js:20
+promise @ _app-c19eb5ab56f538a0.js:40
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+r.httpRequest @ _app-c19eb5ab56f538a0.js:40
+t @ _app-c19eb5ab56f538a0.js:40
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+Promise.catch
+t @ _app-c19eb5ab56f538a0.js:40
+a.sendChunk @ _app-c19eb5ab56f538a0.js:40
+a.sendEvents @ _app-c19eb5ab56f538a0.js:40
+a.flush @ _app-c19eb5ab56f538a0.js:40
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=c0fd5eb3-f354-4491-b93f-e8ea54419998 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=a74ca220-1648-4cae-8ec0-022eb3748ee3 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=c9fc8e90-9ca4-4d2c-b0b4-37b0c6b95923 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=58416827-b8fe-40d9-8bbd-637e160ecb75 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+framework-34a6ec6253342aac.js:1 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+_ @ framework-34a6ec6253342aac.js:1
+(anonymous) @ framework-34a6ec6253342aac.js:1
+uD @ framework-34a6ec6253342aac.js:1
+uI @ framework-34a6ec6253342aac.js:1
+uM @ framework-34a6ec6253342aac.js:1
+uS @ framework-34a6ec6253342aac.js:1
+C @ framework-34a6ec6253342aac.js:1
+z @ framework-34a6ec6253342aac.js:1
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+workspace_iframe.html:32 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html:32 Unrecognized feature: 'ambient-light-sensor'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'battery'.
+workspace_iframe.html:32 Unrecognized feature: 'battery'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-not-rendered'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'layout-animations'.
+workspace_iframe.html:32 Unrecognized feature: 'layout-animations'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html:32 Unrecognized feature: 'legacy-image-formats'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'navigation-override'.
+workspace_iframe.html:32 Unrecognized feature: 'navigation-override'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'oversized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'oversized-images'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html:32 Unrecognized feature: 'publickey-credentials'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html:32 Unrecognized feature: 'speaker-selection'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:151  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/ 404 (Not Found)
+(anonymous) @ workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:151
+  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/ 404 (Not Found)
+(anonymous) @ workspace_iframe.html:151
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+Refused to load the script '<URL>' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/:1 Refused to execute inline event handler because it violates the following Content Security Policy directive: "default-src 'none'". Either the 'unsafe-inline' keyword, a hash ('sha256-...'), or a nonce ('nonce-...') is required to enable inline execution. Note that hashes do not apply to event handlers, style attributes and javascript: navigations unless the 'unsafe-hashes' keyword is present. Note also that 'script-src' was not explicitly set, so 'default-src' is used as a fallback.
+
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/:1 Refused to execute inline event handler because it violates the following Content Security Policy directive: "default-src 'none'". Either the 'unsafe-inline' keyword, a hash ('sha256-...'), or a nonce ('nonce-...') is required to enable inline execution. Note that hashes do not apply to event handlers, style attributes and javascript: navigations unless the 'unsafe-hashes' keyword is present. Note also that 'script-src' was not explicitly set, so 'default-src' is used as a fallback.
+
+_app-c19eb5ab56f538a0.js:18  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+o @ _app-c19eb5ab56f538a0.js:20
+promise @ _app-c19eb5ab56f538a0.js:40
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+r.httpRequest @ _app-c19eb5ab56f538a0.js:40
+t @ _app-c19eb5ab56f538a0.js:40
+a.sendChunk @ _app-c19eb5ab56f538a0.js:40
+a.sendEvents @ _app-c19eb5ab56f538a0.js:40
+a.flush @ _app-c19eb5ab56f538a0.js:40
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:18  POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+o @ _app-c19eb5ab56f538a0.js:20
+promise @ _app-c19eb5ab56f538a0.js:40
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+r.httpRequest @ _app-c19eb5ab56f538a0.js:40
+t @ _app-c19eb5ab56f538a0.js:40
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+Promise.catch
+t @ _app-c19eb5ab56f538a0.js:40
+a.sendChunk @ _app-c19eb5ab56f538a0.js:40
+a.sendEvents @ _app-c19eb5ab56f538a0.js:40
+a.flush @ _app-c19eb5ab56f538a0.js:40
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+setTimeout
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+e @ _app-c19eb5ab56f538a0.js:40
+n @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=10bd4d2f-544c-482a-a065-29382463cf3f net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=7eb670f8-9789-4080-b0e1-c4a780818678 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=43ee7d47-9687-40ce-a622-6e75def79067 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=8129a52e-bfc9-4534-aaed-861d82e7fb6a net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+_app-c19eb5ab56f538a0.js:20  POST https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0 net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+add @ _app-c19eb5ab56f538a0.js:18
+i @ _app-c19eb5ab56f538a0.js:18
+_sendEnvelope @ _app-c19eb5ab56f538a0.js:18
+_flushOutcomes @ _app-c19eb5ab56f538a0.js:18
+(anonymous) @ _app-c19eb5ab56f538a0.js:18
+_app-c19eb5ab56f538a0.js:40  POST https://logs.browser-intake-us5-datadoghq.com/api/v2/logs?ddsource=browser&ddtags=sdk_version%3A4.46.0%2Capi%3Abeacon%2Cenv%3Aproduction%2Cservice%3Awebsite%2Cversion%3Ab734810f&dd-api-key=pub31a5047a3a4692afb84a423db984dc57&dd-evp-origin-version=4.46.0&dd-evp-origin=browser&dd-request-id=ffefda95-7f72-4838-9a8a-bc8b19222edc net::ERR_BLOCKED_BY_CLIENT
+(anonymous) @ _app-c19eb5ab56f538a0.js:40
+sendOnExit @ _app-c19eb5ab56f538a0.js:40
+e.flush @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+f @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:6
+(anonymous) @ _app-c19eb5ab56f538a0.js:20
+e.notify @ _app-c19eb5ab56f538a0.js:20
+r.capture @ _app-c19eb5ab56f538a0.js:20
+d @ _app-c19eb5ab56f538a0.js:1
+(anonymous) @ _app-c19eb5ab56f538a0.js:1
+workspace_iframe.html:32 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:142  GET https://replit.com/public/js/beacon.js net::ERR_BLOCKED_BY_CLIENT
+onIframeLoad @ workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:142
+VM15629 eruda.js:2  GET https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/auth/user 401 (Unauthorized)
+window.fetch @ VM15629 eruda.js:2
+(anonymous) @ VM15667 queryClient.ts:24
+fetchFn @ VM15663 @tanstack_react-query.js:881
+run @ VM15663 @tanstack_react-query.js:513
+start @ VM15663 @tanstack_react-query.js:555
+fetch @ VM15663 @tanstack_react-query.js:969
+executeFetch_fn @ VM15663 @tanstack_react-query.js:2279
+onSubscribe @ VM15663 @tanstack_react-query.js:1983
+subscribe @ VM15663 @tanstack_react-query.js:24
+(anonymous) @ VM15663 @tanstack_react-query.js:3146
+subscribeToStore @ VM15655 chunk-276SZO74.js:11984
+commitHookEffectListMount @ VM15655 chunk-276SZO74.js:16915
+commitPassiveMountOnFiber @ VM15655 chunk-276SZO74.js:18156
+commitPassiveMountEffects_complete @ VM15655 chunk-276SZO74.js:18129
+commitPassiveMountEffects_begin @ VM15655 chunk-276SZO74.js:18119
+commitPassiveMountEffects @ VM15655 chunk-276SZO74.js:18109
+flushPassiveEffectsImpl @ VM15655 chunk-276SZO74.js:19490
+flushPassiveEffects @ VM15655 chunk-276SZO74.js:19447
+performSyncWorkOnRoot @ VM15655 chunk-276SZO74.js:18868
+flushSyncCallbacks @ VM15655 chunk-276SZO74.js:9119
+commitRootImpl @ VM15655 chunk-276SZO74.js:19432
+commitRoot @ VM15655 chunk-276SZO74.js:19277
+finishConcurrentRender @ VM15655 chunk-276SZO74.js:18805
+performConcurrentWorkOnRoot @ VM15655 chunk-276SZO74.js:18718
+workLoop @ VM15655 chunk-276SZO74.js:197
+flushWork @ VM15655 chunk-276SZO74.js:176
+performWorkUntilDeadline @ VM15655 chunk-276SZO74.js:384
+workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:142  GET https://replit.com/public/js/beacon.js net::ERR_BLOCKED_BY_CLIENT
+onIframeLoad @ workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:142
+workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:142  GET https://replit.com/public/js/beacon.js net::ERR_BLOCKED_BY_CLIENT
+onIframeLoad @ workspace_iframe.html?initialPath=%2F&id=%3Ar1vb%3A:142
+Console.js:61 Connecting to WebSocket at: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/notifications
+Console.js:61 Dashboard activeSection changed to: dashboard
+useMessaging.ts:239 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+t @ Network.js:227
+(anonymous) @ useMessaging.ts:239
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+Console.js:61 Messaging WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+Mt.forEach.n.<computed> @ Console.js:61
+ws.onerror @ useMessaging.ts:274
+Console.js:61 Messaging WebSocket disconnected
+Console.js:61 Navigation click: gmail-inbox
+Console.js:61 Dashboard setActiveSection called with: gmail-inbox
+Console.js:61 Dashboard activeSection changed to: gmail-inbox
+gmail-style-inbox.tsx:620 Uncaught ReferenceError: isEmailMode is not defined
+    at gmail-style-inbox.tsx:620:26
+    at Array.map (<anonymous>)
+    at GmailStyleInbox (gmail-style-inbox.tsx:565:33)
+    at renderWithHooks (chunk-276SZO74.js?v=88ca342b:11548:26)
+    at updateFunctionComponent (chunk-276SZO74.js?v=88ca342b:14582:28)
+    at beginWork (chunk-276SZO74.js?v=88ca342b:15924:22)
+    at HTMLUnknownElement.callCallback2 (chunk-276SZO74.js?v=88ca342b:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-276SZO74.js?v=88ca342b:3699:24)
+    at invokeGuardedCallback (chunk-276SZO74.js?v=88ca342b:3733:39)
+    at beginWork$1 (chunk-276SZO74.js?v=88ca342b:19765:15)
+(anonymous) @ gmail-style-inbox.tsx:620
+GmailStyleInbox @ gmail-style-inbox.tsx:565
+renderWithHooks @ chunk-276SZO74.js?v=88ca342b:11548
+updateFunctionComponent @ chunk-276SZO74.js?v=88ca342b:14582
+beginWork @ chunk-276SZO74.js?v=88ca342b:15924
+callCallback2 @ chunk-276SZO74.js?v=88ca342b:3674
+invokeGuardedCallbackDev @ chunk-276SZO74.js?v=88ca342b:3699
+invokeGuardedCallback @ chunk-276SZO74.js?v=88ca342b:3733
+beginWork$1 @ chunk-276SZO74.js?v=88ca342b:19765
+performUnitOfWork @ chunk-276SZO74.js?v=88ca342b:19198
+workLoopSync @ chunk-276SZO74.js?v=88ca342b:19137
+renderRootSync @ chunk-276SZO74.js?v=88ca342b:19116
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18874
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=88ca342b:565
+flush @ @tanstack_react-query.js?v=88ca342b:589
+batch @ @tanstack_react-query.js?v=88ca342b:607
+dispatch_fn @ @tanstack_react-query.js?v=88ca342b:1040
+setData @ @tanstack_react-query.js?v=88ca342b:718
+onSuccess @ @tanstack_react-query.js?v=88ca342b:940
+resolve @ @tanstack_react-query.js?v=88ca342b:475
+Promise.then
+run @ @tanstack_react-query.js?v=88ca342b:517
+start @ @tanstack_react-query.js?v=88ca342b:555
+fetch @ @tanstack_react-query.js?v=88ca342b:969
+executeFetch_fn @ @tanstack_react-query.js?v=88ca342b:2279
+onSubscribe @ @tanstack_react-query.js?v=88ca342b:1983
+subscribe @ @tanstack_react-query.js?v=88ca342b:24
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3146
+subscribeToStore @ chunk-276SZO74.js?v=88ca342b:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+gmail-style-inbox.tsx:620 Uncaught ReferenceError: isEmailMode is not defined
+    at gmail-style-inbox.tsx:620:26
+    at Array.map (<anonymous>)
+    at GmailStyleInbox (gmail-style-inbox.tsx:565:33)
+    at renderWithHooks (chunk-276SZO74.js?v=88ca342b:11548:26)
+    at updateFunctionComponent (chunk-276SZO74.js?v=88ca342b:14582:28)
+    at beginWork (chunk-276SZO74.js?v=88ca342b:15924:22)
+    at HTMLUnknownElement.callCallback2 (chunk-276SZO74.js?v=88ca342b:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-276SZO74.js?v=88ca342b:3699:24)
+    at invokeGuardedCallback (chunk-276SZO74.js?v=88ca342b:3733:39)
+    at beginWork$1 (chunk-276SZO74.js?v=88ca342b:19765:15)
+(anonymous) @ gmail-style-inbox.tsx:620
+GmailStyleInbox @ gmail-style-inbox.tsx:565
+renderWithHooks @ chunk-276SZO74.js?v=88ca342b:11548
+updateFunctionComponent @ chunk-276SZO74.js?v=88ca342b:14582
+beginWork @ chunk-276SZO74.js?v=88ca342b:15924
+callCallback2 @ chunk-276SZO74.js?v=88ca342b:3674
+invokeGuardedCallbackDev @ chunk-276SZO74.js?v=88ca342b:3699
+invokeGuardedCallback @ chunk-276SZO74.js?v=88ca342b:3733
+beginWork$1 @ chunk-276SZO74.js?v=88ca342b:19765
+performUnitOfWork @ chunk-276SZO74.js?v=88ca342b:19198
+workLoopSync @ chunk-276SZO74.js?v=88ca342b:19137
+renderRootSync @ chunk-276SZO74.js?v=88ca342b:19116
+recoverFromConcurrentError @ chunk-276SZO74.js?v=88ca342b:18736
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18879
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=88ca342b:565
+flush @ @tanstack_react-query.js?v=88ca342b:589
+batch @ @tanstack_react-query.js?v=88ca342b:607
+dispatch_fn @ @tanstack_react-query.js?v=88ca342b:1040
+setData @ @tanstack_react-query.js?v=88ca342b:718
+onSuccess @ @tanstack_react-query.js?v=88ca342b:940
+resolve @ @tanstack_react-query.js?v=88ca342b:475
+Promise.then
+run @ @tanstack_react-query.js?v=88ca342b:517
+start @ @tanstack_react-query.js?v=88ca342b:555
+fetch @ @tanstack_react-query.js?v=88ca342b:969
+executeFetch_fn @ @tanstack_react-query.js?v=88ca342b:2279
+onSubscribe @ @tanstack_react-query.js?v=88ca342b:1983
+subscribe @ @tanstack_react-query.js?v=88ca342b:24
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3146
+subscribeToStore @ chunk-276SZO74.js?v=88ca342b:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+Console.js:61 The above error occurred in the <GmailStyleInbox> component:
+
+    at GmailStyleInbox (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/gmail-style-inbox.tsx:60:20)
+    at div
+    at div
+    at div
+    at div
+    at div
+    at Dashboard (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/pages/dashboard.tsx:60:37)
+    at Route (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=88ca342b:206:16)
+    at Switch (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=88ca342b:262:17)
+    at Router (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/App.tsx?v=l3hwre4F1nZlWBOQF7fiT:32:49)
+    at Provider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-3RXG37ZK.js?v=88ca342b:38:15)
+    at TooltipProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=88ca342b:65:5)
+    at QueryClientProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b:2933:3)
+    at ErrorBoundary (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/error-boundary.tsx:10:5)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+Mt.forEach.n.<computed> @ Console.js:61
+logCapturedError @ chunk-276SZO74.js?v=88ca342b:14032
+callback @ chunk-276SZO74.js?v=88ca342b:14078
+callCallback @ chunk-276SZO74.js?v=88ca342b:11248
+commitUpdateQueue @ chunk-276SZO74.js?v=88ca342b:11265
+commitLayoutEffectOnFiber @ chunk-276SZO74.js?v=88ca342b:17075
+commitLayoutMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:17980
+commitLayoutEffects_begin @ chunk-276SZO74.js?v=88ca342b:17969
+commitLayoutEffects @ chunk-276SZO74.js?v=88ca342b:17920
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19353
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=88ca342b:565
+flush @ @tanstack_react-query.js?v=88ca342b:589
+batch @ @tanstack_react-query.js?v=88ca342b:607
+dispatch_fn @ @tanstack_react-query.js?v=88ca342b:1040
+setData @ @tanstack_react-query.js?v=88ca342b:718
+onSuccess @ @tanstack_react-query.js?v=88ca342b:940
+resolve @ @tanstack_react-query.js?v=88ca342b:475
+Promise.then
+run @ @tanstack_react-query.js?v=88ca342b:517
+start @ @tanstack_react-query.js?v=88ca342b:555
+fetch @ @tanstack_react-query.js?v=88ca342b:969
+executeFetch_fn @ @tanstack_react-query.js?v=88ca342b:2279
+onSubscribe @ @tanstack_react-query.js?v=88ca342b:1983
+subscribe @ @tanstack_react-query.js?v=88ca342b:24
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3146
+subscribeToStore @ chunk-276SZO74.js?v=88ca342b:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+Console.js:61 Error caught by boundary: ReferenceError: isEmailMode is not defined
+    at gmail-style-inbox.tsx:620:26
+    at Array.map (<anonymous>)
+    at GmailStyleInbox (gmail-style-inbox.tsx:565:33)
+    at renderWithHooks (chunk-276SZO74.js?v=88ca342b:11548:26)
+    at updateFunctionComponent (chunk-276SZO74.js?v=88ca342b:14582:28)
+    at beginWork (chunk-276SZO74.js?v=88ca342b:15924:22)
+    at beginWork$1 (chunk-276SZO74.js?v=88ca342b:19753:22)
+    at performUnitOfWork (chunk-276SZO74.js?v=88ca342b:19198:20)
+    at workLoopSync (chunk-276SZO74.js?v=88ca342b:19137:13)
+    at renderRootSync (chunk-276SZO74.js?v=88ca342b:19116:15) {componentStack: '\n    at GmailStyleInbox (https://bb1d30f8-d852-4ba…rc/components/error-boundary.tsx:10:5)\n    at App'}
+Mt.forEach.n.<computed> @ Console.js:61
+componentDidCatch @ error-boundary.tsx:28
+callback @ chunk-276SZO74.js?v=88ca342b:14084
+callCallback @ chunk-276SZO74.js?v=88ca342b:11248
+commitUpdateQueue @ chunk-276SZO74.js?v=88ca342b:11265
+commitLayoutEffectOnFiber @ chunk-276SZO74.js?v=88ca342b:17075
+commitLayoutMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:17980
+commitLayoutEffects_begin @ chunk-276SZO74.js?v=88ca342b:17969
+commitLayoutEffects @ chunk-276SZO74.js?v=88ca342b:17920
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19353
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=88ca342b:565
+flush @ @tanstack_react-query.js?v=88ca342b:589
+batch @ @tanstack_react-query.js?v=88ca342b:607
+dispatch_fn @ @tanstack_react-query.js?v=88ca342b:1040
+setData @ @tanstack_react-query.js?v=88ca342b:718
+onSuccess @ @tanstack_react-query.js?v=88ca342b:940
+resolve @ @tanstack_react-query.js?v=88ca342b:475
+Promise.then
+run @ @tanstack_react-query.js?v=88ca342b:517
+start @ @tanstack_react-query.js?v=88ca342b:555
+fetch @ @tanstack_react-query.js?v=88ca342b:969
+executeFetch_fn @ @tanstack_react-query.js?v=88ca342b:2279
+onSubscribe @ @tanstack_react-query.js?v=88ca342b:1983
+subscribe @ @tanstack_react-query.js?v=88ca342b:24
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3146
+subscribeToStore @ chunk-276SZO74.js?v=88ca342b:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+message-notifications.tsx:168 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/notifications' failed: WebSocket is closed before the connection is established.
+(anonymous) @ message-notifications.tsx:168
+safelyCallDestroy @ chunk-276SZO74.js?v=88ca342b:16748
+commitHookEffectListUnmount @ chunk-276SZO74.js?v=88ca342b:16875
+commitPassiveUnmountInsideDeletedTreeOnFiber @ chunk-276SZO74.js?v=88ca342b:18283
+commitPassiveUnmountEffectsInsideOfDeletedTree_begin @ chunk-276SZO74.js?v=88ca342b:18245
+commitPassiveUnmountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18181
+commitPassiveUnmountEffects @ chunk-276SZO74.js?v=88ca342b:18169
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19489
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=88ca342b:565
+flush @ @tanstack_react-query.js?v=88ca342b:589
+batch @ @tanstack_react-query.js?v=88ca342b:607
+dispatch_fn @ @tanstack_react-query.js?v=88ca342b:1040
+setData @ @tanstack_react-query.js?v=88ca342b:718
+onSuccess @ @tanstack_react-query.js?v=88ca342b:940
+resolve @ @tanstack_react-query.js?v=88ca342b:475
+Promise.then
+run @ @tanstack_react-query.js?v=88ca342b:517
+start @ @tanstack_react-query.js?v=88ca342b:555
+fetch @ @tanstack_react-query.js?v=88ca342b:969
+executeFetch_fn @ @tanstack_react-query.js?v=88ca342b:2279
+onSubscribe @ @tanstack_react-query.js?v=88ca342b:1983
+subscribe @ @tanstack_react-query.js?v=88ca342b:24
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3146
+subscribeToStore @ chunk-276SZO74.js?v=88ca342b:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+Console.js:61 WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+Mt.forEach.n.<computed> @ Console.js:61
+socket.onerror @ message-notifications.tsx:146
+Console.js:61 WebSocket connection closed: 1006 

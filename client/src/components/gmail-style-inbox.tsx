@@ -596,8 +596,8 @@ export default function GmailStyleInbox() {
                     <Avatar className="h-8 w-8">
                       <AvatarFallback className="text-xs">
                         {activeFolder === 'sent' 
-                          ? (message.recipientName || 'U')?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'
-                          : (message.senderName || 'U')?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'
+                          ? (message.recipientName || 'U')?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'U'
+                          : (message.senderName || 'U')?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'U'
                         }
                       </AvatarFallback>
                     </Avatar>
@@ -617,12 +617,9 @@ export default function GmailStyleInbox() {
                         </span>
                       </div>
                       <p className="text-sm font-medium truncate mt-1">
-                        {isEmailMode && message.subject 
-                          ? message.subject
-                          : (message.content.length > 40 
-                            ? `${message.content.substring(0, 40)}...`
-                            : message.content)
-                        }
+                        {message.content.length > 40 
+                          ? `${message.content.substring(0, 40)}...`
+                          : message.content}
                       </p>
                     </div>
                   </div>
@@ -646,12 +643,9 @@ export default function GmailStyleInbox() {
               <div className="border-b p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-lg font-semibold">
-                    {isEmailMode && selectedMessage.subject 
-                      ? selectedMessage.subject
-                      : (selectedMessage.content.length > 40 
-                        ? `${selectedMessage.content.substring(0, 40)}...`
-                        : selectedMessage.content)
-                    }
+                    {selectedMessage.content.length > 40 
+                      ? `${selectedMessage.content.substring(0, 40)}...`
+                      : selectedMessage.content}
                   </h3>
                   <div className="flex items-center gap-2">
                     <Button variant="ghost" size="sm" onClick={() => setShowReply(true)}>
