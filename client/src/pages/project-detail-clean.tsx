@@ -738,16 +738,25 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                         }}
                       />
                       {/* Show kudos buttons for completed tasks */}
-                      {task.status === 'completed' && (
+                      {task.status === 'completed' && task.assigneeIds && task.assigneeIds.length > 0 && (
                         <div className="flex gap-1 flex-wrap">
-                          <SendKudosButton 
-                            recipientId="task-team"
-                            recipientName={task.assigneeName || "Task Team"}
-                            contextType="task"
-                            contextId={task.id.toString()}
-                            entityName={task.title}
-                            size="xs"
-                          />
+                          {task.assigneeIds.map((assigneeId, index) => {
+                            const assigneeName = task.assigneeNames && task.assigneeNames[index] 
+                              ? task.assigneeNames[index] 
+                              : `Team Member ${index + 1}`;
+                            
+                            return (
+                              <SendKudosButton 
+                                key={`${task.id}-${assigneeId}`}
+                                recipientId={assigneeId}
+                                recipientName={assigneeName}
+                                contextType="task"
+                                contextId={task.id.toString()}
+                                entityName={task.title}
+                                size="xs"
+                              />
+                            );
+                          })}
                         </div>
                       )}
                     </div>
