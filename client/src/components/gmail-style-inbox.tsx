@@ -561,8 +561,8 @@ export default function GmailStyleInbox() {
                     <Avatar className="h-8 w-8">
                       <AvatarFallback className="text-xs">
                         {activeFolder === 'sent' 
-                          ? (message.recipientName || 'U').split(' ').map(n => n[0]).join('').toUpperCase()
-                          : (message.senderName || 'U').split(' ').map(n => n[0]).join('').toUpperCase()
+                          ? (message.recipientName || 'U')?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'
+                          : (message.senderName || 'U')?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'
                         }
                       </AvatarFallback>
                     </Avatar>
@@ -641,7 +641,7 @@ export default function GmailStyleInbox() {
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10">
                     <AvatarFallback>
-                      {selectedMessage.senderName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      {selectedMessage.senderName?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                   <div>
