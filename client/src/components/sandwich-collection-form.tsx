@@ -53,8 +53,8 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     },
   });
 
-  // Only include active hosts in dropdown to reduce clutter
-  const activeHosts = hosts.filter(host => host.status === 'active');
+  // Only include active hosts in dropdown to reduce clutter, exclude "Groups" from dropdown
+  const activeHosts = hosts.filter(host => host.status === 'active' && host.name !== 'Groups');
   const hostOptions = [...activeHosts.map((host) => host.name).filter(name => name && name.trim() !== ""), "Other"];
 
   // Mutation for creating new hosts

@@ -404,7 +404,7 @@ export default function SandwichCollectionLog() {
   const uniqueHostNames = Array.from(new Set(collections.map((c: SandwichCollection) => c.hostName))).sort();
 
   // Include all hosts (active and inactive) for collection assignment
-  const hostOptions = [...hostsList.map(host => host.name), "Other"];
+  const hostOptions = [...hostsList.filter(host => host.name !== 'Groups').map(host => host.name), "Other"];
 
   const formatDate = (dateString: string) => {
     // Parse date as local date to avoid timezone issues
