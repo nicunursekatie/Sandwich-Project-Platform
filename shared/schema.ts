@@ -254,6 +254,9 @@ export const messages = pgTable("messages", {
   contextType: text("context_type"), // 'suggestion', 'project', 'task', 'direct'
   contextId: text("context_id"),
   read: boolean("read").notNull().default(false), // Simple read status for email-style messaging
+  isStarred: boolean("is_starred").notNull().default(false), // Gmail-style starred status
+  isDraft: boolean("is_draft").notNull().default(false), // Draft status for unsent messages
+  isArchived: boolean("is_archived").notNull().default(false), // Archive status for organizing
   editedAt: timestamp("edited_at"),
   editedContent: text("edited_content"),
   deletedAt: timestamp("deleted_at"),
