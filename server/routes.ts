@@ -4077,6 +4077,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Direct task update routes (for frontend compatibility)
+  app.patch("/api/tasks/:id", sanitizeMiddleware, async (req, res) => {
+    try {
+      const taskId = parseInt(req.params.id);
+      const updates = req.body;
+      
+      console.log(`Direct PATCH request - Task ID: ${taskId}`);
+      console.log("Updates payload:", updates);
+      
+      // Get original task to compare assignees
+      const originalTask = await storage.getProjectTask(taskId);
+      
+      const task = await storage.updateProjectTask(taskId, updates);
+      if (!task) {
+        console.log(`Task ${taskId} not found in database`);
+        return res.status(404).json({ error: "Task not found" });
+      }
+      
+      // Check if assignees were added (new assigneeIds that weren't in original)
+      if (updates.assigneeIds && Array.isArray(updates.assigneeIds)) {
+        const originalAssigneeIds = originalTask?.assigneeIds || [];
+        const newAssigneeIds = updates.assigneeIds.filter(id => 
+          id && id.trim() && !originalAssigneeIds.includes(id)
+        );
+        
+        // Create notifications for newly assigned users
+        if (newAssigneeIds.length > 0) {
+          const user = (req as any).user; // Standardized authentication
+          
+          for (const assigneeId of newAssigneeIds) {
+            try {
+              // Create notification in database
+              const notification = await storage.createNotification({
+                userId: assigneeId,
+                type: 'task_assignment',
+                title: 'New Task Assignment',
+                content: `You have been assigned to task: ${task.title}`,
+                relatedType: 'task',
+                relatedId: task.id
+              });
+
+              // Emit WebSocket notification if available
+              if (typeof (global as any).broadcastTaskAssignment === 'function') {
+                (global as any).broadcastTaskAssignment(assigneeId, {
+                  type: 'task_assignment',
+                  message: 'You have been assigned a new task',
+                  taskId: task.id,
+                  taskTitle: task.title,
+                  notificationId: notification.id
+                });
+              }
+            } catch (notificationError) {
+              console.error(`Error creating notification for user ${assigneeId}:`, notificationError);
+              // Don't fail task update if notification fails
+            }
+          }
+        }
+      }
+      
+      console.log(`Task ${taskId} updated successfully`);
+      res.json(task);
+    } catch (error) {
+      console.error("Error updating project task:", error);
+      res.status(500).json({ error: "Failed to update task" });
+    }
+  });
+
+  app.delete("/api/tasks/:id", async (req, res) => {
+    try {
+      const taskId = parseInt(req.params.id);
+      const success = await storage.deleteProjectTask(taskId);
+      if (!success) {
+        return res.status(404).json({ error: "Task not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting project task:", error);
+      res.status(500).json({ error: "Failed to delete task" });
+    }
+  });
+
   // Register project routes
   const { projectsRoutes } = await import("./routes/projects");
   app.use("/api", projectsRoutes);
