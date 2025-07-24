@@ -1,0 +1,819 @@
+_app-c4f3a108347f3bbc.js:38 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+_app-c4f3a108347f3bbc.js:38 [LaunchDarkly] LaunchDarkly client initialized
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILED
+Sandwich-Project-Platform:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+Sandwich-Project-Platform:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+_app-c4f3a108347f3bbc.js:38 Adding extension: Javascript Commands Object
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+The resource <URL> was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+_app-c4f3a108347f3bbc.js:38 Adding extension: ReplDB Export and Import Object
+_app-c4f3a108347f3bbc.js:38 Adding extension: repl.tv Object
+_app-c4f3a108347f3bbc.js:38 Adding extension: AI Playground Object
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'battery'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'battery'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'layout-animations'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'layout-animations'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'navigation-override'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'navigation-override'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'oversized-images'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'oversized-images'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'publickey-credentials'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'publickey-credentials'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'speaker-selection'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'speaker-selection'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'unoptimized-images'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'unoptimized-images'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'unsized-media'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'unsized-media'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-d75b4538513a3228.js:1
+ Unrecognized feature: 'pointer-lock'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-d75b4538513a3228.js:1
+ Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-d75b4538513a3228.js:1
+framework-d75b4538513a3228.js:1 Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-d75b4538513a3228.js:1
+ Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-d75b4538513a3228.js:1
+hook.js:608 Command: javascript-root-command has unrecognized contributions: commandbar. Valid contributions are commandbar,filetree-context-menu,sidebar-search,editor-context-menu Object
+overrideMethod @ hook.js:608
+4368-43ecab1e806f7fc3.js:1 WebSocket connection to 'wss://production-ai-chat.replit.com/river?auth_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQzMDI1MTM3LCJ1c2VyVGltZUNyZWF0ZWQiOiIyMDI1LTA1LTIzVDAyOjEzOjE1LjEzMVoiLCJyZXBsSWQiOiJiYjFkMzBmOC1kODUyLTRiYWUtYWJjZC1iN2M0NTIxZTNkODUiLCJtZW1iZXJzaGlwIjoiY29yZSIsImlzc3VlciI6Imh0dHBzOi8vcmVwbGl0LXdlYi1wcm9kLnAucmVwbGl0LmNvbSIsInJvbGVzIjpbImV4cGxvcmVyIiwiaW50ZW50X3BlcnNvbmFsIl0sImNhbldyaXRlIjp0cnVlLCJoYXNSZXBsaXRBaVBybyI6dHJ1ZSwiZmxhZ2dpbmdDb250ZXh0Ijoie1wia2V5XCI6XCJ1c2VyOjQzMDI1MTM3XCIsXCJraW5kXCI6XCJvd...0ZW50X3BlcnNvbmFsXCJdLFwiaXNfdGVhbVwiOmZhbHNlLFwiaGFzX2FnZW50X2JpbGxpbmdfdjJcIjp0cnVlLFwibWVtYmVyc2hpcFwiOlwiY29yZVwifSIsImlhdCI6MTc1MzI5NTY0NiwiZXhwIjoxNzUzMjk5MjQ2fQ.WzlImouWNrYGD48Uq9uFTLCbFB8wT2NOTdii_AXzEY31NcoqAbB7wH2o_sZUIKmdp_AX8Qb3_TBo8rYN8PpVvmSmcYCex5v0_ZhUXqVWDQFjXEOOeGNOZoRtgTka4PKL7DhuQNeRTYYTkh-ifgcFrbC74sn-UuztSO7Hs6xETWQPXwtIITEI6fv6BHl4Ng9tQzsfLVIGUJb_XNOMbBZSSleR8rrOh95UlhDpQ-ElFB8oZ5ir2oGoquekC5Si41RNnuGydbuqK5SvKSRIuBKKaf5ZVKnv8VnA-opLyI1JSN-xrPpb9KmkHsfN3famzSkmGk0rocNjWvKi1EudFSNWRw' failed: 
+(anonymous) @ 4368-43ecab1e806f7fc3.js:1
+ WebSocket connection to 'wss://production-ai-chat.replit.com/river?auth_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQzMDI1MTM3LCJ1c2VyVGltZUNyZWF0ZWQiOiIyMDI1LTA1LTIzVDAyOjEzOjE1LjEzMVoiLCJyZXBsSWQiOiJiYjFkMzBmOC1kODUyLTRiYWUtYWJjZC1iN2M0NTIxZTNkODUiLCJtZW1iZXJzaGlwIjoiY29yZSIsImlzc3VlciI6Imh0dHBzOi8vcmVwbGl0LXdlYi1wcm9kLnAucmVwbGl0LmNvbSIsInJvbGVzIjpbImV4cGxvcmVyIiwiaW50ZW50X3BlcnNvbmFsIl0sImNhbldyaXRlIjp0cnVlLCJoYXNSZXBsaXRBaVBybyI6dHJ1ZSwiZmxhZ2dpbmdDb250ZXh0Ijoie1wia2V5XCI6XCJ1c2VyOjQzMDI1MTM3XCIsXCJraW5kXCI6XCJvd...0ZW50X3BlcnNvbmFsXCJdLFwiaXNfdGVhbVwiOmZhbHNlLFwiaGFzX2FnZW50X2JpbGxpbmdfdjJcIjp0cnVlLFwibWVtYmVyc2hpcFwiOlwiY29yZVwifSIsImlhdCI6MTc1MzI5NTY0NiwiZXhwIjoxNzUzMjk5MjQ2fQ.WzlImouWNrYGD48Uq9uFTLCbFB8wT2NOTdii_AXzEY31NcoqAbB7wH2o_sZUIKmdp_AX8Qb3_TBo8rYN8PpVvmSmcYCex5v0_ZhUXqVWDQFjXEOOeGNOZoRtgTka4PKL7DhuQNeRTYYTkh-ifgcFrbC74sn-UuztSO7Hs6xETWQPXwtIITEI6fv6BHl4Ng9tQzsfLVIGUJb_XNOMbBZSSleR8rrOh95UlhDpQ-ElFB8oZ5ir2oGoquekC5Si41RNnuGydbuqK5SvKSRIuBKKaf5ZVKnv8VnA-opLyI1JSN-xrPpb9KmkHsfN3famzSkmGk0rocNjWvKi1EudFSNWRw' failed: 
+(anonymous) @ 4368-43ecab1e806f7fc3.js:1
+4368-43ecab1e806f7fc3.js:1 WebSocket connection to 'wss://production-ai-chat.replit.com/river?auth_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQzMDI1MTM3LCJ1c2VyVGltZUNyZWF0ZWQiOiIyMDI1LTA1LTIzVDAyOjEzOjE1LjEzMVoiLCJyZXBsSWQiOiJiYjFkMzBmOC1kODUyLTRiYWUtYWJjZC1iN2M0NTIxZTNkODUiLCJtZW1iZXJzaGlwIjoiY29yZSIsImlzc3VlciI6Imh0dHBzOi8vcmVwbGl0LXdlYi1wcm9kLnAucmVwbGl0LmNvbSIsInJvbGVzIjpbImV4cGxvcmVyIiwiaW50ZW50X3BlcnNvbmFsIl0sImNhbldyaXRlIjp0cnVlLCJoYXNSZXBsaXRBaVBybyI6dHJ1ZSwiZmxhZ2dpbmdDb250ZXh0Ijoie1wia2V5XCI6XCJ1c2VyOjQzMDI1MTM3XCIsXCJraW5kXCI6XCJvd...0ZW50X3BlcnNvbmFsXCJdLFwiaXNfdGVhbVwiOmZhbHNlLFwiaGFzX2FnZW50X2JpbGxpbmdfdjJcIjp0cnVlLFwibWVtYmVyc2hpcFwiOlwiY29yZVwifSIsImlhdCI6MTc1MzI5NTY0NiwiZXhwIjoxNzUzMjk5MjQ2fQ.WzlImouWNrYGD48Uq9uFTLCbFB8wT2NOTdii_AXzEY31NcoqAbB7wH2o_sZUIKmdp_AX8Qb3_TBo8rYN8PpVvmSmcYCex5v0_ZhUXqVWDQFjXEOOeGNOZoRtgTka4PKL7DhuQNeRTYYTkh-ifgcFrbC74sn-UuztSO7Hs6xETWQPXwtIITEI6fv6BHl4Ng9tQzsfLVIGUJb_XNOMbBZSSleR8rrOh95UlhDpQ-ElFB8oZ5ir2oGoquekC5Si41RNnuGydbuqK5SvKSRIuBKKaf5ZVKnv8VnA-opLyI1JSN-xrPpb9KmkHsfN3famzSkmGk0rocNjWvKi1EudFSNWRw' failed: 
+(anonymous) @ 4368-43ecab1e806f7fc3.js:1
+ WebSocket connection to 'wss://production-ai-chat.replit.com/river?auth_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQzMDI1MTM3LCJ1c2VyVGltZUNyZWF0ZWQiOiIyMDI1LTA1LTIzVDAyOjEzOjE1LjEzMVoiLCJyZXBsSWQiOiJiYjFkMzBmOC1kODUyLTRiYWUtYWJjZC1iN2M0NTIxZTNkODUiLCJtZW1iZXJzaGlwIjoiY29yZSIsImlzc3VlciI6Imh0dHBzOi8vcmVwbGl0LXdlYi1wcm9kLnAucmVwbGl0LmNvbSIsInJvbGVzIjpbImV4cGxvcmVyIiwiaW50ZW50X3BlcnNvbmFsIl0sImNhbldyaXRlIjp0cnVlLCJoYXNSZXBsaXRBaVBybyI6dHJ1ZSwiZmxhZ2dpbmdDb250ZXh0Ijoie1wia2V5XCI6XCJ1c2VyOjQzMDI1MTM3XCIsXCJraW5kXCI6XCJvd...0ZW50X3BlcnNvbmFsXCJdLFwiaXNfdGVhbVwiOmZhbHNlLFwiaGFzX2FnZW50X2JpbGxpbmdfdjJcIjp0cnVlLFwibWVtYmVyc2hpcFwiOlwiY29yZVwifSIsImlhdCI6MTc1MzI5NTY0NiwiZXhwIjoxNzUzMjk5MjQ2fQ.WzlImouWNrYGD48Uq9uFTLCbFB8wT2NOTdii_AXzEY31NcoqAbB7wH2o_sZUIKmdp_AX8Qb3_TBo8rYN8PpVvmSmcYCex5v0_ZhUXqVWDQFjXEOOeGNOZoRtgTka4PKL7DhuQNeRTYYTkh-ifgcFrbC74sn-UuztSO7Hs6xETWQPXwtIITEI6fv6BHl4Ng9tQzsfLVIGUJb_XNOMbBZSSleR8rrOh95UlhDpQ-ElFB8oZ5ir2oGoquekC5Si41RNnuGydbuqK5SvKSRIuBKKaf5ZVKnv8VnA-opLyI1JSN-xrPpb9KmkHsfN3famzSkmGk0rocNjWvKi1EudFSNWRw' failed: 
+(anonymous) @ 4368-43ecab1e806f7fc3.js:1
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitComplete listeners added. Use emitter.setMaxListeners() to increase limit
+    at m (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:53828)
+    at l.addListener (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:56714)
+    at h (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:44842)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:50712)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963633
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963608
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileDirty listeners added. Use emitter.setMaxListeners() to increase limit
+    at m (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:53828)
+    at l.addListener (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:56714)
+    at h (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:44962)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:50712)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963633
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963608
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileClean listeners added. Use emitter.setMaxListeners() to increase limit
+    at m (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:53828)
+    at l.addListener (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:56714)
+    at h (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:45077)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:50712)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963633
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963608
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitStart listeners added. Use emitter.setMaxListeners() to increase limit
+    at m (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:53828)
+    at l.addListener (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:56714)
+    at h (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:45194)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:50712)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963633
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963608
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 promptUserReconnect listeners added. Use emitter.setMaxListeners() to increase limit
+    at m (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:53828)
+    at l.addListener (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:56714)
+    at h (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:46487)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:50712)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963633
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963608
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:134884
+overrideMethod @ hook.js:608
+stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+stallwart.build.js:1 stallwart: failed ping 4
+stallwart.build.js:1 stallwart: failed ping 5
+stallwart.build.js:1 stallwart: session stalled
+hook.js:608 task queue exceeded allotted deadline by 34ms
+overrideMethod @ hook.js:608
+hook.js:608 task queue exceeded allotted deadline by 22ms
+overrideMethod @ hook.js:608
+hook.js:608 `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+overrideMethod @ hook.js:608
+hook.js:608 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+overrideMethod @ hook.js:608
+hook.js:608 WARN: A component changed from uncontrolled to controlled.
+overrideMethod @ hook.js:608
+hook.js:608 WARN: A component changed from controlled to uncontrolled.
+overrideMethod @ hook.js:608
+hook.js:608 WARN: A component changed from uncontrolled to controlled.
+overrideMethod @ hook.js:608
+hook.js:608 task queue exceeded allotted deadline by 29ms
+overrideMethod @ hook.js:608
+hook.js:608 task queue exceeded allotted deadline by 212ms
+overrideMethod @ hook.js:608
+_app-c4f3a108347f3bbc.js:38 Adding extension: Javascript Commands Object
+hook.js:608 Command: javascript-root-command has unrecognized contributions: commandbar. Valid contributions are commandbar,filetree-context-menu,sidebar-search,editor-context-menu Object
+overrideMethod @ hook.js:608
+_app-c4f3a108347f3bbc.js:38 Adding extension: ReplDB Export and Import Object
+_app-c4f3a108347f3bbc.js:38 Adding extension: repl.tv Object
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitComplete listeners added. Use emitter.setMaxListeners() to increase limit
+    at m (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:53828)
+    at l.addListener (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:56714)
+    at h (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:44842)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:50712)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963633
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963608
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileDirty listeners added. Use emitter.setMaxListeners() to increase limit
+    at m (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:53828)
+    at l.addListener (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:56714)
+    at h (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:44962)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:50712)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963633
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963608
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 fileClean listeners added. Use emitter.setMaxListeners() to increase limit
+    at m (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:53828)
+    at l.addListener (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:56714)
+    at h (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:45077)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:50712)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963633
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963608
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 commitStart listeners added. Use emitter.setMaxListeners() to increase limit
+    at m (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:53828)
+    at l.addListener (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:56714)
+    at h (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:45194)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:50712)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963633
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963608
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:134884
+overrideMethod @ hook.js:608
+hook.js:608 MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 promptUserReconnect listeners added. Use emitter.setMaxListeners() to increase limit
+    at m (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:53828)
+    at l.addListener (https://cdn.replit.com/_next/static/chunks/4779-11b2df3bc5a751f9.js:1:56714)
+    at h (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:46487)
+    at Object.watchTextFile (https://cdn.replit.com/_next/static/chunks/3721-7ee85dee8851824e.js:1:50712)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963633
+    at Array.map (<anonymous>)
+    at https://cdn.replit.com/_next/static/chunks/9511-7035dd4ae4ca4505.js:1:2963608
+    at oO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:125395)
+    at uB (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:154390)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152776
+    at uO (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:152842)
+    at u_ (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:137506)
+    at r6 (https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:86196)
+    at https://cdn.replit.com/_next/static/chunks/framework-d75b4538513a3228.js:1:134884
+overrideMethod @ hook.js:608
+_app-c4f3a108347f3bbc.js:38 Adding extension: AI Playground Object
+/graphql:1  Failed to load resource: the server responded with a status of 500 ()
+/graphql:1  Failed to load resource: the server responded with a status of 500 ()
+[Violation] Potential permissions policy violation: fullscreen is not allowed in this document.
+[Violation] Potential permissions policy violation: fullscreen is not allowed in this document.
+[Violation] Potential permissions policy violation: fullscreen is not allowed in this document.
+[Violation] Potential permissions policy violation: fullscreen is not allowed in this document.
+hook.js:608 task queue exceeded allotted deadline by 41ms
+overrideMethod @ hook.js:608
+hook.js:608 WARN: A component changed from uncontrolled to controlled.
+overrideMethod @ hook.js:608
+hook.js:608 WARN: A component changed from controlled to uncontrolled.
+overrideMethod @ hook.js:608
+hook.js:608 WARN: A component changed from uncontrolled to controlled.
+overrideMethod @ hook.js:608
+hook.js:608 WARN: A component changed from controlled to uncontrolled.
+overrideMethod @ hook.js:608
+hook.js:608 WARN: A component changed from uncontrolled to controlled.
+overrideMethod @ hook.js:608
+hook.js:608 WARN: A component changed from uncontrolled to controlled.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+hook.js:608 An aria-label or aria-labelledby prop is required for accessibility.
+overrideMethod @ hook.js:608
+/graphql:1  Failed to load resource: net::ERR_CONNECTION_CLOSED
+/graphql:1  Failed to load resource: net::ERR_CONNECTION_CLOSED
+workspace_iframe.html:32 Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html:32 Unrecognized feature: 'battery'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html:32 Unrecognized feature: 'layout-animations'.
+workspace_iframe.html:32 Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html:32 Unrecognized feature: 'navigation-override'.
+workspace_iframe.html:32 Unrecognized feature: 'oversized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html:32 Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/:1 Refused to load the script 'https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/static/devtools/eruda/3.2.3/eruda.js' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/:1 Refused to load the script 'https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/__replco/static/devtools/injected.js' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/:1 Refused to execute inline event handler because it violates the following Content Security Policy directive: "default-src 'none'". Either the 'unsafe-inline' keyword, a hash ('sha256-...'), or a nonce ('nonce-...') is required to enable inline execution. Note that hashes do not apply to event handlers, style attributes and javascript: navigations unless the 'unsafe-hashes' keyword is present. Note also that 'script-src' was not explicitly set, so 'default-src' is used as a fallback.
+
+ Refused to load the script 'https://replit.com/public/js/beacon.js' because it violates the following Content Security Policy directive: "default-src 'none'". Note that 'script-src-elem' was not explicitly set, so 'default-src' is used as a fallback.
+
+onIframeLoad @ workspace_iframe.html:142
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=R5tMoyo9MLci' failed: 
+t @ bb1d30f8-d852-4bae-a…da/3.2.3/eruda.js:2
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/auth/user:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+Refused to frame 'https://replit.com/' because an ancestor violates the following Content Security Policy directive: "frame-ancestors 'self' https://*.replit.dev".
+
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=R5tMoyo9MLci' failed: 
+t @ bb1d30f8-d852-4bae-a…da/3.2.3/eruda.js:2
+bb1d30f8-d852-4bae-a…da/3.2.3/eruda.js:2 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=R5tMoyo9MLci' is invalid.
+t @ bb1d30f8-d852-4bae-a…da/3.2.3/eruda.js:2
+setupWebSocket @ bb1d30f8-d852-4bae-a…00/@vite/client:536
+fallback @ bb1d30f8-d852-4bae-a…00/@vite/client:509
+(anonymous) @ bb1d30f8-d852-4bae-a…00/@vite/client:555
+bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/auth/user:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)
+Refused to frame 'https://replit.com/' because an ancestor violates the following Content Security Policy directive: "frame-ancestors 'self' https://*.replit.dev".
+
