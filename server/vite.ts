@@ -10,9 +10,9 @@ export async function setupVite(app: Express, server: Server) {
     server: {
       middlewareMode: true,
       hmr: { server },
-      // @ts-expect-error - true is accepted at runtime but not typed
-      allowedHosts: true,
+      allowedHosts: true as const,
     },
+
     appType: "custom",
   });
 
