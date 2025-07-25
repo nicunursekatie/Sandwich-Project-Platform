@@ -1164,7 +1164,7 @@ export default function SandwichCollectionLog() {
               <p className="text-sm text-slate-500 font-medium">{totalItems} entries</p>
               {totalStats && (
                 <div className="text-right">
-                  <div className="text-4xl sm:text-5xl font-black text-transparent bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text drop-shadow-sm">
+                  <div className="text-2xl sm:text-3xl font-black text-transparent bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text drop-shadow-sm">
                     {totalStats.completeTotalSandwiches.toLocaleString()}
                   </div>
                   <div className="text-sm font-semibold text-amber-700 uppercase tracking-wide">Total Sandwiches</div>
@@ -1174,14 +1174,14 @@ export default function SandwichCollectionLog() {
             {totalStats && (
               <div className="flex justify-center gap-8 bg-gradient-to-r from-teal-50 to-amber-50 rounded-xl py-4 px-6 border border-amber-200 shadow-sm">
                 <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-teal-700 drop-shadow-sm">
+                  <div className="text-xl sm:text-2xl font-bold text-teal-700 drop-shadow-sm">
                     {totalStats.individualSandwiches.toLocaleString()}
                   </div>
                   <div className="text-sm font-semibold text-teal-600 uppercase tracking-wide mt-1">Individual</div>
                 </div>
                 <div className="w-px bg-gradient-to-b from-teal-300 to-amber-300"></div>
                 <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-orange-600 drop-shadow-sm">
+                  <div className="text-xl sm:text-2xl font-bold text-orange-600 drop-shadow-sm">
                     {totalStats.groupSandwiches.toLocaleString()}
                   </div>
                   <div className="text-sm font-semibold text-orange-600 uppercase tracking-wide mt-1">Groups</div>
