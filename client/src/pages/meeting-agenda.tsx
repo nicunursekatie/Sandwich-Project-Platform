@@ -23,7 +23,11 @@ interface AgendaItem {
   submittedAt: string;
 }
 
-export default function MeetingAgenda() {
+interface MeetingAgendaProps {
+  isEmbedded?: boolean;
+}
+
+export default function MeetingAgenda({ isEmbedded = false }: MeetingAgendaProps) {
   const { user } = useAuth();
   const canModifyAgenda = user?.role !== 'committee_member';
   const [, setLocation] = useLocation();
@@ -136,7 +140,8 @@ export default function MeetingAgenda() {
 
   return (
     <div className="space-y-6">
-      {/* Navigation Header */}
+      {/* Navigation Header - only show when not embedded */}
+      {!isEmbedded && (
       <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
         <Button 
           variant="outline" 
@@ -153,6 +158,7 @@ export default function MeetingAgenda() {
           <span className="text-gray-900 dark:text-white font-medium">Agenda</span>
         </div>
       </div>
+      )}
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

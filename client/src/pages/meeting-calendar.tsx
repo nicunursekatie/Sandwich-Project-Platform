@@ -28,7 +28,11 @@ interface Meeting {
   createdAt: string;
 }
 
-export default function MeetingCalendar() {
+interface MeetingCalendarProps {
+  isEmbedded?: boolean;
+}
+
+export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarProps) {
   const [, setLocation] = useLocation();
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -131,7 +135,8 @@ export default function MeetingCalendar() {
 
   return (
     <div className="space-y-6">
-      {/* Navigation Header */}
+      {/* Navigation Header - only show when not embedded */}
+      {!isEmbedded && (
       <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
         <Button 
           variant="outline" 
@@ -148,6 +153,7 @@ export default function MeetingCalendar() {
           <span className="text-gray-900 dark:text-white font-medium">Calendar</span>
         </div>
       </div>
+      )}
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

@@ -39,15 +39,15 @@ export default function UnifiedMeetings() {
         </TabsList>
 
         <TabsContent value="minutes" className="mt-6">
-          <MeetingMinutes />
+          <MeetingMinutes isEmbedded={true} />
         </TabsContent>
 
         <TabsContent value="agenda" className="mt-6">
-          <MeetingAgenda />
+          <MeetingAgenda isEmbedded={true} />
         </TabsContent>
 
         <TabsContent value="calendar" className="mt-6">
-          <MeetingCalendar />
+          <MeetingCalendar isEmbedded={true} />
         </TabsContent>
       </Tabs>
     </div>

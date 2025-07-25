@@ -83,6 +83,7 @@ function Router() {
       <Route path="/suggestions">{() => <Dashboard initialSection="suggestions" />}</Route>
       <Route path="/governance">{() => <Dashboard initialSection="governance" />}</Route>
       <Route path="/google-sheets">{() => <Dashboard initialSection="google-sheets" />}</Route>
+      <Route path="/meetings">{() => <Dashboard initialSection="meetings" />}</Route>
       <Route path="/dashboard">{() => <Dashboard />}</Route>
       <Route path="/dashboard/:section">{(params) => <Dashboard initialSection={params.section} />}</Route>
       <Route path="/">{() => <Dashboard />}</Route>

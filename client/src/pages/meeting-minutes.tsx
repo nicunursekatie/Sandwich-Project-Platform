@@ -13,7 +13,11 @@ import { useLocation } from"wouter";
 import { DocumentViewer } from '@/components/DocumentViewer';
 import type { Meeting, MeetingMinutes, InsertMeeting } from"@shared/schema";
 
-export default function MeetingMinutes() {
+interface MeetingMinutesProps {
+  isEmbedded?: boolean;
+}
+
+export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesProps) {
  const [, setLocation] = useLocation();
  const [selectedMeetingId, setSelectedMeetingId] = useState<number | null>(null);
  const [isUploadingMinutes, setIsUploadingMinutes] = useState(false);
@@ -792,7 +796,8 @@ export default function MeetingMinutes() {
  // Show main meetings list
  return (
  <div className="space-y-6">
- {/* Navigation Header */}
+ {/* Navigation Header - only show when not embedded */}
+ {!isEmbedded && (
  <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
  <Button 
  variant="outline" 
@@ -809,6 +814,7 @@ export default function MeetingMinutes() {
  <span className="text-gray-900 dark:text-white font-medium">Minutes</span>
  </div>
  </div>
+ )}
 
  {/* Header */}
  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
