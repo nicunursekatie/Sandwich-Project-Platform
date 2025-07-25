@@ -743,9 +743,9 @@ export default function SuggestionsPortal() {
                         </div>
                       </div>
 
-                      {/* Admin Actions */}
+                      {/* Admin Actions - Mobile responsive */}
                       {hasPermission(currentUser, 'manage_suggestions') && (
-                        <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
+                        <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100 sm:justify-start justify-center">
                           <Button
                             variant="ghost"
                             size="sm"
