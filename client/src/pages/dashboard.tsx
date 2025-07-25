@@ -385,12 +385,12 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
 
   return (
     <HelpProvider>
-      <div className="bg-slate-50 min-h-screen flex flex-col">
+      <div className="bg-gradient-to-br from-orange-50 to-yellow-50 min-h-screen flex flex-col">
       {/* Announcement Banner */}
       <AnnouncementBanner />
       
       {/* Top Header */}
-      <div className="bg-white border-b border-slate-200 px-2 sm:px-4 md:px-6 py-3 flex items-center relative z-50">
+      <div className="bg-gradient-to-r from-white to-orange-50/30 border-b-2 border-amber-200 shadow-sm px-2 sm:px-4 md:px-6 py-3 flex items-center relative z-50">
         <div className="flex items-center space-x-2 min-w-0 flex-shrink-0">
           {/* Mobile menu button - positioned first for easy access */}
           <button
@@ -401,8 +401,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
           <img src={sandwichLogo} alt="Sandwich Logo" className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
-          <h1 className="text-base sm:text-lg font-semibold text-slate-900 hidden sm:block">The Sandwich Project</h1>
-          <h1 className="text-sm font-semibold text-slate-900 sm:hidden">TSP</h1>
+          <h1 className="text-base sm:text-lg font-semibold text-teal-800 hidden sm:block">The Sandwich Project</h1>
+          <h1 className="text-sm font-semibold text-teal-800 sm:hidden">TSP</h1>
         </div>
         
         {/* Flexible spacer */}
@@ -411,22 +411,22 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         {/* Current User Indicator - moved to right side with right-aligned buttons */}
         <div className="flex items-center space-x-2 sm:space-x-3">
           {user && (
-            <div className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200">
-              <div className="w-5 h-5 sm:w-6 sm:h-6 bg-teal-100 rounded-full flex items-center justify-center">
-                <span className="text-xs font-medium text-teal-700">
+            <div className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-200 shadow-sm">
+              <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-teal-100 to-teal-200 rounded-full flex items-center justify-center shadow-sm">
+                <span className="text-xs font-medium text-teal-800">
                   {(user as any)?.firstName?.charAt(0) || (user as any)?.email?.charAt(0) || 'U'}
                 </span>
               </div>
               <div className="hidden sm:flex flex-col">
-                <span className="text-xs font-medium text-slate-700">
+                <span className="text-xs font-medium text-teal-800">
                   {(user as any)?.firstName ? `${(user as any).firstName} ${(user as any)?.lastName || ''}`.trim() : (user as any)?.email}
                 </span>
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-amber-600">
                   {(user as any)?.email}
                 </span>
               </div>
               <div className="sm:hidden">
-                <span className="text-xs font-medium text-slate-700">
+                <span className="text-xs font-medium text-teal-800">
                   {(user as any)?.firstName ? `${(user as any).firstName}` : (user as any)?.email?.split('@')[0] || 'User'}
                 </span>
               </div>
@@ -441,8 +441,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
             }}
             className={`p-2 rounded-lg transition-colors relative z-50 pointer-events-auto touch-manipulation ${
               activeSection === "messages"
-                ? "bg-blue-50 text-blue-700 border border-blue-200"
-                : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                ? "bg-gradient-to-r from-amber-100 to-orange-100 text-teal-700 border border-amber-300 shadow-sm"
+                : "text-teal-600 hover:bg-amber-50 hover:text-teal-800"
             }`}
             title="Messages"
             aria-label="Messages"
@@ -464,8 +464,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
             }}
             className={`p-2 rounded-lg transition-colors relative z-50 pointer-events-auto touch-manipulation ${
               activeSection === "profile"
-                ? "bg-blue-50 text-blue-700 border border-blue-200"
-                : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                ? "bg-gradient-to-r from-amber-100 to-orange-100 text-teal-700 border border-amber-300 shadow-sm"
+                : "text-teal-600 hover:bg-amber-50 hover:text-teal-800"
             }`}
             title="Account Settings"
             aria-label="Account Settings"
@@ -491,7 +491,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
                 window.location.href = "/";
               }
             }}
-            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition-colors touch-manipulation"
+            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 text-amber-700 hover:text-amber-900 rounded-lg hover:bg-amber-50 transition-colors touch-manipulation border border-amber-200 hover:border-amber-300"
             aria-label="Logout"
           >
             <LogOut className="w-4 h-4" />
@@ -513,7 +513,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         {/* Sidebar */}
         <div className={`${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 fixed md:relative z-50 w-64 sm:w-72 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out h-screen max-h-screen`}>
+        } md:translate-x-0 fixed md:relative z-50 w-64 sm:w-72 bg-gradient-to-b from-white to-orange-50/30 border-r-2 border-amber-200 shadow-lg flex flex-col transition-transform duration-300 ease-in-out h-screen max-h-screen`}>
           {/* Simple Navigation with enhanced mobile scrolling */}
           <div className="flex-1 overflow-y-auto pb-6 touch-pan-y overscroll-contain">
             <SimpleNav 
@@ -533,7 +533,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto w-full md:w-auto relative z-10">
-          <div className="p-3 sm:p-4 md:p-6 pb-20 min-h-full">
+          <div className="p-3 sm:p-4 md:p-6 pb-20 min-h-full bg-gradient-to-br from-white/80 to-orange-50/20 rounded-tl-lg">
             <div className="max-w-full overflow-x-hidden">
               {renderContent()}
             </div>
