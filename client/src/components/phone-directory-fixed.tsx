@@ -72,13 +72,22 @@ interface GeneralContact {
 
 function PhoneDirectoryFixed() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("contacts");
   const { user } = useAuth();
 
   // Permission checks
   const canViewHosts = hasPermission(user, PERMISSIONS.ACCESS_HOSTS);
   const canViewRecipients = hasPermission(user, PERMISSIONS.ACCESS_RECIPIENTS);
   const canViewDrivers = hasPermission(user, PERMISSIONS.ACCESS_DRIVERS);
+
+  // Smart default tab selection: prefer hosts, then other tabs (exclude contacts)
+  const getDefaultTab = React.useCallback(() => {
+    if (canViewHosts) return "hosts";
+    if (canViewRecipients) return "recipients";  
+    if (canViewDrivers) return "drivers";
+    return "contacts"; // fallback if no other permissions
+  }, [canViewHosts, canViewRecipients, canViewDrivers]);
+
+  const [activeTab, setActiveTab] = useState(() => getDefaultTab());
 
   // Data queries
   const { data: hosts = [] } = useQuery<HostWithContacts[]>({
@@ -105,12 +114,13 @@ function PhoneDirectoryFixed() {
     { id: 'drivers', label: 'Drivers', icon: User, enabled: canViewDrivers }
   ].filter(tab => tab.enabled);
 
-  // Auto-select first available tab if current tab isn't available
+  // Auto-select appropriate tab based on permissions
   React.useEffect(() => {
+    const defaultTab = getDefaultTab();
     if (!availableTabs.find(tab => tab.id === activeTab)) {
-      setActiveTab(availableTabs[0]?.id || 'contacts');
+      setActiveTab(defaultTab);
     }
-  }, [availableTabs, activeTab]);
+  }, [availableTabs, activeTab, getDefaultTab]);
 
   // Filter data based on search
   const filteredHosts = hosts.filter((host) => {
