@@ -18,10 +18,15 @@ export default function MeetingMinutes() {
 
   // Handle clicking on a meeting minute to view document
   const handleViewMinutes = async (minute: MeetingMinutes) => {
+    console.log("🔍 Meeting minutes clicked:", minute);
+    
     if (minute.filePath) {
       try {
+        console.log("📁 Fetching file from:", `/api/meeting-minutes/${minute.id}/file`);
         // Try to download/view the file
         const response = await fetch(`/api/meeting-minutes/${minute.id}/file`);
+        console.log("📄 File fetch response:", response.status, response.statusText);
+        
         if (!response.ok) {
           throw new Error('File not found');
         }
@@ -37,7 +42,7 @@ export default function MeetingMinutes() {
           description: `Opening ${minute.fileName || 'meeting minutes'}`
         });
       } catch (error) {
-        console.error('Error accessing meeting minutes:', error);
+        console.error('❌ Error accessing meeting minutes:', error);
         toast({
           title: "Unable to access document",
           description: "The meeting minutes document could not be opened. It may have been moved or deleted.",
@@ -45,6 +50,7 @@ export default function MeetingMinutes() {
         });
       }
     } else if (minute.summary.includes("Google Docs link:")) {
+      console.log("🔗 Opening Google Docs link");
       // Extract Google Docs URL and open it
       const googleDocsMatch = minute.summary.match(/https:\/\/docs\.google\.com[^\s)]+/);
       if (googleDocsMatch) {
@@ -55,6 +61,7 @@ export default function MeetingMinutes() {
         });
       }
     } else {
+      console.log("📋 Showing text summary in modal");
       // Show summary in modal for text-only minutes
       setShowAllMinutes(true);
     }
