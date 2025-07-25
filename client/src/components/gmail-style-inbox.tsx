@@ -134,15 +134,15 @@ export default function GmailStyleInbox() {
   // Use email system for Gmail inbox
   const apiBase = "/api/emails";
 
-  // Fetch messages from email system
+  // Fetch messages from email system with threading
   const { data: messages = [], refetch: refetchMessages } = useQuery<any[]>({
-    queryKey: [apiBase, activeFolder],
+    queryKey: [apiBase, activeFolder, "threaded"],
     queryFn: async () => {
-      // Use the email messaging system with proper folder filtering
-      const response = await apiRequest('GET', `/api/emails?folder=${activeFolder}`);
+      // Use the email messaging system with threading enabled
+      const response = await apiRequest('GET', `/api/emails?folder=${activeFolder}&threaded=true`);
       const messages = Array.isArray(response) ? response : response.messages || [];
       
-      console.log(`Fetched ${messages.length} emails from ${activeFolder} folder`);
+      console.log(`Fetched ${messages.length} email threads from ${activeFolder} folder`);
       return messages;
     },
   });
@@ -197,16 +197,26 @@ export default function GmailStyleInbox() {
     }
   });
 
-  // Reply mutation - updated for conversation system
+  // Reply mutation - use email endpoint with proper threading
   const replyMutation = useMutation({
     mutationFn: async (replyData: any) => {
-      // Send reply to the same conversation
-      const conversationData = {
+      if (!selectedMessage) {
+        throw new Error("No message selected for reply");
+      }
+      
+      // Create reply email with proper threading
+      const replyEmailData = {
+        recipientId: selectedMessage.senderId,
+        recipientName: selectedMessage.senderName,
+        recipientEmail: selectedMessage.senderEmail,
+        subject: selectedMessage.subject.startsWith('Re: ') ? selectedMessage.subject : `Re: ${selectedMessage.subject}`,
         content: replyData.content,
-        sender: null,
-        conversationId: replyData.conversationId || selectedMessage?.conversationId
+        parentMessageId: selectedMessage.id, // This creates the thread
+        isDraft: false
       };
-      return await apiRequest('POST', '/api/messages', conversationData);
+      
+      console.log('Sending reply with threading data:', replyEmailData);
+      return await apiRequest('POST', '/api/emails', replyEmailData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [apiBase] });
