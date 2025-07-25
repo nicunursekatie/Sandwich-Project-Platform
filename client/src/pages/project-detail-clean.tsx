@@ -837,15 +837,10 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="operations">Operations</SelectItem>
-                    <SelectItem value="development">Development</SelectItem>
-                    <SelectItem value="marketing">Marketing</SelectItem>
-                    <SelectItem value="fundraising">Fundraising</SelectItem>
-                    <SelectItem value="volunteer">Volunteer</SelectItem>
-                    <SelectItem value="community">Community</SelectItem>
-                    <SelectItem value="strategic">Strategic</SelectItem>
-                    <SelectItem value="administrative">Administrative</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    <SelectItem value="technology">💻 Tech</SelectItem>
+                    <SelectItem value="events">📅 Events</SelectItem>
+                    <SelectItem value="grants">💰 Grants</SelectItem>
+                    <SelectItem value="outreach">🤝 Outreach</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

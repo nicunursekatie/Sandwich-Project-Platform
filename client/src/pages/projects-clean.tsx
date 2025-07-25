@@ -1034,10 +1034,10 @@ export default function ProjectsClean() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="technology">💻 Technology</SelectItem>
+                    <SelectItem value="technology">💻 Tech</SelectItem>
                     <SelectItem value="events">📅 Events</SelectItem>
                     <SelectItem value="grants">💰 Grants</SelectItem>
-                    <SelectItem value="outreach">🤝 Outreach/Networking</SelectItem>
+                    <SelectItem value="outreach">🤝 Outreach</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1197,10 +1197,10 @@ export default function ProjectsClean() {
                     <SelectValue placeholder="Select category..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="technology">💻 Technology</SelectItem>
+                    <SelectItem value="technology">💻 Tech</SelectItem>
                     <SelectItem value="events">📅 Events</SelectItem>
                     <SelectItem value="grants">💰 Grants</SelectItem>
-                    <SelectItem value="outreach">🤝 Outreach/Networking</SelectItem>
+                    <SelectItem value="outreach">🤝 Outreach</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
