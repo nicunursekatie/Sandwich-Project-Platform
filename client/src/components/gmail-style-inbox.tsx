@@ -271,29 +271,53 @@ export default function GmailStyleInbox() {
     }
   });
 
-  // Archive mutation - disabled for conversation messages
+  // Archive mutation - mark messages as archived
   const archiveMutation = useMutation({
     mutationFn: async (messageIds: number[]) => {
-      console.log('Archive not implemented for conversation messages:', messageIds);
-      return Promise.resolve();
+      // Mark each message as archived using the email PATCH endpoint
+      const promises = messageIds.map(id => 
+        apiRequest('PATCH', `/api/emails/${id}`, { isArchived: true })
+      );
+      return await Promise.all(promises);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [apiBase] });
+      // Also invalidate Gmail unread count to update navigation indicator
+      queryClient.invalidateQueries({ queryKey: ['/api/emails/unread-count'] });
       setSelectedMessages(new Set());
-      toast({ description: "Archive not available for conversation messages" });
+      toast({ description: "Messages archived successfully" });
+    },
+    onError: (error) => {
+      console.error('Archive error:', error);
+      toast({ 
+        description: "Failed to archive messages", 
+        variant: "destructive" 
+      });
     }
   });
 
-  // Trash mutation - disabled for conversation messages
+  // Trash mutation - mark messages as trashed
   const trashMutation = useMutation({
     mutationFn: async (messageIds: number[]) => {
-      console.log('Trash not implemented for conversation messages:', messageIds);
-      return Promise.resolve();
+      // Mark each message as trashed using the email PATCH endpoint
+      const promises = messageIds.map(id => 
+        apiRequest('PATCH', `/api/emails/${id}`, { isTrashed: true })
+      );
+      return await Promise.all(promises);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [apiBase] });
+      // Also invalidate Gmail unread count to update navigation indicator
+      queryClient.invalidateQueries({ queryKey: ['/api/emails/unread-count'] });
       setSelectedMessages(new Set());
-      toast({ description: "Trash not available for conversation messages" });
+      toast({ description: "Messages moved to trash" });
+    },
+    onError: (error) => {
+      console.error('Trash error:', error);
+      toast({ 
+        description: "Failed to move messages to trash", 
+        variant: "destructive" 
+      });
     }
   });
 
@@ -554,14 +578,24 @@ export default function GmailStyleInbox() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => console.log('Archive not implemented for conversation messages')}
+                  onClick={() => {
+                    if (selectedMessages.size > 0) {
+                      archiveMutation.mutate(Array.from(selectedMessages));
+                    }
+                  }}
+                  disabled={selectedMessages.size === 0 || archiveMutation.isPending}
                 >
                   Archive
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => console.log('Trash not implemented for conversation messages')}
+                  onClick={() => {
+                    if (selectedMessages.size > 0) {
+                      trashMutation.mutate(Array.from(selectedMessages));
+                    }
+                  }}
+                  disabled={selectedMessages.size === 0 || trashMutation.isPending}
                 >
                   Trash
                 </Button>
