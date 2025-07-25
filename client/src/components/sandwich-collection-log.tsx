@@ -292,26 +292,70 @@ export default function SandwichCollectionLog() {
     setCurrentPage(1);
   }, [searchFilters, sortConfig]);
 
-  // Pagination Controls Component
-  const PaginationControls = ({ position }: { position: 'top' | 'bottom' }) => (
-    <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <div className="flex items-center gap-2 text-sm text-slate-600">
-          <span>{effectiveTotalItems} collection{effectiveTotalItems !== 1 ? 's' : ''}</span>
-          {totalStats && (
-            <>
-              <span className="text-slate-400">•</span>
-              <span className="font-semibold text-slate-700">
-                {totalStats.totalSandwiches?.toLocaleString() || 0} sandwiches
-              </span>
-              <span className="text-slate-400">•</span>
-              <span>{totalStats.individualSandwiches?.toLocaleString() || 0} individual, {totalStats.groupSandwiches?.toLocaleString() || 0} group</span>
-            </>
-          )}
-        </div>
-        
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          {/* Page Size Selector */}
+  // Pagination Controls Component with Full Page Numbers
+  const PaginationControls = ({ position }: { position: 'top' | 'bottom' }) => {
+    // Calculate which page numbers to show
+    const getVisiblePages = () => {
+      const totalPages = effectiveTotalPages;
+      const current = currentPage;
+      const delta = 2; // Show 2 pages on each side of current page
+      
+      let pages = [];
+      
+      // Always show first page
+      if (totalPages > 0) {
+        pages.push(1);
+      }
+      
+      // Calculate start and end of middle section
+      let start = Math.max(2, current - delta);
+      let end = Math.min(totalPages - 1, current + delta);
+      
+      // Add ellipsis after first page if needed
+      if (start > 2) {
+        pages.push('...');
+      }
+      
+      // Add middle pages
+      for (let i = start; i <= end; i++) {
+        if (i !== 1 && i !== totalPages) {
+          pages.push(i);
+        }
+      }
+      
+      // Add ellipsis before last page if needed
+      if (end < totalPages - 1) {
+        pages.push('...');
+      }
+      
+      // Always show last page (if different from first)
+      if (totalPages > 1) {
+        pages.push(totalPages);
+      }
+      
+      return pages;
+    };
+
+    const visiblePages = getVisiblePages();
+
+    return (
+      <div className="flex flex-col sm:flex-row justify-between items-center p-4 bg-white border-t border-slate-200 gap-4">
+        {/* Left side - Collection info and per page selector */}
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="text-sm text-slate-600">
+            {effectiveTotalItems} collection{effectiveTotalItems !== 1 ? 's' : ''}
+            {totalStats && (
+              <>
+                {' • '}
+                <span className="font-semibold text-slate-700">
+                  {totalStats.totalSandwiches?.toLocaleString() || 0} sandwiches
+                </span>
+                {' • '}
+                {totalStats.individualSandwiches?.toLocaleString() || 0} individual, {totalStats.groupSandwiches?.toLocaleString() || 0} group
+              </>
+            )}
+          </div>
+          
           <div className="flex items-center gap-2 text-sm">
             <span className="text-slate-600">Per page:</span>
             <Select
@@ -332,55 +376,74 @@ export default function SandwichCollectionLog() {
               </SelectContent>
             </Select>
           </div>
-          
-          {/* Page Navigation */}
+        </div>
+
+        {/* Right side - Page navigation with individual page numbers */}
+        {effectiveTotalPages > 1 && (
           <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(1)}
-              disabled={currentPage === 1}
-              className="px-2 py-1 text-xs"
-            >
-              <ChevronLeft className="w-3 h-3" />
-              <ChevronLeft className="w-3 h-3 -ml-1" />
-            </Button>
+            {/* Previous button */}
             <Button
               variant="outline"
               size="sm"
               onClick={() => setCurrentPage(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-2 py-1 text-xs"
+              className="px-3 py-2"
             >
-              <ChevronLeft className="w-3 h-3" />
+              Previous
             </Button>
-            <span className="px-3 py-1 text-sm text-slate-600 bg-white border border-slate-200 rounded">
-              {currentPage} / {effectiveTotalPages}
-            </span>
+            
+            {/* Page number buttons */}
+            {visiblePages.map((page, index) => {
+              if (page === '...') {
+                return (
+                  <span key={`ellipsis-${index}`} className="px-2 py-2 text-slate-400">
+                    ...
+                  </span>
+                );
+              }
+              
+              const pageNum = page as number;
+              return (
+                <Button
+                  key={pageNum}
+                  variant={pageNum === currentPage ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setCurrentPage(pageNum)}
+                  className="w-10 h-10"
+                >
+                  {pageNum}
+                </Button>
+              );
+            })}
+            
+            {/* Next button */}
             <Button
               variant="outline"
               size="sm"
               onClick={() => setCurrentPage(currentPage + 1)}
               disabled={currentPage === effectiveTotalPages}
-              className="px-2 py-1 text-xs"
+              className="px-3 py-2"
             >
-              <ChevronRight className="w-3 h-3" />
+              Next
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(effectiveTotalPages)}
-              disabled={currentPage === effectiveTotalPages}
-              className="px-2 py-1 text-xs"
-            >
-              <ChevronRight className="w-3 h-3" />
-              <ChevronRight className="w-3 h-3 -ml-1" />
-            </Button>
+            
+            {/* Last button (if not already visible) */}
+            {currentPage < effectiveTotalPages - 2 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(effectiveTotalPages)}
+                disabled={currentPage === effectiveTotalPages}
+                className="px-3 py-2"
+              >
+                Last
+              </Button>
+            )}
           </div>
-        </div>
+        )}
       </div>
-    </div>
-  );
+    );
+  };
 
   // Get unique host names from collections for filtering
   const uniqueHostNames = Array.from(new Set(collections.map((c: SandwichCollection) => c.hostName))).sort();
