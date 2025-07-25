@@ -1769,13 +1769,7 @@ export default function SandwichCollectionLog() {
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
-                <Label>Group Collections</Label>
-                <Button type="button" variant="outline" size="sm" onClick={addEditGroupRow}>
-                  <Plus className="w-4 h-4 mr-1" />
-                  Add Group
-                </Button>
-              </div>
+              <Label>Group Collections</Label>
               
               <div className="space-y-3 mt-2">
                 {editGroupCollections.map((group) => (
@@ -1808,6 +1802,12 @@ export default function SandwichCollectionLog() {
                     )}
                   </div>
                 ))}
+                
+                {/* Add Another Group Button - Below existing group rows */}
+                <Button type="button" variant="outline" size="sm" onClick={addEditGroupRow}>
+                  <Plus className="w-4 h-4 mr-1" />
+                  ➕ Add Another Group
+                </Button>
               </div>
             </div>
 

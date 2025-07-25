@@ -424,24 +424,13 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
 
             {/* Group Collections */}
             <div className="space-y-4">
-              <div className="flex flex-col gap-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2" style={{ fontSize: '18px', fontWeight: '600' }}>
-                    Group Collections
-                  </h3>
-                  <p className="text-sm italic text-gray-600" style={{ fontSize: '14px', color: '#666' }}>
-                    List any groups/organizations and their counts here. Don't add these to your individual total.
-                  </p>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={addGroupRow}
-                  className="min-h-[44px] px-4 py-2 border-2 hover:bg-blue-100 self-start"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Group
-                </Button>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2" style={{ fontSize: '18px', fontWeight: '600' }}>
+                  Group Collections
+                </h3>
+                <p className="text-sm italic text-gray-600" style={{ fontSize: '14px', color: '#666' }}>
+                  List any groups/organizations and their counts here. Don't add these to your individual total.
+                </p>
               </div>
 
               <div className="space-y-4">
@@ -491,6 +480,17 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                     </div>
                   </div>
                 ))}
+                
+                {/* Add Another Group Button - Below existing group rows */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addGroupRow}
+                  className="min-h-[44px] px-4 py-2 border-2 hover:bg-blue-100 self-start"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  ➕ Add Another Group
+                </Button>
               </div>
             </div>
           </div>
