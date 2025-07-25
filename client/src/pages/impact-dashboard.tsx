@@ -456,45 +456,45 @@ export default function ImpactDashboard() {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <BarChart3 className="w-5 h-5 mr-2" />
-                    Collection Trends & Patterns
+                    Collection Trends & Context
                   </CardTitle>
-                  <CardDescription>Recent performance and seasonal insights</CardDescription>
+                  <CardDescription>Weekly performance and external benchmarks</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">Recent 4 Weeks vs Previous</span>
-                      <span className="font-bold text-green-600">+12%</span>
+                      <span className="text-gray-600">Recent Trend (Last 4 weeks)</span>
+                      <span className="font-bold text-blue-600">Steady</span>
                     </div>
                     <div className="bg-gray-100 rounded-full h-2">
-                      <div className="bg-green-500 h-2 rounded-full" style={{width: '60%'}}></div>
+                      <div className="bg-blue-500 h-2 rounded-full" style={{width: '75%'}}></div>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      Positive trend in weekly collections
+                      Consistent weekly collection performance
                     </p>
                   </div>
 
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">Seasonal Pattern</span>
-                      <span className="font-bold">Summer Peak</span>
+                      <span className="text-gray-600">Seasonal Context</span>
+                      <span className="font-bold">Summer Activity</span>
                     </div>
                     <div className="bg-gray-100 rounded-full h-2">
-                      <div className="bg-blue-500 h-2 rounded-full" style={{width: '85%'}}></div>
+                      <div className="bg-orange-500 h-2 rounded-full" style={{width: '80%'}}></div>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      Historical higher summer activity
+                      Tracking seasonal collection patterns
                     </p>
                   </div>
 
                   <div className="space-y-2">
-                    <h4 className="font-medium text-gray-900">Atlanta Food Security Context</h4>
+                    <h4 className="font-medium text-gray-900">Atlanta Hunger Context</h4>
                     <div className="space-y-1">
                       <a href="https://www.atlantaregionalfoodbank.org/impact/" target="_blank" className="text-blue-600 text-sm hover:underline block">
-                        → Atlanta Regional Food Bank Impact Data
+                        → Atlanta Regional Food Bank Data
                       </a>
                       <a href="https://hungerandhealth.feedingamerica.org/understand-food-insecurity/hunger-facts/" target="_blank" className="text-blue-600 text-sm hover:underline block">
-                        → Georgia Hunger Statistics
+                        → Georgia Food Insecurity Stats
                       </a>
                     </div>
                   </div>
