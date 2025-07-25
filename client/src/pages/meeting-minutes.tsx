@@ -47,6 +47,35 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  });
  const { toast } = useToast();
 
+ // Helper function to convert 24-hour time to 12-hour format
+ const formatTime12Hour = (time24: string) => {
+   if (!time24) return "Time TBD";
+   try {
+     const [hours, minutes] = time24.split(':');
+     const hour = parseInt(hours);
+     const ampm = hour >= 12 ? 'PM' : 'AM';
+     const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+     return `${hour12}:${minutes} ${ampm}`;
+   } catch (error) {
+     return "Time TBD";
+   }
+ };
+
+ // Helper function to check if meeting is in the past
+ const isMeetingPast = (dateStr: string, timeStr: string) => {
+   if (!dateStr) return false;
+   try {
+     const meetingDate = new Date(dateStr);
+     if (timeStr && timeStr !== "TBD") {
+       const [hours, minutes] = timeStr.split(':');
+       meetingDate.setHours(parseInt(hours), parseInt(minutes));
+     }
+     return meetingDate < new Date();
+   } catch (error) {
+     return false;
+   }
+ };
+
  // Fetch all meetings
  const { data: meetings = [], isLoading: meetingsLoading } = useQuery({
  queryKey: ["/api/meetings"],
@@ -287,7 +316,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  const meetingData: InsertMeeting = {
  title: newMeetingData.title,
  date: newMeetingData.date,
- time: newMeetingData.time ||"TBD",
+ time: newMeetingData.time || "",
  type: newMeetingData.type,
  location: newMeetingData.location || undefined,
  description: newMeetingData.description || undefined,
@@ -306,7 +335,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  id: editingMeetingId,
  title: editMeetingData.title,
  date: editMeetingData.date,
- time: editMeetingData.time ||"TBD",
+ time: editMeetingData.time || "",
  type: editMeetingData.type,
  location: editMeetingData.location || undefined,
  description: editMeetingData.description || undefined,
@@ -326,10 +355,22 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  };
 
  const formatMeetingDateTime = (meeting: Meeting) => {
- const date = new Date(meeting.date);
- const dateStr = date.toLocaleDateString();
- const timeStr = meeting.time ||"Time TBD";
- return `${dateStr} at ${timeStr}`;
+   const date = new Date(meeting.date);
+   const dateStr = date.toLocaleDateString();
+   
+   // For past meetings, never show TBD - show actual time or "Time not recorded"
+   const isPast = isMeetingPast(meeting.date, meeting.time);
+   let timeStr;
+   
+   if (meeting.time) {
+     timeStr = formatTime12Hour(meeting.time);
+   } else if (isPast) {
+     timeStr = "Time not recorded";
+   } else {
+     timeStr = "Time TBD";
+   }
+   
+   return `${dateStr} at ${timeStr}`;
  };
 
  if (meetingsLoading || minutesLoading) {
@@ -599,7 +640,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
 
  {/* Document Content */}
  <div>
- <h4 className="font-semibold text-lg mb-4 text-gray-900 dark:text-gray-100">Meeting Minutes Document</h4>
+ <h4 className="font-semibold text-base mb-4 text-gray-900 dark:text-gray-100">Meeting Minutes Document</h4>
  {isGoogleDocsLink ? (
  <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
  {/* Header with download */}
@@ -655,7 +696,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  ) : (
  <div className="flex flex-col items-center justify-center h-full p-8 text-center">
  <FileText className="w-16 h-16 text-gray-400 mb-4" />
- <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+ <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-2">
  {viewingMinutes.fileName}
  </h3>
  <p className="text-gray-600 dark:text-gray-400 mb-4">
@@ -819,7 +860,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  {/* Header */}
  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
  <div>
- <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Meeting Minutes</h1>
+ <h1 className="text-xl font-bold text-gray-900 dark:text-white">Meeting Minutes</h1>
  <p className="text-gray-600 dark:text-gray-400">Upload and view minutes for scheduled meetings</p>
  </div>
  <Button onClick={() => setIsCreatingMeeting(true)} className="flex items-center gap-2">
@@ -911,7 +952,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  <Card>
  <CardContent className="text-center py-12">
  <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
- <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No meetings scheduled</h3>
+ <h3 className="text-base font-medium text-gray-900 dark:text-white mb-2">No meetings scheduled</h3>
  <p className="text-gray-600 dark:text-gray-400">Check back later for scheduled meetings</p>
  </CardContent>
  </Card>

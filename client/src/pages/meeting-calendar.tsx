@@ -64,6 +64,20 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
     }
   };
 
+  // Helper function to convert 24-hour time to 12-hour format
+  const formatTime12Hour = (time24: string) => {
+    if (!time24) return "Time TBD";
+    try {
+      const [hours, minutes] = time24.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+      return `${hour12}:${minutes} ${ampm}`;
+    } catch (error) {
+      return "Time TBD";
+    }
+  };
+
   const { data: meetings = [], isLoading } = useQuery({
     queryKey: ["/api/meetings"],
   });
@@ -174,7 +188,7 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
             <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Meeting Calendar</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Meeting Calendar</h1>
             <p className="text-gray-600 dark:text-gray-400">Schedule and manage team meetings and events</p>
           </div>
         </div>
@@ -345,7 +359,7 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
           {/* Upcoming Meetings */}
           {upcomingMeetings.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Upcoming Meetings</h2>
+              <h2 className="text-base font-semibold mb-4">Upcoming Meetings</h2>
               <div className="space-y-4">
                 {upcomingMeetings.map((meeting: Meeting) => (
                   <Card key={meeting.id} className="border-l-4 border-l-blue-500">
@@ -365,7 +379,7 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
                             </span>
                             <span className="flex items-center gap-1">
                               <Clock className="w-4 h-4" />
-                              {meeting.startTime} - {meeting.endTime}
+                              {formatTime12Hour(meeting.startTime)} - {formatTime12Hour(meeting.endTime)}
                             </span>
                             <span className="flex items-center gap-1">
                               {getMeetingTypeIcon(meeting.meetingType)}
@@ -402,7 +416,7 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
           {/* Past Meetings */}
           {pastMeetings.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Past Meetings</h2>
+              <h2 className="text-base font-semibold mb-4">Past Meetings</h2>
               <div className="space-y-4">
                 {pastMeetings.slice(0, 5).map((meeting: Meeting) => (
                   <Card key={meeting.id} className="opacity-75">
@@ -422,7 +436,7 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
                             </span>
                             <span className="flex items-center gap-1">
                               <Clock className="w-4 h-4" />
-                              {meeting.startTime} - {meeting.endTime}
+                              {formatTime12Hour(meeting.startTime)} - {formatTime12Hour(meeting.endTime)}
                             </span>
                             <span className="flex items-center gap-1">
                               {getMeetingTypeIcon(meeting.meetingType)}
@@ -442,7 +456,7 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
             <Card>
               <CardContent className="text-center py-12">
                 <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No meetings scheduled</h3>
+                <h3 className="text-base font-medium text-gray-900 dark:text-white mb-2">No meetings scheduled</h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">Start by scheduling your first team meeting</p>
                 <Button onClick={() => setIsCreating(true)}>
                   <Plus className="w-4 h-4 mr-2" />
