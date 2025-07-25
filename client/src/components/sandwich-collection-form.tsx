@@ -332,16 +332,16 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-8">
+      <form onSubmit={handleSubmit} className="p-3 sm:p-6 space-y-4 sm:space-y-8">
         {/* Basic Information Section */}
-        <div className="bg-blue-50/30 rounded-lg p-4 sm:p-6 space-y-6">
-          <h3 className="text-lg font-semibold text-slate-900 mb-4" style={{ fontSize: '18px', fontWeight: '600' }}>
+        <div className="bg-blue-50/30 rounded-lg p-3 sm:p-6 space-y-3 sm:space-y-6">
+          <h3 className="text-lg font-semibold text-slate-900 mb-2 sm:mb-4" style={{ fontSize: '18px', fontWeight: '600' }}>
             Basic Information
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <Label htmlFor="collectionDate" className="text-base font-medium text-slate-700">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6">
+            <div className="space-y-2 sm:space-y-3">
+              <Label htmlFor="collectionDate" className="text-sm sm:text-base font-medium text-slate-700">
                 Collection Date
               </Label>
               <Input
@@ -350,13 +350,13 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 value={collectionDate}
                 onChange={(e) => setCollectionDate(e.target.value)}
                 required
-                className="min-h-[44px] text-base px-4 py-3 border-2 border-slate-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                className="min-h-[40px] sm:min-h-[44px] text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 border-2 border-slate-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
                 style={{ fontSize: '16px' }}
               />
             </div>
 
-            <div className="space-y-3">
-              <Label htmlFor="hostName" className="text-base font-medium text-slate-700">
+            <div className="space-y-2 sm:space-y-3">
+              <Label htmlFor="hostName" className="text-sm sm:text-base font-medium text-slate-700">
                 Host Name
               </Label>
               {isCustomHost ? (
@@ -369,7 +369,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                       validateField('hostName', e.target.value);
                     }}
                     placeholder="Enter host location name"
-                    className={`min-h-[44px] text-base px-4 py-3 border-2 rounded-md focus:ring-2 transition-colors ${
+                    className={`min-h-[40px] sm:min-h-[44px] text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-md focus:ring-2 transition-colors ${
                       validationErrors.hostName 
                         ? 'border-red-500 focus:border-red-500 focus:ring-red-200' 
                         : 'border-slate-300 focus:border-blue-500 focus:ring-blue-200'
@@ -383,7 +383,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                       setIsCustomHost(false);
                       setHostName("");
                     }}
-                    className="min-h-[44px] px-4 border-2 hover:bg-slate-50"
+                    className="min-h-[40px] sm:min-h-[44px] px-3 sm:px-4 border-2 hover:bg-slate-50"
                   >
                     Cancel
                   </Button>
@@ -404,7 +404,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                       }
                     }}
                   >
-                    <SelectTrigger className="flex-1 min-h-[44px] text-base px-4 py-3 border-2 border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors" style={{ fontSize: '16px' }}>
+                    <SelectTrigger className="flex-1 min-h-[40px] sm:min-h-[44px] text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 border-2 border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors" style={{ fontSize: '16px' }}>
                       <SelectValue placeholder="Select host location" />
                     </SelectTrigger>
                     <SelectContent>
@@ -426,7 +426,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                       onClick={() => {
                         setIsCustomHost(true);
                       }}
-                      className="min-h-[44px] px-4 border-2 hover:bg-slate-50"
+                      className="min-h-[40px] sm:min-h-[44px] px-3 sm:px-4 border-2 hover:bg-slate-50"
                     >
                       Edit
                     </Button>
@@ -441,15 +441,15 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
         </div>
 
         {/* Warning Callout */}
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 sm:p-4 rounded-r-lg">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
             </div>
-            <div className="ml-3">
-              <p className="text-sm font-semibold text-yellow-800">
+            <div className="ml-2 sm:ml-3">
+              <p className="text-xs sm:text-sm font-semibold text-yellow-800">
                 ⚠️ Do not include group totals in the individual sandwich count. Group entries are logged separately.
               </p>
             </div>
@@ -457,16 +457,16 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
         </div>
 
         {/* Collections Section - Side by Side */}
-        <div className="bg-gray-50/50 rounded-lg p-4 sm:p-6 space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-gray-50/50 rounded-lg p-3 sm:p-6 space-y-3 sm:space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {/* Individual Collections */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-slate-900" style={{ fontSize: '18px', fontWeight: '600' }}>
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="text-base sm:text-lg font-semibold text-slate-900" style={{ fontSize: '16px', fontWeight: '600' }}>
                 Individual Collections
               </h3>
               
-              <div className="space-y-3">
-                <Label htmlFor="individualSandwiches" className="text-base font-medium text-slate-700">
+              <div className="space-y-2 sm:space-y-3">
+                <Label htmlFor="individualSandwiches" className="text-sm sm:text-base font-medium text-slate-700">
                   Number of Individual Sandwiches
                 </Label>
                 <Input
@@ -479,7 +479,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                     validateField('individualSandwiches', e.target.value);
                   }}
                   placeholder="Enter number"
-                  className={`min-h-[44px] text-base px-4 py-3 border-2 rounded-md focus:ring-2 transition-colors ${
+                  className={`min-h-[40px] sm:min-h-[44px] text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-md focus:ring-2 transition-colors ${
                     validationErrors.individualSandwiches 
                       ? 'border-red-500 focus:border-red-500 focus:ring-red-200' 
                       : 'border-slate-300 focus:border-blue-500 focus:ring-blue-200'
@@ -487,23 +487,23 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                   style={{ fontSize: '16px' }}
                 />
                 {validationErrors.individualSandwiches && (
-                  <p className="text-sm text-red-600 mt-1">{validationErrors.individualSandwiches}</p>
+                  <p className="text-xs sm:text-sm text-red-600 mt-1">{validationErrors.individualSandwiches}</p>
                 )}
               </div>
             </div>
 
             {/* Group Collections */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2" style={{ fontSize: '18px', fontWeight: '600' }}>
+                <h3 className="text-base sm:text-lg font-semibold text-slate-900 mb-1 sm:mb-2" style={{ fontSize: '16px', fontWeight: '600' }}>
                   Group Collections
                 </h3>
-                <p className="text-sm italic text-gray-600" style={{ fontSize: '14px', color: '#666' }}>
+                <p className="text-xs sm:text-sm italic text-gray-600" style={{ fontSize: '12px', color: '#666' }}>
                   List any groups/organizations and their counts here. Don't add these to your individual total.
                 </p>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {groupCollections.map((group) => (
                   <div key={group.id} className="flex flex-col gap-3 bg-white p-4 rounded-md border border-slate-200">
                     <div className="space-y-2">
