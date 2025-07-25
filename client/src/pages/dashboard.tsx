@@ -180,7 +180,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "profile":
         return <UserProfile />;
       case "meetings":
-        return <MeetingsLandingPage onNavigate={enhancedSetActiveSection} />;
+        return <DashboardOverview onSectionChange={setActiveSection} />;
       case "minutes":
         return <MeetingMinutes />;
       case "agenda":

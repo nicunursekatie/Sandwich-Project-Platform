@@ -76,7 +76,11 @@ export default function SimpleNav({ onSectionChange, activeSection }: { onSectio
     { id: "toolkit", label: "Toolkit", icon: FolderOpen, href: "toolkit", group: "workflow" },
     ...(hasPermission(user, PERMISSIONS.ADMIN_ACCESS) ? [{ id: "admin", label: "Important Documents", icon: FileText, href: "admin", group: "workflow" }] : []),
     ...(hasPermission(user, PERMISSIONS.VIEW_GOVERNANCE) ? [{ id: "governance", label: "Governance", icon: Scale, href: "governance", group: "workflow" }] : []),
-    ...(hasPermission(user, PERMISSIONS.VIEW_MEETINGS) ? [{ id: "meetings", label: "Meetings", icon: ClipboardList, href: "meetings", group: "workflow" }] : []),
+    ...(hasPermission(user, PERMISSIONS.VIEW_MEETINGS) ? [
+      { id: "meeting-minutes", label: "Meeting Minutes", icon: FileText, href: "minutes", group: "workflow" },
+      { id: "meeting-agenda", label: "Meeting Agenda", icon: ClipboardList, href: "agenda", group: "workflow" },
+      { id: "meeting-calendar", label: "Meeting Calendar", icon: ClipboardList, href: "calendar", group: "workflow" }
+    ] : []),
     
     // PEOPLE section
     { id: "phone-directory", label: "Directory", icon: Phone, href: "phone-directory", group: "people" },
