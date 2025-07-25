@@ -588,20 +588,20 @@ export default function SuggestionsPortal() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className={`grid w-full ${canSubmit && hasPermission(currentUser, 'submit_suggestions') ? 'grid-cols-5' : 'grid-cols-4'}`}>
           <TabsTrigger value="all" className="flex items-center gap-2">
-            All <Badge variant="secondary">{tabCounts.all}</Badge>
+            All <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b]">{tabCounts.all}</Badge>
           </TabsTrigger>
           <TabsTrigger value="pending" className="flex items-center gap-2">
-            Pending <Badge variant="secondary">{tabCounts.pending}</Badge>
+            Pending <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b]">{tabCounts.pending}</Badge>
           </TabsTrigger>
           <TabsTrigger value="in-progress" className="flex items-center gap-2">
-            Active <Badge variant="secondary">{tabCounts.inProgress}</Badge>
+            Active <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b]">{tabCounts.inProgress}</Badge>
           </TabsTrigger>
           <TabsTrigger value="completed" className="flex items-center gap-2">
-            Done <Badge variant="secondary">{tabCounts.completed}</Badge>
+            Done <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b]">{tabCounts.completed}</Badge>
           </TabsTrigger>
           {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (
             <TabsTrigger value="mine" className="flex items-center gap-2">
-              Mine <Badge variant="secondary">{tabCounts.mine}</Badge>
+              Mine <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b]">{tabCounts.mine}</Badge>
             </TabsTrigger>
           )}
         </TabsList>
