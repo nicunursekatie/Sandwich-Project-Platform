@@ -385,17 +385,10 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
             variant="ghost"
             size="sm"
             onClick={() => {
-              // Navigate back to projects section in dashboard
-              setLocation('/dashboard?section=projects');
-              
-              // Force dashboard section change immediately
-              setTimeout(() => {
-                if ((window as any).dashboardSetActiveSection) {
-                  (window as any).dashboardSetActiveSection('projects');
-                }
-                // Also trigger a page refresh to ensure proper navigation
-                window.location.href = '/dashboard?section=projects';
-              }, 100);
+              // Simply trigger dashboard section change without page refresh
+              if ((window as any).dashboardSetActiveSection) {
+                (window as any).dashboardSetActiveSection('projects');
+              }
             }}
             className="flex items-center gap-2"
           >
