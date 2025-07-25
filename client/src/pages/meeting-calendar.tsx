@@ -52,6 +52,18 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
   });
   const { toast } = useToast();
 
+  // Helper function to safely format dates
+  const formatMeetingDate = (dateString: string) => {
+    if (!dateString) return "No date";
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return "Invalid date";
+      return date.toLocaleDateString();
+    } catch (error) {
+      return "Invalid date";
+    }
+  };
+
   const { data: meetings = [], isLoading } = useQuery({
     queryKey: ["/api/meetings"],
   });
@@ -341,7 +353,7 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <h3 className="font-semibold text-lg">{meeting.title}</h3>
+                            <h3 className="font-semibold text-base">{meeting.title}</h3>
                             <Badge className={getStatusColor(meeting.status)}>
                               {meeting.status.replace("_", " ")}
                             </Badge>
@@ -349,7 +361,7 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
                           <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-2">
                             <span className="flex items-center gap-1">
                               <Calendar className="w-4 h-4" />
-                              {new Date(meeting.meetingDate).toLocaleDateString()}
+                              {formatMeetingDate(meeting.meetingDate)}
                             </span>
                             <span className="flex items-center gap-1">
                               <Clock className="w-4 h-4" />
@@ -398,7 +410,7 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <h3 className="font-semibold">{meeting.title}</h3>
+                            <h3 className="font-semibold text-base">{meeting.title}</h3>
                             <Badge className={getStatusColor(meeting.status)}>
                               {meeting.status.replace("_", " ")}
                             </Badge>
@@ -406,7 +418,7 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
                           <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                             <span className="flex items-center gap-1">
                               <Calendar className="w-4 h-4" />
-                              {new Date(meeting.meetingDate).toLocaleDateString()}
+                              {formatMeetingDate(meeting.meetingDate)}
                             </span>
                             <span className="flex items-center gap-1">
                               <Clock className="w-4 h-4" />
