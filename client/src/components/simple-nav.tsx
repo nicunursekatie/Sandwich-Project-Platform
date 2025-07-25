@@ -177,7 +177,7 @@ export default function SimpleNav({ onSectionChange, activeSection }: { onSectio
             }}
           >
             <item.icon className="h-4 w-4 mr-2 sm:mr-3 flex-shrink-0" />
-            <span className="truncate flex-1 text-sm sm:text-base">{item.label}</span>
+            <span className="truncate flex-1 text-xs sm:text-sm">{item.label}</span>
             {unreadCount > 0 && (
               <Badge 
                 variant={isCurrentlyActive ? "secondary" : "destructive"} 
