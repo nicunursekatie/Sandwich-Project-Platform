@@ -159,7 +159,7 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
             className={`
               w-full justify-start text-left h-10 sm:h-11 px-2 sm:px-3 touch-manipulation
               ${isCurrentlyActive 
-                ? "bg-primary text-primary-foreground shadow-sm" 
+                ? "bg-primary text-primary-foreground shadow-sm border-l-4 border-l-yellow-500" 
                 : "hover:bg-slate-100 text-slate-700"
               }
             `}

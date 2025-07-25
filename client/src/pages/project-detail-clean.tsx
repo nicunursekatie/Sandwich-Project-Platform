@@ -419,28 +419,16 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
               Edit Project
             </Button>
           )}
-          {/* Show kudos buttons for completed projects */}
-          {project.status === 'completed' && (
-            <div className="flex gap-2 flex-wrap">
-              <SendKudosButton 
-                recipientId="team"
-                recipientName="Project Team"
-                contextType="project"
-                contextId={project.id.toString()}
-                entityName={project.title}
-                size="sm"
-              />
-              {project.assigneeName && (
-                <SendKudosButton 
-                  recipientId="assignee"
-                  recipientName={project.assigneeName}
-                  contextType="project"
-                  contextId={project.id.toString()}
-                  entityName={project.title}
-                  size="sm"
-                />
-              )}
-            </div>
+          {/* Show kudos button for completed projects */}
+          {project.status === 'completed' && project.assigneeName && (
+            <SendKudosButton 
+              recipientId="assignee"
+              recipientName={project.assigneeName}
+              contextType="project"
+              contextId={project.id.toString()}
+              entityName={project.title}
+              size="sm"
+            />
           )}
           <Badge className={getStatusColor(project.status)}>
             {project.status?.replace('_', ' ')}
