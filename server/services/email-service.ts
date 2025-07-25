@@ -209,7 +209,7 @@ export class EmailService {
           contextId: data.contextId || null,
           contextTitle: data.contextTitle || null,
           isDraft: data.isDraft || false,
-          isRead: false,
+          isRead: !(data.isDraft || false), // Sent messages are automatically read, drafts are unread
           isStarred: false,
           isArchived: false,
           isTrashed: false,
