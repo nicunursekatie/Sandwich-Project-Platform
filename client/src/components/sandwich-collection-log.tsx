@@ -15,8 +15,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS, canEditCollection, canDeleteCollection } from "@shared/auth-utils";
 import type { SandwichCollection, Host } from "@shared/schema";
-import { HelpBubble } from "@/components/help-system/HelpBubble";
-import { helpContent, QuickHelp } from "@/components/help-system";
+import { HelpBubble, helpContent } from "@/components/help-system";
 
 
 
@@ -1189,9 +1188,9 @@ export default function SandwichCollectionLog() {
           <div className="flex flex-col sm:flex-row gap-2">
             {canCreateCollections && (
               <HelpBubble
-                title={helpContent.collections.enterData.title}
-                content={helpContent.collections.enterData.content}
-                character={helpContent.collections.enterData.character}
+                title="Recording Collections"
+                content="Click here to submit new sandwich collection data. Fill in the host location, date, and sandwich counts to track your impact!"
+                character="sandy"
                 position="bottom"
                 trigger="hover"
               >
@@ -1208,9 +1207,9 @@ export default function SandwichCollectionLog() {
             )}
             <div className="flex gap-2 w-full sm:w-auto">
               <HelpBubble
-                title={helpContent.collections.filters.title}
-                content={helpContent.collections.filters.content}
-                character={helpContent.collections.filters.character}
+                title="Filter Collections"
+                content="Use these filters to search and sort your collection data by date, host, or other criteria. Perfect for finding specific entries!"
+                character="guide"
                 position="bottom"
                 trigger="hover"
               >
