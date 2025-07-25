@@ -484,9 +484,9 @@ export default function GmailStyleInbox() {
   ];
 
   return (
-    <div className="flex h-[calc(100vh-64px)]">
+    <div className="flex h-[calc(100vh-64px)] bg-white overflow-hidden">
       {/* Sidebar */}
-      <div className="w-64 border-r bg-gray-50 flex flex-col">
+      <div className="w-64 lg:w-64 md:w-56 sm:w-52 xs:w-48 border-r bg-white flex flex-col flex-shrink-0">
         <div className="p-4">
           <Button 
             onClick={() => setShowCompose(true)} 
@@ -536,10 +536,10 @@ export default function GmailStyleInbox() {
       </div>
 
       {/* Message List */}
-      <div className="flex-1 flex">
-        <div className="w-1/2 border-r flex flex-col">
+      <div className="flex-1 flex bg-white min-w-0">
+        <div className="flex-1 lg:flex-none lg:w-1/2 md:w-3/5 border-r flex flex-col bg-white min-w-0">
           {/* Toolbar */}
-          <div className="border-b p-4 space-y-3">
+          <div className="border-b p-4 space-y-3 bg-white">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold capitalize">{activeFolder}</h2>
               <Button variant="ghost" size="sm" onClick={() => refetchMessages()}>
@@ -560,18 +560,20 @@ export default function GmailStyleInbox() {
             
             {/* Bulk Actions */}
             {selectedMessages.size > 0 && (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-1 lg:gap-2">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleSelectAll}
+                  className="text-xs lg:text-sm px-2 lg:px-3"
                 >
-                  {selectedMessages.size === messages.length ? "Deselect All" : "Select All"}
+                  {selectedMessages.size === messages.length ? "Deselect" : "Select All"}
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => console.log('Mark Read not implemented for conversation messages')}
+                  className="text-xs lg:text-sm px-2 lg:px-3"
                 >
                   Mark Read
                 </Button>
@@ -584,6 +586,7 @@ export default function GmailStyleInbox() {
                     }
                   }}
                   disabled={selectedMessages.size === 0 || archiveMutation.isPending}
+                  className="text-xs lg:text-sm px-2 lg:px-3"
                 >
                   Archive
                 </Button>
@@ -596,6 +599,7 @@ export default function GmailStyleInbox() {
                     }
                   }}
                   disabled={selectedMessages.size === 0 || trashMutation.isPending}
+                  className="text-xs lg:text-sm px-2 lg:px-3"
                 >
                   Trash
                 </Button>
@@ -611,12 +615,12 @@ export default function GmailStyleInbox() {
                   key={message.id}
                   onClick={() => handleSelectMessage(message)}
                   className={`
-                    p-5 cursor-pointer transition-colors hover:bg-amber-50 font-['Roboto'] border-b border-gray-100
+                    p-3 lg:p-5 cursor-pointer transition-colors hover:bg-amber-50 font-['Roboto'] border-b border-gray-100
                     ${selectedMessage?.id === message.id ? 'bg-amber-100 border-r-4 border-amber-500 shadow-sm' : ''}
                     ${!message.isRead ? 'bg-blue-50 font-bold border-l-4 border-blue-500' : 'bg-white font-normal'}
                   `}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-2 lg:gap-3">
                     <input
                       type="checkbox"
                       checked={selectedMessages.has(message.id)}
@@ -637,7 +641,7 @@ export default function GmailStyleInbox() {
                         className="h-4 w-4 text-gray-300"
                       />
                     </button>
-                    <Avatar className="h-8 w-8">
+                    <Avatar className="h-7 w-7 lg:h-8 lg:w-8 flex-shrink-0">
                       <AvatarFallback className="text-xs">
                         {activeFolder === 'sent' 
                           ? (message.recipientName || 'U')?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'U'
@@ -645,12 +649,12 @@ export default function GmailStyleInbox() {
                         }
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-2">
-                        <p className={`text-sm flex-1 mr-4 ${!message.isRead ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>
+                    <div className="flex-1 min-w-0 overflow-hidden">
+                      <div className="flex items-start justify-between mb-2 gap-2">
+                        <p className={`text-sm flex-1 truncate ${!message.isRead ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>
                           {activeFolder === 'sent' ? (message.recipientName || 'Unknown') : (message.senderName || 'Unknown')}
                         </p>
-                        <span className="text-xs text-gray-500 flex-shrink-0 mt-0.5">
+                        <span className="text-xs text-gray-500 whitespace-nowrap">
                           {(() => {
                             try {
                               return message.createdAt ? formatDistanceToNow(new Date(message.createdAt), { addSuffix: true }) : 'No date';
@@ -660,11 +664,12 @@ export default function GmailStyleInbox() {
                           })()}
                         </span>
                       </div>
-                      <p className={`text-sm leading-relaxed line-clamp-3 ${!message.isRead ? 'font-bold text-gray-900' : 'font-normal text-gray-600'}`} style={{
+                      <p className={`text-sm leading-relaxed ${!message.isRead ? 'font-bold text-gray-900' : 'font-normal text-gray-600'}`} style={{
                         display: '-webkit-box',
-                        WebkitLineClamp: 3,
+                        WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
+                        wordBreak: 'break-word'
                       }}>
                         {message.content}
                       </p>
@@ -683,7 +688,7 @@ export default function GmailStyleInbox() {
         </div>
 
         {/* Message Detail */}
-        <div className="flex-1 flex flex-col">
+        <div className="hidden lg:flex lg:flex-1 flex-col bg-white">
           {selectedMessage ? (
             <>
               {/* Message Header */}
