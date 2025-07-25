@@ -165,6 +165,7 @@ export class DatabaseStorage implements IStorage {
       budget: project.budget,
       createdBy: project.createdBy,
       createdByName: project.createdByName,
+      createdAt: project.createdAt, // Include original created date
       originalCreatedAt: project.createdAt,
       originalUpdatedAt: project.updatedAt,
     };
