@@ -153,7 +153,7 @@ export default function WorkLogPage() {
             {isLoading && <div className="py-4 text-gray-500">Loading work logs...</div>}
             {error && <div className="py-4 text-red-500">Error loading logs: {error.message}</div>}
             <div className="py-2 text-xs text-gray-400">
-              Debug: User ID: {user?.id}, Logs count: {safelogs.length}, Loading: {isLoading ? 'yes' : 'no'}, Error: {error?.message || 'none'}
+              Debug: User ID: {(user as any)?.id}, Logs count: {safelogs.length}, Loading: {isLoading ? 'yes' : 'no'}, Error: {error?.message || 'none'}
             </div>
             <Button onClick={() => refetch()} variant="outline" size="sm" className="mb-2">
               Refresh Logs
@@ -162,19 +162,19 @@ export default function WorkLogPage() {
               <ul className="divide-y">
                 {safelogs.length === 0 && <li className="py-4 text-gray-500">No logs yet.</li>}
                 {safelogs.map((log: any) => (
-                <li key={log.id} className="py-4 flex justify-between items-center">
+                <li key={log?.id || Math.random()} className="py-4 flex justify-between items-center">
                   <div className="flex-1">
                     <div className="font-medium">{log.description}</div>
                     <div className="text-sm text-gray-500">
                       {log.hours}h {log.minutes}m &middot; Work Date: {log.workDate ? new Date(log.workDate).toLocaleDateString() : new Date(log.createdAt).toLocaleDateString()}
-                      {log.userId !== user?.id && <span className="ml-2 text-blue-600">(by other user)</span>}
+                      {log?.userId !== (user as any)?.id && <span className="ml-2 text-blue-600">(by other user)</span>}
                     </div>
                   </div>
-                  {((canDeleteOwnLogs && log.userId === user?.id) || canDeleteAllLogs) && (
+                  {((canDeleteOwnLogs && log?.userId === (user as any)?.id) || canDeleteAllLogs) && (
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => deleteLog.mutate(log.id)}
+                      onClick={() => deleteLog.mutate(log?.id)}
                       disabled={deleteLog.isPending}
                     >
                       Delete

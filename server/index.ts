@@ -353,7 +353,7 @@ startServer()
       const express = require("express");
       const fallbackApp = express();
 
-      fallbackApp.get("/", (req, res) => res.status(200).send(`
+      fallbackApp.get("/", (req: any, res: any) => res.status(200).send(`
         <!DOCTYPE html>
         <html>
           <head><title>The Sandwich Project</title></head>
@@ -365,7 +365,7 @@ startServer()
         </html>
       `));
 
-      fallbackApp.get("/health", (req, res) => res.status(200).json({ 
+      fallbackApp.get("/health", (req: any, res: any) => res.status(200).json({ 
         status: "fallback", 
         timestamp: Date.now(),
         mode: "production-fallback"
