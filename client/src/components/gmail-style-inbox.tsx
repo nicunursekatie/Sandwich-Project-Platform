@@ -134,15 +134,15 @@ export default function GmailStyleInbox() {
   // Use email system for Gmail inbox
   const apiBase = "/api/emails";
 
-  // Fetch messages from email system with threading
+  // Fetch messages from email system - use flat list for now since no threads exist
   const { data: messages = [], refetch: refetchMessages } = useQuery<any[]>({
-    queryKey: [apiBase, activeFolder, "threaded"],
+    queryKey: [apiBase, activeFolder],
     queryFn: async () => {
-      // Use the email messaging system with threading enabled
-      const response = await apiRequest('GET', `/api/emails?folder=${activeFolder}&threaded=true`);
+      // Use flat email list since no parent_message_id relationships exist yet
+      const response = await apiRequest('GET', `/api/emails?folder=${activeFolder}&threaded=false`);
       const messages = Array.isArray(response) ? response : response.messages || [];
       
-      console.log(`Fetched ${messages.length} email threads from ${activeFolder} folder`);
+      console.log(`Fetched ${messages.length} emails from ${activeFolder} folder`);
       return messages;
     },
   });
