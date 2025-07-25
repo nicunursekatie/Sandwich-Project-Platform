@@ -18,6 +18,7 @@ import {
   Activity
 } from "lucide-react";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, AreaChart, Area, BarChart, Bar, PieChart as RechartsPieChart, Cell, Pie } from "recharts";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function ImpactDashboard() {
   // Fetch sandwich collections data
@@ -274,18 +275,14 @@ export default function ImpactDashboard() {
 
         {/* Charts and Visualizations */}
         <Tabs defaultValue="trends" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="trends" className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4" />
-              Trends
-            </TabsTrigger>
-            <TabsTrigger value="distribution" className="flex items-center gap-2">
-              <PieChart className="w-4 h-4" />
-              Distribution
+              Collection Trends
             </TabsTrigger>
             <TabsTrigger value="impact" className="flex items-center gap-2">
               <Activity className="w-4 h-4" />
-              Impact Analysis
+              Team Impact
             </TabsTrigger>
           </TabsList>
 
@@ -371,83 +368,7 @@ export default function ImpactDashboard() {
 
 
 
-          {/* Distribution Tab */}
-          <TabsContent value="distribution">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <MapPin className="w-5 h-5 mr-2" />
-                    Host Distribution
-                  </CardTitle>
-                  <CardDescription>Distribution of sandwich collections by host</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <RechartsPieChart>
-                      <Pie
-                        data={hostPerformance.slice(0, 5)}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="totalSandwiches"
-                      >
-                        {hostPerformance.slice(0, 5).map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </RechartsPieChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Collection Summary</CardTitle>
-                  <CardDescription>Overall collection statistics</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Total Collections</span>
-                    <span className="font-bold text-xl">{impactMetrics.totalCollections.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Active Hosts</span>
-                    <span className="font-bold text-xl">{impactMetrics.uniqueHosts.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Avg per Collection</span>
-                    <span className="font-bold text-xl">
-                      {impactMetrics.totalCollections > 0 
-                        ? Math.round(impactMetrics.totalSandwiches / impactMetrics.totalCollections)
-                        : 0}
-                    </span>
-                  </div>
-                  <div className="pt-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">Collection Efficiency</span>
-                      <span className="font-bold">
-                        {impactMetrics.totalCollections > 0 
-                          ? Math.round((impactMetrics.totalSandwiches / impactMetrics.totalCollections) / 50 * 100)
-                          : 0}%
-                      </span>
-                    </div>
-                    <Progress 
-                      value={impactMetrics.totalCollections > 0 
-                        ? Math.min(100, Math.round((impactMetrics.totalSandwiches / impactMetrics.totalCollections) / 50 * 100))
-                        : 0} 
-                      className="h-2" 
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Based on 50 sandwich target per collection</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
 
           {/* Impact Analysis Tab */}
           <TabsContent value="impact">
