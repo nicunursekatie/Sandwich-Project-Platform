@@ -233,16 +233,25 @@ export default function GmailStyleInbox() {
     }
   });
 
-  // Mark as read mutation - simplified for conversation system
+  // Mark as read mutation - use email PATCH endpoint
   const markAsReadMutation = useMutation({
     mutationFn: async (messageIds: number[]) => {
-      // For now, just log - conversation messages don't have read status
-      console.log('Mark as read not implemented for conversation messages:', messageIds);
-      return Promise.resolve();
+      // Mark each message as read using the email PATCH endpoint
+      const promises = messageIds.map(id => 
+        apiRequest('PATCH', `/api/emails/${id}`, { isRead: true })
+      );
+      return await Promise.all(promises);
     },
     onSuccess: () => {
-      // Still refresh to ensure UI updates
       queryClient.invalidateQueries({ queryKey: [apiBase] });
+      toast({ description: "Marked as read" });
+    },
+    onError: (error) => {
+      console.error('Mark as read error:', error);
+      toast({ 
+        description: "Failed to mark as read", 
+        variant: "destructive" 
+      });
     }
   });
 
