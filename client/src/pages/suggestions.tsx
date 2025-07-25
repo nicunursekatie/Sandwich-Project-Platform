@@ -110,7 +110,7 @@ export default function SuggestionsPortal() {
   const canRespond = hasPermission(currentUser, 'respond_to_suggestions');
 
   // Fetch suggestions
-  const { data: suggestions = [], isLoading } = useQuery({
+  const { data: suggestions = [], isLoading } = useQuery<Suggestion[]>({
     queryKey: ['/api/suggestions'],
     enabled: hasPermission(currentUser, 'view_suggestions'),
     staleTime: 0
@@ -189,7 +189,7 @@ export default function SuggestionsPortal() {
   const deleteSuggestionMutation = useMutation({
     mutationFn: (id: number) => apiRequest('DELETE', `/api/suggestions/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/suggestions'], staleTime: 0 });
+      queryClient.invalidateQueries({ queryKey: ['/api/suggestions'] });
       setSelectedSuggestion(null);
       toast({
         title: "Suggestion deleted",
@@ -220,7 +220,7 @@ export default function SuggestionsPortal() {
 
 
   // Enhanced filtering logic
-  const filteredSuggestions = suggestions.filter((suggestion: Suggestion) => {
+  const filteredSuggestions = (suggestions as Suggestion[]).filter((suggestion: Suggestion) => {
     // Tab filter
     let tabMatch = true;
     switch (activeTab) {
@@ -329,12 +329,13 @@ export default function SuggestionsPortal() {
   };
 
   const getTabCounts = () => {
+    const suggestionList = suggestions as Suggestion[];
     return {
-      all: suggestions.length,
-      pending: suggestions.filter(s => ["submitted", "under_review", "needs_clarification"].includes(s.status)).length,
-      inProgress: suggestions.filter(s => s.status === "in_progress").length,
-      completed: suggestions.filter(s => s.status === "completed").length,
-      mine: suggestions.filter(s => s.submittedBy === currentUser?.id).length
+      all: suggestionList.length,
+      pending: suggestionList.filter(s => ["submitted", "under_review", "needs_clarification"].includes(s.status)).length,
+      inProgress: suggestionList.filter(s => s.status === "in_progress").length,
+      completed: suggestionList.filter(s => s.status === "completed").length,
+      mine: suggestionList.filter(s => s.submittedBy === currentUser?.id).length
     };
   };
 
