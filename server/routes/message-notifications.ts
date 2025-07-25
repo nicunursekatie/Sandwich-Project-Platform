@@ -106,33 +106,14 @@ const getUnreadCounts = async (req: Request, res: Response) => {
 
         // Calculate total will be done after formal messaging counts
 
-        // Also get formal messaging system counts (conversations/messages table) for direct messages
-        const unreadConversationCounts = await db
-          .select({
-            conversationId: messages.conversationId,
-            conversationType: conversations.type,
-            count: sql<number>`count(*)`
-          })
-          .from(messages)
-          .innerJoin(conversations, eq(messages.conversationId, conversations.id))
-          .innerJoin(conversationParticipants, and(
-            eq(conversationParticipants.conversationId, conversations.id),
-            eq(conversationParticipants.userId, userId)
-          ))
-          .where(
-            sql`${messages.userId} != ${userId}` // Don't count own messages
-          )
-          .groupBy(messages.conversationId, conversations.type);
-
-        // Process formal messaging counts
-        for (const conversation of unreadConversationCounts) {
-          const count = Number(conversation.count);
-          if (conversation.conversationType === 'direct') {
-            unreadCounts.direct += count;
-          } else if (conversation.conversationType === 'group') {
-            unreadCounts.groups += count;
-          }
-        }
+        // Get unread conversation messages (only unread ones)
+        // For now, we'll use a simpler approach - count messages that haven't been read
+        // This is a placeholder until we implement proper message read tracking
+        
+        // Skip direct message counts for now to prevent inflated numbers
+        // TODO: Implement proper read status tracking for conversation messages
+        unreadCounts.direct = 0;
+        unreadCounts.groups = 0;
 
         // Calculate total
         unreadCounts.total = unreadCounts.general + unreadCounts.committee + 

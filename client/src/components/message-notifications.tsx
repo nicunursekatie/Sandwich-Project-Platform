@@ -217,8 +217,14 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
   };
 
   const navigateToChat = (chatType: string) => {
-    // Navigate to chat system instead of messages inbox
-    window.location.href = '/dashboard?section=chat';
+    // Route different chat types to appropriate destinations
+    if (chatType === 'direct' || chatType === 'groups') {
+      // Direct messages and groups go to inbox
+      window.location.href = '/messages';
+    } else {
+      // Other chat types go to chat system
+      window.location.href = '/dashboard?section=chat';
+    }
   };
 
 
