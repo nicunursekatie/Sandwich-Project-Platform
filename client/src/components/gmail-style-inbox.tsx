@@ -209,7 +209,7 @@ export default function GmailStyleInbox() {
         recipientId: selectedMessage.senderId,
         recipientName: selectedMessage.senderName,
         recipientEmail: selectedMessage.senderEmail,
-        subject: selectedMessage.subject.startsWith('Re: ') ? selectedMessage.subject : `Re: ${selectedMessage.subject}`,
+        subject: selectedMessage.subject?.startsWith('Re: ') ? selectedMessage.subject : `Re: ${selectedMessage.subject || 'No Subject'}`,
         content: replyData.content,
         isDraft: false
       };
@@ -435,7 +435,7 @@ export default function GmailStyleInbox() {
   const getUnreadCount = (folder: string) => {
     return messages.filter(m => {
       switch (folder) {
-        case "inbox": return true; // All conversation messages are in inbox
+        case "inbox": return !m.isRead; // Count unread messages in inbox
         case "starred": return false; // No starred functionality yet
         case "archived": return false; // No archived functionality yet  
         case "trash": return false; // No trash functionality yet
@@ -573,7 +573,7 @@ export default function GmailStyleInbox() {
                   className={`
                     p-4 cursor-pointer transition-colors hover:bg-amber-50 font-['Roboto']
                     ${selectedMessage?.id === message.id ? 'bg-amber-100 border-r-4 border-amber-500 shadow-sm' : ''}
-                    bg-white
+                    ${!message.isRead ? 'bg-blue-50 font-bold border-l-4 border-blue-500' : 'bg-white font-normal'}
                   `}
                 >
                   <div className="flex items-start gap-3">
@@ -607,7 +607,7 @@ export default function GmailStyleInbox() {
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium truncate">
+                        <p className={`text-sm truncate ${!message.isRead ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>
                           {activeFolder === 'sent' ? (message.recipientName || 'Unknown') : (message.senderName || 'Unknown')}
                         </p>
                         <span className="text-xs text-gray-500">
@@ -620,7 +620,7 @@ export default function GmailStyleInbox() {
                           })()}
                         </span>
                       </div>
-                      <p className="text-sm font-medium truncate mt-1">
+                      <p className={`text-sm truncate mt-1 ${!message.isRead ? 'font-bold text-gray-900' : 'font-normal text-gray-600'}`}>
                         {message.content.length > 40 
                           ? `${message.content.substring(0, 40)}...`
                           : message.content}
