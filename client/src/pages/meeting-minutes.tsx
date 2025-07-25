@@ -49,13 +49,21 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
 
  // Helper function to convert 24-hour time to 12-hour format
  const formatTime12Hour = (time24: string) => {
-   if (!time24) return "Time TBD";
+   if (!time24 || time24.trim() === "" || time24 === "TBD") return "Time TBD";
    try {
      const [hours, minutes] = time24.split(':');
-     const hour = parseInt(hours);
-     const ampm = hour >= 12 ? 'PM' : 'AM';
-     const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-     return `${hour12}:${minutes} ${ampm}`;
+     if (!hours || !minutes) return "Time TBD";
+     
+     const hourNum = parseInt(hours, 10);
+     const minuteNum = parseInt(minutes, 10);
+     
+     if (isNaN(hourNum) || isNaN(minuteNum)) return "Time TBD";
+     
+     const ampm = hourNum >= 12 ? 'PM' : 'AM';
+     const hour12 = hourNum === 0 ? 12 : hourNum > 12 ? hourNum - 12 : hourNum;
+     const formattedMinutes = minuteNum.toString().padStart(2, '0');
+     
+     return `${hour12}:${formattedMinutes} ${ampm}`;
    } catch (error) {
      return "Time TBD";
    }
@@ -358,19 +366,15 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
    const date = new Date(meeting.date);
    const dateStr = date.toLocaleDateString();
    
-   // For past meetings, never show TBD - show actual time or "Time not recorded"
-   const isPast = isMeetingPast(meeting.date, meeting.time);
-   let timeStr;
-   
-   if (meeting.time) {
-     timeStr = formatTime12Hour(meeting.time);
-   } else if (isPast) {
-     timeStr = "Time not recorded";
-   } else {
-     timeStr = "Time TBD";
+   // Only show time if it exists and is valid
+   if (meeting.time && meeting.time !== "TBD" && meeting.time !== "") {
+     const timeStr = formatTime12Hour(meeting.time);
+     if (timeStr !== "Time TBD") {
+       return `${dateStr} at ${timeStr}`;
+     }
    }
    
-   return `${dateStr} at ${timeStr}`;
+   return dateStr;
  };
 
  if (meetingsLoading || minutesLoading) {
@@ -860,7 +864,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  {/* Header */}
  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
  <div>
- <h1 className="text-xl font-bold text-gray-900 dark:text-white">Meeting Minutes</h1>
+ <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Meeting Minutes</h1>
  <p className="text-gray-600 dark:text-gray-400">Upload and view minutes for scheduled meetings</p>
  </div>
  <Button onClick={() => setIsCreatingMeeting(true)} className="flex items-center gap-2">
