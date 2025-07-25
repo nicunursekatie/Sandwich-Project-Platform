@@ -36,7 +36,7 @@ interface NavigationItem {
   group?: string;
 }
 
-export default function SimpleNav({ onSectionChange }: { onSectionChange: (section: string) => void }) {
+export default function SimpleNav({ onSectionChange, activeSection }: { onSectionChange: (section: string) => void; activeSection?: string }) {
   const { user } = useAuth();
   const [location] = useLocation();
   const { unreadCounts, totalUnread } = useMessaging();
@@ -94,7 +94,14 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
   ];
 
   const isActive = (href: string) => {
-    // For dashboard, check if we're on root or dashboard
+    // If activeSection is provided, use it directly
+    if (activeSection) {
+      // For dashboard, check both "dashboard" and root
+      if (href === "dashboard") return activeSection === "dashboard" || activeSection === "";
+      return activeSection === href;
+    }
+    
+    // Fallback to URL-based navigation for standalone usage
     if (href === "dashboard") return location === "/" || location === "/dashboard";
     return location === `/${href}`;
   };

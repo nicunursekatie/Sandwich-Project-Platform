@@ -511,15 +511,18 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         } md:translate-x-0 fixed md:relative z-50 w-64 sm:w-72 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out h-screen max-h-screen`}>
           {/* Simple Navigation with enhanced mobile scrolling */}
           <div className="flex-1 overflow-y-auto pb-6 touch-pan-y overscroll-contain">
-            <SimpleNav onSectionChange={(section) => {
-              console.log('Dashboard setActiveSection called with:', section);
-              setActiveSection(section);
-              // Close mobile menu when navigation item is clicked
-              setIsMobileMenuOpen(false);
-              // Also update URL for back button support
-              const newUrl = section === 'dashboard' ? '/dashboard' : `/dashboard?section=${section}`;
-              window.history.pushState({}, '', newUrl);
-            }} />
+            <SimpleNav 
+              activeSection={activeSection} 
+              onSectionChange={(section) => {
+                console.log('Dashboard setActiveSection called with:', section);
+                setActiveSection(section);
+                // Close mobile menu when navigation item is clicked
+                setIsMobileMenuOpen(false);
+                // Also update URL for back button support
+                const newUrl = section === 'dashboard' ? '/dashboard' : `/dashboard?section=${section}`;
+                window.history.pushState({}, '', newUrl);
+              }} 
+            />
           </div>
         </div>
 
