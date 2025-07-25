@@ -1610,6 +1610,9 @@ export class DatabaseStorage implements IStorage {
     sender?: string;
     contextType?: string;
     contextId?: string;
+    replyToMessageId?: number | null;
+    replyToContent?: string | null;
+    replyToSender?: string | null;
   }): Promise<any> {
     try {
       console.log(`[DB] Adding message to conversation ${messageData.conversationId}`);
@@ -1624,6 +1627,9 @@ export class DatabaseStorage implements IStorage {
           sender: messageData.sender || 'Unknown User',
           contextType: messageData.contextType || 'direct',
           contextId: messageData.contextId,
+          replyToMessageId: messageData.replyToMessageId,
+          replyToContent: messageData.replyToContent,
+          replyToSender: messageData.replyToSender,
         })
         .returning();
 

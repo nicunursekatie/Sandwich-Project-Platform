@@ -258,6 +258,10 @@ export const messages = pgTable("messages", {
   editedContent: text("edited_content"),
   deletedAt: timestamp("deleted_at"),
   deletedBy: text("deleted_by"),
+  // Reply functionality
+  replyToMessageId: integer("reply_to_message_id").references(() => messages.id, { onDelete: "cascade" }),
+  replyToContent: text("reply_to_content"), // Store original message content for display
+  replyToSender: text("reply_to_sender"), // Store sender name for display
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

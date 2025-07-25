@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { useMessageReads } from "@/hooks/useMessageReads";
-import { Send, Edit, Trash2, MoreVertical, Users, ArrowLeft } from "lucide-react";
+import { Send, Edit, Trash2, MoreVertical, Users, ArrowLeft, Reply, X } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
@@ -27,6 +27,7 @@ export function GroupConversation({ groupId, groupName, groupDescription, onBack
   const [newMessage, setNewMessage] = useState("");
   const [editingMessage, setEditingMessage] = useState<Message | null>(null);
   const [editedContent, setEditedContent] = useState("");
+  const [replyingToMessage, setReplyingToMessage] = useState<Message | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -126,14 +127,18 @@ export function GroupConversation({ groupId, groupName, groupDescription, onBack
 
   // Send message mutation  
   const sendMessageMutation = useMutation({
-    mutationFn: async (data: { content: string }) => {
+    mutationFn: async (data: { content: string; replyToMessageId?: number; replyToContent?: string; replyToSender?: string }) => {
       return await apiRequest('POST', `/api/conversations/${groupId}/messages`, {
-        content: data.content
+        content: data.content,
+        replyToMessageId: data.replyToMessageId,
+        replyToContent: data.replyToContent,
+        replyToSender: data.replyToSender
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/conversations", groupId, "messages"] });
       setNewMessage("");
+      setReplyingToMessage(null);
     },
   });
 
@@ -185,7 +190,18 @@ export function GroupConversation({ groupId, groupName, groupDescription, onBack
     
     sendMessageMutation.mutate({
       content: newMessage,
+      replyToMessageId: replyingToMessage?.id,
+      replyToContent: replyingToMessage?.content,
+      replyToSender: replyingToMessage?.sender || getUserDisplayName(replyingToMessage?.userId || '')
     });
+  };
+
+  const handleReplyToMessage = (message: Message) => {
+    setReplyingToMessage(message);
+  };
+
+  const handleCancelReply = () => {
+    setReplyingToMessage(null);
   };
 
   const handleEditMessage = (message: Message) => {
@@ -309,32 +325,38 @@ export function GroupConversation({ groupId, groupName, groupDescription, onBack
                       <span className="text-xs text-gray-500">
                         {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
                       </span>
-                      {canEditMessage(message) && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <MoreVertical className="h-3 w-3" />
-                            </Button>
-                          </DropdownMenuTrigger>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <MoreVertical className="h-3 w-3" />
+                          </Button>
+                        </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEditMessage(message)}>
-                              <Edit className="h-3 w-3 mr-2" />
-                              Edit
+                            <DropdownMenuItem onClick={() => handleReplyToMessage(message)}>
+                              <Reply className="h-3 w-3 mr-2" />
+                              Reply
                             </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              onClick={() => handleDeleteMessage(message.id)}
-                              className="text-red-600"
-                            >
-                              <Trash2 className="h-3 w-3 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
+                            {canEditMessage(message) && (
+                              <>
+                                <DropdownMenuItem onClick={() => handleEditMessage(message)}>
+                                  <Edit className="h-3 w-3 mr-2" />
+                                  Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  onClick={() => handleDeleteMessage(message.id)}
+                                  className="text-red-600"
+                                >
+                                  <Trash2 className="h-3 w-3 mr-2" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </>
+                            )}
                           </DropdownMenuContent>
                         </DropdownMenu>
-                      )}
                     </div>
                     {editingMessage?.id === message.id ? (
                       <div className="space-y-2">
@@ -362,9 +384,23 @@ export function GroupConversation({ groupId, groupName, groupDescription, onBack
                         </div>
                       </div>
                     ) : (
-                      <p className="text-sm bg-gray-100 dark:bg-gray-700 rounded-lg p-2">
-                        {message.content}
-                      </p>
+                      <div>
+                        {/* Reply indicator */}
+                        {(message as any).replyToMessageId && (
+                          <div className="mb-2 p-2 bg-gray-50 dark:bg-gray-600 border-l-2 border-blue-400 rounded text-xs">
+                            <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400 mb-1">
+                              <Reply className="h-3 w-3" />
+                              <span>Replying to {(message as any).replyToSender}</span>
+                            </div>
+                            <div className="text-gray-700 dark:text-gray-300 italic truncate">
+                              "{(message as any).replyToContent}"
+                            </div>
+                          </div>
+                        )}
+                        <p className="text-sm bg-gray-100 dark:bg-gray-700 rounded-lg p-2">
+                          {message.content}
+                        </p>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -376,11 +412,34 @@ export function GroupConversation({ groupId, groupName, groupDescription, onBack
 
       {/* Message input */}
       <div className="p-4 border-t bg-white dark:bg-gray-800">
+        {/* Reply preview */}
+        {replyingToMessage && (
+          <div className="mb-3 p-3 bg-blue-50 dark:bg-blue-900/20 border-l-3 border-blue-400 rounded">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400 text-sm font-medium">
+                <Reply className="h-4 w-4" />
+                <span>Replying to {replyingToMessage.sender || getUserDisplayName(replyingToMessage.userId)}</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleCancelReply}
+                className="h-6 w-6 p-0 text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-300 italic bg-white dark:bg-gray-700 p-2 rounded">
+              "{replyingToMessage.content}"
+            </div>
+          </div>
+        )}
+        
         <div className="flex gap-2">
           <Input
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type your message..."
+            placeholder={replyingToMessage ? "Type your reply..." : "Type your message..."}
             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
           />
           <Button 

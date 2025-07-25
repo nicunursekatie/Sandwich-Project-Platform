@@ -97,7 +97,7 @@ router.post("/conversations/:id/messages", async (req, res) => {
     }
     
     const conversationId = parseInt(req.params.id);
-    const { content } = req.body;
+    const { content, replyToMessageId, replyToContent, replyToSender } = req.body;
     
     if (!content?.trim()) {
       return res.status(400).json({ error: "Message content is required" });
@@ -114,6 +114,9 @@ router.post("/conversations/:id/messages", async (req, res) => {
       sender: senderName,
       contextType: 'group',
       contextId: conversationId.toString(),
+      replyToMessageId: replyToMessageId || null,
+      replyToContent: replyToContent || null,
+      replyToSender: replyToSender || null,
     });
     
     // Broadcast the message via WebSocket
