@@ -320,25 +320,21 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   };
 
   return (
-    <div className="w-full bg-white rounded-lg border border-slate-200 shadow-sm">
-      {/* Compact Header */}
-      <div className="px-3 py-3 border-b border-slate-200">
-        <h2 className="text-base font-semibold text-slate-900 flex items-center">
-          <img src={sandwichLogo} alt="Sandwich Logo" className="mr-2 w-4 h-4" />
+    <div className="w-full bg-white rounded border border-slate-200">
+      {/* Ultra Compact Header */}
+      <div className="px-2 py-2 border-b border-slate-200 bg-gray-50">
+        <h2 className="text-sm font-medium text-slate-900 flex items-center">
+          <img src={sandwichLogo} alt="Logo" className="mr-1 w-3 h-3" />
           Submit Collection
         </h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-3 space-y-4">
-        {/* Compact Basic Information */}
-        <div className="bg-blue-50/30 rounded-lg p-3 space-y-3">
-          <h3 className="text-sm font-semibold text-slate-900 mb-2">
-            Basic Information
-          </h3>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label htmlFor="collectionDate" className="text-sm font-medium text-slate-700">
+      <form onSubmit={handleSubmit} className="p-2 space-y-3">
+        {/* Ultra Compact Basic Info */}
+        <div className="bg-blue-50/30 rounded p-2 space-y-2">
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <Label htmlFor="collectionDate" className="text-xs font-medium text-slate-700 block mb-1">
                 Date
               </Label>
               <Input
@@ -347,16 +343,16 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 value={collectionDate}
                 onChange={(e) => setCollectionDate(e.target.value)}
                 required
-                className="min-h-[36px] text-sm px-3 py-2 border border-slate-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-200"
+                className="h-8 text-xs px-2 py-1 border border-slate-300 rounded"
               />
             </div>
 
-            <div className="space-y-1">
-              <Label htmlFor="hostName" className="text-sm font-medium text-slate-700">
-                Host Location
+            <div>
+              <Label htmlFor="hostName" className="text-xs font-medium text-slate-700 block mb-1">
+                Location
               </Label>
               {isCustomHost ? (
-                <div className="flex gap-2">
+                <div className="flex gap-1">
                   <Input
                     id="hostName"
                     value={hostName}
@@ -364,11 +360,11 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                       setHostName(e.target.value);
                       validateField('hostName', e.target.value);
                     }}
-                    placeholder="Enter location name"
-                    className={`min-h-[36px] text-sm px-3 py-2 border rounded focus:ring-1 ${
+                    placeholder="Location name"
+                    className={`h-8 text-xs px-2 py-1 border rounded ${
                       validationErrors.hostName 
-                        ? 'border-red-500 focus:border-red-500 focus:ring-red-200' 
-                        : 'border-slate-300 focus:border-blue-500 focus:ring-blue-200'
+                        ? 'border-red-500' 
+                        : 'border-slate-300'
                     }`}
                   />
                   <Button
@@ -379,56 +375,41 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                       setIsCustomHost(false);
                       setHostName("");
                     }}
-                    className="min-h-[36px] px-3 text-xs"
+                    className="h-8 px-2 text-xs"
                   >
-                    Cancel
+                    ✕
                   </Button>
                 </div>
               ) : (
-                <div className="flex gap-2">
-                  <Select
-                    value={hostName}
-                    onValueChange={(value) => {
-                      if (value === "Other") {
-                        setIsCustomHost(true);
-                        setHostName("");
-                        validateField('hostName', "");
-                      } else {
-                        setHostName(value);
-                        setIsCustomHost(false);
-                        validateField('hostName', value);
-                      }
-                    }}
-                  >
-                    <SelectTrigger className="flex-1 min-h-[36px] text-sm px-3 py-2 border border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200">
-                      <SelectValue placeholder="Select location" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {hostOptions.map((host) => (
-                        <SelectItem key={host} value={host}>
-                          {host === "Groups"
-                            ? "Groups (no location)"
-                            : host === "Other"
-                              ? "Other (create new)"
-                              : host}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {hostName && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setIsCustomHost(true);
-                      }}
-                      className="min-h-[36px] px-3 text-xs"
-                    >
-                      Edit
-                    </Button>
-                  )}
-                </div>
+                <Select
+                  value={hostName}
+                  onValueChange={(value) => {
+                    if (value === "Other") {
+                      setIsCustomHost(true);
+                      setHostName("");
+                      validateField('hostName', "");
+                    } else {
+                      setHostName(value);
+                      setIsCustomHost(false);
+                      validateField('hostName', value);
+                    }
+                  }}
+                >
+                  <SelectTrigger className="h-8 text-xs px-2 py-1 border border-slate-300">
+                    <SelectValue placeholder="Select location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {hostOptions.map((host) => (
+                      <SelectItem key={host} value={host}>
+                        {host === "Groups"
+                          ? "Groups"
+                          : host === "Other"
+                            ? "Other"
+                            : host}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
               {validationErrors.hostName && (
                 <p className="text-xs text-red-600 mt-1">{validationErrors.hostName}</p>
@@ -437,19 +418,18 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
         </div>
 
-        {/* Compact Warning */}
-        <div className="bg-yellow-50 border-l-3 border-yellow-400 p-2 rounded-r text-xs text-yellow-800">
-          ⚠️ Don't include group totals in individual count - log them separately below
+        {/* Ultra Compact Warning */}
+        <div className="bg-yellow-50 border-l-2 border-yellow-400 p-1 text-xs text-yellow-800">
+          ⚠️ Don't include group totals in individual count
         </div>
 
-        {/* Compact Collections Section */}
-        <div className="bg-gray-50/50 rounded-lg p-3 space-y-4">
-          {/* Individual Collections - Compact */}
-          <div>
-            <h3 className="text-sm font-semibold text-slate-900 mb-2">Individual Collections</h3>
-            <div className="space-y-1">
-              <Label htmlFor="individualSandwiches" className="text-sm font-medium text-slate-700">
-                Number of Sandwiches
+        {/* Ultra Compact Collections */}
+        <div className="space-y-2">
+          {/* Individual Collections - Single Line */}
+          <div className="bg-gray-50 rounded p-2">
+            <div className="flex items-center gap-2">
+              <Label htmlFor="individualSandwiches" className="text-xs font-medium text-slate-700 w-20 flex-shrink-0">
+                Individual:
               </Label>
               <Input
                 id="individualSandwiches"
@@ -460,108 +440,88 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                   setIndividualSandwiches(e.target.value);
                   validateField('individualSandwiches', e.target.value);
                 }}
-                placeholder="Enter number"
-                className={`min-h-[36px] text-sm px-3 py-2 border rounded focus:ring-1 ${
+                placeholder="0"
+                className={`h-8 text-xs px-2 py-1 border rounded flex-1 ${
                   validationErrors.individualSandwiches 
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-200' 
-                    : 'border-slate-300 focus:border-blue-500 focus:ring-blue-200'
+                    ? 'border-red-500' 
+                    : 'border-slate-300'
                 }`}
               />
-              {validationErrors.individualSandwiches && (
-                <p className="text-xs text-red-600 mt-1">{validationErrors.individualSandwiches}</p>
-              )}
             </div>
+            {validationErrors.individualSandwiches && (
+              <p className="text-xs text-red-600 mt-1">{validationErrors.individualSandwiches}</p>
+            )}
           </div>
 
-          {/* Group Collections - Compact */}
-          <div>
-            <div className="mb-2">
-              <h3 className="text-sm font-semibold text-slate-900">Group Collections</h3>
-              <p className="text-xs italic text-gray-600">
-                List groups/organizations and their counts (separate from individual total)
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              {groupCollections.map((group) => (
-                <div key={group.id} className="bg-white p-2 rounded border border-slate-200">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <div className="sm:col-span-2">
-                      <Label className="text-xs font-medium text-slate-700">Group Name</Label>
-                      <Input
-                        placeholder="e.g., Local Church"
-                        value={group.groupName}
-                        onChange={(e) =>
-                          updateGroupCollection(group.id, "groupName", e.target.value)
-                        }
-                        className="min-h-[32px] text-sm px-2 py-1 border border-slate-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-200"
-                      />
-                    </div>
-                    <div className="flex gap-1">
-                      <div className="flex-1">
-                        <Label className="text-xs font-medium text-slate-700">Count</Label>
-                        <Input
-                          type="number"
-                          min="0"
-                          placeholder="0"
-                          value={group.sandwichCount || ""}
-                          onChange={(e) =>
-                            updateGroupCollection(
-                              group.id,
-                              "sandwichCount",
-                              parseInt(e.target.value) || 0,
-                            )
-                          }
-                          className="min-h-[32px] text-sm px-2 py-1 border border-slate-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-200"
-                        />
-                      </div>
-                      {groupCollections.length > 1 && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => removeGroupRow(group.id)}
-                          className="mt-4 h-[32px] w-[32px] p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-              
+          {/* Group Collections - Ultra Compact */}
+          <div className="bg-gray-50 rounded p-2">
+            <div className="flex items-center justify-between mb-1">
+              <Label className="text-xs font-medium text-slate-700">Groups:</Label>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={addGroupRow}
-                className="h-8 px-3 text-xs hover:bg-blue-100"
+                className="h-6 px-2 text-xs"
               >
-                <Plus className="w-3 h-3 mr-1" />
-                Add Group
+                <Plus className="w-3 h-3" />
               </Button>
+            </div>
+
+            <div className="space-y-1">
+              {groupCollections.map((group) => (
+                <div key={group.id} className="flex gap-1 items-center">
+                  <Input
+                    placeholder="Group name"
+                    value={group.groupName}
+                    onChange={(e) =>
+                      updateGroupCollection(group.id, "groupName", e.target.value)
+                    }
+                    className="h-7 text-xs px-2 py-1 border border-slate-300 rounded flex-1"
+                  />
+                  <Input
+                    type="number"
+                    min="0"
+                    placeholder="0"
+                    value={group.sandwichCount || ""}
+                    onChange={(e) =>
+                      updateGroupCollection(
+                        group.id,
+                        "sandwichCount",
+                        parseInt(e.target.value) || 0,
+                      )
+                    }
+                    className="h-7 text-xs px-2 py-1 border border-slate-300 rounded w-16"
+                  />
+                  {groupCollections.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeGroupRow(group.id)}
+                      className="h-7 w-7 p-0 text-red-600"
+                    >
+                      ✕
+                    </Button>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Compact Submit Section */}
-        <div className="pt-3">
-          <Button
-            type="submit"
-            disabled={submitCollectionMutation.isPending || !isFormValid()}
-            className={`w-full min-h-[40px] px-6 py-2 text-sm font-semibold shadow focus:ring-2 transition-all ${
-              isFormValid() && !submitCollectionMutation.isPending
-                ? 'bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white focus:ring-amber-300'
-                : 'bg-gray-400 text-gray-700 cursor-not-allowed'
-            }`}
-          >
-            {submitCollectionMutation.isPending
-              ? "Submitting..."
-              : "Submit Collection"
-            }
-          </Button>
-        </div>
+        {/* Ultra Compact Submit */}
+        <Button
+          type="submit"
+          disabled={submitCollectionMutation.isPending || !isFormValid()}
+          className={`w-full h-8 px-4 text-xs font-medium ${
+            isFormValid() && !submitCollectionMutation.isPending
+              ? 'bg-amber-500 hover:bg-amber-600 text-white'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+        >
+          {submitCollectionMutation.isPending ? "Submitting..." : "Submit Collection"}
+        </Button>
       </form>
     </div>
   );
