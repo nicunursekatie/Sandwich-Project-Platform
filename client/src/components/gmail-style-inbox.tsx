@@ -611,12 +611,12 @@ export default function GmailStyleInbox() {
                         }
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className={`text-sm truncate ${!message.isRead ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>
+                    <div className="flex-1 min-w-0 overflow-hidden">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className={`text-sm truncate flex-1 mr-2 ${!message.isRead ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>
                           {activeFolder === 'sent' ? (message.recipientName || 'Unknown') : (message.senderName || 'Unknown')}
                         </p>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 flex-shrink-0">
                           {(() => {
                             try {
                               return message.createdAt ? formatDistanceToNow(new Date(message.createdAt), { addSuffix: true }) : 'No date';
@@ -626,10 +626,8 @@ export default function GmailStyleInbox() {
                           })()}
                         </span>
                       </div>
-                      <p className={`text-sm truncate mt-1 ${!message.isRead ? 'font-bold text-gray-900' : 'font-normal text-gray-600'}`}>
-                        {message.content.length > 40 
-                          ? `${message.content.substring(0, 40)}...`
-                          : message.content}
+                      <p className={`text-sm truncate overflow-hidden text-ellipsis whitespace-nowrap ${!message.isRead ? 'font-bold text-gray-900' : 'font-normal text-gray-600'}`}>
+                        {message.content}
                       </p>
                     </div>
                   </div>
