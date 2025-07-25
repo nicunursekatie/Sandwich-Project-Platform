@@ -16,10 +16,7 @@ import PhoneDirectoryFixed from "@/components/phone-directory-fixed";
 import BulkDataManager from "@/components/bulk-data-manager";
 import AnalyticsDashboard from "@/components/analytics-dashboard";
 import Development from "@/pages/development";
-import MeetingsLandingPage from "@/pages/meetings";
-import MeetingMinutes from "@/pages/meeting-minutes";
-import MeetingAgendaPage from "@/pages/meeting-agenda";
-import MeetingCalendarPage from "@/pages/meeting-calendar";
+import UnifiedMeetings from "@/components/unified-meetings";
 import RoleDemo from "@/pages/role-demo";
 import ProjectsClean from "@/pages/projects-clean";
 import ProjectDetailClean from "@/pages/project-detail-clean";
@@ -180,13 +177,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "profile":
         return <UserProfile />;
       case "meetings":
-        return <DashboardOverview onSectionChange={setActiveSection} />;
-      case "minutes":
-        return <MeetingMinutes />;
-      case "agenda":
-        return <MeetingAgendaPage />;
-      case "calendar":
-        return <MeetingCalendarPage />;
+        return <UnifiedMeetings />;
+
       case "reports":
         return <ReportingDashboard isEmbedded={true} />;
       case "toolkit":
