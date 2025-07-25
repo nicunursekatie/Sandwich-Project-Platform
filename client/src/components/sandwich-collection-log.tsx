@@ -735,15 +735,34 @@ export default function SandwichCollectionLog() {
         return "";
       };
 
-      const headers = ["ID", "Host Name", "Individual Sandwiches", "Collection Date", "Group Collections", "Submitted At"];
+      // Calculate accurate totals including both individual and group sandwiches
+      const calculateTotal = (collection: SandwichCollection) => {
+        const individual = Number(collection.individualSandwiches || 0);
+        const groupSandwiches = Number(collection.groupSandwiches || 0);
+        return individual + groupSandwiches;
+      };
+
+      const headers = [
+        "ID", 
+        "Host Name", 
+        "Collection Date",
+        "Individual Sandwiches", 
+        "Group Sandwiches",
+        "Group Collections Detail",
+        "Total Sandwiches",
+        "Submitted At"
+      ];
+      
       const csvData = [
         headers.join(","),
         ...allCollections.map((collection: SandwichCollection) => [
           collection.id,
           `"${collection.hostName}"`,
-          collection.individualSandwiches,
           `"${collection.collectionDate}"`,
+          collection.individualSandwiches || 0,
+          collection.groupSandwiches || 0,
           `"${formatGroupCollections(collection.groupCollections || '')}"`,
+          calculateTotal(collection),
           `"${new Date(collection.submittedAt).toLocaleString()}"`
         ].join(","))
       ].join("\n");
@@ -752,7 +771,7 @@ export default function SandwichCollectionLog() {
       const link = document.createElement("a");
       const url = URL.createObjectURL(blob);
       link.setAttribute("href", url);
-      link.setAttribute("download", `sandwich-collections-all-${new Date().toISOString().split('T')[0]}.csv`);
+      link.setAttribute("download", `sandwich-collections-complete-${new Date().toISOString().split('T')[0]}.csv`);
       link.style.visibility = "hidden";
       document.body.appendChild(link);
       link.click();
@@ -760,12 +779,13 @@ export default function SandwichCollectionLog() {
 
       toast({
         title: "Export successful",
-        description: `All ${allCollections.length} collections exported to CSV.`,
+        description: `All ${allCollections.length} collections exported to CSV with complete data including group totals.`,
       });
     } catch (error) {
+      console.error('CSV Export Error:', error);
       toast({
         title: "Export failed",
-        description: "Failed to export collections data.",
+        description: "Failed to export collections data. Please try again.",
         variant: "destructive",
       });
     }
