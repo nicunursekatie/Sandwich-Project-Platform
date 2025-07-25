@@ -17,7 +17,7 @@ import BulkDataManager from "@/components/bulk-data-manager";
 import AnalyticsDashboard from "@/components/analytics-dashboard";
 import Development from "@/pages/development";
 import MeetingsLandingPage from "@/pages/meetings";
-import MeetingMinutesPage from "@/pages/meeting-minutes";
+import MeetingMinutes from "@/pages/meeting-minutes";
 import MeetingAgendaPage from "@/pages/meeting-agenda";
 import MeetingCalendarPage from "@/pages/meeting-calendar";
 import RoleDemo from "@/pages/role-demo";
@@ -176,7 +176,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "meetings":
         return <MeetingsLandingPage onNavigate={setActiveSection} />;
       case "minutes":
-        return <MeetingMinutesPage />;
+        return <MeetingMinutes />;
       case "agenda":
         return <MeetingAgendaPage />;
       case "calendar":
