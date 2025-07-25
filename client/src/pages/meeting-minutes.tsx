@@ -377,6 +377,19 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
    return dateStr;
  };
 
+ const getMeetingTypeBadge = (type: string) => {
+   switch (type) {
+     case 'core_team':
+       return (
+         <Badge className="bg-[#FBAD3F] text-white hover:bg-[#e6991c]">
+           Core Team
+         </Badge>
+       );
+     default:
+       return <Badge variant="secondary">{type.replace('_', ' ')}</Badge>;
+   }
+ };
+
  if (meetingsLoading || minutesLoading) {
  return (
  <div className="space-y-6">
@@ -663,7 +676,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  {/* Google Docs iframe */}
  <div style={{ height: '600px' }}>
  <iframe
- src={`https://docs.google.com/document/d/${viewingMinutes.summary.split("Google Docs link:")[1].split("/d/")[1]?.split("/")[0]}/preview`}
+                 src={(() => { try { const docUrl = viewingMinutes.summary.split("Google Docs link:")[1]?.trim(); if (!docUrl) return "about:blank"; const docIdMatch = docUrl.match(/\/d\/([a-zA-Z0-9-_]+)/); const docId = docIdMatch?.[1]; return docId ? `https://docs.google.com/document/d/${docId}/preview` : "about:blank"; } catch { return "about:blank"; } })()}
  className="w-full h-full border-0"
  title="Google Docs Preview"
  />
@@ -892,7 +905,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  <Clock className="w-4 h-4" />
  {formatMeetingDateTime(meeting)}
  </span>
- <Badge variant="secondary">{meeting.type.replace('_', ' ')}</Badge>
+ {getMeetingTypeBadge(meeting.type)}
  <Badge variant={meeting.status === 'completed' ? 'default' : 'outline'}>
  {meeting.status}
  </Badge>
