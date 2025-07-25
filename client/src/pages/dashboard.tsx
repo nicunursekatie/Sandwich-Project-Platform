@@ -47,6 +47,7 @@ import AdminPage from "@/pages/admin";
 import StreamMessagesPage from "@/pages/stream-messages-clean";
 import DirectMessages from "@/pages/direct-messages";
 import GmailStyleInbox from "@/components/gmail-style-inbox";
+import { HelpBubble, QuickHelp, helpContent } from "@/components/help-system";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);

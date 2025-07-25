@@ -1187,26 +1187,42 @@ export default function SandwichCollectionLog() {
           {/* Action buttons - Mobile optimized */}
           <div className="flex flex-col sm:flex-row gap-2">
             {canCreateCollections && (
-              <Button
-                onClick={() => setShowSubmitForm(!showSubmitForm)}
-                variant="default"
-                size="sm"
-                className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-[#236383] hover:bg-[#1d5470] py-2.5"
+              <HelpBubble
+                title={helpContent.collections.enterData.title}
+                content={helpContent.collections.enterData.content}
+                character={helpContent.collections.enterData.character}
+                position="bottom"
+                trigger="hover"
               >
-                <Sandwich className="w-4 h-4" />
-                <span className="font-medium">{showSubmitForm ? 'Hide Form' : 'Enter New Collection Data'}</span>
-              </Button>
+                <Button
+                  onClick={() => setShowSubmitForm(!showSubmitForm)}
+                  variant="default"
+                  size="sm"
+                  className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-[#236383] hover:bg-[#1d5470] py-2.5"
+                >
+                  <Sandwich className="w-4 h-4" />
+                  <span className="font-medium">{showSubmitForm ? 'Hide Form' : 'Enter New Collection Data'}</span>
+                </Button>
+              </HelpBubble>
             )}
             <div className="flex gap-2 w-full sm:w-auto">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center space-x-1 flex-1 sm:flex-none justify-center py-2.5"
+              <HelpBubble
+                title={helpContent.collections.filters.title}
+                content={helpContent.collections.filters.content}
+                character={helpContent.collections.filters.character}
+                position="bottom"
+                trigger="hover"
               >
-                <Filter className="w-4 h-4" />
-                <span>Filter</span>
-              </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="flex items-center space-x-1 flex-1 sm:flex-none justify-center py-2.5"
+                >
+                  <Filter className="w-4 h-4" />
+                  <span>Filter</span>
+                </Button>
+              </HelpBubble>
               {canEditData && (
                 <Button
                   onClick={() => setShowDataManagement(true)}
@@ -1920,6 +1936,8 @@ export default function SandwichCollectionLog() {
         </DialogContent>
       </Dialog>
 
+      {/* Quick Help Button */}
+      <QuickHelp section="collections" />
 
     </div>
   );
