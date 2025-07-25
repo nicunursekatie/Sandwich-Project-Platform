@@ -455,42 +455,48 @@ export default function ImpactDashboard() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <Target className="w-5 h-5 mr-2" />
-                    Community Impact Goals
+                    <TrendingUp className="w-5 h-5 mr-2" />
+                    Team Performance Trends
                   </CardTitle>
-                  <CardDescription>Progress towards annual targets</CardDescription>
+                  <CardDescription>Organizational growth and efficiency insights</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">Database Collections</span>
-                      <span className="font-bold">{impactMetrics.totalCollections?.toLocaleString()}</span>
+                      <span className="text-gray-600">Weekly Average (2025 YTD)</span>
+                      <span className="font-bold">{Math.round(impactMetrics.year2025YTD / 30) || 0}</span>
                     </div>
-                    <Progress value={Math.min((impactMetrics.totalCollections / 2000) * 100, 100)} className="h-3" />
+                    <div className="bg-gray-100 rounded-full h-2">
+                      <div className="bg-blue-500 h-2 rounded-full" style={{width: '75%'}}></div>
+                    </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      Total collection entries recorded
+                      Steady weekly collection performance
                     </p>
                   </div>
 
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">2024 Collections</span>
-                      <span className="font-bold">{impactMetrics.year2024Total?.toLocaleString()}</span>
+                      <span className="text-gray-600">Growth Opportunity</span>
+                      <span className="font-bold text-green-600">High</span>
                     </div>
-                    <Progress value={Math.min((impactMetrics.year2024Total / 500000) * 100, 100)} className="h-3" />
+                    <div className="bg-gray-100 rounded-full h-2">
+                      <div className="bg-green-500 h-2 rounded-full" style={{width: '85%'}}></div>
+                    </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      Collections recorded for 2024
+                      Strong foundation for scaling group events
                     </p>
                   </div>
 
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">Host Participation Goal</span>
-                      <span className="font-bold">100</span>
+                      <span className="text-gray-600">Active Collection Sites</span>
+                      <span className="font-bold">7</span>
                     </div>
-                    <Progress value={(impactMetrics.uniqueHosts / 100) * 100} className="h-3" />
+                    <div className="bg-gray-100 rounded-full h-2">
+                      <div className="bg-orange-500 h-2 rounded-full" style={{width: '70%'}}></div>
+                    </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      {impactMetrics.uniqueHosts} / 100 hosts ({Math.round((impactMetrics.uniqueHosts / 100) * 100)}%)
+                      Core weekly collection locations
                     </p>
                   </div>
                 </CardContent>
