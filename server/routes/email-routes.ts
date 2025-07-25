@@ -61,7 +61,7 @@ router.post('/', isAuthenticated, async (req: any, res) => {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const { recipientId, recipientName, recipientEmail, subject, content, isDraft } = req.body;
+    const { recipientId, recipientName, recipientEmail, subject, content, isDraft, parentMessageId, contextType, contextId, contextTitle } = req.body;
 
     if (!subject || !content) {
       return res.status(400).json({ message: 'Subject and content are required' });
@@ -71,7 +71,7 @@ router.post('/', isAuthenticated, async (req: any, res) => {
       return res.status(400).json({ message: 'Recipient information is required' });
     }
 
-    console.log(`[Email API] Sending email from ${user.email} to ${recipientEmail}`);
+    console.log(`[Email API] Sending email from ${user.email} to ${recipientEmail}${parentMessageId ? ` (reply to ${parentMessageId})` : ''}`);
 
     const newEmail = await emailService.sendEmail({
       senderId: user.id,
@@ -82,6 +82,10 @@ router.post('/', isAuthenticated, async (req: any, res) => {
       recipientEmail: recipientEmail || user.email,
       subject,
       content,
+      parentMessageId: parentMessageId || null, // Enable threading
+      contextType: contextType || null,
+      contextId: contextId || null,
+      contextTitle: contextTitle || null,
       isDraft: isDraft || false,
     });
 

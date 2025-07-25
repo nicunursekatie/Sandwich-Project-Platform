@@ -332,40 +332,75 @@ export class EmailService {
   }
 
   /**
-   * Get emails grouped by subject (thread view)
+   * Get emails grouped by thread using parentMessageId (proper threading)
    */
   async getEmailThreads(userId: string, folder: string): Promise<any[]> {
     try {
       const emails = await this.getEmailsByFolder(userId, folder);
       
-      // Group emails by subject
-      const threadMap = new Map<string, EmailMessage[]>();
+      // Create thread map using proper parent-child relationships
+      const threadMap = new Map<number, EmailMessage[]>();
+      const emailMap = new Map<number, EmailMessage>();
       
+      // First pass: index all emails
       emails.forEach(email => {
-        const subject = email.subject || 'No Subject';
-        if (!threadMap.has(subject)) {
-          threadMap.set(subject, []);
+        emailMap.set(email.id, email);
+      });
+      
+      // Second pass: group into threads using parentMessageId
+      emails.forEach(email => {
+        let threadId: number;
+        
+        if (email.parentMessageId && emailMap.has(email.parentMessageId)) {
+          // This is a reply - find the root thread
+          threadId = this.findRootThreadId(email.parentMessageId, emailMap);
+        } else {
+          // This is a root message - starts a new thread
+          threadId = email.id;
         }
-        threadMap.get(subject)!.push(email);
+        
+        if (!threadMap.has(threadId)) {
+          threadMap.set(threadId, []);
+        }
+        threadMap.get(threadId)!.push(email);
       });
       
       // Convert to array of threads
-      const threads = Array.from(threadMap.entries()).map(([subject, messages]) => {
-        // Sort messages in thread by date (newest first)
+      const threads = Array.from(threadMap.entries()).map(([threadId, messages]) => {
+        // Sort messages in thread by date (oldest first for conversation flow)
         messages.sort((a, b) => {
           const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
           const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-          return dateB - dateA;
+          return dateA - dateB;
         });
         
+        const rootMessage = messages[0]; // First (oldest) message is the root
+        const lastMessage = messages[messages.length - 1]; // Last (newest) message
+        
         return {
-          subject,
+          threadId,
+          subject: rootMessage.subject,
           messageCount: messages.length,
-          lastMessage: messages[0], // Most recent message
-          messages: messages,
+          rootMessage,
+          lastMessage,
+          messages,
           participants: Array.from(new Set(messages.flatMap(m => [m.senderEmail, m.recipientEmail]))).filter(Boolean),
           hasUnread: messages.some(m => !m.isRead),
-          lastMessageDate: messages[0].createdAt
+          lastMessageDate: lastMessage.createdAt,
+          // Format for Gmail-style display
+          id: threadId,
+          senderId: lastMessage.senderId,
+          senderName: lastMessage.senderName,
+          senderEmail: lastMessage.senderEmail,
+          recipientId: rootMessage.recipientId,
+          recipientName: rootMessage.recipientName,
+          recipientEmail: rootMessage.recipientEmail,
+          content: `${messages.length > 1 ? `${messages.length} messages: ` : ''}${lastMessage.content}`,
+          createdAt: lastMessage.createdAt,
+          isRead: messages.every(m => m.isRead),
+          isStarred: messages.some(m => m.isStarred),
+          folder: folder,
+          committee: rootMessage.contextType || 'email'
         };
       });
       
@@ -376,11 +411,23 @@ export class EmailService {
         return dateB - dateA;
       });
       
+      console.log(`[Email Service] Created ${threads.length} threads from ${emails.length} emails`);
       return threads;
     } catch (error) {
       console.error('Failed to get email threads:', error);
       throw error;
     }
+  }
+
+  /**
+   * Find the root thread ID by traversing up the parent chain
+   */
+  private findRootThreadId(messageId: number, emailMap: Map<number, EmailMessage>): number {
+    const email = emailMap.get(messageId);
+    if (!email || !email.parentMessageId || !emailMap.has(email.parentMessageId)) {
+      return messageId; // This is the root
+    }
+    return this.findRootThreadId(email.parentMessageId, emailMap);
   }
 
   /**
