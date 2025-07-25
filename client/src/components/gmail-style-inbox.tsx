@@ -184,6 +184,8 @@ export default function GmailStyleInbox() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [apiBase] });
+      // Also invalidate Gmail unread count to update navigation indicator
+      queryClient.invalidateQueries({ queryKey: ['/api/emails/unread-count'] });
       setShowCompose(false);
       resetCompose();
       toast({ description: "Message sent successfully" });
@@ -219,6 +221,8 @@ export default function GmailStyleInbox() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [apiBase] });
+      // Also invalidate Gmail unread count to update navigation indicator
+      queryClient.invalidateQueries({ queryKey: ['/api/emails/unread-count'] });
       setShowReply(false);
       setReplyContent("");
       toast({ description: "Reply sent successfully" });
@@ -243,6 +247,8 @@ export default function GmailStyleInbox() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [apiBase] });
+      // Also invalidate Gmail unread count to update navigation indicator
+      queryClient.invalidateQueries({ queryKey: ['/api/emails/unread-count'] });
       toast({ description: "Marked as read" });
     },
     onError: (error) => {

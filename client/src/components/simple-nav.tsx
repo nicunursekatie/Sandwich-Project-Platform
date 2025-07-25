@@ -24,6 +24,8 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { useMessaging } from "@/hooks/useMessaging";
+import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 interface NavigationItem {
   id: string;
@@ -38,6 +40,23 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
   const { user } = useAuth();
   const [location] = useLocation();
   const { unreadCounts, totalUnread } = useMessaging();
+
+  // Get Gmail inbox unread count
+  const { data: gmailUnreadCount = 0 } = useQuery({
+    queryKey: ['/api/emails/unread-count', (user as any)?.id || 'no-user'],
+    queryFn: async () => {
+      if (!(user as any)?.id) return 0;
+      try {
+        const response = await apiRequest('GET', '/api/emails/unread-count');
+        return response.count || 0;
+      } catch (error) {
+        console.error('Failed to fetch Gmail unread count:', error);
+        return 0;
+      }
+    },
+    enabled: !!(user as any)?.id,
+    refetchInterval: 30000, // Refetch every 30 seconds
+  });
 
   // Navigation organized by sections: MAIN, COMMUNICATION, WORKFLOW, PEOPLE, DATA
   const navigationItems: NavigationItem[] = [
@@ -121,7 +140,9 @@ export default function SimpleNav({ onSectionChange }: { onSectionChange: (secti
         
         // Get unread count for specific items
         let unreadCount = 0;
-        if (item.id === 'messages') {
+        if (item.id === 'gmail-inbox') {
+          unreadCount = gmailUnreadCount; // Gmail inbox unread count
+        } else if (item.id === 'messages') {
           unreadCount = totalUnread; // Direct/Group messages
         } else if (item.id === 'chat') {
           unreadCount = unreadCounts.general; // Chat rooms
