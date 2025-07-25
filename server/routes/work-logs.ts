@@ -19,7 +19,10 @@ const router = Router();
 const insertWorkLogSchema = z.object({
   description: z.string().min(1),
   hours: z.number().int().min(0),
-  minutes: z.number().int().min(0).max(59)
+  minutes: z.number().int().min(0).max(59),
+  workDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    message: "Invalid date format"
+  })
 });
 
 // Middleware to check if user is super admin or admin
@@ -72,7 +75,8 @@ router.post("/work-logs", isAuthenticated, async (req, res) => {
       userId: req.user.id,
       description: result.data.description,
       hours: result.data.hours,
-      minutes: result.data.minutes
+      minutes: result.data.minutes,
+      workDate: new Date(result.data.workDate)
     }).returning();
     res.status(201).json(log[0]);
   } catch (error) {
@@ -97,7 +101,8 @@ router.put("/work-logs/:id", isAuthenticated, async (req, res) => {
     const updated = await db.update(workLogs).set({
       description: result.data.description,
       hours: result.data.hours,
-      minutes: result.data.minutes
+      minutes: result.data.minutes,
+      workDate: new Date(result.data.workDate)
     }).where(eq(workLogs.id, logId)).returning();
     res.json(updated[0]);
   } catch (error) {

@@ -822,7 +822,8 @@ export const workLogs = pgTable("work_logs", {
   description: text("description").notNull(),
   hours: integer("hours").notNull().default(0),
   minutes: integer("minutes").notNull().default(0),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  workDate: timestamp("work_date", { withTimezone: true }).notNull(), // Date when the work was actually performed
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(), // When the log entry was created
   status: varchar("status", { length: 20 }).default("pending"), // for future approval
   approvedBy: varchar("approved_by"), // for future approval
   approvedAt: timestamp("approved_at", { withTimezone: true }), // for future approval

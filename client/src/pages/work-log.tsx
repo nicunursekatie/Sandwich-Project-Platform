@@ -21,6 +21,11 @@ export default function WorkLogPage() {
   const [description, setDescription] = useState("");
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
+  const [workDate, setWorkDate] = useState(() => {
+    // Default to today's date in YYYY-MM-DD format
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  });
 
   const { data: logs = [], refetch, isLoading, error } = useQuery({
     queryKey: ["/api/work-logs"],
@@ -45,7 +50,8 @@ export default function WorkLogPage() {
       const data = await apiRequest("POST", "/api/work-logs", { 
         description, 
         hours, 
-        minutes
+        minutes,
+        workDate: workDate + "T12:00:00.000Z" // Add time component for proper date parsing
       });
       return data;
     },
@@ -53,6 +59,10 @@ export default function WorkLogPage() {
       setDescription("");
       setHours(0);
       setMinutes(0);
+      setWorkDate(() => {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/work-logs"] });
       refetch(); // Force refetch to update the list immediately
     },
@@ -84,6 +94,15 @@ export default function WorkLogPage() {
               }}
               className="space-y-4"
           >
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Work Date</label>
+              <Input
+                type="date"
+                value={workDate}
+                onChange={e => setWorkDate(e.target.value)}
+                required
+              />
+            </div>
             <Textarea
               value={description}
               onChange={e => setDescription(e.target.value)}
@@ -147,7 +166,7 @@ export default function WorkLogPage() {
                   <div className="flex-1">
                     <div className="font-medium">{log.description}</div>
                     <div className="text-sm text-gray-500">
-                      {log.hours}h {log.minutes}m &middot; {new Date(log.createdAt).toLocaleString()}
+                      {log.hours}h {log.minutes}m &middot; Work Date: {log.workDate ? new Date(log.workDate).toLocaleDateString() : new Date(log.createdAt).toLocaleDateString()}
                       {log.userId !== user?.id && <span className="ml-2 text-blue-600">(by other user)</span>}
                     </div>
                   </div>
