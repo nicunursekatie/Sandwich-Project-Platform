@@ -485,12 +485,22 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           <Button
             type="submit"
             disabled={submitCollectionMutation.isPending}
-            className="w-full sm:w-auto min-h-[44px] px-8 py-3 text-base font-semibold btn-tsp-primary text-white hover:bg-opacity-90 focus:ring-2 focus:ring-blue-200 transition-all"
+            className="w-full sm:w-auto min-h-[44px] px-8 py-3 text-base font-semibold bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white shadow-lg hover:shadow-xl focus:ring-2 focus:ring-amber-300 transition-all transform hover:scale-105"
             style={{ fontSize: '16px', minWidth: '200px' }}
           >
-            {submitCollectionMutation.isPending
-              ? "Submitting..."
-              : "Submit Collection"}
+            {submitCollectionMutation.isPending ? (
+              <div className="flex items-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Submitting...
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Submit Collection
+              </div>
+            )}
           </Button>
         </div>
       </form>
