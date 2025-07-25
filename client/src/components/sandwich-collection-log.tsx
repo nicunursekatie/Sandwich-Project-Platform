@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, useCallback } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X, ArrowUp, ArrowDown, Download, Plus, Database } from "lucide-react";
+import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X, ArrowUp, ArrowDown, Download, Plus, Database, ChevronLeft, ChevronRight } from "lucide-react";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -196,6 +196,13 @@ export default function SandwichCollectionLog() {
 
   const collections = collectionsResponse?.collections || [];
   const pagination = collectionsResponse?.pagination;
+  
+  // Extract pagination info
+  const totalItems = pagination?.total || 0;
+  const totalPages = pagination?.totalPages || 1;
+  const currentPageFromServer = pagination?.page || 1;
+  const hasNext = pagination?.hasNext || false;
+  const hasPrev = pagination?.hasPrev || false;
 
   const { data: hostsList = [] } = useQuery<Host[]>({
     queryKey: ["/api/hosts"]
@@ -271,9 +278,9 @@ export default function SandwichCollectionLog() {
       return sortConfig.direction === 'asc' ? comparison : -comparison;
     });
 
-  // Always use the actual filtered collection count for accurate pagination
-  const totalItems = filteredCollections.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  // Use pagination info from backend when available, otherwise calculate from filtered results
+  const effectiveTotalItems = totalItems || filteredCollections.length;
+  const effectiveTotalPages = totalPages || Math.ceil(effectiveTotalItems / itemsPerPage);
   
   // Apply pagination to filtered results
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -304,7 +311,7 @@ export default function SandwichCollectionLog() {
       </div>
 
       {/* Pagination controls */}
-      {totalPages > 1 && (
+      {effectiveTotalPages > 1 && (
         <div className="flex items-center justify-center w-full sm:w-auto">
           {/* Mobile view - simplified controls */}
           <div className="flex sm:hidden items-center gap-2">
@@ -318,13 +325,13 @@ export default function SandwichCollectionLog() {
               Previous
             </Button>
             <span className="px-3 py-2 text-sm font-medium bg-slate-100 rounded border">
-              {currentPage} of {totalPages}
+              {currentPage} of {effectiveTotalPages}
             </span>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
+              disabled={currentPage === effectiveTotalPages}
               className="px-3 py-2 min-h-[40px]"
             >
               Next
@@ -353,9 +360,9 @@ export default function SandwichCollectionLog() {
             </Button>
 
             <div className="flex items-center space-x-1">
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                const pageNumber = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
-                if (pageNumber > totalPages) return null;
+              {Array.from({ length: Math.min(5, effectiveTotalPages) }, (_, i) => {
+                const pageNumber = Math.max(1, Math.min(effectiveTotalPages - 4, currentPage - 2)) + i;
+                if (pageNumber > effectiveTotalPages) return null;
 
                 return (
                   <Button
@@ -375,7 +382,7 @@ export default function SandwichCollectionLog() {
               variant="outline"
               size="sm"
               onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
+              disabled={currentPage === effectiveTotalPages}
               className="px-3 py-2"
             >
               Next
@@ -383,8 +390,8 @@ export default function SandwichCollectionLog() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage(totalPages)}
-              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(effectiveTotalPages)}
+              disabled={currentPage === effectiveTotalPages}
               className="px-3 py-2"
             >
               Last
@@ -399,6 +406,96 @@ export default function SandwichCollectionLog() {
   React.useEffect(() => {
     setCurrentPage(1);
   }, [searchFilters, sortConfig]);
+
+  // Pagination Controls Component
+  const PaginationControls = ({ position }: { position: 'top' | 'bottom' }) => (
+    <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div className="flex items-center gap-2 text-sm text-slate-600">
+          <span>{effectiveTotalItems} collection{effectiveTotalItems !== 1 ? 's' : ''}</span>
+          {totalStats && (
+            <>
+              <span className="text-slate-400">•</span>
+              <span className="font-semibold text-slate-700">
+                {totalStats.totalSandwiches?.toLocaleString() || 0} sandwiches
+              </span>
+              <span className="text-slate-400">•</span>
+              <span>{totalStats.individualSandwiches?.toLocaleString() || 0} individual, {totalStats.groupSandwiches?.toLocaleString() || 0} group</span>
+            </>
+          )}
+        </div>
+        
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          {/* Page Size Selector */}
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-slate-600">Per page:</span>
+            <Select
+              value={itemsPerPage.toString()}
+              onValueChange={(value) => {
+                setItemsPerPage(parseInt(value));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="w-20 h-8">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="25">25</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+                <SelectItem value="200">200</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {/* Page Navigation */}
+          <div className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(1)}
+              disabled={currentPage === 1}
+              className="px-2 py-1 text-xs"
+            >
+              <ChevronLeft className="w-3 h-3" />
+              <ChevronLeft className="w-3 h-3 -ml-1" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-2 py-1 text-xs"
+            >
+              <ChevronLeft className="w-3 h-3" />
+            </Button>
+            <span className="px-3 py-1 text-sm text-slate-600 bg-white border border-slate-200 rounded">
+              {currentPage} / {effectiveTotalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage === effectiveTotalPages}
+              className="px-2 py-1 text-xs"
+            >
+              <ChevronRight className="w-3 h-3" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(effectiveTotalPages)}
+              disabled={currentPage === effectiveTotalPages}
+              className="px-2 py-1 text-xs"
+            >
+              <ChevronRight className="w-3 h-3" />
+              <ChevronRight className="w-3 h-3 -ml-1" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   // Get unique host names from collections for filtering
   const uniqueHostNames = Array.from(new Set(collections.map((c: SandwichCollection) => c.hostName))).sort();
