@@ -453,6 +453,11 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
             )}
           </div>
 
+          {/* Instruction Text */}
+          <div className="text-xs text-gray-600 italic px-1">
+            Enter group totals separately below. Each group needs a name and count. Use + to add more groups.
+          </div>
+
           {/* Group Collections - Ultra Compact */}
           <div className="bg-gray-50 rounded p-2">
             <div className="flex items-center justify-between mb-1">
