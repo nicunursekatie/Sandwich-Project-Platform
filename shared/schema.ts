@@ -278,19 +278,7 @@ export const messageRecipients = pgTable("message_recipients", {
   unreadIdx: index("idx_message_recipients_unread").on(table.recipientId, table.read),
 }));
 
-// 5. Message Threads - maintain threading hierarchy
-export const messageThreads = pgTable("message_threads", {
-  id: serial("id").primaryKey(),
-  rootMessageId: integer("root_message_id").references(() => messages.id, { onDelete: "cascade" }),
-  messageId: integer("message_id").references(() => messages.id, { onDelete: "cascade" }),
-  parentMessageId: integer("parent_message_id").references(() => messages.id, { onDelete: "cascade" }),
-  depth: integer("depth").notNull().default(0),
-  path: text("path").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-}, (table) => ({
-  uniqueMessage: unique().on(table.messageId),
-  pathIdx: index("idx_thread_path").on(table.path),
-}));
+// THREADING REMOVED: No message threads table needed for simplified Gmail functionality
 
 // 6. Kudos Tracking - prevent spam by tracking sent kudos
 export const kudosTracking = pgTable("kudos_tracking", {
@@ -309,7 +297,8 @@ export const kudosTracking = pgTable("kudos_tracking", {
 
 // All complex messaging tables removed - using enhanced messaging system above
 
-// Email-style messaging table for Gmail-like inbox functionality
+// SIMPLIFIED Email-style messaging table - NO THREADING COMPLEXITY  
+// Simple Gmail-like inbox with send/receive, read/unread, reply, archive, delete operations only
 export const emailMessages = pgTable("email_messages", {
   id: serial("id").primaryKey(),
   senderId: varchar("sender_id").notNull(),
@@ -325,7 +314,7 @@ export const emailMessages = pgTable("email_messages", {
   isArchived: boolean("is_archived").notNull().default(false),
   isTrashed: boolean("is_trashed").notNull().default(false),
   isDraft: boolean("is_draft").notNull().default(false),
-  parentMessageId: integer("parent_message_id"), // For replies/threading
+  // REMOVED: parentMessageId - No threading, each email is independent
   contextType: varchar("context_type"), // 'project', 'task', 'suggestion', etc.
   contextId: varchar("context_id"), // ID of the related entity
   contextTitle: varchar("context_title"), // Display name of related entity
@@ -510,7 +499,7 @@ export const insertProjectSchema = createInsertSchema(projects).omit({ id: true,
 export const insertArchivedProjectSchema = createInsertSchema(archivedProjects).omit({ id: true, archivedAt: true });
 export const insertMessageSchema = createInsertSchema(messages).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertMessageRecipientSchema = createInsertSchema(messageRecipients).omit({ id: true, createdAt: true });
-export const insertMessageThreadSchema = createInsertSchema(messageThreads).omit({ id: true, createdAt: true });
+// REMOVED: insertMessageThreadSchema - Threading functionality removed
 export const insertKudosTrackingSchema = createInsertSchema(kudosTracking).omit({ id: true, sentAt: true });
 export const insertWeeklyReportSchema = createInsertSchema(weeklyReports).omit({ id: true, submittedAt: true });
 export const insertSandwichCollectionSchema = createInsertSchema(sandwichCollections).omit({ id: true, submittedAt: true });
@@ -545,8 +534,7 @@ export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type MessageRecipient = typeof messageRecipients.$inferSelect;
 export type InsertMessageRecipient = z.infer<typeof insertMessageRecipientSchema>;
-export type MessageThread = typeof messageThreads.$inferSelect;
-export type InsertMessageThread = z.infer<typeof insertMessageThreadSchema>;
+// REMOVED: MessageThread types - Threading functionality removed
 export type KudosTracking = typeof kudosTracking.$inferSelect;
 export type InsertKudosTracking = z.infer<typeof insertKudosTrackingSchema>;
 export type WeeklyReport = typeof weeklyReports.$inferSelect;

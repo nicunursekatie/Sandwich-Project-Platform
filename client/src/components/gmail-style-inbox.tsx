@@ -74,7 +74,7 @@ interface Message {
   senderName: string;
   conversationId: number;
   createdAt: string;
-  // Legacy email fields (might not be present in conversation-based messages)
+  // Email fields for Gmail-style inbox (NO THREADING)
   senderId?: string;
   senderEmail?: string;
   recipientId?: string;
@@ -86,7 +86,7 @@ interface Message {
   isArchived?: boolean;
   isTrashed?: boolean;
   isDraft?: boolean;
-  parentMessageId?: number;
+  // REMOVED: parentMessageId - No threading functionality
   readAt?: string;
   contextType?: string;
   contextId?: string;

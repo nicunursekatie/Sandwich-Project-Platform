@@ -225,31 +225,11 @@ async function startServer() {
               await setupVite(app, httpServer);
               console.log("✓ Vite development server setup complete");
               // Add small delay to ensure Vite is fully ready
-              await new Promise(resolve => setTimeout(resolve, 500));
+              await new Promise(resolve => setTimeout(resolve, 200));
               console.log("✓ Vite stabilization delay complete");
-              
-              // Test that Vite is actually working by checking a route
-              console.log("✓ Testing Vite middleware...");
-              
             } catch (error) {
               console.error("✗ Vite setup failed:", error);
               console.log("⚠ Server continuing without Vite - frontend may not work properly");
-              
-              // Fallback: serve a simple static response
-              app.get("/", (req: any, res: any) => {
-                res.send(`
-                  <html>
-                    <head><title>The Sandwich Project</title></head>
-                    <body>
-                      <h1>Gmail Inbox Simplified</h1>
-                      <p>Threading removed as requested. Core email functionality ready.</p>
-                      <p><a href="/api/login">Login to Access Gmail Inbox</a></p>
-                      <script>console.log('Fallback page loaded')</script>
-                    </body>
-                  </html>
-                `);
-              });
-              console.log("✓ Fallback static serving enabled");
             }
           } else {
               // Add catch-all for unknown routes before SPA
