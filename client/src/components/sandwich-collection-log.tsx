@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS, canEditCollection, canDeleteCollection } from "@shared/auth-utils";
 import type { SandwichCollection, Host } from "@shared/schema";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
+import { helpContent, QuickHelp } from "@/components/help-system";
 
 
 
