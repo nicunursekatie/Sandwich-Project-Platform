@@ -513,7 +513,7 @@ export default function GmailStyleInbox() {
 
       {/* Message List */}
       <div className="flex-1 flex">
-        <div className="w-96 border-r flex flex-col">
+        <div className="w-1/2 border-r flex flex-col">
           {/* Toolbar */}
           <div className="border-b p-4 space-y-3">
             <div className="flex items-center justify-between">
@@ -577,7 +577,7 @@ export default function GmailStyleInbox() {
                   key={message.id}
                   onClick={() => handleSelectMessage(message)}
                   className={`
-                    p-4 cursor-pointer transition-colors hover:bg-amber-50 font-['Roboto']
+                    p-5 cursor-pointer transition-colors hover:bg-amber-50 font-['Roboto'] border-b border-gray-100
                     ${selectedMessage?.id === message.id ? 'bg-amber-100 border-r-4 border-amber-500 shadow-sm' : ''}
                     ${!message.isRead ? 'bg-blue-50 font-bold border-l-4 border-blue-500' : 'bg-white font-normal'}
                   `}
@@ -611,12 +611,12 @@ export default function GmailStyleInbox() {
                         }
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1 min-w-0 overflow-hidden">
-                      <div className="flex items-center justify-between mb-1">
-                        <p className={`text-sm truncate flex-1 mr-2 ${!message.isRead ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between mb-2">
+                        <p className={`text-sm flex-1 mr-4 ${!message.isRead ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>
                           {activeFolder === 'sent' ? (message.recipientName || 'Unknown') : (message.senderName || 'Unknown')}
                         </p>
-                        <span className="text-xs text-gray-500 flex-shrink-0">
+                        <span className="text-xs text-gray-500 flex-shrink-0 mt-0.5">
                           {(() => {
                             try {
                               return message.createdAt ? formatDistanceToNow(new Date(message.createdAt), { addSuffix: true }) : 'No date';
@@ -626,7 +626,12 @@ export default function GmailStyleInbox() {
                           })()}
                         </span>
                       </div>
-                      <p className={`text-sm truncate overflow-hidden text-ellipsis whitespace-nowrap ${!message.isRead ? 'font-bold text-gray-900' : 'font-normal text-gray-600'}`}>
+                      <p className={`text-sm leading-relaxed line-clamp-3 ${!message.isRead ? 'font-bold text-gray-900' : 'font-normal text-gray-600'}`} style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}>
                         {message.content}
                       </p>
                     </div>
