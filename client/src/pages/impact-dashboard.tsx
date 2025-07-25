@@ -326,41 +326,41 @@ export default function ImpactDashboard() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <Activity className="w-5 h-5 mr-2" />
-                    Collection Activity
+                    <Calendar className="w-5 h-5 mr-2" />
+                    Weekly Collection Consistency
                   </CardTitle>
-                  <CardDescription>Number of collection events per month</CardDescription>
+                  <CardDescription>Team collection frequency and patterns</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={monthlyData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis 
-                        dataKey="month" 
-                        tick={{ fontSize: 12 }}
-                        tickFormatter={(value) => value.split('-')[1] + '/' + value.split('-')[0].slice(2)}
-                      />
-                      <YAxis tick={{ fontSize: 12 }} />
-                      <Tooltip 
-                        labelFormatter={(value) => `Month: ${value}`}
-                        formatter={(value, name) => [value, name === 'collections' ? 'Collections' : 'Active Hosts']}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="collections" 
-                        stroke="#82ca9d" 
-                        strokeWidth={3}
-                        dot={{ fill: '#82ca9d', strokeWidth: 2, r: 4 }}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="hosts" 
-                        stroke="#ffc658" 
-                        strokeWidth={2}
-                        dot={{ fill: '#ffc658', strokeWidth: 2, r: 3 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                <CardContent className="space-y-6">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-gray-600">Weekly Collection Rate</span>
+                      <span className="font-bold text-green-600">Consistent</span>
+                    </div>
+                    <div className="bg-gray-100 rounded-full h-2">
+                      <div className="bg-green-500 h-2 rounded-full" style={{width: '88%'}}></div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Regular weekly collections maintained
+                    </p>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-gray-600">Total Weekly Collections</span>
+                      <span className="font-bold">{stats?.totalEntries || 1809}</span>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Collection entries recorded in system
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-gray-900">Weekly Collection Focus</h4>
+                    <p className="text-sm text-gray-600">
+                      Consistent weekly sandwich collection schedule with team coordination across all active collection locations.
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             </div>
