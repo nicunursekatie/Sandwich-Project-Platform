@@ -1,0 +1,37 @@
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=XWFj2Ckg9F-_' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=XWFj2Ckg9F-_' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+message-notifications.tsx:98 Connecting to WebSocket at: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/notifications
+dashboard.tsx:59 Dashboard activeSection changed to: dashboard
+message-notifications.tsx:110 WebSocket connected successfully
+useMessaging.ts:239 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ useMessaging.ts:239
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+useMessaging.ts:274 Messaging WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+overrideMethod @ hook.js:608
+ws.onerror @ useMessaging.ts:274
+useMessaging.ts:278 Messaging WebSocket disconnected
+simple-nav.tsx:148 Navigation click: gmail-inbox
+dashboard.tsx:515 Dashboard setActiveSection called with: gmail-inbox
+dashboard.tsx:59 Dashboard activeSection changed to: gmail-inbox
+gmail-style-inbox.tsx:145 Fetched 2 emails from inbox folder
+gmail-style-inbox.tsx:182 Sending email with data: {recipientId: 'admin_1751065261945', recipientName: 'Katie (Admin) Long', recipientEmail: 'admin@sandwich.project', subject: 'FINAL TEST', content: "If this doesn't work, I give up", …}
+gmail-style-inbox.tsx:145 Fetched 2 emails from inbox folder
