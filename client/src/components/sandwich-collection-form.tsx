@@ -42,6 +42,53 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     { id: "1", groupName: "", sandwichCount: 0 },
   ]);
 
+  // Validation state
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  // Real-time validation
+  const validateField = (fieldName: string, value: any) => {
+    const errors = { ...validationErrors };
+    
+    switch (fieldName) {
+      case 'hostName':
+        if (!value || value.trim() === "") {
+          errors.hostName = "Host location is required";
+        } else {
+          delete errors.hostName;
+        }
+        break;
+      case 'individualSandwiches':
+        const hasIndividual = value && value.trim() !== "" && parseInt(value) > 0;
+        const hasGroups = groupCollections.some(g => g.groupName.trim() !== "" && g.sandwichCount > 0);
+        if (!hasIndividual && !hasGroups) {
+          errors.individualSandwiches = "Either individual sandwiches or group collections required";
+        } else {
+          delete errors.individualSandwiches;
+        }
+        break;
+      case 'groupCollections':
+        const hasValidGroups = groupCollections.some(g => g.groupName.trim() !== "" && g.sandwichCount > 0);
+        const hasValidIndividual = individualSandwiches && individualSandwiches.trim() !== "" && parseInt(individualSandwiches) > 0;
+        if (!hasValidGroups && !hasValidIndividual) {
+          errors.groupCollections = "Either individual sandwiches or group collections required";
+        } else {
+          delete errors.groupCollections;
+        }
+        break;
+    }
+    
+    setValidationErrors(errors);
+  };
+
+  // Check if form is valid
+  const isFormValid = () => {
+    const hasHost = hostName && hostName.trim() !== "";
+    const hasIndividual = individualSandwiches && individualSandwiches.trim() !== "" && parseInt(individualSandwiches) > 0;
+    const hasGroups = groupCollections.some(g => g.groupName.trim() !== "" && g.sandwichCount > 0);
+    
+    return hasHost && (hasIndividual || hasGroups) && Object.keys(validationErrors).length === 0;
+  };
+
 
   // Fetch active hosts from the database
   const { data: hosts = [] } = useQuery<Host[]>({
@@ -154,11 +201,12 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     field: keyof GroupCollection,
     value: string | number,
   ) => {
-    setGroupCollections(
-      groupCollections.map((group) =>
-        group.id === id ? { ...group, [field]: value } : group,
-      ),
+    const updatedGroups = groupCollections.map((group) =>
+      group.id === id ? { ...group, [field]: value } : group,
     );
+    setGroupCollections(updatedGroups);
+    // Trigger validation after updating groups
+    validateField('groupCollections', updatedGroups);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -316,9 +364,16 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                   <Input
                     id="hostName"
                     value={hostName}
-                    onChange={(e) => setHostName(e.target.value)}
+                    onChange={(e) => {
+                      setHostName(e.target.value);
+                      validateField('hostName', e.target.value);
+                    }}
                     placeholder="Enter host location name"
-                    className="min-h-[44px] text-base px-4 py-3 border-2 border-slate-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                    className={`min-h-[44px] text-base px-4 py-3 border-2 rounded-md focus:ring-2 transition-colors ${
+                      validationErrors.hostName 
+                        ? 'border-red-500 focus:border-red-500 focus:ring-red-200' 
+                        : 'border-slate-300 focus:border-blue-500 focus:ring-blue-200'
+                    }`}
                     style={{ fontSize: '16px' }}
                   />
                   <Button
@@ -341,9 +396,11 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                       if (value === "Other") {
                         setIsCustomHost(true);
                         setHostName("");
+                        validateField('hostName', "");
                       } else {
                         setHostName(value);
                         setIsCustomHost(false);
+                        validateField('hostName', value);
                       }
                     }}
                   >
@@ -375,6 +432,9 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                     </Button>
                   )}
                 </div>
+              )}
+              {validationErrors.hostName && (
+                <p className="text-sm text-red-600 mt-1">{validationErrors.hostName}</p>
               )}
             </div>
           </div>
@@ -414,11 +474,21 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                   type="number"
                   min="0"
                   value={individualSandwiches}
-                  onChange={(e) => setIndividualSandwiches(e.target.value)}
+                  onChange={(e) => {
+                    setIndividualSandwiches(e.target.value);
+                    validateField('individualSandwiches', e.target.value);
+                  }}
                   placeholder="Enter number"
-                  className="min-h-[44px] text-base px-4 py-3 border-2 border-slate-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                  className={`min-h-[44px] text-base px-4 py-3 border-2 rounded-md focus:ring-2 transition-colors ${
+                    validationErrors.individualSandwiches 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-200' 
+                      : 'border-slate-300 focus:border-blue-500 focus:ring-blue-200'
+                  }`}
                   style={{ fontSize: '16px' }}
                 />
+                {validationErrors.individualSandwiches && (
+                  <p className="text-sm text-red-600 mt-1">{validationErrors.individualSandwiches}</p>
+                )}
               </div>
             </div>
 
@@ -488,7 +558,6 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                   onClick={addGroupRow}
                   className="min-h-[44px] px-4 py-2 border-2 hover:bg-blue-100 self-start"
                 >
-                  <Plus className="w-4 h-4 mr-2" />
                   ➕ Add Another Group
                 </Button>
               </div>
@@ -500,8 +569,12 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
         <div className="flex justify-center pt-6">
           <Button
             type="submit"
-            disabled={submitCollectionMutation.isPending}
-            className="w-full sm:w-auto min-h-[44px] px-8 py-3 text-base font-semibold bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white shadow-lg hover:shadow-xl focus:ring-2 focus:ring-amber-300 transition-all transform hover:scale-105"
+            disabled={submitCollectionMutation.isPending || !isFormValid()}
+            className={`w-full sm:w-auto min-h-[44px] px-8 py-3 text-base font-semibold shadow-lg hover:shadow-xl focus:ring-2 transition-all transform ${
+              isFormValid() && !submitCollectionMutation.isPending
+                ? 'bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white focus:ring-amber-300 hover:scale-105'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
             style={{ fontSize: '16px', minWidth: '200px' }}
           >
             {submitCollectionMutation.isPending ? (

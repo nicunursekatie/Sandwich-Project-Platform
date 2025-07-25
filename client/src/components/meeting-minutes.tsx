@@ -20,6 +20,15 @@ export default function MeetingMinutes() {
   const handleViewMinutes = async (minute: MeetingMinutes) => {
     console.log("🔍 Meeting minutes clicked:", minute);
     
+    // Add detailed debug info
+    console.log("📋 Meeting details:", {
+      id: minute.id,
+      title: minute.title,
+      filePath: minute.filePath,
+      fileName: minute.fileName,
+      summary: minute.summary?.substring(0, 100) + "..."
+    });
+    
     if (minute.filePath) {
       try {
         console.log("📁 Fetching file from:", `/api/meeting-minutes/${minute.id}/file`);

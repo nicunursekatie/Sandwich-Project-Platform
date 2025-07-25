@@ -58,6 +58,12 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
   React.useEffect(() => {
     console.log('Dashboard activeSection changed to:', activeSection);
   }, [activeSection]);
+
+  // Enhanced setActiveSection with debugging
+  const enhancedSetActiveSection = (section: string) => {
+    console.log('📍 Dashboard setActiveSection called with:', section);
+    setActiveSection(section);
+  };
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isLoading } = useAuth();
@@ -174,7 +180,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "profile":
         return <UserProfile />;
       case "meetings":
-        return <MeetingsLandingPage onNavigate={setActiveSection} />;
+        return <MeetingsLandingPage onNavigate={enhancedSetActiveSection} />;
       case "minutes":
         return <MeetingMinutes />;
       case "agenda":

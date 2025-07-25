@@ -64,9 +64,19 @@ export default function MeetingsLandingPage({ onNavigate }: MeetingsLandingPageP
                 </p>
                 <Button 
                   onClick={() => {
+                    console.log("🔍 Meeting button clicked:", {
+                      title: option.title,
+                      route: option.route,
+                      routeAfterReplace: option.route.replace("/meetings/", ""),
+                      onNavigateExists: !!onNavigate
+                    });
+                    
                     if (onNavigate) {
-                      onNavigate(option.route.replace("/meetings/", ""));
+                      const section = option.route.replace("/meetings/", "");
+                      console.log("📍 Calling onNavigate with:", section);
+                      onNavigate(section);
                     } else {
+                      console.log("📍 Using setLocation with:", option.route);
                       setLocation(option.route);
                     }
                   }}

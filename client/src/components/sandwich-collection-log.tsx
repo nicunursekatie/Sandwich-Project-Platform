@@ -1805,7 +1805,6 @@ export default function SandwichCollectionLog() {
                 
                 {/* Add Another Group Button - Below existing group rows */}
                 <Button type="button" variant="outline" size="sm" onClick={addEditGroupRow}>
-                  <Plus className="w-4 h-4 mr-1" />
                   ➕ Add Another Group
                 </Button>
               </div>
