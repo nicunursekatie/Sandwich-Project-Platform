@@ -837,7 +837,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         }
 
-        const archived = await storage.archiveProject(id);
+        const archived = await storage.archiveProject(id, req.user?.id, req.user?.firstName + ' ' + req.user?.lastName);
         if (!archived) {
           return res.status(500).json({ message: "Failed to archive project" });
         }

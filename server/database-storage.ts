@@ -165,9 +165,11 @@ export class DatabaseStorage implements IStorage {
       budget: project.budget,
       createdBy: project.createdBy,
       createdByName: project.createdByName,
-      createdAt: project.createdAt, // Include original created date
+      createdAt: project.createdAt || new Date(), // Ensure we have a valid timestamp
       originalCreatedAt: project.createdAt,
       originalUpdatedAt: project.updatedAt,
+      archivedBy: userId,
+      archivedByName: userName,
     };
 
     // Insert into archived table
