@@ -42,11 +42,6 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
     description: "",
     meetingDate: "",
     startTime: "",
-    endTime: "",
-    location: "",
-    meetingType: "in_person" as const,
-    maxAttendees: 20,
-    organizer: "",
     agenda: "",
     meetingLink: ""
   });
@@ -66,7 +61,7 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
 
   // Helper function to convert 24-hour time to 12-hour format
   const formatTime12Hour = (time24: string) => {
-    if (!time24) return "Time TBD";
+    if (!time24) return null;
     try {
       const [hours, minutes] = time24.split(':');
       const hour = parseInt(hours);
@@ -74,8 +69,19 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
       const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
       return `${hour12}:${minutes} ${ampm}`;
     } catch (error) {
-      return "Time TBD";
+      return null;
     }
+  };
+
+  // Helper function to render time display only when both times exist
+  const renderTimeInfo = (startTime: string, endTime: string) => {
+    const formattedStart = formatTime12Hour(startTime);
+    const formattedEnd = formatTime12Hour(endTime);
+    
+    if (!formattedStart && !formattedEnd) return null;
+    if (formattedStart && formattedEnd) return `${formattedStart} - ${formattedEnd}`;
+    if (formattedStart) return formattedStart;
+    return null;
   };
 
   const { data: meetings = [], isLoading } = useQuery({
@@ -100,11 +106,6 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
         description: "",
         meetingDate: "",
         startTime: "",
-        endTime: "",
-        location: "",
-        meetingType: "in_person",
-        maxAttendees: 20,
-        organizer: "",
         agenda: "",
         meetingLink: ""
       });
@@ -249,7 +250,6 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
                     <Input
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      placeholder="Weekly team standup"
                       required
                     />
                   </div>
@@ -258,11 +258,10 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
                     <Textarea
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      placeholder="Meeting purpose and objectives"
                       rows={3}
                     />
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Date</label>
                       <Input
@@ -273,73 +272,26 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Start Time</label>
+                      <label className="block text-sm font-medium mb-2">Start Time (optional)</label>
                       <Input
                         type="time"
                         value={formData.startTime}
                         onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">End Time</label>
-                      <Input
-                        type="time"
-                        value={formData.endTime}
-                        onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Meeting Type</label>
-                      <Select value={formData.meetingType} onValueChange={(value: any) => setFormData({ ...formData, meetingType: value })}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="in_person">In Person</SelectItem>
-                          <SelectItem value="virtual">Virtual</SelectItem>
-                          <SelectItem value="hybrid">Hybrid</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Max Attendees</label>
-                      <Input
-                        type="number"
-                        value={formData.maxAttendees}
-                        onChange={(e) => setFormData({ ...formData, maxAttendees: parseInt(e.target.value) || 20 })}
-                        min="1"
-                        max="100"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Location / Meeting Link</label>
+                    <label className="block text-sm font-medium mb-2">Meeting Link (optional)</label>
                     <Input
-                      value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      placeholder={formData.meetingType === "virtual" ? "https://zoom.us/j/..." : "Conference Room A"}
-                      required
+                      value={formData.meetingLink}
+                      onChange={(e) => setFormData({ ...formData, meetingLink: e.target.value })}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Organizer</label>
-                    <Input
-                      value={formData.organizer}
-                      onChange={(e) => setFormData({ ...formData, organizer: e.target.value })}
-                      placeholder="Meeting organizer name"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Agenda (Optional)</label>
+                    <label className="block text-sm font-medium mb-2">Agenda (optional)</label>
                     <Textarea
                       value={formData.agenda}
                       onChange={(e) => setFormData({ ...formData, agenda: e.target.value })}
-                      placeholder="Meeting agenda and topics"
                       rows={4}
                     />
                   </div>
@@ -377,25 +329,27 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
                               <Calendar className="w-4 h-4" />
                               {formatMeetingDate(meeting.meetingDate)}
                             </span>
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {formatTime12Hour(meeting.startTime)} - {formatTime12Hour(meeting.endTime)}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              {getMeetingTypeIcon(meeting.meetingType)}
-                              {meeting.location}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Users className="w-4 h-4" />
-                              Max {meeting.maxAttendees}
-                            </span>
+                            {renderTimeInfo(meeting.startTime, meeting.endTime) && (
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-4 h-4" />
+                                {renderTimeInfo(meeting.startTime, meeting.endTime)}
+                              </span>
+                            )}
+                            {meeting.location && (
+                              <span className="flex items-center gap-1">
+                                {getMeetingTypeIcon(meeting.meetingType)}
+                                {meeting.location}
+                              </span>
+                            )}
                           </div>
                           {meeting.description && (
                             <p className="text-gray-600 dark:text-gray-400 mb-2">{meeting.description}</p>
                           )}
-                          <p className="text-sm text-blue-600 dark:text-blue-400">
-                            Organized by: {meeting.organizer}
-                          </p>
+                          {meeting.meetingLink && (
+                            <p className="text-sm text-blue-600 dark:text-blue-400">
+                              Meeting Link: <a href={meeting.meetingLink} target="_blank" rel="noopener noreferrer" className="underline hover:no-underline">{meeting.meetingLink}</a>
+                            </p>
+                          )}
                         </div>
                         <div className="flex gap-2">
                           <Button variant="outline" size="sm">
@@ -434,14 +388,18 @@ export default function MeetingCalendar({ isEmbedded = false }: MeetingCalendarP
                               <Calendar className="w-4 h-4" />
                               {formatMeetingDate(meeting.meetingDate)}
                             </span>
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {formatTime12Hour(meeting.startTime)} - {formatTime12Hour(meeting.endTime)}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              {getMeetingTypeIcon(meeting.meetingType)}
-                              {meeting.location}
-                            </span>
+                            {renderTimeInfo(meeting.startTime, meeting.endTime) && (
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-4 h-4" />
+                                {renderTimeInfo(meeting.startTime, meeting.endTime)}
+                              </span>
+                            )}
+                            {meeting.location && (
+                              <span className="flex items-center gap-1">
+                                {getMeetingTypeIcon(meeting.meetingType)}
+                                {meeting.location}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
