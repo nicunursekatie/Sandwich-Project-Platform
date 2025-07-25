@@ -340,42 +340,26 @@ export default function SandwichCollectionLog() {
 
     return (
       <div className="flex flex-col sm:flex-row justify-between items-center p-4 bg-white border-t border-slate-200 gap-4">
-        {/* Left side - Collection info and per page selector */}
-        <div className="flex flex-col sm:flex-row items-center gap-4">
-          <div className="text-sm text-slate-600">
-            {effectiveTotalItems} collection{effectiveTotalItems !== 1 ? 's' : ''}
-            {totalStats && (
-              <>
-                {' • '}
-                <span className="font-semibold text-slate-700">
-                  {totalStats.totalSandwiches?.toLocaleString() || 0} sandwiches
-                </span>
-                {' • '}
-                {totalStats.individualSandwiches?.toLocaleString() || 0} individual, {totalStats.groupSandwiches?.toLocaleString() || 0} group
-              </>
-            )}
-          </div>
-          
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-slate-600">Per page:</span>
-            <Select
-              value={itemsPerPage.toString()}
-              onValueChange={(value) => {
-                setItemsPerPage(parseInt(value));
-                setCurrentPage(1);
-              }}
-            >
-              <SelectTrigger className="w-20 h-8">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="25">25</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
-                <SelectItem value="200">200</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        {/* Left side - Per page selector only */}
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-slate-600">Per page:</span>
+          <Select
+            value={itemsPerPage.toString()}
+            onValueChange={(value) => {
+              setItemsPerPage(parseInt(value));
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="w-20 h-8">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+              <SelectItem value="200">200</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Right side - Page navigation with individual page numbers */}
