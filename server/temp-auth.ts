@@ -226,6 +226,10 @@ export function setupTempAuth(app: Express) {
           border: 1px solid #FECACA;
           border-radius: 6px;
           font-weight: 500;
+          display: none; /* Hidden by default */
+        }
+        .error.show {
+          display: block;
         }
         .tab-content p {
           color: #78716C; 
@@ -298,6 +302,12 @@ export function setupTempAuth(app: Express) {
             btn.classList.remove('active');
           });
 
+          // Clear any error messages
+          document.querySelectorAll('.error').forEach(error => {
+            error.classList.remove('show');
+            error.textContent = '';
+          });
+
           // Show selected tab
           document.getElementById(tabName + '-tab').classList.add('active');
           event.target.classList.add('active');
@@ -320,10 +330,14 @@ export function setupTempAuth(app: Express) {
             if (result.success) {
               window.location.href = '/';
             } else {
-              document.getElementById('login-error').textContent = result.message || 'Login failed';
+              const errorDiv = document.getElementById('login-error');
+              errorDiv.textContent = result.message || 'Login failed';
+              errorDiv.classList.add('show');
             }
           } catch (error) {
-            document.getElementById('login-error').textContent = 'Login failed: ' + error.message;
+            const errorDiv = document.getElementById('login-error');
+            errorDiv.textContent = 'Login failed: ' + error.message;
+            errorDiv.classList.add('show');
           }
         });
 
@@ -346,10 +360,14 @@ export function setupTempAuth(app: Express) {
               showTab('login');
               document.getElementById('login-email').value = data.email;
             } else {
-              document.getElementById('register-error').textContent = result.message || 'Registration failed';
+              const errorDiv = document.getElementById('register-error');
+              errorDiv.textContent = result.message || 'Registration failed';
+              errorDiv.classList.add('show');
             }
           } catch (error) {
-            document.getElementById('register-error').textContent = 'Registration failed: ' + error.message;
+            const errorDiv = document.getElementById('register-error');
+            errorDiv.textContent = 'Registration failed: ' + error.message;
+            errorDiv.classList.add('show');
           }
         });
       </script>
