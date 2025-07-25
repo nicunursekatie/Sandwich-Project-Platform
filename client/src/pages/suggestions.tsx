@@ -357,25 +357,26 @@ export default function SuggestionsPortal() {
   const tabCounts = getTabCounts();
 
   return (
-    <div className="space-y-6">
-      {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Lightbulb className="h-8 w-8 text-blue-600" />
-            Suggestions Portal
+    <div className="space-y-4 sm:space-y-6">
+      {/* Header Section - Mobile responsive */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+            <Lightbulb className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 flex-shrink-0" />
+            <span className="truncate">Suggestions Portal</span>
           </h1>
-          <p className="text-gray-600 mt-1">Share ideas and feedback to improve our operations</p>
-          <p className="text-gray-700 mt-2 max-w-4xl leading-relaxed">
+          <p className="text-sm sm:text-base text-gray-600 mt-1">Share ideas and feedback to improve our operations</p>
+          <p className="text-sm sm:text-base text-gray-700 mt-2 leading-relaxed">
             If you need something to work differently, if something is confusing to you, you have tips on how we could better arrange this whole site, or if you run into a bug, please submit your feedback here so we can get this where it serves your needs the best it possibly can!
           </p>
         </div>
         {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (
           <Dialog open={showSubmissionForm} onOpenChange={setShowSubmissionForm}>
             <DialogTrigger asChild>
-              <Button size="lg" className="shadow-sm">
+              <Button size="sm" className="shadow-sm w-full sm:w-auto sm:size-lg">
                 <Plus className="h-4 w-4 mr-2" />
-                Submit Suggestion
+                <span className="hidden sm:inline">Submit Suggestion</span>
+                <span className="sm:hidden">Submit</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
@@ -417,7 +418,7 @@ export default function SuggestionsPortal() {
                       </FormItem>
                     )}
                   />
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FormField
                       control={suggestionForm.control}
                       name="category"
@@ -502,26 +503,27 @@ export default function SuggestionsPortal() {
         )}
       </div>
 
-      {/* Search and Filter Section */}
+      {/* Search and Filter Section - Mobile responsive */}
       <Card className="border-0 shadow-sm">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
                 placeholder="Search suggestions..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 h-10 sm:h-11"
               />
             </div>
             <Button
               variant="outline"
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 h-10 sm:h-11 justify-center"
             >
               <Filter className="h-4 w-4" />
-              Filters
+              <span className="hidden sm:inline">Filters</span>
+              <span className="sm:hidden">Filter</span>
               {(selectedCategory !== "all" || selectedPriority !== "all") && (
                 <Badge variant="secondary" className="ml-1">
                   {[selectedCategory !== "all" ? 1 : 0, selectedPriority !== "all" ? 1 : 0].reduce((a, b) => a + b)}
@@ -531,8 +533,8 @@ export default function SuggestionsPortal() {
           </div>
 
           {showFilters && (
-            <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t">
-              <div className="min-w-[200px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap gap-3 sm:gap-4 mt-3 sm:mt-4 pt-3 sm:pt-4 border-t">
+              <div className="min-w-0 flex-1 sm:min-w-[200px]">
                 <Label className="text-sm font-medium">Category</Label>
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                   <SelectTrigger className="mt-1">
@@ -550,7 +552,7 @@ export default function SuggestionsPortal() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="min-w-[150px]">
+              <div className="min-w-0 flex-1 sm:min-w-[150px]">
                 <Label className="text-sm font-medium">Priority</Label>
                 <Select value={selectedPriority} onValueChange={setSelectedPriority}>
                   <SelectTrigger className="mt-1">
@@ -565,7 +567,7 @@ export default function SuggestionsPortal() {
                 </Select>
               </div>
               {(selectedCategory !== "all" || selectedPriority !== "all") && (
-                <div className="flex items-end">
+                <div className="flex items-end sm:col-span-2 lg:col-span-1">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -573,7 +575,7 @@ export default function SuggestionsPortal() {
                       setSelectedCategory("all");
                       setSelectedPriority("all");
                     }}
-                    className="text-sm"
+                    className="text-sm w-full sm:w-auto"
                   >
                     Clear Filters
                   </Button>
@@ -584,24 +586,34 @@ export default function SuggestionsPortal() {
         </CardContent>
       </Card>
 
-      {/* Tabs with Counts */}
+      {/* Tabs with Counts - Mobile responsive */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className={`grid w-full ${canSubmit && hasPermission(currentUser, 'submit_suggestions') ? 'grid-cols-5' : 'grid-cols-4'}`}>
-          <TabsTrigger value="all" className="flex items-center gap-2">
-            All <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b]">{tabCounts.all}</Badge>
+        <TabsList className={`grid w-full ${canSubmit && hasPermission(currentUser, 'submit_suggestions') ? 'grid-cols-3 sm:grid-cols-5' : 'grid-cols-2 sm:grid-cols-4'} gap-1`}>
+          <TabsTrigger value="all" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <span className="hidden sm:inline">All</span>
+            <span className="sm:hidden">All</span>
+            <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b] text-xs">{tabCounts.all}</Badge>
           </TabsTrigger>
-          <TabsTrigger value="pending" className="flex items-center gap-2">
-            Pending <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b]">{tabCounts.pending}</Badge>
+          <TabsTrigger value="pending" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <span className="hidden sm:inline">Pending</span>
+            <span className="sm:hidden">New</span>
+            <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b] text-xs">{tabCounts.pending}</Badge>
           </TabsTrigger>
-          <TabsTrigger value="in-progress" className="flex items-center gap-2">
-            Active <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b]">{tabCounts.inProgress}</Badge>
+          <TabsTrigger value="in-progress" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <span className="hidden sm:inline">Active</span>
+            <span className="sm:hidden">Active</span>
+            <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b] text-xs">{tabCounts.inProgress}</Badge>
           </TabsTrigger>
-          <TabsTrigger value="completed" className="flex items-center gap-2">
-            Done <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b]">{tabCounts.completed}</Badge>
+          <TabsTrigger value="completed" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <span className="hidden sm:inline">Done</span>
+            <span className="sm:hidden">Done</span>
+            <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b] text-xs">{tabCounts.completed}</Badge>
           </TabsTrigger>
           {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (
-            <TabsTrigger value="mine" className="flex items-center gap-2">
-              Mine <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b]">{tabCounts.mine}</Badge>
+            <TabsTrigger value="mine" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+              <span className="hidden sm:inline">Mine</span>
+              <span className="sm:hidden">Mine</span>
+              <Badge className="bg-[#FBAD3F] text-white hover:bg-[#f09f2b] text-xs">{tabCounts.mine}</Badge>
             </TabsTrigger>
           )}
         </TabsList>

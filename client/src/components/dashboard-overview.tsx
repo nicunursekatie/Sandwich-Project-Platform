@@ -11,7 +11,7 @@ interface DashboardOverviewProps {
   onSectionChange: (section: string) => void;
 }
 
-export default function DashboardOverview({ onSectionChange }: DashboardOverviewProps) {
+export default function DashboardOverview({ onSectionChange }: { onSectionChange?: (section: string) => void }) {
   const { user } = useAuth();
   
   const { data: projects = [] } = useQuery<Project[]>({
@@ -80,36 +80,38 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
     .slice(0, 3);
 
   return (
-    <div className="space-y-6 font-body">
-      {/* Welcome Help Bubble */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Your Dashboard</h1>
-          <p className="text-gray-600">Here's an overview of your TSP activity</p>
+    <div className="space-y-4 sm:space-y-6 font-body">
+      {/* Welcome Help Bubble - Mobile responsive */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Welcome to Your Dashboard</h1>
+          <p className="text-sm sm:text-base text-gray-600">Here's an overview of your TSP activity</p>
         </div>
-        <HelpBubble
-          content={{
-            id: 'dashboard-welcome',
-            title: 'Welcome to TSP!',
-            message: "I'm so glad you're here! This dashboard is your central hub for everything related to The Sandwich Project. From here, you can track collections, connect with your team, and make a real difference in your community.",
-            tone: 'encouraging',
-            character: 'friend',
-            position: 'left',
-            showOnFirstVisit: true
-          }}
-        />
+        <div className="flex-shrink-0">
+          <HelpBubble
+            content={{
+              id: 'dashboard-welcome',
+              title: 'Welcome to TSP!',
+              message: "I'm so glad you're here! This dashboard is your central hub for everything related to The Sandwich Project. From here, you can track collections, connect with your team, and make a real difference in your community.",
+              tone: 'encouraging',
+              character: 'friend',
+              position: 'left',
+              showOnFirstVisit: true
+            }}
+          />
+        </div>
       </div>
 
-      {/* Total Collections Card */}
-      <div className="bg-gradient-to-r from-primary to-brand-teal rounded-lg shadow-md p-4 text-white">
+      {/* Total Collections Card - Mobile responsive */}
+      <div className="bg-gradient-to-r from-primary to-brand-teal rounded-lg shadow-md p-4 sm:p-6 text-white">
         <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-sub-heading">Total Collections</h3>
-            <p className="text-xl font-main-heading">{totalCollectedSandwiches.toLocaleString()}</p>
-            <p className="text-xs font-body text-white/80">sandwiches collected</p>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-sm sm:text-base font-sub-heading">Total Collections</h3>
+            <p className="text-xl sm:text-2xl lg:text-3xl font-main-heading">{totalCollectedSandwiches.toLocaleString()}</p>
+            <p className="text-xs sm:text-sm font-body text-white/80">sandwiches collected</p>
           </div>
-          <div className="bg-white bg-opacity-20 p-2 rounded-full">
-            <TrendingUp className="w-5 h-5" />
+          <div className="bg-white bg-opacity-20 p-2 sm:p-3 rounded-full flex-shrink-0">
+            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
         </div>
       </div>
@@ -118,12 +120,12 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
 
 
-      {/* Quick Collection Entry - Only show if user has permission */}
+      {/* Quick Collection Entry - Only show if user has permission - Mobile responsive */}
       {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
         <div className="bg-card rounded-lg border border-border">
-          <div className="px-4 py-3 border-b border-border flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <h2 className="text-base font-sub-heading text-primary">Quick Collection Entry</h2>
+          <div className="px-3 sm:px-4 py-3 border-b border-border flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+            <div className="flex items-center space-x-2 min-w-0 flex-1">
+              <h2 className="text-sm sm:text-base font-sub-heading text-primary">Quick Collection Entry</h2>
               <HelpBubble
                 content={{
                   id: 'collections-form',
@@ -138,14 +140,14 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => onSectionChange("collections")}
-              className="text-xs px-2 py-1"
+              onClick={() => onSectionChange?.("collections")}
+              className="text-xs px-2 py-1 w-full sm:w-auto"
             >
               View All Collections
             </Button>
           </div>
-          <div className="p-4">
-            <SandwichCollectionForm onSuccess={() => onSectionChange("collections")} />
+          <div className="p-3 sm:p-4">
+            <SandwichCollectionForm onSuccess={() => onSectionChange?.("collections")} />
           </div>
         </div>
       )}

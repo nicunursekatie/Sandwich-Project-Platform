@@ -252,57 +252,62 @@ export default function EnhancedChat() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-200px)] bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden relative z-10">
-      {/* Sidebar with live previews */}
-      <LiveChatHub 
-        onChannelSelect={setSelectedChannel}
-        selectedChannel={selectedChannel}
-      />
+    <div className="flex flex-col md:flex-row h-[calc(100vh-200px)] bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden relative z-10">
+      {/* Sidebar with live previews - Mobile responsive */}
+      <div className="md:block">
+        <LiveChatHub 
+          onChannelSelect={setSelectedChannel}
+          selectedChannel={selectedChannel}
+        />
+      </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Chat Header */}
-        <div className={`px-6 py-4 ${getChannelHeaderClass()}`}>
+      <div className="flex-1 flex flex-col min-h-0">
+        {/* Chat Header - Mobile responsive */}
+        <div className={`px-3 sm:px-4 md:px-6 py-3 sm:py-4 ${getChannelHeaderClass()}`}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              {channelInfo?.icon}
-              <div>
-                <h3 className="text-lg font-semibold">{channelInfo?.name}</h3>
-                <p className="text-sm opacity-90">{channelInfo?.description}</p>
+            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+              <div className="flex-shrink-0">
+                {channelInfo?.icon}
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-base sm:text-lg font-semibold truncate">{channelInfo?.name}</h3>
+                <p className="text-xs sm:text-sm opacity-90 truncate hidden sm:block">{channelInfo?.description}</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
               {channelInfo?.isPrivate && (
-                <Badge variant="secondary" className="bg-white/20 text-white">
+                <Badge variant="secondary" className="bg-white/20 text-white text-xs hidden sm:inline-flex">
                   Private
                 </Badge>
               )}
               <Badge 
                 variant={isConnected ? "default" : "destructive"}
-                className={isConnected ? "bg-green-500" : ""}
+                className={`text-xs ${isConnected ? "bg-green-500" : ""}`}
               >
-                {isConnected ? "Connected" : "Disconnected"}
+                <span className="hidden sm:inline">{isConnected ? "Connected" : "Disconnected"}</span>
+                <span className="sm:hidden">{isConnected ? "●" : "○"}</span>
               </Badge>
             </div>
           </div>
         </div>
 
-        {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-800">
+        {/* Messages Area - Mobile responsive */}
+        <div className="flex-1 overflow-y-auto p-2 sm:p-3 md:p-4 space-y-2 sm:space-y-4 bg-gray-50 dark:bg-gray-800 min-h-0">
           {!isJoined ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center text-gray-500 dark:text-gray-400">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#236383] mx-auto mb-4"></div>
-                <p>Joining {channelInfo?.name}...</p>
+                <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-[#236383] mx-auto mb-3 sm:mb-4"></div>
+                <p className="text-sm sm:text-base">Joining {channelInfo?.name}...</p>
               </div>
             </div>
           ) : messages.length === 0 ? (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center h-full px-4">
               <div className="text-center text-gray-500 dark:text-gray-400">
-                <div className="text-4xl mb-4">{channelInfo?.icon}</div>
-                <h4 className="text-lg font-medium mb-2">Welcome to {channelInfo?.name}!</h4>
-                <p>This is the beginning of your conversation.</p>
-                <p className="text-sm mt-2">Send a message to get started.</p>
+                <div className="text-2xl sm:text-4xl mb-3 sm:mb-4">{channelInfo?.icon}</div>
+                <h4 className="text-base sm:text-lg font-medium mb-2">Welcome to {channelInfo?.name}!</h4>
+                <p className="text-sm sm:text-base">This is the beginning of your conversation.</p>
+                <p className="text-xs sm:text-sm mt-2">Send a message to get started.</p>
               </div>
             </div>
           ) : (
@@ -320,8 +325,8 @@ export default function EnhancedChat() {
           )}
         </div>
 
-        {/* Message Input */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+        {/* Message Input - Mobile responsive */}
+        <div className="p-3 sm:p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
           <div className="flex space-x-2">
             <Input
               value={newMessage}
@@ -329,12 +334,12 @@ export default function EnhancedChat() {
               onKeyPress={handleKeyPress}
               placeholder={`Message ${channelInfo?.name || "chat"}...`}
               disabled={!isConnected || !isJoined}
-              className="flex-1"
+              className="flex-1 text-sm sm:text-base h-10 sm:h-11"
             />
             <Button 
               onClick={sendMessage}
               disabled={!isConnected || !isJoined || !newMessage.trim()}
-              className="bg-[#236383] hover:bg-[#1a4d66] text-white"
+              className="bg-[#236383] hover:bg-[#1a4d66] text-white h-10 sm:h-11 w-10 sm:w-11 p-0"
             >
               <Send className="h-4 w-4" />
             </Button>
