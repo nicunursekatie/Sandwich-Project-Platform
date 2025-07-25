@@ -305,7 +305,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  title: meeting.title,
  date: meeting.date,
  time: meeting.time ||"",
- type: meeting.type,
+ type: meeting.type as "core_team" | "board" | "committee" | "special",
  location: meeting.location ||"",
  description: meeting.description ||""
  });
