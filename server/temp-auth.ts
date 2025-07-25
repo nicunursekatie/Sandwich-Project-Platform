@@ -85,46 +85,94 @@ export function setupTempAuth(app: Express) {
       <title>The Sandwich Project - Login</title>
       <style>
         body { 
-          font-family: Arial, sans-serif; 
+          font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; 
           display: flex; 
           align-items: center; 
           justify-content: center; 
           min-height: 100vh; 
           margin: 0; 
-          background-color: #f5f5f5; 
+          background: linear-gradient(135deg, #FEF3C7 0%, #F59E0B 100%);
+          background-attachment: fixed;
         }
         .login-card { 
-          background: white; 
-          padding: 2rem; 
-          border-radius: 8px; 
-          box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-          max-width: 400px; 
+          background: linear-gradient(to bottom, #ffffff 0%, #fef9e7 100%); 
+          padding: 2.5rem; 
+          border-radius: 16px; 
+          box-shadow: 0 10px 25px rgba(245, 158, 11, 0.15), 0 4px 6px rgba(0,0,0,0.1); 
+          max-width: 420px; 
           width: 100%; 
+          border: 2px solid #F59E0B;
+          position: relative;
+          overflow: hidden;
+        }
+        .login-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(to right, #236383 0%, #F59E0B 50%, #EA580C 100%);
+        }
+        .logo-header {
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+        .logo-header h1 {
+          color: #236383;
+          font-size: 1.75rem;
+          font-weight: bold;
+          margin: 0;
+          text-shadow: 0 1px 2px rgba(35, 99, 131, 0.1);
+        }
+        .logo-header p {
+          color: #B45309;
+          font-size: 0.95rem;
+          margin: 0.5rem 0 0 0;
+          font-weight: 500;
         }
         .form-group {
-          margin-bottom: 1rem;
+          margin-bottom: 1.25rem;
           text-align: left;
         }
         .form-group label {
           display: block;
           margin-bottom: 0.5rem;
-          color: #333;
-          font-weight: bold;
+          color: #236383;
+          font-weight: 600;
+          font-size: 0.9rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
         .form-group input {
           width: 100%;
-          padding: 10px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          font-size: 14px;
+          padding: 12px 16px;
+          border: 2px solid #FDE68A;
+          border-radius: 8px;
+          font-size: 15px;
+          transition: all 0.3s ease;
+          background: #FFFBEB;
+          box-sizing: border-box;
+        }
+        .form-group input:focus {
+          outline: none;
+          border-color: #F59E0B;
+          box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+          background: white;
         }
         .btn { 
-          background-color: #236383; 
+          background: linear-gradient(135deg, #236383 0%, #1E5A78 100%); 
           color: white; 
           border: none; 
-          padding: 12px 24px; 
-          border-radius: 6px; 
-          cursor: pointer; 
+          padding: 14px 28px; 
+          border-radius: 8px; 
+          cursor: pointer;
+          font-weight: 600;
+          font-size: 15px;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 12px rgba(35, 99, 131, 0.3);
+          text-transform: uppercase;
+          letter-spacing: 0.5px; 
           font-size: 16px; 
           margin: 10px 0;
           width: 100%;
@@ -136,24 +184,32 @@ export function setupTempAuth(app: Express) {
         .btn-secondary:hover {
           background-color: #545b62;
         }
-        h1 { color: #236383; margin-bottom: 1rem; text-align: center; }
-        p { color: #666; margin-bottom: 1.5rem; text-align: center; }
         .tab-buttons {
           display: flex;
-          margin-bottom: 1rem;
+          margin-bottom: 1.5rem;
+          border-radius: 10px;
+          overflow: hidden;
+          background: #FEF3C7;
+          border: 1px solid #F59E0B;
         }
         .tab-btn {
           flex: 1;
-          padding: 10px;
+          padding: 12px 16px;
           border: none;
-          background: #f8f9fa;
+          background: transparent;
           cursor: pointer;
-          border-bottom: 2px solid transparent;
+          font-weight: 600;
+          color: #B45309;
+          transition: all 0.3s ease;
+          position: relative;
+        }
+        .tab-btn:hover {
+          background: rgba(245, 158, 11, 0.1);
         }
         .tab-btn.active {
-          background: white;
-          border-bottom-color: #236383;
-          color: #236383;
+          background: linear-gradient(135deg, #236383 0%, #1E5A78 100%);
+          color: white;
+          box-shadow: 0 2px 8px rgba(35, 99, 131, 0.3);
         }
         .tab-content {
           display: none;
@@ -162,15 +218,29 @@ export function setupTempAuth(app: Express) {
           display: block;
         }
         .error {
-          color: #dc3545;
+          color: #DC2626;
           font-size: 14px;
-          margin-top: 0.5rem;
+          margin-top: 0.75rem;
+          padding: 8px 12px;
+          background: #FEE2E2;
+          border: 1px solid #FECACA;
+          border-radius: 6px;
+          font-weight: 500;
+        }
+        .tab-content p {
+          color: #78716C; 
+          margin-bottom: 1.5rem; 
+          text-align: center;
+          font-size: 0.95rem;
         }
       </style>
     </head>
     <body>
       <div class="login-card">
-        <h1>The Sandwich Project</h1>
+        <div class="logo-header">
+          <h1>The Sandwich Project</h1>
+          <p>Volunteer Management Platform</p>
+        </div>
 
         <div class="tab-buttons">
           <button class="tab-btn active" onclick="showTab('login')">Login</button>
