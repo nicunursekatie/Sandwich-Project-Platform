@@ -620,7 +620,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  
  <Card>
  <CardHeader>
- <CardTitle className="flex items-center gap-2">
+ <CardTitle className="flex items-center gap-2 text-base font-medium">
  <FileText className="w-5 h-5" />
  {viewingMinutes.title}
  </CardTitle>
@@ -883,7 +883,7 @@ export default function MeetingMinutes({ isEmbedded = false }: MeetingMinutesPro
  <CardHeader>
  <div className="flex items-start justify-between">
  <div className="flex-1">
- <CardTitle className="flex items-center gap-2">
+ <CardTitle className="flex items-center gap-2 text-base font-medium">
  <Calendar className="w-5 h-5" />
  {meeting.title}
  </CardTitle>
