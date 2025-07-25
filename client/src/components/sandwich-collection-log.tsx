@@ -1937,7 +1937,7 @@ export default function SandwichCollectionLog() {
       </Dialog>
 
       {/* Quick Help Button */}
-      <QuickHelp section="collections" />
+
 
     </div>
   );
