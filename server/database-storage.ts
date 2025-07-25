@@ -135,7 +135,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Archive functionality for completed projects
-  async archiveProject(id: number): Promise<boolean> {
+  async archiveProject(id: number, userId?: string, userName?: string): Promise<boolean> {
     const project = await this.getProject(id);
     if (!project) return false;
 

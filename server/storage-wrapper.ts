@@ -188,10 +188,10 @@ class StorageWrapper implements IStorage {
     );
   }
 
-  async archiveProject(id: number) {
+  async archiveProject(id: number, userId?: string, userName?: string) {
     return this.executeWithFallback(
-      () => this.primaryStorage.archiveProject(id),
-      () => this.fallbackStorage.archiveProject(id)
+      () => this.primaryStorage.archiveProject(id, userId, userName),
+      () => this.fallbackStorage.archiveProject(id, userId, userName)
     );
   }
 

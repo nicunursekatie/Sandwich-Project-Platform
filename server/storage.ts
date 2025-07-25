@@ -44,7 +44,7 @@ export interface IStorage {
   updateProject(id: number, updates: Partial<Project>): Promise<Project | undefined>;
   deleteProject(id: number): Promise<boolean>;
   getArchivedProjects(): Promise<any[]>;
-  archiveProject(id: number): Promise<any>;
+  archiveProject(id: number, userId?: string, userName?: string): Promise<any>;
   
   // Project Tasks
   getProjectTasks(projectId: number): Promise<ProjectTask[]>;
@@ -453,6 +453,16 @@ export class MemStorage implements IStorage {
 
   async deleteProject(id: number): Promise<boolean> {
     return this.projects.delete(id);
+  }
+
+  async getArchivedProjects(): Promise<any[]> {
+    // For MemStorage, return empty array for now
+    return [];
+  }
+
+  async archiveProject(id: number, userId?: string, userName?: string): Promise<boolean> {
+    // For MemStorage, just delete the project (simulating archive)
+    return this.deleteProject(id);
   }
 
   // Project Task methods
