@@ -4,6 +4,8 @@ import { ClipboardList, FileText, Calendar } from "lucide-react";
 import MeetingMinutes from "@/pages/meeting-minutes";
 import MeetingAgenda from "@/pages/meeting-agenda";
 import MeetingCalendar from "@/pages/meeting-calendar";
+import { MeetingHelpWrapper } from "@/components/meeting-help";
+import { QuickHelp } from "@/components/help-system";
 
 export default function UnifiedMeetings() {
   const [activeTab, setActiveTab] = useState("minutes");
@@ -24,18 +26,24 @@ export default function UnifiedMeetings() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="minutes" className="flex items-center gap-2">
-            <FileText className="w-4 h-4" />
-            Minutes
-          </TabsTrigger>
-          <TabsTrigger value="agenda" className="flex items-center gap-2">
-            <ClipboardList className="w-4 h-4" />
-            Agenda
-          </TabsTrigger>
-          <TabsTrigger value="calendar" className="flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
-            Calendar
-          </TabsTrigger>
+          <MeetingHelpWrapper type="minutes">
+            <TabsTrigger value="minutes" className="flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              Minutes
+            </TabsTrigger>
+          </MeetingHelpWrapper>
+          <MeetingHelpWrapper type="agenda">
+            <TabsTrigger value="agenda" className="flex items-center gap-2">
+              <ClipboardList className="w-4 h-4" />
+              Agenda
+            </TabsTrigger>
+          </MeetingHelpWrapper>
+          <MeetingHelpWrapper type="schedule">
+            <TabsTrigger value="calendar" className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              Calendar
+            </TabsTrigger>
+          </MeetingHelpWrapper>
         </TabsList>
 
         <TabsContent value="minutes" className="mt-6">
@@ -50,6 +58,9 @@ export default function UnifiedMeetings() {
           <MeetingCalendar isEmbedded={true} />
         </TabsContent>
       </Tabs>
+      
+      {/* Quick Help Button */}
+      <QuickHelp section="meetings" />
     </div>
   );
 }

@@ -47,7 +47,9 @@ import AdminPage from "@/pages/admin";
 import StreamMessagesPage from "@/pages/stream-messages-clean";
 import DirectMessages from "@/pages/direct-messages";
 import GmailStyleInbox from "@/components/gmail-style-inbox";
-import { HelpBubble, QuickHelp, helpContent } from "@/components/help-system";
+import { HelpProvider } from "@/components/help-system/HelpProvider";
+import { HelpToggle } from "@/components/help-system/HelpToggle";
+import { HelpBubble } from "@/components/help-system/HelpBubble";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [activeSection, setActiveSection] = useState(initialSection);
@@ -382,7 +384,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
+    <HelpProvider>
+      <div className="bg-slate-50 min-h-screen flex flex-col">
       {/* Announcement Banner */}
       <AnnouncementBanner />
       
@@ -446,6 +449,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
             <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           <MessageNotifications user={user} />
+          <HelpToggle />
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -535,5 +539,6 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         </div>
       </div>
     </div>
+    </HelpProvider>
   );
 }

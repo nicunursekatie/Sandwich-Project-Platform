@@ -218,6 +218,16 @@ export const QuickHelp: React.FC<{ section: string }> = ({ section }) => {
             "Your recent activity shows your latest contributions"
           ]
         };
+      case 'meetings':
+        return {
+          title: "Meeting Management Help",
+          tips: [
+            "Access meeting minutes, agendas, and calendar all in one place",
+            "Use the tabs to switch between different meeting functions",
+            "Upload documents for meeting minutes",
+            "Schedule new meetings using the calendar view"
+          ]
+        };
       default:
         return {
           title: "General Help",

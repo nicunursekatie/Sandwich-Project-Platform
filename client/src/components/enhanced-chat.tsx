@@ -10,6 +10,7 @@ import { formatDistanceToNow } from "date-fns";
 import io, { Socket } from "socket.io-client";
 import LiveChatHub from "./live-chat-hub";
 import ChatMessageComponent from "./chat-message";
+import { HelpBubble, helpContent } from "@/components/help-system";
 
 interface ChatMessage {
   id: string;

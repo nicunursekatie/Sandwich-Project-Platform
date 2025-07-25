@@ -26,6 +26,7 @@ import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { useMessaging } from "@/hooks/useMessaging";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { HelpBubble } from "@/components/help-system/HelpBubble";
 
 interface NavigationItem {
   id: string;
@@ -130,6 +131,21 @@ export default function SimpleNav({ onSectionChange, activeSection }: { onSectio
 
   return (
     <nav className="space-y-1 p-3 sm:p-4 pb-6 sm:pb-8">
+      {/* Navigation Help Header */}
+      <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Navigation</div>
+        <HelpBubble
+          content={{
+            id: 'navigation-help',
+            title: 'Finding Your Way Around',
+            message: "Think of this sidebar as your map to everything TSP! Each section is designed to help you contribute in your own unique way. Take your time exploring - there's no rush.",
+            tone: 'informative',
+            character: 'guide',
+            position: 'right'
+          }}
+          trigger="click"
+        />
+      </div>
       {groupedItems.map((item, index) => {
         if (item.type === 'separator') {
           return (

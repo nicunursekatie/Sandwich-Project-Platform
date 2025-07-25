@@ -5,6 +5,7 @@ import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import type { Project, Message, MeetingMinutes, DriveLink, WeeklyReport, SandwichCollection, Meeting } from "@shared/schema";
+import { HelpBubble } from "@/components/help-system/HelpBubble";
 
 interface DashboardOverviewProps {
   onSectionChange: (section: string) => void;
@@ -80,6 +81,25 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
 
   return (
     <div className="space-y-6 font-body">
+      {/* Welcome Help Bubble */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Your Dashboard</h1>
+          <p className="text-gray-600">Here's an overview of your TSP activity</p>
+        </div>
+        <HelpBubble
+          content={{
+            id: 'dashboard-welcome',
+            title: 'Welcome to TSP!',
+            message: "I'm so glad you're here! This dashboard is your central hub for everything related to The Sandwich Project. From here, you can track collections, connect with your team, and make a real difference in your community.",
+            tone: 'encouraging',
+            character: 'friend',
+            position: 'left',
+            showOnFirstVisit: true
+          }}
+        />
+      </div>
+
       {/* Total Collections Card */}
       <div className="bg-gradient-to-r from-primary to-brand-teal rounded-lg shadow-md p-4 text-white">
         <div className="flex items-center justify-between">
@@ -102,7 +122,19 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
       {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
         <div className="bg-card rounded-lg border border-border">
           <div className="px-4 py-3 border-b border-border flex justify-between items-center">
-            <h2 className="text-base font-sub-heading text-primary">Quick Collection Entry</h2>
+            <div className="flex items-center space-x-2">
+              <h2 className="text-base font-sub-heading text-primary">Quick Collection Entry</h2>
+              <HelpBubble
+                content={{
+                  id: 'collections-form',
+                  title: 'Recording Your Collections',
+                  message: "Every sandwich you record here represents a meal for someone in need. Don't worry about making mistakes - you can always edit entries later. Just do your best, and know that your contribution matters so much!",
+                  tone: 'supportive',
+                  character: 'mentor',
+                  position: 'bottom'
+                }}
+              />
+            </div>
             <Button 
               variant="outline" 
               size="sm"
@@ -122,7 +154,19 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
       {hasPermission(user, PERMISSIONS.VIEW_PROJECTS) && (
         <div className="bg-card rounded-lg border border-border">
           <div className="px-4 py-3 border-b border-border flex justify-between items-center">
-            <h2 className="text-base font-sub-heading text-primary">Active Projects</h2>
+            <div className="flex items-center space-x-2">
+              <h2 className="text-base font-sub-heading text-primary">Active Projects</h2>
+              <HelpBubble
+                content={{
+                  id: 'project-management',
+                  title: 'Making Things Happen',
+                  message: "Projects might seem overwhelming, but remember - every big change starts with small steps. You don't have to do everything at once. Just pick something that speaks to you and take it one task at a time!",
+                  tone: 'supportive',
+                  character: 'coach',
+                  position: 'bottom'
+                }}
+              />
+            </div>
             <Button 
               variant="outline" 
               size="sm"
@@ -165,7 +209,19 @@ export default function DashboardOverview({ onSectionChange }: DashboardOverview
       {hasPermission(user, PERMISSIONS.VIEW_MEETINGS) && (
         <div className="bg-white rounded-lg border border-slate-200">
           <div className="px-4 py-3 border-b border-slate-200 flex justify-between items-center">
-            <h2 className="text-base font-semibold text-slate-900">Upcoming Meetings</h2>
+            <div className="flex items-center space-x-2">
+              <h2 className="text-base font-semibold text-slate-900">Upcoming Meetings</h2>
+              <HelpBubble
+                content={{
+                  id: 'meetings-schedule',
+                  title: 'Stay Connected',
+                  message: "Meetings are where we come together as a team! They're not just about business - they're about connecting, sharing ideas, and supporting each other. Your participation is valued!",
+                  tone: 'encouraging',
+                  character: 'mentor',
+                  position: 'bottom'
+                }}
+              />
+            </div>
             <Button 
               variant="outline" 
               size="sm"

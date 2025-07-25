@@ -15,7 +15,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS, canEditCollection, canDeleteCollection } from "@shared/auth-utils";
 import type { SandwichCollection, Host } from "@shared/schema";
-import { HelpBubble, QuickHelp, helpContent } from "@/components/help-system";
+import { HelpBubble } from "@/components/help-system/HelpBubble";
 
 
 
