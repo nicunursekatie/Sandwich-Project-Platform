@@ -131,37 +131,19 @@ export default function GmailStyleInbox() {
     queryKey: ["/api/users"],
   });
 
-  // Use conversation-based messaging system for Gmail inbox
-  const apiBase = "/api/messages";
+  // Use email system for Gmail inbox
+  const apiBase = "/api/emails";
 
-  // Fetch messages from conversations system
+  // Fetch messages from email system
   const { data: messages = [], refetch: refetchMessages } = useQuery<any[]>({
-    queryKey: [apiBase, activeFolder, "threaded"],
+    queryKey: [apiBase, activeFolder],
     queryFn: async () => {
-      // Use the conversation-based messaging system
-      const response = await apiRequest('GET', '/api/messages?groupByContext=true');
+      // Use the email messaging system with proper folder filtering
+      const response = await apiRequest('GET', `/api/emails?folder=${activeFolder}`);
       const messages = Array.isArray(response) ? response : response.messages || [];
       
-      // Transform conversation messages to Gmail-compatible format
-      return messages.map((msg: any) => ({
-        id: msg.id,
-        content: msg.content || msg.text || '',
-        senderName: msg.senderName || msg.sender || 'Unknown User',
-        senderId: msg.userId || msg.senderId,
-        recipientName: msg.recipientName || 'User',
-        recipientId: msg.recipientId,
-        createdAt: msg.createdAt || msg.timestamp || new Date().toISOString(),
-        subject: msg.contextTitle || msg.conversationName || 'Project Discussion',
-        conversationId: msg.conversationId,
-        contextType: msg.contextType || 'project',
-        contextTitle: msg.contextTitle || msg.conversationName || 'General Discussion',
-        // Set default email-style fields for compatibility
-        isRead: msg.isRead !== false, // Default to read
-        isStarred: msg.isStarred || false,
-        isArchived: msg.isArchived || false,
-        isTrashed: msg.isTrashed || false,
-        isDraft: false
-      }));
+      console.log(`Fetched ${messages.length} emails from ${activeFolder} folder`);
+      return messages;
     },
   });
 
@@ -185,17 +167,20 @@ export default function GmailStyleInbox() {
     }
   });
 
-  // Send message mutation - updated for conversation system
+  // Send message mutation - use email endpoint for Gmail
   const sendMessageMutation = useMutation({
     mutationFn: async (messageData: any) => {
-      // Transform to conversation format
-      const conversationData = {
-        content: messageData.content,
-        sender: null, // Backend will use authenticated user
+      // Use proper email format for emailMessages table
+      const emailData = {
         recipientId: messageData.recipientId,
-        conversationName: messageData.subject || 'Project Discussion'
+        recipientName: messageData.recipientName,
+        recipientEmail: messageData.recipientEmail,
+        subject: messageData.subject || 'Project Discussion',
+        content: messageData.content,
+        isDraft: messageData.isDraft || false
       };
-      return await apiRequest('POST', '/api/messages', conversationData);
+      console.log('Sending email with data:', emailData);
+      return await apiRequest('POST', '/api/emails', emailData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [apiBase] });
@@ -203,7 +188,8 @@ export default function GmailStyleInbox() {
       resetCompose();
       toast({ description: "Message sent successfully" });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Send email error:', error);
       toast({ 
         description: "Failed to send message", 
         variant: "destructive" 

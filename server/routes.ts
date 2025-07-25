@@ -6459,83 +6459,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       if (chatType === "sent") {
-        console.log("Sent folder requested - showing messages sent by this user from messages table");
+        console.log("Sent folder requested - showing email messages sent by this user");
         
-        // Get messages sent BY this user from the messages table
-        const sentMessages = await db
-          .select({
-            id: messages.id,
-            content: messages.content,
-            senderId: messages.senderId,
-            sender: messages.sender,
-            createdAt: messages.createdAt,
-            contextType: messages.contextType,
-            contextId: messages.contextId,
-            conversationId: messages.conversationId,
-            // Get sender details
-            senderFirstName: users.firstName,
-            senderLastName: users.lastName,
-            senderEmail: users.email,
-            senderDisplayName: users.displayName,
-          })
-          .from(messages)
-          .leftJoin(users, eq(messages.senderId, users.id))
-          .where(eq(messages.senderId, user.id))
-          .orderBy(desc(messages.createdAt))
+        // Get email messages sent BY this user
+        const sentEmails = await db
+          .select()
+          .from(emailMessages)
+          .where(and(
+            eq(emailMessages.senderId, user.id),
+            eq(emailMessages.isDraft, false),
+            eq(emailMessages.isTrashed, false)
+          ))
+          .orderBy(desc(emailMessages.createdAt))
           .limit(50);
-
-        // Get recipients for each message
-        const messageIds = sentMessages.map(msg => msg.id);
-        let recipientsByMessage = {};
-        
-        if (messageIds.length > 0) {
-          const recipientsData = await db
-            .select({
-              messageId: messageRecipients.messageId,
-              recipientId: messageRecipients.recipientId,
-              firstName: users.firstName,
-              lastName: users.lastName,
-              email: users.email,
-              displayName: users.displayName,
-            })
-            .from(messageRecipients)
-            .leftJoin(users, eq(messageRecipients.recipientId, users.id))
-            .where(inArray(messageRecipients.messageId, messageIds));
-
-          recipientsByMessage = recipientsData.reduce((acc, r) => {
-            if (!acc[r.messageId]) acc[r.messageId] = [];
-            acc[r.messageId].push(r);
-            return acc;
-          }, {} as Record<number, any[]>);
-        }
           
-        console.log(`Found ${sentMessages.length} sent messages from messages table`);
-        return res.json(sentMessages.map(msg => {
-          const recipients = recipientsByMessage[msg.id] || [];
-          const recipientNames = recipients.map(r => {
-            if (r.displayName) return r.displayName;
-            if (r.firstName || r.lastName) return `${r.firstName || ''} ${r.lastName || ''}`.trim();
-            return r.email || "Unknown";
-          }).join(", ");
-
-          return {
-            id: msg.id,
-            senderId: msg.senderId,
-            senderName: msg.sender || `${msg.senderFirstName || ''} ${msg.senderLastName || ''}`.trim() || msg.senderEmail || "Unknown User",
-            senderEmail: msg.senderEmail || "unknown@example.com",
-            recipientId: recipients.length > 0 ? recipients[0].recipientId : user.id,
-            recipientName: recipientNames || "Unknown Recipients",
-            recipientEmail: recipients.length > 0 ? recipients[0].email : user.email,
-            content: msg.content,
-            subject: msg.contextType === 'project' ? `Project: ${msg.contextId}` : (msg.contextType === 'task' ? `Task: ${msg.contextId}` : "Direct Message"),
-            createdAt: msg.createdAt,
-            threadId: msg.conversationId || msg.id,
-            isRead: true, // Sent messages are always "read" by sender
-            isStarred: false,
-            folder: "sent",
-            committee: msg.contextType || "direct"
-          };
-        }));
+        console.log(`Found ${sentEmails.length} sent email messages`);
+        return res.json(sentEmails.map(email => ({
+          id: email.id,
+          senderId: email.senderId,
+          senderName: email.senderName,
+          senderEmail: email.senderEmail,
+          recipientId: email.recipientId,
+          recipientName: email.recipientName,
+          recipientEmail: email.recipientEmail,
+          content: email.content,
+          subject: email.subject,
+          createdAt: email.createdAt,
+          threadId: email.parentMessageId || email.id,
+          isRead: email.isRead,
+          isStarred: email.isStarred,
+          folder: "sent",
+          committee: email.contextType || "email"
+        })));
       }
       
       if (chatType === "archived") {
@@ -6613,52 +6568,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
         })));
       }
 
-      // For inbox and any other context (default case), show messages received by this user
-      console.log("Inbox folder requested - showing messages received by this user from messages table");
+      // For inbox and any other context (default case), show inbox email messages
+      console.log("Inbox folder requested - showing inbox email messages");
       
-      // Get messages where this user is a recipient
-      const inboxMessages = await db
-        .select({
-          id: messages.id,
-          content: messages.content,
-          senderId: messages.senderId,
-          sender: messages.sender,
-          createdAt: messages.createdAt,
-          contextType: messages.contextType,
-          contextId: messages.contextId,
-          conversationId: messages.conversationId,
-          // Get sender details
-          senderFirstName: users.firstName,
-          senderLastName: users.lastName,
-          senderEmail: users.email,
-          senderDisplayName: users.displayName,
-          // Get recipient details
-          isRead: messageRecipients.read,
-        })
-        .from(messages)
-        .leftJoin(users, eq(messages.senderId, users.id))
-        .innerJoin(messageRecipients, eq(messages.id, messageRecipients.messageId))
-        .where(eq(messageRecipients.recipientId, user.id))
-        .orderBy(desc(messages.createdAt))
+      // Get inbox email messages for this user (not drafts, not trashed, not archived)
+      const inboxEmails = await db
+        .select()
+        .from(emailMessages)
+        .where(and(
+          or(
+            eq(emailMessages.senderId, user.id),
+            eq(emailMessages.recipientId, user.id)
+          ),
+          eq(emailMessages.isDraft, false),
+          eq(emailMessages.isTrashed, false),
+          eq(emailMessages.isArchived, false)
+        ))
+        .orderBy(desc(emailMessages.createdAt))
         .limit(50);
 
-      console.log(`Found ${inboxMessages.length} inbox messages from messages table`);
-      return res.json(inboxMessages.map(msg => ({
-        id: msg.id,
-        senderId: msg.senderId,
-        senderName: msg.sender || `${msg.senderFirstName || ''} ${msg.senderLastName || ''}`.trim() || msg.senderEmail || "Unknown User",
-        senderEmail: msg.senderEmail || "unknown@example.com",
-        recipientId: user.id,
-        recipientName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || "You",
-        recipientEmail: user.email,
-        content: msg.content,
-        subject: msg.contextType === 'project' ? `Project: ${msg.contextId}` : (msg.contextType === 'task' ? `Task: ${msg.contextId}` : "Direct Message"),
-        createdAt: msg.createdAt,
-        threadId: msg.conversationId || msg.id,
-        isRead: msg.isRead || false,
-        isStarred: false, // Messages don't have starred functionality in messages table yet
+      console.log(`Found ${inboxEmails.length} inbox email messages`);
+      return res.json(inboxEmails.map(email => ({
+        id: email.id,
+        senderId: email.senderId,
+        senderName: email.senderName,
+        senderEmail: email.senderEmail,
+        recipientId: email.recipientId,
+        recipientName: email.recipientName,
+        recipientEmail: email.recipientEmail,
+        content: email.content,
+        subject: email.subject,
+        createdAt: email.createdAt,
+        threadId: email.parentMessageId || email.id,
+        isRead: email.isRead,
+        isStarred: email.isStarred,
         folder: "inbox",
-        committee: msg.contextType || "direct"
+        committee: email.contextType || "email"
       })));
 
       console.log("=== INBOX DEBUG END ===");
