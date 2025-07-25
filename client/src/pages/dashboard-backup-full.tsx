@@ -432,6 +432,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
               </div>
             </div>
           )}
+        </div>
           <div className="flex items-center space-x-1 sm:space-x-2 relative z-50 flex-shrink-0">
           <button
             onClick={() => {
