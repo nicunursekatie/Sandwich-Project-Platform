@@ -134,12 +134,12 @@ export default function GmailStyleInbox() {
   // Use email system for Gmail inbox
   const apiBase = "/api/emails";
 
-  // Fetch messages from email system - use flat list for now since no threads exist
+  // Fetch messages from email system - simple flat list
   const { data: messages = [], refetch: refetchMessages } = useQuery<any[]>({
     queryKey: [apiBase, activeFolder],
     queryFn: async () => {
-      // Use flat email list since no parent_message_id relationships exist yet
-      const response = await apiRequest('GET', `/api/emails?folder=${activeFolder}&threaded=false`);
+      // Get flat email list for simple inbox view
+      const response = await apiRequest('GET', `/api/emails?folder=${activeFolder}`);
       const messages = Array.isArray(response) ? response : response.messages || [];
       
       console.log(`Fetched ${messages.length} emails from ${activeFolder} folder`);
@@ -197,25 +197,24 @@ export default function GmailStyleInbox() {
     }
   });
 
-  // Reply mutation - use email endpoint with proper threading
+  // Reply mutation - simple email reply without threading
   const replyMutation = useMutation({
     mutationFn: async (replyData: any) => {
       if (!selectedMessage) {
         throw new Error("No message selected for reply");
       }
       
-      // Create reply email with proper threading
+      // Create simple reply email
       const replyEmailData = {
         recipientId: selectedMessage.senderId,
         recipientName: selectedMessage.senderName,
         recipientEmail: selectedMessage.senderEmail,
         subject: selectedMessage.subject.startsWith('Re: ') ? selectedMessage.subject : `Re: ${selectedMessage.subject}`,
         content: replyData.content,
-        parentMessageId: selectedMessage.id, // This creates the thread
         isDraft: false
       };
       
-      console.log('Sending reply with threading data:', replyEmailData);
+      console.log('Sending reply:', replyEmailData);
       return await apiRequest('POST', '/api/emails', replyEmailData);
     },
     onSuccess: () => {

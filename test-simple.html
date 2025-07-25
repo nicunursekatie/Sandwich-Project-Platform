@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Simple Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Test</title>
 </head>
 <body>
-    <div id="test">
-        <h1>Static HTML Test</h1>
-        <p>This should work without any React/JavaScript errors.</p>
-    </div>
+    <h1>Testing Frontend Serving</h1>
+    <p>If you can see this, the server is serving HTML correctly.</p>
     <script>
-        console.log("Simple JavaScript test");
-        document.getElementById("test").style.backgroundColor = "lightgreen";
+        console.log('JavaScript is working!');
+        document.body.innerHTML += '<p>JavaScript executed successfully!</p>';
+        
+        // Test fetch to API
+        fetch('/api/health')
+            .then(response => response.json())
+            .then(data => {
+                console.log('API test successful:', data);
+                document.body.innerHTML += '<p>API connection working: ' + JSON.stringify(data) + '</p>';
+            })
+            .catch(error => {
+                console.error('API test failed:', error);
+                document.body.innerHTML += '<p>API connection failed: ' + error.message + '</p>';
+            });
     </script>
 </body>
 </html>
