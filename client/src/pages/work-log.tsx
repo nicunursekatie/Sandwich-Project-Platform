@@ -48,7 +48,7 @@ export default function WorkLogPage() {
   const createLog = useMutation({
     mutationFn: async () => {
       const data = await apiRequest("POST", "/api/work-logs", { 
-        description, 
+        description: description || "Work logged", 
         hours, 
         minutes,
         workDate: workDate + "T12:00:00.000Z" // Add time component for proper date parsing
@@ -83,7 +83,7 @@ export default function WorkLogPage() {
     <div className="max-w-4xl mx-auto py-6 space-y-6">
       {/* Debug info - minimized and subtle */}
       <div className="text-xs text-gray-400 px-2">
-        Debug: {safelogs.length} logs loaded • User: {user?.email}
+        Debug: {safelogs.length} logs loaded • User: {(user as any)?.email || 'Unknown'}
       </div>
 
       {canCreateLogs && (
@@ -108,19 +108,6 @@ export default function WorkLogPage() {
                   onChange={e => setWorkDate(e.target.value)}
                   required
                   className="w-full sm:w-48"
-                />
-              </div>
-
-              {/* Work description - properly sized */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Work Description</label>
-                <Textarea
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                  placeholder="Describe what you worked on..."
-                  required
-                  rows={3}
-                  className="resize-none"
                 />
               </div>
 
@@ -155,6 +142,20 @@ export default function WorkLogPage() {
                     <span className="text-sm text-gray-600 font-medium">minutes</span>
                   </div>
                 </div>
+              </div>
+
+              {/* Work description - moved below time and made optional */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Work Description <span className="text-gray-500 font-normal">(optional)</span>
+                </label>
+                <Textarea
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  placeholder="Describe what you worked on (optional)..."
+                  rows={3}
+                  className="resize-none"
+                />
               </div>
 
               {/* Submit button */}
