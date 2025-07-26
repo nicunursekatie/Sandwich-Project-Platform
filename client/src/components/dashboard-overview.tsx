@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
-import type { Project, Message, MeetingMinutes, DriveLink, WeeklyReport, SandwichCollection, Meeting } from "@shared/schema";
+import type { Project, MeetingMinutes, DriveLink, WeeklyReport, SandwichCollection, Meeting } from "@shared/schema";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
 
 interface DashboardOverviewProps {
@@ -19,10 +19,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
     enabled: hasPermission(user, PERMISSIONS.VIEW_PROJECTS)
   });
 
-  const { data: messages = [] } = useQuery<Message[]>({
-    queryKey: ["/api/messages"],
-    enabled: hasPermission(user, PERMISSIONS.GENERAL_CHAT)
-  });
+
 
   const { data: driveLinks = [] } = useQuery<DriveLink[]>({
     queryKey: ["/api/drive-links"]
@@ -70,7 +67,6 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
   const totalSandwiches = reports.reduce((sum, report) => sum + report.sandwichCount, 0);
   const totalCollectedSandwiches = statsData?.completeTotalSandwiches || 0;
   const activeProjects = projects.filter(p => p.status === "in_progress" || p.status === "available" || p.status === "planning");
-  const recentMessages = messages.slice(0, 3);
 
   
   // Filter upcoming meetings (not completed and future or current dates)
@@ -267,49 +263,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         </div>
       )}
 
-      {/* Recent Messages - Only show if user has permission */}
-      {hasPermission(user, PERMISSIONS.GENERAL_CHAT) && (
-        <div className="bg-white rounded-lg border border-slate-200">
-          <div className="px-4 py-3 border-b border-slate-200 flex justify-between items-center">
-            <h2 className="text-base font-semibold text-slate-900">Recent Messages</h2>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => onSectionChange("messages")}
-              className="text-xs px-2 py-1"
-            >
-              View All
-            </Button>
-          </div>
-          <div className="p-4">
-            <div className="space-y-2">
-              {recentMessages.map((message) => (
-                <div 
-                  key={message.id} 
-                  className="p-2 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer transition-colors"
-                  onClick={() => onSectionChange("messages")}
-                >
-                  <div className="flex justify-between items-start mb-1">
-                    <span className="text-sm font-medium text-slate-900">{message.sender}</span>
-                    <span className="text-xs text-slate-500">
-                      {message.createdAt ? new Date(message.createdAt).toLocaleDateString() : 'Recent'}
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-600">
-                    {message.content.length > 60 
-                      ? message.content.substring(0, 60) + "..." 
-                      : message.content}
-                  </p>
-                </div>
-              ))}
-              
-              {recentMessages.length === 0 && (
-                <p className="text-slate-500 text-center py-3 text-sm">No recent messages</p>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+
 
 
 
