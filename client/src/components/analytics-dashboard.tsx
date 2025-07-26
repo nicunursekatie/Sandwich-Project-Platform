@@ -11,13 +11,23 @@ import type { SandwichCollection } from "@shared/schema";
 export default function AnalyticsDashboard() {
   const [activeTab, setActiveTab] = useState('highlights');
 
-  const { data: collections, isLoading } = useQuery<SandwichCollection[]>({
+  const { data: collections, isLoading: collectionsLoading } = useQuery<SandwichCollection[]>({
     queryKey: ['/api/sandwich-collections'],
     select: (data: any) => data?.collections || []
   });
 
+  // Get accurate database totals from stats API
+  const { data: statsData, isLoading: statsLoading } = useQuery({
+    queryKey: ['/api/sandwich-collections/stats']
+  });
+
+  const isLoading = collectionsLoading || statsLoading;
+
   const analyticsData = useMemo(() => {
-    if (!collections?.length) return null;
+    if (!collections?.length || !statsData) return null;
+
+    // Use ACCURATE database totals from stats API instead of frontend calculation
+    const totalSandwiches = statsData.completeTotalSandwiches || 0;
 
     // PHASE 6: Standardized group calculation using new column structure only
     const calculateGroupTotal = (collection: SandwichCollection): number => {
@@ -25,11 +35,6 @@ export default function AnalyticsDashboard() {
       const groupCount2 = (collection as any).group2Count || 0;
       return groupCount1 + groupCount2;
     };
-
-    // Calculate basic statistics
-    const totalSandwiches = collections.reduce((sum, c) => 
-      sum + (c.individualSandwiches || 0) + calculateGroupTotal(c), 0
-    );
 
     const hostStats = collections.reduce((acc, c) => {
       const host = c.hostName || 'Unknown';
@@ -107,7 +112,7 @@ export default function AnalyticsDashboard() {
       trendData
     };
 
-  }, [collections]);
+  }, [collections, statsData]);
 
   if (isLoading) {
     return (

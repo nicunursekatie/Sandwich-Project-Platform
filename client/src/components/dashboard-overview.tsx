@@ -53,9 +53,9 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
     }
   ];
 
-  // Key statistics from the PDF analysis
+  // Key statistics - Use actual database values instead of hardcoded ones
   const organizationalStats = {
-    totalLifetimeSandwiches: "1,868,690",
+    totalLifetimeSandwiches: statsData ? statsData.completeTotalSandwiches?.toLocaleString() : "Loading...",
     peakWeekRecord: "19,414",
     peakWeekDate: "November 15, 2023",
     currentAnnualCapacity: "~450,000",
@@ -136,18 +136,24 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
             </div>
           </div>
 
-          {/* Current Statistics */}
+          {/* Database Details */}
           {statsData && (
             <div className="mt-4 p-4 bg-gradient-to-r from-[#236383]/10 to-amber-100/50 rounded-lg border border-[#236383]/20">
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="text-sm text-slate-600">Current Database Total</div>
-                  <div className="text-2xl font-bold text-[#236383]">
-                    {statsData.completeTotalSandwiches?.toLocaleString() || 0}
+                  <div className="text-sm text-slate-600">Individual Sandwiches</div>
+                  <div className="text-xl font-semibold text-[#236383]">
+                    {statsData.individualSandwiches?.toLocaleString() || 0}
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-sm text-slate-600">Group Sandwiches</div>
+                  <div className="text-xl font-semibold text-amber-700">
+                    {((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)).toLocaleString()}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm text-slate-600">Entries Recorded</div>
+                  <div className="text-sm text-slate-600">Total Entries</div>
                   <div className="text-xl font-semibold text-slate-700">
                     {statsData.totalEntries?.toLocaleString() || 0}
                   </div>
