@@ -133,12 +133,20 @@ async function startServer() {
       path: '/notifications'
     });
 
-    // Set up Vite middleware BEFORE server starts listening to ensure frontend is ready
+    // CRITICAL FIX: Register all API routes BEFORE Vite middleware to prevent route interception
+    try {
+      await registerRoutes(app);
+      console.log("✓ API routes registered BEFORE Vite middleware");
+    } catch (error) {
+      console.error("✗ Route registration failed:", error);
+    }
+
+    // Set up Vite middleware AFTER API routes to prevent catch-all interference
     if (process.env.NODE_ENV === "development") {
       try {
         const { setupVite } = await import("./vite");
         await setupVite(app, httpServer);
-        console.log("✓ Vite development server setup complete BEFORE server start");
+        console.log("✓ Vite development server setup complete AFTER API routes");
       } catch (error) {
         console.error("✗ Vite setup failed:", error);
         console.log("⚠ Server continuing without Vite - frontend may not work properly");
@@ -217,8 +225,8 @@ async function startServer() {
           await initializeDatabase();
           console.log("✓ Database initialization complete");
 
-          const server = await registerRoutes(app);
-          console.log("✓ Routes registered successfully");
+          // Routes already registered during server startup
+          console.log("✓ Database initialization completed after route registration");
 
           // Update health check to reflect full init
           app.get("/health", (_req: Request, res: Response) => {
