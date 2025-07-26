@@ -69,8 +69,20 @@ function Router() {
             </div>
           )}
         </Route>
-        <Route path="/" component={Landing} />
-        <Route component={Landing} />
+        <Route path="/">
+          {() => {
+            // Redirect unauthenticated users directly to login
+            window.location.href = "/api/login";
+            return <LoadingState text="Redirecting to login..." size="lg" className="min-h-screen" />;
+          }}
+        </Route>
+        <Route>
+          {() => {
+            // Default fallback - redirect to login
+            window.location.href = "/api/login";
+            return <LoadingState text="Redirecting to login..." size="lg" className="min-h-screen" />;
+          }}
+        </Route>
       </Switch>
     );
   }
