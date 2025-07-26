@@ -811,7 +811,8 @@ export default function SandwichCollectionLog() {
         "Group Sandwiches",
         "Group Collections Detail",
         "Total Sandwiches",
-        "Submitted At"
+        "Submitted At",
+        "Created By"
       ];
       
       const csvData = [
@@ -824,7 +825,8 @@ export default function SandwichCollectionLog() {
           calculateGroupTotal(collection.groupCollections),
           `"${formatGroupCollections(collection.groupCollections || '')}"`,
           calculateTotal(collection),
-          `"${new Date(collection.submittedAt).toLocaleString()}"`
+          `"${new Date(collection.submittedAt).toLocaleString()}"`,
+          `"${collection.createdByName || 'Unknown'}"`
         ].join(","))
       ].join("\n");
 
@@ -1620,8 +1622,13 @@ export default function SandwichCollectionLog() {
 
                 {/* Footer */}
                 <div className="mt-3 pt-3 border-t border-slate-200">
-                  <div className="text-xs text-slate-500">
-                    Submitted {formatSubmittedAt(collection.submittedAt)}
+                  <div className="text-xs text-slate-500 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                    <span>Submitted {formatSubmittedAt(collection.submittedAt)}</span>
+                    {collection.createdByName && (
+                      <span className="text-slate-400">
+                        by {collection.createdByName}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

@@ -231,26 +231,24 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     const hasGroupCollections = validGroupCollections.length > 0;
     const isAutoGroupOnlyMode = hasGroupCollections && !hasIndividualSandwiches && !hasHostName;
 
-    if (isAutoGroupOnlyMode) {
-      // Group-only mode validation - just need groups
-      if (validGroupCollections.length === 0) {
-        toast({
-          title: "Missing group collections",
-          description: "Please add at least one group collection with a name and sandwich count.",
-          variant: "destructive",
-        });
-        return;
-      }
-    } else {
-      // Regular mode requires host name and individual sandwiches
-      if (!hasHostName || !hasIndividualSandwiches) {
-        toast({
-          title: "Missing information",
-          description: "Please fill in the host name and individual sandwiches, or just add group collections.",
-          variant: "destructive",
-        });
-        return;
-      }
+    // Validation: Need either individual data OR group data (or both)
+    if (!hasIndividualSandwiches && !hasGroupCollections) {
+      toast({
+        title: "Missing sandwich data",
+        description: "Please enter either individual sandwiches (with host) or group collections.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // If they have individual sandwiches, they need a host
+    if (hasIndividualSandwiches && !hasHostName) {
+      toast({
+        title: "Missing host information",
+        description: "Please select a host location for individual sandwich collections.",
+        variant: "destructive",
+      });
+      return;
     }
 
     // Check if host exists and create if needed (skip for "Groups")
@@ -311,7 +309,8 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     const group2Name = validGroupCollections.length > 1 ? validGroupCollections[1].groupName.trim() : null;
     const group2Count = validGroupCollections.length > 1 ? validGroupCollections[1].sandwichCount : null;
 
-    submitCollectionMutation.mutate({
+    // Phase 3: Submit with new group columns (temporarily typed as any to work around TypeScript)
+    const submissionData = {
       collectionDate,
       hostName: finalHostName,
       individualSandwiches: finalIndividualSandwiches,
@@ -324,7 +323,9 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       createdByName: user && typeof user === 'object' && 'firstName' in user && 'lastName' in user && user.firstName && user.lastName 
         ? `${user.firstName} ${user.lastName}` 
         : user && typeof user === 'object' && 'displayName' in user && (user as any).displayName || (user as any)?.email || 'Unknown User',
-    });
+    };
+
+    submitCollectionMutation.mutate(submissionData as any);
   };
 
   return (
