@@ -129,7 +129,6 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       collectionDate: string;
       hostName: string;
       individualSandwiches: number;
-      groupSandwiches: number; // Add the new field to the type
       groupCollections: string;
       createdBy?: string;
       createdByName?: string;
@@ -310,7 +309,6 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       collectionDate,
       hostName: finalHostName,
       individualSandwiches: finalIndividualSandwiches,
-      groupSandwiches: finalGroupSandwiches, // Use the corrected variable to avoid double counting
       groupCollections: finalGroupCollections,
       createdBy: (user as any)?.id,
       createdByName: user && typeof user === 'object' && 'firstName' in user && 'lastName' in user && user.firstName && user.lastName 

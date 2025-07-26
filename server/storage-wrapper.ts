@@ -434,9 +434,20 @@ class StorageWrapper implements IStorage {
     return this.executeWithFallback(
       () => this.primaryStorage.getCollectionStats(),
       async () => {
-        // Fallback: calculate stats from all collections including group sandwiches
+        // Fallback: calculate stats from all collections using JSON data for consistency
         const all = await this.fallbackStorage.getAllSandwichCollections();
-        const totalSandwiches = all.reduce((sum, collection) => sum + (collection.individualSandwiches || 0) + (collection.groupSandwiches || 0), 0);
+        const calculateGroupTotal = (groupCollections: string | null) => {
+          try {
+            const groupData = JSON.parse(groupCollections || "[]");
+            return Array.isArray(groupData) 
+              ? groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0)
+              : 0;
+          } catch {
+            return 0;
+          }
+        };
+        const totalSandwiches = all.reduce((sum, collection) => 
+          sum + (collection.individualSandwiches || 0) + calculateGroupTotal(collection.groupCollections), 0);
         return {
           totalEntries: all.length,
           totalSandwiches

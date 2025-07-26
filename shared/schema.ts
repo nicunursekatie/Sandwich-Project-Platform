@@ -361,7 +361,6 @@ export const sandwichCollections = pgTable("sandwich_collections", {
   collectionDate: text("collection_date").notNull(),
   hostName: text("host_name").notNull(),
   individualSandwiches: integer("individual_sandwiches").notNull(),
-  groupSandwiches: integer("group_sandwiches").notNull().default(0), // Total count from all groups
   groupCollections: text("group_collections").notNull(), // JSON string of group data with names/counts
   createdBy: text("created_by"), // User ID who created this entry
   createdByName: text("created_by_name"), // Display name of creator

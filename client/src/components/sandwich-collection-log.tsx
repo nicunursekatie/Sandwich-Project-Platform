@@ -460,11 +460,20 @@ export default function SandwichCollectionLog() {
 
   const calculateTotal = (collection: SandwichCollection) => {
     const individual = Number(collection.individualSandwiches || 0);
-    const groupSandwiches = Number(collection.groupSandwiches || 0);
     
-    // Use the new numeric groupSandwiches field to avoid double counting
-    // For group-only entries, individual contains the total and groupSandwiches is 0
-    return individual + groupSandwiches;
+    // Calculate group total from JSON data for consistency
+    const calculateGroupTotal = (groupCollections: string | null) => {
+      try {
+        const groupData = JSON.parse(groupCollections || "[]");
+        return Array.isArray(groupData) 
+          ? groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0)
+          : 0;
+      } catch {
+        return 0;
+      }
+    };
+    
+    return individual + calculateGroupTotal(collection.groupCollections);
   };
 
   const parseGroupCollections = (groupCollectionsJson: string) => {
@@ -766,10 +775,20 @@ export default function SandwichCollectionLog() {
       };
 
       // Calculate accurate totals including both individual and group sandwiches
+      const calculateGroupTotal = (groupCollections: string | null) => {
+        try {
+          const groupData = JSON.parse(groupCollections || "[]");
+          return Array.isArray(groupData) 
+            ? groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0)
+            : 0;
+        } catch {
+          return 0;
+        }
+      };
+
       const calculateTotal = (collection: SandwichCollection) => {
         const individual = Number(collection.individualSandwiches || 0);
-        const groupSandwiches = Number(collection.groupSandwiches || 0);
-        return individual + groupSandwiches;
+        return individual + calculateGroupTotal(collection.groupCollections);
       };
 
       const headers = [
@@ -790,7 +809,7 @@ export default function SandwichCollectionLog() {
           `"${collection.hostName}"`,
           `"${collection.collectionDate}"`,
           collection.individualSandwiches || 0,
-          collection.groupSandwiches || 0,
+          calculateGroupTotal(collection.groupCollections),
           `"${formatGroupCollections(collection.groupCollections || '')}"`,
           calculateTotal(collection),
           `"${new Date(collection.submittedAt).toLocaleString()}"`
@@ -1182,7 +1201,7 @@ export default function SandwichCollectionLog() {
                 <div className="w-px bg-gradient-to-b from-teal-300 to-amber-300"></div>
                 <div className="text-center">
                   <div className="text-lg sm:text-xl font-bold text-orange-600 drop-shadow-sm">
-                    {totalStats.groupSandwiches.toLocaleString()}
+                    {(totalStats.completeTotalSandwiches - totalStats.individualSandwiches).toLocaleString()}
                   </div>
                   <div className="text-sm font-semibold text-orange-600 uppercase tracking-wide mt-1">Groups</div>
                 </div>
@@ -1568,7 +1587,7 @@ export default function SandwichCollectionLog() {
                         <span className="text-sm font-medium text-slate-700">Groups</span>
                       </div>
                       <span className="text-lg font-bold text-slate-900">
-                        {Number(collection.groupSandwiches || 0)}
+                        {calculateGroupTotal(collection.groupCollections)}
                       </span>
                     </div>
                     {Array.isArray(groupData) && groupData.length > 0 && (

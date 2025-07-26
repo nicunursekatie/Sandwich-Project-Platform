@@ -796,7 +796,20 @@ export class MemStorage implements IStorage {
 
   async getCollectionStats(): Promise<{ totalEntries: number; totalSandwiches: number; }> {
     const collections = Array.from(this.sandwichCollections.values());
-    const totalSandwiches = collections.reduce((sum, collection) => sum + (collection.individualSandwiches || 0) + (collection.groupSandwiches || 0), 0);
+    // Calculate group totals from JSON data for consistency
+    const calculateGroupTotal = (groupCollections: string | null) => {
+      try {
+        const groupData = JSON.parse(groupCollections || "[]");
+        return Array.isArray(groupData) 
+          ? groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0)
+          : 0;
+      } catch {
+        return 0;
+      }
+    };
+
+    const totalSandwiches = collections.reduce((sum, collection) => 
+      sum + (collection.individualSandwiches || 0) + calculateGroupTotal(collection.groupCollections), 0);
     return {
       totalEntries: collections.length,
       totalSandwiches
