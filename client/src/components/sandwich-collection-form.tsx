@@ -51,8 +51,10 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     
     switch (fieldName) {
       case 'hostName':
-        if (!value || value.trim() === "") {
-          errors.hostName = "Host location is required";
+        // Only require host if there are individual sandwiches
+        const hasIndividualSandwiches = individualSandwiches && individualSandwiches.trim() !== "" && parseInt(individualSandwiches) > 0;
+        if (hasIndividualSandwiches && (!value || value.trim() === "")) {
+          errors.hostName = "Host location is required for individual sandwich collections";
         } else {
           delete errors.hostName;
         }
@@ -86,7 +88,10 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     const hasIndividual = individualSandwiches && individualSandwiches.trim() !== "" && parseInt(individualSandwiches) > 0;
     const hasGroups = groupCollections.some(g => g.groupName.trim() !== "" && g.sandwichCount > 0);
     
-    return hasHost && (hasIndividual || hasGroups) && Object.keys(validationErrors).length === 0;
+    // For individual collections, require host. For group-only collections, host is optional (auto-assigned)
+    const hostRequiredForIndividual = hasIndividual ? hasHost : true;
+    
+    return hostRequiredForIndividual && (hasIndividual || hasGroups) && Object.keys(validationErrors).length === 0;
   };
 
 
