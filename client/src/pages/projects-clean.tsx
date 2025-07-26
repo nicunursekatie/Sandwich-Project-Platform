@@ -549,7 +549,7 @@ export default function ProjectsClean() {
                 project.status === 'in_progress' ? 'text-[#236383]' :
                 'text-slate-500'
               }`}>
-                {project.status.replace('_', ' ')}
+                {project.status ? project.status.replace('_', ' ') : 'archived'}
               </span>
             </div>
           </div>
