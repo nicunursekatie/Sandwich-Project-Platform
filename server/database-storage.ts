@@ -660,13 +660,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async createConversation(conversationData: any): Promise<any> {
-    const [conversation] = await db
-      .insert(conversations)
-      .values(conversationData)
-      .returning();
-    return conversation;
-  }
+
 
   async addConversationParticipant(participantData: any): Promise<any> {
     const [participant] = await db
@@ -1241,35 +1235,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  // Project assignments
-  async getProjectAssignments(projectId: number): Promise<any[]> {
-    try {
-      const assignments = await db
-        .select({
-          id: projectAssignments.id,
-          projectId: projectAssignments.projectId,
-          userId: projectAssignments.userId,
-          role: projectAssignments.role,
-          assignedAt: projectAssignments.assignedAt,
-          user: {
-            id: users.id,
-            email: users.email,
-            firstName: users.firstName,
-            lastName: users.lastName,
-            role: users.role
-          }
-        })
-        .from(projectAssignments)
-        .leftJoin(users, eq(projectAssignments.userId, users.id))
-        .where(eq(projectAssignments.projectId, projectId))
-        .orderBy(projectAssignments.assignedAt);
-      
-      return assignments;
-    } catch (error) {
-      console.error('Error fetching project assignments:', error);
-      return [];
-    }
-  }
+
 
   async addProjectAssignment(assignment: { projectId: number; userId: string; role: string }): Promise<any> {
     try {

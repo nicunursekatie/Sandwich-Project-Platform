@@ -1,0 +1,75 @@
+2025-07-26T05:34:51Z info: Deployment: 8906c9b8-172c-4199-9be8-1f925127d59a
+2025-07-26T05:34:51Z info: Build: f469a71b-2b5b-43e3-b217-f36a40b0d902
+2025-07-26T05:34:51Z info: Connecting to builder
+2025-07-26T05:34:52Z info: Builder connected
+2025-07-26T05:34:53Z info: Installing packages
+2025-07-26T05:34:55Z info: Starting Build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --external:./vite.js --external:vite --packages=external --bundle --format=esm --outdir=dist
+
+
+vite v5.4.19 building for production...
+
+transforming...
+
+✓ 4261 modules transformed.
+
+rendering chunks...
+
+computing gzip size...
+
+../dist/public/index.html                                  0.67 kB │ gzip:   0.41 kB
+
+../dist/public/assets/stream-chat-icons-BLRMizsT.woff      4.99 kB
+
+✓ built in 19.53s
+
+▲ [WARNING] Duplicate member "getProjectAssignments" in class body [duplicate-class-member]
+
+    server/database-storage.ts:1245:8:
+      1245 │   async getProjectAssignments(projectId: number): Promise<any[]> {
+           ╵         ~~~~~~~~~~~~~~~~~~~~~
+
+  The original member "getProjectAssignments" is here:
+
+    server/database-storage.ts:998:8:
+      998 │   async getProjectAssignments(projectId: number): Promise<Project...
+          ╵         ~~~~~~~~~~~~~~~~~~~~~
+
+▲ [WARNING] Duplicate member "createConversation" in class body [duplicate-class-member]
+
+    server/database-storage.ts:1517:8:
+      1517 │   async createConversation(conversationData: {
+           ╵         ~~~~~~~~~~~~~~~~~~
+
+  The original member "createConversation" is here:
+
+    server/database-storage.ts:663:8:
+      663 │   async createConversation(conversationData: any): Promise<any> {
+          ╵         ~~~~~~~~~~~~~~~~~~
+
+
+2 warnings
+
+  dist/index.js  713.7kb
+
+⚡ Done in 62ms
+
+npm notice
+npm notice New minor version of npm available! 11.4.2 -> 11.5.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.1
+npm notice To update run: npm install -g npm@11.5.1
+npm notice
+
+2025-07-26T05:35:32Z info: Pushing pid1 binary layer...
+2025-07-26T05:35:34Z info: Created pid1 binary layer
+2025-07-26T05:35:39Z info: Pushing Repl layer...
+2025-07-26T05:35:39Z info: Pushing hosting layer...
+2025-07-26T05:35:39Z info: Nix layers for this Repl are uncached.
+2025-07-26T05:35:39Z info: Pushing nix-0 layer...
+2025-07-26T05:35:39Z info: Created hosting layer
+2025-07-26T05:36:46Z info: Created Repl layer
+2025-07-26T05:37:19Z info: Connecting to builder
+2025-07-26T05:37:19Z info: Builder connected
+2025-07-26T05:37:20Z info: Installing packages
