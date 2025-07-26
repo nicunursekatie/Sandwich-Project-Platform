@@ -527,187 +527,184 @@ export default function ProjectsClean() {
       className="hover:shadow-md transition-shadow cursor-pointer project-card"
       onClick={() => handleProjectClick(project.id)}
     >
-      <CardContent className="p-4">
-        {/* Header with title and badges */}
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1 min-w-0 pr-3">
-            <h3 className="text-base font-semibold text-slate-900 line-clamp-2 leading-tight">
+      <CardContent className="p-3">
+        {/* Compact Header */}
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex-1 min-w-0 pr-2">
+            <h3 className="text-sm font-semibold text-slate-900 line-clamp-1 leading-tight font-roboto">
               {project.title}
             </h3>
-            <p className="text-sm text-slate-600 mt-1 line-clamp-2">
-              {project.description}
-            </p>
-          </div>
-          <div className="flex items-start gap-2">
-            <div className="flex flex-col gap-1 shrink-0">
-              <Badge className={`${getPriorityColor(project.priority)} text-xs px-2 py-1 badge`}>
+            <div className="flex items-center gap-2 mt-1">
+              {/* Inline compact badges */}
+              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${
+                project.priority === 'high' ? 'bg-red-100 text-red-800' :
+                project.priority === 'medium' ? 'bg-[#FBAD3F]/20 text-[#d87e00]' :
+                'bg-gray-100 text-gray-800'
+              }`}>
                 {project.priority}
-              </Badge>
-              <Badge variant="outline" className={`${getStatusColor(project.status)} text-xs px-2 py-1 badge`}>
-                {getStatusIcon(project.status)}
-                <span className="ml-1 capitalize">{project.status.replace('_', ' ')}</span>
-              </Badge>
-              <Badge variant="secondary" className="text-xs px-2 py-1 badge">
-                {getCategoryIcon(project.category)} {project.category}
-              </Badge>
+              </span>
+              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${
+                project.status === 'completed' ? 'bg-green-100 text-green-800' :
+                project.status === 'in_progress' ? 'bg-[#236383]/20 text-[#236383]' :
+                'bg-gray-100 text-gray-600'
+              }`}>
+                {project.status.replace('_', ' ')}
+              </span>
             </div>
-            {canEditProject(user, project) && (
-              <div className="flex gap-1 ml-1">
-                {/* Quick Complete Button for non-completed projects */}
-                {project.status !== 'completed' && (
+          </div>
+          {canEditProject(user, project) && (
+            <div className="flex gap-1 shrink-0">
+              {project.status !== 'completed' && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => handleMarkComplete(project.id, project.title, e)}
+                  className="h-6 w-6 p-0 hover:bg-green-50"
+                  title="Complete"
+                >
+                  <CheckCircle2 className="h-3 w-3 text-green-600" />
+                </Button>
+              )}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={(e) => handleMarkComplete(project.id, project.title, e)}
-                    className="h-8 w-8 p-0 hover:bg-green-50"
-                    title="Mark as completed"
+                    onClick={(e) => e.stopPropagation()}
+                    className="h-6 w-6 p-0 hover:bg-gray-50"
+                    title="Actions"
                   >
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <Settings className="h-3 w-3 text-gray-600" />
                   </Button>
-                )}
-                
-                {/* Status Change Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => e.stopPropagation()}
-                      className="h-8 w-8 p-0 hover:bg-gray-50"
-                      title="Change status"
-                    >
-                      <Settings className="h-4 w-4 text-gray-600" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-                    <DropdownMenuItem 
-                      onClick={(e) => handleStatusQuickChange(project.id, 'available', e)}
-                    >
-                      <Circle className="w-4 h-4 mr-2 text-purple-600" />
-                      Available
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={(e) => handleStatusQuickChange(project.id, 'in_progress', e)}
-                    >
-                      <Play className="w-4 h-4 mr-2 text-blue-600" />
-                      In Progress
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem 
-                      onClick={(e) => handleStatusQuickChange(project.id, 'completed', e)}
-                    >
-                      <CheckCircle2 className="w-4 h-4 mr-2 text-green-600" />
-                      Completed
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem 
-                      onClick={(e) => handleEditProject(project, e)}
-                    >
-                      <Edit className="w-4 h-4 mr-2 text-blue-600" />
-                      Edit Details
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={(e) => handleDeleteProject(project.id, project.title, e)}
-                      className="text-red-600 focus:text-red-600"
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Delete Project
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            )}
-          </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                  <DropdownMenuItem onClick={(e) => handleStatusQuickChange(project.id, 'available', e)}>
+                    <Circle className="w-4 h-4 mr-2 text-purple-600" />
+                    Available
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={(e) => handleStatusQuickChange(project.id, 'in_progress', e)}>
+                    <Play className="w-4 h-4 mr-2 text-blue-600" />
+                    In Progress
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={(e) => handleStatusQuickChange(project.id, 'completed', e)}>
+                    <CheckCircle2 className="w-4 h-4 mr-2 text-green-600" />
+                    Completed
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={(e) => handleEditProject(project, e)}>
+                    <Edit className="w-4 h-4 mr-2 text-blue-600" />
+                    Edit Details
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={(e) => handleDeleteProject(project.id, project.title, e)}
+                    className="text-red-600 focus:text-red-600"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete Project
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
         </div>
 
-        {/* Assignment and Date */}
-        <div className="space-y-2 mb-3">
-          <div className="flex items-center min-w-0">
-            <User className="w-4 h-4 mr-2 flex-shrink-0" />
-            <span className="text-sm text-slate-600 truncate min-w-0 flex-1">
-              {project.assigneeName ? project.assigneeName.split(', ').slice(0, 2).join(', ') + (project.assigneeName.split(', ').length > 2 ? '...' : '') : 'Unassigned'}
+        {/* Compact description */}
+        {project.description && (
+          <p className="text-xs text-slate-600 mb-2 line-clamp-2 font-roboto">
+            {project.description}
+          </p>
+        )}
+
+        {/* Compact assignment and progress row */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <User className="w-3 h-3 text-slate-400 shrink-0" />
+            <span className="text-xs text-slate-600 truncate">
+              {project.assigneeName ? project.assigneeName.split(', ').slice(0, 1).join('') + (project.assigneeName.split(', ').length > 1 ? '...' : '') : 'Unassigned'}
             </span>
           </div>
-          <div className="flex items-center">
-            <Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
-            <span className="text-sm text-slate-600">{project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No due date'}</span>
+          <div className="flex items-center gap-1 shrink-0">
+            <span className="text-xs text-slate-600">{(project as any).progress || 0}%</span>
           </div>
         </div>
         
-        {/* Progress bar */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-600">Progress</span>
-            <span className="font-medium text-slate-900">{(project as any).progress || 0}%</span>
+        {/* Ultra-compact progress bar with TSP colors */}
+        <div className="mb-2">
+          <div className={`w-full h-1 rounded-full overflow-hidden ${
+            project.status === 'completed' ? 'bg-green-100' : 'bg-gray-100'
+          }`}>
+            <div 
+              className={`h-full transition-all duration-300 ${
+                project.status === 'completed' 
+                  ? 'bg-green-500' 
+                  : (project as any).progress > 50 
+                    ? 'bg-[#FBAD3F]' 
+                    : 'bg-[#236383]'
+              }`}
+              style={{ width: `${(project as any).progress || 0}%` }}
+            />
           </div>
-          <Progress value={(project as any).progress || 0} className="h-2 progress-bar" />
         </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between pt-3 mt-3 border-t border-slate-100 card-footer">
-          <div className="text-xs text-slate-500">
-            Due: {project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No date'}
+        {/* Compact footer */}
+        <div className="flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center gap-1">
+            <Calendar className="w-3 h-3" />
+            <span>{project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No date'}</span>
           </div>
           
-          {/* Add kudos and archive buttons for completed projects */}
           {project.status === 'completed' ? (
-            <div className="flex gap-2 items-center">
-              {/* Archive button for completed projects */}
+            <div className="flex gap-1 items-center">
               <Button
                 size="sm"
                 variant="outline"
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (confirm('Archive this completed project? It will be moved to the archived projects section.')) {
+                  if (confirm('Archive this completed project?')) {
                     archiveProjectMutation.mutate(project.id);
                   }
                 }}
                 disabled={archiveProjectMutation.isPending}
-                className="h-8 px-3 text-xs"
+                className="h-6 px-2 text-xs"
               >
                 {archiveProjectMutation.isPending ? (
-                  <div className="animate-spin rounded-full h-3 w-3 border-b border-purple-600"></div>
+                  <div className="animate-spin rounded-full h-2 w-2 border-b border-purple-600"></div>
                 ) : (
-                  <Archive className="w-3 h-3 mr-1" />
+                  <Archive className="w-3 h-3" />
                 )}
-                Archive
               </Button>
               
-              {/* Kudos buttons */}
-              <div className="flex gap-1">
-                {/* Handle multiple assignees from assigneeIds array */}
-                {project.assigneeIds && project.assigneeIds.length > 0 ? (
-                  project.assigneeIds.map((assigneeId, index) => {
-                    const assigneeName = project.assigneeNames?.[index] || `User ${assigneeId}`;
-                    return user?.id !== assigneeId ? (
-                      <SendKudosButton
-                        key={assigneeId}
-                        recipientId={assigneeId}
-                        recipientName={assigneeName}
-                        contextType="project"
-                        contextId={project.id.toString()}
-                        entityName={project.title}
-                        size="sm"
-                      />
-                    ) : null;
-                  })
-                ) : (
-                  /* Handle single assignee from legacy assigneeId field */
-                  project.assigneeId && project.assigneeName && user?.id !== project.assigneeId ? (
+              {/* Compact kudos buttons */}
+              {project.assigneeIds && project.assigneeIds.length > 0 ? (
+                project.assigneeIds.map((assigneeId, index) => {
+                  const assigneeName = project.assigneeNames?.[index] || `User ${assigneeId}`;
+                  return user?.id !== assigneeId ? (
                     <SendKudosButton
-                      recipientId={project.assigneeId}
-                      recipientName={project.assigneeName}
+                      key={assigneeId}
+                      recipientId={assigneeId}
+                      recipientName={assigneeName}
                       contextType="project"
                       contextId={project.id.toString()}
                       entityName={project.title}
                       size="sm"
                     />
-                  ) : null
-                )}
-              </div>
+                  ) : null;
+                })
+              ) : (
+                project.assigneeId && project.assigneeName && user?.id !== project.assigneeId ? (
+                  <SendKudosButton
+                    recipientId={project.assigneeId}
+                    recipientName={project.assigneeName}
+                    contextType="project"
+                    contextId={project.id.toString()}
+                    entityName={project.title}
+                    size="sm"
+                  />
+                ) : null
+              )}
             </div>
           ) : (
-            <ArrowRight className="w-4 h-4 text-slate-400" />
+            <ArrowRight className="w-3 h-3 text-slate-400" />
           )}
         </div>
       </CardContent>

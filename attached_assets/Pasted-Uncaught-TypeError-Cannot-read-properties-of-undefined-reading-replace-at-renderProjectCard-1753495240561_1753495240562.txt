@@ -1,0 +1,47 @@
+Uncaught TypeError: Cannot read properties of undefined (reading 'replace')
+    at renderProjectCard (projects-clean.tsx:548:67)
+    at Array.map (<anonymous>)
+    at ProjectsClean (projects-clean.tsx:959:23)
+    at renderWithHooks (chunk-276SZO74.js?v=88ca342b:11548:26)
+    at updateFunctionComponent (chunk-276SZO74.js?v=88ca342b:14582:28)
+    at beginWork (chunk-276SZO74.js?v=88ca342b:15924:22)
+    at HTMLUnknownElement.callCallback2 (chunk-276SZO74.js?v=88ca342b:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-276SZO74.js?v=88ca342b:3699:24)
+    at invokeGuardedCallback (chunk-276SZO74.js?v=88ca342b:3733:39)
+    at beginWork$1 (chunk-276SZO74.js?v=88ca342b:19765:15)
+hook.js:608 The above error occurred in the <ProjectsClean> component:
+
+    at ProjectsClean (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/pages/projects-clean.tsx:55:27)
+    at div
+    at div
+    at div
+    at div
+    at div
+    at HelpProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/help-system/HelpProvider.tsx:29:32)
+    at Dashboard (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/pages/dashboard.tsx:59:37)
+    at Route (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=88ca342b:206:16)
+    at Switch (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=88ca342b:262:17)
+    at Router (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/App.tsx?v=kCxZK8NRqiyAbqDwWYYbF:32:49)
+    at Provider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-3RXG37ZK.js?v=88ca342b:38:15)
+    at TooltipProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=88ca342b:65:5)
+    at QueryClientProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b:2933:3)
+    at ErrorBoundary (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/error-boundary.tsx:10:5)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+overrideMethod @ hook.js:608
+hook.js:608 Error caught by boundary: TypeError: Cannot read properties of undefined (reading 'replace')
+    at renderProjectCard (projects-clean.tsx:548:67)
+    at Array.map (<anonymous>)
+    at ProjectsClean (projects-clean.tsx:959:23)
+    at renderWithHooks (chunk-276SZO74.js?v=88ca342b:11548:26)
+    at updateFunctionComponent (chunk-276SZO74.js?v=88ca342b:14582:28)
+    at beginWork (chunk-276SZO74.js?v=88ca342b:15924:22)
+    at beginWork$1 (chunk-276SZO74.js?v=88ca342b:19753:22)
+    at performUnitOfWork (chunk-276SZO74.js?v=88ca342b:19198:20)
+    at workLoopSync (chunk-276SZO74.js?v=88ca342b:19137:13)
+    at renderRootSync (chunk-276SZO74.js?v=88ca342b:19116:15) Object Error Component Stack
+    at ErrorBoundary (error-boundary.tsx:19:5)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+message-notifications.tsx:136 WebSocket connection closed: 1000 Component unmounting
