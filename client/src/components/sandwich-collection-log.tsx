@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useCallback } from "react";
+import React, { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Sandwich, Calendar, User, Users, Edit, Trash2, Upload, AlertTriangle, Scan, Square, CheckSquare, Filter, X, ArrowUp, ArrowDown, Download, Plus, Database, ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
@@ -77,6 +77,15 @@ export default function SandwichCollectionLog() {
     createdAtTo: ""
   });
 
+  // Debounced search filters for actual queries
+  const [debouncedSearchFilters, setDebouncedSearchFilters] = useState({
+    hostName: "",
+    collectionDateFrom: "",
+    collectionDateTo: "",
+    createdAtFrom: "",
+    createdAtTo: ""
+  });
+
   const [sortConfig, setSortConfig] = useState({
     field: "collectionDate" as keyof SandwichCollection,
     direction: "desc" as "asc" | "desc"
@@ -118,20 +127,29 @@ export default function SandwichCollectionLog() {
     return individual + groupTotal;
   };
 
-  // Memoize expensive computations
+  // Debounce search filters to prevent excessive queries
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedSearchFilters(searchFilters);
+    }, 500); // Wait 500ms after user stops typing
+
+    return () => clearTimeout(timeoutId);
+  }, [searchFilters]);
+
+  // Memoize expensive computations using debounced filters
   const needsAllData = useMemo(() => 
-    showFilters || Object.values(searchFilters).some(v => v) || 
+    showFilters || Object.values(debouncedSearchFilters).some(v => v) || 
     sortConfig.field !== "collectionDate" || sortConfig.direction !== "desc",
-    [showFilters, searchFilters, sortConfig]
+    [showFilters, debouncedSearchFilters, sortConfig]
   );
 
   const queryKey = useMemo(() => [
     "/api/sandwich-collections", 
     needsAllData ? "all" : currentPage, 
     needsAllData ? "all" : itemsPerPage, 
-    searchFilters, 
+    debouncedSearchFilters, 
     sortConfig
-  ], [needsAllData, currentPage, itemsPerPage, searchFilters, sortConfig]);
+  ], [needsAllData, currentPage, itemsPerPage, debouncedSearchFilters, sortConfig]);
 
   const { data: collectionsResponse, isLoading } = useQuery({
     queryKey,
@@ -143,35 +161,35 @@ export default function SandwichCollectionLog() {
         
         let filteredCollections = data.collections || [];
         
-        // Apply filters
-        if (searchFilters.hostName) {
-          const searchTerm = searchFilters.hostName.toLowerCase();
+        // Apply filters using debounced values
+        if (debouncedSearchFilters.hostName) {
+          const searchTerm = debouncedSearchFilters.hostName.toLowerCase();
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
             c.hostName?.toLowerCase().includes(searchTerm)
           );
         }
         
-        if (searchFilters.collectionDateFrom) {
+        if (debouncedSearchFilters.collectionDateFrom) {
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
-            c.collectionDate >= searchFilters.collectionDateFrom
+            c.collectionDate >= debouncedSearchFilters.collectionDateFrom
           );
         }
         
-        if (searchFilters.collectionDateTo) {
+        if (debouncedSearchFilters.collectionDateTo) {
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
-            c.collectionDate <= searchFilters.collectionDateTo
+            c.collectionDate <= debouncedSearchFilters.collectionDateTo
           );
         }
         
-        if (searchFilters.createdAtFrom) {
+        if (debouncedSearchFilters.createdAtFrom) {
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
-            new Date(c.submittedAt) >= new Date(searchFilters.createdAtFrom)
+            new Date(c.submittedAt) >= new Date(debouncedSearchFilters.createdAtFrom)
           );
         }
         
-        if (searchFilters.createdAtTo) {
+        if (debouncedSearchFilters.createdAtTo) {
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
-            new Date(c.submittedAt) <= new Date(searchFilters.createdAtTo)
+            new Date(c.submittedAt) <= new Date(debouncedSearchFilters.createdAtTo)
           );
         }
         
@@ -206,7 +224,7 @@ export default function SandwichCollectionLog() {
         if (!response.ok) throw new Error('Failed to fetch collections');
         return response.json();
       }
-    }, [needsAllData, currentPage, itemsPerPage, searchFilters, sortConfig])
+    }, [needsAllData, currentPage, itemsPerPage, debouncedSearchFilters, sortConfig])
   });
 
   const collections = collectionsResponse?.collections || [];
@@ -1083,13 +1101,15 @@ export default function SandwichCollectionLog() {
   };
 
   const handleClearFilters = () => {
-    setSearchFilters({
+    const emptyFilters = {
       hostName: "",
       collectionDateFrom: "",
       collectionDateTo: "",
       createdAtFrom: "",
       createdAtTo: ""
-    });
+    };
+    setSearchFilters(emptyFilters);
+    setDebouncedSearchFilters(emptyFilters);
     setSortConfig({ field: 'collectionDate', direction: 'desc' });
     setCurrentPage(1);
     setShowFilters(false);

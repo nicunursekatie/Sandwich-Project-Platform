@@ -1,0 +1,54 @@
+ELETE https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/sandwich-collections/1849 401 (Unauthorized)
+apiRequest @ queryClient.ts:17
+mutationFn @ sandwich-collection-log.tsx:516
+fn @ @tanstack_react-query.js?v=88ca342b:1236
+run @ @tanstack_react-query.js?v=88ca342b:513
+start @ @tanstack_react-query.js?v=88ca342b:555
+execute @ @tanstack_react-query.js?v=88ca342b:1272
+await in execute
+mutate @ @tanstack_react-query.js?v=88ca342b:2691
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3414
+handleDelete @ sandwich-collection-log.tsx:988
+onClick @ sandwich-collection-log.tsx:1527
+callCallback2 @ chunk-276SZO74.js?v=88ca342b:3674
+invokeGuardedCallbackDev @ chunk-276SZO74.js?v=88ca342b:3699
+invokeGuardedCallback @ chunk-276SZO74.js?v=88ca342b:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-276SZO74.js?v=88ca342b:3736
+executeDispatch @ chunk-276SZO74.js?v=88ca342b:7014
+processDispatchQueueItemsInOrder @ chunk-276SZO74.js?v=88ca342b:7034
+processDispatchQueue @ chunk-276SZO74.js?v=88ca342b:7043
+dispatchEventsForPlugins @ chunk-276SZO74.js?v=88ca342b:7051
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:7174
+batchedUpdates$1 @ chunk-276SZO74.js?v=88ca342b:18913
+batchedUpdates @ chunk-276SZO74.js?v=88ca342b:3579
+dispatchEventForPluginEventSystem @ chunk-276SZO74.js?v=88ca342b:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-276SZO74.js?v=88ca342b:5478
+dispatchEvent @ chunk-276SZO74.js?v=88ca342b:5472
+dispatchDiscreteEvent @ chunk-276SZO74.js?v=88ca342b:5449
+sandwich-collection-log.tsx:528 Delete collection error: Error: 401: {"message":"Unauthorized"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:24:3)
+    at async Object.mutationFn (sandwich-collection-log.tsx:516:22)
+overrideMethod @ hook.js:608
+onError @ sandwich-collection-log.tsx:528
+execute @ @tanstack_react-query.js?v=88ca342b:1301
+await in execute
+mutate @ @tanstack_react-query.js?v=88ca342b:2691
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3414
+handleDelete @ sandwich-collection-log.tsx:988
+onClick @ sandwich-collection-log.tsx:1527
+callCallback2 @ chunk-276SZO74.js?v=88ca342b:3674
+invokeGuardedCallbackDev @ chunk-276SZO74.js?v=88ca342b:3699
+invokeGuardedCallback @ chunk-276SZO74.js?v=88ca342b:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-276SZO74.js?v=88ca342b:3736
+executeDispatch @ chunk-276SZO74.js?v=88ca342b:7014
+processDispatchQueueItemsInOrder @ chunk-276SZO74.js?v=88ca342b:7034
+processDispatchQueue @ chunk-276SZO74.js?v=88ca342b:7043
+dispatchEventsForPlugins @ chunk-276SZO74.js?v=88ca342b:7051
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:7174
+batchedUpdates$1 @ chunk-276SZO74.js?v=88ca342b:18913
+batchedUpdates @ chunk-276SZO74.js?v=88ca342b:3579
+dispatchEventForPluginEventSystem @ chunk-276SZO74.js?v=88ca342b:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-276SZO74.js?v=88ca342b:5478
+dispatchEvent @ chunk-276SZO74.js?v=88ca342b:5472
+dispatchDiscreteEvent @ chunk-276SZO74.js?v=88ca342b:5449
