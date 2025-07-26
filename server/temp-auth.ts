@@ -476,7 +476,7 @@ export function setupTempAuth(app: Express) {
             console.log("Adding VIEW_PROJECTS permission to Katie");
           }
           // Force update Katie regardless to ensure she gets projects access
-          console.log(`Forcing Katie's permission update. Current: [${user.permissions.join(', ')}]`);
+          console.log(`Forcing Katie's permission update. Current: [${Array.isArray(user.permissions) ? user.permissions.join(', ') : 'none'}]`);
           console.log(`New: [${correctPermissions.join(', ')}]`);
         }
 
@@ -523,7 +523,7 @@ export function setupTempAuth(app: Express) {
       }
 
       // Check password (stored in metadata for now)
-      const storedPassword = user.metadata?.password;
+      const storedPassword = (user.metadata as any)?.password;
       if (storedPassword !== password) {
         return res.status(401).json({ 
           success: false, 
@@ -687,12 +687,12 @@ export function setupTempAuth(app: Express) {
       }
 
       res.json({
-        id: updatedUser.id,
-        email: updatedUser.email,
-        firstName: updatedUser.firstName,
-        lastName: updatedUser.lastName,
-        displayName: updatedUser.displayName,
-        profileImageUrl: updatedUser.profileImageUrl
+        id: updatedUser?.id,
+        email: updatedUser?.email,
+        firstName: updatedUser?.firstName,
+        lastName: updatedUser?.lastName,
+        displayName: updatedUser?.displayName,
+        profileImageUrl: updatedUser?.profileImageUrl
       });
     } catch (error) {
       console.error("Profile update error:", error);
@@ -711,14 +711,14 @@ export function setupTempAuth(app: Express) {
       }
 
       // Check current password
-      const storedPassword = userData.metadata?.password;
+      const storedPassword = (userData.metadata as any)?.password;
       if (!storedPassword || storedPassword !== currentPassword) {
         return res.status(400).json({ message: "Current password is incorrect" });
       }
 
       // Update password
       await storage.updateUser(userData.id, {
-        metadata: { ...userData.metadata, password: newPassword },
+        metadata: { ...(userData.metadata as any), password: newPassword },
         updatedAt: new Date()
       });
 
