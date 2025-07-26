@@ -534,20 +534,19 @@ export default function ProjectsClean() {
             <h3 className="text-sm font-semibold text-slate-900 line-clamp-1 leading-tight font-roboto">
               {project.title}
             </h3>
-            <div className="flex items-center gap-3 mt-1 text-xs text-slate-600 font-roboto">
-              {/* Clean text-based status indicators */}
-              <span className={`font-medium ${
-                project.priority === 'high' ? 'text-red-600' :
-                project.priority === 'medium' ? 'text-[#FBAD3F]' :
-                'text-slate-500'
+            <div className="flex items-center gap-2 mt-1">
+              {/* Professional refined badges */}
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium font-roboto border ${
+                project.priority === 'high' ? 'bg-red-50 text-red-700 border-red-200' :
+                project.priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                'bg-gray-50 text-gray-700 border-gray-200'
               }`}>
-                {project.priority} priority
+                {project.priority}
               </span>
-              <span className="text-slate-400">•</span>
-              <span className={`font-medium capitalize ${
-                project.status === 'completed' ? 'text-green-600' :
-                project.status === 'in_progress' ? 'text-[#236383]' :
-                'text-slate-500'
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium font-roboto border capitalize ${
+                project.status === 'completed' ? 'bg-green-50 text-green-700 border-green-200' :
+                project.status === 'in_progress' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                'bg-gray-50 text-gray-700 border-gray-200'
               }`}>
                 {project.status ? project.status.replace('_', ' ') : 'archived'}
               </span>
