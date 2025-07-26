@@ -1,0 +1,191 @@
+2025-07-26T05:24:31Z info: Deployment: 8906c9b8-172c-4199-9be8-1f925127d59a
+2025-07-26T05:24:31Z info: Build: 8e9efe51-07cf-4630-a98d-d504fc23dd33
+2025-07-26T05:24:31Z info: Connecting to builder
+2025-07-26T05:24:33Z info: Builder connected
+2025-07-26T05:24:34Z info: Installing packages
+2025-07-26T05:24:35Z info: Starting Build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --external:./vite.js --external:vite --packages=external --bundle --format=esm --outdir=dist
+
+
+vite v5.4.19 building for production...
+
+transforming...
+
+✓ 4261 modules transformed.
+
+rendering chunks...
+
+computing gzip size...
+
+../dist/public/index.html                                  0.67 kB │ gzip:   0.41 kB
+
+../dist/public/assets/stream-chat-icons-DWRBO47D.svg       4.95 kB │ gzip:   1.75 kB
+
+../dist/public/assets/stream-chat-icons-BLRMizsT.woff      4.99 kB
+
+../dist/public/assets/stream-chat-icons-C_tSEO3S.ttf       8.60 kB
+
+../dist/public/assets/stream-chat-icons-CVCe0Jge.eot       8.81 kB
+../dist/public/assets/sandwich logo-DvhvnHfZ.png          92.89 kB
+
+../dist/public/assets/index-2Xw6Y5-s.css                 482.72 kB │ gzip:  60.70 kB
+
+../dist/public/assets/index-ClDjYKEJ.js                2,982.41 kB │ gzip: 834.43 kB
+
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+✓ built in 18.81s
+
+▲ [WARNING] Duplicate member "getProjectAssignments" in class body [duplicate-class-member]
+
+    server/database-storage.ts:1245:8:
+      1245 │   async getProjectAssignments(projectId: number): Promise<any[]> {
+           ╵         ~~~~~~~~~~~~~~~~~~~~~
+
+  The original member "getProjectAssignments" is here:
+
+    server/database-storage.ts:998:8:
+      998 │   async getProjectAssignments(projectId: number): Promise<Project...
+          ╵         ~~~~~~~~~~~~~~~~~~~~~
+
+▲ [WARNING] Duplicate member "createConversation" in class body [duplicate-class-member]
+
+    server/database-storage.ts:1517:8:
+      1517 │   async createConversation(conversationData: {
+           ╵         ~~~~~~~~~~~~~~~~~~
+
+  The original member "createConversation" is here:
+
+    server/database-storage.ts:663:8:
+      663 │   async createConversation(conversationData: any): Promise<any> {
+          ╵         ~~~~~~~~~~~~~~~~~~
+
+
+2 warnings
+
+
+  dist/index.js  712.4kb
+
+⚡ Done in 97ms
+
+npm notice
+npm notice New minor version of npm available! 11.4.2 -> 11.5.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.1
+npm notice To update run: npm install -g npm@11.5.1
+npm notice
+
+2025-07-26T05:25:12Z info: Pushing pid1 binary layer...
+2025-07-26T05:25:14Z info: Created pid1 binary layer
+2025-07-26T05:25:18Z info: Pushing hosting layer...
+2025-07-26T05:25:18Z info: Pushing Repl layer...
+2025-07-26T05:25:18Z info: Retrieved cached nix layer
+2025-07-26T05:25:18Z info: Created hosting layer
+2025-07-26T05:26:11Z info: Created Repl layer
+2025-07-26T05:26:11Z info: Pushed image manifest
+2025-07-26T05:26:12Z info: Pushed soci index manifest
+2025-07-26T05:26:17Z info: Creating virtual machine
+2025-07-26T05:26:33Z info: Virtual machine created
+2025-07-26T05:26:34Z info: Waiting for deployment to be ready
+2025-07-26T05:24:31Z info: Deployment: 8906c9b8-172c-4199-9be8-1f925127d59a
+2025-07-26T05:24:31Z info: Build: 8e9efe51-07cf-4630-a98d-d504fc23dd33
+2025-07-26T05:24:31Z info: Connecting to builder
+2025-07-26T05:24:33Z info: Builder connected
+2025-07-26T05:24:34Z info: Installing packages
+2025-07-26T05:24:35Z info: Starting Build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --external:./vite.js --external:vite --packages=external --bundle --format=esm --outdir=dist
+
+
+vite v5.4.19 building for production...
+
+transforming...
+
+✓ 4261 modules transformed.
+
+rendering chunks...
+
+computing gzip size...
+
+../dist/public/index.html                                  0.67 kB │ gzip:   0.41 kB
+
+../dist/public/assets/stream-chat-icons-DWRBO47D.svg       4.95 kB │ gzip:   1.75 kB
+
+../dist/public/assets/stream-chat-icons-BLRMizsT.woff      4.99 kB
+
+../dist/public/assets/stream-chat-icons-C_tSEO3S.ttf       8.60 kB
+
+../dist/public/assets/stream-chat-icons-CVCe0Jge.eot       8.81 kB
+../dist/public/assets/sandwich logo-DvhvnHfZ.png          92.89 kB
+
+../dist/public/assets/index-2Xw6Y5-s.css                 482.72 kB │ gzip:  60.70 kB
+
+../dist/public/assets/index-ClDjYKEJ.js                2,982.41 kB │ gzip: 834.43 kB
+
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+✓ built in 18.81s
+
+▲ [WARNING] Duplicate member "getProjectAssignments" in class body [duplicate-class-member]
+
+    server/database-storage.ts:1245:8:
+      1245 │   async getProjectAssignments(projectId: number): Promise<any[]> {
+           ╵         ~~~~~~~~~~~~~~~~~~~~~
+
+  The original member "getProjectAssignments" is here:
+
+    server/database-storage.ts:998:8:
+      998 │   async getProjectAssignments(projectId: number): Promise<Project...
+          ╵         ~~~~~~~~~~~~~~~~~~~~~
+
+▲ [WARNING] Duplicate member "createConversation" in class body [duplicate-class-member]
+
+    server/database-storage.ts:1517:8:
+      1517 │   async createConversation(conversationData: {
+           ╵         ~~~~~~~~~~~~~~~~~~
+
+  The original member "createConversation" is here:
+
+    server/database-storage.ts:663:8:
+      663 │   async createConversation(conversationData: any): Promise<any> {
+          ╵         ~~~~~~~~~~~~~~~~~~
+
+
+2 warnings
+
+
+  dist/index.js  712.4kb
+
+⚡ Done in 97ms
+
+npm notice
+npm notice New minor version of npm available! 11.4.2 -> 11.5.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.1
+npm notice To update run: npm install -g npm@11.5.1
+npm notice
+
+2025-07-26T05:25:12Z info: Pushing pid1 binary layer...
+2025-07-26T05:25:14Z info: Created pid1 binary layer
+2025-07-26T05:25:18Z info: Pushing hosting layer...
+2025-07-26T05:25:18Z info: Pushing Repl layer...
+2025-07-26T05:25:18Z info: Retrieved cached nix layer
+2025-07-26T05:25:18Z info: Created hosting layer
+2025-07-26T05:26:11Z info: Created Repl layer
+2025-07-26T05:26:11Z info: Pushed image manifest
+2025-07-26T05:26:12Z info: Pushed soci index manifest
+2025-07-26T05:26:17Z info: Creating virtual machine
+2025-07-26T05:26:33Z info: Virtual machine created
+2025-07-26T05:26:34Z info: Waiting for deployment to be ready
+starting up user application
+forwarding local port 80 to external port 80 (mapped as 1104)
+2025-07-26T05:27:05Z info: Deployment successful

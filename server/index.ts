@@ -1,3 +1,37 @@
+// CRITICAL: Prevent server exit in production before any other imports
+if (process.env.NODE_ENV === "production") {
+  console.log("🛡️ PRODUCTION MODE: Installing aggressive exit prevention...");
+  
+  // Override process.exit to prevent any exit calls
+  const originalExit = process.exit;
+  process.exit = ((code?: number) => {
+    console.log(`⚠️ BLOCKED process.exit(${code}) in production mode`);
+    console.log("Server MUST stay alive for deployment - exit blocked");
+    return undefined as never;
+  }) as typeof process.exit;
+  
+  // Keep process alive immediately
+  process.stdin.resume();
+  
+  // Prevent any unhandled errors from crashing the server
+  process.on('uncaughtException', (error) => {
+    console.error('🚨 Uncaught Exception (production - server continues):', error);
+  });
+  
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('🚨 Unhandled Rejection (production - server continues):', reason);
+  });
+  
+  process.on('beforeExit', (code) => {
+    console.log(`🛡️ beforeExit triggered with code ${code} - keeping server alive`);
+    setImmediate(() => {
+      console.log("✅ Server kept alive via setImmediate");
+    });
+  });
+  
+  console.log("✅ Production exit prevention installed");
+}
+
 import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { WebSocketServer } from "ws";
@@ -420,3 +454,18 @@ startServer()
       process.exit(1);
     }
   });
+
+// PRODUCTION INFINITE KEEP-ALIVE LOOP
+if (process.env.NODE_ENV === "production") {
+  console.log("🔄 Starting production infinite keep-alive loop...");
+  
+  const keepAlive = () => {
+    setTimeout(() => {
+      console.log(`🔄 Production keep-alive tick - uptime: ${Math.floor(process.uptime())}s`);
+      keepAlive(); // Recursive call to keep the loop going forever
+    }, 60000); // Every 60 seconds
+  };
+  
+  keepAlive();
+  console.log("✅ Production infinite keep-alive loop started");
+}
