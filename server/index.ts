@@ -267,9 +267,34 @@ async function startServer() {
           console.log(
             "✓ The Sandwich Project server is fully ready to handle requests",
           );
+
+          // In production, add aggressive keep-alive measures
+          if (process.env.NODE_ENV === "production") {
+            console.log("🚀 PRODUCTION SERVER INITIALIZATION COMPLETE 🚀");
+            
+            // Keep process alive with multiple strategies
+            process.stdin.resume();
+            process.on('beforeExit', (code) => {
+              console.log(`⚠ Process attempting to exit with code ${code} - preventing in production`);
+              setTimeout(() => {
+                console.log("✓ Production keep-alive timeout triggered");
+              }, 1000);
+            });
+            
+            // Production heartbeat
+            setInterval(() => {
+              console.log(`✓ PRODUCTION HEARTBEAT - Server active, uptime: ${Math.floor(process.uptime())}s`);
+            }, 60000);
+          }
         } catch (initError) {
           console.error("✗ Background initialization failed:", initError);
           console.log("Server continues to run with basic functionality...");
+          
+          // Even if initialization fails, keep the server alive in production
+          if (process.env.NODE_ENV === "production") {
+            process.stdin.resume();
+            console.log("✓ Server kept alive despite initialization error");
+          }
         }
       });
     });
