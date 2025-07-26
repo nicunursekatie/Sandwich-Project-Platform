@@ -12,8 +12,13 @@ export default function AnalyticsDashboard() {
   const [activeTab, setActiveTab] = useState('highlights');
 
   const { data: collections, isLoading: collectionsLoading } = useQuery<SandwichCollection[]>({
-    queryKey: ['/api/sandwich-collections'],
-    select: (data: any) => data?.collections || []
+    queryKey: ['/api/sandwich-collections/all'],
+    queryFn: async () => {
+      const response = await fetch('/api/sandwich-collections?limit=2000');
+      if (!response.ok) throw new Error('Failed to fetch collections');
+      const data = await response.json();
+      return data.collections || [];
+    }
   });
 
   // Get accurate database totals from stats API
@@ -29,11 +34,39 @@ export default function AnalyticsDashboard() {
     // Use ACCURATE database totals from stats API instead of frontend calculation
     const totalSandwiches = statsData.completeTotalSandwiches || 0;
 
-    // PHASE 6: Standardized group calculation using new column structure only
+    // PHASE 6: Comprehensive group calculation using ALL data sources
     const calculateGroupTotal = (collection: SandwichCollection): number => {
+      // Try new columns first
       const groupCount1 = (collection as any).group1Count || 0;
       const groupCount2 = (collection as any).group2Count || 0;
-      return groupCount1 + groupCount2;
+      const newColumnTotal = groupCount1 + groupCount2;
+      
+      if (newColumnTotal > 0) {
+        return newColumnTotal;
+      }
+      
+      // Try legacy groupSandwiches field (like for "Groups - Main" entries)
+      const legacyGroupTotal = (collection as any).groupSandwiches || 0;
+      if (legacyGroupTotal > 0) {
+        return legacyGroupTotal;
+      }
+      
+      // Fallback to JSON parsing for older records
+      try {
+        const groupCollections = collection.groupCollections;
+        if (typeof groupCollections === 'string') {
+          const parsed = JSON.parse(groupCollections);
+          if (Array.isArray(parsed)) {
+            return parsed.reduce((sum, group) => sum + (group.sandwichCount || group.count || 0), 0);
+          }
+        } else if (Array.isArray(groupCollections)) {
+          return groupCollections.reduce((sum, group) => sum + (group.sandwichCount || group.count || 0), 0);
+        }
+      } catch (error) {
+        // Ignore JSON parsing errors
+      }
+      
+      return 0;
     };
 
     const hostStats = collections.reduce((acc, c) => {
