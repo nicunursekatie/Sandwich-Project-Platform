@@ -1354,26 +1354,7 @@ export class MemStorage implements IStorage {
     return this.suggestionResponses.delete(id);
   }
 
-  // Project assignments (stub implementations for memory storage)
-  async getProjectAssignments(projectId: number) {
-    // TODO: Implement in memory storage
-    return [];
-  }
 
-  async addProjectAssignment(assignment: { projectId: number; userId: string; role: string }) {
-    // TODO: Implement in memory storage
-    return null;
-  }
-
-  async removeProjectAssignment(projectId: number, userId: string) {
-    // TODO: Implement in memory storage
-    return false;
-  }
-
-  async updateProjectAssignment(projectId: number, userId: string, updates: { role: string }) {
-    // TODO: Implement in memory storage
-    return null;
-  }
 
   // Conversation methods (stub implementations for memory storage)
   async createConversation(conversationData: any, participants: string[]) {
