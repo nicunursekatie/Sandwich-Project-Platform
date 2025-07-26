@@ -107,7 +107,7 @@ export default function ProjectsClean() {
       
       // Filter by ownership (My Projects)
       const ownershipMatch = !showMyProjects || 
-        (project.assigneeIds && Array.isArray(project.assigneeIds) && user?.id && project.assigneeIds.includes(user.id)) ||
+        (project.assigneeIds && Array.isArray(project.assigneeIds) && user?.id && (project.assigneeIds as string[]).includes(user.id)) ||
         project.assigneeId === user?.id ||
         project.createdBy === user?.id;
       
@@ -173,7 +173,7 @@ export default function ProjectsClean() {
       if (variables.status === 'completed') {
         const project = projects?.find(p => p.id === variables.id);
         if (project) {
-          await sendKudosForProjectCompletion(project, project.title);
+          await sendKudosForProjectCompletion(project);
           triggerCelebration();
         }
       }
@@ -323,15 +323,7 @@ export default function ProjectsClean() {
     }
   };
 
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'technology': return '💻';
-      case 'events': return '📅';
-      case 'grants': return '💰';
-      case 'outreach': return '🤝';
-      default: return '📁';
-    }
-  };
+
 
   const handleProjectClick = (projectId: number) => {
     console.log('Navigating to project:', projectId);
@@ -463,7 +455,7 @@ export default function ProjectsClean() {
       triggerCelebration();
       
       // Send kudos to all assignees
-      await sendKudosForProjectCompletion(project, projectTitle);
+      await sendKudosForProjectCompletion(project);
     }
   };
 
@@ -479,7 +471,7 @@ export default function ProjectsClean() {
       
       // If project is being completed, send kudos to all assignees
       if (newStatus === 'completed') {
-        await sendKudosForProjectCompletion(project, project.title);
+        await sendKudosForProjectCompletion(project);
         triggerCelebration();
       }
     }
@@ -781,7 +773,7 @@ export default function ProjectsClean() {
             <p className="text-gray-600 font-roboto">Organize and track all team projects</p>
           </div>
         </div>
-        {hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS) && (
+        {hasPermission(user, PERMISSIONS.CREATE_PROJECTS) && (
           <Button 
             onClick={() => setShowCreateDialog(true)}
             className="bg-[#FBAD3F] hover:bg-[#f09f2b] text-white font-roboto"

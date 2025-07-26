@@ -257,7 +257,7 @@ const projectDataUpload = multer({
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Only Excel, CSV, and PDF files are allowed for project data uploads'), false);
+      cb(new Error('Only Excel, CSV, and PDF files are allowed for project data uploads'));
     }
   }
 });
@@ -738,7 +738,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                           req.user?.role === 'admin' || req.user?.role === 'super_admin';
         
         const canEditOwn = req.user?.permissions?.includes('edit_own_projects') && 
-                          (existingProject.created_by === req.user.id);
+                          (existingProject.createdBy === req.user.id);
 
         if (!canEditAll && !canEditOwn) {
           return res.status(403).json({ 
@@ -785,7 +785,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                             req.user?.role === 'admin' || req.user?.role === 'super_admin';
         
         const canDeleteOwn = req.user?.permissions?.includes('delete_own_projects') && 
-                            (existingProject.created_by === req.user.id);
+                            (existingProject.createdBy === req.user.id);
 
         if (!canDeleteAll && !canDeleteOwn) {
           return res.status(403).json({ 
