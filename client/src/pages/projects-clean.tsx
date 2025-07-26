@@ -53,6 +53,7 @@ export default function ProjectsClean() {
   const [activeTab, setActiveTab] = useState("active");
   
   // Filter and sort state
+  const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState("title"); // 'title', 'priority', 'dueDate', 'status'
   const [sortOrder, setSortOrder] = useState("asc"); // 'asc', 'desc'
   const [filterCategory, setFilterCategory] = useState("all"); // 'all', 'technology', 'events', 'grants', 'outreach'
@@ -84,18 +85,21 @@ export default function ProjectsClean() {
     queryKey: ["/api/projects/archived"],
   });
 
-  // Filter and sort projects
-  const filteredAndSortedProjects = allProjects
-    .filter(project => {
+  // Filter and sort projects based on the selected tab
+  const getFilteredProjects = () => {
+    if (activeTab === "archived") {
+      return (archivedProjects as Project[]) || [];
+    }
+    
+    return allProjects.filter(project => {
       // Filter by tab (status)
       let statusMatch = false;
-      if (activeTab === "active") {
-        statusMatch = project.status === "available" || project.status === "in_progress";
+      if (activeTab === "available") {
+        statusMatch = project.status === "available";
+      } else if (activeTab === "active") {
+        statusMatch = project.status === "in_progress";
       } else if (activeTab === "completed") {
         statusMatch = project.status === "completed";
-      } else if (activeTab === "archived") {
-        // Archived projects are handled separately, don't show in regular filter
-        return false;
       }
       
       // Filter by category
@@ -103,12 +107,15 @@ export default function ProjectsClean() {
       
       // Filter by ownership (My Projects)
       const ownershipMatch = !showMyProjects || 
-        (project.assigneeIds && project.assigneeIds.includes(user?.id)) ||
+        (project.assigneeIds && Array.isArray(project.assigneeIds) && user?.id && project.assigneeIds.includes(user.id)) ||
         project.assigneeId === user?.id ||
         project.createdBy === user?.id;
       
       return statusMatch && categoryMatch && ownershipMatch;
-    })
+    });
+  };
+
+  const filteredAndSortedProjects = getFilteredProjects()
     .sort((a, b) => {
       let aValue: any, bValue: any;
       
@@ -716,252 +723,241 @@ export default function ProjectsClean() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center">
-            <img src={sandwichLogo} alt="Sandwich Logo" className="w-6 h-6 mr-2" />
-            Project Management
-          </h2>
-          <p className="text-slate-600 mt-1 text-sm sm:text-base">Organize and track all team projects</p>
+    <div className="p-4 sm:p-6 bg-white min-h-screen">
+      {/* Header with TSP Styling */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <img 
+            src={sandwichLogo} 
+            alt="The Sandwich Project Logo" 
+            className="w-10 h-10"
+          />
+          <div>
+            <h1 className="text-2xl font-bold text-[#236383] font-roboto">Project Management</h1>
+            <p className="text-gray-600 font-roboto">Organize and track all team projects</p>
+          </div>
         </div>
-        <Button 
-          onClick={() => setShowCreateDialog(true)} 
-          disabled={!hasPermission(user, PERMISSIONS.CREATE_PROJECTS)}
-          className="w-full sm:w-auto"
+        {hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS) && (
+          <Button 
+            onClick={() => setShowCreateDialog(true)}
+            className="bg-[#FBAD3F] hover:bg-[#f09f2b] text-white font-roboto"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            New Project
+          </Button>
+        )}
+      </div>
+
+      {/* Clean Status Tabs */}
+      <div className="flex flex-wrap items-center gap-2 mb-6">
+        <Button
+          variant={activeTab === "available" ? "default" : "outline"}
+          onClick={() => setActiveTab("available")}
+          className={`font-roboto ${activeTab === "available" 
+            ? "bg-[#236383] hover:bg-[#1e5470] text-white" 
+            : "text-[#236383] border-[#236383] hover:bg-[#236383]/10"}`}
         >
-          <Plus className="w-4 h-4 mr-2" />
-          New Project
+          <Circle className="w-4 h-4 mr-2" />
+          Available ({allProjects.filter(p => p.status === "available").length})
         </Button>
-      </div>
-
-      {/* Filter and Sort Controls */}
-      <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-4">
-        <div className="flex flex-wrap gap-4">
-          {/* Category Filter */}
-          <div className="flex-1 min-w-48">
-            <Label htmlFor="category-filter" className="text-sm font-medium">Category</Label>
-            <Select value={filterCategory} onValueChange={setFilterCategory}>
-              <SelectTrigger id="category-filter" className="mt-1">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="technology">Technology</SelectItem>
-                <SelectItem value="events">Events</SelectItem>
-                <SelectItem value="grants">Grants</SelectItem>
-                <SelectItem value="outreach">Outreach/Networking</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Sort Options */}
-          <div className="flex-1 min-w-48">
-            <Label htmlFor="sort-by" className="text-sm font-medium">Sort By</Label>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger id="sort-by" className="mt-1">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="title">Alphabetical</SelectItem>
-                <SelectItem value="priority">Priority</SelectItem>
-                <SelectItem value="dueDate">Due Date</SelectItem>
-                <SelectItem value="status">Status</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Sort Direction */}
-          <div className="flex-1 min-w-32">
-            <Label htmlFor="sort-order" className="text-sm font-medium">Order</Label>
-            <Select value={sortOrder} onValueChange={setSortOrder}>
-              <SelectTrigger id="sort-order" className="mt-1">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="asc">A-Z / Low-High</SelectItem>
-                <SelectItem value="desc">Z-A / High-Low</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Quick Filter Buttons */}
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant={showMyProjects ? "default" : "outline"}
-            size="sm"
-            onClick={() => setShowMyProjects(!showMyProjects)}
-            className="flex items-center gap-2"
-          >
-            <User className="w-4 h-4" />
-            My Projects Only
-          </Button>
-          
-          {/* Quick category filters */}
-          <Button
-            variant={filterCategory === "technology" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setFilterCategory(filterCategory === "technology" ? "all" : "technology")}
-          >
-            💻 Tech
-          </Button>
-          <Button
-            variant={filterCategory === "events" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setFilterCategory(filterCategory === "events" ? "all" : "events")}
-          >
-            📅 Events
-          </Button>
-          <Button
-            variant={filterCategory === "grants" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setFilterCategory(filterCategory === "grants" ? "all" : "grants")}
-          >
-            💰 Grants
-          </Button>
-          <Button
-            variant={filterCategory === "outreach" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setFilterCategory(filterCategory === "outreach" ? "all" : "outreach")}
-          >
-            🤝 Outreach
-          </Button>
-        </div>
-
-        {/* Results Summary */}
-        <div className="text-sm text-gray-600">
-          Showing {projects.length} of {allProjects.length} projects
-          {showMyProjects && " (your projects only)"}
-          {filterCategory !== "all" && ` in ${filterCategory}`}
-        </div>
-      </div>
-
-      {/* Big Category Buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
         <Button
           variant={activeTab === "active" ? "default" : "outline"}
           onClick={() => setActiveTab("active")}
-          className="h-24 flex flex-col items-center justify-center gap-2 text-base font-medium bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-blue-200"
+          className={`font-roboto ${activeTab === "active" 
+            ? "bg-[#236383] hover:bg-[#1e5470] text-white" 
+            : "text-[#236383] border-[#236383] hover:bg-[#236383]/10"}`}
         >
-          <Play className="w-8 h-8 text-blue-600" />
-          <div className="text-center">
-            <div className="font-semibold text-blue-900">Active Projects</div>
-            <div className="text-sm text-blue-700">{activeProjects.length} projects in progress</div>
-          </div>
+          <Play className="w-4 h-4 mr-2" />
+          Active ({allProjects.filter(p => p.status === "in_progress").length})
         </Button>
         
         <Button
           variant={activeTab === "completed" ? "default" : "outline"}
           onClick={() => setActiveTab("completed")}
-          className="h-24 flex flex-col items-center justify-center gap-2 text-base font-medium bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 border-green-200"
+          className={`font-roboto ${activeTab === "completed" 
+            ? "bg-[#236383] hover:bg-[#1e5470] text-white" 
+            : "text-[#236383] border-[#236383] hover:bg-[#236383]/10"}`}
         >
-          <CheckCircle2 className="w-8 h-8 text-green-600" />
-          <div className="text-center">
-            <div className="font-semibold text-green-900">Completed</div>
-            <div className="text-sm text-green-700">{completedProjects.length} ready to archive</div>
-          </div>
+          <CheckCircle2 className="w-4 h-4 mr-2" />
+          Completed ({allProjects.filter(p => p.status === "completed").length})
         </Button>
         
         <Button
           variant={activeTab === "archived" ? "default" : "outline"}
           onClick={() => setActiveTab("archived")}
-          className="h-24 flex flex-col items-center justify-center gap-2 text-base font-medium bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-purple-200"
+          className={`font-roboto ${activeTab === "archived" 
+            ? "bg-[#236383] hover:bg-[#1e5470] text-white" 
+            : "text-[#236383] border-[#236383] hover:bg-[#236383]/10"}`}
         >
-          <Award className="w-8 h-8 text-purple-600" />
-          <div className="text-center">
-            <div className="font-semibold text-purple-900">Completed & Archived</div>
-            <div className="text-sm text-purple-700">View completed projects</div>
-          </div>
+          <Archive className="w-4 h-4 mr-2" />
+          Archived ({(archivedProjects as any[])?.length || 0})
         </Button>
       </div>
-      
-      {/* Project Content */}
+
+      {/* Filter Controls */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Category Filter Buttons */}
+          <Button
+            variant={showMyProjects ? "default" : "outline"}
+            size="sm"
+            onClick={() => setShowMyProjects(!showMyProjects)}
+            className={`font-roboto ${showMyProjects 
+              ? "bg-[#FBAD3F] hover:bg-[#f09f2b] text-white" 
+              : "text-[#FBAD3F] border-[#FBAD3F] hover:bg-[#FBAD3F]/10"}`}
+          >
+            <User className="w-4 h-4 mr-1" />
+            My Projects
+          </Button>
+          
+          <Button
+            variant={filterCategory === "technology" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterCategory(filterCategory === "technology" ? "all" : "technology")}
+            className={`font-roboto ${filterCategory === "technology" 
+              ? "bg-[#FBAD3F] hover:bg-[#f09f2b] text-white" 
+              : "text-[#FBAD3F] border-[#FBAD3F] hover:bg-[#FBAD3F]/10"}`}
+          >
+            💻 Tech
+          </Button>
+          
+          <Button
+            variant={filterCategory === "events" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterCategory(filterCategory === "events" ? "all" : "events")}
+            className={`font-roboto ${filterCategory === "events" 
+              ? "bg-[#FBAD3F] hover:bg-[#f09f2b] text-white" 
+              : "text-[#FBAD3F] border-[#FBAD3F] hover:bg-[#FBAD3F]/10"}`}
+          >
+            📅 Events
+          </Button>
+          
+          <Button
+            variant={filterCategory === "grants" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterCategory(filterCategory === "grants" ? "all" : "grants")}
+            className={`font-roboto ${filterCategory === "grants" 
+              ? "bg-[#FBAD3F] hover:bg-[#f09f2b] text-white" 
+              : "text-[#FBAD3F] border-[#FBAD3F] hover:bg-[#FBAD3F]/10"}`}
+          >
+            💰 Grants
+          </Button>
+          
+          <Button
+            variant={filterCategory === "outreach" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilterCategory(filterCategory === "outreach" ? "all" : "outreach")}
+            className={`font-roboto ${filterCategory === "outreach" 
+              ? "bg-[#FBAD3F] hover:bg-[#f09f2b] text-white" 
+              : "text-[#FBAD3F] border-[#FBAD3F] hover:bg-[#FBAD3F]/10"}`}
+          >
+            🤝 Outreach
+          </Button>
+        </div>
+
+        {/* Sort/Filter Button */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowFilters(!showFilters)}
+          className="text-[#236383] border-[#236383] hover:bg-[#236383]/10 font-roboto"
+        >
+          <Settings className="w-4 h-4 mr-2" />
+          Sort & Filter
+        </Button>
+      </div>
+
+      {/* Collapsible Sort/Filter Controls */}
+      {showFilters && (
+        <Card className="mb-6 border-[#236383]/20">
+          <CardContent className="p-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="category-filter" className="text-sm font-medium text-[#236383] font-roboto">Category</Label>
+                <Select value={filterCategory} onValueChange={setFilterCategory}>
+                  <SelectTrigger id="category-filter" className="mt-1 border-[#236383]/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="technology">💻 Technology</SelectItem>
+                    <SelectItem value="events">📅 Events</SelectItem>
+                    <SelectItem value="grants">💰 Grants</SelectItem>
+                    <SelectItem value="outreach">🤝 Outreach</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="sort-by" className="text-sm font-medium text-[#236383] font-roboto">Sort By</Label>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger id="sort-by" className="mt-1 border-[#236383]/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="title">Alphabetical</SelectItem>
+                    <SelectItem value="priority">Priority</SelectItem>
+                    <SelectItem value="dueDate">Due Date</SelectItem>
+                    <SelectItem value="status">Status</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="sort-order" className="text-sm font-medium text-[#236383] font-roboto">Order</Label>
+                <Select value={sortOrder} onValueChange={setSortOrder}>
+                  <SelectTrigger id="sort-order" className="mt-1 border-[#236383]/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="asc">A-Z / Low-High</SelectItem>
+                    <SelectItem value="desc">Z-A / High-Low</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Projects List */}
       <div className="mt-6">
-        {activeTab === "active" && (
-          <>
-            {projects.length === 0 ? (
-              <div className="text-center py-12">
-                <Play className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-slate-900 mb-2">No active projects</h3>
-                <p className="text-slate-500">Create new projects or start working on existing ones.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4">
-                {projects.map(renderProjectCard)}
-              </div>
+        {projects.length === 0 ? (
+          <div className="text-center py-12">
+            {activeTab === "available" && (
+              <>
+                <Circle className="w-12 h-12 text-[#236383]/30 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-[#236383] font-roboto mb-2">No Available Projects</h3>
+                <p className="text-gray-600 font-roboto">All projects are currently assigned or completed.</p>
+              </>
             )}
-          </>
-        )}
-        
-        {activeTab === "completed" && (
-          <>
-            {projects.length === 0 ? (
-              <div className="text-center py-12">
-                <CheckCircle2 className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-slate-900 mb-2">No completed projects</h3>
-                <p className="text-slate-500">Completed projects will appear here ready for archiving.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4">
-                {projects.map(renderProjectCard)}
-              </div>
+            {activeTab === "active" && (
+              <>
+                <Play className="w-12 h-12 text-[#236383]/30 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-[#236383] font-roboto mb-2">No Active Projects</h3>
+                <p className="text-gray-600 font-roboto">No projects are currently in progress.</p>
+              </>
             )}
-          </>
-        )}
-        
-        {activeTab === "archived" && (
-          <>
-            {archiveLoading ? (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
-                <p className="text-slate-500">Loading archived projects...</p>
-              </div>
-            ) : archivedProjects.length === 0 ? (
-              <div className="text-center py-12">
-                <Award className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-slate-900 mb-2">No Archived Projects</h3>
-                <p className="text-slate-500">Completed projects that have been archived will appear here.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4">
-                {archivedProjects.map((project: any) => (
-                  <Card key={project.id} className="opacity-75 border-purple-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <h3 className="text-base font-semibold text-slate-900 mb-1">
-                            {project.title}
-                          </h3>
-                          <p className="text-sm text-slate-600 mb-2">
-                            {project.description}
-                          </p>
-                          <div className="flex items-center gap-2 text-xs text-slate-500">
-                            <span>Completed: {project.completionDate}</span>
-                            <span>•</span>
-                            <span>Archived: {new Date(project.archivedAt).toLocaleDateString()}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <Badge className="bg-purple-500 text-white text-xs">
-                            Archived
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {project.category}
-                          </Badge>
-                        </div>
-                      </div>
-                      {project.assigneeNames && (
-                        <div className="text-sm text-slate-600">
-                          <span className="font-medium">Completed by:</span> {project.assigneeNames}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+            {activeTab === "completed" && (
+              <>
+                <CheckCircle2 className="w-12 h-12 text-[#236383]/30 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-[#236383] font-roboto mb-2">No Completed Projects</h3>
+                <p className="text-gray-600 font-roboto">Completed projects will appear here.</p>
+              </>
             )}
-          </>
+            {activeTab === "archived" && (
+              <>
+                <Archive className="w-12 h-12 text-[#236383]/30 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-[#236383] font-roboto mb-2">No Archived Projects</h3>
+                <p className="text-gray-600 font-roboto">Archived projects will appear here.</p>
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4">
+            {projects.map(renderProjectCard)}
+          </div>
         )}
       </div>
 
