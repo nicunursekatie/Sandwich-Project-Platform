@@ -545,7 +545,7 @@ export default function ProjectsClean() {
               </span>
               <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium font-roboto border capitalize ${
                 project.status === 'completed' ? 'bg-green-50 text-green-700 border-green-200' :
-                project.status === 'in_progress' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                project.status === 'in_progress' ? 'bg-[#236383]/10 text-[#236383] border-[#236383]/30' :
                 'bg-gray-50 text-gray-700 border-gray-200'
               }`}>
                 {project.status ? project.status.replace('_', ' ') : 'archived'}
