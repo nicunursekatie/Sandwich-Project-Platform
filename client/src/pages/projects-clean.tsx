@@ -534,19 +534,20 @@ export default function ProjectsClean() {
             <h3 className="text-sm font-semibold text-slate-900 line-clamp-1 leading-tight font-roboto">
               {project.title}
             </h3>
-            <div className="flex items-center gap-2 mt-1">
-              {/* Inline compact badges */}
-              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${
-                project.priority === 'high' ? 'bg-red-100 text-red-800' :
-                project.priority === 'medium' ? 'bg-[#FBAD3F]/20 text-[#d87e00]' :
-                'bg-gray-100 text-gray-800'
+            <div className="flex items-center gap-3 mt-1 text-xs text-slate-600 font-roboto">
+              {/* Clean text-based status indicators */}
+              <span className={`font-medium ${
+                project.priority === 'high' ? 'text-red-600' :
+                project.priority === 'medium' ? 'text-[#FBAD3F]' :
+                'text-slate-500'
               }`}>
-                {project.priority}
+                {project.priority} priority
               </span>
-              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${
-                project.status === 'completed' ? 'bg-green-100 text-green-800' :
-                project.status === 'in_progress' ? 'bg-[#236383]/20 text-[#236383]' :
-                'bg-gray-100 text-gray-600'
+              <span className="text-slate-400">•</span>
+              <span className={`font-medium capitalize ${
+                project.status === 'completed' ? 'text-green-600' :
+                project.status === 'in_progress' ? 'text-[#236383]' :
+                'text-slate-500'
               }`}>
                 {project.status.replace('_', ' ')}
               </span>
