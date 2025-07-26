@@ -749,7 +749,7 @@ export default function ProjectsClean() {
       </div>
 
       {/* Clean Status Tabs */}
-      <div className="flex flex-wrap items-center gap-2 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-6">
         <Button
           variant={activeTab === "available" ? "default" : "outline"}
           onClick={() => setActiveTab("available")}
