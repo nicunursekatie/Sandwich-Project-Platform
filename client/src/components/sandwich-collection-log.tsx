@@ -104,8 +104,26 @@ export default function SandwichCollectionLog() {
   ]);
   const [newCollectionGroupOnlyMode, setNewCollectionGroupOnlyMode] = useState(false);
 
-  // Helper function to calculate group totals from JSON
-  const calculateGroupTotal = (groupCollections: string | null) => {
+  // PHASE 4: Helper function to calculate group totals using new column structure first
+  const calculateGroupTotal = (collection: SandwichCollection | string | null) => {
+    // If passed a collection object, use new column structure first
+    if (typeof collection === 'object' && collection !== null) {
+      const groupCount1 = (collection as any).group1Count || 0;
+      const groupCount2 = (collection as any).group2Count || 0;
+      if (groupCount1 || groupCount2) {
+        return groupCount1 + groupCount2;
+      }
+      // Fallback to JSON parsing
+      const groupCollections = (collection as any).groupCollections;
+      return calculateGroupTotalFromJson(groupCollections);
+    }
+    
+    // Legacy: If passed a string (JSON), parse it
+    return calculateGroupTotalFromJson(collection as string);
+  };
+
+  // Helper for JSON parsing
+  const calculateGroupTotalFromJson = (groupCollections: string | null) => {
     try {
       const groupData = JSON.parse(groupCollections || "[]");
       return Array.isArray(groupData) 
@@ -473,19 +491,17 @@ export default function SandwichCollectionLog() {
   const calculateTotal = (collection: SandwichCollection) => {
     const individual = Number(collection.individualSandwiches || 0);
     
-    // Calculate group total from JSON data for consistency
-    const calculateGroupTotal = (groupCollections: string | null) => {
-      try {
-        const groupData = JSON.parse(groupCollections || "[]");
-        return Array.isArray(groupData) 
-          ? groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0)
-          : 0;
-      } catch {
-        return 0;
-      }
-    };
+    // PHASE 4: Use new column structure first, fallback to JSON parsing
+    const groupCount1 = (collection as any).group1Count || 0;
+    const groupCount2 = (collection as any).group2Count || 0;
     
-    return individual + calculateGroupTotal(collection.groupCollections);
+    if (groupCount1 || groupCount2) {
+      return individual + groupCount1 + groupCount2;
+    }
+    
+    // Fallback to JSON parsing for backward compatibility
+    const groupTotal = calculateGroupTotalFromJson(collection.groupCollections);
+    return individual + groupTotal;
   };
 
   const parseGroupCollections = (groupCollectionsJson: string) => {
@@ -786,10 +802,18 @@ export default function SandwichCollectionLog() {
         return "";
       };
 
-      // Calculate accurate totals including both individual and group sandwiches
-      const calculateGroupTotal = (groupCollections: string | null) => {
+      // PHASE 4: Calculate accurate totals using new column structure first
+      const calculateGroupTotalForCSV = (collection: SandwichCollection) => {
+        const groupCount1 = (collection as any).group1Count || 0;
+        const groupCount2 = (collection as any).group2Count || 0;
+        
+        if (groupCount1 || groupCount2) {
+          return groupCount1 + groupCount2;
+        }
+        
+        // Fallback to JSON parsing
         try {
-          const groupData = JSON.parse(groupCollections || "[]");
+          const groupData = JSON.parse(collection.groupCollections || "[]");
           return Array.isArray(groupData) 
             ? groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0)
             : 0;
@@ -798,9 +822,9 @@ export default function SandwichCollectionLog() {
         }
       };
 
-      const calculateTotal = (collection: SandwichCollection) => {
+      const calculateTotalForCSV = (collection: SandwichCollection) => {
         const individual = Number(collection.individualSandwiches || 0);
-        return individual + calculateGroupTotal(collection.groupCollections);
+        return individual + calculateGroupTotalForCSV(collection);
       };
 
       const headers = [
@@ -822,9 +846,9 @@ export default function SandwichCollectionLog() {
           `"${collection.hostName}"`,
           `"${collection.collectionDate}"`,
           collection.individualSandwiches || 0,
-          calculateGroupTotal(collection.groupCollections),
+          calculateGroupTotalForCSV(collection),
           `"${formatGroupCollections(collection.groupCollections || '')}"`,
-          calculateTotal(collection),
+          calculateTotalForCSV(collection),
           `"${new Date(collection.submittedAt).toLocaleString()}"`,
           `"${collection.createdByName || 'Unknown'}"`
         ].join(","))
@@ -1601,7 +1625,7 @@ export default function SandwichCollectionLog() {
                         <span className="text-sm font-medium text-slate-700">Groups</span>
                       </div>
                       <span className="text-lg font-bold text-slate-900">
-                        {calculateGroupTotal(collection.groupCollections)}
+                        {calculateGroupTotal(collection)}
                       </span>
                     </div>
                     {Array.isArray(groupData) && groupData.length > 0 && (

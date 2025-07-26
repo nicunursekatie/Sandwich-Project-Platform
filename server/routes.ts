@@ -1059,30 +1059,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
           collections.forEach((collection) => {
             individualTotal += collection.individualSandwiches || 0;
 
-            // Calculate group collections total
-            try {
-              const groupData = JSON.parse(collection.groupCollections || "[]");
-              if (Array.isArray(groupData)) {
-                groupTotal += groupData.reduce(
-                  (sum: number, group: any) => sum + (group.sandwichCount || 0),
-                  0,
-                );
-              }
-            } catch (error) {
-              // Handle text format like "Marketing Team: 8, Development: 6"
-              if (
-                collection.groupCollections &&
-                collection.groupCollections !== "[]"
-              ) {
-                const matches = collection.groupCollections.match(/(\d+)/g);
-                if (matches) {
-                  groupTotal += matches.reduce(
-                    (sum, num) => sum + parseInt(num),
+            // PHASE 4: Use new column structure first, fallback to JSON parsing
+            let collectionGroupTotal = 0;
+            
+            // New column structure (preferred)
+            if (collection.group1Count || collection.group2Count) {
+              collectionGroupTotal = (collection.group1Count || 0) + (collection.group2Count || 0);
+            } else {
+              // Fallback to JSON parsing for backward compatibility
+              try {
+                const groupData = JSON.parse(collection.groupCollections || "[]");
+                if (Array.isArray(groupData)) {
+                  collectionGroupTotal = groupData.reduce(
+                    (sum: number, group: any) => sum + (group.sandwichCount || 0),
                     0,
                   );
                 }
+              } catch (error) {
+                // Handle text format like "Marketing Team: 8, Development: 6"
+                if (
+                  collection.groupCollections &&
+                  collection.groupCollections !== "[]"
+                ) {
+                  const matches = collection.groupCollections.match(/(\d+)/g);
+                  if (matches) {
+                    collectionGroupTotal = matches.reduce(
+                      (sum, num) => sum + parseInt(num),
+                      0,
+                    );
+                  }
+                }
               }
             }
+            
+            groupTotal += collectionGroupTotal;
           });
 
           return {
