@@ -29,7 +29,10 @@ function EditCollectionDialog({ collection, isOpen, onClose, onSave, isUpdating 
     collectionDate: collection?.collectionDate || '',
     hostName: collection?.hostName || '',
     individualSandwiches: collection?.individualSandwiches || 0,
-    groupCollections: collection?.groupCollections || ''
+    group1Name: (collection as any)?.group1Name || '',
+    group1Count: (collection as any)?.group1Count || 0,
+    group2Name: (collection as any)?.group2Name || '',
+    group2Count: (collection as any)?.group2Count || 0
   });
 
   const handleSave = () => {
@@ -76,14 +79,37 @@ function EditCollectionDialog({ collection, isOpen, onClose, onSave, isUpdating 
           </div>
           
           <div>
-            <Label htmlFor="groupCollections">Group Collections</Label>
-            <Textarea
-              id="groupCollections"
-              value={formData.groupCollections}
-              onChange={(e) => setFormData({ ...formData, groupCollections: e.target.value })}
-              placeholder="JSON format or text description"
-              rows={3}
-            />
+            <Label>Group Collections</Label>
+            <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-2">
+                <Input
+                  placeholder="Group 1 name"
+                  value={formData.group1Name}
+                  onChange={(e) => setFormData({ ...formData, group1Name: e.target.value })}
+                />
+                <Input
+                  type="number"
+                  min="0"
+                  placeholder="Count"
+                  value={formData.group1Count}
+                  onChange={(e) => setFormData({ ...formData, group1Count: parseInt(e.target.value) || 0 })}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Input
+                  placeholder="Group 2 name"
+                  value={formData.group2Name}
+                  onChange={(e) => setFormData({ ...formData, group2Name: e.target.value })}
+                />
+                <Input
+                  type="number"
+                  min="0"
+                  placeholder="Count"
+                  value={formData.group2Count}
+                  onChange={(e) => setFormData({ ...formData, group2Count: parseInt(e.target.value) || 0 })}
+                />
+              </div>
+            </div>
           </div>
           
           <div className="flex justify-end gap-2">
@@ -103,29 +129,25 @@ function EditCollectionDialog({ collection, isOpen, onClose, onSave, isUpdating 
 export function CollectionTable({ collections, onEdit, onDelete, isUpdating, isDeleting }: CollectionTableProps) {
   const [editingCollection, setEditingCollection] = useState<SandwichCollection | null>(null);
 
-  const parseGroupCollections = (groupCollectionsJson: string) => {
-    try {
-      return JSON.parse(groupCollectionsJson || "[]");
-    } catch {
-      if (groupCollectionsJson && groupCollectionsJson !== "[]") {
-        const parts = groupCollectionsJson.split(',');
-        return parts.map(part => {
-          const match = part.match(/([^:]+):\s*(\d+)/);
-          if (match) {
-            return {
-              groupName: match[1].trim(),
-              sandwichCount: parseInt(match[2])
-            };
-          }
-          return null;
-        }).filter(item => item !== null);
-      }
-      return [];
+  // PHASE 5: Get group collections from new column structure
+  const getGroupCollections = (collection: SandwichCollection) => {
+    const groups = [];
+    const group1Name = (collection as any).group1Name;
+    const group1Count = (collection as any).group1Count;
+    const group2Name = (collection as any).group2Name;
+    const group2Count = (collection as any).group2Count;
+    
+    if (group1Name && group1Count > 0) {
+      groups.push({ groupName: group1Name, sandwichCount: group1Count });
     }
+    if (group2Name && group2Count > 0) {
+      groups.push({ groupName: group2Name, sandwichCount: group2Count });
+    }
+    return groups;
   };
 
   const calculateTotal = (collection: SandwichCollection) => {
-    const groupCollections = parseGroupCollections(collection.groupCollections);
+    const groupCollections = getGroupCollections(collection);
     const groupTotal = groupCollections.reduce((sum: number, group: any) => 
       sum + (group.sandwichCount || 0), 0
     );
@@ -164,7 +186,7 @@ export function CollectionTable({ collections, onEdit, onDelete, isUpdating, isD
           </thead>
           <tbody>
             {collections.map((collection) => {
-              const groupCollections = parseGroupCollections(collection.groupCollections);
+              const groupCollections = getGroupCollections(collection);
               const total = calculateTotal(collection);
               
               return (

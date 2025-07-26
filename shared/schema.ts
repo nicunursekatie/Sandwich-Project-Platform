@@ -361,8 +361,7 @@ export const sandwichCollections = pgTable("sandwich_collections", {
   collectionDate: text("collection_date").notNull(),
   hostName: text("host_name").notNull(),
   individualSandwiches: integer("individual_sandwiches").notNull(),
-  groupCollections: text("group_collections").notNull(), // JSON string of group data with names/counts - TEMPORARY for migration
-  // Phase 1: New simple columns for group data
+  // Group collection columns (Phase 5: JSON column removed)
   group1Name: text("group1_name"), // Name of first group (nullable)
   group1Count: integer("group1_count"), // Count for first group (nullable)
   group2Name: text("group2_name"), // Name of second group (nullable)

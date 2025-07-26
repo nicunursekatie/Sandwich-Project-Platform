@@ -1059,38 +1059,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           collections.forEach((collection) => {
             individualTotal += collection.individualSandwiches || 0;
 
-            // PHASE 4: Use new column structure first, fallback to JSON parsing
-            let collectionGroupTotal = 0;
-            
-            // New column structure (preferred)
-            if (collection.group1Count || collection.group2Count) {
-              collectionGroupTotal = (collection.group1Count || 0) + (collection.group2Count || 0);
-            } else {
-              // Fallback to JSON parsing for backward compatibility
-              try {
-                const groupData = JSON.parse(collection.groupCollections || "[]");
-                if (Array.isArray(groupData)) {
-                  collectionGroupTotal = groupData.reduce(
-                    (sum: number, group: any) => sum + (group.sandwichCount || 0),
-                    0,
-                  );
-                }
-              } catch (error) {
-                // Handle text format like "Marketing Team: 8, Development: 6"
-                if (
-                  collection.groupCollections &&
-                  collection.groupCollections !== "[]"
-                ) {
-                  const matches = collection.groupCollections.match(/(\d+)/g);
-                  if (matches) {
-                    collectionGroupTotal = matches.reduce(
-                      (sum, num) => sum + parseInt(num),
-                      0,
-                    );
-                  }
-                }
-              }
-            }
+            // PHASE 5: Use new column structure only
+            const collectionGroupTotal = (collection.group1Count || 0) + (collection.group2Count || 0);
             
             groupTotal += collectionGroupTotal;
           });
@@ -1206,20 +1176,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const updates: any = {};
         const fixType = [];
 
-        // Parse group collections to check for data issues
-        let groupData = [];
-        try {
-          if (collection.groupCollections && collection.groupCollections !== "[]") {
-            groupData = JSON.parse(collection.groupCollections);
-          }
-        } catch (error) {
-          // Skip if can't parse group data
-          continue;
-        }
-
+        // PHASE 5: Check group collections using new column structure
         const individual = Number(collection.individualSandwiches) || 0;
-        const groupTotal = Array.isArray(groupData) ? 
-          groupData.reduce((sum, g) => sum + (Number(g.sandwichCount || g.count) || 0), 0) : 0;
+        const groupTotal = (collection.group1Count || 0) + (collection.group2Count || 0);
 
         // Fix 1: Check if individual count equals group total (duplication issue)
         if (individual > 0 && groupTotal > 0 && individual === groupTotal) {

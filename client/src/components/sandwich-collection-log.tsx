@@ -104,34 +104,11 @@ export default function SandwichCollectionLog() {
   ]);
   const [newCollectionGroupOnlyMode, setNewCollectionGroupOnlyMode] = useState(false);
 
-  // PHASE 4: Helper function to calculate group totals using new column structure first
-  const calculateGroupTotal = (collection: SandwichCollection | string | null) => {
-    // If passed a collection object, use new column structure first
-    if (typeof collection === 'object' && collection !== null) {
-      const groupCount1 = (collection as any).group1Count || 0;
-      const groupCount2 = (collection as any).group2Count || 0;
-      if (groupCount1 || groupCount2) {
-        return groupCount1 + groupCount2;
-      }
-      // Fallback to JSON parsing
-      const groupCollections = (collection as any).groupCollections;
-      return calculateGroupTotalFromJson(groupCollections);
-    }
-    
-    // Legacy: If passed a string (JSON), parse it
-    return calculateGroupTotalFromJson(collection as string);
-  };
-
-  // Helper for JSON parsing
-  const calculateGroupTotalFromJson = (groupCollections: string | null) => {
-    try {
-      const groupData = JSON.parse(groupCollections || "[]");
-      return Array.isArray(groupData) 
-        ? groupData.reduce((sum, group) => sum + (group.sandwichCount || group.count || 0), 0)
-        : 0;
-    } catch {
-      return 0;
-    }
+  // PHASE 5: Simplified group total calculation using only new column structure
+  const calculateGroupTotal = (collection: SandwichCollection) => {
+    const groupCount1 = (collection as any).group1Count || 0;
+    const groupCount2 = (collection as any).group2Count || 0;
+    return groupCount1 + groupCount2;
   };
 
   // Memoize expensive computations
@@ -490,45 +467,25 @@ export default function SandwichCollectionLog() {
 
   const calculateTotal = (collection: SandwichCollection) => {
     const individual = Number(collection.individualSandwiches || 0);
-    
-    // PHASE 4: Use new column structure first, fallback to JSON parsing
-    const groupCount1 = (collection as any).group1Count || 0;
-    const groupCount2 = (collection as any).group2Count || 0;
-    
-    if (groupCount1 || groupCount2) {
-      return individual + groupCount1 + groupCount2;
-    }
-    
-    // Fallback to JSON parsing for backward compatibility
-    const groupTotal = calculateGroupTotalFromJson(collection.groupCollections);
+    const groupTotal = calculateGroupTotal(collection);
     return individual + groupTotal;
   };
 
-  const parseGroupCollections = (groupCollectionsJson: string) => {
-    try {
-      const parsed = JSON.parse(groupCollectionsJson || "[]");
-      // Convert database format {name, count} to form format {groupName, sandwichCount}
-      return parsed.map((group: any) => ({
-        groupName: group.name || group.groupName || "",
-        sandwichCount: group.count || group.sandwichCount || 0
-      }));
-    } catch {
-      // Handle text format by converting to array
-      if (groupCollectionsJson && groupCollectionsJson !== "[]") {
-        const parts = groupCollectionsJson.split(',');
-        return parts.map(part => {
-          const match = part.match(/([^:]+):\s*(\d+)/);
-          if (match) {
-            return {
-              groupName: match[1].trim(),
-              sandwichCount: parseInt(match[2])
-            };
-          }
-          return null;
-        }).filter(item => item !== null);
-      }
-      return [];
+  // PHASE 5: Helper to get group collections from new column structure
+  const getGroupCollections = (collection: SandwichCollection) => {
+    const groups = [];
+    const group1Name = (collection as any).group1Name;
+    const group1Count = (collection as any).group1Count;
+    const group2Name = (collection as any).group2Name;
+    const group2Count = (collection as any).group2Count;
+    
+    if (group1Name && group1Count > 0) {
+      groups.push({ groupName: group1Name, sandwichCount: group1Count });
     }
+    if (group2Name && group2Count > 0) {
+      groups.push({ groupName: group2Name, sandwichCount: group2Count });
+    }
+    return groups;
   };
 
   // Mutations for update and delete
@@ -783,48 +740,20 @@ export default function SandwichCollectionLog() {
         return;
       }
 
-      // Helper function to format group collections for CSV
-      const formatGroupCollections = (groupCollectionsStr: string) => {
-        if (!groupCollectionsStr || groupCollectionsStr === "[]") return "";
-        try {
-          const groups = JSON.parse(groupCollectionsStr);
-          if (Array.isArray(groups) && groups.length > 0) {
-            return groups.map((group: any) => {
-              const name = group.name || group.groupName || '';
-              const count = group.count || group.sandwichCount || 0;
-              return `${name}: ${count}`;
-            }).join('; ');
-          }
-        } catch (e) {
-          // If parsing fails, return the original string cleaned up
-          return groupCollectionsStr.replace(/"/g, '');
-        }
-        return "";
+      // PHASE 5: Format group collections from new column structure
+      const formatGroupCollections = (collection: SandwichCollection) => {
+        const groups = getGroupCollections(collection);
+        if (groups.length === 0) return "";
+        return groups.map(group => `${group.groupName}: ${group.sandwichCount}`).join('; ');
       };
 
-      // PHASE 4: Calculate accurate totals using new column structure first
+      // PHASE 5: Simplified CSV calculations using only new column structure
       const calculateGroupTotalForCSV = (collection: SandwichCollection) => {
-        const groupCount1 = (collection as any).group1Count || 0;
-        const groupCount2 = (collection as any).group2Count || 0;
-        
-        if (groupCount1 || groupCount2) {
-          return groupCount1 + groupCount2;
-        }
-        
-        // Fallback to JSON parsing
-        try {
-          const groupData = JSON.parse(collection.groupCollections || "[]");
-          return Array.isArray(groupData) 
-            ? groupData.reduce((sum, group) => sum + (group.sandwichCount || 0), 0)
-            : 0;
-        } catch {
-          return 0;
-        }
+        return calculateGroupTotal(collection);
       };
 
       const calculateTotalForCSV = (collection: SandwichCollection) => {
-        const individual = Number(collection.individualSandwiches || 0);
-        return individual + calculateGroupTotalForCSV(collection);
+        return calculateTotal(collection);
       };
 
       const headers = [
@@ -847,7 +776,7 @@ export default function SandwichCollectionLog() {
           `"${collection.collectionDate}"`,
           collection.individualSandwiches || 0,
           calculateGroupTotalForCSV(collection),
-          `"${formatGroupCollections(collection.groupCollections || '')}"`,
+          `"${formatGroupCollections(collection)}"`,
           calculateTotalForCSV(collection),
           `"${new Date(collection.submittedAt).toLocaleString()}"`,
           `"${collection.createdByName || 'Unknown'}"`
@@ -1502,7 +1431,7 @@ export default function SandwichCollectionLog() {
         )}
         <div className="space-y-3 sm:space-y-4">
           {paginatedCollections.map((collection: SandwichCollection) => {
-            const groupData = parseGroupCollections(collection.groupCollections);
+            const groupData = getGroupCollections(collection);
             const totalSandwiches = calculateTotal(collection);
             const isSelected = selectedCollections.has(collection.id);
 
@@ -1740,7 +1669,7 @@ export default function SandwichCollectionLog() {
                   <div className="max-h-64 overflow-y-auto border border-slate-200 rounded-lg">
                     <div className="space-y-1 p-2">
                       {duplicateAnalysis.suspiciousEntries.map((entry) => {
-                        const groupData = parseGroupCollections(entry.groupCollections || "[]");
+                        const groupData = getGroupCollections(entry);
                         const totalSandwiches = calculateTotal(entry);
                         return (
                           <div key={entry.id} className="flex items-center space-x-3 p-2 border border-slate-100 rounded hover:bg-slate-50">

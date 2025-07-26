@@ -457,7 +457,7 @@ export default function BulkDataManager({
                       </div>
                       <div>
                         <span className="font-medium text-gray-600">Groups:</span>
-                        <div>{collection.groupCollections || 0}</div>
+                        <div>{((collection as any).group1Count || 0) + ((collection as any).group2Count || 0)}</div>
                       </div>
                       {collection.notes && (
                         <div className="col-span-2 md:col-span-4">
