@@ -521,34 +521,81 @@ export default function ProjectsClean() {
     return projects.filter((project: Project) => project.status === status);
   };
 
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'technology': return '💻';
+      case 'marketing': return '📈';
+      case 'operations': return '⚙️';
+      case 'community': return '👥';
+      case 'fundraising': return '💰';
+      case 'event': return '🎉';
+      default: return '📋';
+    }
+  };
+
+  const getCategoryGradient = (category: string) => {
+    switch (category) {
+      case 'technology': return 'from-blue-500 to-indigo-600';
+      case 'marketing': return 'from-green-500 to-emerald-600';
+      case 'operations': return 'from-[#236383] to-blue-700';
+      case 'community': return 'from-purple-500 to-pink-600';
+      case 'fundraising': return 'from-[#FBAD3F] to-orange-600';
+      case 'event': return 'from-rose-500 to-red-600';
+      default: return 'from-gray-500 to-slate-600';
+    }
+  };
+
+  const getStatusGradient = (status: string) => {
+    switch (status) {
+      case 'completed': return 'from-green-50 to-emerald-50 border-green-200';
+      case 'in_progress': return 'from-blue-50 to-indigo-50 border-blue-200';
+      case 'waiting': return 'from-amber-50 to-yellow-50 border-amber-200';
+      case 'available': return 'from-purple-50 to-pink-50 border-purple-200';
+      default: return 'from-gray-50 to-slate-50 border-gray-200';
+    }
+  };
+
   const renderProjectCard = (project: Project) => (
     <Card 
       key={project.id} 
-      className="hover:shadow-md transition-shadow cursor-pointer project-card"
+      className={`hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 bg-gradient-to-br ${getStatusGradient(project.status)} border-2 overflow-hidden`}
       onClick={() => handleProjectClick(project.id)}
     >
+      {/* Colorful Category Header */}
+      <div className={`h-2 bg-gradient-to-r ${getCategoryGradient(project.category)}`}></div>
+      
       <CardContent className="p-3">
         {/* Compact Header */}
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1 min-w-0 pr-2">
-            <h3 className="text-sm font-semibold text-slate-900 line-clamp-1 leading-tight font-roboto">
-              {project.title}
-            </h3>
+            <div className="flex items-center gap-2 mb-1">
+              {/* Category Icon */}
+              <div className={`flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br ${getCategoryGradient(project.category)} flex items-center justify-center text-white text-sm shadow-sm`}>
+                {getCategoryIcon(project.category)}
+              </div>
+              <h3 className="text-sm font-bold text-slate-900 line-clamp-1 leading-tight font-roboto">
+                {project.title}
+              </h3>
+            </div>
+            
             <div className="flex items-center gap-2 mt-1">
-              {/* Professional refined badges */}
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium font-roboto border ${
-                project.priority === 'high' ? 'bg-red-50 text-red-700 border-red-200' :
-                project.priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-200' :
-                'bg-gray-50 text-gray-700 border-gray-200'
+              {/* Vibrant Priority Badge */}
+              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold font-roboto text-white shadow-sm ${
+                project.priority === 'high' ? 'bg-gradient-to-r from-red-500 to-red-600' :
+                project.priority === 'medium' ? 'bg-gradient-to-r from-[#FBAD3F] to-orange-500' :
+                'bg-gradient-to-r from-gray-400 to-gray-500'
               }`}>
-                {project.priority}
+                {project.priority} priority
               </span>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium font-roboto border capitalize ${
-                project.status === 'completed' ? 'bg-green-50 text-green-700 border-green-200' :
-                project.status === 'in_progress' ? 'bg-[#236383]/10 text-[#236383] border-[#236383]/30' :
-                'bg-gray-50 text-gray-700 border-gray-200'
+              
+              {/* Vibrant Status Badge */}
+              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold font-roboto capitalize text-white shadow-sm ${
+                project.status === 'completed' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
+                project.status === 'in_progress' ? 'bg-gradient-to-r from-[#236383] to-blue-600' :
+                project.status === 'waiting' ? 'bg-gradient-to-r from-amber-500 to-yellow-500' :
+                'bg-gradient-to-r from-purple-500 to-pink-600'
               }`}>
-                {project.status ? project.status.replace('_', ' ') : 'archived'}
+                {project.status ? project.status.replace('_', ' ') : 'available'}
               </span>
             </div>
           </div>

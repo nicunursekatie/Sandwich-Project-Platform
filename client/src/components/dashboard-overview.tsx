@@ -98,16 +98,61 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         </div>
       </div>
 
-      {/* Total Collections Card - Mobile responsive */}
-      <div className="bg-gradient-to-r from-primary to-brand-teal rounded-lg shadow-md p-4 sm:p-6 text-white">
-        <div className="flex items-center justify-between">
-          <div className="min-w-0 flex-1">
-            <h3 className="text-sm sm:text-base font-sub-heading">Total Collections</h3>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-main-heading">{totalCollectedSandwiches.toLocaleString()}</p>
-            <p className="text-xs sm:text-sm font-body text-white/80">sandwiches collected</p>
+      {/* Colorful Statistics Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Collections Card */}
+        <div className="bg-gradient-to-br from-[#236383] to-blue-600 rounded-xl shadow-lg p-4 text-white transform hover:scale-105 transition-all duration-300">
+          <div className="flex items-center justify-between mb-2">
+            <div className="bg-white bg-opacity-20 p-2 rounded-lg">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+            <div className="text-right">
+              <p className="text-xs opacity-80">Total</p>
+              <p className="text-lg font-bold">{totalCollectedSandwiches.toLocaleString()}</p>
+              <p className="text-xs opacity-90">sandwiches</p>
+            </div>
           </div>
-          <div className="bg-white bg-opacity-20 p-2 sm:p-3 rounded-full flex-shrink-0">
-            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
+        </div>
+
+        {/* Active Projects Card */}
+        <div className="bg-gradient-to-br from-[#FBAD3F] to-orange-500 rounded-xl shadow-lg p-4 text-white transform hover:scale-105 transition-all duration-300">
+          <div className="flex items-center justify-between mb-2">
+            <div className="bg-white bg-opacity-20 p-2 rounded-lg">
+              <ListTodo className="w-5 h-5" />
+            </div>
+            <div className="text-right">
+              <p className="text-xs opacity-80">Active</p>
+              <p className="text-lg font-bold">{activeProjects.length}</p>
+              <p className="text-xs opacity-90">projects</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Upcoming Meetings Card */}
+        <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-lg p-4 text-white transform hover:scale-105 transition-all duration-300">
+          <div className="flex items-center justify-between mb-2">
+            <div className="bg-white bg-opacity-20 p-2 rounded-lg">
+              <Users className="w-5 h-5" />
+            </div>
+            <div className="text-right">
+              <p className="text-xs opacity-80">Upcoming</p>
+              <p className="text-lg font-bold">{upcomingMeetings.length}</p>
+              <p className="text-xs opacity-90">meetings</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Team Progress Card */}
+        <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg p-4 text-white transform hover:scale-105 transition-all duration-300">
+          <div className="flex items-center justify-between mb-2">
+            <div className="bg-white bg-opacity-20 p-2 rounded-lg">
+              <BarChart3 className="w-5 h-5" />
+            </div>
+            <div className="text-right">
+              <p className="text-xs opacity-80">Completed</p>
+              <p className="text-lg font-bold">{statusCounts.completed}</p>
+              <p className="text-xs opacity-90">projects</p>
+            </div>
           </div>
         </div>
       </div>
@@ -150,10 +195,13 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
       {/* Active Projects - Only show if user has permission */}
       {hasPermission(user, PERMISSIONS.VIEW_PROJECTS) && (
-        <div className="bg-card rounded-lg border border-border">
-          <div className="px-4 py-3 border-b border-border flex justify-between items-center">
+        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border-2 border-indigo-200 shadow-lg">
+          <div className="px-4 py-3 border-b border-indigo-200 flex justify-between items-center bg-gradient-to-r from-indigo-100 to-purple-100 rounded-t-xl">
             <div className="flex items-center space-x-2">
-              <h2 className="text-base font-sub-heading text-primary">Active Projects</h2>
+              <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-2 rounded-lg">
+                <ListTodo className="w-4 h-4 text-white" />
+              </div>
+              <h2 className="text-base font-bold text-indigo-900">Active Projects</h2>
               <HelpBubble
                 content={{
                   id: 'project-management',
@@ -169,7 +217,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               variant="outline" 
               size="sm"
               onClick={() => onSectionChange("projects")}
-              className="text-xs px-2 py-1"
+              className="text-xs px-2 py-1 bg-white hover:bg-indigo-50 border-indigo-300 text-indigo-700"
             >
               View All
             </Button>
@@ -205,10 +253,13 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
       {/* Upcoming Meetings - Only show if user has permission */}
       {hasPermission(user, PERMISSIONS.VIEW_MEETINGS) && (
-        <div className="bg-white rounded-lg border border-slate-200">
-          <div className="px-4 py-3 border-b border-slate-200 flex justify-between items-center">
+        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl border-2 border-emerald-200 shadow-lg">
+          <div className="px-4 py-3 border-b border-emerald-200 flex justify-between items-center bg-gradient-to-r from-emerald-100 to-teal-100 rounded-t-xl">
             <div className="flex items-center space-x-2">
-              <h2 className="text-base font-semibold text-slate-900">Upcoming Meetings</h2>
+              <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-2 rounded-lg">
+                <Users className="w-4 h-4 text-white" />
+              </div>
+              <h2 className="text-base font-bold text-emerald-900">Upcoming Meetings</h2>
               <HelpBubble
                 content={{
                   id: 'meetings-schedule',
@@ -224,7 +275,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               variant="outline" 
               size="sm"
               onClick={() => onSectionChange("meetings")}
-              className="text-xs px-2 py-1"
+              className="text-xs px-2 py-1 bg-white hover:bg-emerald-50 border-emerald-300 text-emerald-700"
             >
               View All
             </Button>
