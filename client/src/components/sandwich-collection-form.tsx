@@ -305,11 +305,21 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       finalGroupCollections = groupCollectionsString; // Keep the group breakdown for reference
     }
 
+    // Phase 3: Extract group data for new simple columns
+    const group1Name = validGroupCollections.length > 0 ? validGroupCollections[0].groupName.trim() : null;
+    const group1Count = validGroupCollections.length > 0 ? validGroupCollections[0].sandwichCount : null;
+    const group2Name = validGroupCollections.length > 1 ? validGroupCollections[1].groupName.trim() : null;
+    const group2Count = validGroupCollections.length > 1 ? validGroupCollections[1].sandwichCount : null;
+
     submitCollectionMutation.mutate({
       collectionDate,
       hostName: finalHostName,
       individualSandwiches: finalIndividualSandwiches,
-      groupCollections: finalGroupCollections,
+      groupCollections: finalGroupCollections, // Keep for backward compatibility during migration
+      group1Name,
+      group1Count,
+      group2Name,
+      group2Count,
       createdBy: (user as any)?.id,
       createdByName: user && typeof user === 'object' && 'firstName' in user && 'lastName' in user && user.firstName && user.lastName 
         ? `${user.firstName} ${user.lastName}` 

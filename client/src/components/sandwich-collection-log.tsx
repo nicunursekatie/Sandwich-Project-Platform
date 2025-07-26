@@ -104,6 +104,18 @@ export default function SandwichCollectionLog() {
   ]);
   const [newCollectionGroupOnlyMode, setNewCollectionGroupOnlyMode] = useState(false);
 
+  // Helper function to calculate group totals from JSON
+  const calculateGroupTotal = (groupCollections: string | null) => {
+    try {
+      const groupData = JSON.parse(groupCollections || "[]");
+      return Array.isArray(groupData) 
+        ? groupData.reduce((sum, group) => sum + (group.sandwichCount || group.count || 0), 0)
+        : 0;
+    } catch {
+      return 0;
+    }
+  };
+
   // Memoize expensive computations
   const needsAllData = useMemo(() => 
     showFilters || Object.values(searchFilters).some(v => v) || 
