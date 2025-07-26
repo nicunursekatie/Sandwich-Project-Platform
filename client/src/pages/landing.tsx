@@ -41,8 +41,8 @@ export default function Landing() {
   // Use calculated overall weekly average from actual operational data
   // Based on 2023-2025 performance: 8,983/week (2023), 8,851/week (2024), 7,861/week (2025)
   const weeklyAverage = 8700;
-  // Use the verified record week from database query (34,100 on 2022-11-16)
-  const recordWeek = 34100;
+  // Use the verified record week from official records (38,828 on Nov 15, 2023 - Week 190)
+  const recordWeek = 38828;
   
 
 

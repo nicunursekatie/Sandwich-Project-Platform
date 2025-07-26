@@ -56,11 +56,11 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
   // Key statistics - Use actual database values instead of hardcoded ones
   const organizationalStats = {
     totalLifetimeSandwiches: statsData ? statsData.completeTotalSandwiches?.toLocaleString() : "Loading...",
-    peakWeekRecord: "19,414",
+    peakWeekRecord: "38,828",
     peakWeekDate: "November 15, 2023",
     currentAnnualCapacity: "~450,000",
     weeklyBaseline: "6,000-12,000",
-    surgingCapacity: "15,000-20,000",
+    surgingCapacity: "25,000-40,000",
     operationalYears: "5",
     growthMultiplier: "107x"
   };

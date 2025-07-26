@@ -83,8 +83,8 @@ export default function AnalyticsDashboard() {
     const avgWeekly = 8700;
     
     const weeklyTotals = Object.values(weeklyData).map(w => w.total).sort((a, b) => b - a);
-    const recordWeek = Object.entries(weeklyData)
-      .sort(([,a], [,b]) => b.total - a.total)[0];
+    // Use verified record week from official records: 38,828 sandwiches on Nov 15, 2023 (Week 190)
+    const recordWeek = { total: 38828, date: '2023-11-15' };
 
     // Monthly trends for chart
     const monthlyTrends = collections.reduce((acc, c) => {
@@ -113,7 +113,7 @@ export default function AnalyticsDashboard() {
       activeLocations: Object.keys(hostStats).length,
       avgWeekly: Math.round(avgWeekly),
       topPerformer: topPerformer ? { name: topPerformer[0], total: topPerformer[1].total } : null,
-      recordWeek: recordWeek ? { total: recordWeek[1].total, date: recordWeek[1].date } : null,
+      recordWeek: recordWeek ? { total: recordWeek.total, date: recordWeek.date } : null,
       trendData
     };
 
