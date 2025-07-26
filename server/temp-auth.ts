@@ -626,7 +626,39 @@ export function setupTempAuth(app: Express) {
     }
   });
 
+  // FIXED: Add the missing /api/auth/user endpoint that frontend expects
+  app.get("/api/auth/user", async (req: any, res) => {
+    if (req.session.user) {
+      try {
+        // Get fresh user data from database to ensure permissions are current
+        const dbUser = await storage.getUserByEmail(req.session.user.email);
+        if (!dbUser || !dbUser.isActive) {
+          return res.status(401).json({ message: "User account not found or inactive" });
+        }
 
+        // Standardize authentication - Always use (req as any).user and attach dbUser to request
+        (req as any).user = dbUser;
+
+        // Return the database user data instead of session data to include latest profile updates
+        res.json({
+          id: dbUser.id,
+          email: dbUser.email,
+          firstName: dbUser.firstName,
+          lastName: dbUser.lastName,
+          displayName: dbUser.displayName,
+          profileImageUrl: dbUser.profileImageUrl,
+          role: dbUser.role,
+          permissions: dbUser.permissions,
+          isActive: dbUser.isActive
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        res.status(500).json({ message: "Error fetching user data" });
+      }
+    } else {
+      res.status(401).json({ message: "Unauthorized" });
+    }
+  });
 
   // Logout endpoint
   app.post("/api/logout", (req: any, res) => {
