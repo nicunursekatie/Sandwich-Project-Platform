@@ -104,11 +104,18 @@ export default function SandwichCollectionLog() {
   ]);
   const [newCollectionGroupOnlyMode, setNewCollectionGroupOnlyMode] = useState(false);
 
-  // PHASE 5: Simplified group total calculation using only new column structure
+  // PHASE 6: Standardized group total calculation using new column structure only
   const calculateGroupTotal = (collection: SandwichCollection) => {
     const groupCount1 = (collection as any).group1Count || 0;
     const groupCount2 = (collection as any).group2Count || 0;
     return groupCount1 + groupCount2;
+  };
+
+  // PHASE 6: Standardized total calculation - individual + groups
+  const calculateTotal = (collection: SandwichCollection) => {
+    const individual = Number(collection.individualSandwiches || 0);
+    const groupTotal = calculateGroupTotal(collection);
+    return individual + groupTotal;
   };
 
   // Memoize expensive computations
@@ -463,12 +470,6 @@ export default function SandwichCollectionLog() {
       hour: '2-digit',
       minute: '2-digit'
     });
-  };
-
-  const calculateTotal = (collection: SandwichCollection) => {
-    const individual = Number(collection.individualSandwiches || 0);
-    const groupTotal = calculateGroupTotal(collection);
-    return individual + groupTotal;
   };
 
   // PHASE 5: Helper to get group collections from new column structure

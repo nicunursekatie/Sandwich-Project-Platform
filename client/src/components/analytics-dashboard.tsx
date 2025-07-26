@@ -19,34 +19,21 @@ export default function AnalyticsDashboard() {
   const analyticsData = useMemo(() => {
     if (!collections?.length) return null;
 
-    // Parse group collections safely
-    const parseGroups = (groups: any): number => {
-      if (!groups) return 0;
-      if (typeof groups === 'string') {
-        try {
-          const parsed = JSON.parse(groups);
-          if (Array.isArray(parsed)) {
-            return parsed.reduce((sum: number, g: any) => sum + (Number(g.sandwichCount) || 0), 0);
-          }
-          return Number(parsed) || 0;
-        } catch {
-          return Number(groups) || 0;
-        }
-      }
-      if (Array.isArray(groups)) {
-        return groups.reduce((sum: number, g: any) => sum + (Number(g.sandwichCount) || 0), 0);
-      }
-      return Number(groups) || 0;
+    // PHASE 6: Standardized group calculation using new column structure only
+    const calculateGroupTotal = (collection: SandwichCollection): number => {
+      const groupCount1 = (collection as any).group1Count || 0;
+      const groupCount2 = (collection as any).group2Count || 0;
+      return groupCount1 + groupCount2;
     };
 
     // Calculate basic statistics
     const totalSandwiches = collections.reduce((sum, c) => 
-      sum + (c.individualSandwiches || 0) + parseGroups(c.groupCollections), 0
+      sum + (c.individualSandwiches || 0) + calculateGroupTotal(c), 0
     );
 
     const hostStats = collections.reduce((acc, c) => {
       const host = c.hostName || 'Unknown';
-      const sandwiches = (c.individualSandwiches || 0) + parseGroups(c.groupCollections);
+      const sandwiches = (c.individualSandwiches || 0) + calculateGroupTotal(c);
       
       if (!acc[host]) {
         acc[host] = { total: 0, collections: 0 };
@@ -71,7 +58,7 @@ export default function AnalyticsDashboard() {
     const weeklyData = collections.reduce((acc, c) => {
       const date = new Date(c.collectionDate || '');
       const weekKey = getWeekKey(date);
-      const sandwiches = (c.individualSandwiches || 0) + parseGroups(c.groupCollections);
+      const sandwiches = (c.individualSandwiches || 0) + calculateGroupTotal(c);
       
       if (!acc[weekKey]) {
         acc[weekKey] = { total: 0, date: c.collectionDate };
@@ -93,7 +80,7 @@ export default function AnalyticsDashboard() {
     const monthlyTrends = collections.reduce((acc, c) => {
       const date = new Date(c.collectionDate || '');
       const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      const sandwiches = (c.individualSandwiches || 0) + parseGroups(c.groupCollections);
+      const sandwiches = (c.individualSandwiches || 0) + calculateGroupTotal(c);
       
       if (!acc[monthKey]) {
         acc[monthKey] = { month: monthKey, sandwiches: 0 };

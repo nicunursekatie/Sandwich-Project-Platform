@@ -133,6 +133,18 @@ async function startServer() {
       path: '/notifications'
     });
 
+    // Set up Vite middleware BEFORE server starts listening to ensure frontend is ready
+    if (process.env.NODE_ENV === "development") {
+      try {
+        const { setupVite } = await import("./vite");
+        await setupVite(app, httpServer);
+        console.log("✓ Vite development server setup complete BEFORE server start");
+      } catch (error) {
+        console.error("✗ Vite setup failed:", error);
+        console.log("⚠ Server continuing without Vite - frontend may not work properly");
+      }
+    }
+
     const clients = new Map<string, any>();
 
     wss.on('connection', (ws, request) => {
@@ -219,19 +231,7 @@ async function startServer() {
             });
           });
 
-          if (process.env.NODE_ENV === "development") {
-            try {
-              const { setupVite } = await import("./vite");
-              await setupVite(app, httpServer);
-              console.log("✓ Vite development server setup complete");
-              // Add small delay to ensure Vite is fully ready
-              await new Promise(resolve => setTimeout(resolve, 200));
-              console.log("✓ Vite stabilization delay complete");
-            } catch (error) {
-              console.error("✗ Vite setup failed:", error);
-              console.log("⚠ Server continuing without Vite - frontend may not work properly");
-            }
-          } else {
+          if (process.env.NODE_ENV === "production") {
               // Add catch-all for unknown routes before SPA
               app.use("*", (req: Request, res: Response, next: NextFunction) => {
                 console.log(`Catch-all route hit: ${req.method} ${req.originalUrl}`);
