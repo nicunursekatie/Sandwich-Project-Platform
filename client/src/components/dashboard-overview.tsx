@@ -85,7 +85,6 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               <HelpBubble
                 title="Recording Collections"
                 content="Every sandwich you record represents a meal for someone in need. Don't worry about making mistakes - you can always edit entries later!"
-                character="mentor"
                 position="bottom"
                 trigger="hover"
               />

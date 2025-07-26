@@ -243,7 +243,7 @@ export const conversationParticipants = pgTable("conversation_participants", {
   pk: primaryKey({ columns: [table.conversationId, table.userId] }),
 }));
 
-// 3. Messages - for chat messages only
+// 3. Messages - for chat messages only  
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
   conversationId: integer("conversation_id").references(() => conversations.id, { onDelete: "cascade" }),
@@ -259,7 +259,7 @@ export const messages = pgTable("messages", {
   deletedAt: timestamp("deleted_at"),
   deletedBy: text("deleted_by"),
   // Reply functionality
-  replyToMessageId: integer("reply_to_message_id").references(() => messages.id, { onDelete: "cascade" }),
+  replyToMessageId: integer("reply_to_message_id"),
   replyToContent: text("reply_to_content"), // Store original message content for display
   replyToSender: text("reply_to_sender"), // Store sender name for display
   createdAt: timestamp("created_at").defaultNow(),
@@ -361,7 +361,12 @@ export const sandwichCollections = pgTable("sandwich_collections", {
   collectionDate: text("collection_date").notNull(),
   hostName: text("host_name").notNull(),
   individualSandwiches: integer("individual_sandwiches").notNull(),
-  groupCollections: text("group_collections").notNull(), // JSON string of group data with names/counts
+  groupCollections: text("group_collections").notNull(), // JSON string of group data with names/counts - TEMPORARY for migration
+  // Phase 1: New simple columns for group data
+  group1Name: text("group1_name"), // Name of first group (nullable)
+  group1Count: integer("group1_count"), // Count for first group (nullable)
+  group2Name: text("group2_name"), // Name of second group (nullable)
+  group2Count: integer("group2_count"), // Count for second group (nullable)
   createdBy: text("created_by"), // User ID who created this entry
   createdByName: text("created_by_name"), // Display name of creator
   submittedAt: timestamp("submitted_at").notNull().defaultNow(),
