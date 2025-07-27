@@ -114,25 +114,37 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h3 className="text-base font-semibold text-[#236383] font-roboto mb-2">Total Lifetime</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-base font-semibold text-[#236383] font-roboto">Total Lifetime</h3>
+              <span className="bg-[#236383] text-white px-2 py-1 rounded-full text-xs font-medium">active</span>
+            </div>
             <p className="text-2xl font-bold text-gray-900 font-roboto mb-1">{organizationalStats.totalLifetimeSandwiches}</p>
             <p className="text-sm text-gray-500 font-roboto">Since 2020</p>
           </div>
           
           <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h3 className="text-base font-semibold text-[#FBAD3F] font-roboto mb-2">Peak Week</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-base font-semibold text-[#FBAD3F] font-roboto">Peak Week</h3>
+              <span className="bg-[#FBAD3F] text-white px-2 py-1 rounded-full text-xs font-medium">high priority</span>
+            </div>
             <p className="text-2xl font-bold text-gray-900 font-roboto mb-1">{organizationalStats.peakWeekRecord}</p>
             <p className="text-sm text-gray-500 font-roboto">{organizationalStats.peakWeekDate}</p>
           </div>
           
           <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h3 className="text-base font-semibold text-green-600 font-roboto mb-2">Annual Capacity</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-base font-semibold text-green-600 font-roboto">Annual Capacity</h3>
+              <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">sustainable</span>
+            </div>
             <p className="text-2xl font-bold text-gray-900 font-roboto mb-1">{organizationalStats.currentAnnualCapacity}</p>
             <p className="text-sm text-gray-500 font-roboto">Sustainable Level</p>
           </div>
           
           <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h3 className="text-base font-semibold text-blue-600 font-roboto mb-2">Growth</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-base font-semibold text-blue-600 font-roboto">Growth</h3>
+              <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">expanding</span>
+            </div>
             <p className="text-2xl font-bold text-gray-900 font-roboto mb-1">{organizationalStats.growthMultiplier}</p>
             <p className="text-sm text-gray-500 font-roboto">Since Launch</p>
           </div>
@@ -142,15 +154,24 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         {statsData && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-200">
             <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <h3 className="text-base font-semibold text-blue-600 font-roboto mb-2">Individual Sandwiches</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-base font-semibold text-blue-600 font-roboto">Individual Sandwiches</h3>
+                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">active</span>
+              </div>
               <p className="text-lg font-bold text-gray-900 font-roboto">{statsData.individualSandwiches?.toLocaleString() || 0}</p>
             </div>
             <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <h3 className="text-base font-semibold text-orange-600 font-roboto mb-2">Group Sandwiches</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-base font-semibold text-orange-600 font-roboto">Group Sandwiches</h3>
+                <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">medium priority</span>
+              </div>
               <p className="text-lg font-bold text-gray-900 font-roboto">{((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)).toLocaleString()}</p>
             </div>
             <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <h3 className="text-base font-semibold text-gray-600 font-roboto mb-2">Total Entries</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-base font-semibold text-gray-600 font-roboto">Total Entries</h3>
+                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">database</span>
+              </div>
               <p className="text-lg font-bold text-gray-900 font-roboto">{statsData.totalEntries?.toLocaleString() || 0}</p>
             </div>
           </div>
@@ -215,30 +236,37 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
       </div>
 
       {/* Operational Capacity Information */}
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-        <div className="px-4 py-3 border-b border-slate-200">
-          <div className="flex items-center space-x-2">
-            <Award className="w-5 h-5 text-[#236383]" />
-            <h2 className="text-lg font-semibold text-slate-900">Operational Capacity</h2>
+      <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-6 h-6 bg-[#236383]/10 rounded flex items-center justify-center shrink-0">
+            <Award className="h-3 w-3 text-[#236383]" />
           </div>
+          <h2 className="text-lg font-semibold text-[#236383] font-roboto">Operational Capacity</h2>
         </div>
-        <div className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-slate-50 rounded-lg">
-              <div className="text-lg font-bold text-slate-700">{organizationalStats.weeklyBaseline}</div>
-              <div className="text-sm text-slate-600">Weekly Baseline</div>
-              <div className="text-xs text-slate-500 mt-1">Normal Operations</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-base font-semibold text-gray-600 font-roboto">Weekly Baseline</div>
+              <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">normal ops</span>
             </div>
-            <div className="text-center p-4 bg-amber-50 rounded-lg">
-              <div className="text-lg font-bold text-amber-700">{organizationalStats.surgingCapacity}</div>
-              <div className="text-sm text-slate-600">Surge Capacity</div>
-              <div className="text-xs text-slate-500 mt-1">Crisis Response</div>
+            <div className="text-lg font-bold text-gray-900 font-roboto mb-1">{organizationalStats.weeklyBaseline}</div>
+            <div className="text-sm text-gray-500 font-roboto">Normal Operations</div>
+          </div>
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-base font-semibold text-amber-600 font-roboto">Surge Capacity</div>
+              <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded-full text-xs font-medium">high priority</span>
             </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-lg font-bold text-blue-700">{organizationalStats.operationalYears}</div>
-              <div className="text-sm text-slate-600">Years Operating</div>
-              <div className="text-xs text-slate-500 mt-1">Since April 2020</div>
+            <div className="text-lg font-bold text-gray-900 font-roboto mb-1">{organizationalStats.surgingCapacity}</div>
+            <div className="text-sm text-gray-500 font-roboto">Crisis Response</div>
+          </div>
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-base font-semibold text-blue-600 font-roboto">Years Operating</div>
+              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">established</span>
             </div>
+            <div className="text-lg font-bold text-gray-900 font-roboto mb-1">{organizationalStats.operationalYears}</div>
+            <div className="text-sm text-gray-500 font-roboto">Since April 2020</div>
           </div>
         </div>
       </div>
