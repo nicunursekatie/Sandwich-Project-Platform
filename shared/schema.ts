@@ -299,6 +299,20 @@ export const kudosTracking = pgTable("kudos_tracking", {
   senderIdx: index("idx_kudos_sender").on(table.senderId),
 }));
 
+// 5. Message Likes - track who liked which messages
+export const messageLikes = pgTable("message_likes", {
+  id: serial("id").primaryKey(),
+  messageId: integer("message_id").references(() => messages.id, { onDelete: "cascade" }).notNull(),
+  userId: text("user_id").notNull(),
+  userName: text("user_name"), // Store user display name for tooltip
+  likedAt: timestamp("liked_at").defaultNow(),
+}, (table) => ({
+  // Ensure each user can only like a message once
+  uniqueLike: unique().on(table.messageId, table.userId),
+  messageIdx: index("idx_message_likes_message").on(table.messageId),
+  userIdx: index("idx_message_likes_user").on(table.userId),
+}));
+
 // All complex messaging tables removed - using enhanced messaging system above
 
 // SIMPLIFIED Email-style messaging table - NO THREADING COMPLEXITY  
@@ -539,6 +553,15 @@ export type ArchivedProject = typeof archivedProjects.$inferSelect;
 export type InsertArchivedProject = z.infer<typeof insertArchivedProjectSchema>;
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+
+// Message likes schema types
+export const insertMessageLikeSchema = createInsertSchema(messageLikes).omit({
+  id: true,
+  likedAt: true
+});
+
+export type MessageLike = typeof messageLikes.$inferSelect;
+export type InsertMessageLike = z.infer<typeof insertMessageLikeSchema>;
 export type MessageRecipient = typeof messageRecipients.$inferSelect;
 export type InsertMessageRecipient = z.infer<typeof insertMessageRecipientSchema>;
 // REMOVED: MessageThread types - Threading functionality removed

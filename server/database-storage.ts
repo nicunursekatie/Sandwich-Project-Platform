@@ -1,5 +1,5 @@
 import { 
-  users, projects, archivedProjects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, suggestions, suggestionResponses, chatMessages,
+  users, projects, archivedProjects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, messageLikes, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, suggestions, suggestionResponses, chatMessages,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -7,6 +7,7 @@ import {
   type ProjectAssignment, type InsertProjectAssignment,
   type TaskCompletion, type InsertTaskCompletion,
   type Message, type InsertMessage,
+  type MessageLike, type InsertMessageLike,
   type WeeklyReport, type InsertWeeklyReport,
   type SandwichCollection, type InsertSandwichCollection,
   type MeetingMinutes, type InsertMeetingMinutes,
@@ -1651,6 +1652,88 @@ export class DatabaseStorage implements IStorage {
       return (result.rowCount ?? 0) > 0;
     } catch (error) {
       console.error('Error deleting conversation message:', error);
+      return false;
+    }
+  }
+
+  // Message Like methods
+  async likeMessage(messageId: number, userId: string, userName: string): Promise<MessageLike | null> {
+    try {
+      console.log(`[DB] User ${userId} liking message ${messageId}`);
+      
+      const [like] = await db
+        .insert(messageLikes)
+        .values({
+          messageId,
+          userId,
+          userName,
+        })
+        .returning();
+      
+      console.log(`[DB] Created message like with ID: ${like.id}`);
+      return like;
+    } catch (error: any) {
+      if (error.code === '23505') { // Unique constraint violation
+        console.log(`[DB] User ${userId} already liked message ${messageId}`);
+        return null; // Already liked
+      }
+      console.error('Error liking message:', error);
+      throw error;
+    }
+  }
+
+  async unlikeMessage(messageId: number, userId: string): Promise<boolean> {
+    try {
+      console.log(`[DB] User ${userId} unliking message ${messageId}`);
+      
+      const result = await db
+        .delete(messageLikes)
+        .where(and(
+          eq(messageLikes.messageId, messageId),
+          eq(messageLikes.userId, userId)
+        ));
+      
+      const success = (result.rowCount ?? 0) > 0;
+      console.log(`[DB] Unlike result: ${success}`);
+      return success;
+    } catch (error) {
+      console.error('Error unliking message:', error);
+      return false;
+    }
+  }
+
+  async getMessageLikes(messageId: number): Promise<MessageLike[]> {
+    try {
+      console.log(`[DB] Getting likes for message ${messageId}`);
+      
+      const likes = await db
+        .select()
+        .from(messageLikes)
+        .where(eq(messageLikes.messageId, messageId))
+        .orderBy(messageLikes.likedAt);
+      
+      console.log(`[DB] Found ${likes.length} likes for message ${messageId}`);
+      return likes;
+    } catch (error) {
+      console.error('Error getting message likes:', error);
+      return [];
+    }
+  }
+
+  async hasUserLikedMessage(messageId: number, userId: string): Promise<boolean> {
+    try {
+      const [like] = await db
+        .select()
+        .from(messageLikes)
+        .where(and(
+          eq(messageLikes.messageId, messageId),
+          eq(messageLikes.userId, userId)
+        ))
+        .limit(1);
+      
+      return !!like;
+    } catch (error) {
+      console.error('Error checking if user liked message:', error);
       return false;
     }
   }

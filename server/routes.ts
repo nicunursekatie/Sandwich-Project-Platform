@@ -7407,6 +7407,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Message Likes API Routes
+  
+  // Like a message
+  app.post("/api/messages/:id/like", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).user;
+      if (!user?.id) {
+        return res.status(401).json({ error: "User not authenticated" });
+      }
+
+      const messageId = parseInt(req.params.id);
+      if (isNaN(messageId)) {
+        return res.status(400).json({ error: "Invalid message ID" });
+      }
+
+      const userName = `${user.firstName} ${user.lastName}`.trim() || user.email || "Unknown User";
+      
+      const like = await storage.likeMessage(messageId, user.id, userName);
+      
+      if (like === null) {
+        return res.status(409).json({ error: "Message already liked" });
+      }
+
+      res.json({ success: true, like });
+    } catch (error) {
+      console.error("Error liking message:", error);
+      res.status(500).json({ error: "Failed to like message" });
+    }
+  });
+
+  // Unlike a message
+  app.delete("/api/messages/:id/like", isAuthenticated, async (req, res) => {
+    try {
+      const user = (req as any).user;
+      if (!user?.id) {
+        return res.status(401).json({ error: "User not authenticated" });
+      }
+
+      const messageId = parseInt(req.params.id);
+      if (isNaN(messageId)) {
+        return res.status(400).json({ error: "Invalid message ID" });
+      }
+
+      const success = await storage.unlikeMessage(messageId, user.id);
+      
+      if (!success) {
+        return res.status(404).json({ error: "Like not found" });
+      }
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error unliking message:", error);
+      res.status(500).json({ error: "Failed to unlike message" });
+    }
+  });
+
+  // Get likes for a message
+  app.get("/api/messages/:id/likes", isAuthenticated, async (req, res) => {
+    try {
+      const messageId = parseInt(req.params.id);
+      if (isNaN(messageId)) {
+        return res.status(400).json({ error: "Invalid message ID" });
+      }
+
+      const likes = await storage.getMessageLikes(messageId);
+      res.json(likes);
+    } catch (error) {
+      console.error("Error getting message likes:", error);
+      res.status(500).json({ error: "Failed to get message likes" });
+    }
+  });
+
   // Create or get direct conversation between two users
   app.post("/api/conversations/direct", isAuthenticated, async (req, res) => {
     console.log("=== POST /api/conversations/direct START ===");

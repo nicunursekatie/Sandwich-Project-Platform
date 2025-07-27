@@ -110,6 +110,12 @@ export interface IStorage {
   deleteConversationMessage(messageId: number, userId: string): Promise<boolean>;
   getConversationParticipants(conversationId: number): Promise<any[]>;
   
+  // Message likes methods
+  likeMessage(messageId: number, userId: string, userName: string): Promise<any>;
+  unlikeMessage(messageId: number, userId: string): Promise<boolean>;
+  getMessageLikes(messageId: number): Promise<any[]>;
+  hasUserLikedMessage(messageId: number, userId: string): Promise<boolean>;
+  
   // Thread participant management - individual user control over group threads
   getThreadParticipants(threadId: number): Promise<any[]>;
   getParticipantStatus(threadId: number, userId: string): Promise<string | null>;
