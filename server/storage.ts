@@ -254,6 +254,20 @@ export interface IStorage {
   updateChatMessage(id: number, updates: { content: string }): Promise<void>;
   deleteChatMessage(id: number): Promise<void>;
   markChannelMessagesAsRead(userId: string, channel: string): Promise<void>;
+
+  // Shoutout methods
+  createShoutoutLog(log: {
+    templateName: string;
+    subject: string;
+    message: string;
+    recipientCount: number;
+    sentAt: string;
+    status: string;
+    sentBy: string;
+    successCount?: number;
+    failureCount?: number;
+  }): Promise<any>;
+  getShoutoutHistory(): Promise<any[]>;
 }
 
 export class MemStorage implements IStorage {

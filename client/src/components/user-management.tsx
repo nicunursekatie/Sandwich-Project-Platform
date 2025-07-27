@@ -18,6 +18,7 @@ import { Users, Shield, Settings, Key, Award, Megaphone, Trash2, Bug } from "luc
 import AnnouncementManager from "@/components/announcement-manager";
 import AuthDebug from "@/components/auth-debug";
 import { SimplePermissionsDialog } from "@/components/simple-permissions-dialog";
+import ShoutoutSystem from "@/components/shoutout-system";
 
 interface User {
   id: string;
@@ -35,7 +36,7 @@ export default function UserManagement() {
   const { user: currentUser } = useAuth();
   const { toast } = useToast();
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
-  const [activeTab, setActiveTab] = useState<"users" | "announcements" | "auth-debug">("users");
+  const [activeTab, setActiveTab] = useState<"users" | "announcements" | "shoutouts" | "auth-debug">("users");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null);
   const [newPassword, setNewPassword] = useState<string>("");
@@ -250,6 +251,18 @@ export default function UserManagement() {
             <span className="sm:hidden">Announce</span>
           </button>
           <button
+            onClick={() => setActiveTab("shoutouts")}
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
+              activeTab === "shoutouts"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+            }`}
+          >
+            <Users className="h-4 w-4 inline mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">User Outreach</span>
+            <span className="sm:hidden">Outreach</span>
+          </button>
+          <button
             onClick={() => setActiveTab("auth-debug")}
             className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
               activeTab === "auth-debug"
@@ -266,6 +279,8 @@ export default function UserManagement() {
 
       {activeTab === "announcements" ? (
         <AnnouncementManager />
+      ) : activeTab === "shoutouts" ? (
+        <ShoutoutSystem />
       ) : activeTab === "auth-debug" ? (
         <AuthDebug />
       ) : (

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { isAuthenticated, requirePermission } from '../auth';
-import { storage } from '../storage.js';
+import { isAuthenticated, requirePermission } from '../temp-auth';
+import { storage } from '../storage-wrapper';
 import { sendEmail } from '../services/sendgrid';
 
 const router = Router();
