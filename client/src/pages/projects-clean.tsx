@@ -219,8 +219,8 @@ export default function ProjectsClean() {
     >
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-[#236383] font-roboto text-lg mb-1 truncate">
+          <div className="flex-1">
+            <h3 className="font-semibold text-[#236383] font-roboto text-lg mb-1 break-words leading-tight">
               {project.title}
             </h3>
             <div className="flex flex-wrap gap-2 mb-2">
