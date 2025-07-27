@@ -385,19 +385,22 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
             variant="ghost"
             size="sm"
             onClick={() => {
+              console.log('Back to Projects clicked - navigating to projects');
               // Simply trigger dashboard section change without page refresh
               if ((window as any).dashboardSetActiveSection) {
                 (window as any).dashboardSetActiveSection('projects');
+              } else {
+                setLocation('/projects');
               }
             }}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 border-[#236383] text-[#236383] hover:bg-[#236383] hover:text-white font-roboto"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Projects
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{project.title}</h1>
-            <p className="text-gray-600">{project.description}</p>
+            <h1 className="text-2xl font-bold text-[#236383] font-roboto">{project.title}</h1>
+            <p className="text-gray-600 font-roboto">{project.description}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -406,7 +409,7 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
               variant="outline"
               size="sm"
               onClick={handleEditProject}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 border-[#FBAD3F] text-[#FBAD3F] hover:bg-[#FBAD3F] hover:text-white font-roboto"
             >
               <Edit2 className="h-4 w-4" />
               Edit Project
@@ -500,11 +503,11 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
       {/* Tasks Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Tasks</h2>
+          <h2 className="text-xl font-semibold text-[#236383] font-roboto">Tasks</h2>
           {user && canEditProject(user, project) && (
             <Button
               onClick={() => setIsAddingTask(true)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-[#FBAD3F] hover:bg-[#FBAD3F]/90 text-white font-roboto"
             >
               <Plus className="h-4 w-4" />
               Add Task
@@ -593,6 +596,7 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                 <Button
                   onClick={handleAddTask}
                   disabled={addTaskMutation.isPending}
+                  className="bg-[#FBAD3F] hover:bg-[#FBAD3F]/90 text-white font-roboto"
                 >
                   {addTaskMutation.isPending ? 'Adding...' : 'Add Task'}
                 </Button>
