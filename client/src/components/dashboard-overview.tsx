@@ -105,116 +105,112 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
       )}
 
       {/* Organizational Impact Statistics */}
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-        <div className="px-4 py-3 border-b border-slate-200">
-          <div className="flex items-center space-x-2">
-            <TrendingUp className="w-5 h-5 text-[#236383]" />
-            <h2 className="text-lg font-semibold text-slate-900">Organizational Impact</h2>
+      <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-6 h-6 bg-[#236383]/10 rounded flex items-center justify-center shrink-0">
+            <TrendingUp className="h-3 w-3 text-[#236383]" />
+          </div>
+          <h2 className="text-lg font-semibold text-[#236383] font-roboto">Organizational Impact</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <h3 className="text-base font-semibold text-[#236383] font-roboto mb-2">Total Lifetime</h3>
+            <p className="text-2xl font-bold text-gray-900 font-roboto mb-1">{organizationalStats.totalLifetimeSandwiches}</p>
+            <p className="text-sm text-gray-500 font-roboto">Since 2020</p>
+          </div>
+          
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <h3 className="text-base font-semibold text-[#FBAD3F] font-roboto mb-2">Peak Week</h3>
+            <p className="text-2xl font-bold text-gray-900 font-roboto mb-1">{organizationalStats.peakWeekRecord}</p>
+            <p className="text-sm text-gray-500 font-roboto">{organizationalStats.peakWeekDate}</p>
+          </div>
+          
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <h3 className="text-base font-semibold text-green-600 font-roboto mb-2">Annual Capacity</h3>
+            <p className="text-2xl font-bold text-gray-900 font-roboto mb-1">{organizationalStats.currentAnnualCapacity}</p>
+            <p className="text-sm text-gray-500 font-roboto">Sustainable Level</p>
+          </div>
+          
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <h3 className="text-base font-semibold text-blue-600 font-roboto mb-2">Growth</h3>
+            <p className="text-2xl font-bold text-gray-900 font-roboto mb-1">{organizationalStats.growthMultiplier}</p>
+            <p className="text-sm text-gray-500 font-roboto">Since Launch</p>
           </div>
         </div>
-        <div className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-gradient-to-br from-[#236383] to-[#1e5472] text-white rounded-lg p-4">
-              <h3 className="text-base font-semibold font-roboto mb-2">Total Lifetime</h3>
-              <p className="text-2xl font-bold font-roboto mb-1">{organizationalStats.totalLifetimeSandwiches}</p>
-              <p className="text-sm text-blue-100 font-roboto">Since 2020</p>
-            </div>
-            
-            <div className="bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] text-white rounded-lg p-4">
-              <h3 className="text-base font-semibold font-roboto mb-2">Peak Week</h3>
-              <p className="text-2xl font-bold font-roboto mb-1">{organizationalStats.peakWeekRecord}</p>
-              <p className="text-sm text-orange-100 font-roboto">{organizationalStats.peakWeekDate}</p>
-            </div>
-            
-            <div className="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg p-4">
-              <h3 className="text-base font-semibold font-roboto mb-2">Annual Capacity</h3>
-              <p className="text-2xl font-bold font-roboto mb-1">{organizationalStats.currentAnnualCapacity}</p>
-              <p className="text-sm text-green-100 font-roboto">Sustainable Level</p>
-            </div>
-            
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg p-4">
-              <h3 className="text-base font-semibold font-roboto mb-2">Growth</h3>
-              <p className="text-2xl font-bold font-roboto mb-1">{organizationalStats.growthMultiplier}</p>
-              <p className="text-sm text-blue-100 font-roboto">Since Launch</p>
-            </div>
-          </div>
 
-          {/* Database Details */}
-          {statsData && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-200">
-              <div className="bg-gradient-to-br from-blue-400 to-blue-500 text-white rounded-lg p-3">
-                <h3 className="text-sm font-semibold font-roboto mb-2">Individual Sandwiches</h3>
-                <p className="text-lg font-bold font-roboto">{statsData.individualSandwiches?.toLocaleString() || 0}</p>
-              </div>
-              <div className="bg-gradient-to-br from-orange-400 to-orange-500 text-white rounded-lg p-3">
-                <h3 className="text-sm font-semibold font-roboto mb-2">Group Sandwiches</h3>
-                <p className="text-lg font-bold font-roboto">{((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)).toLocaleString()}</p>
-              </div>
-              <div className="bg-gradient-to-br from-gray-500 to-gray-600 text-white rounded-lg p-3">
-                <h3 className="text-sm font-semibold font-roboto mb-2">Total Entries</h3>
-                <p className="text-lg font-bold font-roboto">{statsData.totalEntries?.toLocaleString() || 0}</p>
-              </div>
+        {/* Database Details */}
+        {statsData && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-200">
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <h3 className="text-base font-semibold text-blue-600 font-roboto mb-2">Individual Sandwiches</h3>
+              <p className="text-lg font-bold text-gray-900 font-roboto">{statsData.individualSandwiches?.toLocaleString() || 0}</p>
             </div>
-          )}
-        </div>
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <h3 className="text-base font-semibold text-orange-600 font-roboto mb-2">Group Sandwiches</h3>
+              <p className="text-lg font-bold text-gray-900 font-roboto">{((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)).toLocaleString()}</p>
+            </div>
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <h3 className="text-base font-semibold text-gray-600 font-roboto mb-2">Total Entries</h3>
+              <p className="text-lg font-bold text-gray-900 font-roboto">{statsData.totalEntries?.toLocaleString() || 0}</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Important Documents */}
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-        <div className="px-4 py-3 border-b border-slate-200">
-          <div className="flex items-center space-x-2">
-            <FileText className="w-5 h-5 text-[#236383]" />
-            <h2 className="text-lg font-semibold text-slate-900">Important Documents</h2>
+      <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-6 h-6 bg-[#236383]/10 rounded flex items-center justify-center shrink-0">
+            <FileText className="h-3 w-3 text-[#236383]" />
           </div>
+          <h2 className="text-lg font-semibold text-[#236383] font-roboto">Important Documents</h2>
         </div>
-        <div className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {importantDocuments.map((doc, index) => (
-              <div key={index} className="border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center space-x-3 flex-1">
-                    <FileText className="w-8 h-8 text-[#236383] flex-shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-base font-semibold text-slate-900 mb-1">{doc.title}</h3>
-                      <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
-                        doc.category === 'Legal' ? 'bg-blue-100 text-blue-800' :
-                        doc.category === 'Strategy' ? 'bg-purple-100 text-purple-800' :
-                        'bg-green-100 text-green-800'
-                      }`}>
-                        {doc.category}
-                      </span>
-                    </div>
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {importantDocuments.map((doc, index) => (
+            <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-6 h-6 bg-[#236383]/10 rounded flex items-center justify-center shrink-0">
+                  <FileText className="h-3 w-3 text-[#236383]" />
                 </div>
-                <p className="text-sm text-slate-600 mb-4">{doc.description}</p>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(doc.path, '_blank')}
-                    className="flex items-center gap-2 text-[#236383] border-[#236383]/30 hover:bg-[#236383]/10"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      const link = document.createElement('a');
-                      link.href = doc.path;
-                      link.download = doc.title;
-                      link.click();
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <Download className="w-4 h-4" />
-                    Download
-                  </Button>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-semibold text-gray-900 font-roboto mb-2">{doc.title}</h3>
+                  <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
+                    doc.category === 'Legal' ? 'bg-blue-100 text-blue-800' :
+                    doc.category === 'Strategy' ? 'bg-purple-100 text-purple-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>
+                    {doc.category}
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
+              <p className="text-sm text-gray-600 font-roboto mb-4 leading-tight">{doc.description}</p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.open(doc.path, '_blank')}
+                  className="flex items-center gap-1 text-[#236383] border-[#236383]/30 hover:bg-[#236383]/10 text-xs h-7"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  View
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = doc.path;
+                    link.download = doc.title;
+                    link.click();
+                  }}
+                  className="flex items-center gap-1 text-xs h-7"
+                >
+                  <Download className="w-3 h-3" />
+                  Download
+                </Button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
