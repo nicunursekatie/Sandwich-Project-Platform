@@ -434,17 +434,17 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
         {/* Project Owner */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-[#236383]/10 rounded-lg flex items-center justify-center">
-              <User className="h-5 w-5 text-[#236383]" />
+            <div className="w-8 h-8 bg-[#236383]/10 rounded-lg flex items-center justify-center">
+              <User className="h-4 w-4 text-[#236383]" />
             </div>
-            <div>
-              <h3 className="text-sm font-medium text-gray-500 font-roboto uppercase tracking-wide">Project Owner</h3>
-              <p className="text-xl font-bold text-[#236383] font-roboto">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-semibold text-[#236383] font-roboto mb-1">Project Owner</h3>
+              <p className="text-sm text-gray-700 font-roboto truncate">
                 {project.assigneeName || 'Christine Cooper Nowicki'}
               </p>
             </div>
           </div>
-          <p className="text-sm text-gray-600 font-roboto">
+          <p className="text-xs text-gray-500 font-roboto">
             Currently managing this project
           </p>
         </div>
@@ -452,12 +452,12 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
         {/* Target Date */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-[#FBAD3F]/10 rounded-lg flex items-center justify-center">
-              <Calendar className="h-5 w-5 text-[#FBAD3F]" />
+            <div className="w-8 h-8 bg-[#FBAD3F]/10 rounded-lg flex items-center justify-center">
+              <Calendar className="h-4 w-4 text-[#FBAD3F]" />
             </div>
-            <div>
-              <h3 className="text-sm font-medium text-gray-500 font-roboto uppercase tracking-wide">Target Date</h3>
-              <p className="text-xl font-bold text-[#FBAD3F] font-roboto">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-semibold text-[#FBAD3F] font-roboto mb-1">Target Date</h3>
+              <p className="text-sm text-gray-700 font-roboto">
                 {project.dueDate 
                   ? new Date(project.dueDate).toLocaleDateString()
                   : '8/30/2025'
@@ -465,7 +465,7 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
               </p>
             </div>
           </div>
-          <p className="text-sm text-gray-600 font-roboto">
+          <p className="text-xs text-gray-500 font-roboto">
             About 1 month remaining
           </p>
         </div>
@@ -473,18 +473,18 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
         {/* Progress */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <Target className="h-5 w-5 text-green-600" />
+            <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+              <Target className="h-4 w-4 text-green-600" />
             </div>
-            <div>
-              <h3 className="text-sm font-medium text-gray-500 font-roboto uppercase tracking-wide">Progress</h3>
-              <p className="text-xl font-bold text-green-600 font-roboto">{progressPercentage}%</p>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-semibold text-green-600 font-roboto mb-1">Progress</h3>
+              <p className="text-sm text-gray-700 font-roboto">{progressPercentage}%</p>
             </div>
           </div>
-          <p className="text-sm text-gray-600 font-roboto">
+          <p className="text-xs text-gray-500 font-roboto mb-3">
             {completedTasks} of {totalTasks} tasks complete
           </p>
-          <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+          <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
               className="bg-green-500 h-2 rounded-full transition-all duration-300" 
               style={{ width: `${progressPercentage}%` }}
