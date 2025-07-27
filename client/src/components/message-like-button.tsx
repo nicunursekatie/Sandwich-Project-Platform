@@ -26,6 +26,9 @@ export function MessageLikeButton({ messageId, className = "" }: MessageLikeButt
   // Convert messageId to number for API consistency
   const numericMessageId = Number(messageId);
   
+  // Debug logging
+  console.log("MessageLikeButton rendered:", { messageId, numericMessageId, user: user?.id });
+  
   // Fetch likes for this message
   const { data: likes = [], isLoading } = useQuery({
     queryKey: ["message-likes", numericMessageId],

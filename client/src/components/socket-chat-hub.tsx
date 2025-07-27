@@ -188,30 +188,33 @@ export default function SocketChatHub() {
             {/* Messages */}
             <ScrollArea className="flex-1 p-4">
               <div className="space-y-4">
-                {(messages[currentRoom] || []).map((message: ChatMessage) => (
-                  <div key={message.id} className="flex gap-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="text-xs">
-                        {getInitials(message.username)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline gap-2">
-                        <span className="font-medium text-sm">{message.username}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {formatTime(message.timestamp)}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-700 mt-1 break-words">
-                        {message.content}
-                      </p>
-                      {/* Message actions */}
-                      <div className="flex items-center mt-2 space-x-2">
-                        <MessageLikeButton messageId={message.id} />
+                {(messages[currentRoom] || []).map((message: ChatMessage) => {
+                  console.log("Rendering socket chat message:", message);
+                  return (
+                    <div key={message.id} className="flex gap-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="text-xs">
+                          {getInitials(message.username)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-baseline gap-2">
+                          <span className="font-medium text-sm">{message.username}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {formatTime(message.timestamp)}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-700 mt-1 break-words">
+                          {message.content}
+                        </p>
+                        {/* Message actions */}
+                        <div className="flex items-center mt-2 space-x-2">
+                          <MessageLikeButton messageId={message.id} />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 <div ref={messagesEndRef} />
               </div>
             </ScrollArea>
