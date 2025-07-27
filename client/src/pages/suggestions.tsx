@@ -900,7 +900,6 @@ export default function SuggestionsPortal() {
                         })}
                       </div>
                     )}
-                  </div>
                 </div>
               </TabsContent>
             </Tabs>
