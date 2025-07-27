@@ -187,7 +187,7 @@ export default function ProjectsClean() {
   };
 
   const filterProjectsByStatus = (status: string) => {
-    if (status === "in_progress") {
+    if (status === "active") {
       return allProjects.filter((project: Project) => project.status === "in_progress");
     }
     return allProjects.filter((project: Project) => project.status === status);
@@ -227,8 +227,8 @@ export default function ProjectsClean() {
               <Badge className={`${getPriorityColor(project.priority)} text-white text-xs font-roboto`}>
                 {project.priority} priority
               </Badge>
-              <Badge variant="outline" className="text-[#236383] border-[#236383] text-xs font-roboto">
-                {project.status?.replace('_', ' ') || 'available'}
+              <Badge className="bg-[#FBAD3F] text-white border-[#FBAD3F] text-xs font-roboto">
+                {project.status === 'in_progress' ? 'active' : project.status?.replace('_', ' ') || 'available'}
               </Badge>
             </div>
           </div>
@@ -243,10 +243,10 @@ export default function ProjectsClean() {
                     e.stopPropagation();
                     handleMarkComplete(project.id, project.title);
                   }}
-                  className="h-8 w-8 p-0 hover:bg-green-50"
+                  className="h-8 w-8 p-0 hover:bg-[#FBAD3F]/10"
                   title="Complete"
                 >
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  <CheckCircle2 className="h-4 w-4 text-[#FBAD3F]" />
                 </Button>
               )}
               
@@ -256,9 +256,9 @@ export default function ProjectsClean() {
                     variant="ghost"
                     size="sm"
                     onClick={(e) => e.stopPropagation()}
-                    className="h-8 w-8 p-0 hover:bg-gray-50"
+                    className="h-8 w-8 p-0 hover:bg-[#FBAD3F]/10"
                   >
-                    <Settings className="h-4 w-4 text-gray-600" />
+                    <Settings className="h-4 w-4 text-[#FBAD3F]" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -266,7 +266,7 @@ export default function ProjectsClean() {
                     e.stopPropagation();
                     handleEditProject(project);
                   }}>
-                    <Edit className="w-4 h-4 mr-2 text-[#236383]" />
+                    <Edit className="w-4 h-4 mr-2 text-[#FBAD3F]" />
                     Edit Project
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -294,12 +294,12 @@ export default function ProjectsClean() {
 
         <div className="flex items-center justify-between text-sm text-gray-500 font-roboto">
           <div className="flex items-center gap-1">
-            <User className="w-4 h-4" />
+            <User className="w-4 h-4 text-[#FBAD3F]" />
             <span>{project.assigneeName || 'Unassigned'}</span>
           </div>
           
           <div className="flex items-center gap-1">
-            <Calendar className="w-4 h-4" />
+            <Calendar className="w-4 h-4 text-[#FBAD3F]" />
             <span>{project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No date'}</span>
           </div>
         </div>
