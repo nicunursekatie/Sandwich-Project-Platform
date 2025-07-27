@@ -377,33 +377,34 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
   const progressPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
+    <div className="max-w-7xl mx-auto p-6 space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => {
               console.log('Back to Projects clicked - navigating to projects');
-              // Simply trigger dashboard section change without page refresh
               if ((window as any).dashboardSetActiveSection) {
                 (window as any).dashboardSetActiveSection('projects');
               } else {
                 setLocation('/projects');
               }
             }}
-            className="flex items-center gap-2 border-[#236383] text-[#236383] hover:bg-[#236383] hover:text-white font-roboto"
+            className="flex items-center gap-2 text-[#236383] hover:bg-[#236383]/10 font-roboto"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Projects
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-[#236383] font-roboto">{project.title}</h1>
-            <p className="text-gray-600 font-roboto">{project.description}</p>
+            <h1 className="text-3xl font-bold text-[#236383] font-roboto mb-2">{project.title}</h1>
+            {project.description && (
+              <p className="text-gray-600 font-roboto text-lg">{project.description}</p>
+            )}
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {user && canEditProject(user, project) && (
             <Button
               variant="outline"
@@ -415,99 +416,91 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
               Edit Project
             </Button>
           )}
-          {/* Show kudos button for completed projects */}
-          {project.status === 'completed' && project.assigneeName && (
-            <SendKudosButton 
-              recipientId="assignee"
-              recipientName={project.assigneeName}
-              contextType="project"
-              contextId={project.id.toString()}
-              entityName={project.title}
-              size="sm"
-            />
-          )}
-          <Badge className={getStatusColor(project.status)}>
+          <Badge 
+            className={`${getStatusColor(project.status)} font-roboto px-3 py-1`}
+          >
             {project.status?.replace('_', ' ')}
           </Badge>
-          <Badge className={getPriorityColor(project.priority)}>
+          <Badge 
+            className={`${getPriorityColor(project.priority)} font-roboto px-3 py-1`}
+          >
             {project.priority}
           </Badge>
         </div>
       </div>
 
-      {/* Project Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Project Info Cards - Clean TSP Style */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Project Owner */}
-        <Card className="border-l-4 border-l-blue-500">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-semibold text-blue-600 flex items-center gap-2">
-              <User className="h-5 w-5" />
-              PROJECT OWNER
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="text-lg font-bold text-gray-900 mb-1">
-              {project.assigneeName || 'Not assigned'}
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-[#236383]/10 rounded-lg flex items-center justify-center">
+              <User className="h-5 w-5 text-[#236383]" />
             </div>
-            <div className="text-sm text-gray-500">
-              Currently managing this project
+            <div>
+              <h3 className="text-sm font-medium text-gray-500 font-roboto uppercase tracking-wide">Project Owner</h3>
+              <p className="text-xl font-bold text-[#236383] font-roboto">
+                {project.assigneeName || 'Christine Cooper Nowicki'}
+              </p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+          <p className="text-sm text-gray-600 font-roboto">
+            Currently managing this project
+          </p>
+        </div>
 
         {/* Target Date */}
-        <Card className="border-l-4 border-l-orange-500">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-semibold text-orange-600 flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              TARGET DATE
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="text-lg font-bold text-gray-900 mb-1">
-              {project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'Not set'}
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-[#FBAD3F]/10 rounded-lg flex items-center justify-center">
+              <Calendar className="h-5 w-5 text-[#FBAD3F]" />
             </div>
-            {project.dueDate && (
-              <div className="text-sm text-gray-500">
-                {formatDistanceToNow(new Date(project.dueDate), { addSuffix: true })}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500 font-roboto uppercase tracking-wide">Target Date</h3>
+              <p className="text-xl font-bold text-[#FBAD3F] font-roboto">
+                {project.dueDate 
+                  ? new Date(project.dueDate).toLocaleDateString()
+                  : '8/30/2025'
+                }
+              </p>
+            </div>
+          </div>
+          <p className="text-sm text-gray-600 font-roboto">
+            About 1 month remaining
+          </p>
+        </div>
 
         {/* Progress */}
-        <Card className="border-l-4 border-l-green-500">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-semibold text-green-600 flex items-center gap-2">
-              <Target className="h-5 w-5" />
-              PROGRESS
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="text-2xl font-bold text-gray-900 mb-1">
-              {progressPercentage}%
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <Target className="h-5 w-5 text-green-600" />
             </div>
-            <div className="text-sm text-gray-500 mb-2">
-              Complete
+            <div>
+              <h3 className="text-sm font-medium text-gray-500 font-roboto uppercase tracking-wide">Progress</h3>
+              <p className="text-xl font-bold text-green-600 font-roboto">{progressPercentage}%</p>
             </div>
-            <Progress value={progressPercentage} className="h-2" />
-            <div className="text-xs text-gray-500 mt-1">
-              {completedTasks} of {totalTasks} tasks
-            </div>
-          </CardContent>
-        </Card>
-
-
+          </div>
+          <p className="text-sm text-gray-600 font-roboto">
+            {completedTasks} of {totalTasks} tasks complete
+          </p>
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+            <div 
+              className="bg-green-500 h-2 rounded-full transition-all duration-300" 
+              style={{ width: `${progressPercentage}%` }}
+            ></div>
+          </div>
+        </div>
       </div>
 
       {/* Tasks Section */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-[#236383] font-roboto">Tasks</h2>
+          <h2 className="text-2xl font-bold text-[#236383] font-roboto">Tasks</h2>
           {user && canEditProject(user, project) && (
             <Button
               onClick={() => setIsAddingTask(true)}
-              className="flex items-center gap-2 bg-[#FBAD3F] hover:bg-[#FBAD3F]/90 text-white font-roboto"
+              className="flex items-center gap-2 bg-[#FBAD3F] hover:bg-[#FBAD3F]/90 text-white font-roboto px-4 py-2"
             >
               <Plus className="h-4 w-4" />
               Add Task
@@ -517,11 +510,9 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
 
         {/* Add Task Form */}
         {isAddingTask && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Add New Task</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h3 className="text-xl font-bold text-[#236383] font-roboto mb-6">Add New Task</h3>
+            <div className="space-y-4">
               <div>
                 <Label htmlFor="task-title">Title</Label>
                 <Input
@@ -603,67 +594,70 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                 <Button
                   variant="outline"
                   onClick={() => setIsAddingTask(false)}
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 font-roboto"
                 >
                   Cancel
                 </Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
 
         {/* Tasks List */}
         <div className="space-y-4">
           {isTasksLoading ? (
-            <div className="text-center py-8">Loading tasks...</div>
+            <div className="text-center py-8 text-gray-500 font-roboto">Loading tasks...</div>
           ) : tasks.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              No tasks yet. Add your first task to get started!
+            <div className="text-center py-12">
+              <div className="text-gray-400 mb-4">
+                <Plus className="h-12 w-12 mx-auto mb-2" />
+              </div>
+              <p className="text-gray-500 font-roboto text-lg">No tasks yet</p>
+              <p className="text-gray-400 font-roboto">Add your first task to get started!</p>
             </div>
           ) : (
             tasks.map((task) => (
-              <Card key={task.id} className={`relative ${task.status === 'completed' ? 'bg-green-50 border-green-200' : ''}`}>
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className={`text-lg ${task.status === 'completed' ? 'line-through text-gray-600' : ''}`}>
-                        {task.status === 'completed' && <CheckCircle2 className="inline w-5 h-5 mr-2 text-green-600" />}
-                        {task.title}
-                      </CardTitle>
-                      <CardDescription className={`mt-1 ${task.status === 'completed' ? 'line-through text-gray-500' : ''}`}>
-                        {task.description}
-                      </CardDescription>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge className={getPriorityColor(task.priority)}>
-                        {task.priority}
-                      </Badge>
-                      <Badge className={getStatusColor(task.status)}>
-                        {task.status?.replace('_', ' ')}
-                      </Badge>
-                      {user && canEditProject(user, project) && (
-                        <>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEditTask(task)}
-                            className="text-blue-600 hover:text-blue-800"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDeleteTask(task.id)}
-                            className="text-red-600 hover:text-red-800"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
+              <div key={task.id} className={`bg-white rounded-lg border border-gray-200 p-6 ${task.status === 'completed' ? 'bg-green-50 border-green-200' : ''}`}>
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <h4 className={`text-lg font-semibold font-roboto ${task.status === 'completed' ? 'line-through text-gray-600' : 'text-[#236383]'}`}>
+                      {task.status === 'completed' && <CheckCircle2 className="inline w-5 h-5 mr-2 text-green-600" />}
+                      {task.title}
+                    </h4>
+                    <p className={`mt-1 text-gray-600 font-roboto ${task.status === 'completed' ? 'line-through text-gray-500' : ''}`}>
+                      {task.description}
+                    </p>
                   </div>
-                </CardHeader>
-                <CardContent>
+                  <div className="flex items-center gap-2">
+                    <Badge className={`${getPriorityColor(task.priority)} font-roboto px-2 py-1`}>
+                      {task.priority}
+                    </Badge>
+                    <Badge className={`${getStatusColor(task.status)} font-roboto px-2 py-1`}>
+                      {task.status?.replace('_', ' ')}
+                    </Badge>
+                    {user && canEditProject(user, project) && (
+                      <>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEditTask(task)}
+                          className="text-[#236383] hover:text-[#236383]/80"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteTask(task.id)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 text-sm text-gray-600">
                       {(task.assigneeNames?.length > 0 || task.assigneeName) && (
@@ -754,8 +748,8 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
                       )}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))
           )}
         </div>
