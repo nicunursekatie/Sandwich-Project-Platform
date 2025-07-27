@@ -119,6 +119,15 @@ export default function CommitteeChat() {
     }
   }, [committeeConversation?.id]);
 
+  // Trigger notification refresh when messages are marked as read
+  useEffect(() => {
+    if (messages.length > 0 && selectedCommittee) {
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('refreshNotifications'));
+      }, 500);
+    }
+  }, [messages.length, selectedCommittee]);
+
   const sendMessageMutation = useMutation({
     mutationFn: async (data: { content: string }) => {
       if (!committeeConversation) throw new Error("No conversation available");

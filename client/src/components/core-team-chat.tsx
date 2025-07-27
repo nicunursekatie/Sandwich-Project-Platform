@@ -130,17 +130,18 @@ export default function CoreTeamChat() {
   console.log("Sample raw message:", rawMessages?.[0]);
   console.log("Sample displayed message:", displayedMessages?.[0]);
 
-  // Auto-mark messages as read when viewing - disabled for now since useAutoMarkAsRead expects Message[] not ChatMessage[]
-  // useAutoMarkAsRead("core_team", messages, hasCoreTeamAccess);
+  // Auto-mark messages as read when viewing this chat
+  useAutoMarkAsRead("core-team", messages as any[], hasCoreTeamAccess);
 
-  // Mark messages as read when messages are loaded
+  // Mark messages as read when messages are loaded to ensure notification counts update
   useEffect(() => {
-    if (messages.length > 0) {
-      queryClient.invalidateQueries({
-        queryKey: ["/api/messages/unread-counts"],
-      });
+    if (messages.length > 0 && hasCoreTeamAccess) {
+      // Trigger notification refresh after marking as read
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('refreshNotifications'));
+      }, 500);
     }
-  }, [messages.length, queryClient]);
+  }, [messages.length, hasCoreTeamAccess]);
 
   // Send message mutation - uses team chat system
   const sendMessageMutation = useMutation({

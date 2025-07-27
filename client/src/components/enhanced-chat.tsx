@@ -191,8 +191,35 @@ export default function EnhancedChat() {
         userId: user.id,
         userName: displayName
       });
+
+      // Mark all messages in this channel as read when joining
+      markChannelAsRead(selectedChannel);
     }
   }, [socket, isConnected, user, selectedChannel]);
+
+  // Function to mark all messages in a channel as read
+  const markChannelAsRead = async (channel: string) => {
+    try {
+      const response = await fetch('/api/message-notifications/mark-chat-read', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ channel })
+      });
+
+      if (response.ok) {
+        console.log(`Marked all messages in ${channel} as read`);
+        // Trigger a refresh of unread counts in the nav bar
+        window.dispatchEvent(new CustomEvent('refreshNotifications'));
+      } else {
+        console.warn(`Failed to mark ${channel} messages as read:`, response.statusText);
+      }
+    } catch (error) {
+      console.error(`Error marking ${channel} messages as read:`, error);
+    }
+  };
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
