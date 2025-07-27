@@ -55,22 +55,22 @@ const adminDocuments: AdminDocument[] = [
     importance: 'critical'
   },
   {
-    id: 'volunteer-application-form',
-    name: 'Volunteer Application Form',
-    description: 'Application form for new volunteers to join The Sandwich Project',
+    id: 'volunteer-driver-agreement',
+    name: 'TSP Volunteer Driver Agreement',
+    description: 'Required agreement form for volunteer drivers',
     category: 'Forms',
-    path: '/attached_assets/forms/volunteer-application-form.pdf',
-    type: 'pdf',
-    importance: 'high'
-  },
-  {
-    id: 'liability-waiver-form',
-    name: 'Liability Waiver Form',
-    description: 'Required waiver form for all volunteers and participants',
-    category: 'Forms',
-    path: '/attached_assets/forms/liability-waiver-form.pdf',
+    path: '/attached_assets/TSP Volunteer Driver Agreement (1).pdf',
     type: 'pdf',
     importance: 'critical'
+  },
+  {
+    id: 'community-service-hours',
+    name: 'TSP Community Service Hours',
+    description: 'Form for tracking and documenting community service hours',
+    category: 'Forms',
+    path: '/attached_assets/TSP COMMUNITY SERVICE HOURS (1) (1) (1).pdf',
+    type: 'pdf',
+    importance: 'high'
   }
 ];
 
