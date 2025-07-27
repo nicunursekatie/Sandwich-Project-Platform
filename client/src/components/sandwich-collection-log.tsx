@@ -948,17 +948,28 @@ export default function SandwichCollectionLog() {
       collectionDate: collection.collectionDate,
       hostName: collection.hostName,
       individualSandwiches: collection.individualSandwiches.toString(),
-      groupCollections: collection.groupCollections
+      groupCollections: "" // Not used with new schema
     });
     
-    // Parse existing group collections for editing
-    const parsedGroups = parseGroupCollections(collection.groupCollections || "");
-    if (parsedGroups.length > 0) {
-      setEditGroupCollections(parsedGroups.map((group: any, index: number) => ({
-        id: `edit-${index}`,
-        groupName: group.groupName,
-        sandwichCount: group.sandwichCount
-      })));
+    // Parse existing group collections from new schema fields
+    const groupList = [];
+    if (collection.group1Name && collection.group1Count) {
+      groupList.push({
+        id: "edit-1",
+        groupName: collection.group1Name,
+        sandwichCount: collection.group1Count
+      });
+    }
+    if (collection.group2Name && collection.group2Count) {
+      groupList.push({
+        id: "edit-2", 
+        groupName: collection.group2Name,
+        sandwichCount: collection.group2Count
+      });
+    }
+    
+    if (groupList.length > 0) {
+      setEditGroupCollections(groupList);
     } else {
       setEditGroupCollections([{ id: "edit-1", groupName: "", sandwichCount: 0 }]);
     }
@@ -967,20 +978,21 @@ export default function SandwichCollectionLog() {
   const handleUpdate = () => {
     if (!editingCollection) return;
 
-    // Convert editGroupCollections back to JSON format with consistent property names
+    // Convert editGroupCollections to new schema format
     const validGroups = editGroupCollections.filter(g => g.groupName.trim() && g.sandwichCount > 0);
-    const groupCollectionsString = validGroups.length > 0 
-      ? JSON.stringify(validGroups.map(g => ({ name: g.groupName.trim(), count: g.sandwichCount })))
-      : '[]';
+    const updates: any = {
+      collectionDate: editFormData.collectionDate,
+      hostName: editFormData.hostName,
+      individualSandwiches: parseInt(editFormData.individualSandwiches) || 0,
+      group1Name: validGroups[0]?.groupName || null,
+      group1Count: validGroups[0]?.sandwichCount || null,
+      group2Name: validGroups[1]?.groupName || null,
+      group2Count: validGroups[1]?.sandwichCount || null
+    };
 
     updateMutation.mutate({
       id: editingCollection.id,
-      updates: {
-        collectionDate: editFormData.collectionDate,
-        hostName: editFormData.hostName,
-        individualSandwiches: parseInt(editFormData.individualSandwiches) || 0,
-        groupCollections: groupCollectionsString
-      }
+      updates
     });
   };
 
