@@ -252,74 +252,80 @@ export default function SandwichCollectionLog() {
     }
   });
 
-  // Filter and sort collections
-  const filteredCollections = collections
-    .filter((collection: SandwichCollection) => {
-      // Host name filter
-      if (searchFilters.hostName && !collection.hostName.toLowerCase().includes(searchFilters.hostName.toLowerCase())) {
-        return false;
-      }
+  // Filter and sort collections - only apply client-side filtering when needsAllData is true
+  const filteredCollections = needsAllData 
+    ? collections
+        .filter((collection: SandwichCollection) => {
+          // Host name filter
+          if (searchFilters.hostName && !collection.hostName.toLowerCase().includes(searchFilters.hostName.toLowerCase())) {
+            return false;
+          }
 
-      // Collection date range filter
-      if (searchFilters.collectionDateFrom) {
-        const collectionDate = new Date(collection.collectionDate);
-        const fromDate = new Date(searchFilters.collectionDateFrom);
-        if (collectionDate < fromDate) return false;
-      }
+          // Collection date range filter
+          if (searchFilters.collectionDateFrom) {
+            const collectionDate = new Date(collection.collectionDate);
+            const fromDate = new Date(searchFilters.collectionDateFrom);
+            if (collectionDate < fromDate) return false;
+          }
 
-      if (searchFilters.collectionDateTo) {
-        const collectionDate = new Date(collection.collectionDate);
-        const toDate = new Date(searchFilters.collectionDateTo);
-        if (collectionDate > toDate) return false;
-      }
+          if (searchFilters.collectionDateTo) {
+            const collectionDate = new Date(collection.collectionDate);
+            const toDate = new Date(searchFilters.collectionDateTo);
+            if (collectionDate > toDate) return false;
+          }
 
-      // Created at date range filter
-      if (searchFilters.createdAtFrom) {
-        const createdDate = new Date(collection.submittedAt);
-        const fromDate = new Date(searchFilters.createdAtFrom);
-        if (createdDate < fromDate) return false;
-      }
+          // Created at date range filter
+          if (searchFilters.createdAtFrom) {
+            const createdDate = new Date(collection.submittedAt);
+            const fromDate = new Date(searchFilters.createdAtFrom);
+            if (createdDate < fromDate) return false;
+          }
 
-      if (searchFilters.createdAtTo) {
-        const createdDate = new Date(collection.submittedAt);
-        const toDate = new Date(searchFilters.createdAtTo);
-        // Add 23:59:59 to include the entire day
-        toDate.setHours(23, 59, 59, 999);
-        if (createdDate > toDate) return false;
-      }
+          if (searchFilters.createdAtTo) {
+            const createdDate = new Date(collection.submittedAt);
+            const toDate = new Date(searchFilters.createdAtTo);
+            // Add 23:59:59 to include the entire day
+            toDate.setHours(23, 59, 59, 999);
+            if (createdDate > toDate) return false;
+          }
 
-      return true;
-    })
-    .sort((a: SandwichCollection, b: SandwichCollection) => {
-      const aValue = a[sortConfig.field];
-      const bValue = b[sortConfig.field];
+          return true;
+        })
+        .sort((a: SandwichCollection, b: SandwichCollection) => {
+          const aValue = a[sortConfig.field];
+          const bValue = b[sortConfig.field];
 
-      // Handle different data types
-      let comparison = 0;
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        comparison = aValue.localeCompare(bValue);
-      } else if (typeof aValue === 'number' && typeof bValue === 'number') {
-        comparison = aValue - bValue;
-      } else if (aValue instanceof Date && bValue instanceof Date) {
-        comparison = aValue.getTime() - bValue.getTime();
-      } else {
-        // Handle date strings
-        const aDate = new Date(aValue as string);
-        const bDate = new Date(bValue as string);
-        comparison = aDate.getTime() - bDate.getTime();
-      }
+          // Handle different data types
+          let comparison = 0;
+          if (typeof aValue === 'string' && typeof bValue === 'string') {
+            comparison = aValue.localeCompare(bValue);
+          } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+            comparison = aValue - bValue;
+          } else if (aValue instanceof Date && bValue instanceof Date) {
+            comparison = aValue.getTime() - bValue.getTime();
+          } else {
+            // Handle date strings
+            const aDate = new Date(aValue as string);
+            const bDate = new Date(bValue as string);
+            comparison = aDate.getTime() - bDate.getTime();
+          }
 
-      return sortConfig.direction === 'asc' ? comparison : -comparison;
-    });
+          return sortConfig.direction === 'asc' ? comparison : -comparison;
+        })
+    : collections; // Server-side filtering/sorting already applied
 
   // Use pagination info from backend when available, otherwise calculate from filtered results
   const effectiveTotalItems = totalItems || filteredCollections.length;
   const effectiveTotalPages = totalPages || Math.ceil(effectiveTotalItems / itemsPerPage);
   
-  // Apply pagination to filtered results
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedCollections = filteredCollections.slice(startIndex, endIndex);
+  // Apply pagination to filtered results ONLY when using client-side pagination
+  const paginatedCollections = needsAllData 
+    ? (() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return filteredCollections.slice(startIndex, endIndex);
+      })()
+    : filteredCollections; // Server-side pagination already handled, don't slice again
 
   // Reset to first page when filters change
   React.useEffect(() => {
