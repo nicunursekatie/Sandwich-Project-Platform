@@ -1,5 +1,5 @@
 import { 
-  users, projects, archivedProjects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, messageLikes, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, suggestions, suggestionResponses, chatMessages,
+  users, projects, archivedProjects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, messageLikes, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, suggestions, suggestionResponses, chatMessages, chatMessageLikes,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -24,7 +24,8 @@ import {
   type CommitteeMembership, type InsertCommitteeMembership,
   type Notification, type InsertNotification,
   type Suggestion, type InsertSuggestion,
-  type SuggestionResponse, type InsertSuggestionResponse
+  type SuggestionResponse, type InsertSuggestionResponse,
+  type ChatMessageLike, type InsertChatMessageLike
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql, and, or, isNull, ne, isNotNull, gt, gte, lte, inArray, like } from "drizzle-orm";
@@ -1734,6 +1735,88 @@ export class DatabaseStorage implements IStorage {
       return !!like;
     } catch (error) {
       console.error('Error checking if user liked message:', error);
+      return false;
+    }
+  }
+
+  // Chat Message Like methods
+  async likeChatMessage(messageId: number, userId: string, userName: string): Promise<ChatMessageLike | null> {
+    try {
+      console.log(`[DB] User ${userId} liking chat message ${messageId}`);
+      
+      const [like] = await db
+        .insert(chatMessageLikes)
+        .values({
+          messageId,
+          userId,
+          userName,
+        })
+        .returning();
+      
+      console.log(`[DB] Created chat message like with ID: ${like.id}`);
+      return like;
+    } catch (error: any) {
+      if (error.code === '23505') { // Unique constraint violation
+        console.log(`[DB] User ${userId} already liked chat message ${messageId}`);
+        return null; // Already liked
+      }
+      console.error('Error liking chat message:', error);
+      throw error;
+    }
+  }
+
+  async unlikeChatMessage(messageId: number, userId: string): Promise<boolean> {
+    try {
+      console.log(`[DB] User ${userId} unliking chat message ${messageId}`);
+      
+      const result = await db
+        .delete(chatMessageLikes)
+        .where(and(
+          eq(chatMessageLikes.messageId, messageId),
+          eq(chatMessageLikes.userId, userId)
+        ));
+      
+      const success = (result.rowCount ?? 0) > 0;
+      console.log(`[DB] Unlike chat message result: ${success}`);
+      return success;
+    } catch (error) {
+      console.error('Error unliking chat message:', error);
+      return false;
+    }
+  }
+
+  async getChatMessageLikes(messageId: number): Promise<ChatMessageLike[]> {
+    try {
+      console.log(`[DB] Getting likes for chat message ${messageId}`);
+      
+      const likes = await db
+        .select()
+        .from(chatMessageLikes)
+        .where(eq(chatMessageLikes.messageId, messageId))
+        .orderBy(chatMessageLikes.likedAt);
+      
+      console.log(`[DB] Found ${likes.length} likes for chat message ${messageId}`);
+      return likes;
+    } catch (error) {
+      console.error('Error getting chat message likes:', error);
+      return [];
+    }
+  }
+
+  async hasUserLikedChatMessage(messageId: number, userId: string): Promise<boolean> {
+    try {
+      const [like] = await db
+        .select()
+        .from(chatMessageLikes)
+        .where(and(
+          eq(chatMessageLikes.messageId, messageId),
+          eq(chatMessageLikes.userId, userId)
+        ))
+        .limit(1);
+      
+      return !!like;
+    } catch (error) {
+      console.error('Error checking if user liked chat message:', error);
       return false;
     }
   }

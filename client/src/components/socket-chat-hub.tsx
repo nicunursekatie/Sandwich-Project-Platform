@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSocketChat, ChatMessage, ChatRoom } from "@/hooks/useSocketChat";
 import { useAuth } from "@/hooks/useAuth";
-import { MessageLikeButton } from "./message-like-button";
+import { ChatMessageLikeButton } from "./chat-message-like-button";
 import { 
   MessageSquare, 
   Send, 
@@ -209,7 +209,7 @@ export default function SocketChatHub() {
                         </p>
                         {/* Message actions */}
                         <div className="flex items-center mt-2 space-x-2">
-                          <MessageLikeButton messageId={message.id} />
+                          <ChatMessageLikeButton messageId={message.id} />
                         </div>
                       </div>
                     </div>

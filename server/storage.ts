@@ -21,7 +21,8 @@ import {
   type Committee, type InsertCommittee,
   type CommitteeMembership, type InsertCommitteeMembership,
   type Suggestion, type InsertSuggestion,
-  type SuggestionResponse, type InsertSuggestionResponse
+  type SuggestionResponse, type InsertSuggestionResponse,
+  type ChatMessageLike, type InsertChatMessageLike
 } from "@shared/schema";
 
 export interface IStorage {
@@ -115,6 +116,12 @@ export interface IStorage {
   unlikeMessage(messageId: number, userId: string): Promise<boolean>;
   getMessageLikes(messageId: number): Promise<any[]>;
   hasUserLikedMessage(messageId: number, userId: string): Promise<boolean>;
+  
+  // Chat message likes methods (for Socket.IO chat messages)
+  likeChatMessage(messageId: number, userId: string, userName: string): Promise<ChatMessageLike | null>;
+  unlikeChatMessage(messageId: number, userId: string): Promise<boolean>;
+  getChatMessageLikes(messageId: number): Promise<ChatMessageLike[]>;
+  hasUserLikedChatMessage(messageId: number, userId: string): Promise<boolean>;
   
   // Thread participant management - individual user control over group threads
   getThreadParticipants(threadId: number): Promise<any[]>;
@@ -1418,6 +1425,56 @@ export class MemStorage implements IStorage {
   async markChannelMessagesAsRead(userId: string, channel: string): Promise<void> {
     // No-op for memory storage since it doesn't persist anyway
     console.log(`[MemStorage] Marked all messages in ${channel} as read for user ${userId}`);
+  }
+
+  // Chat message likes methods (stub implementations for memory storage)
+  async likeChatMessage(messageId: number, userId: string, userName: string): Promise<ChatMessageLike | null> {
+    // Return a mock like object for memory storage
+    return {
+      id: Date.now(),
+      messageId,
+      userId,
+      userName,
+      likedAt: new Date()
+    } as ChatMessageLike;
+  }
+
+  async unlikeChatMessage(messageId: number, userId: string): Promise<boolean> {
+    // Always return true for memory storage
+    return true;
+  }
+
+  async getChatMessageLikes(messageId: number): Promise<ChatMessageLike[]> {
+    // Return empty array for memory storage
+    return [];
+  }
+
+  async hasUserLikedChatMessage(messageId: number, userId: string): Promise<boolean> {
+    // Return false for memory storage
+    return false;
+  }
+
+  // Message likes methods (stub implementations)
+  async likeMessage(messageId: number, userId: string, userName: string): Promise<any> {
+    return {
+      id: Date.now(),
+      messageId,
+      userId,
+      userName,
+      likedAt: new Date()
+    };
+  }
+
+  async unlikeMessage(messageId: number, userId: string): Promise<boolean> {
+    return true;
+  }
+
+  async getMessageLikes(messageId: number): Promise<any[]> {
+    return [];
+  }
+
+  async hasUserLikedMessage(messageId: number, userId: string): Promise<boolean> {
+    return false;
   }
 }
 

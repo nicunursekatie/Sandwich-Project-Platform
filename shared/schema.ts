@@ -72,6 +72,17 @@ export const chatMessageReads = pgTable("chat_message_reads", {
   channelUserIdx: index("idx_chat_reads_channel_user").on(table.channel, table.userId),
 }));
 
+// Chat message likes table for real-time chat system
+export const chatMessageLikes = pgTable("chat_message_likes", {
+  id: serial("id").primaryKey(),
+  messageId: integer("message_id").references(() => chatMessages.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull(),
+  userName: varchar("user_name").notNull(),
+  likedAt: timestamp("liked_at").defaultNow(),
+}, (table) => ({
+  uniqueLike: unique().on(table.messageId, table.userId),
+}));
+
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -726,6 +737,15 @@ export const insertChatMessageSchema = createInsertSchema(chatMessages).omit({
   createdAt: true,
   editedAt: true
 });
+
+// Chat message likes schema types
+export const insertChatMessageLikeSchema = createInsertSchema(chatMessageLikes).omit({
+  id: true,
+  likedAt: true
+});
+
+export type ChatMessageLike = typeof chatMessageLikes.$inferSelect;
+export type InsertChatMessageLike = z.infer<typeof insertChatMessageLikeSchema>;
 
 // Simple messaging schema types
 export const insertConversationSchema = createInsertSchema(conversations).omit({

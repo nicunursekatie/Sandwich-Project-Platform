@@ -1,0 +1,112 @@
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=Re5sr9HNfSr_' failed: 
+setupWebSocket @ :5000/@vite/client:536
+:5000/@vite/client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=Re5sr9HNfSr_' is invalid.
+    at setupWebSocket (:5000/@vite/client:536:19)
+    at fallback (:5000/@vite/client:509:16)
+    at WebSocket.<anonymous> (:5000/@vite/client:555:7)
+ Connecting to WebSocket at: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/notifications
+ Dashboard activeSection changed to: dashboard
+ WebSocket connected successfully
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ :5000/src/hooks/useMessaging.ts:163
+hook.js:608 Messaging WebSocket error: Event
+overrideMethod @ hook.js:608
+ Messaging WebSocket disconnected
+ Navigation click: chat
+ Dashboard setActiveSection called with: chat
+ Dashboard activeSection changed to: chat
+ Chat connected to Socket.IO
+ Chat sending user data: Object
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=bqG3IPOV_z64ylE1AAAE' failed: Invalid frame header
+createSocket @ :5000/@fs/home/runne….js?v=88ca342b:1059
+ Successfully joined channel: general
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=T-SyM65fy2DuRf_6AAAF' failed: Invalid frame header
+createSocket @ :5000/@fs/home/runne….js?v=88ca342b:1059
+ Navigation click: collections
+ Dashboard setActiveSection called with: collections
+ Chat disconnected from Socket.IO
+ Dashboard activeSection changed to: collections
+ Navigation click: user-management
+ Dashboard setActiveSection called with: user-management
+ Dashboard activeSection changed to: user-management
+ Navigation click: chat
+ Dashboard setActiveSection called with: chat
+ Dashboard activeSection changed to: chat
+ Chat connected to Socket.IO
+ Chat sending user data: Object
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=9C_3M2vNJiH0xLoZAAAI' failed: Invalid frame header
+createSocket @ :5000/@fs/home/runne….js?v=88ca342b:1059
+doOpen @ :5000/@fs/home/runne…t.js?v=88ca342b:986
+open @ :5000/@fs/home/runne…t.js?v=88ca342b:503
+_probe @ :5000/@fs/home/runne….js?v=88ca342b:1731
+onOpen @ :5000/@fs/home/runne….js?v=88ca342b:1640
+onHandshake @ :5000/@fs/home/runne….js?v=88ca342b:1399
+onHandshake @ :5000/@fs/home/runne….js?v=88ca342b:1736
+_onPacket @ :5000/@fs/home/runne….js?v=88ca342b:1365
+Emitter.emit @ :5000/@fs/home/runne…t.js?v=88ca342b:354
+onPacket @ :5000/@fs/home/runne…t.js?v=88ca342b:553
+callback @ :5000/@fs/home/runne…t.js?v=88ca342b:663
+onData @ :5000/@fs/home/runne…t.js?v=88ca342b:665
+Emitter.emit @ :5000/@fs/home/runne…t.js?v=88ca342b:354
+_onLoad @ :5000/@fs/home/runne…t.js?v=88ca342b:908
+xhr.onreadystatechange @ :5000/@fs/home/runne…t.js?v=88ca342b:851
+ Successfully joined channel: general
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=s_fkxfwQhZPwSzz8AAAJ' failed: Invalid frame header
+createSocket @ :5000/@fs/home/runne….js?v=88ca342b:1059
+doOpen @ :5000/@fs/home/runne…t.js?v=88ca342b:986
+open @ :5000/@fs/home/runne…t.js?v=88ca342b:503
+_probe @ :5000/@fs/home/runne….js?v=88ca342b:1731
+onOpen @ :5000/@fs/home/runne….js?v=88ca342b:1640
+onHandshake @ :5000/@fs/home/runne….js?v=88ca342b:1399
+onHandshake @ :5000/@fs/home/runne….js?v=88ca342b:1736
+_onPacket @ :5000/@fs/home/runne….js?v=88ca342b:1365
+Emitter.emit @ :5000/@fs/home/runne…t.js?v=88ca342b:354
+onPacket @ :5000/@fs/home/runne…t.js?v=88ca342b:553
+callback @ :5000/@fs/home/runne…t.js?v=88ca342b:663
+onData @ :5000/@fs/home/runne…t.js?v=88ca342b:665
+Emitter.emit @ :5000/@fs/home/runne…t.js?v=88ca342b:354
+_onLoad @ :5000/@fs/home/runne…t.js?v=88ca342b:908
+xhr.onreadystatechange @ :5000/@fs/home/runne…t.js?v=88ca342b:851
+ Navigation click: gmail-inbox
+ Dashboard setActiveSection called with: gmail-inbox
+ Chat disconnected from Socket.IO
+ Dashboard activeSection changed to: gmail-inbox
+ Navigation click: chat
+ Dashboard setActiveSection called with: chat
+ Dashboard activeSection changed to: chat
+ Fetched 2 emails from inbox folder
+ Chat connected to Socket.IO
+ Chat sending user data: {displayName: 'Katie (Main)', firstName: 'Katie (Main)', email: 'katielong2316@gmail.com', finalName: 'Katie (Main)'}
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=qvJ15k3ABcSziSOXAAAM' failed: Invalid frame header
+createSocket @ :5000/@fs/home/runne….js?v=88ca342b:1059
+doOpen @ :5000/@fs/home/runne…t.js?v=88ca342b:986
+open @ :5000/@fs/home/runne…t.js?v=88ca342b:503
+_probe @ :5000/@fs/home/runne….js?v=88ca342b:1731
+onOpen @ :5000/@fs/home/runne….js?v=88ca342b:1640
+onHandshake @ :5000/@fs/home/runne….js?v=88ca342b:1399
+onHandshake @ :5000/@fs/home/runne….js?v=88ca342b:1736
+_onPacket @ :5000/@fs/home/runne….js?v=88ca342b:1365
+Emitter.emit @ :5000/@fs/home/runne…t.js?v=88ca342b:354
+onPacket @ :5000/@fs/home/runne…t.js?v=88ca342b:553
+callback @ :5000/@fs/home/runne…t.js?v=88ca342b:663
+onData @ :5000/@fs/home/runne…t.js?v=88ca342b:665
+Emitter.emit @ :5000/@fs/home/runne…t.js?v=88ca342b:354
+_onLoad @ :5000/@fs/home/runne…t.js?v=88ca342b:908
+xhr.onreadystatechange @ :5000/@fs/home/runne…t.js?v=88ca342b:851
+ Successfully joined channel: general
+ WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/socket.io/?EIO=4&transport=websocket&sid=He2rf-YNcMDPqX7eAAAN' failed: Invalid frame header
+createSocket @ :5000/@fs/home/runne….js?v=88ca342b:1059
+doOpen @ :5000/@fs/home/runne…t.js?v=88ca342b:986
+open @ :5000/@fs/home/runne…t.js?v=88ca342b:503
+_probe @ :5000/@fs/home/runne….js?v=88ca342b:1731
+onOpen @ :5000/@fs/home/runne….js?v=88ca342b:1640
+onHandshake @ :5000/@fs/home/runne….js?v=88ca342b:1399
+onHandshake @ :5000/@fs/home/runne….js?v=88ca342b:1736
+_onPacket @ :5000/@fs/home/runne….js?v=88ca342b:1365
+Emitter.emit @ :5000/@fs/home/runne…t.js?v=88ca342b:354
+onPacket @ :5000/@fs/home/runne…t.js?v=88ca342b:553
+callback @ :5000/@fs/home/runne…t.js?v=88ca342b:663
+onData @ :5000/@fs/home/runne…t.js?v=88ca342b:665
+Emitter.emit @ :5000/@fs/home/runne…t.js?v=88ca342b:354
+_onLoad @ :5000/@fs/home/runne…t.js?v=88ca342b:908
+xhr.onreadystatechange @ :5000/@fs/home/runne…t.js?v=88ca342b:851
