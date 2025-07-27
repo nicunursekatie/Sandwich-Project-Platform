@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { useMessageReads } from "@/hooks/useMessageReads";
+import { MessageLikeButton } from "./message-like-button";
 
 interface Message {
   id: number;
@@ -271,6 +272,10 @@ export default function CommitteeChat() {
                   </div>
                   <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3">
                     <p className="text-sm">{message.content}</p>
+                  </div>
+                  {/* Message actions */}
+                  <div className="flex items-center mt-1 space-x-2">
+                    <MessageLikeButton messageId={message.id} />
                   </div>
                 </div>
               </div>

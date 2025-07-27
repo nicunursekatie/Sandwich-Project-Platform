@@ -24,6 +24,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useMessageReads } from "@/hooks/useMessageReads";
+import { MessageLikeButton } from "./message-like-button";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { ChatMessage } from "@shared/schema";
@@ -359,6 +360,10 @@ export default function CoreTeamChat() {
                         <p className="text-sm text-slate-800 whitespace-pre-wrap">
                           {msg.content}
                         </p>
+                      </div>
+                      {/* Message actions */}
+                      <div className="flex items-center mt-1 space-x-2">
+                        <MessageLikeButton messageId={msg.id} />
                       </div>
                     </div>
                   </div>
