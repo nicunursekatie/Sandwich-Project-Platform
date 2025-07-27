@@ -136,9 +136,9 @@ export function useMessaging() {
       }
     },
     enabled: isValidUser(user),
-    staleTime: 30000, // Data remains fresh for 30 seconds
-    gcTime: 60000,
-    refetchInterval: 30000, // Refetch every 30 seconds
+    staleTime: 120000, // Data remains fresh for 2 minutes
+    gcTime: 300000,
+    refetchInterval: 120000, // Refetch every 2 minutes (reduced from 30 seconds)
   });
 
   // Get unread messages

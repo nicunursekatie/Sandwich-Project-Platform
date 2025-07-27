@@ -112,7 +112,7 @@ export default function DirectMessaging() {
       return await response.json();
     },
     enabled: !!currentConversation,
-    refetchInterval: 3000,
+    refetchInterval: 120000, // Reduced from 3 seconds to 2 minutes
   });
   const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
   const displayedMessages = optimisticMessages || messages;

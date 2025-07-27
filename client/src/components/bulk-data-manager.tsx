@@ -52,13 +52,13 @@ export default function BulkDataManager({
   // Fetch collection statistics
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['/api/collection-stats'],
-    refetchInterval: 5000, // Refresh every 5 seconds during import
+    refetchInterval: 120000, // Reduced from 5 seconds to 2 minutes
   });
 
   // Fetch host mapping distribution
   const { data: mappingStats, isLoading: mappingLoading } = useQuery({
     queryKey: ['/api/host-mapping-stats'],
-    refetchInterval: 5000,
+    refetchInterval: 120000, // Reduced from 5 seconds to 2 minutes
   });
 
   // Fetch collections for selected host

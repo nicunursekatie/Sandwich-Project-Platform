@@ -166,7 +166,7 @@ export function GroupMessaging({ currentUser }: GroupMessagesProps) {
       return Array.isArray(data) ? data : [];
     },
     enabled: !!groupConversation,
-    refetchInterval: 3000,
+    refetchInterval: 120000, // Reduced from 3 seconds to 2 minutes
   });
   const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
   const displayedMessages = optimisticMessages || messages;

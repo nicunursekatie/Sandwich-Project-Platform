@@ -100,7 +100,7 @@ export default function CommitteeChat() {
   const { data: messages = [] } = useQuery<Message[]>({
     queryKey: ["/api/conversations", committeeConversation?.id, "messages"],
     enabled: !!committeeConversation,
-    refetchInterval: 3000,
+    refetchInterval: 120000, // Reduced from 3 seconds to 2 minutes
   });
   const [optimisticMessages, setOptimisticMessages] = useState<Message[] | null>(null);
   const displayedMessages = optimisticMessages || messages;
