@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Notifications</title>
+</head>
+<body>
+    <h1>Testing Message Notifications</h1>
+    <button onclick="testWebSocket()">Test WebSocket Connection</button>
+    <button onclick="testNotificationAPI()">Test Notification API</button>
+    <div id="status"></div>
+    <div id="messages"></div>
+
+    <script>
+        function log(message) {
+            document.getElementById('messages').innerHTML += '<p>' + new Date().toLocaleTimeString() + ': ' + message + '</p>';
+        }
+
+        function testWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/notifications`;
+            log('Connecting to: ' + wsUrl);
+            
+            const ws = new WebSocket(wsUrl);
+            
+            ws.onopen = function() {
+                log('✅ WebSocket connected successfully');
+                ws.send(JSON.stringify({ type: 'identify', userId: 'test-user' }));
+            };
+            
+            ws.onmessage = function(event) {
+                log('📨 Received: ' + event.data);
+            };
+            
+            ws.onclose = function(event) {
+                log('❌ WebSocket closed: ' + event.code + ' - ' + event.reason);
+            };
+            
+            ws.onerror = function(error) {
+                log('🚨 WebSocket error: ' + error);
+            };
+        }
+
+        async function testNotificationAPI() {
+            try {
+                const response = await fetch('/api/message-notifications/unread-counts');
+                if (response.ok) {
+                    const data = await response.json();
+                    log('✅ Notification API working: ' + JSON.stringify(data));
+                } else {
+                    log('❌ Notification API failed: ' + response.status + ' - ' + await response.text());
+                }
+            } catch (error) {
+                log('🚨 Notification API error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -41,13 +41,16 @@ const getUnreadCounts = async (req: Request, res: Response) => {
       console.log('req.session exists:', !!(req as any).session);
       console.log('req.session?.user exists:', !!(req as any).session?.user);
       
-      const userId = (req as any).user?.id;
-      if (!userId) {
+      // Try to get user from both req.user and req.session.user for compatibility
+      const userId = (req as any).user?.id || (req as any).session?.user?.id;
+      const user = (req as any).user || (req as any).session?.user;
+      
+      if (!userId || !user) {
         console.log('Authentication failed: No user ID found');
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      const user = (req as any).user;
+      console.log('Using user data:', { id: userId, permissions: user.permissions?.length || 0 });
 
       // Initialize counts
       let unreadCounts = {
@@ -140,7 +143,7 @@ const chatReadTracker = new Map<string, Date>();
 // Mark chat messages as read when user views a chat channel
 const markChatMessagesRead = async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user?.id;
+      const userId = (req as any).user?.id || (req as any).session?.user?.id;
       if (!userId) {
         return res.status(401).json({ error: "User not authenticated" });
       }
@@ -207,7 +210,7 @@ const markChatMessagesRead = async (req: Request, res: Response) => {
 // Mark messages as read when user views a chat
 const markMessagesRead = async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user?.id;
+      const userId = (req as any).user?.id || (req as any).session?.user?.id;
       if (!userId) {
         return res.status(401).json({ error: "User not authenticated" });
       }
@@ -229,7 +232,7 @@ const markMessagesRead = async (req: Request, res: Response) => {
 // Mark all messages as read for user
 const markAllRead = async (req: Request, res: Response) => {
     try {
-      const userId = (req as any).user?.id;
+      const userId = (req as any).user?.id || (req as any).session?.user?.id;
       if (!userId) {
         return res.status(401).json({ error: "User not authenticated" });
       }
