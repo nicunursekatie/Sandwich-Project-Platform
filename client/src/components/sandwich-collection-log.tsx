@@ -137,9 +137,10 @@ export default function SandwichCollectionLog() {
   }, [searchFilters]);
 
   // Memoize expensive computations using debounced filters
+  // Only fetch all data when we need client-side filtering/sorting, not for basic pagination
   const needsAllData = useMemo(() => 
     showFilters || Object.values(debouncedSearchFilters).some(v => v) || 
-    sortConfig.field !== "collectionDate" || sortConfig.direction !== "desc",
+    (sortConfig.field !== "collectionDate" || sortConfig.direction !== "desc"),
     [showFilters, debouncedSearchFilters, sortConfig]
   );
 
@@ -230,12 +231,12 @@ export default function SandwichCollectionLog() {
   const collections = collectionsResponse?.collections || [];
   const pagination = collectionsResponse?.pagination;
   
-  // Extract pagination info
-  const totalItems = pagination?.total || 0;
-  const totalPages = pagination?.totalPages || 1;
-  const currentPageFromServer = pagination?.page || 1;
-  const hasNext = pagination?.hasNext || false;
-  const hasPrev = pagination?.hasPrev || false;
+  // Extract pagination info - handle both client-side and server-side pagination responses
+  const totalItems = pagination?.totalItems || pagination?.total || 0;
+  const totalPages = pagination?.totalPages || Math.ceil(totalItems / itemsPerPage) || 1;
+  const currentPageFromServer = pagination?.currentPage || pagination?.page || 1;
+  const hasNext = pagination?.hasNext || (currentPage < totalPages);
+  const hasPrev = pagination?.hasPrev || (currentPage > 1);
 
   const { data: hostsList = [] } = useQuery<Host[]>({
     queryKey: ["/api/hosts"]
