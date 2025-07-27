@@ -896,10 +896,12 @@ export default function SuggestionsPortal() {
                                   )}
                                 </div>
                               </div>
+                            </div>
                           );
                         })}
                       </div>
                     )}
+                  </div>
                 </div>
               </TabsContent>
             </Tabs>
