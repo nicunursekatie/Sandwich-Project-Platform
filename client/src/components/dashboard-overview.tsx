@@ -114,50 +114,53 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         </div>
         <div className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-slate-50 rounded-lg">
-              <div className="text-2xl font-bold text-[#236383]">{organizationalStats.totalLifetimeSandwiches}</div>
-              <div className="text-sm text-slate-600">Total Lifetime Sandwiches</div>
-              <div className="text-xs text-slate-500 mt-1">Since 2020</div>
+            <div className="bg-white rounded-lg border border-gray-200 p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="text-sm font-semibold text-[#236383] font-roboto">Total Lifetime</h3>
+              </div>
+              <p className="text-lg font-bold text-gray-900 font-roboto mb-1">{organizationalStats.totalLifetimeSandwiches}</p>
+              <p className="text-xs text-gray-500 font-roboto">Since 2020</p>
             </div>
-            <div className="text-center p-4 bg-amber-50 rounded-lg">
-              <div className="text-2xl font-bold text-amber-700">{organizationalStats.peakWeekRecord}</div>
-              <div className="text-sm text-slate-600">Peak Week Record</div>
-              <div className="text-xs text-slate-500 mt-1">{organizationalStats.peakWeekDate}</div>
+            
+            <div className="bg-white rounded-lg border border-gray-200 p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="text-sm font-semibold text-[#FBAD3F] font-roboto">Peak Week</h3>
+              </div>
+              <p className="text-lg font-bold text-gray-900 font-roboto mb-1">{organizationalStats.peakWeekRecord}</p>
+              <p className="text-xs text-gray-500 font-roboto">{organizationalStats.peakWeekDate}</p>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{organizationalStats.currentAnnualCapacity}</div>
-              <div className="text-sm text-slate-600">Annual Capacity</div>
-              <div className="text-xs text-slate-500 mt-1">Sustainable Level</div>
+            
+            <div className="bg-white rounded-lg border border-gray-200 p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="text-sm font-semibold text-green-600 font-roboto">Annual Capacity</h3>
+              </div>
+              <p className="text-lg font-bold text-gray-900 font-roboto mb-1">{organizationalStats.currentAnnualCapacity}</p>
+              <p className="text-xs text-gray-500 font-roboto">Sustainable Level</p>
             </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-700">{organizationalStats.growthMultiplier}</div>
-              <div className="text-sm text-slate-600">Growth Multiplier</div>
-              <div className="text-xs text-slate-500 mt-1">Since Launch</div>
+            
+            <div className="bg-white rounded-lg border border-gray-200 p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="text-sm font-semibold text-blue-600 font-roboto">Growth</h3>
+              </div>
+              <p className="text-lg font-bold text-gray-900 font-roboto mb-1">{organizationalStats.growthMultiplier}</p>
+              <p className="text-xs text-gray-500 font-roboto">Since Launch</p>
             </div>
           </div>
 
           {/* Database Details */}
           {statsData && (
-            <div className="mt-4 p-4 bg-gradient-to-r from-[#236383]/10 to-amber-100/50 rounded-lg border border-[#236383]/20">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="text-sm text-slate-600">Individual Sandwiches</div>
-                  <div className="text-xl font-semibold text-[#236383]">
-                    {statsData.individualSandwiches?.toLocaleString() || 0}
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm text-slate-600">Group Sandwiches</div>
-                  <div className="text-xl font-semibold text-amber-700">
-                    {((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)).toLocaleString()}
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm text-slate-600">Total Entries</div>
-                  <div className="text-xl font-semibold text-slate-700">
-                    {statsData.totalEntries?.toLocaleString() || 0}
-                  </div>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-200">
+              <div className="bg-white rounded-lg border border-gray-200 p-3">
+                <h3 className="text-sm font-semibold text-blue-600 font-roboto mb-2">Individual Sandwiches</h3>
+                <p className="text-sm font-medium text-gray-900 font-roboto">{statsData.individualSandwiches?.toLocaleString() || 0}</p>
+              </div>
+              <div className="bg-white rounded-lg border border-gray-200 p-3">
+                <h3 className="text-sm font-semibold text-orange-600 font-roboto mb-2">Group Sandwiches</h3>
+                <p className="text-sm font-medium text-gray-900 font-roboto">{((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)).toLocaleString()}</p>
+              </div>
+              <div className="bg-white rounded-lg border border-gray-200 p-3">
+                <h3 className="text-sm font-semibold text-gray-600 font-roboto mb-2">Total Entries</h3>
+                <p className="text-sm font-medium text-gray-900 font-roboto">{statsData.totalEntries?.toLocaleString() || 0}</p>
               </div>
             </div>
           )}
@@ -165,89 +168,85 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
       </div>
 
       {/* Important Documents */}
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-        <div className="px-4 py-3 border-b border-slate-200">
-          <div className="flex items-center space-x-2">
-            <FileText className="w-5 h-5 text-[#236383]" />
-            <h2 className="text-lg font-semibold text-slate-900">Important Documents</h2>
+      <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-6 h-6 bg-[#236383]/10 rounded flex items-center justify-center shrink-0">
+            <FileText className="h-3 w-3 text-[#236383]" />
           </div>
+          <h2 className="text-lg font-semibold text-[#236383] font-roboto">Important Documents</h2>
         </div>
-        <div className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {importantDocuments.map((doc, index) => (
-              <div key={index} className="border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center space-x-3 flex-1">
-                    <FileText className="w-8 h-8 text-[#236383] flex-shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-base font-semibold text-slate-900 mb-1">{doc.title}</h3>
-                      <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
-                        doc.category === 'Legal' ? 'bg-blue-100 text-blue-800' :
-                        doc.category === 'Strategy' ? 'bg-purple-100 text-purple-800' :
-                        'bg-green-100 text-green-800'
-                      }`}>
-                        {doc.category}
-                      </span>
-                    </div>
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {importantDocuments.map((doc, index) => (
+            <div key={index} className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-6 h-6 bg-[#236383]/10 rounded flex items-center justify-center shrink-0">
+                  <FileText className="h-3 w-3 text-[#236383]" />
                 </div>
-                <p className="text-sm text-slate-600 mb-4">{doc.description}</p>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(doc.path, '_blank')}
-                    className="flex items-center gap-2 text-[#236383] border-[#236383]/30 hover:bg-[#236383]/10"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      const link = document.createElement('a');
-                      link.href = doc.path;
-                      link.download = doc.title;
-                      link.click();
-                    }}
-                    className="flex items-center gap-2"
-                  >
-                    <Download className="w-4 h-4" />
-                    Download
-                  </Button>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-semibold text-gray-900 font-roboto mb-1">{doc.title}</h3>
+                  <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
+                    doc.category === 'Legal' ? 'bg-blue-100 text-blue-800' :
+                    doc.category === 'Strategy' ? 'bg-purple-100 text-purple-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>
+                    {doc.category}
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
+              <p className="text-xs text-gray-600 font-roboto mb-3 leading-tight">{doc.description}</p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.open(doc.path, '_blank')}
+                  className="flex items-center gap-1 text-[#236383] border-[#236383]/30 hover:bg-[#236383]/10 text-xs h-7"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  View
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = doc.path;
+                    link.download = doc.title;
+                    link.click();
+                  }}
+                  className="flex items-center gap-1 text-xs h-7"
+                >
+                  <Download className="w-3 h-3" />
+                  Download
+                </Button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Operational Capacity Information */}
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-        <div className="px-4 py-3 border-b border-slate-200">
-          <div className="flex items-center space-x-2">
-            <Award className="w-5 h-5 text-[#236383]" />
-            <h2 className="text-lg font-semibold text-slate-900">Operational Capacity</h2>
+      <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-6 h-6 bg-[#236383]/10 rounded flex items-center justify-center shrink-0">
+            <Award className="h-3 w-3 text-[#236383]" />
           </div>
+          <h2 className="text-lg font-semibold text-[#236383] font-roboto">Operational Capacity</h2>
         </div>
-        <div className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-slate-50 rounded-lg">
-              <div className="text-lg font-bold text-slate-700">{organizationalStats.weeklyBaseline}</div>
-              <div className="text-sm text-slate-600">Weekly Baseline</div>
-              <div className="text-xs text-slate-500 mt-1">Normal Operations</div>
-            </div>
-            <div className="text-center p-4 bg-amber-50 rounded-lg">
-              <div className="text-lg font-bold text-amber-700">{organizationalStats.surgingCapacity}</div>
-              <div className="text-sm text-slate-600">Surge Capacity</div>
-              <div className="text-xs text-slate-500 mt-1">Crisis Response</div>
-            </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-lg font-bold text-blue-700">{organizationalStats.operationalYears}</div>
-              <div className="text-sm text-slate-600">Years Operating</div>
-              <div className="text-xs text-slate-500 mt-1">Since April 2020</div>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white rounded-lg border border-gray-200 p-3">
+            <h3 className="text-sm font-semibold text-gray-600 font-roboto mb-2">Weekly Baseline</h3>
+            <p className="text-sm font-medium text-gray-900 font-roboto mb-1">{organizationalStats.weeklyBaseline}</p>
+            <p className="text-xs text-gray-500 font-roboto">Normal Operations</p>
+          </div>
+          <div className="bg-white rounded-lg border border-gray-200 p-3">
+            <h3 className="text-sm font-semibold text-amber-600 font-roboto mb-2">Surge Capacity</h3>
+            <p className="text-sm font-medium text-gray-900 font-roboto mb-1">{organizationalStats.surgingCapacity}</p>
+            <p className="text-xs text-gray-500 font-roboto">Crisis Response</p>
+          </div>
+          <div className="bg-white rounded-lg border border-gray-200 p-3">
+            <h3 className="text-sm font-semibold text-blue-600 font-roboto mb-2">Years Operating</h3>
+            <p className="text-sm font-medium text-gray-900 font-roboto mb-1">{organizationalStats.operationalYears}</p>
+            <p className="text-xs text-gray-500 font-roboto">Since April 2020</p>
           </div>
         </div>
       </div>
