@@ -164,6 +164,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       case "collections":
         return <SandwichCollectionLog />;
       case "projects":
+        console.log("Rendering ProjectsClean component");
         return <ProjectsClean />;
       case "real-time-messages":
         return <RealTimeMessages />;

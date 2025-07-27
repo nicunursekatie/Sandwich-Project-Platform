@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 import { Project, InsertProject } from '@shared/schema';
-import { SendKudosButton } from '@/components/send-kudos-button';
+import SendKudosButton from '@/components/send-kudos-button';
 import sandwichLogo from '@assets/LOGOS/TSP_transparent.png';
 
 export default function ProjectsClean() {
@@ -145,8 +145,8 @@ export default function ProjectsClean() {
     if (newProject.title?.trim()) {
       const projectWithCreator = {
         ...newProject,
-        createdBy: user?.id || '',
-        createdByName: user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email || ''
+        createdBy: (user as any)?.id || '',
+        createdByName: (user as any)?.firstName ? `${(user as any).firstName} ${(user as any).lastName || ''}`.trim() : (user as any)?.email || ''
       };
       createProjectMutation.mutate(projectWithCreator);
     }
@@ -182,7 +182,7 @@ export default function ProjectsClean() {
         title: "🎉 Project completed!",
         description: `"${projectTitle}" has been marked as completed.`
       });
-      triggerCelebration();
+      triggerCelebration('🎉');
     }
   };
 
@@ -387,7 +387,7 @@ export default function ProjectsClean() {
               : "text-[#236383] hover:text-[#1e5470] hover:bg-[#236383]/5"}`}
           >
             <Archive className="w-4 h-4 mr-2" />
-            Archived ({archivedProjects.length})
+            Archived ({Array.isArray(archivedProjects) ? archivedProjects.length : 0})
           </Button>
         </div>
       </div>
@@ -442,7 +442,7 @@ export default function ProjectsClean() {
               <Textarea
                 id="description"
                 placeholder="Project description"
-                value={newProject.description}
+                value={newProject.description || ''}
                 onChange={(e) => setNewProject({...newProject, description: e.target.value})}
                 className="font-roboto"
                 rows={3}
@@ -488,7 +488,7 @@ export default function ProjectsClean() {
               <Input
                 id="assigneeName"
                 placeholder="Enter assignee name"
-                value={newProject.assigneeName}
+                value={newProject.assigneeName || ''}
                 onChange={(e) => setNewProject({...newProject, assigneeName: e.target.value})}
                 className="font-roboto"
               />
@@ -499,7 +499,7 @@ export default function ProjectsClean() {
               <Input
                 id="dueDate"
                 type="date"
-                value={newProject.dueDate}
+                value={newProject.dueDate || ''}
                 onChange={(e) => setNewProject({...newProject, dueDate: e.target.value})}
                 className="font-roboto"
               />
