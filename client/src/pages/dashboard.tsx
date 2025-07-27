@@ -1,4 +1,5 @@
 import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone, ChevronDown, ChevronRight, Menu, X, UserCog, Lightbulb, AlertCircle } from "lucide-react";
+import { useLocation } from "wouter";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectList from "@/components/project-list";
@@ -52,7 +53,30 @@ import { HelpToggle } from "@/components/help-system/HelpToggle";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
+  const [location] = useLocation();
   const [activeSection, setActiveSection] = useState(initialSection);
+  
+  // Listen to URL changes to update activeSection
+  React.useEffect(() => {
+    console.log('Current URL location:', location);
+    
+    // Extract section from URL path
+    if (location.startsWith('/projects/')) {
+      const projectId = location.split('/projects/')[1];
+      if (projectId) {
+        const newSection = `project-${projectId}`;
+        console.log('Setting activeSection to project ID:', newSection);
+        setActiveSection(newSection);
+      }
+    } else {
+      // Handle other sections if needed
+      const pathSection = location.substring(1) || 'dashboard';
+      if (pathSection !== activeSection && pathSection !== location.substring(1)) {
+        console.log('Setting activeSection to:', pathSection);
+        setActiveSection(pathSection);
+      }
+    }
+  }, [location]);
   
   // Debug logging
   React.useEffect(() => {
@@ -67,42 +91,6 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isLoading } = useAuth();
-
-  // Handle URL parameters and make setActiveSection available globally
-  React.useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const section = urlParams.get('section');
-    if (section) {
-      setActiveSection(section);
-    }
-    
-    (window as any).dashboardSetActiveSection = setActiveSection;
-    
-    return () => {
-      delete (window as any).dashboardSetActiveSection;
-    };
-  }, []);
-
-  // Listen for URL changes to update active section
-  React.useEffect(() => {
-    const handleLocationChange = () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const section = urlParams.get('section');
-      if (section && section !== activeSection) {
-        setActiveSection(section);
-      }
-    };
-
-    // Listen for popstate events (back/forward navigation)
-    window.addEventListener('popstate', handleLocationChange);
-    
-    // Also check for URL changes on component mount
-    handleLocationChange();
-
-    return () => {
-      window.removeEventListener('popstate', handleLocationChange);
-    };
-  }, [activeSection]);
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => 
