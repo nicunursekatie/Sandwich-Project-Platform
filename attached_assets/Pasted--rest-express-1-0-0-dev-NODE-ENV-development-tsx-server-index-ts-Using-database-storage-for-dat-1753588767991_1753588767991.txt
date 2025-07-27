@@ -1,0 +1,71 @@
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+Using database storage for data persistence...
+Database storage initialized
+🚀 Starting The Sandwich Project server...
+Starting server on 0.0.0.0:5000 in development mode
+Using memory-based session store for stability
+Temporary authentication system initialized
+✅ Default admin user already exists: admin@sandwich.project
+✅ Found existing user: katielong2316@gmail.com (preserving current role and permissions)
+✅ Assigned katielong2316@gmail.com to Finance Committee only
+✅ Found existing user: kenig.ka@gmail.com (preserving current role and permissions)
+Next automated backup scheduled for: 2025-07-28T02:00:00.000Z
+Backup system initialized with automated daily backups
+✓ API routes registered BEFORE Vite middleware
+✓ Vite development server setup complete AFTER API routes
+✓ Server startup sequence completed successfully
+✓ Server object: EXISTS
+✓ Server is running on http://0.0.0.0:5000
+✓ WebSocket server ready on ws://0.0.0.0:5000/notifications
+✓ Environment: development
+✓ Basic server ready - starting background initialization...
+Checking database initialization...
+DATABASE_URL exists: true
+DATABASE_URL preview: postgresql://neondb_...
+Checking sessions table...
+Sessions table ready
+CORS: Request from origin: undefined
+CORS: Allowing all origins (development fallback)
+[2025-07-27T03:59:13.935Z] INFO: GET /
+Table counts - Hosts: 25 Projects: 9 Messages: 58 Collections: 1752 Recipients: 23
+Database ready - no sample data seeded
+Database initialization complete
+✓ Database initialization complete
+✓ Database initialization completed after route registration
+✓ The Sandwich Project server is fully ready to handle requests
+CORS: Request from origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+CORS: Allowing origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+[2025-07-27T03:59:14.974Z] INFO: GET /src/main.tsx?v=C_LhPAas2G0VOe7ASg2yu
+CORS: Request from origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+CORS: Allowing origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+CORS: Request from origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+CORS: Allowing origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+[2025-07-27T03:59:15.311Z] WARN: GET /@react-refresh
+CORS: Request from origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+CORS: Allowing origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+[2025-07-27T03:59:15.524Z] INFO: GET /src/App.tsx?v=C_LhPAas2G0VOe7ASg2yu
+CORS: Request from origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+CORS: Allowing origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+[2025-07-27T03:59:16.864Z] INFO: GET /src/index.css?v=C_LhPAas2G0VOe7ASg2yu
+CORS: Request from origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+CORS: Allowing origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+CORS: Request from origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+CORS: Allowing origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+[2025-07-27T03:59:16.868Z] INFO: GET /src/lib/queryClient.ts
+[2025-07-27T03:59:16.869Z] INFO: GET /src/components/ui/toaster.tsx
+[2025-07-27T03:59:16.877Z] INFO: GET /@vite/client
+CORS: Request from origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+CORS: Allowing origin: https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000
+[2025-07-27T03:59:16.888Z] INFO: GET /src/hooks/useAuth.ts
+3:59:18 AM [vite] Pre-transform error: /home/runner/workspace/client/src/pages/suggestions.tsx: Unexpected token (903:14)
+
+  901 |                       </div>
+  902 |                     )}
+> 903 |               </TabsContent>
+      |               ^
+  904 |             </Tabs>
+  905 |           </div>
+  906 |         </div>
