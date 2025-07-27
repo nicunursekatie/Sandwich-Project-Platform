@@ -53,10 +53,28 @@ const adminDocuments: AdminDocument[] = [
     path: '/attached_assets/The Sandwich Project Bylaws 2024(1)_1750871081277.pdf',
     type: 'pdf',
     importance: 'critical'
+  },
+  {
+    id: 'volunteer-application-form',
+    name: 'Volunteer Application Form',
+    description: 'Application form for new volunteers to join The Sandwich Project',
+    category: 'Forms',
+    path: '/attached_assets/forms/volunteer-application-form.pdf',
+    type: 'pdf',
+    importance: 'high'
+  },
+  {
+    id: 'liability-waiver-form',
+    name: 'Liability Waiver Form',
+    description: 'Required waiver form for all volunteers and participants',
+    category: 'Forms',
+    path: '/attached_assets/forms/liability-waiver-form.pdf',
+    type: 'pdf',
+    importance: 'critical'
   }
 ];
 
-const categories = ['All', 'Legal & Tax', 'Governance'];
+const categories = ['All', 'Legal & Tax', 'Governance', 'Forms'];
 
 export default function AdminPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
