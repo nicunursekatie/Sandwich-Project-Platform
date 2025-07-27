@@ -764,15 +764,20 @@ export default function GmailStyleInbox() {
               </div>
 
               {/* Message Content */}
-              <ScrollArea className="flex-1 p-4">
+              <div className={`p-4 ${selectedMessage.content.length > 500 ? 'flex-1 overflow-y-auto' : 'flex-shrink-0'}`}>
                 <div className="prose max-w-none">
                   <div className="whitespace-pre-wrap">{selectedMessage.content}</div>
                 </div>
-              </ScrollArea>
+              </div>
+
+              {/* Flexible spacer for short messages */}
+              {selectedMessage.content.length <= 500 && (
+                <div className="flex-1 min-h-0"></div>
+              )}
 
               {/* Reply Section */}
               {showReply && (
-                <div className="border-t p-4">
+                <div className="border-t p-4 flex-shrink-0">
                   <div className="space-y-3">
                     <Label>Reply to {selectedMessage.senderName}</Label>
                     <Textarea
