@@ -334,18 +334,20 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   };
 
   return (
-    <div className="w-full bg-white rounded border border-slate-200">
+    <div className="w-full bg-gradient-to-br from-white to-amber-50/40 rounded-lg border border-amber-200/50 shadow-sm">
       {/* Ultra Compact Header */}
-      <div className="px-2 py-2 border-b border-slate-200 bg-gray-50">
-        <h2 className="text-sm font-medium text-slate-900 flex items-center">
-          <img src={sandwichLogo} alt="Logo" className="mr-1 w-3 h-3" />
+      <div className="px-4 py-3 border-b border-amber-200/30 bg-gradient-to-r from-[#FBAD3F]/8 to-amber-50/50">
+        <h2 className="text-base font-semibold text-[#236383] flex items-center font-roboto">
+          <div className="w-6 h-6 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded mr-2 flex items-center justify-center">
+            <img src={sandwichLogo} alt="Logo" className="w-4 h-4" />
+          </div>
           Submit Collection
         </h2>
       </div>
 
       <form onSubmit={handleSubmit} className="p-2 space-y-3">
         {/* Ultra Compact Basic Info */}
-        <div className="bg-blue-50/30 rounded p-2 space-y-2">
+        <div className="bg-gradient-to-r from-amber-50/50 to-orange-50/30 rounded-lg p-4 space-y-3 border border-amber-200/30">
           <div className="grid grid-cols-2 gap-2">
             <div>
               <Label htmlFor="collectionDate" className="text-xs font-medium text-slate-700 block mb-1">
@@ -433,14 +435,14 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
         </div>
 
         {/* Ultra Compact Warning */}
-        <div className="bg-yellow-50 border-l-2 border-yellow-400 p-1 text-xs text-yellow-800">
+        <div className="bg-gradient-to-r from-amber-100/80 to-yellow-100/60 border-l-4 border-[#FBAD3F] p-3 text-sm text-amber-800 rounded-r-lg">
           ⚠️ Don't include group totals in individual count
         </div>
 
         {/* Ultra Compact Collections */}
         <div className="space-y-2">
           {/* Individual Collections - Single Line */}
-          <div className="bg-gray-50 rounded p-2">
+          <div className="bg-gradient-to-r from-slate-50 to-blue-50/40 rounded-lg p-3 border border-slate-200">
             <div className="flex items-center gap-2">
               <Label htmlFor="individualSandwiches" className="text-xs font-medium text-slate-700 w-20 flex-shrink-0">
                 Individual:
@@ -473,7 +475,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
 
           {/* Group Collections - Ultra Compact */}
-          <div className="bg-gray-50 rounded p-2">
+          <div className="bg-gradient-to-r from-orange-50/60 to-amber-50/40 rounded-lg p-3 border border-orange-200/50">
             <div className="flex items-center justify-between mb-1">
               <Label className="text-xs font-medium text-slate-700">Groups:</Label>
               <Button
@@ -533,9 +535,9 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
         <Button
           type="submit"
           disabled={submitCollectionMutation.isPending || !isFormValid()}
-          className={`w-full h-8 px-4 text-xs font-medium ${
+          className={`w-full h-10 px-6 text-sm font-semibold rounded-lg shadow-sm transition-all duration-200 ${
             isFormValid() && !submitCollectionMutation.isPending
-              ? 'bg-amber-500 hover:bg-amber-600 text-white'
+              ? 'bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#d88a1e] text-white shadow-[#FBAD3F]/25'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
         >
