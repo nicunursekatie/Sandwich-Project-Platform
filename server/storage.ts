@@ -222,6 +222,20 @@ export interface IStorage {
   updateSuggestion(id: number, updates: Partial<Suggestion>): Promise<Suggestion | undefined>;
   deleteSuggestion(id: number): Promise<boolean>;
   upvoteSuggestion(id: number): Promise<boolean>;
+
+  // Shoutouts
+  createShoutoutLog(log: {
+    templateName: string;
+    subject: string;
+    message: string;
+    recipientCount: number;
+    sentAt: string;
+    status: string;
+    sentBy: string;
+    successCount?: number;
+    failureCount?: number;
+  }): Promise<any>;
+  getShoutoutHistory(): Promise<any[]>;
   
   // Suggestion Responses
   getSuggestionResponses(suggestionId: number): Promise<SuggestionResponse[]>;
@@ -265,6 +279,7 @@ export class MemStorage implements IStorage {
   private announcements: Map<number, any>;
   private suggestions: Map<number, Suggestion>;
   private suggestionResponses: Map<number, SuggestionResponse>;
+  private shoutoutLogs: Map<number, any>;
   private currentIds: {
     user: number;
     project: number;
@@ -312,6 +327,7 @@ export class MemStorage implements IStorage {
     this.announcements = new Map();
     this.suggestions = new Map();
     this.suggestionResponses = new Map();
+    this.shoutoutLogs = new Map();
     this.taskCompletions = new Map();
     this.currentIds = {
       user: 1,
@@ -334,7 +350,8 @@ export class MemStorage implements IStorage {
       committeeMembership: 1,
       announcement: 1,
       suggestion: 1,
-      suggestionResponse: 1
+      suggestionResponse: 1,
+      shoutoutLog: 1
     };
     
     // No sample data - start with clean storage
@@ -1379,6 +1396,33 @@ export class MemStorage implements IStorage {
 
   async deleteSuggestionResponse(id: number): Promise<boolean> {
     return this.suggestionResponses.delete(id);
+  }
+
+  // Shoutout methods
+  async createShoutoutLog(log: {
+    templateName: string;
+    subject: string;
+    message: string;
+    recipientCount: number;
+    sentAt: string;
+    status: string;
+    sentBy: string;
+    successCount?: number;
+    failureCount?: number;
+  }): Promise<any> {
+    const id = this.currentIds.shoutoutLog++;
+    const newLog = {
+      id,
+      ...log,
+      createdAt: new Date().toISOString()
+    };
+    this.shoutoutLogs.set(id, newLog);
+    return newLog;
+  }
+
+  async getShoutoutHistory(): Promise<any[]> {
+    return Array.from(this.shoutoutLogs.values())
+      .sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime());
   }
 
 
