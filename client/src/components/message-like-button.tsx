@@ -15,7 +15,7 @@ interface MessageLike {
 }
 
 interface MessageLikeButtonProps {
-  messageId: number;
+  messageId: number | string;
   className?: string;
 }
 
@@ -23,10 +23,13 @@ export function MessageLikeButton({ messageId, className = "" }: MessageLikeButt
   const { user } = useAuth();
   const queryClient = useQueryClient();
   
+  // Convert messageId to number for API consistency
+  const numericMessageId = Number(messageId);
+  
   // Fetch likes for this message
   const { data: likes = [], isLoading } = useQuery({
-    queryKey: ["message-likes", messageId],
-    queryFn: () => apiRequest("GET", `/api/messages/${messageId}/likes`),
+    queryKey: ["message-likes", numericMessageId],
+    queryFn: () => apiRequest("GET", `/api/messages/${numericMessageId}/likes`),
     staleTime: 30000, // 30 seconds
   });
 
@@ -37,14 +40,14 @@ export function MessageLikeButton({ messageId, className = "" }: MessageLikeButt
   const likeMutation = useMutation({
     mutationFn: async () => {
       if (hasUserLiked) {
-        return apiRequest("DELETE", `/api/messages/${messageId}/like`);
+        return apiRequest("DELETE", `/api/messages/${numericMessageId}/like`);
       } else {
-        return apiRequest("POST", `/api/messages/${messageId}/like`);
+        return apiRequest("POST", `/api/messages/${numericMessageId}/like`);
       }
     },
     onSuccess: () => {
       // Invalidate and refetch likes
-      queryClient.invalidateQueries({ queryKey: ["message-likes", messageId] });
+      queryClient.invalidateQueries({ queryKey: ["message-likes", numericMessageId] });
     },
     onError: (error) => {
       console.error("Error toggling message like:", error);
