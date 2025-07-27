@@ -352,13 +352,13 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
       default:
         // Handle project detail pages
         if (projectId) {
-          return <ProjectDetailClean projectId={projectId} onBack={() => setActiveSection("projects")} />;
+          return <ProjectDetailClean projectId={projectId} />;
         }
         // Handle legacy project routes
         if (activeSection.startsWith("project-")) {
           const legacyProjectId = parseInt(activeSection.replace("project-", ""));
           if (!isNaN(legacyProjectId)) {
-            return <ProjectDetailClean projectId={legacyProjectId} onBack={() => setActiveSection("projects")} />;
+            return <ProjectDetailClean projectId={legacyProjectId} />;
           }
         }
         return <DashboardOverview onSectionChange={setActiveSection} />;
