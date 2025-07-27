@@ -4,13 +4,14 @@ import { storage } from './storage';
 import { insertSuggestionSchema, insertSuggestionResponseSchema } from "@shared/schema";
 import { isAuthenticated, requirePermission } from './temp-auth';
 import { PERMISSIONS } from "@shared/auth-utils";
+import { sendSuggestionNotification } from './sendgrid';
 
 const router = Router();
 
 // Use the requirePermission middleware from temp-auth
 
 // Get all suggestions
-router.get('/', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), async (req, res) => {
+router.get('/', requirePermission(PERMISSIONS.ACCESS_SUGGESTIONS), async (req, res) => {
   try {
     const suggestions = await storage.getAllSuggestions();
     res.json(suggestions);
@@ -21,7 +22,7 @@ router.get('/', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), async (req, r
 });
 
 // Get single suggestion
-router.get('/:id', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), async (req, res) => {
+router.get('/:id', requirePermission(PERMISSIONS.ACCESS_SUGGESTIONS), async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const suggestion = await storage.getSuggestion(id);
@@ -36,7 +37,7 @@ router.get('/:id', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), async (req
 });
 
 // Create new suggestion
-router.post('/', requirePermission([PERMISSIONS.SUBMIT_SUGGESTIONS]), async (req, res) => {
+router.post('/', requirePermission(PERMISSIONS.SUBMIT_SUGGESTIONS), async (req, res) => {
   try {
     console.log('=== SUGGESTION SUBMISSION DEBUG ===');
     console.log('Request body:', JSON.stringify(req.body, null, 2));
@@ -58,6 +59,28 @@ router.post('/', requirePermission([PERMISSIONS.SUBMIT_SUGGESTIONS]), async (req
     };
     
     const suggestion = await storage.createSuggestion(suggestionData);
+    
+    // Send email notification to developer (no user notification needed)
+    try {
+      const emailSuccess = await sendSuggestionNotification({
+        title: suggestion.title,
+        description: suggestion.description,
+        category: suggestion.category,
+        priority: suggestion.priority,
+        submittedBy: suggestionData.submitterName || suggestionData.submitterEmail || 'Anonymous',
+        submittedAt: suggestion.createdAt || new Date(),
+      });
+      
+      if (emailSuccess) {
+        console.log('Developer notification email sent successfully for suggestion:', suggestion.id);
+      } else {
+        console.warn('Failed to send developer notification email for suggestion:', suggestion.id);
+      }
+    } catch (emailError) {
+      console.error('Error sending developer notification email:', emailError);
+      // Don't fail the suggestion creation if email fails
+    }
+    
     res.status(201).json(suggestion);
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -74,7 +97,7 @@ router.post('/', requirePermission([PERMISSIONS.SUBMIT_SUGGESTIONS]), async (req
 });
 
 // Update suggestion (admin only)
-router.patch('/:id', requirePermission([PERMISSIONS.MANAGE_SUGGESTIONS]), async (req, res) => {
+router.patch('/:id', requirePermission(PERMISSIONS.MANAGE_SUGGESTIONS), async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const updates = req.body;
@@ -91,7 +114,7 @@ router.patch('/:id', requirePermission([PERMISSIONS.MANAGE_SUGGESTIONS]), async 
 });
 
 // Delete suggestion (admin only)
-router.delete('/:id', requirePermission([PERMISSIONS.MANAGE_SUGGESTIONS]), async (req, res) => {
+router.delete('/:id', requirePermission(PERMISSIONS.MANAGE_SUGGESTIONS), async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const success = await storage.deleteSuggestion(id);
@@ -106,7 +129,7 @@ router.delete('/:id', requirePermission([PERMISSIONS.MANAGE_SUGGESTIONS]), async
 });
 
 // Upvote suggestion
-router.post('/:id/upvote', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), async (req, res) => {
+router.post('/:id/upvote', requirePermission(PERMISSIONS.ACCESS_SUGGESTIONS), async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const success = await storage.upvoteSuggestion(id);
@@ -121,7 +144,7 @@ router.post('/:id/upvote', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), as
 });
 
 // Get responses for a suggestion
-router.get('/:id/responses', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), async (req, res) => {
+router.get('/:id/responses', requirePermission(PERMISSIONS.ACCESS_SUGGESTIONS), async (req, res) => {
   try {
     const suggestionId = parseInt(req.params.id);
     const responses = await storage.getSuggestionResponses(suggestionId);
@@ -133,7 +156,7 @@ router.get('/:id/responses', requirePermission([PERMISSIONS.VIEW_SUGGESTIONS]), 
 });
 
 // Create response to suggestion
-router.post('/:id/responses', requirePermission([PERMISSIONS.RESPOND_TO_SUGGESTIONS]), async (req, res) => {
+router.post('/:id/responses', requirePermission(PERMISSIONS.MANAGE_SUGGESTIONS), async (req, res) => {
   try {
     const suggestionId = parseInt(req.params.id);
     const validatedData = insertSuggestionResponseSchema.parse(req.body);
@@ -164,7 +187,7 @@ router.post('/:id/responses', requirePermission([PERMISSIONS.RESPOND_TO_SUGGESTI
 });
 
 // Delete response (admin or response author only)
-router.delete('/responses/:responseId', requirePermission([PERMISSIONS.RESPOND_TO_SUGGESTIONS]), async (req, res) => {
+router.delete('/responses/:responseId', requirePermission(PERMISSIONS.MANAGE_SUGGESTIONS), async (req, res) => {
   try {
     const responseId = parseInt(req.params.responseId);
     const success = await storage.deleteSuggestionResponse(responseId);
@@ -179,7 +202,7 @@ router.delete('/responses/:responseId', requirePermission([PERMISSIONS.RESPOND_T
 });
 
 // Send clarification request to suggestion creator
-router.post('/:id/clarification', requirePermission([PERMISSIONS.MANAGE_SUGGESTIONS]), async (req, res) => {
+router.post('/:id/clarification', requirePermission(PERMISSIONS.MANAGE_SUGGESTIONS), async (req, res) => {
   try {
     const suggestionId = parseInt(req.params.id);
     const { message } = req.body;

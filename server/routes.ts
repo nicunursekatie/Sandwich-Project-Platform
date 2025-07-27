@@ -13,7 +13,7 @@ import { createReadStream } from "fs";
 import path from "path";
 import mammoth from "mammoth";
 import { storage } from "./storage-wrapper";
-import { sendDriverAgreementNotification } from "./sendgrid";
+// import { sendDriverAgreementNotification } from "./sendgrid"; // Removed for now
 import { registerMessageNotificationRoutes } from "./routes/message-notifications";
 import googleSheetsRoutes from "./routes/google-sheets";
 import suggestionsRoutes from "./suggestions-routes";
