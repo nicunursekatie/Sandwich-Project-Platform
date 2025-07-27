@@ -1089,8 +1089,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 50;
       const offset = (page - 1) * limit;
+      const sortField = req.query.sort as string || 'collectionDate';
+      const sortOrder = req.query.order as string || 'desc';
 
-      const result = await storage.getSandwichCollections(limit, offset);
+      const result = await storage.getSandwichCollections(limit, offset, sortField, sortOrder);
       const totalCount = await storage.getSandwichCollectionsCount();
 
       res.json({

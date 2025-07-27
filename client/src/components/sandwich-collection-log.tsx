@@ -139,9 +139,8 @@ export default function SandwichCollectionLog() {
   // Memoize expensive computations using debounced filters
   // Only fetch all data when we need client-side filtering/sorting, not for basic pagination
   const needsAllData = useMemo(() => 
-    showFilters || Object.values(debouncedSearchFilters).some(v => v) || 
-    (sortConfig.field !== "collectionDate" || sortConfig.direction !== "desc"),
-    [showFilters, debouncedSearchFilters, sortConfig]
+    showFilters || Object.values(debouncedSearchFilters).some(v => v),
+    [showFilters, debouncedSearchFilters]
   );
 
   const queryKey = useMemo(() => [
@@ -221,7 +220,8 @@ export default function SandwichCollectionLog() {
           }
         };
       } else {
-        const response = await fetch(`/api/sandwich-collections?page=${currentPage}&limit=${itemsPerPage}`);
+        const sortParam = `&sort=${sortConfig.field}&order=${sortConfig.direction}`;
+        const response = await fetch(`/api/sandwich-collections?page=${currentPage}&limit=${itemsPerPage}${sortParam}`);
         if (!response.ok) throw new Error('Failed to fetch collections');
         return response.json();
       }

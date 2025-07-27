@@ -28,7 +28,7 @@ import {
   type ChatMessageLike, type InsertChatMessageLike
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, sql, and, or, isNull, ne, isNotNull, gt, gte, lte, inArray, like } from "drizzle-orm";
+import { eq, desc, asc, sql, and, or, isNull, ne, isNotNull, gt, gte, lte, inArray, like } from "drizzle-orm";
 import type { IStorage } from "./storage";
 
 export class DatabaseStorage implements IStorage {
@@ -691,10 +691,14 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(sandwichCollections).orderBy(desc(sandwichCollections.collectionDate));
   }
 
-  async getSandwichCollections(limit: number, offset: number): Promise<SandwichCollection[]> {
+  async getSandwichCollections(limit: number, offset: number, sortField = 'collectionDate', sortOrder = 'desc'): Promise<SandwichCollection[]> {
+    const orderByClause = sortOrder === 'asc' ? 
+      asc(sandwichCollections[sortField as keyof typeof sandwichCollections]) :
+      desc(sandwichCollections[sortField as keyof typeof sandwichCollections]);
+      
     return await db.select()
       .from(sandwichCollections)
-      .orderBy(desc(sandwichCollections.collectionDate))
+      .orderBy(orderByClause)
       .limit(limit)
       .offset(offset);
   }

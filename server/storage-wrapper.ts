@@ -407,13 +407,13 @@ class StorageWrapper implements IStorage {
     return collections.filter(collection => !this.deletedIds.has(collection.id));
   }
 
-  async getSandwichCollections(limit: number, offset: number) {
+  async getSandwichCollections(limit: number, offset: number, sortField?: string, sortOrder?: string) {
     return await this.executeWithFallback(
-      () => this.primaryStorage.getSandwichCollections(limit, offset),
+      () => this.primaryStorage.getSandwichCollections(limit, offset, sortField, sortOrder),
       async () => {
-        // Fallback: get all and slice manually
+        // Fallback: get all and slice manually with sorting
         const all = await this.fallbackStorage.getAllSandwichCollections();
-        return all.slice(offset, offset + limit);
+        return this.fallbackStorage.getSandwichCollections(limit, offset, sortField, sortOrder);
       }
     );
   }
