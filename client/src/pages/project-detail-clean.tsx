@@ -432,61 +432,55 @@ export default function ProjectDetailClean({ projectId }: { projectId?: number }
       {/* Project Info Cards - Clean TSP Style */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Project Owner */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-[#236383]/10 rounded-lg flex items-center justify-center">
-              <User className="h-4 w-4 text-[#236383]" />
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 bg-[#236383]/10 rounded flex items-center justify-center shrink-0">
+              <User className="h-3 w-3 text-[#236383]" />
             </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-base font-semibold text-[#236383] font-roboto mb-1">Project Owner</h3>
-              <p className="text-sm text-gray-700 font-roboto truncate">
-                {project.assigneeName || 'Christine Cooper Nowicki'}
-              </p>
-            </div>
+            <h3 className="text-sm font-semibold text-[#236383] font-roboto">Project Owner</h3>
           </div>
+          <p className="text-sm text-gray-900 font-roboto font-medium mb-2 leading-tight">
+            {project.assigneeName || 'Christine Cooper Nowicki'}
+          </p>
           <p className="text-xs text-gray-500 font-roboto">
             Currently managing this project
           </p>
         </div>
 
         {/* Target Date */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-[#FBAD3F]/10 rounded-lg flex items-center justify-center">
-              <Calendar className="h-4 w-4 text-[#FBAD3F]" />
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 bg-[#FBAD3F]/10 rounded flex items-center justify-center shrink-0">
+              <Calendar className="h-3 w-3 text-[#FBAD3F]" />
             </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-base font-semibold text-[#FBAD3F] font-roboto mb-1">Target Date</h3>
-              <p className="text-sm text-gray-700 font-roboto">
-                {project.dueDate 
-                  ? new Date(project.dueDate).toLocaleDateString()
-                  : '8/30/2025'
-                }
-              </p>
-            </div>
+            <h3 className="text-sm font-semibold text-[#FBAD3F] font-roboto">Target Date</h3>
           </div>
+          <p className="text-sm text-gray-900 font-roboto font-medium mb-2 leading-tight">
+            {project.dueDate 
+              ? new Date(project.dueDate).toLocaleDateString()
+              : '8/30/2025'
+            }
+          </p>
           <p className="text-xs text-gray-500 font-roboto">
             About 1 month remaining
           </p>
         </div>
 
         {/* Progress */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-              <Target className="h-4 w-4 text-green-600" />
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 bg-green-100 rounded flex items-center justify-center shrink-0">
+              <Target className="h-3 w-3 text-green-600" />
             </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-base font-semibold text-green-600 font-roboto mb-1">Progress</h3>
-              <p className="text-sm text-gray-700 font-roboto">{progressPercentage}%</p>
-            </div>
+            <h3 className="text-sm font-semibold text-green-600 font-roboto">Progress</h3>
           </div>
+          <p className="text-sm text-gray-900 font-roboto font-medium mb-2 leading-tight">{progressPercentage}%</p>
           <p className="text-xs text-gray-500 font-roboto mb-3">
             {completedTasks} of {totalTasks} tasks complete
           </p>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div 
-              className="bg-green-500 h-2 rounded-full transition-all duration-300" 
+              className="bg-green-500 h-1.5 rounded-full transition-all duration-300" 
               style={{ width: `${progressPercentage}%` }}
             ></div>
           </div>
