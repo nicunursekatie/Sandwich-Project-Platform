@@ -1896,4 +1896,26 @@ export class DatabaseStorage implements IStorage {
         )
     `);
   }
+
+  // Shoutout methods
+  async createShoutoutLog(log: {
+    templateName: string;
+    subject: string;
+    message: string;
+    recipientCount: number;
+    sentAt: string;
+    status: string;
+    sentBy: string;
+    successCount?: number;
+    failureCount?: number;
+  }): Promise<any> {
+    // Store in memory as a simple fallback since there's no shoutout_logs table
+    // This will work with the fallback storage system
+    throw new Error('Database shoutout logging not implemented - using memory storage');
+  }
+
+  async getShoutoutHistory(): Promise<any[]> {
+    // Fallback to memory storage for shoutout history
+    throw new Error('Database shoutout history not implemented - using memory storage');
+  }
 }
