@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { FileText, TrendingUp, Calendar, Award, Download, ExternalLink, Sandwich } from "lucide-react";
+import { FileText, TrendingUp, Calendar, Award, Download, ExternalLink, Sandwich, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
+import { DocumentPreviewModal } from "@/components/document-preview-modal";
 import tspLogo from "@assets/sandwich_project_transparent_1753668698851.png";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 
@@ -14,6 +16,32 @@ interface DashboardOverviewProps {
 
 export default function DashboardOverview({ onSectionChange }: { onSectionChange?: (section: string) => void }) {
   const { user } = useAuth();
+  
+  // Modal state for document preview
+  const [previewModal, setPreviewModal] = useState({
+    isOpen: false,
+    documentPath: '',
+    documentName: '',
+    documentType: ''
+  });
+
+  const openPreviewModal = (path: string, name: string, type: string) => {
+    setPreviewModal({
+      isOpen: true,
+      documentPath: path,
+      documentName: name,
+      documentType: type
+    });
+  };
+
+  const closePreviewModal = () => {
+    setPreviewModal({
+      isOpen: false,
+      documentPath: '',
+      documentName: '',
+      documentType: ''
+    });
+  };
 
   const { data: statsData } = useQuery({
     queryKey: ["/api/sandwich-collections/stats"],
@@ -205,11 +233,11 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => window.open(doc.path, '_blank')}
+                  onClick={() => openPreviewModal(doc.path, doc.title, doc.path.split('.').pop() || 'pdf')}
                   className="flex items-center gap-1 text-[#236383] border-[#FBAD3F]/40 hover:bg-[#FBAD3F]/10 hover:border-[#FBAD3F]/60 text-xs h-8 transition-all duration-200"
                 >
-                  <ExternalLink className="w-3 h-3" />
-                  View
+                  <Eye className="w-3 h-3" />
+                  Preview
                 </Button>
                 <Button
                   variant="outline"
@@ -270,6 +298,15 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           </div>
         </div>
       </div>
+
+      {/* Document Preview Modal */}
+      <DocumentPreviewModal
+        isOpen={previewModal.isOpen}
+        onClose={closePreviewModal}
+        documentPath={previewModal.documentPath}
+        documentName={previewModal.documentName}
+        documentType={previewModal.documentType}
+      />
     </div>
   );
 }
