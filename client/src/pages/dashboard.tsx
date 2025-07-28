@@ -51,6 +51,7 @@ import GmailStyleInbox from "@/components/gmail-style-inbox";
 import { HelpProvider } from "@/components/help-system/HelpProvider";
 import { HelpToggle } from "@/components/help-system/HelpToggle";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
+import { ToolkitTabs } from "@/components/toolkit-tabs";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [location] = useLocation();
