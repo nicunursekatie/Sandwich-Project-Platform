@@ -338,8 +338,8 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       {/* Ultra Compact Header */}
       <div className="px-4 py-3 border-b border-amber-200/30 bg-gradient-to-r from-[#FBAD3F]/8 to-amber-50/50">
         <h2 className="text-base font-semibold text-[#236383] flex items-center font-roboto">
-          <div className="w-6 h-6 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded mr-2 flex items-center justify-center">
-            <img src={sandwichLogo} alt="Logo" className="w-4 h-4" />
+          <div className="w-6 h-6 bg-white rounded mr-2 flex items-center justify-center border border-slate-200 shadow-sm">
+            <img src={sandwichLogo} alt="Logo" className="w-4 h-4 object-contain" />
           </div>
           Submit Collection
         </h2>
