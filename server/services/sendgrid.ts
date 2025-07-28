@@ -22,12 +22,12 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
       throw new Error("SendGrid API key not configured");
     }
 
-    const msg = {
+    const msg: sgMail.MailDataRequired = {
       to: params.to,
       from: params.from,
       subject: params.subject,
-      text: params.text,
-      html: params.html || params.text?.replace(/\n/g, '<br>')
+      text: params.text || '',
+      html: params.html || params.text?.replace(/\n/g, '<br>') || ''
     };
 
     await sgMail.send(msg);

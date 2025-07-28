@@ -223,20 +223,6 @@ export interface IStorage {
   deleteSuggestion(id: number): Promise<boolean>;
   upvoteSuggestion(id: number): Promise<boolean>;
 
-  // Shoutouts
-  createShoutoutLog(log: {
-    templateName: string;
-    subject: string;
-    message: string;
-    recipientCount: number;
-    sentAt: string;
-    status: string;
-    sentBy: string;
-    successCount?: number;
-    failureCount?: number;
-  }): Promise<any>;
-  getShoutoutHistory(): Promise<any[]>;
-  
   // Suggestion Responses
   getSuggestionResponses(suggestionId: number): Promise<SuggestionResponse[]>;
   createSuggestionResponse(response: InsertSuggestionResponse): Promise<SuggestionResponse>;

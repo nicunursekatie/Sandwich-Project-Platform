@@ -158,6 +158,35 @@ export default function ShoutoutSystem() {
     }
   });
 
+  // Test SendGrid configuration mutation
+  const testSendGridMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest('POST', '/api/shoutouts/test', {});
+    },
+    onSuccess: (data: any) => {
+      const successfulSenders = data.results?.filter((r: any) => r.status === 'success') || [];
+      if (successfulSenders.length > 0) {
+        toast({
+          title: "SendGrid test successful!",
+          description: `Working sender addresses found: ${successfulSenders.map((s: any) => s.from).join(', ')}`
+        });
+      } else {
+        toast({
+          variant: "destructive", 
+          title: "SendGrid test failed",
+          description: "No working sender addresses found. Check SendGrid configuration."
+        });
+      }
+    },
+    onError: (error: any) => {
+      toast({
+        variant: "destructive",
+        title: "SendGrid test failed", 
+        description: error.message || "Unable to test SendGrid configuration."
+      });
+    }
+  });
+
   const handleTemplateSelect = (template: ShoutoutTemplate) => {
     setSelectedTemplate(template);
     setCustomSubject(template.subject);
@@ -180,6 +209,10 @@ export default function ShoutoutSystem() {
       recipientGroup,
       templateName: selectedTemplate?.name
     });
+  };
+
+  const handleTestSendGrid = () => {
+    testSendGridMutation.mutate();
   };
 
   const getRecipientCount = () => {
@@ -326,23 +359,44 @@ export default function ShoutoutSystem() {
                 </AlertDescription>
               </Alert>
               
-              <Button
-                onClick={handleSendShoutout}
-                disabled={sendShoutoutMutation.isPending || !customSubject.trim() || !customMessage.trim()}
-                className="w-full bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#d4941f] text-white font-semibold py-3"
-              >
-                {sendShoutoutMutation.isPending ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="h-4 w-4 mr-2" />
-                    Send Shoutout
-                  </>
-                )}
-              </Button>
+              <div className="space-y-3">
+                <Button
+                  onClick={handleSendShoutout}
+                  disabled={sendShoutoutMutation.isPending || !customSubject.trim() || !customMessage.trim()}
+                  className="w-full bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#d4941f] text-white font-semibold py-3"
+                >
+                  {sendShoutoutMutation.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 mr-2" />
+                      Send Shoutout
+                    </>
+                  )}
+                </Button>
+                
+                <Button
+                  onClick={handleTestSendGrid}
+                  disabled={testSendGridMutation.isPending}
+                  variant="outline"
+                  className="w-full border-[#236383] text-[#236383] hover:bg-[#236383]/5"
+                >
+                  {testSendGridMutation.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#236383] mr-2"></div>
+                      Testing...
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="h-4 w-4 mr-2" />
+                      Test SendGrid Setup
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
