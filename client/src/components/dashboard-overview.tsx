@@ -143,7 +143,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         <div className="p-6">
           {/* Top Row - Main Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg border border-blue-200/50 p-4">
+            <div className="bg-gradient-to-r from-blue-50 via-blue-100/70 to-cyan-50 rounded-lg border border-blue-200/50 p-4 shadow-sm">
               <div className="mb-3">
                 <span className="text-base sm:text-lg font-semibold text-blue-700">Total Lifetime</span>
               </div>
@@ -151,7 +151,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               <div className="text-sm text-blue-600">Since 2020</div>
             </div>
 
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 rounded-lg border border-orange-200/50 p-4">
+            <div className="bg-gradient-to-r from-orange-50 via-amber-50/70 to-yellow-50 rounded-lg border border-orange-200/50 p-4 shadow-sm">
               <div className="mb-3">
                 <span className="text-base sm:text-lg font-semibold text-orange-700">Peak Week</span>
               </div>
@@ -159,7 +159,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               <div className="text-sm text-orange-600 break-words">{organizationalStats.peakWeekDate}</div>
             </div>
 
-            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-lg border border-emerald-200/50 p-4">
+            <div className="bg-gradient-to-r from-emerald-50 via-green-50/70 to-teal-50 rounded-lg border border-emerald-200/50 p-4 shadow-sm">
               <div className="mb-3">
                 <span className="text-base sm:text-lg font-semibold text-emerald-700">Annual Capacity</span>
               </div>
@@ -167,7 +167,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               <div className="text-sm text-emerald-600">Sustainable Level</div>
             </div>
 
-            <div className="bg-gradient-to-br from-red-50 to-red-100/50 rounded-lg border border-red-200/50 p-4">
+            <div className="bg-gradient-to-r from-red-50 via-rose-50/70 to-pink-50 rounded-lg border border-red-200/50 p-4 shadow-sm">
               <div className="mb-3">
                 <span className="text-base sm:text-lg font-semibold text-red-700">Growth</span>
               </div>
@@ -178,21 +178,21 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
           {/* Bottom Row - Breakdown Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg border border-blue-200/50 p-4">
+            <div className="bg-gradient-to-r from-blue-50 via-indigo-50/70 to-purple-50 rounded-lg border border-blue-200/50 p-4 shadow-sm">
               <div className="mb-3">
                 <span className="text-base sm:text-lg font-semibold text-blue-700">Individual Sandwiches</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{statsData?.individualSandwiches?.toLocaleString() || organizationalStats.individualSandwiches}</div>
             </div>
 
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 rounded-lg border border-orange-200/50 p-4">
+            <div className="bg-gradient-to-r from-orange-50 via-red-50/70 to-rose-50 rounded-lg border border-orange-200/50 p-4 shadow-sm">
               <div className="mb-3">
                 <span className="text-base sm:text-lg font-semibold text-orange-700">Group Sandwiches</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{statsData ? ((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)).toLocaleString() : organizationalStats.groupSandwiches}</div>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200/50 p-4">
+            <div className="bg-gradient-to-r from-slate-50 via-gray-50/70 to-zinc-50 rounded-lg border border-slate-200/50 p-4 shadow-sm">
               <div className="mb-3">
                 <span className="text-base sm:text-lg font-semibold text-slate-700">Total Entries</span>
               </div>
@@ -272,7 +272,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-lg border border-emerald-200/50 p-4">
+            <div className="bg-gradient-to-r from-emerald-50 via-green-100/70 to-lime-50 rounded-lg border border-emerald-200/50 p-4 shadow-sm">
               <div className="mb-3">
                 <span className="text-base sm:text-lg font-semibold text-emerald-700">Weekly Baseline</span>
               </div>
@@ -280,7 +280,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               <div className="text-sm text-emerald-600">Standard Operations</div>
             </div>
 
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 rounded-lg border border-orange-200/50 p-4">
+            <div className="bg-gradient-to-r from-orange-50 via-amber-100/70 to-yellow-100 rounded-lg border border-orange-200/50 p-4 shadow-sm">
               <div className="mb-3">
                 <span className="text-base sm:text-lg font-semibold text-orange-700">Surge Capacity</span>
               </div>
@@ -288,7 +288,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               <div className="text-sm text-orange-600">Crisis Response</div>
             </div>
 
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg border border-blue-200/50 p-4">
+            <div className="bg-gradient-to-r from-blue-50 via-sky-100/70 to-cyan-100 rounded-lg border border-blue-200/50 p-4 shadow-sm">
               <div className="mb-3">
                 <span className="text-base sm:text-lg font-semibold text-blue-700">Experience</span>
               </div>
