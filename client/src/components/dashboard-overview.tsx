@@ -5,7 +5,7 @@ import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
-import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
+import tspLogo from "@assets/sandwich_project_transparent_1753668698851.png";
 
 interface DashboardOverviewProps {
   onSectionChange: (section: string) => void;
@@ -69,14 +69,9 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
     <div className="space-y-8">
       {/* Welcome Header - Enhanced Professional Design */}
       <div className="text-center py-12 bg-gradient-to-br from-white via-slate-50/30 to-blue-50/20 rounded-2xl border border-slate-200 shadow-xl">
-        <div className="flex items-center justify-center mb-6">
-          <div className="w-16 h-16 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded-2xl flex items-center justify-center mr-6 shadow-lg">
-            <img src={sandwichLogo} alt="The Sandwich Project" className="w-10 h-10" />
-          </div>
-          <div className="text-left">
-            <h1 className="text-4xl font-black text-[#922B21] font-roboto tracking-tight leading-none">The Sandwich Project</h1>
-            <p className="text-xl font-semibold text-[#236383] font-roboto mt-1">Operations Dashboard</p>
-          </div>
+        <div className="flex flex-col items-center mb-6">
+          <img src={tspLogo} alt="The Sandwich Project" className="h-20 mb-4" />
+          <p className="text-xl font-semibold text-[#236383] font-roboto">Operations Dashboard</p>
         </div>
         <div className="max-w-2xl mx-auto">
           <p className="text-lg font-medium text-[#7F8C8D] font-roboto leading-relaxed">Community Impact Through Coordinated Action</p>
