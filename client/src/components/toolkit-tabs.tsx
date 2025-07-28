@@ -140,13 +140,13 @@ function DocumentCard({ document, onPreview }: { document: ToolkitDocument; onPr
   };
 
   return (
-    <Card className="hover:shadow-md transition-shadow duration-200">
+    <Card className="hover:shadow-md transition-shadow duration-200 h-full flex flex-col">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3 flex-1 min-w-0">
             {getFileIcon(document.type)}
             <div className="flex-1 min-w-0">
-              <CardTitle className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
+              <CardTitle className="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100 break-words">
                 {document.name}
               </CardTitle>
               <Badge variant="secondary" className={`mt-1 text-xs ${getCategoryColor(document.category)}`}>
@@ -156,37 +156,43 @@ function DocumentCard({ document, onPreview }: { document: ToolkitDocument; onPr
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0">
+      <CardContent className="pt-0 flex-1 flex flex-col">
         {document.description && (
-          <CardDescription className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+          <CardDescription className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 flex-1">
             {document.description}
           </CardDescription>
         )}
-        <div className="flex gap-2">
+        {/* Mobile: Stack buttons vertically, Desktop: Horizontal layout */}
+        <div className="flex flex-col sm:flex-row gap-2 mt-auto">
           <Button
             variant="outline"
             size="sm"
             onClick={() => onPreview(document)}
-            className="flex-1"
+            className="flex-1 text-xs sm:text-sm"
           >
-            <Eye className="h-4 w-4 mr-2" />
+            <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             Preview
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleDownload(document.path, document.name)}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Download
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => window.open(document.path, '_blank')}
-          >
-            <ExternalLink className="h-4 w-4" />
-          </Button>
+          <div className="flex gap-2 sm:flex-1">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleDownload(document.path, document.name)}
+              className="flex-1 text-xs sm:text-sm"
+            >
+              <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Download</span>
+              <span className="sm:hidden">DL</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open(document.path, '_blank')}
+              className="px-2 sm:px-3"
+            >
+              <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -199,11 +205,11 @@ export function ToolkitTabs() {
   if (previewDocument) {
     return (
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center space-x-3 min-w-0">
             {getFileIcon(previewDocument.type)}
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <div className="min-w-0 flex-1">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 break-words">
                 {previewDocument.name}
               </h2>
               <Badge variant="secondary" className={`text-xs ${getCategoryColor(previewDocument.category)}`}>
@@ -211,7 +217,7 @@ export function ToolkitTabs() {
               </Badge>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 shrink-0">
             <Button
               variant="outline"
               size="sm"
@@ -224,22 +230,27 @@ export function ToolkitTabs() {
                 link.click();
                 document.body.removeChild(link);
               }}
+              className="text-xs sm:text-sm"
             >
-              <Download className="h-4 w-4 mr-2" />
-              Download
+              <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Download</span>
+              <span className="sm:hidden">DL</span>
             </Button>
             <Button
               variant="outline"
               onClick={() => setPreviewDocument(null)}
+              className="text-xs sm:text-sm"
             >
-              Back to Toolkit
+              <span className="hidden sm:inline">Back to Toolkit</span>
+              <span className="sm:hidden">Back</span>
             </Button>
           </div>
         </div>
         <DocumentPreview 
-          title={previewDocument.name}
-          path={previewDocument.path}
-          type={previewDocument.type}
+          documentPath={previewDocument.path}
+          documentName={previewDocument.name}
+          documentType={previewDocument.type}
+          onClose={() => setPreviewDocument(null)}
         />
       </div>
     );
@@ -248,37 +259,39 @@ export function ToolkitTabs() {
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-3">
-        <div className="w-8 h-8 bg-[#FBAD3F] rounded-lg flex items-center justify-center">
+        <div className="w-8 h-8 bg-[#FBAD3F] rounded-lg flex items-center justify-center shrink-0">
           <FileText className="h-4 w-4 text-white" />
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 font-roboto">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 font-roboto break-words">
             Toolkit & Resources
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 break-words">
             Essential documents, guidelines, and resources for volunteers and hosts
           </p>
         </div>
       </div>
 
       <Tabs defaultValue="safety" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="safety" className="flex items-center gap-2">
-            <Shield className="h-4 w-4" />
-            Safety
+        <TabsList className="grid w-full grid-cols-3 h-auto">
+          <TabsTrigger value="safety" className="flex items-center gap-1 sm:gap-2 py-2 px-2 sm:px-4 text-xs sm:text-sm">
+            <Shield className="h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
+            <span className="hidden sm:inline">Safety</span>
+            <span className="sm:hidden">Safe</span>
           </TabsTrigger>
-          <TabsTrigger value="labels" className="flex items-center gap-2">
-            <Tag className="h-4 w-4" />
-            Labels
+          <TabsTrigger value="labels" className="flex items-center gap-1 sm:gap-2 py-2 px-2 sm:px-4 text-xs sm:text-sm">
+            <Tag className="h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
+            <span>Labels</span>
           </TabsTrigger>
-          <TabsTrigger value="sandwich-making" className="flex items-center gap-2">
-            <Sandwich className="h-4 w-4" />
-            Sandwich Making
+          <TabsTrigger value="sandwich-making" className="flex items-center gap-1 sm:gap-2 py-2 px-2 sm:px-4 text-xs sm:text-sm">
+            <Sandwich className="h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
+            <span className="hidden sm:inline">Sandwich Making</span>
+            <span className="sm:hidden">Making</span>
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="safety" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
             {safetyDocuments.map((document, index) => (
               <DocumentCard
                 key={index}
@@ -290,7 +303,7 @@ export function ToolkitTabs() {
         </TabsContent>
 
         <TabsContent value="labels" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
             {labelDocuments.map((document, index) => (
               <DocumentCard
                 key={index}
@@ -302,7 +315,7 @@ export function ToolkitTabs() {
         </TabsContent>
 
         <TabsContent value="sandwich-making" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
             {sandwichMakingDocuments.map((document, index) => (
               <DocumentCard
                 key={index}
