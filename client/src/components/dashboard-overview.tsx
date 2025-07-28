@@ -67,14 +67,9 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
   return (
     <div className="space-y-8">
-      {/* Simple Header - Matching Screenshot Design */}
+      {/* Simple Header with Large Logo */}
       <div className="text-center py-8">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="w-12 h-12 bg-orange-400 rounded-lg flex items-center justify-center">
-            <img src={tspLogo} alt="The Sandwich Project" className="w-8 h-8 object-contain" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-700 font-roboto">The Sandwich Project Dashboard</h1>
-        </div>
+        <img src={tspLogo} alt="The Sandwich Project" className="w-[500px] mb-6 mx-auto" />
         <p className="text-lg text-gray-600 font-roboto">Community Impact Through Coordinated Action</p>
       </div>
 
