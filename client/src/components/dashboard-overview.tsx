@@ -66,26 +66,48 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
   };
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Header - Enhanced Professional Design */}
-      <div className="text-center py-12 bg-gradient-to-br from-white via-slate-50/30 to-blue-50/20 rounded-2xl border border-slate-200 shadow-xl">
-        <div className="flex flex-col items-center mb-8">
-          <img src={tspLogo} alt="The Sandwich Project" className="w-[500px] mb-6" />
-          <p className="text-xl font-semibold text-[#236383] font-roboto mb-4">Operations Dashboard</p>
-          <p className="text-lg font-medium text-[#7F8C8D] font-roboto leading-relaxed mb-8">Community Impact Through Coordinated Action</p>
-          
-          <div className="flex items-center justify-center gap-6">
-            <div className="stat-card-burgundy text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px' }}>
-              <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>5+</p>
-              <p className="text-sm font-medium uppercase tracking-wider mt-2">Years Active</p>
+    <div className="space-y-12">
+      {/* Hero Section - Professional Linear-inspired Design */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-50/50 border border-slate-200/60 rounded-2xl">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(35,99,131,0.04),transparent_70%)]"></div>
+        <div className="relative px-12 py-16">
+          <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+            <div className="flex items-center justify-center mb-8">
+              <img src={tspLogo} alt="The Sandwich Project" className="h-20 mr-4" />
+              <div className="text-left">
+                <h1 className="text-4xl font-bold text-slate-900 font-roboto tracking-tight">Operations Hub</h1>
+                <p className="text-lg text-slate-600 font-medium mt-1">Community Impact Through Coordinated Action</p>
+              </div>
             </div>
-            <div className="stat-card-gold text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px' }}>
-              <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>25+</p>
-              <p className="text-sm font-medium uppercase tracking-wider mt-2">Host Locations</p>
-            </div>
-            <div className="stat-card-navy text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px' }}>
-              <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>1.8M+</p>
-              <p className="text-sm font-medium uppercase tracking-wider mt-2">Total Impact</p>
+            
+            {/* Professional Metrics Grid */}
+            <div className="grid grid-cols-3 gap-8 w-full max-w-3xl">
+              <div className="metric-card group rounded-xl p-6 text-center relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 metric-accent-burgundy"></div>
+                <div className="flex items-center justify-center mb-3">
+                  <img src={tspLogo} alt="" className="h-6 w-6 opacity-60" />
+                </div>
+                <div className="text-3xl font-bold text-slate-900 mb-1">5+</div>
+                <div className="text-sm font-medium text-slate-600 uppercase tracking-wide">Years Active</div>
+              </div>
+              
+              <div className="metric-card group rounded-xl p-6 text-center relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 metric-accent-gold"></div>
+                <div className="flex items-center justify-center mb-3">
+                  <img src={tspLogo} alt="" className="h-6 w-6 opacity-60" />
+                </div>
+                <div className="text-3xl font-bold text-slate-900 mb-1">25+</div>
+                <div className="text-sm font-medium text-slate-600 uppercase tracking-wide">Host Locations</div>
+              </div>
+              
+              <div className="metric-card group rounded-xl p-6 text-center relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 metric-accent-navy"></div>
+                <div className="flex items-center justify-center mb-3">
+                  <img src={tspLogo} alt="" className="h-6 w-6 opacity-60" />
+                </div>
+                <div className="text-3xl font-bold text-slate-900 mb-1">1.8M+</div>
+                <div className="text-sm font-medium text-slate-600 uppercase tracking-wide">Total Impact</div>
+              </div>
             </div>
           </div>
         </div>
