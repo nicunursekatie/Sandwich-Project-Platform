@@ -75,15 +75,15 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           <p className="text-lg font-medium text-[#7F8C8D] font-roboto leading-relaxed mb-8">Community Impact Through Coordinated Action</p>
           
           <div className="flex items-center justify-center gap-6">
-            <div className="bg-[#922B21] text-white rounded-xl shadow-xl text-center" style={{ padding: '20px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
+            <div className="bg-gradient-to-b from-[#922B21] to-[#B73C28] text-white rounded-xl shadow-xl text-center" style={{ padding: '20px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
               <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>5+</p>
               <p className="text-sm font-medium uppercase tracking-wider mt-2">Years Active</p>
             </div>
-            <div className="bg-[#FBAD3F] text-white rounded-xl shadow-xl text-center" style={{ padding: '20px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
+            <div className="bg-gradient-to-b from-[#FBAD3F] to-[#FFB347] text-white rounded-xl shadow-xl text-center" style={{ padding: '20px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
               <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>25+</p>
               <p className="text-sm font-medium uppercase tracking-wider mt-2">Host Locations</p>
             </div>
-            <div className="bg-[#236383] text-white rounded-xl shadow-xl text-center" style={{ padding: '20px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
+            <div className="bg-gradient-to-b from-[#236383] to-[#2980B9] text-white rounded-xl shadow-xl text-center" style={{ padding: '20px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
               <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>1.8M+</p>
               <p className="text-sm font-medium uppercase tracking-wider mt-2">Total Impact</p>
             </div>
