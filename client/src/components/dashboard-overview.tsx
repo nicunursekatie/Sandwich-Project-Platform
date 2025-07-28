@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
 import tspLogo from "@assets/sandwich_project_transparent_1753668698851.png";
+import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 
 interface DashboardOverviewProps {
   onSectionChange: (section: string) => void;
@@ -78,8 +79,8 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
           <div className="px-8 py-6 border-b border-slate-200 flex justify-between items-center bg-gradient-to-r from-[#FBAD3F]/5 via-white to-[#236383]/5">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded-xl flex items-center justify-center shadow-lg">
-                <Sandwich className="h-6 w-6 text-white" />
+              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg border border-slate-200">
+                <img src={sandwichLogo} alt="Sandwich" className="h-8 w-8 object-contain" />
               </div>
               <div>
                 <h2 className="text-2xl font-black text-slate-900 font-roboto tracking-tight">Submit Collection Data</h2>
