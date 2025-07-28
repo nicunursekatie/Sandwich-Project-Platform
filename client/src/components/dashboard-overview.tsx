@@ -102,146 +102,82 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         </div>
       )}
 
-      {/* Organizational Impact Statistics - Enhanced Professional Design */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
-        <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50/50 to-white">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#236383] to-blue-600 rounded-xl flex items-center justify-center shrink-0 shadow-lg">
-              <TrendingUp className="h-6 w-6 text-white" />
+      {/* Organizational Impact - Card Based Layout */}
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
+        <div className="px-6 py-4 border-b border-slate-200">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-[#FBAD3F] rounded-lg flex items-center justify-center">
+              <TrendingUp className="h-4 w-4 text-white" />
             </div>
-            <div>
-              <h2 className="text-2xl font-black text-slate-900 font-roboto tracking-tight">Organizational Impact</h2>
-              <p className="text-sm font-medium text-slate-500 font-roboto mt-1">Key performance metrics and operational data</p>
-            </div>
+            <h2 className="text-lg font-semibold text-slate-900 font-roboto">Organizational Impact</h2>
           </div>
         </div>
-        <div className="p-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#236383] to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-                  <TrendingUp className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 font-roboto">Total Impact</h3>
-                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">LIFETIME</p>
-                </div>
+        <div className="p-6">
+          {/* Top Row - Main Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-white rounded-lg border border-slate-200 p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-[#236383]">Total Lifetime</span>
+                <span className="px-2 py-1 bg-[#236383] text-white text-xs rounded-full">active</span>
               </div>
+              <div className="text-2xl font-bold text-slate-900">{organizationalStats.totalLifetimeSandwiches}</div>
+              <div className="text-sm text-slate-500">Since 2020</div>
             </div>
-            <div className="space-y-2">
-              <p className="text-4xl font-black text-slate-900 font-roboto tracking-tight">{organizationalStats.totalLifetimeSandwiches}</p>
-              <p className="text-sm font-semibold text-[#236383] font-roboto">Since 2020 Launch</p>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#FBAD3F] to-orange-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-                  <Award className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 font-roboto">Peak Performance</h3>
-                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">RECORD</p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <p className="text-4xl font-black text-slate-900 font-roboto tracking-tight">{organizationalStats.peakWeekRecord}</p>
-              <p className="text-sm font-semibold text-[#FBAD3F] font-roboto">{organizationalStats.peakWeekDate}</p>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-                  <Calendar className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 font-roboto">Annual Capacity</h3>
-                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">SUSTAINABLE</p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <p className="text-4xl font-black text-slate-900 font-roboto tracking-tight">{organizationalStats.currentAnnualCapacity}</p>
-              <p className="text-sm font-semibold text-emerald-600 font-roboto">Current Operations</p>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-                  <TrendingUp className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 font-roboto">Growth Factor</h3>
-                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">EXPANSION</p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <p className="text-4xl font-black text-slate-900 font-roboto tracking-tight">{organizationalStats.growthMultiplier}</p>
-              <p className="text-sm font-semibold text-purple-600 font-roboto">Since Launch</p>
-            </div>
-          </div>
-        </div>
 
-        {/* Database Details - Enhanced Professional Design */}
-        {statsData && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-slate-200">
-            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-[#236383]/30">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#236383] to-blue-600 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 font-roboto">Individual Collections</h3>
-                </div>
-                <span className="bg-gradient-to-r from-[#236383]/10 to-blue-100 text-[#236383] px-3 py-1.5 rounded-full text-xs font-semibold border border-[#236383]/20">ACTIVE</span>
+            <div className="bg-white rounded-lg border border-slate-200 p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-[#FBAD3F]">Peak Week</span>
+                <span className="px-2 py-1 bg-[#FBAD3F] text-white text-xs rounded-full">high priority</span>
               </div>
-              <div className="space-y-2">
-                <p className="text-3xl font-black text-slate-900 font-roboto tracking-tight">{statsData.individualSandwiches?.toLocaleString() || 0}</p>
-                <p className="text-sm font-medium text-slate-500 font-roboto">Direct volunteer contributions</p>
-              </div>
+              <div className="text-2xl font-bold text-slate-900">{organizationalStats.peakWeekRecord}</div>
+              <div className="text-sm text-slate-500">{organizationalStats.peakWeekDate}</div>
             </div>
-            
-            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-[#FBAD3F]/30">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#FBAD3F] to-orange-500 rounded-lg flex items-center justify-center">
-                    <Award className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 font-roboto">Group Collections</h3>
-                </div>
-                <span className="bg-gradient-to-r from-[#FBAD3F]/10 to-orange-100 text-[#FBAD3F] px-3 py-1.5 rounded-full text-xs font-semibold border border-[#FBAD3F]/20">PRIORITY</span>
+
+            <div className="bg-white rounded-lg border border-slate-200 p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-emerald-600">Annual Capacity</span>
+                <span className="px-2 py-1 bg-emerald-500 text-white text-xs rounded-full">sustainable</span>
               </div>
-              <div className="space-y-2">
-                <p className="text-3xl font-black text-slate-900 font-roboto tracking-tight">{((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)).toLocaleString()}</p>
-                <p className="text-sm font-medium text-slate-500 font-roboto">Organization partnerships</p>
-              </div>
+              <div className="text-2xl font-bold text-slate-900">{organizationalStats.currentAnnualCapacity}</div>
+              <div className="text-sm text-slate-500">Sustainable Level</div>
             </div>
-            
-            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-slate-400/30">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-700 rounded-lg flex items-center justify-center">
-                    <FileText className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 font-roboto">Total Records</h3>
-                </div>
-                <span className="bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 px-3 py-1.5 rounded-full text-xs font-semibold border border-slate-300">DATABASE</span>
+
+            <div className="bg-white rounded-lg border border-slate-200 p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-[#922B21]">Growth</span>
+                <span className="px-2 py-1 bg-[#922B21] text-white text-xs rounded-full">expanding</span>
               </div>
-              <div className="space-y-2">
-                <p className="text-3xl font-black text-slate-900 font-roboto tracking-tight">{statsData.totalEntries?.toLocaleString() || 0}</p>
-                <p className="text-sm font-medium text-slate-500 font-roboto">Historical data points</p>
-              </div>
+              <div className="text-2xl font-bold text-slate-900">{organizationalStats.growthMultiplier}x</div>
+              <div className="text-sm text-slate-500">Since Launch</div>
             </div>
           </div>
-        )}
+
+          {/* Bottom Row - Breakdown Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white rounded-lg border border-slate-200 p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-[#236383]">Individual Sandwiches</span>
+                <span className="px-2 py-1 bg-[#236383] text-white text-xs rounded-full">active</span>
+              </div>
+              <div className="text-2xl font-bold text-slate-900">{statsData?.individualSandwiches?.toLocaleString() || organizationalStats.individualSandwiches}</div>
+            </div>
+
+            <div className="bg-white rounded-lg border border-slate-200 p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-[#FBAD3F]">Group Sandwiches</span>
+                <span className="px-2 py-1 bg-orange-500 text-white text-xs rounded-full">medium priority</span>
+              </div>
+              <div className="text-2xl font-bold text-slate-900">{statsData ? ((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)).toLocaleString() : organizationalStats.groupSandwiches}</div>
+            </div>
+
+            <div className="bg-white rounded-lg border border-slate-200 p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-slate-600">Total Entries</span>
+                <span className="px-2 py-1 bg-slate-500 text-white text-xs rounded-full">database</span>
+              </div>
+              <div className="text-2xl font-bold text-slate-900">{statsData?.totalEntries?.toLocaleString() || organizationalStats.totalEntries}</div>
+            </div>
+          </div>
         </div>
       </div>
 
