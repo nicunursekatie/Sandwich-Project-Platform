@@ -67,28 +67,15 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
   return (
     <div className="space-y-8">
-      {/* Welcome Header - Enhanced Professional Design */}
-      <div className="text-center py-12 bg-gradient-to-br from-white via-slate-50/30 to-blue-50/20 rounded-2xl border border-slate-200 shadow-xl">
-        <div className="flex flex-col items-center mb-8">
-          <img src={tspLogo} alt="The Sandwich Project" className="w-[500px] mb-6" />
-          <p className="text-xl font-semibold text-[#236383] font-roboto mb-4">Operations Dashboard</p>
-          <p className="text-lg font-medium text-[#7F8C8D] font-roboto leading-relaxed mb-8">Community Impact Through Coordinated Action</p>
-          
-          <div className="flex items-center justify-center gap-6">
-            <div className="stat-card-burgundy text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px' }}>
-              <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>5+</p>
-              <p className="text-sm font-medium uppercase tracking-wider mt-2">Years Active</p>
-            </div>
-            <div className="stat-card-gold text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px' }}>
-              <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>25+</p>
-              <p className="text-sm font-medium uppercase tracking-wider mt-2">Host Locations</p>
-            </div>
-            <div className="stat-card-navy text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px' }}>
-              <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>1.8M+</p>
-              <p className="text-sm font-medium uppercase tracking-wider mt-2">Total Impact</p>
-            </div>
+      {/* Simple Header - Matching Screenshot Design */}
+      <div className="text-center py-8">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-orange-400 rounded-lg flex items-center justify-center">
+            <img src={tspLogo} alt="The Sandwich Project" className="w-8 h-8 object-contain" />
           </div>
+          <h1 className="text-3xl font-bold text-gray-700 font-roboto">The Sandwich Project Dashboard</h1>
         </div>
+        <p className="text-lg text-gray-600 font-roboto">Community Impact Through Coordinated Action</p>
       </div>
 
       {/* Sandwich Collection Form - Primary Focus */}
