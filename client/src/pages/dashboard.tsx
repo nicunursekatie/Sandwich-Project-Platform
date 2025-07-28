@@ -383,24 +383,42 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
 
   return (
     <HelpProvider>
-      <div className="bg-gradient-to-br from-orange-50 to-yellow-50 min-h-screen flex flex-col">
+      <div style={{ 
+        backgroundColor: '#F8F6F3', 
+        fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+        minHeight: '100vh'
+      }} className="flex flex-col">
       {/* Announcement Banner */}
       <AnnouncementBanner />
       
       {/* Top Header */}
-      <div className="bg-gradient-to-r from-white to-orange-50/30 border-b-2 border-amber-200 shadow-sm px-2 sm:px-4 md:px-6 py-3 flex items-center relative z-50">
+      <div style={{
+        background: 'linear-gradient(135deg, #236383 0%, #1E4F6F 100%)',
+        borderBottom: '1px solid rgba(35, 99, 131, 0.2)',
+        boxShadow: '0 2px 8px rgba(35, 99, 131, 0.1)'
+      }} className="px-2 sm:px-4 md:px-6 py-3 flex items-center relative z-50">
         <div className="flex items-center space-x-2 min-w-0 flex-shrink-0">
           {/* Mobile menu button - positioned first for easy access */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors touch-manipulation relative z-60"
+            className="md:hidden p-2 rounded-lg text-white hover:bg-white/20 transition-colors touch-manipulation relative z-60"
             aria-label="Toggle navigation menu"
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
           <img src={sandwichLogo} alt="Sandwich Logo" className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
-          <h1 className="text-base sm:text-lg font-semibold text-teal-800 hidden sm:block">The Sandwich Project</h1>
-          <h1 className="text-sm font-semibold text-teal-800 sm:hidden">TSP</h1>
+          <h1 style={{ 
+            fontSize: '18px', 
+            fontWeight: '600', 
+            color: 'white',
+            fontFamily: 'Inter, system-ui, -apple-system, sans-serif'
+          }} className="hidden sm:block">The Sandwich Project</h1>
+          <h1 style={{ 
+            fontSize: '14px', 
+            fontWeight: '600', 
+            color: 'white',
+            fontFamily: 'Inter, system-ui, -apple-system, sans-serif'
+          }} className="sm:hidden">TSP</h1>
         </div>
         
         {/* Flexible spacer */}
