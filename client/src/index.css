@@ -56,6 +56,19 @@
     color: #236383 !important;
     background-color: rgba(35, 99, 131, 0.1) !important;
   }
+
+  /* Stat Card Gradients */
+  .stat-card-burgundy {
+    background: linear-gradient(180deg, #922B21 0%, #B73C28 100%) !important;
+  }
+  
+  .stat-card-gold {
+    background: linear-gradient(180deg, #FBAD3F 0%, #FFB347 100%) !important;
+  }
+  
+  .stat-card-navy {
+    background: linear-gradient(180deg, #236383 0%, #2980B9 100%) !important;
+  }
 }
 
 /* Increased base font sizes for better readability */
