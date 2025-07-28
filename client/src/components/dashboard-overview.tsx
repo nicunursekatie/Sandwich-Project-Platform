@@ -68,30 +68,30 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
   return (
     <div className="space-y-8">
       {/* Welcome Header - Enhanced Professional Design */}
-      <div className="text-center py-12 bg-gradient-to-br from-white via-slate-50/30 to-blue-50/20 rounded-2xl border border-slate-200 shadow-xl">
-        <div className="flex items-center justify-center mb-6">
+      <div className="text-center py-8 bg-gradient-to-br from-white via-slate-50/30 to-blue-50/20 rounded-2xl border border-slate-200 shadow-xl">
+        <div className="flex items-center justify-center mb-4">
           <div className="w-16 h-16 bg-[#FBAD3F] rounded-2xl flex items-center justify-center mr-6 shadow-lg">
             <img src={sandwichLogo} alt="The Sandwich Project" className="w-10 h-10" />
           </div>
           <div className="text-left">
-            <h1 className="font-roboto tracking-tight leading-none" style={{ fontSize: '36px', fontWeight: '700', color: '#236383' }}>The Sandwich Project</h1>
-            <p className="font-roboto" style={{ fontSize: '20px', fontWeight: '500', color: '#922B21', marginTop: '16px' }}>Operations Dashboard</p>
+            <h1 className="font-roboto tracking-tight leading-none" style={{ fontSize: '36px', fontWeight: '700', color: '#922B21' }}>The Sandwich Project</h1>
+            <p className="font-roboto" style={{ fontSize: '20px', fontWeight: '500', color: '#236383', marginTop: '8px' }}>Operations Dashboard</p>
           </div>
         </div>
         <div className="max-w-2xl mx-auto">
-          <p className="font-roboto leading-relaxed" style={{ fontSize: '16px', fontWeight: '400', color: '#7F8C8D', marginTop: '24px' }}>Community Impact Through Coordinated Action</p>
-          <div className="flex items-center justify-center border-t border-slate-200" style={{ gap: '32px', marginTop: '40px', paddingTop: '40px' }}>
-            <div className="text-center">
-              <p className="font-roboto" style={{ fontSize: '32px', fontWeight: '700', color: '#236383' }}>5+</p>
-              <p className="uppercase tracking-wider" style={{ fontSize: '14px', fontWeight: '500', color: '#95A5A6', marginTop: '8px' }}>Years Active</p>
+          <p className="font-roboto leading-relaxed" style={{ fontSize: '16px', fontWeight: '400', color: '#7F8C8D', marginTop: '12px' }}>Community Impact Through Coordinated Action</p>
+          <div className="flex items-center justify-center" style={{ gap: '16px', marginTop: '20px' }}>
+            <div className="text-center bg-[#922B21] text-white rounded-lg shadow-lg" style={{ padding: '12px', borderRadius: '8px' }}>
+              <p className="font-roboto" style={{ fontSize: '32px', fontWeight: '700' }}>5+</p>
+              <p className="uppercase tracking-wider" style={{ fontSize: '14px', fontWeight: '500', marginTop: '4px' }}>Years Active</p>
             </div>
-            <div className="text-center">
-              <p className="font-roboto" style={{ fontSize: '32px', fontWeight: '700', color: '#922B21' }}>25+</p>
-              <p className="uppercase tracking-wider" style={{ fontSize: '14px', fontWeight: '500', color: '#95A5A6', marginTop: '8px' }}>Host Locations</p>
+            <div className="text-center bg-[#FBAD3F] text-white rounded-lg shadow-lg" style={{ padding: '12px', borderRadius: '8px' }}>
+              <p className="font-roboto" style={{ fontSize: '32px', fontWeight: '700' }}>25+</p>
+              <p className="uppercase tracking-wider" style={{ fontSize: '14px', fontWeight: '500', marginTop: '4px' }}>Host Locations</p>
             </div>
-            <div className="text-center">
-              <p className="font-roboto" style={{ fontSize: '32px', fontWeight: '700', color: '#236383' }}>1.8M+</p>
-              <p className="uppercase tracking-wider" style={{ fontSize: '14px', fontWeight: '500', color: '#95A5A6', marginTop: '8px' }}>Total Impact</p>
+            <div className="text-center bg-[#236383] text-white rounded-lg shadow-lg" style={{ padding: '12px', borderRadius: '8px' }}>
+              <p className="font-roboto" style={{ fontSize: '32px', fontWeight: '700' }}>1.8M+</p>
+              <p className="uppercase tracking-wider" style={{ fontSize: '14px', fontWeight: '500', marginTop: '4px' }}>Total Impact</p>
             </div>
           </div>
         </div>
