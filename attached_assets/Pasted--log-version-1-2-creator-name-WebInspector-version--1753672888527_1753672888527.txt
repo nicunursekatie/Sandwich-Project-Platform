@@ -1,0 +1,593 @@
+{
+  "log": {
+    "version": "1.2",
+    "creator": {
+      "name": "WebInspector",
+      "version": "537.36"
+    },
+    "pages": [],
+    "entries": [
+      {
+        "_connectionId": "961859",
+        "_initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "Ye",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 43811
+              },
+              {
+                "functionName": "queryFn",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 710,
+                "columnNumber": 186970
+              },
+              {
+                "functionName": "s",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 14859
+              },
+              {
+                "functionName": "g",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 10182
+              },
+              {
+                "functionName": "start",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 10643
+              },
+              {
+                "functionName": "fetch",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 16246
+              },
+              {
+                "functionName": "Tx",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 36874
+              },
+              {
+                "functionName": "",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 37581
+              }
+            ]
+          }
+        },
+        "_priority": "High",
+        "_resourceType": "fetch",
+        "cache": {},
+        "connection": "443",
+        "request": {
+          "method": "GET",
+          "url": "https://sandwich-project-platform-final-katielong2316.replit.app/api/emails/unread-count",
+          "httpVersion": "h3",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "sandwich-project-platform-final-katielong2316.replit.app"
+            },
+            {
+              "name": ":method",
+              "value": "GET"
+            },
+            {
+              "name": ":path",
+              "value": "/api/emails/unread-count"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "if-none-match",
+              "value": "W/\"b-ch7MNww9+xUYoTgutbGr6VU0GaU\""
+            },
+            {
+              "name": "priority",
+              "value": "u=1, i"
+            },
+            {
+              "name": "referer",
+              "value": "https://sandwich-project-platform-final-katielong2316.replit.app/dashboard?section=user-management"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Brave\";v=\"138\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"macOS\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "empty"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "sec-gpc",
+              "value": "1"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 304,
+          "statusText": "",
+          "httpVersion": "h3",
+          "headers": [
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma"
+            },
+            {
+              "name": "access-control-allow-methods",
+              "value": "GET,PUT,POST,DELETE,OPTIONS,PATCH"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "alt-svc",
+              "value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+            },
+            {
+              "name": "date",
+              "value": "Mon, 28 Jul 2025 03:21:12 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "W/\"b-ch7MNww9+xUYoTgutbGr6VU0GaU\""
+            },
+            {
+              "name": "server",
+              "value": "Google Frontend"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; includeSubDomains"
+            },
+            {
+              "name": "via",
+              "value": "1.1 google"
+            },
+            {
+              "name": "x-cloud-trace-context",
+              "value": "548732c356ab3daa55e27bddedeb60b5"
+            },
+            {
+              "name": "x-powered-by",
+              "value": "Express"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 11,
+            "mimeType": "application/json"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": 0,
+          "_transferSize": 18,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "34.117.33.233",
+        "startedDateTime": "2025-07-28T03:21:11.869Z",
+        "time": 282.21299999859184,
+        "timings": {
+          "blocked": 1.7699999740198256,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.10399999999999987,
+          "wait": 279.3539999748766,
+          "receive": 0.9850000496953726,
+          "_blocked_queueing": 0.6539999740198255,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "961859",
+        "_initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "Ye",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 43811
+              },
+              {
+                "functionName": "mutationFn",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 759,
+                "columnNumber": 336
+              },
+              {
+                "functionName": "fn",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 20189
+              },
+              {
+                "functionName": "g",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 10182
+              },
+              {
+                "functionName": "start",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 10643
+              },
+              {
+                "functionName": "execute",
+                "scriptId": "93",
+                "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                "lineNumber": 47,
+                "columnNumber": 20957
+              }
+            ],
+            "parent": {
+              "description": "await",
+              "callFrames": [
+                {
+                  "functionName": "mutate",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 47,
+                  "columnNumber": 40124
+                },
+                {
+                  "functionName": "",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 47,
+                  "columnNumber": 43508
+                },
+                {
+                  "functionName": "g",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 759,
+                  "columnNumber": 902
+                },
+                {
+                  "functionName": "spe",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 36,
+                  "columnNumber": 9872
+                },
+                {
+                  "functionName": "ope",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 36,
+                  "columnNumber": 10029
+                },
+                {
+                  "functionName": "lpe",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 36,
+                  "columnNumber": 10089
+                },
+                {
+                  "functionName": "i8",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 36,
+                  "columnNumber": 31562
+                },
+                {
+                  "functionName": "ZY",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 36,
+                  "columnNumber": 31980
+                },
+                {
+                  "functionName": "",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 36,
+                  "columnNumber": 36913
+                },
+                {
+                  "functionName": "x4",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 39,
+                  "columnNumber": 36983
+                },
+                {
+                  "functionName": "wY",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 36,
+                  "columnNumber": 9006
+                },
+                {
+                  "functionName": "BT",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 36,
+                  "columnNumber": 33270
+                },
+                {
+                  "functionName": "GI",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 36,
+                  "columnNumber": 17413
+                },
+                {
+                  "functionName": "Cpe",
+                  "scriptId": "93",
+                  "url": "https://sandwich-project-platform-final-katielong2316.replit.app/assets/index-C_GnBLGw.js",
+                  "lineNumber": 36,
+                  "columnNumber": 17196
+                }
+              ]
+            }
+          }
+        },
+        "_priority": "High",
+        "_resourceType": "fetch",
+        "cache": {},
+        "connection": "443",
+        "request": {
+          "method": "POST",
+          "url": "https://sandwich-project-platform-final-katielong2316.replit.app/api/shoutouts/send",
+          "httpVersion": "h3",
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "sandwich-project-platform-final-katielong2316.replit.app"
+            },
+            {
+              "name": ":method",
+              "value": "POST"
+            },
+            {
+              "name": ":path",
+              "value": "/api/shoutouts/send"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "en-US,en;q=0.5"
+            },
+            {
+              "name": "content-length",
+              "value": "1310"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "origin",
+              "value": "https://sandwich-project-platform-final-katielong2316.replit.app"
+            },
+            {
+              "name": "priority",
+              "value": "u=1, i"
+            },
+            {
+              "name": "referer",
+              "value": "https://sandwich-project-platform-final-katielong2316.replit.app/dashboard?section=user-management"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Brave\";v=\"138\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"macOS\""
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "empty"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "cors"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-origin"
+            },
+            {
+              "name": "sec-gpc",
+              "value": "1"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+            }
+          ],
+          "queryString": [],
+          "cookies": [],
+          "headersSize": -1,
+          "bodySize": 1310,
+          "postData": {
+            "mimeType": "application/json",
+            "text": "{\"subject\":\"🥪 Quick Check-In - TSP App Going Live This Week!\",\"message\":\"Hey everyone!\\n\\nThanks for the positive feedback so far! Just a quick note: when we call this our \\\"app,\\\" it's sort of a technicality - it's not an app you have to download or anything. For our purposes, it's a website. But since we already have our official public website and this is way more than a basic website, it's been easier to refer to it as an app. I just don't want anyone hearing they need to log in to our app and stressing about downloading or learning something complicated.\\n\\nWe're hoping to start using the app for all sandwich numbers this week instead of the Google form/texting. To make sure we're ready:\\n\\nIf you haven't logged in yet: Please log in before Wednesday so I can help with any questions before we go live.\\n\\nIf you've already logged in: We've made some exciting updates! Please hop back in when you have a moment to make sure everything looks good for this week's submissions.\\n\\nThank you again for jumping in and helping us work more efficiently and hopefully cut down on some redundancy in our processes!\\n\\nQuestions? Just reply or text me (770) 789-1013 and I'll be more than happy to help you get sorted.\\n\\nThanks!\\n-Katie Long\",\"recipientGroup\":\"all\",\"templateName\":\"Check-In Reminder\"}"
+          }
+        },
+        "response": {
+          "status": 500,
+          "statusText": "",
+          "httpVersion": "h3",
+          "headers": [
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-headers",
+              "value": "Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma"
+            },
+            {
+              "name": "access-control-allow-methods",
+              "value": "GET,PUT,POST,DELETE,OPTIONS,PATCH"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "name": "alt-svc",
+              "value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+            },
+            {
+              "name": "content-length",
+              "value": "985"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "date",
+              "value": "Mon, 28 Jul 2025 03:21:17 GMT"
+            },
+            {
+              "name": "etag",
+              "value": "W/\"3d9-lX65ghGuESc+8OFQZ7hdqlINSsQ\""
+            },
+            {
+              "name": "server",
+              "value": "Google Frontend"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=63072000; includeSubDomains"
+            },
+            {
+              "name": "via",
+              "value": "1.1 google"
+            },
+            {
+              "name": "x-cloud-trace-context",
+              "value": "100becb34e06f2a20ad2aa45724b103d;o=1"
+            },
+            {
+              "name": "x-powered-by",
+              "value": "Express"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 985,
+            "mimeType": "application/json"
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": -1,
+          "_transferSize": 1012,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "34.117.33.233",
+        "startedDateTime": "2025-07-28T03:21:15.287Z",
+        "time": 2480.403999972623,
+        "timings": {
+          "blocked": 2.719999989453703,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.6649999999999999,
+          "wait": 2476.627999974493,
+          "receive": 0.3910000086762011,
+          "_blocked_queueing": 2.375999989453703,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      }
+    ]
+  }
+}

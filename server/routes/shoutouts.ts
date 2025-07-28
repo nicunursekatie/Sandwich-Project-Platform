@@ -16,10 +16,10 @@ router.post('/test', isAuthenticated, requirePermission('MANAGE_USERS'), async (
     
     // Try different "from" addresses to identify the issue
     const fromAddresses = [
+      'katielong2316@gmail.com',
       'no-reply@thesandwichproject.org',
       'alerts@thesandwichproject.org', 
-      'admin@thesandwichproject.org',
-      'admin@sandwich.project'
+      'admin@thesandwichproject.org'
     ];
     
     const results = [];
@@ -121,8 +121,9 @@ router.post('/send', isAuthenticated, requirePermission('MANAGE_USERS'), async (
     let failureCount = 0;
     const errors = [];
 
-    // Try different verified sender addresses
+    // Try different verified sender addresses (prioritize Katie's verified email)
     const verifiedSenders = [
+      'katielong2316@gmail.com',
       'no-reply@thesandwichproject.org',
       'alerts@thesandwichproject.org',
       'admin@thesandwichproject.org'

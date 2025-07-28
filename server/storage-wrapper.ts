@@ -1062,6 +1062,31 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.deleteChatMessage(id)
     );
   }
+
+  // Shoutout methods
+  async createShoutoutLog(log: {
+    templateName: string;
+    subject: string;
+    message: string;
+    recipientCount: number;
+    sentAt: string;
+    status: string;
+    sentBy: string;
+    successCount?: number;
+    failureCount?: number;
+  }) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.createShoutoutLog(log),
+      () => this.fallbackStorage.createShoutoutLog(log)
+    );
+  }
+
+  async getShoutoutHistory() {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getShoutoutHistory(),
+      () => this.fallbackStorage.getShoutoutHistory()
+    );
+  }
 }
 
 export const storage = new StorageWrapper();
