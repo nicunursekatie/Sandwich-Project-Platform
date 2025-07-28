@@ -75,15 +75,15 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           <p className="text-lg font-medium text-[#7F8C8D] font-roboto leading-relaxed mb-8">Community Impact Through Coordinated Action</p>
           
           <div className="flex items-center justify-center gap-6">
-            <div className="stat-card-burgundy text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+            <div className="stat-card-burgundy text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px' }}>
               <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>5+</p>
               <p className="text-sm font-medium uppercase tracking-wider mt-2">Years Active</p>
             </div>
-            <div className="stat-card-gold text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+            <div className="stat-card-gold text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px' }}>
               <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>25+</p>
               <p className="text-sm font-medium uppercase tracking-wider mt-2">Host Locations</p>
             </div>
-            <div className="stat-card-navy text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+            <div className="stat-card-navy text-white rounded-xl text-center" style={{ padding: '16px', borderRadius: '12px' }}>
               <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>1.8M+</p>
               <p className="text-sm font-medium uppercase tracking-wider mt-2">Total Impact</p>
             </div>

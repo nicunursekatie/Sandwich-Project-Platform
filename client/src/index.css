@@ -57,17 +57,32 @@
     background-color: rgba(35, 99, 131, 0.1) !important;
   }
 
-  /* Stat Card Flat Colors */
+  /* Stat Card Subtle Patterns */
   .stat-card-burgundy {
     background-color: #922B21 !important;
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
+      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
+    background-size: 20px 20px, 12px 12px !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.15) !important;
   }
   
   .stat-card-gold {
     background-color: #FBAD3F !important;
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
+      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
+    background-size: 20px 20px, 12px 12px !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.15) !important;
   }
   
   .stat-card-navy {
     background-color: #236383 !important;
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
+      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
+    background-size: 20px 20px, 12px 12px !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.15) !important;
   }
 }
 
