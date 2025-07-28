@@ -117,7 +117,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg border border-blue-200/50 p-4">
               <div className="mb-3">
-                <span className="text-sm font-medium text-blue-700">Total Lifetime</span>
+                <span className="text-base sm:text-lg font-semibold text-blue-700">Total Lifetime</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.totalLifetimeSandwiches}</div>
               <div className="text-sm text-blue-600">Since 2020</div>
@@ -125,7 +125,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
             <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 rounded-lg border border-orange-200/50 p-4">
               <div className="mb-3">
-                <span className="text-sm font-medium text-orange-700">Peak Week</span>
+                <span className="text-base sm:text-lg font-semibold text-orange-700">Peak Week</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.peakWeekRecord}</div>
               <div className="text-sm text-orange-600 break-words">{organizationalStats.peakWeekDate}</div>
@@ -133,7 +133,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
             <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-lg border border-emerald-200/50 p-4">
               <div className="mb-3">
-                <span className="text-sm font-medium text-emerald-700">Annual Capacity</span>
+                <span className="text-base sm:text-lg font-semibold text-emerald-700">Annual Capacity</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.currentAnnualCapacity}</div>
               <div className="text-sm text-emerald-600">Sustainable Level</div>
@@ -141,7 +141,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
             <div className="bg-gradient-to-br from-red-50 to-red-100/50 rounded-lg border border-red-200/50 p-4">
               <div className="mb-3">
-                <span className="text-sm font-medium text-red-700">Growth</span>
+                <span className="text-base sm:text-lg font-semibold text-red-700">Growth</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.growthMultiplier}</div>
               <div className="text-sm text-red-600">Since Launch</div>
@@ -152,21 +152,21 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg border border-blue-200/50 p-4">
               <div className="mb-3">
-                <span className="text-sm font-medium text-blue-700">Individual Sandwiches</span>
+                <span className="text-base sm:text-lg font-semibold text-blue-700">Individual Sandwiches</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{statsData?.individualSandwiches?.toLocaleString() || organizationalStats.individualSandwiches}</div>
             </div>
 
             <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 rounded-lg border border-orange-200/50 p-4">
               <div className="mb-3">
-                <span className="text-sm font-medium text-orange-700">Group Sandwiches</span>
+                <span className="text-base sm:text-lg font-semibold text-orange-700">Group Sandwiches</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{statsData ? ((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)).toLocaleString() : organizationalStats.groupSandwiches}</div>
             </div>
 
             <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200/50 p-4">
               <div className="mb-3">
-                <span className="text-sm font-medium text-slate-700">Total Entries</span>
+                <span className="text-base sm:text-lg font-semibold text-slate-700">Total Entries</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{statsData?.totalEntries?.toLocaleString() || organizationalStats.totalEntries}</div>
             </div>
@@ -246,7 +246,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-lg border border-emerald-200/50 p-4">
               <div className="mb-3">
-                <span className="text-sm font-medium text-emerald-700">Weekly Baseline</span>
+                <span className="text-base sm:text-lg font-semibold text-emerald-700">Weekly Baseline</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.weeklyBaseline}</div>
               <div className="text-sm text-emerald-600">Standard Operations</div>
@@ -254,7 +254,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
             <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 rounded-lg border border-orange-200/50 p-4">
               <div className="mb-3">
-                <span className="text-sm font-medium text-orange-700">Surge Capacity</span>
+                <span className="text-base sm:text-lg font-semibold text-orange-700">Surge Capacity</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.surgingCapacity}</div>
               <div className="text-sm text-orange-600">Crisis Response</div>
@@ -262,7 +262,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
             <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg border border-blue-200/50 p-4">
               <div className="mb-3">
-                <span className="text-sm font-medium text-blue-700">Experience</span>
+                <span className="text-base sm:text-lg font-semibold text-blue-700">Experience</span>
               </div>
               <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.operationalYears} Years</div>
               <div className="text-sm text-blue-600">Since April 2020</div>
