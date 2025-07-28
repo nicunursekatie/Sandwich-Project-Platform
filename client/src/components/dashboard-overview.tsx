@@ -74,24 +74,24 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
             <img src={sandwichLogo} alt="The Sandwich Project" className="w-10 h-10" />
           </div>
           <div className="text-left">
-            <h1 className="text-4xl font-black text-slate-900 font-roboto tracking-tight leading-none">The Sandwich Project</h1>
-            <p className="text-xl font-semibold text-[#236383] font-roboto mt-1">Operations Dashboard</p>
+            <h1 className="text-4xl font-black text-[#236383] font-roboto tracking-tight leading-none">The Sandwich Project</h1>
+            <p className="text-xl font-semibold text-[#7F8C8D] font-roboto mt-1">Operations Dashboard</p>
           </div>
         </div>
         <div className="max-w-2xl mx-auto">
-          <p className="text-lg font-medium text-slate-600 font-roboto leading-relaxed">Community Impact Through Coordinated Action</p>
+          <p className="text-lg font-medium text-[#7F8C8D] font-roboto leading-relaxed">Community Impact Through Coordinated Action</p>
           <div className="flex items-center justify-center gap-8 mt-6 pt-6 border-t border-slate-200">
             <div className="text-center">
-              <p className="text-2xl font-bold text-slate-900 font-roboto">5+</p>
-              <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">Years Active</p>
+              <p className="text-2xl font-bold text-[#236383] font-roboto">5+</p>
+              <p className="text-sm font-medium text-[#7F8C8D] uppercase tracking-wider">Years Active</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-slate-900 font-roboto">25+</p>
-              <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">Host Locations</p>
+              <p className="text-2xl font-bold text-[#236383] font-roboto">25+</p>
+              <p className="text-sm font-medium text-[#7F8C8D] uppercase tracking-wider">Host Locations</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-slate-900 font-roboto">1.8M+</p>
-              <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">Total Impact</p>
+              <p className="text-2xl font-bold text-[#236383] font-roboto">1.8M+</p>
+              <p className="text-sm font-medium text-[#7F8C8D] uppercase tracking-wider">Total Impact</p>
             </div>
           </div>
         </div>
