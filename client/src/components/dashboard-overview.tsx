@@ -75,7 +75,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           </div>
           <div className="text-left">
             <h1 className="font-roboto tracking-tight leading-none" style={{ fontSize: '36px', fontWeight: '700', color: '#236383' }}>The Sandwich Project</h1>
-            <p className="font-roboto" style={{ fontSize: '20px', fontWeight: '500', color: '#7F8C8D', marginTop: '16px' }}>Operations Dashboard</p>
+            <p className="font-roboto" style={{ fontSize: '20px', fontWeight: '500', color: '#922B21', marginTop: '16px' }}>Operations Dashboard</p>
           </div>
         </div>
         <div className="max-w-2xl mx-auto">
@@ -86,7 +86,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               <p className="uppercase tracking-wider" style={{ fontSize: '14px', fontWeight: '500', color: '#95A5A6', marginTop: '8px' }}>Years Active</p>
             </div>
             <div className="text-center">
-              <p className="font-roboto" style={{ fontSize: '32px', fontWeight: '700', color: '#236383' }}>25+</p>
+              <p className="font-roboto" style={{ fontSize: '32px', fontWeight: '700', color: '#922B21' }}>25+</p>
               <p className="uppercase tracking-wider" style={{ fontSize: '14px', fontWeight: '500', color: '#95A5A6', marginTop: '8px' }}>Host Locations</p>
             </div>
             <div className="text-center">
