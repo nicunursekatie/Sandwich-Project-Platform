@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&family=Lobster&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -62,32 +61,16 @@
 /* Increased base font sizes for better readability */
 @layer base {
   :root {
-    /* TSP Brand Colors - Complete Palette */
-    --tsp-primary: #236383; /* TSP teal - primary */
-    --tsp-accent: #FBAD3F; /* TSP gold - highlights */
-    --tsp-secondary: #2D5A2D; /* forest green - status */
-    --tsp-tertiary: #E67E22; /* coral orange - secondary accents */
-    --tsp-background: #F8F6F3; /* warm cream - page background */
-    --tsp-text-primary: #2C3E50; /* deep navy - main text */
-    --tsp-text-secondary: #7F8C8D; /* warm gray - supporting text */
-    
-    /* Legacy support */
-    --tsp-teal: #236383;
-    --tsp-teal-hover: #1e5470;
-    --tsp-teal-light: #e6f3f7;
-    --tsp-orange: #FBAD3F;
-    --tsp-gray: #646464;
+    /* TSP Brand Colors */
+    --tsp-teal: #236383; /* Primary brand color */
+    --tsp-teal-hover: #1e5470; /* Darker shade for hover */
+    --tsp-teal-light: #e6f3f7; /* Light teal for backgrounds */
+    --tsp-orange: #FBAD3F; /* Secondary brand color */
+    --tsp-gray: #646464; /* Accent color */
   }
 
   html {
-    font-size: 16px; /* 16px baseline grid */
-    font-family: 'Inter', 'Roboto', system-ui, -apple-system, sans-serif;
-  }
-  
-  body {
-    background-color: var(--tsp-background);
-    color: var(--tsp-text-primary);
-    font-family: 'Inter', 'Roboto', system-ui, -apple-system, sans-serif;
+    font-size: 18px; /* Increased from default 16px */
   }
   
   body {
