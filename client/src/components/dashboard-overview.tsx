@@ -70,22 +70,22 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
       {/* Welcome Header - Enhanced Professional Design */}
       <div className="text-center py-12 bg-gradient-to-br from-white via-slate-50/30 to-blue-50/20 rounded-2xl border border-slate-200 shadow-xl">
         <div className="flex flex-col items-center mb-8">
-          <img src={tspLogo} alt="The Sandwich Project" className="w-96 mb-6" />
+          <img src={tspLogo} alt="The Sandwich Project" className="w-[500px] mb-6" />
           <p className="text-xl font-semibold text-[#236383] font-roboto mb-4">Operations Dashboard</p>
           <p className="text-lg font-medium text-[#7F8C8D] font-roboto leading-relaxed mb-8">Community Impact Through Coordinated Action</p>
           
-          <div className="flex items-center justify-center gap-5">
-            <div className="bg-white rounded-xl shadow-lg text-center" style={{ padding: '16px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-              <p className="font-roboto font-bold text-[#922B21]" style={{ fontSize: '24px' }}>5+</p>
-              <p className="text-sm font-medium text-[#666666] uppercase tracking-wider mt-2">Years Active</p>
+          <div className="flex items-center justify-center gap-6">
+            <div className="bg-[#922B21] text-white rounded-xl shadow-xl text-center" style={{ padding: '20px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
+              <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>5+</p>
+              <p className="text-sm font-medium uppercase tracking-wider mt-2">Years Active</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg text-center" style={{ padding: '16px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-              <p className="font-roboto font-bold text-[#FBAD3F]" style={{ fontSize: '24px' }}>25+</p>
-              <p className="text-sm font-medium text-[#666666] uppercase tracking-wider mt-2">Host Locations</p>
+            <div className="bg-[#FBAD3F] text-white rounded-xl shadow-xl text-center" style={{ padding: '20px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
+              <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>25+</p>
+              <p className="text-sm font-medium uppercase tracking-wider mt-2">Host Locations</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg text-center" style={{ padding: '16px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-              <p className="font-roboto font-bold text-[#236383]" style={{ fontSize: '24px' }}>1.8M+</p>
-              <p className="text-sm font-medium text-[#666666] uppercase tracking-wider mt-2">Total Impact</p>
+            <div className="bg-[#236383] text-white rounded-xl shadow-xl text-center" style={{ padding: '20px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
+              <p className="font-roboto font-bold" style={{ fontSize: '28px' }}>1.8M+</p>
+              <p className="text-sm font-medium uppercase tracking-wider mt-2">Total Impact</p>
             </div>
           </div>
         </div>
