@@ -57,32 +57,35 @@
     background-color: rgba(35, 99, 131, 0.1) !important;
   }
 
-  /* Stat Card Subtle Patterns */
-  .stat-card-burgundy {
-    background-color: #922B21 !important;
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
-      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
-    background-size: 20px 20px, 12px 12px !important;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.15) !important;
+  /* Professional Metric Cards */
+  .metric-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,255,255,0.8));
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 
+      0 1px 3px rgba(0,0,0,0.06),
+      0 4px 12px rgba(0,0,0,0.04);
+    transition: all 0.2s cubic-bezier(0.23, 1, 0.320, 1);
+    backdrop-filter: blur(8px);
   }
   
-  .stat-card-gold {
-    background-color: #FBAD3F !important;
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
-      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
-    background-size: 20px 20px, 12px 12px !important;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.15) !important;
+  .metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 4px 8px rgba(0,0,0,0.08),
+      0 8px 24px rgba(0,0,0,0.06);
+    border-color: rgba(0,0,0,0.12);
   }
   
-  .stat-card-navy {
-    background-color: #236383 !important;
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
-      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
-    background-size: 20px 20px, 12px 12px !important;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.15) !important;
+  .metric-accent-burgundy {
+    background: linear-gradient(135deg, #922B21 0%, #B73C28 100%);
+  }
+  
+  .metric-accent-gold {
+    background: linear-gradient(135deg, #FBAD3F 0%, #F39C12 100%);
+  }
+  
+  .metric-accent-navy {
+    background: linear-gradient(135deg, #236383 0%, #2980B9 100%);
   }
 }
 
