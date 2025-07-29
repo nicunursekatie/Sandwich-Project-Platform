@@ -83,11 +83,9 @@ const PERMISSION_GROUPS = [
       { key: PERMISSIONS.DELETE_ALL_COLLECTIONS, label: "Delete All Collections", icon: Shield, description: "Delete any collection record" },
       
       { key: PERMISSIONS.ACCESS_PROJECTS, label: "View Projects", icon: Eye, description: "View project information" },
-      { key: PERMISSIONS.EDIT_OWN_PROJECTS, label: "Edit Own Projects", icon: Edit, description: "Edit projects you created" },
-      { key: PERMISSIONS.DELETE_OWN_PROJECTS, label: "Delete Own Projects", icon: Edit, description: "Delete projects you created" },
+      { key: PERMISSIONS.CREATE_PROJECTS, label: "Create Projects", icon: FolderOpen, description: "Create new projects + edit/delete own projects + edit projects where assigned" },
       { key: PERMISSIONS.EDIT_ALL_PROJECTS, label: "Edit All Projects", icon: Shield, description: "Edit any project (admin level)" },
       { key: PERMISSIONS.DELETE_ALL_PROJECTS, label: "Delete All Projects", icon: Shield, description: "Delete any project (admin level)" },
-      { key: PERMISSIONS.MANAGE_PROJECTS, label: "Manage Projects (Legacy)", icon: FolderOpen, description: "Legacy: Full project management access" },
       
       { key: PERMISSIONS.ACCESS_SUGGESTIONS, label: "View Suggestions", icon: Eye, description: "View suggestion portal" },
       { key: PERMISSIONS.SUBMIT_SUGGESTIONS, label: "Submit Suggestions", icon: Lightbulb, description: "Submit your own suggestions" },
