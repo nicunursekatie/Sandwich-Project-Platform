@@ -128,15 +128,15 @@ const getCategoryColor = (category: string) => {
   }
 };
 
-function DocumentCard({ document, onPreview }: { document: ToolkitDocument; onPreview: (doc: ToolkitDocument) => void }) {
+function DocumentCard({ document: doc, onPreview }: { document: ToolkitDocument; onPreview: (doc: ToolkitDocument) => void }) {
   const handleDownload = (path: string, name: string) => {
-    const link = document.createElement('a');
+    const link = window.document.createElement('a');
     link.href = path;
     link.download = name;
     link.target = '_blank';
-    document.body.appendChild(link);
+    window.document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    window.document.body.removeChild(link);
   };
 
   return (
@@ -144,22 +144,22 @@ function DocumentCard({ document, onPreview }: { document: ToolkitDocument; onPr
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3 flex-1 min-w-0">
-            {getFileIcon(document.type)}
+            {getFileIcon(doc.type)}
             <div className="flex-1 min-w-0">
               <CardTitle className="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100 break-words">
-                {document.name}
+                {doc.name}
               </CardTitle>
-              <Badge variant="secondary" className={`mt-1 text-xs ${getCategoryColor(document.category)}`}>
-                {document.category}
+              <Badge variant="secondary" className={`mt-1 text-xs ${getCategoryColor(doc.category)}`}>
+                {doc.category}
               </Badge>
             </div>
           </div>
         </div>
       </CardHeader>
       <CardContent className="pt-0 flex-1 flex flex-col">
-        {document.description && (
+        {doc.description && (
           <CardDescription className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 flex-1">
-            {document.description}
+            {doc.description}
           </CardDescription>
         )}
         {/* Mobile: Stack buttons vertically, Desktop: Horizontal layout */}
@@ -167,7 +167,7 @@ function DocumentCard({ document, onPreview }: { document: ToolkitDocument; onPr
           <Button
             variant="outline"
             size="sm"
-            onClick={() => onPreview(document)}
+            onClick={() => onPreview(doc)}
             className="flex-1 text-xs sm:text-sm"
           >
             <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
@@ -177,7 +177,7 @@ function DocumentCard({ document, onPreview }: { document: ToolkitDocument; onPr
             <Button
               variant="outline"
               size="sm"
-              onClick={() => handleDownload(document.path, document.name)}
+              onClick={() => handleDownload(doc.path, doc.name)}
               className="flex-1 text-xs sm:text-sm"
             >
               <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
@@ -187,7 +187,7 @@ function DocumentCard({ document, onPreview }: { document: ToolkitDocument; onPr
             <Button
               variant="outline"
               size="sm"
-              onClick={() => window.open(document.path, '_blank')}
+              onClick={() => window.open(doc.path, '_blank')}
               className="px-2 sm:px-3"
             >
               <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4" />
