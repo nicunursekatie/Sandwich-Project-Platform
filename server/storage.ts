@@ -1425,6 +1425,55 @@ export class MemStorage implements IStorage {
       .sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime());
   }
 
+  // User Activity Tracking methods (memory storage implementations)
+  async logUserActivity(activity: InsertUserActivityLog): Promise<UserActivityLog> {
+    const id = this.currentIds.userActivity++;
+    const log: UserActivityLog = {
+      id,
+      ...activity,
+      timestamp: new Date()
+    };
+    // Store in temporary memory for demo purposes
+    return log;
+  }
+
+  async getUserActivityStats(userId: string, days: number = 30): Promise<{
+    totalActions: number;
+    sectionsUsed: string[];
+    topActions: { action: string; count: number }[];
+    dailyActivity: { date: string; count: number }[];
+  }> {
+    // Return demo data for memory storage
+    return {
+      totalActions: 0,
+      sectionsUsed: [],
+      topActions: [],
+      dailyActivity: []
+    };
+  }
+
+  async getAllUsersActivitySummary(days: number = 30): Promise<{
+    userId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    totalActions: number;
+    lastActive: Date | null;
+    topSection: string;
+  }[]> {
+    // Return user list with empty activity for memory storage
+    const users = Array.from(this.users.values());
+    return users.map(user => ({
+      userId: user.id,
+      email: user.email || '',
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      totalActions: 0,
+      lastActive: null,
+      topSection: 'none'
+    }));
+  }
+
 
 
   // Conversation methods (stub implementations for memory storage)

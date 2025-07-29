@@ -1,5 +1,5 @@
 import { 
-  users, projects, archivedProjects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, messageLikes, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, suggestions, suggestionResponses, chatMessages, chatMessageLikes,
+  users, projects, archivedProjects, projectTasks, projectComments, projectAssignments, taskCompletions, messages, messageLikes, conversations, conversationParticipants, weeklyReports, meetingMinutes, driveLinks, sandwichCollections, agendaItems, meetings, driverAgreements, drivers, hosts, hostContacts, recipients, contacts, committees, committeeMemberships, notifications, suggestions, suggestionResponses, chatMessages, chatMessageLikes, userActivityLogs,
   type User, type InsertUser, type UpsertUser,
   type Project, type InsertProject,
   type ProjectTask, type InsertProjectTask,
@@ -25,7 +25,8 @@ import {
   type Notification, type InsertNotification,
   type Suggestion, type InsertSuggestion,
   type SuggestionResponse, type InsertSuggestionResponse,
-  type ChatMessageLike, type InsertChatMessageLike
+  type ChatMessageLike, type InsertChatMessageLike,
+  type UserActivityLog, type InsertUserActivityLog
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc, sql, and, or, isNull, ne, isNotNull, gt, gte, lte, inArray, like } from "drizzle-orm";
@@ -1917,5 +1918,236 @@ export class DatabaseStorage implements IStorage {
   async getShoutoutHistory(): Promise<any[]> {
     // Fallback to memory storage for shoutout history
     throw new Error('Database shoutout history not implemented - using memory storage');
+  }
+
+  // User Activity Tracking methods (database implementations)
+  async logUserActivity(activity: InsertUserActivityLog): Promise<UserActivityLog> {
+    const { userActivityLogs } = await import("@shared/schema");
+    const [newActivity] = await db.insert(userActivityLogs).values(activity).returning();
+    return newActivity;
+  }
+
+  async getUserActivityStats(userId: string, days: number = 30): Promise<{
+    totalActions: number;
+    sectionsUsed: string[];
+    topActions: { action: string; count: number }[];
+    dailyActivity: { date: string; count: number }[];
+  }> {
+    const { userActivityLogs } = await import("@shared/schema");
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    // Get user activity from the last X days
+    const activities = await db
+      .select()
+      .from(userActivityLogs)
+      .where(
+        and(
+          eq(userActivityLogs.userId, userId),
+          sql`${userActivityLogs.timestamp} >= ${startDate}`
+        )
+      );
+
+    // Calculate statistics
+    const totalActions = activities.length;
+    const sectionsUsed = [...new Set(activities.map(a => a.section))];
+    
+    // Get top actions by count
+    const actionCounts = activities.reduce((acc: Record<string, number>, activity) => {
+      acc[activity.action] = (acc[activity.action] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const topActions = Object.entries(actionCounts)
+      .map(([action, count]) => ({ action, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+
+    // Calculate daily activity
+    const dailyActivity = activities.reduce((acc: Record<string, number>, activity) => {
+      const date = activity.timestamp.toISOString().split('T')[0];
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {});
+
+    const dailyActivityArray = Object.entries(dailyActivity)
+      .map(([date, count]) => ({ date, count }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    return {
+      totalActions,
+      sectionsUsed,
+      topActions,
+      dailyActivity: dailyActivityArray
+    };
+  }
+
+  async getAllUsersActivitySummary(days: number = 30): Promise<{
+    userId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    totalActions: number;
+    lastActive: Date | null;
+    topSection: string;
+  }[]> {
+    const { userActivityLogs, users } = await import("@shared/schema");
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    // Get all users with their activity summary
+    const userActivities = await db
+      .select({
+        userId: userActivityLogs.userId,
+        email: users.email,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        activityCount: sql<number>`COUNT(${userActivityLogs.id})::int`,
+        lastActive: sql<Date>`MAX(${userActivityLogs.timestamp})`,
+        topSection: sql<string>`
+          COALESCE(
+            (SELECT ${userActivityLogs.section} 
+             FROM ${userActivityLogs} u2 
+             WHERE u2.user_id = ${users.id} 
+             AND u2.timestamp >= ${startDate}
+             GROUP BY ${userActivityLogs.section} 
+             ORDER BY COUNT(*) DESC 
+             LIMIT 1), 
+            'none'
+          )
+        `
+      })
+      .from(users)
+      .leftJoin(userActivityLogs, and(
+        eq(users.id, userActivityLogs.userId),
+        sql`${userActivityLogs.timestamp} >= ${startDate}`
+      ))
+      .groupBy(users.id, users.email, users.firstName, users.lastName);
+
+    return userActivities.map(user => ({
+      userId: user.userId || '',
+      email: user.email || '',
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      totalActions: user.activityCount || 0,
+      lastActive: user.lastActive,
+      topSection: user.topSection || 'none'
+    }));
+  }
+
+  // User Activity Tracking methods
+  async logUserActivity(activity: InsertUserActivityLog): Promise<UserActivityLog> {
+    const [log] = await db
+      .insert(userActivityLogs)
+      .values(activity)
+      .returning();
+    return log;
+  }
+
+  async getUserActivityStats(userId: string, days: number = 30): Promise<{
+    totalActions: number;
+    sectionsUsed: string[];
+    topActions: { action: string; count: number }[];
+    dailyActivity: { date: string; count: number }[];
+  }> {
+    const sinceDate = new Date();
+    sinceDate.setDate(sinceDate.getDate() - days);
+
+    // Get total actions
+    const totalResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(userActivityLogs)
+      .where(and(
+        eq(userActivityLogs.userId, userId),
+        gte(userActivityLogs.timestamp, sinceDate)
+      ));
+
+    // Get sections used
+    const sectionsResult = await db
+      .select({ section: userActivityLogs.section })
+      .from(userActivityLogs)
+      .where(and(
+        eq(userActivityLogs.userId, userId),
+        gte(userActivityLogs.timestamp, sinceDate)
+      ))
+      .groupBy(userActivityLogs.section);
+
+    // Get top actions
+    const actionsResult = await db
+      .select({
+        action: userActivityLogs.action,
+        count: sql<number>`count(*)`
+      })
+      .from(userActivityLogs)
+      .where(and(
+        eq(userActivityLogs.userId, userId),
+        gte(userActivityLogs.timestamp, sinceDate)
+      ))
+      .groupBy(userActivityLogs.action)
+      .orderBy(desc(sql`count(*)`))
+      .limit(5);
+
+    // Get daily activity
+    const dailyResult = await db
+      .select({
+        date: sql<string>`date(timestamp)`,
+        count: sql<number>`count(*)`
+      })
+      .from(userActivityLogs)
+      .where(and(
+        eq(userActivityLogs.userId, userId),
+        gte(userActivityLogs.timestamp, sinceDate)
+      ))
+      .groupBy(sql`date(timestamp)`)
+      .orderBy(sql`date(timestamp)`);
+
+    return {
+      totalActions: totalResult[0]?.count || 0,
+      sectionsUsed: sectionsResult.map(r => r.section),
+      topActions: actionsResult.map(r => ({ action: r.action, count: r.count })),
+      dailyActivity: dailyResult.map(r => ({ date: r.date, count: r.count }))
+    };
+  }
+
+  async getAllUsersActivitySummary(days: number = 30): Promise<{
+    userId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    totalActions: number;
+    lastActive: Date | null;
+    topSection: string;
+  }[]> {
+    const sinceDate = new Date();
+    sinceDate.setDate(sinceDate.getDate() - days);
+
+    const result = await db
+      .select({
+        userId: users.id,
+        email: users.email,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        totalActions: sql<number>`count(user_activity_logs.id)`,
+        lastActive: sql<Date>`max(user_activity_logs.timestamp)`,
+        topSection: sql<string>`mode() within group (order by user_activity_logs.section)`
+      })
+      .from(users)
+      .leftJoin(userActivityLogs, and(
+        eq(users.id, userActivityLogs.userId),
+        gte(userActivityLogs.timestamp, sinceDate)
+      ))
+      .where(eq(users.isActive, true))
+      .groupBy(users.id, users.email, users.firstName, users.lastName)
+      .orderBy(desc(sql`count(user_activity_logs.id)`));
+
+    return result.map(row => ({
+      userId: row.userId,
+      email: row.email || '',
+      firstName: row.firstName || '',
+      lastName: row.lastName || '',
+      totalActions: row.totalActions || 0,
+      lastActive: row.lastActive,
+      topSection: row.topSection || 'none'
+    }));
   }
 }

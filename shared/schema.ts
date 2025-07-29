@@ -48,6 +48,24 @@ export const auditLogs = pgTable("audit_logs", {
   timestamp: timestamp("timestamp").defaultNow().notNull(),
 });
 
+// User activity tracking table for detailed usage analytics
+export const userActivityLogs = pgTable("user_activity_logs", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  action: varchar("action").notNull(), // PAGE_VIEW, FEATURE_USE, FORM_SUBMIT, DOWNLOAD, SEARCH, etc.
+  section: varchar("section").notNull(), // dashboard, collections, messaging, admin, etc.
+  details: jsonb("details").default('{}'), // Additional context (page, search terms, etc.)
+  sessionId: varchar("session_id"),
+  ipAddress: varchar("ip_address"),
+  userAgent: text("user_agent"),
+  duration: integer("duration"), // Time spent on action in seconds
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
+}, (table) => ({
+  userActionIdx: index("idx_user_activity_user_action").on(table.userId, table.action),
+  sectionTimeIdx: index("idx_user_activity_section_time").on(table.section, table.timestamp),
+  userTimeIdx: index("idx_user_activity_user_time").on(table.userId, table.timestamp),
+}));
+
 // Chat messages table for real-time chat system
 export const chatMessages = pgTable("chat_messages", {
   id: serial("id").primaryKey(),
@@ -966,6 +984,15 @@ export const insertStreamThreadSchema = createInsertSchema(streamThreads).omit({
   createdAt: true,
   updatedAt: true
 });
+
+// User activity tracking schemas
+export const insertUserActivityLogSchema = createInsertSchema(userActivityLogs).omit({
+  id: true,
+  timestamp: true
+});
+
+export type UserActivityLog = typeof userActivityLogs.$inferSelect;
+export type InsertUserActivityLog = z.infer<typeof insertUserActivityLogSchema>;
 
 export type StreamUser = typeof streamUsers.$inferSelect;
 export type InsertStreamUser = z.infer<typeof insertStreamUserSchema>;

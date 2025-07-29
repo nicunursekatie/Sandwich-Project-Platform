@@ -14,11 +14,12 @@ import { useToast } from "@/hooks/use-toast";
 import { useCelebration, CelebrationToast } from "@/components/celebration-toast";
 import { hasPermission, USER_ROLES, PERMISSIONS, getDefaultPermissionsForRole, getRoleDisplayName } from "@shared/auth-utils";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { Users, Shield, Settings, Key, Award, Megaphone, Trash2, Bug } from "lucide-react";
+import { Users, Shield, Settings, Key, Award, Megaphone, Trash2, Bug, Activity } from "lucide-react";
 import AnnouncementManager from "@/components/announcement-manager";
 import AuthDebug from "@/components/auth-debug";
 import { SimplePermissionsDialog } from "@/components/simple-permissions-dialog";
 import ShoutoutSystem from "@/components/shoutout-system";
+import UserActivityAnalytics from "@/components/user-activity-analytics";
 
 interface User {
   id: string;
@@ -36,7 +37,7 @@ export default function UserManagement() {
   const { user: currentUser } = useAuth();
   const { toast } = useToast();
   const { celebration, triggerCelebration, hideCelebration } = useCelebration();
-  const [activeTab, setActiveTab] = useState<"users" | "announcements" | "shoutouts" | "auth-debug">("users");
+  const [activeTab, setActiveTab] = useState<"users" | "activity" | "announcements" | "shoutouts" | "auth-debug">("users");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null);
   const [newPassword, setNewPassword] = useState<string>("");
@@ -161,22 +162,7 @@ export default function UserManagement() {
     });
   };
 
-  const handleCongratulateUser = (user: User) => {
-    const achievements = [
-      "making a real difference in our mission",
-      "way to go"
-    ];
-    
-    const randomAchievement = achievements[Math.floor(Math.random() * achievements.length)];
-    const congratsMessage = `${user.firstName} ${user.lastName} - ${randomAchievement}! From ${(currentUser as any)?.firstName || 'Admin'}`;
-    
-    triggerCelebration(congratsMessage);
-    
-    toast({
-      title: "Congratulations Sent!",
-      description: `Celebrated ${user.firstName} ${user.lastName}'s achievements.`,
-    });
-  };
+
 
   const handleDeleteUser = (user: User) => {
     const confirmDelete = window.confirm(
@@ -239,6 +225,18 @@ export default function UserManagement() {
             <span className="sm:hidden">Users</span>
           </button>
           <button
+            onClick={() => setActiveTab("activity")}
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
+              activeTab === "activity"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+            }`}
+          >
+            <Activity className="h-4 w-4 inline mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">User Activity</span>
+            <span className="sm:hidden">Activity</span>
+          </button>
+          <button
             onClick={() => setActiveTab("announcements")}
             className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
               activeTab === "announcements"
@@ -279,6 +277,8 @@ export default function UserManagement() {
 
       {activeTab === "announcements" ? (
         <AnnouncementManager />
+      ) : activeTab === "activity" ? (
+        <UserActivityAnalytics />
       ) : activeTab === "shoutouts" ? (
         <ShoutoutSystem />
       ) : activeTab === "auth-debug" ? (
@@ -404,16 +404,7 @@ export default function UserManagement() {
                         </DialogContent>
                       </Dialog>
                       
-                      {/* Congratulate Button */}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleCongratulateUser(user)}
-                        className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
-                      >
-                        <Award className="h-4 w-4 mr-2" />
-                        Congratulate
-                      </Button>
+
                       
                       <Button
                         variant="outline"

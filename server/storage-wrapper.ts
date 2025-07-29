@@ -1087,6 +1087,28 @@ class StorageWrapper implements IStorage {
       () => this.fallbackStorage.getShoutoutHistory()
     );
   }
+
+  // User Activity Tracking methods
+  async logUserActivity(activity: InsertUserActivityLog) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.logUserActivity(activity),
+      () => this.fallbackStorage.logUserActivity(activity)
+    );
+  }
+
+  async getUserActivityStats(userId: string, days?: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getUserActivityStats(userId, days),
+      () => this.fallbackStorage.getUserActivityStats(userId, days)
+    );
+  }
+
+  async getAllUsersActivitySummary(days?: number) {
+    return this.executeWithFallback(
+      () => this.primaryStorage.getAllUsersActivitySummary(days),
+      () => this.fallbackStorage.getAllUsersActivitySummary(days)
+    );
+  }
 }
 
 export const storage = new StorageWrapper();
