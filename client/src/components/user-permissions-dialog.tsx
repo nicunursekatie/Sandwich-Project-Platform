@@ -99,6 +99,8 @@ const PERMISSION_CATEGORIES = [
       { key: PERMISSIONS.VIEW_ANALYTICS, label: "View Analytics", description: "Access analytics dashboards" },
       { key: PERMISSIONS.VIEW_REPORTS, label: "View Reports", description: "Access and generate reports" },
       { key: PERMISSIONS.VIEW_MEETINGS, label: "View Meetings", description: "Access meeting information" },
+      { key: PERMISSIONS.VIEW_SUGGESTIONS, label: "View Suggestions", description: "View suggestion portal" },
+      { key: PERMISSIONS.SUBMIT_SUGGESTIONS, label: "Submit Suggestions", description: "Submit your own suggestions" },
     ],
   },
   {
@@ -121,12 +123,12 @@ const PERMISSION_CATEGORIES = [
     icon: UserCog,
     description: "System management and advanced administrative functions",
     permissions: [
-      { key: PERMISSIONS.VIEW_USERS, label: "Manage Users", description: "View and edit user roles and permissions" },
       { key: PERMISSIONS.MANAGE_USERS, label: "Full User Management", description: "Complete control over user accounts" },
       { key: PERMISSIONS.MANAGE_ANNOUNCEMENTS, label: "Manage Announcements", description: "Create and edit system announcements" },
-      { key: PERMISSIONS.VIEW_SUGGESTIONS, label: "View All Suggestions", description: "Access all user suggestions" },
-      { key: PERMISSIONS.MANAGE_SUGGESTIONS, label: "Manage Suggestions", description: "Review and update suggestion workflow" },
+      { key: PERMISSIONS.MANAGE_SUGGESTIONS, label: "Manage All Suggestions", description: "Review and update suggestion workflow" },
       { key: PERMISSIONS.RESPOND_TO_SUGGESTIONS, label: "Official Responses", description: "Post official organizational responses" },
+      { key: "access_work_logs", label: "View Work Logs", description: "Access work log system" },
+      { key: "view_all_work_logs", label: "View All Work Logs", description: "See all user work logs for oversight" },
     ],
   },
 ];
