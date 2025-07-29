@@ -88,8 +88,10 @@ const PERMISSION_GROUPS = [
       { key: PERMISSIONS.DELETE_ALL_PROJECTS, label: "Delete All Projects", icon: Shield, description: "Delete any project (admin level)" },
       
       { key: PERMISSIONS.ACCESS_SUGGESTIONS, label: "View Suggestions", icon: Eye, description: "View suggestion portal" },
-      { key: PERMISSIONS.SUBMIT_SUGGESTIONS, label: "Submit Suggestions", icon: Lightbulb, description: "Submit your own suggestions" },
-      { key: PERMISSIONS.MANAGE_SUGGESTIONS, label: "Manage All Suggestions", icon: Shield, description: "Review and respond to all suggestions" },
+      { key: PERMISSIONS.CREATE_SUGGESTIONS, label: "Create Suggestions", icon: Lightbulb, description: "Create new suggestions + edit/delete own suggestions" },
+      { key: PERMISSIONS.MANAGE_SUGGESTIONS, label: "Manage All Suggestions", icon: Shield, description: "Review and respond to all suggestions (admin level)" },
+      { key: PERMISSIONS.EDIT_ALL_SUGGESTIONS, label: "Edit All Suggestions", icon: Shield, description: "Edit any suggestion (admin level)" },
+      { key: PERMISSIONS.DELETE_ALL_SUGGESTIONS, label: "Delete All Suggestions", icon: Shield, description: "Delete any suggestion (admin level)" },
       
       { key: PERMISSIONS.ACCESS_WORK_LOGS, label: "View Work Logs", icon: Eye, description: "Access work logs section" },
       { key: PERMISSIONS.CREATE_WORK_LOGS, label: "Create Work Logs", icon: Edit, description: "Submit your own work log entries" },

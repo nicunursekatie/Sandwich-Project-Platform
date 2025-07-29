@@ -105,15 +105,15 @@ export default function SuggestionsPortal() {
     enabled: true
   });
 
-  // Check permissions
-  const canSubmit = hasPermission(currentUser, 'submit_suggestions');
+  // Check permissions - updated to use new CREATE_SUGGESTIONS system
+  const canSubmit = hasPermission(currentUser, 'create_suggestions'); // Changed from submit_suggestions
   const canManage = hasPermission(currentUser, 'manage_suggestions');
   const canRespond = hasPermission(currentUser, 'respond_to_suggestions');
 
-  // Fetch suggestions
+  // Fetch suggestions - everyone with create_suggestions can also view them
   const { data: suggestions = [], isLoading } = useQuery<Suggestion[]>({
     queryKey: ['/api/suggestions'],
-    enabled: hasPermission(currentUser, 'view_suggestions'),
+    enabled: hasPermission(currentUser, 'access_suggestions') || hasPermission(currentUser, 'create_suggestions'),
     staleTime: 0
   });
 
@@ -235,7 +235,7 @@ export default function SuggestionsPortal() {
         tabMatch = suggestion.status === "completed";
         break;
       case "mine":
-        tabMatch = suggestion.submittedBy === currentUser?.id;
+        tabMatch = suggestion.submittedBy === (currentUser as any)?.id;
         break;
       default:
         tabMatch = true;
@@ -336,11 +336,11 @@ export default function SuggestionsPortal() {
       pending: suggestionList.filter(s => ["submitted", "under_review", "needs_clarification"].includes(s.status)).length,
       inProgress: suggestionList.filter(s => s.status === "in_progress").length,
       completed: suggestionList.filter(s => s.status === "completed").length,
-      mine: suggestionList.filter(s => s.submittedBy === currentUser?.id).length
+      mine: suggestionList.filter(s => s.submittedBy === (currentUser as any)?.id).length
     };
   };
 
-  if (!hasPermission(currentUser, 'view_suggestions')) {
+  if (!hasPermission(currentUser, 'access_suggestions') && !hasPermission(currentUser, 'create_suggestions')) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <Card className="w-full max-w-md">
@@ -378,7 +378,7 @@ export default function SuggestionsPortal() {
                 </p>
               </div>
             </div>
-            {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (
+            {canSubmit && (
               <Dialog open={showSubmissionForm} onOpenChange={setShowSubmissionForm}>
                 <DialogTrigger asChild>
                   <Button 
@@ -650,7 +650,7 @@ export default function SuggestionsPortal() {
                   <span className="sm:hidden">Done</span>
                   <Badge className="bg-green-600 text-white text-xs min-w-[20px] justify-center">{tabCounts.completed}</Badge>
                 </TabsTrigger>
-                {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (
+                {canSubmit && (
                   <TabsTrigger 
                     value="mine" 
                     className="flex items-center gap-2 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-gray-900"
@@ -705,13 +705,13 @@ export default function SuggestionsPortal() {
                             : "No suggestions found"}
                         </h3>
                         <p className="text-gray-500 mb-6">
-                          {activeTab === "mine" && canSubmit && hasPermission(currentUser, 'submit_suggestions')
+                          {activeTab === "mine" && canSubmit
                             ? "You haven't submitted any suggestions yet." 
                             : searchQuery || selectedCategory !== "all" || selectedPriority !== "all"
                             ? "Try adjusting your search or filter criteria."
                             : "Be the first to share an idea for improvement."}
                         </p>
-                        {canSubmit && hasPermission(currentUser, 'submit_suggestions') && (activeTab === "mine" || (!searchQuery && selectedCategory === "all" && selectedPriority === "all")) && (
+                        {canSubmit && (activeTab === "mine" || (!searchQuery && selectedCategory === "all" && selectedPriority === "all")) && (
                           <Button 
                             onClick={() => setShowSubmissionForm(true)}
                             className="bg-orange-500 hover:bg-orange-600 text-white"
@@ -825,7 +825,7 @@ export default function SuggestionsPortal() {
                                           e.stopPropagation();
                                           updateSuggestionMutation.mutate({ 
                                             id: suggestion.id, 
-                                            updates: { status: 'under_review', assignedTo: currentUser?.id } 
+                                            updates: { status: 'under_review', assignedTo: (currentUser as any)?.id } 
                                           });
                                         }}
                                         disabled={suggestion.status === 'under_review'}
@@ -841,7 +841,7 @@ export default function SuggestionsPortal() {
                                           e.stopPropagation();
                                           updateSuggestionMutation.mutate({ 
                                             id: suggestion.id, 
-                                            updates: { status: 'in_progress', assignedTo: currentUser?.id } 
+                                            updates: { status: 'in_progress', assignedTo: (currentUser as any)?.id } 
                                           });
                                         }}
                                         disabled={suggestion.status === 'in_progress'}
@@ -857,7 +857,7 @@ export default function SuggestionsPortal() {
                                           e.stopPropagation();
                                           updateSuggestionMutation.mutate({ 
                                             id: suggestion.id, 
-                                            updates: { status: 'completed', assignedTo: currentUser?.id } 
+                                            updates: { status: 'completed', assignedTo: (currentUser as any)?.id } 
                                           });
                                         }}
                                         disabled={suggestion.status === 'completed'}

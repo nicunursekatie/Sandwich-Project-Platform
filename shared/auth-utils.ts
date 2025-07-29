@@ -47,6 +47,14 @@ export const PERMISSIONS = {
   MANAGE_MEETINGS: 'manage_meetings',
   MANAGE_SUGGESTIONS: 'manage_suggestions',
   SUBMIT_SUGGESTIONS: 'submit_suggestions',
+  
+  // Suggestions ownership permissions - similar to projects/collections pattern
+  CREATE_SUGGESTIONS: 'create_suggestions', // Create new suggestions + edit/delete own suggestions
+  EDIT_OWN_SUGGESTIONS: 'edit_own_suggestions', // Edit suggestions you created
+  DELETE_OWN_SUGGESTIONS: 'delete_own_suggestions', // Delete suggestions you created  
+  EDIT_ALL_SUGGESTIONS: 'edit_all_suggestions', // Edit any suggestion (admin level)
+  DELETE_ALL_SUGGESTIONS: 'delete_all_suggestions', // Delete any suggestion (admin level)
+  
   MANAGE_COLLECTIONS: 'manage_collections',
   
   // Project permissions - improved hierarchical structure
@@ -142,7 +150,7 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.COMMITTEE_CHAT,
         PERMISSIONS.EXPORT_DATA,
-        PERMISSIONS.SUBMIT_SUGGESTIONS
+        PERMISSIONS.CREATE_SUGGESTIONS, // Can create suggestions + edit/delete own
       ];
     
     case USER_ROLES.HOST:
@@ -159,7 +167,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.HOST_CHAT,
         PERMISSIONS.CREATE_COLLECTIONS, // Can create collections (automatically can edit/delete own)
-        PERMISSIONS.CREATE_PROJECTS // Can create projects (automatically can edit/delete own)
+        PERMISSIONS.CREATE_PROJECTS, // Can create projects (automatically can edit/delete own)
+        PERMISSIONS.CREATE_SUGGESTIONS // Can create suggestions (automatically can edit/delete own)
       ];
     
     case USER_ROLES.DRIVER:
@@ -174,7 +183,8 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_SUGGESTIONS,
         PERMISSIONS.ACCESS_SANDWICH_DATA,
         PERMISSIONS.GENERAL_CHAT,
-        PERMISSIONS.DRIVER_CHAT
+        PERMISSIONS.DRIVER_CHAT,
+        PERMISSIONS.CREATE_SUGGESTIONS // Can create suggestions (automatically can edit/delete own)
       ];
     
     case USER_ROLES.VOLUNTEER:
@@ -189,7 +199,7 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.CREATE_COLLECTIONS, // Can create collections (automatically can edit/delete own)
         PERMISSIONS.CREATE_PROJECTS, // Can create projects (automatically can edit/delete own)
-        PERMISSIONS.SUBMIT_SUGGESTIONS
+        PERMISSIONS.CREATE_SUGGESTIONS // Can create suggestions (automatically can edit/delete own)
       ];
     
     case USER_ROLES.RECIPIENT:
@@ -197,8 +207,10 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_COLLECTIONS,
         PERMISSIONS.ACCESS_CHAT,
         PERMISSIONS.ACCESS_MESSAGES,
+        PERMISSIONS.ACCESS_SUGGESTIONS,
         PERMISSIONS.GENERAL_CHAT,
-        PERMISSIONS.RECIPIENT_CHAT
+        PERMISSIONS.RECIPIENT_CHAT,
+        PERMISSIONS.CREATE_SUGGESTIONS // Can create suggestions (automatically can edit/delete own)
       ];
     
     case USER_ROLES.VIEWER:
@@ -209,7 +221,9 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_TOOLKIT,
         PERMISSIONS.ACCESS_REPORTS,
         PERMISSIONS.ACCESS_PROJECTS,
-        PERMISSIONS.ACCESS_SANDWICH_DATA
+        PERMISSIONS.ACCESS_SUGGESTIONS,
+        PERMISSIONS.ACCESS_SANDWICH_DATA,
+        PERMISSIONS.CREATE_SUGGESTIONS // Can create suggestions (automatically can edit/delete own)
       ];
     
     case USER_ROLES.WORK_LOGGER:
@@ -327,6 +341,34 @@ export function canDeleteProject(user: any, project: any): boolean {
   // Users with CREATE_PROJECTS can only delete projects they created (not assigned ones)
   if (user.permissions.includes(PERMISSIONS.CREATE_PROJECTS) && 
       (project?.createdBy === user.id || project?.created_by === user.id)) return true;
+  
+  return false;
+}
+
+// Function to check if user can edit a specific suggestion entry
+export function canEditSuggestion(user: any, suggestion: any): boolean {
+  if (!user || !user.permissions) return false;
+  
+  // Super admins and users with EDIT_ALL_SUGGESTIONS can edit all suggestions
+  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.EDIT_ALL_SUGGESTIONS)) return true;
+  
+  // Users with CREATE_SUGGESTIONS can edit suggestions they created
+  if (user.permissions.includes(PERMISSIONS.CREATE_SUGGESTIONS) && 
+      (suggestion?.createdBy === user.id || suggestion?.created_by === user.id || suggestion?.submittedBy === user.id)) return true;
+  
+  return false;
+}
+
+// Function to check if user can delete a specific suggestion entry
+export function canDeleteSuggestion(user: any, suggestion: any): boolean {
+  if (!user || !user.permissions) return false;
+  
+  // Super admins and users with DELETE_ALL_SUGGESTIONS can delete all suggestions
+  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.DELETE_ALL_SUGGESTIONS)) return true;
+  
+  // Users with CREATE_SUGGESTIONS can delete suggestions they created
+  if (user.permissions.includes(PERMISSIONS.CREATE_SUGGESTIONS) && 
+      (suggestion?.createdBy === user.id || suggestion?.created_by === user.id || suggestion?.submittedBy === user.id)) return true;
   
   return false;
 }
