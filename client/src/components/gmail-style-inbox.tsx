@@ -854,7 +854,7 @@ export default function GmailStyleInbox() {
             <div className="space-y-2">
               <Label htmlFor="subject" className="text-sm font-semibold text-gray-700 font-['Roboto'] flex items-center gap-2">
                 <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
-                Project/Task name (required for threading)
+                Project/Task name (optional)
               </Label>
               <Input
                 id="subject"
@@ -864,7 +864,7 @@ export default function GmailStyleInbox() {
                 className="rounded-lg border border-gray-300 bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-200 h-11 font-['Roboto'] placeholder:text-gray-500 transition-colors"
               />
               <p className="text-xs text-gray-500 font-['Roboto'] italic">
-                Messages with the same project/task name will be grouped together
+                Leave blank for general conversation
               </p>
             </div>
             
