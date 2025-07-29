@@ -44,26 +44,25 @@ export const PERMISSIONS = {
   MANAGE_HOSTS: 'manage_hosts',
   MANAGE_RECIPIENTS: 'manage_recipients', 
   MANAGE_DRIVERS: 'manage_drivers',
-  MANAGE_PROJECTS: 'manage_projects',
   MANAGE_MEETINGS: 'manage_meetings',
   MANAGE_SUGGESTIONS: 'manage_suggestions',
   SUBMIT_SUGGESTIONS: 'submit_suggestions',
   MANAGE_COLLECTIONS: 'manage_collections',
   
-  // Content creation permissions (automatically grants edit/delete of own content)
-  CREATE_PROJECTS: 'create_projects',
+  // Project permissions - improved hierarchical structure
+  CREATE_PROJECTS: 'create_projects', // Create new projects + edit/delete own projects + edit projects where listed as owner
+  EDIT_ALL_PROJECTS: 'edit_all_projects', // Edit any project regardless of ownership
+  DELETE_ALL_PROJECTS: 'delete_all_projects', // Delete any project regardless of ownership
+  
+  // Collection permissions  
   CREATE_COLLECTIONS: 'create_collections',
-  CREATE_WORK_LOGS: 'create_work_logs',
-  EDIT_OWN_PROJECTS: 'edit_own_projects',
-  DELETE_OWN_PROJECTS: 'delete_own_projects',
   EDIT_OWN_COLLECTIONS: 'edit_own_collections',
   DELETE_OWN_COLLECTIONS: 'delete_own_collections',
-  
-  // Override permissions for editing/deleting others' content
-  EDIT_ALL_PROJECTS: 'edit_all_projects',
-  DELETE_ALL_PROJECTS: 'delete_all_projects',
   EDIT_ALL_COLLECTIONS: 'edit_all_collections',
   DELETE_ALL_COLLECTIONS: 'delete_all_collections',
+  
+  // Work log permissions
+  CREATE_WORK_LOGS: 'create_work_logs',
   
   // Work log specific permissions
   EDIT_OWN_WORK_LOGS: 'edit_own_work_logs',
@@ -109,8 +108,12 @@ export const PERMISSIONS = {
   VIEW_COMMITTEE: 'committee_chat',
   TOOLKIT_ACCESS: 'access_toolkit',
   EDIT_MEETINGS: 'manage_meetings',
-  RESPOND_TO_SUGGESTIONS: 'manage_suggestions'
+  RESPOND_TO_SUGGESTIONS: 'manage_suggestions',
+  // Legacy project permission (deprecated - use CREATE_PROJECTS instead)
+  MANAGE_PROJECTS: 'create_projects' // Maps to new CREATE_PROJECTS permission
 } as const;
+
+// Helper functions for improved project permissions system
 
 export function getDefaultPermissionsForRole(role: string): string[] {
   switch (role) {
@@ -135,8 +138,11 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_SUGGESTIONS,
         PERMISSIONS.ACCESS_SANDWICH_DATA,
         PERMISSIONS.ACCESS_GOVERNANCE,
+        PERMISSIONS.ACCESS_PROJECTS, // Committee members can view projects
         PERMISSIONS.GENERAL_CHAT,
-        PERMISSIONS.COMMITTEE_CHAT
+        PERMISSIONS.COMMITTEE_CHAT,
+        PERMISSIONS.EXPORT_DATA,
+        PERMISSIONS.SUBMIT_SUGGESTIONS
       ];
     
     case USER_ROLES.HOST:
