@@ -70,9 +70,11 @@ const PERMISSION_CATEGORIES = [
     icon: Shield,
     description: "Authority to edit/delete other users' content (you automatically own your own content)",
     permissions: [
-      { key: PERMISSIONS.EDIT_COLLECTIONS, label: "Edit Others' Collections", description: "Edit collection entries created by other users" },
-      { key: PERMISSIONS.DELETE_COLLECTIONS, label: "Delete Others' Collections", description: "Delete collection entries created by other users" },
-      { key: PERMISSIONS.MANAGE_PROJECTS, label: "Manage Others' Projects", description: "Edit and delete projects created by other users" },
+      { key: PERMISSIONS.EDIT_ALL_COLLECTIONS, label: "Edit All Collections", description: "Edit any collection entry regardless of who created it" },
+      { key: PERMISSIONS.DELETE_ALL_COLLECTIONS, label: "Delete All Collections", description: "Delete any collection entry regardless of who created it" },
+      { key: PERMISSIONS.CREATE_PROJECTS, label: "Create Projects", description: "Create new projects + edit/delete own projects + edit projects where assigned" },
+      { key: PERMISSIONS.EDIT_ALL_PROJECTS, label: "Edit All Projects", description: "Edit any project regardless of ownership" },
+      { key: PERMISSIONS.DELETE_ALL_PROJECTS, label: "Delete All Projects", description: "Delete any project regardless of ownership" },
     ],
   },
   {
