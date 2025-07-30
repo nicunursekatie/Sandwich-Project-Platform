@@ -423,53 +423,286 @@ export default function EnhancedUserAnalytics() {
         </TabsContent>
 
         <TabsContent value="behavior" className="space-y-4">
-          {selectedUser !== 'all' && userStats && (
-            <div className="grid gap-4 md:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Feature Usage Breakdown</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {userStats.featureUsage?.slice(0, 10).map((feature, idx) => (
-                      <div key={idx} className="flex items-center justify-between">
-                        <span className="text-sm">{feature.feature}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">{feature.count}x</span>
-                          <span className="text-xs text-muted-foreground">
-                            avg {Math.round(feature.avgDuration)}s
-                          </span>
-                        </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {/* Most Used Features */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-green-600" />
+                  Most Used Features
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Features with highest user engagement
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {systemStats?.topFeatures?.slice(0, 6).map((feature, idx) => (
+                    <div key={idx} className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${
+                          idx === 0 ? 'bg-green-500' : 
+                          idx === 1 ? 'bg-blue-500' : 
+                          idx === 2 ? 'bg-purple-500' : 'bg-gray-400'
+                        }`} />
+                        <span className="text-sm font-medium">{feature.feature}</span>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                      <div className="text-right">
+                        <span className="text-sm font-bold">{feature.usage}</span>
+                        <p className="text-xs text-muted-foreground">
+                          {feature.feature !== 'Unknown' ? 'uses' : 'unknown'}
+                        </p>
+                      </div>
+                    </div>
+                  )) || (
+                    <p className="text-sm text-muted-foreground">No feature data available</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Section Activity</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {userStats.sectionBreakdown?.map((section, idx) => (
-                      <div key={idx} className="flex items-center justify-between">
-                        <Badge className={getSectionColor(section.section)}>
-                          {section.section}
-                        </Badge>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">{section.actions} actions</span>
-                          <span className="text-xs text-muted-foreground">
-                            {Math.round(section.timeSpent)}min
+            {/* Most Visited Sections */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-blue-600" />
+                  Most Visited Sections
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Platform areas with highest traffic
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {systemStats?.topSections?.slice(0, 6).map((section, idx) => (
+                    <div key={idx} className="flex items-center justify-between">
+                      <Badge className={getSectionColor(section.section)} variant="outline">
+                        {section.section.replace('/api/', '').replace('/', '')}
+                      </Badge>
+                      <div className="text-right">
+                        <span className="text-sm font-bold">{section.actions || section.usage}</span>
+                        <p className="text-xs text-muted-foreground">actions</p>
+                      </div>
+                    </div>
+                  )) || (
+                    <p className="text-sm text-muted-foreground">No section data available</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* User Engagement Analysis */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5 text-purple-600" />
+                  User Engagement
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Overall platform activity patterns
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Active Users</span>
+                      <span>{systemStats?.activeUsers || 0} of {systemStats?.totalUsers || 0}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-purple-600 h-2 rounded-full" 
+                        style={{ 
+                          width: `${systemStats?.totalUsers ? (systemStats.activeUsers / systemStats.totalUsers) * 100 : 0}%` 
+                        }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm font-medium">Average Actions per User</p>
+                    <p className="text-2xl font-bold text-purple-600">
+                      {Math.round(systemStats?.averageActionsPerUser || 0)}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Total Sessions</p>
+                    <p className="text-lg font-bold">
+                      {detailedActivities?.reduce((sum, user) => sum + user.sessionsCount, 0) || 0}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Detailed Analysis for All Users or Selected User */}
+          <div className="grid gap-4 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-orange-600" />
+                  {selectedUser === 'all' ? 'All Users Activity Breakdown' : 'Individual User Analysis'}
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  {selectedUser === 'all' 
+                    ? 'Comprehensive platform usage overview' 
+                    : 'Detailed activity analysis for selected user'
+                  }
+                </p>
+              </CardHeader>
+              <CardContent>
+                {selectedUser === 'all' ? (
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-medium mb-2">Active vs Inactive Users</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-sm">Active Users (with activity)</span>
+                          <span className="font-bold text-green-600">
+                            {detailedActivities?.filter(u => u.totalActions > 0).length || 0}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Inactive Users (no activity)</span>
+                          <span className="font-bold text-red-600">
+                            {detailedActivities?.filter(u => u.totalActions === 0).length || 0}
                           </span>
                         </div>
                       </div>
-                    ))}
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium mb-2">Top Active Users</h4>
+                      <div className="space-y-2">
+                        {detailedActivities
+                          ?.filter(u => u.totalActions > 0)
+                          .slice(0, 5)
+                          .map((user, idx) => (
+                            <div key={user.userId} className="flex justify-between">
+                              <span className="text-sm">
+                                {user.firstName} {user.lastName}
+                              </span>
+                              <span className="font-bold">
+                                {user.totalActions} actions
+                              </span>
+                            </div>
+                          ))
+                        }
+                      </div>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
+                ) : (
+                  // Individual user analysis would go here when a specific user is selected
+                  <div className="space-y-3">
+                    {selectedUser !== 'all' && detailedActivities && (
+                      (() => {
+                        const user = detailedActivities.find(u => u.userId === selectedUser);
+                        if (!user) return <p>User not found</p>;
+                        return (
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <p className="text-sm text-muted-foreground">Total Actions</p>
+                                <p className="text-2xl font-bold">{user.totalActions}</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-muted-foreground">Sessions</p>
+                                <p className="text-2xl font-bold">{user.sessionsCount}</p>
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <p className="text-sm text-muted-foreground mb-2">Features Used</p>
+                              <div className="flex flex-wrap gap-1">
+                                {user.featuresUsed.map((feature, idx) => (
+                                  <Badge key={idx} variant="outline" className="text-xs">
+                                    {feature}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div>
+                              <p className="text-sm text-muted-foreground mb-2">Section Activity</p>
+                              <div className="space-y-2">
+                                {user.sectionBreakdown?.map((section, idx) => (
+                                  <div key={idx} className="flex justify-between">
+                                    <span className="text-sm">{section.section}</span>
+                                    <span className="font-medium">{section.actions} actions</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="h-5 w-5 text-red-600" />
+                  Areas Needing Attention
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Features and sections that may need improvement
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-medium mb-2 text-red-600">Unused Features</h4>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Platform features that haven't been accessed recently
+                    </p>
+                    <div className="space-y-1">
+                      {/* This would need to be calculated based on all available features vs used features */}
+                      <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200">
+                        Unknown Features
+                      </Badge>
+                      <p className="text-xs text-muted-foreground">
+                        Consider user training or interface improvements
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium mb-2 text-orange-600">Low Engagement</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm">Users with 0 actions</span>
+                        <span className="font-bold text-orange-600">
+                          {detailedActivities?.filter(u => u.totalActions === 0).length || 0}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Users with 1-2 actions</span>
+                        <span className="font-bold text-orange-600">
+                          {detailedActivities?.filter(u => u.totalActions > 0 && u.totalActions <= 2).length || 0}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium mb-2 text-green-600">Recommendations</h4>
+                    <ul className="text-sm space-y-1 text-muted-foreground">
+                      <li>• Focus on onboarding inactive users</li>
+                      <li>• Improve discoverability of unused features</li>
+                      <li>• Analyze user paths to identify friction points</li>
+                      <li>• Consider user feedback for feature improvements</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

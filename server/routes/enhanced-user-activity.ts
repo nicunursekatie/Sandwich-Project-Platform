@@ -273,7 +273,7 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
 
       // Calculate statistics
       const totalActions = activities.length;
-      const sectionsUsed = [...new Set(activities.map(a => a.section))];
+      const sectionsUsed = Array.from(new Set(activities.map(a => a.section)));
       
       // Top actions by count
       const actionCounts = activities.reduce((acc: Record<string, number>, activity) => {
