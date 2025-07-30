@@ -1944,7 +1944,7 @@ export class DatabaseStorage implements IStorage {
       .where(
         and(
           eq(userActivityLogs.userId, userId),
-          sql`${userActivityLogs.timestamp} >= ${startDate}`
+          sql`${userActivityLogs.createdAt} >= ${startDate}`
         )
       );
 
@@ -1965,7 +1965,7 @@ export class DatabaseStorage implements IStorage {
 
     // Calculate daily activity
     const dailyActivity = activities.reduce((acc: Record<string, number>, activity) => {
-      const date = activity.timestamp.toISOString().split('T')[0];
+      const date = activity.createdAt.toISOString().split('T')[0];
       acc[date] = (acc[date] || 0) + 1;
       return acc;
     }, {});
@@ -2003,13 +2003,13 @@ export class DatabaseStorage implements IStorage {
         firstName: users.firstName,
         lastName: users.lastName,
         activityCount: sql<number>`COUNT(${userActivityLogs.id})::int`,
-        lastActive: sql<Date>`MAX(${userActivityLogs.timestamp})`,
+        lastActive: sql<Date>`MAX(${userActivityLogs.createdAt})`,
         topSection: sql<string>`
           COALESCE(
             (SELECT ${userActivityLogs.section} 
              FROM ${userActivityLogs} u2 
              WHERE u2.user_id = ${users.id} 
-             AND u2.timestamp >= ${startDate}
+             AND u2.created_at >= ${startDate}
              GROUP BY ${userActivityLogs.section} 
              ORDER BY COUNT(*) DESC 
              LIMIT 1), 
@@ -2020,7 +2020,7 @@ export class DatabaseStorage implements IStorage {
       .from(users)
       .leftJoin(userActivityLogs, and(
         eq(users.id, userActivityLogs.userId),
-        sql`${userActivityLogs.timestamp} >= ${startDate}`
+        sql`${userActivityLogs.createdAt} >= ${startDate}`
       ))
       .groupBy(users.id, users.email, users.firstName, users.lastName);
 
@@ -2059,7 +2059,7 @@ export class DatabaseStorage implements IStorage {
       .from(userActivityLogs)
       .where(and(
         eq(userActivityLogs.userId, userId),
-        gte(userActivityLogs.timestamp, sinceDate)
+        gte(userActivityLogs.createdAt, sinceDate)
       ));
 
     // Get sections used
@@ -2068,7 +2068,7 @@ export class DatabaseStorage implements IStorage {
       .from(userActivityLogs)
       .where(and(
         eq(userActivityLogs.userId, userId),
-        gte(userActivityLogs.timestamp, sinceDate)
+        gte(userActivityLogs.createdAt, sinceDate)
       ))
       .groupBy(userActivityLogs.section);
 
@@ -2081,7 +2081,7 @@ export class DatabaseStorage implements IStorage {
       .from(userActivityLogs)
       .where(and(
         eq(userActivityLogs.userId, userId),
-        gte(userActivityLogs.timestamp, sinceDate)
+        gte(userActivityLogs.createdAt, sinceDate)
       ))
       .groupBy(userActivityLogs.action)
       .orderBy(desc(sql`count(*)`))
@@ -2090,16 +2090,16 @@ export class DatabaseStorage implements IStorage {
     // Get daily activity
     const dailyResult = await db
       .select({
-        date: sql<string>`date(timestamp)`,
+        date: sql<string>`date(created_at)`,
         count: sql<number>`count(*)`
       })
       .from(userActivityLogs)
       .where(and(
         eq(userActivityLogs.userId, userId),
-        gte(userActivityLogs.timestamp, sinceDate)
+        gte(userActivityLogs.createdAt, sinceDate)
       ))
-      .groupBy(sql`date(timestamp)`)
-      .orderBy(sql`date(timestamp)`);
+      .groupBy(sql`date(created_at)`)
+      .orderBy(sql`date(created_at)`);
 
     return {
       totalActions: totalResult[0]?.count || 0,
@@ -2128,13 +2128,13 @@ export class DatabaseStorage implements IStorage {
         firstName: users.firstName,
         lastName: users.lastName,
         totalActions: sql<number>`count(user_activity_logs.id)`,
-        lastActive: sql<Date>`max(user_activity_logs.timestamp)`,
+        lastActive: sql<Date>`max(user_activity_logs.created_at)`,
         topSection: sql<string>`mode() within group (order by user_activity_logs.section)`
       })
       .from(users)
       .leftJoin(userActivityLogs, and(
         eq(users.id, userActivityLogs.userId),
-        gte(userActivityLogs.timestamp, sinceDate)
+        gte(userActivityLogs.createdAt, sinceDate)
       ))
       .where(eq(users.isActive, true))
       .groupBy(users.id, users.email, users.firstName, users.lastName)
