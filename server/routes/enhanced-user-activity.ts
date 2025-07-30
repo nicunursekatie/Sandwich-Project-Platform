@@ -38,15 +38,15 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
       // Calculate average actions per user
       const averageActionsPerUser = activeUsers > 0 ? totalActions / activeUsers : 0;
 
-      // Get top sections by actions
+      // Get top pages by actions
       const topSectionsResult = await db
         .select({
-          section: userActivityLogs.section,
+          section: userActivityLogs.page,
           actions: count()
         })
         .from(userActivityLogs)
         .where(sql`${userActivityLogs.createdAt} >= ${startDate}`)
-        .groupBy(userActivityLogs.section)
+        .groupBy(userActivityLogs.page)
         .orderBy(desc(count()))
         .limit(5);
 
@@ -124,11 +124,11 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
           totalActions: sql`COUNT(${userActivityLogs.id})`.as('totalActions'),
           lastActive: sql`MAX(${userActivityLogs.createdAt})`.as('lastActive'),
           topSection: sql`
-            (SELECT ${userActivityLogs.section} 
+            (SELECT ${userActivityLogs.page} 
              FROM ${userActivityLogs} ual2 
              WHERE ual2.user_id = ${users.id} 
              AND ual2.created_at >= ${startDate}
-             GROUP BY ${userActivityLogs.section} 
+             GROUP BY ${userActivityLogs.page} 
              ORDER BY COUNT(*) DESC 
              LIMIT 1)
           `.as('topSection'),
@@ -172,13 +172,13 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
       const sectionBreakdowns = await db
         .select({
           userId: userActivityLogs.userId,
-          section: userActivityLogs.section,
+          section: userActivityLogs.page,
           actions: count(),
           timeSpent: sql`COALESCE(SUM(${userActivityLogs.duration}), 0)`.as('timeSpent')
         })
         .from(userActivityLogs)
         .where(sql`${userActivityLogs.createdAt} >= ${startDate}`)
-        .groupBy(userActivityLogs.userId, userActivityLogs.section);
+        .groupBy(userActivityLogs.userId, userActivityLogs.page);
 
       // Combine data
       const result = userActivities.map(user => {
@@ -245,7 +245,7 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
           userId: userActivityLogs.userId,
           userName: sql`COALESCE(${users.firstName} || ' ' || ${users.lastName}, ${users.email})`.as('userName'),
           action: userActivityLogs.action,
-          section: userActivityLogs.section,
+          section: userActivityLogs.page,
           feature: userActivityLogs.feature,
           page: userActivityLogs.page,
           duration: userActivityLogs.duration,

@@ -1,116 +1,116 @@
 export const USER_ROLES = {
-  SUPER_ADMIN: 'super_admin',
-  ADMIN: 'admin',
-  COMMITTEE_MEMBER: 'committee_member',
-  HOST: 'host',
-  DRIVER: 'driver',
-  VOLUNTEER: 'volunteer',
-  RECIPIENT: 'recipient',
-  VIEWER: 'viewer',
-  WORK_LOGGER: 'work_logger'
+  SUPER_ADMIN: "super_admin",
+  ADMIN: "admin",
+  COMMITTEE_MEMBER: "committee_member",
+  HOST: "host",
+  DRIVER: "driver",
+  VOLUNTEER: "volunteer",
+  RECIPIENT: "recipient",
+  VIEWER: "viewer",
+  WORK_LOGGER: "work_logger",
 } as const;
 
 // Granular yet intuitive permission system
 export const PERMISSIONS = {
   // Administrative permissions
-  ADMIN_ACCESS: 'admin_access',
-  MANAGE_USERS: 'manage_users',
-  MANAGE_ANNOUNCEMENTS: 'manage_announcements',
-  
+  ADMIN_ACCESS: "admin_access",
+  MANAGE_USERS: "manage_users",
+  MANAGE_ANNOUNCEMENTS: "manage_announcements",
+
   // Main tab access permissions
-  ACCESS_DIRECTORY: 'access_directory',
-  ACCESS_HOSTS: 'access_hosts', 
-  ACCESS_RECIPIENTS: 'access_recipients',
-  ACCESS_DRIVERS: 'access_drivers',
-  ACCESS_COLLECTIONS: 'access_collections',
-  ACCESS_CHAT: 'access_chat',
-  ACCESS_MESSAGES: 'access_messages',
-  ACCESS_TOOLKIT: 'access_toolkit',
-  
-  // Operations section permissions  
-  ACCESS_MEETINGS: 'access_meetings',
-  ACCESS_ANALYTICS: 'access_analytics',
-  ACCESS_REPORTS: 'access_reports',
-  ACCESS_PROJECTS: 'access_projects',
-  ACCESS_ROLE_DEMO: 'access_role_demo',
-  
+  ACCESS_DIRECTORY: "access_directory",
+  ACCESS_HOSTS: "access_hosts",
+  ACCESS_RECIPIENTS: "access_recipients",
+  ACCESS_DRIVERS: "access_drivers",
+  ACCESS_COLLECTIONS: "access_collections",
+  ACCESS_CHAT: "access_chat",
+  ACCESS_MESSAGES: "access_messages",
+  ACCESS_TOOLKIT: "access_toolkit",
+
+  // Operations section permissions
+  ACCESS_MEETINGS: "access_meetings",
+  ACCESS_ANALYTICS: "access_analytics",
+  ACCESS_REPORTS: "access_reports",
+  ACCESS_PROJECTS: "access_projects",
+  ACCESS_ROLE_DEMO: "access_role_demo",
+
   // Resources section permissions
-  ACCESS_SUGGESTIONS: 'access_suggestions',
-  ACCESS_SANDWICH_DATA: 'access_sandwich_data',
-  ACCESS_GOVERNANCE: 'access_governance',
-  ACCESS_WORK_LOGS: 'access_work_logs',
-  
+  ACCESS_SUGGESTIONS: "access_suggestions",
+  ACCESS_SANDWICH_DATA: "access_sandwich_data",
+  ACCESS_GOVERNANCE: "access_governance",
+  ACCESS_WORK_LOGS: "access_work_logs",
+
   // Simplified management permissions for each section
-  MANAGE_HOSTS: 'manage_hosts',
-  MANAGE_RECIPIENTS: 'manage_recipients', 
-  MANAGE_DRIVERS: 'manage_drivers',
-  MANAGE_MEETINGS: 'manage_meetings',
-  MANAGE_SUGGESTIONS: 'manage_suggestions',
-  SUBMIT_SUGGESTIONS: 'submit_suggestions',
-  
+  MANAGE_HOSTS: "manage_hosts",
+  MANAGE_RECIPIENTS: "manage_recipients",
+  MANAGE_DRIVERS: "manage_drivers",
+  MANAGE_MEETINGS: "manage_meetings",
+  MANAGE_SUGGESTIONS: "manage_suggestions",
+  SUBMIT_SUGGESTIONS: "submit_suggestions",
+
   // Simplified suggestions permissions - CREATE automatically includes edit/delete own
-  CREATE_SUGGESTIONS: 'create_suggestions', // Create new suggestions + automatically edit/delete own suggestions
-  EDIT_ALL_SUGGESTIONS: 'edit_all_suggestions', // Edit any suggestion (admin level)
-  DELETE_ALL_SUGGESTIONS: 'delete_all_suggestions', // Delete any suggestion (admin level)
-  
-  MANAGE_COLLECTIONS: 'manage_collections',
-  
+  CREATE_SUGGESTIONS: "create_suggestions", // Create new suggestions + automatically edit/delete own suggestions
+  EDIT_ALL_SUGGESTIONS: "edit_all_suggestions", // Edit any suggestion (admin level)
+  DELETE_ALL_SUGGESTIONS: "delete_all_suggestions", // Delete any suggestion (admin level)
+
+  MANAGE_COLLECTIONS: "manage_collections",
+
   // Simplified project permissions - CREATE automatically includes edit/delete own + assigned projects
-  CREATE_PROJECTS: 'create_projects', // Create new projects + automatically edit/delete own projects + edit assigned projects
-  EDIT_ALL_PROJECTS: 'edit_all_projects', // Edit any project regardless of ownership
-  DELETE_ALL_PROJECTS: 'delete_all_projects', // Delete any project regardless of ownership
-  
+  CREATE_PROJECTS: "create_projects", // Create new projects + automatically edit/delete own projects + edit assigned projects
+  EDIT_ALL_PROJECTS: "edit_all_projects", // Edit any project regardless of ownership
+  DELETE_ALL_PROJECTS: "delete_all_projects", // Delete any project regardless of ownership
+
   // Simplified collection permissions - CREATE automatically includes edit/delete own
-  CREATE_COLLECTIONS: 'create_collections', // Create new collections + automatically edit/delete own collections
-  EDIT_ALL_COLLECTIONS: 'edit_all_collections', // Edit any collection regardless of ownership
-  DELETE_ALL_COLLECTIONS: 'delete_all_collections', // Delete any collection regardless of ownership
-  
+  CREATE_COLLECTIONS: "create_collections", // Create new collections + automatically edit/delete own collections
+  EDIT_ALL_COLLECTIONS: "edit_all_collections", // Edit any collection regardless of ownership
+  DELETE_ALL_COLLECTIONS: "delete_all_collections", // Delete any collection regardless of ownership
+
   // Simplified work log permissions - CREATE automatically includes edit/delete own
-  CREATE_WORK_LOGS: 'create_work_logs', // Create new work logs + automatically edit/delete own work logs
-  VIEW_ALL_WORK_LOGS: 'view_all_work_logs',
-  EDIT_ALL_WORK_LOGS: 'edit_all_work_logs',
-  DELETE_ALL_WORK_LOGS: 'delete_all_work_logs',
-  
+  CREATE_WORK_LOGS: "create_work_logs", // Create new work logs + automatically edit/delete own work logs
+  VIEW_ALL_WORK_LOGS: "view_all_work_logs",
+  EDIT_ALL_WORK_LOGS: "edit_all_work_logs",
+  DELETE_ALL_WORK_LOGS: "delete_all_work_logs",
+
   // Data action permissions
-  EXPORT_DATA: 'export_data',
-  IMPORT_DATA: 'import_data',
-  SCHEDULE_REPORTS: 'schedule_reports',
-  
+  EXPORT_DATA: "export_data",
+  IMPORT_DATA: "import_data",
+  SCHEDULE_REPORTS: "schedule_reports",
+
   // Message and communication permissions
-  SEND_MESSAGES: 'send_messages',
-  MODERATE_MESSAGES: 'moderate_messages',
-  DIRECT_MESSAGES: 'direct_messages',
-  GROUP_MESSAGES: 'group_messages',
-  
+  SEND_MESSAGES: "send_messages",
+  MODERATE_MESSAGES: "moderate_messages",
+  DIRECT_MESSAGES: "direct_messages",
+  GROUP_MESSAGES: "group_messages",
+
   // Chat-specific permissions
-  GENERAL_CHAT: 'general_chat',
-  COMMITTEE_CHAT: 'committee_chat',
-  HOST_CHAT: 'host_chat',
-  DRIVER_CHAT: 'driver_chat',
-  RECIPIENT_CHAT: 'recipient_chat',
-  CORE_TEAM_CHAT: 'core_team_chat',
-  
+  GENERAL_CHAT: "general_chat",
+  COMMITTEE_CHAT: "committee_chat",
+  HOST_CHAT: "host_chat",
+  DRIVER_CHAT: "driver_chat",
+  RECIPIENT_CHAT: "recipient_chat",
+  CORE_TEAM_CHAT: "core_team_chat",
+
   // Legacy support for existing components (backwards compatibility)
-  VIEW_PHONE_DIRECTORY: 'access_directory',
-  VIEW_HOSTS: 'access_hosts',
-  VIEW_RECIPIENTS: 'access_recipients', 
-  VIEW_DRIVERS: 'access_drivers',
-  VIEW_COLLECTIONS: 'access_collections',
-  VIEW_REPORTS: 'access_reports',
-  VIEW_MEETINGS: 'access_meetings',
-  VIEW_ANALYTICS: 'access_analytics',
-  VIEW_PROJECTS: 'access_projects',
-  VIEW_ROLE_DEMO: 'access_role_demo',
-  VIEW_SUGGESTIONS: 'access_suggestions',
-  VIEW_SANDWICH_DATA: 'access_sandwich_data', 
-  VIEW_GOVERNANCE: 'access_governance',
-  VIEW_USERS: 'manage_users',
-  VIEW_COMMITTEE: 'committee_chat',
-  TOOLKIT_ACCESS: 'access_toolkit',
-  EDIT_MEETINGS: 'manage_meetings',
-  RESPOND_TO_SUGGESTIONS: 'manage_suggestions',
+  VIEW_PHONE_DIRECTORY: "access_directory",
+  VIEW_HOSTS: "access_hosts",
+  VIEW_RECIPIENTS: "access_recipients",
+  VIEW_DRIVERS: "access_drivers",
+  VIEW_COLLECTIONS: "access_collections",
+  VIEW_REPORTS: "access_reports",
+  VIEW_MEETINGS: "access_meetings",
+  VIEW_ANALYTICS: "access_analytics",
+  VIEW_PROJECTS: "access_projects",
+  VIEW_ROLE_DEMO: "access_role_demo",
+  VIEW_SUGGESTIONS: "access_suggestions",
+  VIEW_SANDWICH_DATA: "access_sandwich_data",
+  VIEW_GOVERNANCE: "access_governance",
+  VIEW_USERS: "manage_users",
+  VIEW_COMMITTEE: "committee_chat",
+  TOOLKIT_ACCESS: "access_toolkit",
+  EDIT_MEETINGS: "manage_meetings",
+  RESPOND_TO_SUGGESTIONS: "manage_suggestions",
   // Legacy project permission (deprecated - use CREATE_PROJECTS instead)
-  MANAGE_PROJECTS: 'create_projects' // Maps to new CREATE_PROJECTS permission
+  MANAGE_PROJECTS: "create_projects", // Maps to new CREATE_PROJECTS permission
 } as const;
 
 // Helper functions for improved project permissions system
@@ -119,10 +119,12 @@ export function getDefaultPermissionsForRole(role: string): string[] {
   switch (role) {
     case USER_ROLES.SUPER_ADMIN:
       return Object.values(PERMISSIONS);
-      
+
     case USER_ROLES.ADMIN:
-      return Object.values(PERMISSIONS).filter(p => p !== PERMISSIONS.MODERATE_MESSAGES);
-    
+      return Object.values(PERMISSIONS).filter(
+        (p) => p !== PERMISSIONS.MODERATE_MESSAGES,
+      );
+
     case USER_ROLES.COMMITTEE_MEMBER:
       return [
         // Can view these sections but not manage them
@@ -144,7 +146,7 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.EXPORT_DATA,
         PERMISSIONS.CREATE_SUGGESTIONS, // Can create suggestions + edit/delete own
       ];
-    
+
     case USER_ROLES.HOST:
       return [
         PERMISSIONS.ACCESS_DIRECTORY,
@@ -160,9 +162,9 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.HOST_CHAT,
         PERMISSIONS.CREATE_COLLECTIONS, // Can create collections (automatically can edit/delete own)
         PERMISSIONS.CREATE_PROJECTS, // Can create projects (automatically can edit/delete own)
-        PERMISSIONS.CREATE_SUGGESTIONS // Can create suggestions (automatically can edit/delete own)
+        PERMISSIONS.CREATE_SUGGESTIONS, // Can create suggestions (automatically can edit/delete own)
       ];
-    
+
     case USER_ROLES.DRIVER:
       return [
         PERMISSIONS.ACCESS_DIRECTORY,
@@ -176,9 +178,9 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_SANDWICH_DATA,
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.DRIVER_CHAT,
-        PERMISSIONS.CREATE_SUGGESTIONS // Can create suggestions (automatically can edit/delete own)
+        PERMISSIONS.CREATE_SUGGESTIONS, // Can create suggestions (automatically can edit/delete own)
       ];
-    
+
     case USER_ROLES.VOLUNTEER:
       return [
         PERMISSIONS.ACCESS_COLLECTIONS,
@@ -191,9 +193,9 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.CREATE_COLLECTIONS, // Can create collections (automatically can edit/delete own)
         PERMISSIONS.CREATE_PROJECTS, // Can create projects (automatically can edit/delete own)
-        PERMISSIONS.CREATE_SUGGESTIONS // Can create suggestions (automatically can edit/delete own)
+        PERMISSIONS.CREATE_SUGGESTIONS, // Can create suggestions (automatically can edit/delete own)
       ];
-    
+
     case USER_ROLES.RECIPIENT:
       return [
         PERMISSIONS.ACCESS_COLLECTIONS,
@@ -202,9 +204,9 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_SUGGESTIONS,
         PERMISSIONS.GENERAL_CHAT,
         PERMISSIONS.RECIPIENT_CHAT,
-        PERMISSIONS.CREATE_SUGGESTIONS // Can create suggestions (automatically can edit/delete own)
+        PERMISSIONS.CREATE_SUGGESTIONS, // Can create suggestions (automatically can edit/delete own)
       ];
-    
+
     case USER_ROLES.VIEWER:
       return [
         PERMISSIONS.ACCESS_DIRECTORY,
@@ -215,9 +217,9 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_PROJECTS,
         PERMISSIONS.ACCESS_SUGGESTIONS,
         PERMISSIONS.ACCESS_SANDWICH_DATA,
-        PERMISSIONS.CREATE_SUGGESTIONS // Can create suggestions (automatically can edit/delete own)
+        PERMISSIONS.CREATE_SUGGESTIONS, // Can create suggestions (automatically can edit/delete own)
       ];
-    
+
     case USER_ROLES.WORK_LOGGER:
       return [
         PERMISSIONS.ACCESS_DIRECTORY,
@@ -228,9 +230,9 @@ export function getDefaultPermissionsForRole(role: string): string[] {
         PERMISSIONS.ACCESS_REPORTS,
         PERMISSIONS.ACCESS_PROJECTS,
         PERMISSIONS.GENERAL_CHAT,
-        'log_work'
+        "log_work",
       ];
-    
+
     default:
       return [];
   }
@@ -238,23 +240,24 @@ export function getDefaultPermissionsForRole(role: string): string[] {
 
 // Chat room to permission mapping
 export const CHAT_PERMISSIONS = {
-  'general': PERMISSIONS.GENERAL_CHAT,
-  'committee': PERMISSIONS.COMMITTEE_CHAT,
-  'hosts': PERMISSIONS.HOST_CHAT,
-  'drivers': PERMISSIONS.DRIVER_CHAT,
-  'recipients': PERMISSIONS.RECIPIENT_CHAT,
-  'core_team': PERMISSIONS.CORE_TEAM_CHAT,
-  'direct': PERMISSIONS.DIRECT_MESSAGES,
-  'groups': PERMISSIONS.GROUP_MESSAGES
+  general: PERMISSIONS.GENERAL_CHAT,
+  committee: PERMISSIONS.COMMITTEE_CHAT,
+  hosts: PERMISSIONS.HOST_CHAT,
+  drivers: PERMISSIONS.DRIVER_CHAT,
+  recipients: PERMISSIONS.RECIPIENT_CHAT,
+  core_team: PERMISSIONS.CORE_TEAM_CHAT,
+  direct: PERMISSIONS.DIRECT_MESSAGES,
+  groups: PERMISSIONS.GROUP_MESSAGES,
 } as const;
 
 // Function to check if user has access to a specific chat room
 export function hasAccessToChat(user: any, chatRoom: string): boolean {
   if (!user || !user.permissions) return false;
-  
-  const requiredPermission = CHAT_PERMISSIONS[chatRoom as keyof typeof CHAT_PERMISSIONS];
+
+  const requiredPermission =
+    CHAT_PERMISSIONS[chatRoom as keyof typeof CHAT_PERMISSIONS];
   if (!requiredPermission) return false;
-  
+
   return user.permissions.includes(requiredPermission);
 }
 
@@ -267,129 +270,200 @@ export function hasPermission(user: any, permission: string): boolean {
 // Function to check if user can edit a specific collection entry
 export function canEditCollection(user: any, collection: any): boolean {
   if (!user || !user.permissions) return false;
-  
+
   // Super admins and users with EDIT_ALL_COLLECTIONS can edit all collections
-  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.EDIT_ALL_COLLECTIONS)) return true;
-  
+  if (
+    user.role === "super_admin" ||
+    user.permissions.includes(PERMISSIONS.EDIT_ALL_COLLECTIONS)
+  )
+    return true;
+
   // Users with CREATE_COLLECTIONS can edit collections they created
-  if (user.permissions.includes(PERMISSIONS.CREATE_COLLECTIONS) && 
-      (collection?.createdBy === user.id || collection?.created_by === user.id)) return true;
-  
+  if (
+    user.permissions.includes(PERMISSIONS.CREATE_COLLECTIONS) &&
+    (collection?.createdBy === user.id || collection?.created_by === user.id)
+  )
+    return true;
+
   return false;
 }
 
 // Function to check if user can delete a specific collection entry
 export function canDeleteCollection(user: any, collection: any): boolean {
   if (!user || !user.permissions) return false;
-  
+
   // Super admins and users with DELETE_ALL_COLLECTIONS can delete all collections
-  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.DELETE_ALL_COLLECTIONS)) return true;
-  
+  if (
+    user.role === "super_admin" ||
+    user.permissions.includes(PERMISSIONS.DELETE_ALL_COLLECTIONS)
+  )
+    return true;
+
   // Users with CREATE_COLLECTIONS can delete collections they created
-  if (user.permissions.includes(PERMISSIONS.CREATE_COLLECTIONS) && 
-      (collection?.createdBy === user.id || collection?.created_by === user.id)) return true;
-  
+  if (
+    user.permissions.includes(PERMISSIONS.CREATE_COLLECTIONS) &&
+    (collection?.createdBy === user.id || collection?.created_by === user.id)
+  )
+    return true;
+
   return false;
 }
 
 // Function to check if user can edit a specific project
 export function canEditProject(user: any, project: any): boolean {
   if (!user || !user.permissions) return false;
-  
+
   // Super admins and users with EDIT_ALL_PROJECTS can edit all projects
-  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.EDIT_ALL_PROJECTS)) return true;
-  
+  if (
+    user.role === "super_admin" ||
+    user.permissions.includes(PERMISSIONS.EDIT_ALL_PROJECTS)
+  )
+    return true;
+
   // Users with CREATE_PROJECTS can edit projects they created
-  if (user.permissions.includes(PERMISSIONS.CREATE_PROJECTS) && 
-      (project?.createdBy === user.id || project?.created_by === user.id)) return true;
-  
+  if (
+    user.permissions.includes(PERMISSIONS.CREATE_PROJECTS) &&
+    (project?.createdBy === user.id || project?.created_by === user.id)
+  )
+    return true;
+
   // Users with CREATE_PROJECTS can edit projects they're assigned to
   if (user.permissions.includes(PERMISSIONS.CREATE_PROJECTS)) {
     // Check multi-assignee IDs
     if (project?.assigneeIds && Array.isArray(project.assigneeIds)) {
       if (project.assigneeIds.includes(user.id)) return true;
     }
-    
+
     // Check legacy single assignee ID
     if (project?.assigneeId === user.id) return true;
-    
+
     // Check assigneeName matches user's display name or email
     if (project?.assigneeName) {
-      const userDisplayName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email;
-      if (project.assigneeName === userDisplayName || project.assigneeName === user.email) return true;
+      const userDisplayName =
+        user.firstName && user.lastName
+          ? `${user.firstName} ${user.lastName}`
+          : user.email;
+      if (
+        project.assigneeName === userDisplayName ||
+        project.assigneeName === user.email
+      )
+        return true;
     }
   }
-  
+
   return false;
 }
 
 // Function to check if user can delete a specific project
 export function canDeleteProject(user: any, project: any): boolean {
   if (!user || !user.permissions) return false;
-  
+
   // Super admins and users with DELETE_ALL_PROJECTS can delete all projects
-  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.DELETE_ALL_PROJECTS)) return true;
-  
+  if (
+    user.role === "super_admin" ||
+    user.permissions.includes(PERMISSIONS.DELETE_ALL_PROJECTS)
+  )
+    return true;
+
   // Users with CREATE_PROJECTS can only delete projects they created (not assigned ones)
-  if (user.permissions.includes(PERMISSIONS.CREATE_PROJECTS) && 
-      (project?.createdBy === user.id || project?.created_by === user.id)) return true;
-  
+  if (
+    user.permissions.includes(PERMISSIONS.CREATE_PROJECTS) &&
+    (project?.createdBy === user.id || project?.created_by === user.id)
+  )
+    return true;
+
   return false;
 }
 
 // Function to check if user can edit a specific suggestion entry
 export function canEditSuggestion(user: any, suggestion: any): boolean {
   if (!user || !user.permissions) return false;
-  
+
   // Super admins and users with EDIT_ALL_SUGGESTIONS can edit all suggestions
-  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.EDIT_ALL_SUGGESTIONS)) return true;
-  
+  if (
+    user.role === "super_admin" ||
+    user.permissions.includes(PERMISSIONS.EDIT_ALL_SUGGESTIONS)
+  )
+    return true;
+
   // Users with CREATE_SUGGESTIONS can edit suggestions they created
-  if (user.permissions.includes(PERMISSIONS.CREATE_SUGGESTIONS) && 
-      (suggestion?.createdBy === user.id || suggestion?.created_by === user.id || suggestion?.submittedBy === user.id)) return true;
-  
+  if (
+    user.permissions.includes(PERMISSIONS.CREATE_SUGGESTIONS) &&
+    (suggestion?.createdBy === user.id ||
+      suggestion?.created_by === user.id ||
+      suggestion?.submittedBy === user.id)
+  )
+    return true;
+
   return false;
 }
 
 // Function to check if user can delete a specific suggestion entry
 export function canDeleteSuggestion(user: any, suggestion: any): boolean {
   if (!user || !user.permissions) return false;
-  
+
   // Super admins and users with DELETE_ALL_SUGGESTIONS can delete all suggestions
-  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.DELETE_ALL_SUGGESTIONS)) return true;
-  
+  if (
+    user.role === "super_admin" ||
+    user.permissions.includes(PERMISSIONS.DELETE_ALL_SUGGESTIONS)
+  )
+    return true;
+
   // Users with CREATE_SUGGESTIONS can delete suggestions they created
-  if (user.permissions.includes(PERMISSIONS.CREATE_SUGGESTIONS) && 
-      (suggestion?.createdBy === user.id || suggestion?.created_by === user.id || suggestion?.submittedBy === user.id)) return true;
-  
+  if (
+    user.permissions.includes(PERMISSIONS.CREATE_SUGGESTIONS) &&
+    (suggestion?.createdBy === user.id ||
+      suggestion?.created_by === user.id ||
+      suggestion?.submittedBy === user.id)
+  )
+    return true;
+
   return false;
 }
 
 // Function to check if user can edit a specific work log entry
 export function canEditWorkLog(user: any, workLog: any): boolean {
   if (!user || !user.permissions) return false;
-  
+
   // Super admins and users with EDIT_ALL_WORK_LOGS can edit all work logs
-  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.EDIT_ALL_WORK_LOGS)) return true;
-  
+  if (
+    user.role === "super_admin" ||
+    user.permissions.includes(PERMISSIONS.EDIT_ALL_WORK_LOGS)
+  )
+    return true;
+
   // Users with CREATE_WORK_LOGS can edit work logs they created
-  if (user.permissions.includes(PERMISSIONS.CREATE_WORK_LOGS) && 
-      (workLog?.createdBy === user.id || workLog?.created_by === user.id || workLog?.userId === user.id)) return true;
-  
+  if (
+    user.permissions.includes(PERMISSIONS.CREATE_WORK_LOGS) &&
+    (workLog?.createdBy === user.id ||
+      workLog?.created_by === user.id ||
+      workLog?.userId === user.id)
+  )
+    return true;
+
   return false;
 }
 
 // Function to check if user can delete a specific work log entry
 export function canDeleteWorkLog(user: any, workLog: any): boolean {
   if (!user || !user.permissions) return false;
-  
+
   // Super admins and users with DELETE_ALL_WORK_LOGS can delete all work logs
-  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.DELETE_ALL_WORK_LOGS)) return true;
-  
+  if (
+    user.role === "super_admin" ||
+    user.permissions.includes(PERMISSIONS.DELETE_ALL_WORK_LOGS)
+  )
+    return true;
+
   // Users with CREATE_WORK_LOGS can delete work logs they created
-  if (user.permissions.includes(PERMISSIONS.CREATE_WORK_LOGS) && 
-      (workLog?.createdBy === user.id || workLog?.created_by === user.id || workLog?.userId === user.id)) return true;
-  
+  if (
+    user.permissions.includes(PERMISSIONS.CREATE_WORK_LOGS) &&
+    (workLog?.createdBy === user.id ||
+      workLog?.created_by === user.id ||
+      workLog?.userId === user.id)
+  )
+    return true;
+
   return false;
 }
 
@@ -397,24 +471,24 @@ export function canDeleteWorkLog(user: any, workLog: any): boolean {
 export function getRoleDisplayName(role: string): string {
   switch (role) {
     case USER_ROLES.SUPER_ADMIN:
-      return 'Super Administrator';
+      return "Super Administrator";
     case USER_ROLES.ADMIN:
-      return 'Administrator';
+      return "Administrator";
     case USER_ROLES.COMMITTEE_MEMBER:
-      return 'Committee Member';
+      return "Committee Member";
     case USER_ROLES.HOST:
-      return 'Host Organization';
+      return "Host Location";
     case USER_ROLES.DRIVER:
-      return 'Delivery Driver';
+      return "Delivery Driver";
     case USER_ROLES.VOLUNTEER:
-      return 'Volunteer';
+      return "Volunteer";
     case USER_ROLES.RECIPIENT:
-      return 'Recipient Organization';
+      return "Recipient Organization";
     case USER_ROLES.VIEWER:
-      return 'Viewer';
+      return "Viewer";
     case USER_ROLES.WORK_LOGGER:
-      return 'Work Logger';
+      return "Work Logger";
     default:
-      return role.charAt(0).toUpperCase() + role.slice(1).replace('_', ' ');
+      return role.charAt(0).toUpperCase() + role.slice(1).replace("_", " ");
   }
 }

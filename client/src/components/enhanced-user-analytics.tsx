@@ -79,9 +79,9 @@ export default function EnhancedUserAnalytics() {
 
   // System-wide analytics
   const { data: systemStats, isLoading: isLoadingStats } = useQuery<SystemStats>({
-    queryKey: ['/api/user-activity/enhanced-stats', selectedTimeframe],
+    queryKey: ['/api/enhanced-user-activity/enhanced-stats', selectedTimeframe],
     queryFn: async () => {
-      const res = await fetch(`/api/user-activity/enhanced-stats?days=${selectedTimeframe}`, {
+      const res = await fetch(`/api/enhanced-user-activity/enhanced-stats?days=${selectedTimeframe}`, {
         credentials: 'include'
       });
       if (!res.ok) throw new Error('Failed to fetch system stats');
@@ -92,9 +92,9 @@ export default function EnhancedUserAnalytics() {
 
   // Detailed user activities
   const { data: detailedActivities, isLoading: isLoadingUsers } = useQuery<DetailedUserActivity[]>({
-    queryKey: ['/api/user-activity/detailed-users', selectedTimeframe],
+    queryKey: ['/api/enhanced-user-activity/detailed-users', selectedTimeframe],
     queryFn: async () => {
-      const res = await fetch(`/api/user-activity/detailed-users?days=${selectedTimeframe}`, {
+      const res = await fetch(`/api/enhanced-user-activity/detailed-users?days=${selectedTimeframe}`, {
         credentials: 'include'
       });
       if (!res.ok) throw new Error('Failed to fetch user activities');
@@ -105,14 +105,14 @@ export default function EnhancedUserAnalytics() {
 
   // Activity logs for detailed view
   const { data: activityLogs, isLoading: isLoadingLogs } = useQuery<ActivityLog[]>({
-    queryKey: ['/api/user-activity/logs', selectedUser, activityFilter, selectedTimeframe],
+    queryKey: ['/api/enhanced-user-activity/logs', selectedUser, activityFilter, selectedTimeframe],
     queryFn: async () => {
       const params = new URLSearchParams({
         days: selectedTimeframe,
         ...(selectedUser !== 'all' && { userId: selectedUser }),
         ...(activityFilter !== 'all' && { action: activityFilter })
       });
-      const res = await fetch(`/api/user-activity/logs?${params}`, {
+      const res = await fetch(`/api/enhanced-user-activity/logs?${params}`, {
         credentials: 'include'
       });
       if (!res.ok) throw new Error('Failed to fetch activity logs');
@@ -123,9 +123,9 @@ export default function EnhancedUserAnalytics() {
 
   // Individual user stats
   const { data: userStats, isLoading: isLoadingUserStats } = useQuery<ActivityStats>({
-    queryKey: ['/api/user-activity/user-stats', selectedUser, selectedTimeframe],
+    queryKey: ['/api/enhanced-user-activity/user-stats', selectedUser, selectedTimeframe],
     queryFn: async () => {
-      const res = await fetch(`/api/user-activity/user-stats/${selectedUser}?days=${selectedTimeframe}`, {
+      const res = await fetch(`/api/enhanced-user-activity/user-stats/${selectedUser}?days=${selectedTimeframe}`, {
         credentials: 'include'
       });
       if (!res.ok) throw new Error('Failed to fetch user stats');

@@ -7793,7 +7793,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/user-activity", isAuthenticated, createUserActivityRoutes(storage));
   
   // Register enhanced user activity analytics routes
-  app.use("/api/user-activity", createEnhancedUserActivityRoutes(storage));
+  app.use("/api/enhanced-user-activity", createEnhancedUserActivityRoutes(storage));
 
   // Register real-time messages routes
   const { default: realTimeMessagesRoutes } = await import("./routes/real-time-messages");

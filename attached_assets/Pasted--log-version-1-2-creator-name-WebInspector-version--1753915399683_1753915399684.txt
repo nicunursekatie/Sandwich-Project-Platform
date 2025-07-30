@@ -1,0 +1,1956 @@
+{
+  "log": {
+    "version": "1.2",
+    "creator": {
+      "name": "WebInspector",
+      "version": "537.36"
+    },
+    "pages": [],
+    "entries": [
+      {
+        "_connectionId": "2814472",
+        "_initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "queryFn",
+                "scriptId": "2445",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/enhanced-user-analytics.tsx",
+                "lineNumber": 45,
+                "columnNumber": 24
+              },
+              {
+                "functionName": "fetchFn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 880,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "run",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 512,
+                "columnNumber": 48
+              },
+              {
+                "functionName": "start",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 554,
+                "columnNumber": 8
+              },
+              {
+                "functionName": "fetch",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 968,
+                "columnNumber": 40
+              },
+              {
+                "functionName": "executeFetch_fn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 2278,
+                "columnNumber": 50
+              },
+              {
+                "functionName": "onSubscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 1982,
+                "columnNumber": 73
+              },
+              {
+                "functionName": "subscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 23,
+                "columnNumber": 9
+              },
+              {
+                "functionName": "",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 3145,
+                "columnNumber": 55
+              },
+              {
+                "functionName": "subscribeToStore",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 11983,
+                "columnNumber": 17
+              },
+              {
+                "functionName": "commitHookEffectListMount",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 16914,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "commitPassiveMountOnFiber",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18155,
+                "columnNumber": 18
+              },
+              {
+                "functionName": "commitPassiveMountEffects_complete",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18128,
+                "columnNumber": 16
+              },
+              {
+                "functionName": "commitPassiveMountEffects_begin",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18118,
+                "columnNumber": 14
+              },
+              {
+                "functionName": "commitPassiveMountEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18108,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffectsImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19489,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19446,
+                "columnNumber": 21
+              },
+              {
+                "functionName": "commitRootImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19415,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "commitRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19276,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "performSyncWorkOnRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18894,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushSyncCallbacks",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 9118,
+                "columnNumber": 29
+              },
+              {
+                "functionName": "",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18626,
+                "columnNumber": 20
+              }
+            ]
+          }
+        },
+        "_priority": "High",
+        "_resourceType": "fetch",
+        "cache": {},
+        "connection": "5000",
+        "request": {
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/user-activity/enhanced-stats?days=7",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.7"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/dashboard?section=user-management"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Sec-GPC",
+              "value": "1"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Brave\";v=\"138\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"macOS\""
+            }
+          ],
+          "queryString": [
+            {
+              "name": "days",
+              "value": "7"
+            }
+          ],
+          "cookies": [],
+          "headersSize": 817,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 500,
+          "statusText": "Internal Server Error",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Access-Control-Allow-Credentials",
+              "value": "true"
+            },
+            {
+              "name": "Access-Control-Allow-Headers",
+              "value": "Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma"
+            },
+            {
+              "name": "Access-Control-Allow-Methods",
+              "value": "GET,PUT,POST,DELETE,OPTIONS,PATCH"
+            },
+            {
+              "name": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "name": "Content-Length",
+              "value": "47"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "Date",
+              "value": "Wed, 30 Jul 2025 22:42:43 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"2f-M0H7p6QOGYHhOEOgWFqZdZGBIQ8\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 47,
+            "mimeType": "application/json",
+            "compression": 0
+          },
+          "redirectURL": "",
+          "headersSize": 827,
+          "bodySize": 47,
+          "_transferSize": 874,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "34.82.58.13",
+        "startedDateTime": "2025-07-30T22:42:42.396Z",
+        "time": 765.1670000050217,
+        "timings": {
+          "blocked": 4.482999983921647,
+          "dns": -1,
+          "ssl": -1,
+          "connect": -1,
+          "send": 0.061000000000000165,
+          "wait": 759.9259999524877,
+          "receive": 0.6970000686123967,
+          "_blocked_queueing": 2.810999983921647,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "2814496",
+        "_initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "queryFn",
+                "scriptId": "2445",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/enhanced-user-analytics.tsx",
+                "lineNumber": 56,
+                "columnNumber": 24
+              },
+              {
+                "functionName": "fetchFn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 880,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "run",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 512,
+                "columnNumber": 48
+              },
+              {
+                "functionName": "start",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 554,
+                "columnNumber": 8
+              },
+              {
+                "functionName": "fetch",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 968,
+                "columnNumber": 40
+              },
+              {
+                "functionName": "executeFetch_fn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 2278,
+                "columnNumber": 50
+              },
+              {
+                "functionName": "onSubscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 1982,
+                "columnNumber": 73
+              },
+              {
+                "functionName": "subscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 23,
+                "columnNumber": 9
+              },
+              {
+                "functionName": "",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 3145,
+                "columnNumber": 55
+              },
+              {
+                "functionName": "subscribeToStore",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 11983,
+                "columnNumber": 17
+              },
+              {
+                "functionName": "commitHookEffectListMount",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 16914,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "commitPassiveMountOnFiber",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18155,
+                "columnNumber": 18
+              },
+              {
+                "functionName": "commitPassiveMountEffects_complete",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18128,
+                "columnNumber": 16
+              },
+              {
+                "functionName": "commitPassiveMountEffects_begin",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18118,
+                "columnNumber": 14
+              },
+              {
+                "functionName": "commitPassiveMountEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18108,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffectsImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19489,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19446,
+                "columnNumber": 21
+              },
+              {
+                "functionName": "commitRootImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19415,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "commitRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19276,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "performSyncWorkOnRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18894,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushSyncCallbacks",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 9118,
+                "columnNumber": 29
+              },
+              {
+                "functionName": "",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18626,
+                "columnNumber": 20
+              }
+            ]
+          }
+        },
+        "_priority": "High",
+        "_resourceType": "fetch",
+        "cache": {},
+        "connection": "5000",
+        "request": {
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/user-activity/detailed-users?days=7",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.7"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/dashboard?section=user-management"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Sec-GPC",
+              "value": "1"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Brave\";v=\"138\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"macOS\""
+            }
+          ],
+          "queryString": [
+            {
+              "name": "days",
+              "value": "7"
+            }
+          ],
+          "cookies": [],
+          "headersSize": 817,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 500,
+          "statusText": "Internal Server Error",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Access-Control-Allow-Credentials",
+              "value": "true"
+            },
+            {
+              "name": "Access-Control-Allow-Headers",
+              "value": "Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma"
+            },
+            {
+              "name": "Access-Control-Allow-Methods",
+              "value": "GET,PUT,POST,DELETE,OPTIONS,PATCH"
+            },
+            {
+              "name": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "name": "Content-Length",
+              "value": "52"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "Date",
+              "value": "Wed, 30 Jul 2025 22:42:43 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"34-rgcQKkV1nKYGFSw05zpRGrR3cEE\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 52,
+            "mimeType": "application/json",
+            "compression": 0
+          },
+          "redirectURL": "",
+          "headersSize": 827,
+          "bodySize": 52,
+          "_transferSize": 879,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "34.82.58.13",
+        "startedDateTime": "2025-07-30T22:42:42.396Z",
+        "time": 613.7800000316574,
+        "timings": {
+          "blocked": 3.510999957077205,
+          "dns": 0.012999999999999984,
+          "ssl": 151.605,
+          "connect": 221.426,
+          "send": 0.4939999999999998,
+          "wait": 387.4410000116974,
+          "receive": 0.8950000628829002,
+          "_blocked_queueing": 3.311999957077205,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "2814505",
+        "_initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "queryFn",
+                "scriptId": "2445",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/enhanced-user-analytics.tsx",
+                "lineNumber": 72,
+                "columnNumber": 24
+              },
+              {
+                "functionName": "fetchFn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 880,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "run",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 512,
+                "columnNumber": 48
+              },
+              {
+                "functionName": "start",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 554,
+                "columnNumber": 8
+              },
+              {
+                "functionName": "fetch",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 968,
+                "columnNumber": 40
+              },
+              {
+                "functionName": "executeFetch_fn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 2278,
+                "columnNumber": 50
+              },
+              {
+                "functionName": "onSubscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 1982,
+                "columnNumber": 73
+              },
+              {
+                "functionName": "subscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 23,
+                "columnNumber": 9
+              },
+              {
+                "functionName": "",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 3145,
+                "columnNumber": 55
+              },
+              {
+                "functionName": "subscribeToStore",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 11983,
+                "columnNumber": 17
+              },
+              {
+                "functionName": "commitHookEffectListMount",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 16914,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "commitPassiveMountOnFiber",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18155,
+                "columnNumber": 18
+              },
+              {
+                "functionName": "commitPassiveMountEffects_complete",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18128,
+                "columnNumber": 16
+              },
+              {
+                "functionName": "commitPassiveMountEffects_begin",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18118,
+                "columnNumber": 14
+              },
+              {
+                "functionName": "commitPassiveMountEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18108,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffectsImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19489,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19446,
+                "columnNumber": 21
+              },
+              {
+                "functionName": "commitRootImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19415,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "commitRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19276,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "performSyncWorkOnRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18894,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushSyncCallbacks",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 9118,
+                "columnNumber": 29
+              },
+              {
+                "functionName": "",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18626,
+                "columnNumber": 20
+              }
+            ]
+          }
+        },
+        "_priority": "High",
+        "_resourceType": "fetch",
+        "cache": {},
+        "connection": "5000",
+        "request": {
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/user-activity/logs?days=7",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.7"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/dashboard?section=user-management"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Sec-GPC",
+              "value": "1"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Brave\";v=\"138\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"macOS\""
+            }
+          ],
+          "queryString": [
+            {
+              "name": "days",
+              "value": "7"
+            }
+          ],
+          "cookies": [],
+          "headersSize": 807,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 500,
+          "statusText": "Internal Server Error",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Access-Control-Allow-Credentials",
+              "value": "true"
+            },
+            {
+              "name": "Access-Control-Allow-Headers",
+              "value": "Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma"
+            },
+            {
+              "name": "Access-Control-Allow-Methods",
+              "value": "GET,PUT,POST,DELETE,OPTIONS,PATCH"
+            },
+            {
+              "name": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "name": "Content-Length",
+              "value": "41"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "Date",
+              "value": "Wed, 30 Jul 2025 22:42:43 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"29-91X4QF84SD0aGpXLuk21bNDw3aI\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 41,
+            "mimeType": "application/json",
+            "compression": 0
+          },
+          "redirectURL": "",
+          "headersSize": 827,
+          "bodySize": 41,
+          "_transferSize": 868,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "34.82.58.13",
+        "startedDateTime": "2025-07-30T22:42:42.396Z",
+        "time": 764.8220000175014,
+        "timings": {
+          "blocked": 3.8410000109300015,
+          "dns": 0.0050000000000000044,
+          "ssl": 152.41199999999998,
+          "connect": 222.026,
+          "send": 0.18099999999998317,
+          "wait": 538.3410000071973,
+          "receive": 0.42799999937415123,
+          "_blocked_queueing": 3.6860000109300017,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "2814732",
+        "_initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "queryFn",
+                "scriptId": "2445",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/enhanced-user-analytics.tsx",
+                "lineNumber": 45,
+                "columnNumber": 24
+              },
+              {
+                "functionName": "fetchFn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 880,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "run",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 512,
+                "columnNumber": 48
+              },
+              {
+                "functionName": "start",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 554,
+                "columnNumber": 8
+              },
+              {
+                "functionName": "fetch",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 968,
+                "columnNumber": 40
+              },
+              {
+                "functionName": "executeFetch_fn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 2278,
+                "columnNumber": 50
+              },
+              {
+                "functionName": "onSubscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 1982,
+                "columnNumber": 73
+              },
+              {
+                "functionName": "subscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 23,
+                "columnNumber": 9
+              },
+              {
+                "functionName": "",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 3145,
+                "columnNumber": 55
+              },
+              {
+                "functionName": "subscribeToStore",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 11983,
+                "columnNumber": 17
+              },
+              {
+                "functionName": "commitHookEffectListMount",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 16914,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "commitPassiveMountOnFiber",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18155,
+                "columnNumber": 18
+              },
+              {
+                "functionName": "commitPassiveMountEffects_complete",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18128,
+                "columnNumber": 16
+              },
+              {
+                "functionName": "commitPassiveMountEffects_begin",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18118,
+                "columnNumber": 14
+              },
+              {
+                "functionName": "commitPassiveMountEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18108,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffectsImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19489,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19446,
+                "columnNumber": 21
+              },
+              {
+                "functionName": "commitRootImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19415,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "commitRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19276,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "performSyncWorkOnRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18894,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushSyncCallbacks",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 9118,
+                "columnNumber": 29
+              },
+              {
+                "functionName": "",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18626,
+                "columnNumber": 20
+              }
+            ]
+          }
+        },
+        "_priority": "High",
+        "_resourceType": "fetch",
+        "cache": {},
+        "connection": "5000",
+        "request": {
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/user-activity/enhanced-stats?days=7",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.7"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/dashboard?section=user-management"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Sec-GPC",
+              "value": "1"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Brave\";v=\"138\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"macOS\""
+            }
+          ],
+          "queryString": [
+            {
+              "name": "days",
+              "value": "7"
+            }
+          ],
+          "cookies": [],
+          "headersSize": 817,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 500,
+          "statusText": "Internal Server Error",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Access-Control-Allow-Credentials",
+              "value": "true"
+            },
+            {
+              "name": "Access-Control-Allow-Headers",
+              "value": "Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma"
+            },
+            {
+              "name": "Access-Control-Allow-Methods",
+              "value": "GET,PUT,POST,DELETE,OPTIONS,PATCH"
+            },
+            {
+              "name": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "name": "Content-Length",
+              "value": "47"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "Date",
+              "value": "Wed, 30 Jul 2025 22:42:55 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"2f-M0H7p6QOGYHhOEOgWFqZdZGBIQ8\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 47,
+            "mimeType": "application/json",
+            "compression": 0
+          },
+          "redirectURL": "",
+          "headersSize": 827,
+          "bodySize": 47,
+          "_transferSize": 874,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "34.82.58.13",
+        "startedDateTime": "2025-07-30T22:42:54.433Z",
+        "time": 927.2319999921768,
+        "timings": {
+          "blocked": 2.139000013820827,
+          "dns": 0.007000000000000117,
+          "ssl": 145.50599999999997,
+          "connect": 215.618,
+          "send": 0.2150000000000034,
+          "wait": 708.7880000464916,
+          "receive": 0.46499993186444044,
+          "_blocked_queueing": 0.965000013820827,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "2814714",
+        "_initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "queryFn",
+                "scriptId": "2445",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/enhanced-user-analytics.tsx",
+                "lineNumber": 56,
+                "columnNumber": 24
+              },
+              {
+                "functionName": "fetchFn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 880,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "run",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 512,
+                "columnNumber": 48
+              },
+              {
+                "functionName": "start",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 554,
+                "columnNumber": 8
+              },
+              {
+                "functionName": "fetch",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 968,
+                "columnNumber": 40
+              },
+              {
+                "functionName": "executeFetch_fn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 2278,
+                "columnNumber": 50
+              },
+              {
+                "functionName": "onSubscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 1982,
+                "columnNumber": 73
+              },
+              {
+                "functionName": "subscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 23,
+                "columnNumber": 9
+              },
+              {
+                "functionName": "",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 3145,
+                "columnNumber": 55
+              },
+              {
+                "functionName": "subscribeToStore",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 11983,
+                "columnNumber": 17
+              },
+              {
+                "functionName": "commitHookEffectListMount",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 16914,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "commitPassiveMountOnFiber",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18155,
+                "columnNumber": 18
+              },
+              {
+                "functionName": "commitPassiveMountEffects_complete",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18128,
+                "columnNumber": 16
+              },
+              {
+                "functionName": "commitPassiveMountEffects_begin",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18118,
+                "columnNumber": 14
+              },
+              {
+                "functionName": "commitPassiveMountEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18108,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffectsImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19489,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19446,
+                "columnNumber": 21
+              },
+              {
+                "functionName": "commitRootImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19415,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "commitRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19276,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "performSyncWorkOnRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18894,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushSyncCallbacks",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 9118,
+                "columnNumber": 29
+              },
+              {
+                "functionName": "",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18626,
+                "columnNumber": 20
+              }
+            ]
+          }
+        },
+        "_priority": "High",
+        "_resourceType": "fetch",
+        "cache": {},
+        "connection": "5000",
+        "request": {
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/user-activity/detailed-users?days=7",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.7"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/dashboard?section=user-management"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Sec-GPC",
+              "value": "1"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Brave\";v=\"138\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"macOS\""
+            }
+          ],
+          "queryString": [
+            {
+              "name": "days",
+              "value": "7"
+            }
+          ],
+          "cookies": [],
+          "headersSize": 817,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 500,
+          "statusText": "Internal Server Error",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Access-Control-Allow-Credentials",
+              "value": "true"
+            },
+            {
+              "name": "Access-Control-Allow-Headers",
+              "value": "Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma"
+            },
+            {
+              "name": "Access-Control-Allow-Methods",
+              "value": "GET,PUT,POST,DELETE,OPTIONS,PATCH"
+            },
+            {
+              "name": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "name": "Content-Length",
+              "value": "52"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "Date",
+              "value": "Wed, 30 Jul 2025 22:42:55 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"34-rgcQKkV1nKYGFSw05zpRGrR3cEE\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 52,
+            "mimeType": "application/json",
+            "compression": 0
+          },
+          "redirectURL": "",
+          "headersSize": 827,
+          "bodySize": 52,
+          "_transferSize": 879,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "34.82.58.13",
+        "startedDateTime": "2025-07-30T22:42:54.433Z",
+        "time": 843.8499999465421,
+        "timings": {
+          "blocked": 1.1530000483617187,
+          "dns": 0,
+          "ssl": 147.801,
+          "connect": 218.776,
+          "send": 0.6689999999999827,
+          "wait": 622.8700000162423,
+          "receive": 0.38199988193809986,
+          "_blocked_queueing": 1.1530000483617187,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      },
+      {
+        "_connectionId": "2814723",
+        "_initiator": {
+          "type": "script",
+          "stack": {
+            "callFrames": [
+              {
+                "functionName": "queryFn",
+                "scriptId": "2445",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/enhanced-user-analytics.tsx",
+                "lineNumber": 72,
+                "columnNumber": 24
+              },
+              {
+                "functionName": "fetchFn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 880,
+                "columnNumber": 13
+              },
+              {
+                "functionName": "run",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 512,
+                "columnNumber": 48
+              },
+              {
+                "functionName": "start",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 554,
+                "columnNumber": 8
+              },
+              {
+                "functionName": "fetch",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 968,
+                "columnNumber": 40
+              },
+              {
+                "functionName": "executeFetch_fn",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 2278,
+                "columnNumber": 50
+              },
+              {
+                "functionName": "onSubscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 1982,
+                "columnNumber": 73
+              },
+              {
+                "functionName": "subscribe",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 23,
+                "columnNumber": 9
+              },
+              {
+                "functionName": "",
+                "scriptId": "2302",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b",
+                "lineNumber": 3145,
+                "columnNumber": 55
+              },
+              {
+                "functionName": "subscribeToStore",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 11983,
+                "columnNumber": 17
+              },
+              {
+                "functionName": "commitHookEffectListMount",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 16914,
+                "columnNumber": 33
+              },
+              {
+                "functionName": "commitPassiveMountOnFiber",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18155,
+                "columnNumber": 18
+              },
+              {
+                "functionName": "commitPassiveMountEffects_complete",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18128,
+                "columnNumber": 16
+              },
+              {
+                "functionName": "commitPassiveMountEffects_begin",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18118,
+                "columnNumber": 14
+              },
+              {
+                "functionName": "commitPassiveMountEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18108,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffectsImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19489,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushPassiveEffects",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19446,
+                "columnNumber": 21
+              },
+              {
+                "functionName": "commitRootImpl",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19415,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "commitRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 19276,
+                "columnNumber": 12
+              },
+              {
+                "functionName": "performSyncWorkOnRoot",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18894,
+                "columnNumber": 10
+              },
+              {
+                "functionName": "flushSyncCallbacks",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 9118,
+                "columnNumber": 29
+              },
+              {
+                "functionName": "",
+                "scriptId": "2296",
+                "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=88ca342b",
+                "lineNumber": 18626,
+                "columnNumber": 20
+              }
+            ]
+          }
+        },
+        "_priority": "High",
+        "_resourceType": "fetch",
+        "cache": {},
+        "connection": "5000",
+        "request": {
+          "method": "GET",
+          "url": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/api/user-activity/logs?days=7",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.7"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Host",
+              "value": "bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000"
+            },
+            {
+              "name": "Referer",
+              "value": "https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/dashboard?section=user-management"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "same-origin"
+            },
+            {
+              "name": "Sec-GPC",
+              "value": "1"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Brave\";v=\"138\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"macOS\""
+            }
+          ],
+          "queryString": [
+            {
+              "name": "days",
+              "value": "7"
+            }
+          ],
+          "cookies": [],
+          "headersSize": 807,
+          "bodySize": 0
+        },
+        "response": {
+          "status": 500,
+          "statusText": "Internal Server Error",
+          "httpVersion": "HTTP/1.1",
+          "headers": [
+            {
+              "name": "Access-Control-Allow-Credentials",
+              "value": "true"
+            },
+            {
+              "name": "Access-Control-Allow-Headers",
+              "value": "Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma"
+            },
+            {
+              "name": "Access-Control-Allow-Methods",
+              "value": "GET,PUT,POST,DELETE,OPTIONS,PATCH"
+            },
+            {
+              "name": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "name": "Content-Length",
+              "value": "41"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "name": "Date",
+              "value": "Wed, 30 Jul 2025 22:42:55 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "W/\"29-91X4QF84SD0aGpXLuk21bNDw3aI\""
+            },
+            {
+              "name": "Replit-Cluster",
+              "value": "spock"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            },
+            {
+              "name": "X-Robots-Tag",
+              "value": "none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex"
+            }
+          ],
+          "cookies": [],
+          "content": {
+            "size": 41,
+            "mimeType": "application/json",
+            "compression": 0
+          },
+          "redirectURL": "",
+          "headersSize": 827,
+          "bodySize": 41,
+          "_transferSize": 868,
+          "_error": null,
+          "_fetchedViaServiceWorker": false
+        },
+        "serverIPAddress": "34.82.58.13",
+        "startedDateTime": "2025-07-30T22:42:54.433Z",
+        "time": 832.7280000085011,
+        "timings": {
+          "blocked": 1.5330000314861536,
+          "dns": 0,
+          "ssl": 148.13,
+          "connect": 218.675,
+          "send": 0.4579999999999984,
+          "wait": 611.6880000395774,
+          "receive": 0.3739999374374747,
+          "_blocked_queueing": 1.5330000314861536,
+          "_workerStart": -1,
+          "_workerReady": -1,
+          "_workerFetchStart": -1,
+          "_workerRespondWithSettled": -1
+        }
+      }
+    ]
+  }
+}
