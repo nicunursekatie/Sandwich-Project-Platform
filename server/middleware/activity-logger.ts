@@ -71,12 +71,47 @@ export function createActivityLogger(options: ActivityLoggerOptions) {
             let feature = 'Unknown';
             let page = req.path;
             
-            // Find the best matching route
+            // Find the best matching route with better pattern matching
             for (const [route, details] of Object.entries(routeToSectionAndFeature)) {
               if (req.path.startsWith(route)) {
                 section = details.section;
                 feature = details.feature;
                 break;
+              }
+            }
+
+            // Enhanced fallback mapping for unmatched paths
+            if (feature === 'Unknown') {
+              if (req.path.includes('enhanced-user-activity')) {
+                section = 'Analytics';
+                feature = 'User Analytics';
+              } else if (req.path.includes('detailed-users')) {
+                section = 'Analytics';
+                feature = 'User Details';
+              } else if (req.path.includes('enhanced-stats')) {
+                section = 'Analytics';
+                feature = 'System Statistics';
+              } else if (req.path.includes('/logs')) {
+                section = 'Analytics';
+                feature = 'Activity Logs';
+              } else if (req.path.includes('/dashboard')) {
+                section = 'Dashboard';
+                feature = 'Dashboard Navigation';
+              } else if (req.path.includes('/user-management')) {
+                section = 'Admin';
+                feature = 'User Management';
+              } else {
+                // Extract meaningful names from path
+                const pathParts = req.path.split('/').filter(part => part && part !== 'api');
+                if (pathParts.length > 0) {
+                  section = pathParts[0].charAt(0).toUpperCase() + pathParts[0].slice(1).replace('-', ' ');
+                  feature = pathParts.length > 1 
+                    ? pathParts[1].charAt(0).toUpperCase() + pathParts[1].slice(1).replace('-', ' ')
+                    : 'General Activity';
+                } else {
+                  section = 'Platform';
+                  feature = 'General Navigation';
+                }
               }
             }
 

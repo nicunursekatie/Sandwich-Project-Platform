@@ -38,19 +38,25 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
       // Calculate average actions per user
       const averageActionsPerUser = activeUsers > 0 ? totalActions / activeUsers : 0;
 
-      // Get top pages by actions
+      // Get top sections by actions (use section field for better names)
       const topSectionsResult = await db
         .select({
-          section: userActivityLogs.page,
+          section: userActivityLogs.section,
           actions: count()
         })
         .from(userActivityLogs)
-        .where(sql`${userActivityLogs.createdAt} >= ${startDate}`)
-        .groupBy(userActivityLogs.page)
+        .where(
+          and(
+            sql`${userActivityLogs.createdAt} >= ${startDate}`,
+            sql`${userActivityLogs.section} IS NOT NULL`,
+            sql`${userActivityLogs.section} != 'General'`
+          )
+        )
+        .groupBy(userActivityLogs.section)
         .orderBy(desc(count()))
-        .limit(5);
+        .limit(8);
 
-      // Get top features by usage
+      // Get top features by usage (exclude Unknown values)
       const topFeaturesResult = await db
         .select({
           feature: userActivityLogs.feature,
@@ -60,12 +66,13 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
         .where(
           and(
             sql`${userActivityLogs.createdAt} >= ${startDate}`,
-            sql`${userActivityLogs.feature} IS NOT NULL`
+            sql`${userActivityLogs.feature} IS NOT NULL`,
+            sql`${userActivityLogs.feature} != 'Unknown'`
           )
         )
         .groupBy(userActivityLogs.feature)
         .orderBy(desc(count()))
-        .limit(5);
+        .limit(8);
 
       // Get daily active users for trend analysis
       const dailyActiveUsersResult = await db

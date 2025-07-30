@@ -437,7 +437,7 @@ export default function EnhancedUserAnalytics() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {systemStats?.topFeatures?.slice(0, 6).map((feature, idx) => (
+                  {systemStats?.topFeatures?.filter(f => f.feature && f.feature !== 'Unknown').slice(0, 6).map((feature, idx) => (
                     <div key={idx} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className={`w-2 h-2 rounded-full ${
@@ -474,7 +474,7 @@ export default function EnhancedUserAnalytics() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {systemStats?.topSections?.slice(0, 6).map((section, idx) => (
+                  {systemStats?.topSections?.filter(s => s.section && s.section !== 'General' && s.section !== 'Unknown').slice(0, 6).map((section, idx) => (
                     <div key={idx} className="flex items-center justify-between">
                       <Badge className={getSectionColor(section.section)} variant="outline">
                         {section.section.replace('/api/', '').replace('/', '')}
