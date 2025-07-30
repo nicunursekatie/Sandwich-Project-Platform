@@ -291,9 +291,9 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-hidden flex flex-col space-y-6">
+        <div className="flex-1 overflow-auto space-y-6">
           {/* Role Selection */}
-          <div className="space-y-3 flex-shrink-0">
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
               <Label htmlFor="role">User Role</Label>
               <div className="flex gap-2">
@@ -340,8 +340,7 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
           </div>
 
           {/* Permission Categories */}
-          <ScrollArea className="flex-1 pr-4">
-            <div className="space-y-6">
+          <div className="space-y-6">
               {PERMISSION_GROUPS.map((category) => (
                 <Card key={category.id} className={`${getCardColorForType(category.type)}`}>
                   <CardHeader className="pb-3">
@@ -405,11 +404,10 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
                   </CardContent>
                 </Card>
               ))}
-            </div>
-          </ScrollArea>
+          </div>
 
           {/* Quick Actions & Permission Count */}
-          <div className="flex items-center justify-between pt-2 border-t flex-shrink-0">
+          <div className="flex items-center justify-between pt-2 border-t">
             <div className="flex items-center gap-2">
               <Badge variant="secondary">
                 {selectedPermissions.length} permissions selected
