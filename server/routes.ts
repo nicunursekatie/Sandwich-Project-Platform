@@ -26,6 +26,7 @@ import { createUserActivityRoutes } from "./routes/user-activity";
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
 import { requestLogger, errorLogger, logger } from "./middleware/logger";
+import { createActivityLogger } from "./middleware/activity-logger";
 import {
   insertProjectSchema,
   insertProjectTaskSchema,
@@ -338,6 +339,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Initialize with default admin user for persistent login
   await initializeTempAuth();
+
+  // Add activity logging middleware after authentication setup
+  app.use(createActivityLogger({ storage }));
 
   // Import and register signup routes
   const { signupRoutes } = await import("./routes/signup");

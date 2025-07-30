@@ -8,7 +8,7 @@ export function createUserActivityRoutes(storage: IStorage) {
   const router = Router();
 
   // Log user activity (authentication will be handled by parent router)
-  router.post("/", async (req, res) => {
+  router.post("/", async (req: any, res) => {
     try {
       const userId = req.user?.id;
       if (!userId) {
@@ -32,14 +32,15 @@ export function createUserActivityRoutes(storage: IStorage) {
   });
 
   // Get user activity stats (authentication will be handled by parent router)
-  router.get("/stats/:userId", async (req, res) => {
+  router.get("/stats/:userId", async (req: any, res) => {
     try {
       const { userId } = req.params;
       const days = parseInt(req.query.days as string) || 30;
 
       // Allow users to view their own stats or admins to view any stats
       const currentUserId = req.user?.id;
-      const hasAdminAccess = req.user?.permissions?.includes('manage_users');
+      const hasAdminAccess = req.user?.permissions?.includes('manage_users') || 
+                            req.user?.permissions?.includes('view_analytics');
       
       if (userId !== currentUserId && !hasAdminAccess) {
         return res.status(403).json({ error: "Access denied" });
@@ -54,9 +55,10 @@ export function createUserActivityRoutes(storage: IStorage) {
   });
 
   // Get all users activity summary (admin only)
-  router.get("/summary", async (req, res) => {
+  router.get("/summary", async (req: any, res) => {
     try {
-      const hasAdminAccess = req.user?.permissions?.includes('manage_users');
+      const hasAdminAccess = req.user?.permissions?.includes('manage_users') || 
+                            req.user?.permissions?.includes('view_analytics');
       if (!hasAdminAccess) {
         return res.status(403).json({ error: "Admin access required" });
       }

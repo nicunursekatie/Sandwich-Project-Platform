@@ -1599,7 +1599,130 @@ export class MemStorage implements IStorage {
   }
 
   async hasUserLikedMessage(messageId: number, userId: string): Promise<boolean> {
-    return false;
+    return false;  
+  }
+
+  // User Activity methods for MemStorage
+  private userActivityLogs: Map<number, any> = new Map();
+  private activityLogId = 1;
+  
+  async logUserActivity(activity: any): Promise<any> {
+    const newActivity = {
+      id: this.activityLogId++,
+      ...activity,
+      timestamp: activity.timestamp || new Date()
+    };
+    this.userActivityLogs.set(newActivity.id, newActivity);
+    return newActivity;
+  }
+
+  async getUserActivityStats(userId: string, days: number = 30): Promise<{
+    totalActions: number;
+    sectionsUsed: string[];
+    topActions: { action: string; count: number }[];
+    dailyActivity: { date: string; count: number }[];
+  }> {
+    const sinceDate = new Date();
+    sinceDate.setDate(sinceDate.getDate() - days);
+
+    const userActivities = Array.from(this.userActivityLogs.values())
+      .filter(activity => 
+        activity.userId === userId && 
+        new Date(activity.timestamp) >= sinceDate
+      );
+
+    const totalActions = userActivities.length;
+    const sectionsUsed = [...new Set(userActivities.map(a => a.section))];
+    
+    // Calculate top actions
+    const actionCounts: Record<string, number> = {};
+    userActivities.forEach(activity => {
+      actionCounts[activity.action] = (actionCounts[activity.action] || 0) + 1;
+    });
+    
+    const topActions = Object.entries(actionCounts)
+      .map(([action, count]) => ({ action, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    // Calculate daily activity
+    const dailyCounts: Record<string, number> = {};
+    userActivities.forEach(activity => {
+      const date = new Date(activity.timestamp).toISOString().split('T')[0];
+      dailyCounts[date] = (dailyCounts[date] || 0) + 1;
+    });
+
+    const dailyActivity = Object.entries(dailyCounts)
+      .map(([date, count]) => ({ date, count }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    return {
+      totalActions,
+      sectionsUsed,
+      topActions,
+      dailyActivity
+    };
+  }
+
+  async getAllUsersActivitySummary(days: number = 30): Promise<{
+    userId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    totalActions: number;
+    lastActive: Date | null;
+    topSection: string;
+  }[]> {
+    const sinceDate = new Date();
+    sinceDate.setDate(sinceDate.getDate() - days);
+
+    const userActivitySummary: Record<string, {
+      userId: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      totalActions: number;
+      lastActive: Date | null;
+      sections: Record<string, number>;
+    }> = {};
+
+    // Aggregate activity by user
+    Array.from(this.userActivityLogs.values())
+      .filter(activity => new Date(activity.timestamp) >= sinceDate)
+      .forEach(activity => {
+        if (!userActivitySummary[activity.userId]) {
+          // Get user info
+          const user = Array.from(this.users.values()).find(u => u.id === activity.userId);
+          userActivitySummary[activity.userId] = {
+            userId: activity.userId,
+            email: user?.email || '',
+            firstName: user?.firstName || '',
+            lastName: user?.lastName || '',
+            totalActions: 0,
+            lastActive: null,
+            sections: {}
+          };
+        }
+
+        const summary = userActivitySummary[activity.userId];
+        summary.totalActions++;
+        summary.lastActive = new Date(Math.max(
+          summary.lastActive?.getTime() || 0,
+          new Date(activity.timestamp).getTime()
+        ));
+        summary.sections[activity.section] = (summary.sections[activity.section] || 0) + 1;
+      });
+
+    return Object.values(userActivitySummary).map(summary => ({
+      userId: summary.userId,
+      email: summary.email,
+      firstName: summary.firstName,
+      lastName: summary.lastName,
+      totalActions: summary.totalActions,
+      lastActive: summary.lastActive,
+      topSection: Object.entries(summary.sections)
+        .sort(([,a], [,b]) => b - a)[0]?.[0] || 'none'
+    }));
   }
 }
 
