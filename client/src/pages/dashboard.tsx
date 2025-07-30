@@ -16,6 +16,7 @@ import { DocumentsBrowser } from "@/components/documents-browser";
 import PhoneDirectoryFixed from "@/components/phone-directory-fixed";
 import BulkDataManager from "@/components/bulk-data-manager";
 import AnalyticsDashboard from "@/components/analytics-dashboard";
+import EnhancedUserAnalytics from "@/components/enhanced-user-analytics";
 import Development from "@/pages/development";
 import UnifiedMeetings from "@/components/unified-meetings";
 import RoleDemo from "@/pages/role-demo";
@@ -201,15 +202,19 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
               <p className="font-body text-muted-foreground">Data insights and impact visualization</p>
             </div>
             <Tabs defaultValue="data" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 h-9 sm:h-10">
+              <TabsList className="grid w-full grid-cols-3 h-9 sm:h-10">
                 <TabsTrigger value="data" className="text-xs sm:text-sm">Data Analytics</TabsTrigger>
                 <TabsTrigger value="impact" className="text-xs sm:text-sm">Impact Dashboard</TabsTrigger>
+                <TabsTrigger value="behavior" className="text-xs sm:text-sm">User Analytics</TabsTrigger>
               </TabsList>
               <TabsContent value="data" className="mt-6">
                 <AnalyticsDashboard />
               </TabsContent>
               <TabsContent value="impact" className="mt-6">
                 <ImpactDashboard />
+              </TabsContent>
+              <TabsContent value="behavior" className="mt-6">
+                <EnhancedUserAnalytics />
               </TabsContent>
             </Tabs>
           </div>

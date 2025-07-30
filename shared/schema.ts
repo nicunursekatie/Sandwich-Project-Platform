@@ -59,11 +59,14 @@ export const userActivityLogs = pgTable("user_activity_logs", {
   ipAddress: varchar("ip_address"),
   userAgent: text("user_agent"),
   duration: integer("duration"), // Time spent on action in seconds
-  timestamp: timestamp("timestamp").defaultNow().notNull(),
+  page: varchar("page"), // Specific page or route visited
+  feature: varchar("feature"), // Specific feature used (button clicked, form submitted, etc.)
+  metadata: jsonb("metadata").default('{}'), // Additional context data
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => ({
   userActionIdx: index("idx_user_activity_user_action").on(table.userId, table.action),
-  sectionTimeIdx: index("idx_user_activity_section_time").on(table.section, table.timestamp),
-  userTimeIdx: index("idx_user_activity_user_time").on(table.userId, table.timestamp),
+  sectionTimeIdx: index("idx_user_activity_section_time").on(table.section, table.createdAt),
+  userTimeIdx: index("idx_user_activity_user_time").on(table.userId, table.createdAt),
 }));
 
 // Chat messages table for real-time chat system
@@ -988,7 +991,7 @@ export const insertStreamThreadSchema = createInsertSchema(streamThreads).omit({
 // User activity tracking schemas
 export const insertUserActivityLogSchema = createInsertSchema(userActivityLogs).omit({
   id: true,
-  timestamp: true
+  createdAt: true
 });
 
 export type UserActivityLog = typeof userActivityLogs.$inferSelect;

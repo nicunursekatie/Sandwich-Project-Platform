@@ -256,7 +256,7 @@ export interface IStorage {
   getShoutoutHistory(): Promise<any[]>;
 
   // User Activity methods
-  logUserActivity(activity: any): Promise<any>;
+  logUserActivity(activity: InsertUserActivityLog): Promise<UserActivityLog>;
   getUserActivityStats(userId: string, days?: number): Promise<{
     totalActions: number;
     sectionsUsed: string[];
@@ -1449,7 +1449,7 @@ export class MemStorage implements IStorage {
     const log: UserActivityLog = {
       id,
       ...activity,
-      timestamp: new Date()
+      createdAt: new Date()
     };
     // Store in temporary memory for demo purposes
     return log;

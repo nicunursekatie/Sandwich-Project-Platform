@@ -1,0 +1,477 @@
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { 
+  Activity, 
+  Calendar, 
+  Clock, 
+  Eye, 
+  TrendingUp, 
+  User, 
+  Users, 
+  MousePointer, 
+  FileText, 
+  MessageSquare,
+  BarChart3,
+  Target
+} from "lucide-react";
+import { formatDistanceToNow, format } from "date-fns";
+
+// Enhanced interfaces for granular user behavior tracking
+interface DetailedUserActivity {
+  userId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  totalActions: number;
+  lastActive: Date | null;
+  topSection: string;
+  topFeature: string;
+  timeSpent: number; // in minutes
+  sessionsCount: number;
+  featuresUsed: string[];
+  sectionBreakdown: { section: string; actions: number; timeSpent: number }[];
+}
+
+interface ActivityStats {
+  totalActions: number;
+  sectionsUsed: string[];
+  topActions: { action: string; count: number }[];
+  dailyActivity: { date: string; count: number }[];
+  featureUsage: { feature: string; count: number; avgDuration: number }[];
+  sectionBreakdown: { section: string; actions: number; timeSpent: number }[];
+  peakUsageTimes: { hour: number; count: number }[];
+}
+
+interface ActivityLog {
+  id: number;
+  userId: string;
+  userName: string;
+  action: string;
+  section: string;
+  feature: string;
+  page: string;
+  duration: number;
+  createdAt: string;
+  metadata: any;
+}
+
+interface SystemStats {
+  totalUsers: number;
+  activeUsers: number;
+  totalActions: number;
+  averageActionsPerUser: number;
+  topSections: { section: string; actions: number }[];
+  topFeatures: { feature: string; usage: number }[];
+  dailyActiveUsers: { date: string; users: number }[];
+}
+
+export default function EnhancedUserAnalytics() {
+  const [selectedTimeframe, setSelectedTimeframe] = useState('7');
+  const [selectedUser, setSelectedUser] = useState<string>('all');
+  const [activityFilter, setActivityFilter] = useState<string>('all');
+  const [activeTab, setActiveTab] = useState('overview');
+
+  // System-wide analytics
+  const { data: systemStats, isLoading: isLoadingStats } = useQuery<SystemStats>({
+    queryKey: ['/api/user-activity/enhanced-stats', selectedTimeframe],
+    queryFn: async () => {
+      const res = await fetch(`/api/user-activity/enhanced-stats?days=${selectedTimeframe}`, {
+        credentials: 'include'
+      });
+      if (!res.ok) throw new Error('Failed to fetch system stats');
+      return res.json();
+    },
+    staleTime: 60000,
+  });
+
+  // Detailed user activities
+  const { data: detailedActivities, isLoading: isLoadingUsers } = useQuery<DetailedUserActivity[]>({
+    queryKey: ['/api/user-activity/detailed-users', selectedTimeframe],
+    queryFn: async () => {
+      const res = await fetch(`/api/user-activity/detailed-users?days=${selectedTimeframe}`, {
+        credentials: 'include'
+      });
+      if (!res.ok) throw new Error('Failed to fetch user activities');
+      return res.json();
+    },
+    staleTime: 30000,
+  });
+
+  // Activity logs for detailed view
+  const { data: activityLogs, isLoading: isLoadingLogs } = useQuery<ActivityLog[]>({
+    queryKey: ['/api/user-activity/logs', selectedUser, activityFilter, selectedTimeframe],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        days: selectedTimeframe,
+        ...(selectedUser !== 'all' && { userId: selectedUser }),
+        ...(activityFilter !== 'all' && { action: activityFilter })
+      });
+      const res = await fetch(`/api/user-activity/logs?${params}`, {
+        credentials: 'include'
+      });
+      if (!res.ok) throw new Error('Failed to fetch activity logs');
+      return res.json();
+    },
+    staleTime: 15000,
+  });
+
+  // Individual user stats
+  const { data: userStats, isLoading: isLoadingUserStats } = useQuery<ActivityStats>({
+    queryKey: ['/api/user-activity/user-stats', selectedUser, selectedTimeframe],
+    queryFn: async () => {
+      const res = await fetch(`/api/user-activity/user-stats/${selectedUser}?days=${selectedTimeframe}`, {
+        credentials: 'include'
+      });
+      if (!res.ok) throw new Error('Failed to fetch user stats');
+      return res.json();
+    },
+    enabled: selectedUser !== 'all',
+    staleTime: 30000,
+  });
+
+  const getSectionColor = (section: string) => {
+    const colors: Record<string, string> = {
+      'Dashboard': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+      'Collections': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      'Communication': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+      'Directory': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+      'Projects': 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200',
+      'Analytics': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+      'Admin': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+      'Meetings': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+    };
+    return colors[section] || 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200';
+  };
+
+  const getActionIcon = (action: string) => {
+    switch (action) {
+      case 'View': return <Eye className="h-4 w-4" />;
+      case 'Create': return <FileText className="h-4 w-4" />;
+      case 'Update': return <MousePointer className="h-4 w-4" />;
+      case 'Delete': return <Target className="h-4 w-4" />;
+      default: return <Activity className="h-4 w-4" />;
+    }
+  };
+
+  if (isLoadingStats || isLoadingUsers) {
+    return (
+      <div className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <div className="h-4 bg-gray-200 rounded w-20"></div>
+                <div className="h-4 w-4 bg-gray-200 rounded"></div>
+              </CardHeader>
+              <CardContent>
+                <div className="h-8 bg-gray-200 rounded w-16 mb-1"></div>
+                <div className="h-3 bg-gray-200 rounded w-24"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Controls */}
+      <div className="flex flex-wrap gap-4 items-center">
+        <Select value={selectedTimeframe} onValueChange={setSelectedTimeframe}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select timeframe" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="1">Last 24 hours</SelectItem>
+            <SelectItem value="7">Last 7 days</SelectItem>
+            <SelectItem value="30">Last 30 days</SelectItem>
+            <SelectItem value="90">Last 90 days</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedUser} onValueChange={setSelectedUser}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Select user" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Users</SelectItem>
+            {detailedActivities?.map((user) => (
+              <SelectItem key={user.userId} value={user.userId}>
+                {user.firstName && user.lastName 
+                  ? `${user.firstName} ${user.lastName}` 
+                  : user.email}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Button 
+          variant="outline" 
+          onClick={() => window.location.reload()}
+          className="flex items-center gap-2"
+        >
+          <TrendingUp className="h-4 w-4" />
+          Refresh Data
+        </Button>
+      </div>
+
+      {/* Overview Stats Cards */}
+      {systemStats && (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{systemStats.totalUsers}</div>
+              <p className="text-xs text-muted-foreground">
+                {systemStats.activeUsers} active in timeframe
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Actions</CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{systemStats.totalActions.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">
+                {Math.round(systemStats.averageActionsPerUser)} avg per user
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Top Section</CardTitle>
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {systemStats.topSections?.[0]?.section || 'N/A'}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {systemStats.topSections?.[0]?.actions || 0} actions
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Top Feature</CardTitle>
+              <Target className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-xl font-bold">
+                {systemStats.topFeatures?.[0]?.feature || 'N/A'}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {systemStats.topFeatures?.[0]?.usage || 0} uses
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Detailed Analytics Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="overview">User Overview</TabsTrigger>
+          <TabsTrigger value="activity">Activity Logs</TabsTrigger>
+          <TabsTrigger value="behavior">Behavior Analysis</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>User Activity Summary</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[600px]">
+                <div className="space-y-4">
+                  {detailedActivities?.map((user) => (
+                    <div key={user.userId} className="border rounded-lg p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-[#236383] text-white rounded-full flex items-center justify-center text-sm font-medium">
+                            {user.firstName?.[0] || user.email[0].toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="font-medium">
+                              {user.firstName && user.lastName 
+                                ? `${user.firstName} ${user.lastName}` 
+                                : user.email}
+                            </p>
+                            <p className="text-sm text-muted-foreground">{user.email}</p>
+                          </div>
+                        </div>
+                        <Badge variant="secondary">
+                          {user.totalActions} actions
+                        </Badge>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div>
+                          <p className="text-muted-foreground">Top Section</p>
+                          <Badge className={getSectionColor(user.topSection)}>
+                            {user.topSection}
+                          </Badge>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground">Top Feature</p>
+                          <p className="font-medium">{user.topFeature}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground">Time Spent</p>
+                          <p className="font-medium">{Math.round(user.timeSpent)} min</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground">Last Active</p>
+                          <p className="font-medium">
+                            {user.lastActive 
+                              ? formatDistanceToNow(new Date(user.lastActive), { addSuffix: true })
+                              : 'Never'
+                            }
+                          </p>
+                        </div>
+                      </div>
+
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-2">Features Used</p>
+                        <div className="flex flex-wrap gap-1">
+                          {user.featuresUsed.slice(0, 5).map((feature, idx) => (
+                            <Badge key={idx} variant="outline" className="text-xs">
+                              {feature}
+                            </Badge>
+                          ))}
+                          {user.featuresUsed.length > 5 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{user.featuresUsed.length - 5} more
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="activity" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activity Log</CardTitle>
+              <div className="flex gap-2">
+                <Select value={activityFilter} onValueChange={setActivityFilter}>
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder="Filter by action" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Actions</SelectItem>
+                    <SelectItem value="View">View</SelectItem>
+                    <SelectItem value="Create">Create</SelectItem>
+                    <SelectItem value="Update">Update</SelectItem>
+                    <SelectItem value="Delete">Delete</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[600px]">
+                <div className="space-y-2">
+                  {activityLogs?.map((log) => (
+                    <div key={log.id} className="flex items-center gap-3 p-3 border rounded-lg">
+                      <div className="flex items-center gap-2">
+                        {getActionIcon(log.action)}
+                        <Badge variant="outline">{log.action}</Badge>
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">{log.userName || 'Unknown User'}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {log.feature} in {log.section}
+                          {log.page && ` (${log.page})`}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium">
+                          {format(new Date(log.createdAt), 'MMM dd, HH:mm')}
+                        </p>
+                        {log.duration && (
+                          <p className="text-xs text-muted-foreground">
+                            {log.duration}s duration
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="behavior" className="space-y-4">
+          {selectedUser !== 'all' && userStats && (
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Feature Usage Breakdown</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {userStats.featureUsage?.slice(0, 10).map((feature, idx) => (
+                      <div key={idx} className="flex items-center justify-between">
+                        <span className="text-sm">{feature.feature}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">{feature.count}x</span>
+                          <span className="text-xs text-muted-foreground">
+                            avg {Math.round(feature.avgDuration)}s
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Section Activity</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {userStats.sectionBreakdown?.map((section, idx) => (
+                      <div key={idx} className="flex items-center justify-between">
+                        <Badge className={getSectionColor(section.section)}>
+                          {section.section}
+                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">{section.actions} actions</span>
+                          <span className="text-xs text-muted-foreground">
+                            {Math.round(section.timeSpent)}min
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}

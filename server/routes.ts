@@ -22,6 +22,7 @@ import chatRoutes from "./routes/chat-simple";
 import emailRoutes from "./routes/email-routes";
 import shoutoutRoutes from "./routes/shoutouts";
 import { createUserActivityRoutes } from "./routes/user-activity";
+import { createEnhancedUserActivityRoutes } from "./routes/enhanced-user-activity";
 
 // import { generalRateLimit, strictRateLimit, uploadRateLimit, clearRateLimit } from "./middleware/rateLimiter";
 import { sanitizeMiddleware } from "./middleware/sanitizer";
@@ -7790,6 +7791,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Register user activity tracking routes with authentication
   app.use("/api/user-activity", isAuthenticated, createUserActivityRoutes(storage));
+  
+  // Register enhanced user activity analytics routes
+  app.use("/api/user-activity", createEnhancedUserActivityRoutes(storage));
 
   // Register real-time messages routes
   const { default: realTimeMessagesRoutes } = await import("./routes/real-time-messages");
