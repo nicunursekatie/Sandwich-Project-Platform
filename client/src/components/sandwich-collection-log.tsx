@@ -149,6 +149,7 @@ export default function SandwichCollectionLog() {
     "/api/sandwich-collections", 
     needsAllData ? "all" : currentPage, 
     needsAllData ? "all" : itemsPerPage, 
+    currentPage, // Always include current page for proper cache keying
     debouncedSearchFilters, 
     sortConfig
   ], [needsAllData, currentPage, itemsPerPage, debouncedSearchFilters, sortConfig]);
