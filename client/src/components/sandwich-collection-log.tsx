@@ -131,6 +131,7 @@ export default function SandwichCollectionLog() {
   // Debounce search filters to prevent excessive queries
   useEffect(() => {
     const timeoutId = setTimeout(() => {
+      console.log('Setting debounced filters:', searchFilters);
       setDebouncedSearchFilters(searchFilters);
     }, 500); // Wait 500ms after user stops typing
 
@@ -156,11 +157,13 @@ export default function SandwichCollectionLog() {
     queryKey,
     queryFn: useCallback(async () => {
       if (needsAllData) {
+        console.log('Fetching all data for filtering with filters:', debouncedSearchFilters);
         const response = await fetch('/api/sandwich-collections?limit=10000');
         if (!response.ok) throw new Error('Failed to fetch collections');
         const data = await response.json();
         
         let filteredCollections = data.collections || [];
+        console.log('Initial collections count:', filteredCollections.length);
         
         // Apply filters using debounced values
         if (debouncedSearchFilters.hostName) {
@@ -171,26 +174,34 @@ export default function SandwichCollectionLog() {
         }
         
         if (debouncedSearchFilters.collectionDateFrom) {
+          const fromDate = new Date(debouncedSearchFilters.collectionDateFrom);
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
-            c.collectionDate >= debouncedSearchFilters.collectionDateFrom
+            new Date(c.collectionDate) >= fromDate
           );
         }
         
         if (debouncedSearchFilters.collectionDateTo) {
+          const toDate = new Date(debouncedSearchFilters.collectionDateTo);
+          // Add 23:59:59 to include the entire day
+          toDate.setHours(23, 59, 59, 999);
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
-            c.collectionDate <= debouncedSearchFilters.collectionDateTo
+            new Date(c.collectionDate) <= toDate
           );
         }
         
         if (debouncedSearchFilters.createdAtFrom) {
+          const fromDate = new Date(debouncedSearchFilters.createdAtFrom);
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
-            new Date(c.submittedAt) >= new Date(debouncedSearchFilters.createdAtFrom)
+            new Date(c.submittedAt) >= fromDate
           );
         }
         
         if (debouncedSearchFilters.createdAtTo) {
+          const toDate = new Date(debouncedSearchFilters.createdAtTo);
+          // Add 23:59:59 to include the entire day
+          toDate.setHours(23, 59, 59, 999);
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
-            new Date(c.submittedAt) <= new Date(debouncedSearchFilters.createdAtTo)
+            new Date(c.submittedAt) <= toDate
           );
         }
         
@@ -1052,7 +1063,12 @@ export default function SandwichCollectionLog() {
   };
 
   const handleFilterChange = (filterUpdates: Partial<typeof searchFilters>) => {
-    setSearchFilters(prev => ({ ...prev, ...filterUpdates }));
+    console.log('Filter change:', filterUpdates);
+    setSearchFilters(prev => {
+      const newFilters = { ...prev, ...filterUpdates };
+      console.log('New search filters:', newFilters);
+      return newFilters;
+    });
     setCurrentPage(1);
   };
 
