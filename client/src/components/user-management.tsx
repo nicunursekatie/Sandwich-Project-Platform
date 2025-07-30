@@ -19,7 +19,7 @@ import AnnouncementManager from "@/components/announcement-manager";
 import AuthDebug from "@/components/auth-debug";
 import { SimplePermissionsDialog } from "@/components/simple-permissions-dialog";
 import ShoutoutSystem from "@/components/shoutout-system";
-import UserActivityAnalytics from "@/components/user-activity-analytics";
+import EnhancedUserAnalytics from "@/components/enhanced-user-analytics";
 
 interface User {
   id: string;
@@ -278,7 +278,7 @@ export default function UserManagement() {
       {activeTab === "announcements" ? (
         <AnnouncementManager />
       ) : activeTab === "activity" ? (
-        <UserActivityAnalytics />
+        <EnhancedUserAnalytics />
       ) : activeTab === "shoutouts" ? (
         <ShoutoutSystem />
       ) : activeTab === "auth-debug" ? (

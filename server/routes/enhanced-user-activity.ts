@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { isAuthenticated } from '../middleware/auth.js';
+import { isAuthenticated } from '../temp-auth';
 import { IStorage } from '../storage.js';
 import { sql, eq, and, desc, asc, count } from 'drizzle-orm';
 
