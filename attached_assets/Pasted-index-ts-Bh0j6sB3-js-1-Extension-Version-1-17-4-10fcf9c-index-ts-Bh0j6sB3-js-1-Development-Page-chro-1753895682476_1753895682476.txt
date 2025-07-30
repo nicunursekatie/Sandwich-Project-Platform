@@ -1,0 +1,63 @@
+index.ts-Bh0j6sB3.js:1 Extension Version 1.17.4 10fcf9c
+index.ts-Bh0j6sB3.js:1 Development Page chrome-extension://amcccnldajjnngnaoinemnaloklogjak/src/pages/dev/index.html
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=s0qgWJ6itegD' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=s0qgWJ6itegD' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+message-notifications.tsx:98 Connecting to WebSocket at: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/notifications
+dashboard.tsx:62 Current URL location: /
+dashboard.tsx:84 Dashboard activeSection changed to: dashboard
+useMessaging.ts:239 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ useMessaging.ts:239
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+message-notifications.tsx:110 WebSocket connected successfully
+useMessaging.ts:274 Messaging WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+overrideMethod @ hook.js:608
+ws.onerror @ useMessaging.ts:274
+useMessaging.ts:278 Messaging WebSocket disconnected
+simple-nav.tsx:191 Navigation click: collections
+dashboard.tsx:419 Dashboard setActiveSection called with: collections
+dashboard.tsx:62 Current URL location: /dashboard
+dashboard.tsx:84 Dashboard activeSection changed to: collections
+sandwich-collection-log.tsx:134 Setting debounced filters: {hostName: '', collectionDateFrom: '', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:160 Fetching all data for filtering with filters: {hostName: '', collectionDateFrom: '', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:166 Initial collections count: 1639
+sandwich-collection-log.tsx:1066 Filter change: {hostName: 'e'}
+sandwich-collection-log.tsx:1069 New search filters: {hostName: 'e', collectionDateFrom: '', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:1066 Filter change: {hostName: 'ea'}
+sandwich-collection-log.tsx:1069 New search filters: {hostName: 'ea', collectionDateFrom: '', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:1066 Filter change: {hostName: 'eas'}
+sandwich-collection-log.tsx:1069 New search filters: {hostName: 'eas', collectionDateFrom: '', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:1066 Filter change: {hostName: 'east'}
+sandwich-collection-log.tsx:1069 New search filters: {hostName: 'east', collectionDateFrom: '', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:134 Setting debounced filters: {hostName: 'east', collectionDateFrom: '', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:160 Fetching all data for filtering with filters: {hostName: 'east', collectionDateFrom: '', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:166 Initial collections count: 1639
+sandwich-collection-log.tsx:1066 Filter change: {collectionDateFrom: '0002-01-02'}
+sandwich-collection-log.tsx:1069 New search filters: {hostName: 'east', collectionDateFrom: '0002-01-02', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:1066 Filter change: {collectionDateFrom: '0020-01-02'}
+sandwich-collection-log.tsx:1069 New search filters: {hostName: 'east', collectionDateFrom: '0020-01-02', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:1066 Filter change: {collectionDateFrom: '0202-01-02'}
+sandwich-collection-log.tsx:1069 New search filters: {hostName: 'east', collectionDateFrom: '0202-01-02', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:1066 Filter change: {collectionDateFrom: '2022-01-02'}
+sandwich-collection-log.tsx:1069 New search filters: {hostName: 'east', collectionDateFrom: '2022-01-02', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:134 Setting debounced filters: {hostName: 'east', collectionDateFrom: '2022-01-02', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:160 Fetching all data for filtering with filters: {hostName: 'east', collectionDateFrom: '2022-01-02', collectionDateTo: '', createdAtFrom: '', createdAtTo: ''}
+sandwich-collection-log.tsx:166 Initial collections count: 1639

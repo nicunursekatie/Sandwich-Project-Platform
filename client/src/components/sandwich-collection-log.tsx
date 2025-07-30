@@ -220,7 +220,17 @@ export default function SandwichCollectionLog() {
         
         // Apply pagination
         const startIndex = (currentPage - 1) * itemsPerPage;
-        const paginatedResults = filteredCollections.slice(startIndex, startIndex + itemsPerPage);
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedResults = filteredCollections.slice(startIndex, endIndex);
+        
+        console.log('Pagination debug:', {
+          currentPage,
+          itemsPerPage,
+          startIndex,
+          endIndex,
+          totalFiltered: filteredCollections.length,
+          resultCount: paginatedResults.length
+        });
         
         return {
           collections: paginatedResults,
