@@ -11,10 +11,10 @@ import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 export default function WorkLogPage() {
   const { user } = useAuth();
 
-  // Check permissions
+  // Simplified permissions: CREATE_WORK_LOGS automatically includes edit/delete own permissions
   const canCreateLogs = hasPermission(user, PERMISSIONS.CREATE_WORK_LOGS);
-  const canEditOwnLogs = hasPermission(user, PERMISSIONS.EDIT_OWN_WORK_LOGS);
-  const canDeleteOwnLogs = hasPermission(user, PERMISSIONS.DELETE_OWN_WORK_LOGS);
+  const canEditOwnLogs = hasPermission(user, PERMISSIONS.CREATE_WORK_LOGS); // Automatically included
+  const canDeleteOwnLogs = hasPermission(user, PERMISSIONS.CREATE_WORK_LOGS); // Automatically included
   const canViewAllLogs = hasPermission(user, PERMISSIONS.VIEW_ALL_WORK_LOGS);
   const canEditAllLogs = hasPermission(user, PERMISSIONS.EDIT_ALL_WORK_LOGS);
   const canDeleteAllLogs = hasPermission(user, PERMISSIONS.DELETE_ALL_WORK_LOGS);

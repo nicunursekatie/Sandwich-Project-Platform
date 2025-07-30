@@ -56,8 +56,9 @@ export default function SandwichCollectionLog() {
   const canCreateCollections = hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS);
   const canEditAllCollections = hasPermission(user, PERMISSIONS.EDIT_ALL_COLLECTIONS);
   const canDeleteAllCollections = hasPermission(user, PERMISSIONS.DELETE_ALL_COLLECTIONS);
-  const canEditData = hasPermission(user, PERMISSIONS.EDIT_OWN_COLLECTIONS) || hasPermission(user, PERMISSIONS.EDIT_ALL_COLLECTIONS);
-  const canDeleteData = hasPermission(user, PERMISSIONS.DELETE_OWN_COLLECTIONS) || hasPermission(user, PERMISSIONS.DELETE_ALL_COLLECTIONS);
+  // Simplified approach: CREATE_COLLECTIONS automatically includes edit/delete own permissions
+  const canEditData = hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.EDIT_ALL_COLLECTIONS);
+  const canDeleteData = hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.DELETE_ALL_COLLECTIONS);
   const [editingCollection, setEditingCollection] = useState<SandwichCollection | null>(null);
   const [showDuplicateAnalysis, setShowDuplicateAnalysis] = useState(false);
   const [duplicateAnalysis, setDuplicateAnalysis] = useState<DuplicateAnalysis | null>(null);

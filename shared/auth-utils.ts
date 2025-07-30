@@ -48,33 +48,25 @@ export const PERMISSIONS = {
   MANAGE_SUGGESTIONS: 'manage_suggestions',
   SUBMIT_SUGGESTIONS: 'submit_suggestions',
   
-  // Suggestions ownership permissions - similar to projects/collections pattern
-  CREATE_SUGGESTIONS: 'create_suggestions', // Create new suggestions + edit/delete own suggestions
-  EDIT_OWN_SUGGESTIONS: 'edit_own_suggestions', // Edit suggestions you created
-  DELETE_OWN_SUGGESTIONS: 'delete_own_suggestions', // Delete suggestions you created  
+  // Simplified suggestions permissions - CREATE automatically includes edit/delete own
+  CREATE_SUGGESTIONS: 'create_suggestions', // Create new suggestions + automatically edit/delete own suggestions
   EDIT_ALL_SUGGESTIONS: 'edit_all_suggestions', // Edit any suggestion (admin level)
   DELETE_ALL_SUGGESTIONS: 'delete_all_suggestions', // Delete any suggestion (admin level)
   
   MANAGE_COLLECTIONS: 'manage_collections',
   
-  // Project permissions - improved hierarchical structure
-  CREATE_PROJECTS: 'create_projects', // Create new projects + edit/delete own projects + edit projects where listed as owner
+  // Simplified project permissions - CREATE automatically includes edit/delete own + assigned projects
+  CREATE_PROJECTS: 'create_projects', // Create new projects + automatically edit/delete own projects + edit assigned projects
   EDIT_ALL_PROJECTS: 'edit_all_projects', // Edit any project regardless of ownership
   DELETE_ALL_PROJECTS: 'delete_all_projects', // Delete any project regardless of ownership
   
-  // Collection permissions  
-  CREATE_COLLECTIONS: 'create_collections',
-  EDIT_OWN_COLLECTIONS: 'edit_own_collections',
-  DELETE_OWN_COLLECTIONS: 'delete_own_collections',
-  EDIT_ALL_COLLECTIONS: 'edit_all_collections',
-  DELETE_ALL_COLLECTIONS: 'delete_all_collections',
+  // Simplified collection permissions - CREATE automatically includes edit/delete own
+  CREATE_COLLECTIONS: 'create_collections', // Create new collections + automatically edit/delete own collections
+  EDIT_ALL_COLLECTIONS: 'edit_all_collections', // Edit any collection regardless of ownership
+  DELETE_ALL_COLLECTIONS: 'delete_all_collections', // Delete any collection regardless of ownership
   
-  // Work log permissions
-  CREATE_WORK_LOGS: 'create_work_logs',
-  
-  // Work log specific permissions
-  EDIT_OWN_WORK_LOGS: 'edit_own_work_logs',
-  DELETE_OWN_WORK_LOGS: 'delete_own_work_logs',
+  // Simplified work log permissions - CREATE automatically includes edit/delete own
+  CREATE_WORK_LOGS: 'create_work_logs', // Create new work logs + automatically edit/delete own work logs
   VIEW_ALL_WORK_LOGS: 'view_all_work_logs',
   EDIT_ALL_WORK_LOGS: 'edit_all_work_logs',
   DELETE_ALL_WORK_LOGS: 'delete_all_work_logs',
@@ -369,6 +361,34 @@ export function canDeleteSuggestion(user: any, suggestion: any): boolean {
   // Users with CREATE_SUGGESTIONS can delete suggestions they created
   if (user.permissions.includes(PERMISSIONS.CREATE_SUGGESTIONS) && 
       (suggestion?.createdBy === user.id || suggestion?.created_by === user.id || suggestion?.submittedBy === user.id)) return true;
+  
+  return false;
+}
+
+// Function to check if user can edit a specific work log entry
+export function canEditWorkLog(user: any, workLog: any): boolean {
+  if (!user || !user.permissions) return false;
+  
+  // Super admins and users with EDIT_ALL_WORK_LOGS can edit all work logs
+  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.EDIT_ALL_WORK_LOGS)) return true;
+  
+  // Users with CREATE_WORK_LOGS can edit work logs they created
+  if (user.permissions.includes(PERMISSIONS.CREATE_WORK_LOGS) && 
+      (workLog?.createdBy === user.id || workLog?.created_by === user.id || workLog?.userId === user.id)) return true;
+  
+  return false;
+}
+
+// Function to check if user can delete a specific work log entry
+export function canDeleteWorkLog(user: any, workLog: any): boolean {
+  if (!user || !user.permissions) return false;
+  
+  // Super admins and users with DELETE_ALL_WORK_LOGS can delete all work logs
+  if (user.role === 'super_admin' || user.permissions.includes(PERMISSIONS.DELETE_ALL_WORK_LOGS)) return true;
+  
+  // Users with CREATE_WORK_LOGS can delete work logs they created
+  if (user.permissions.includes(PERMISSIONS.CREATE_WORK_LOGS) && 
+      (workLog?.createdBy === user.id || workLog?.created_by === user.id || workLog?.userId === user.id)) return true;
   
   return false;
 }
