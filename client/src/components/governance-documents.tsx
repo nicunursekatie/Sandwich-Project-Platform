@@ -80,12 +80,12 @@ export function GovernanceDocuments() {
   };
 
   const handleDownload = (document: GovernanceDocument) => {
-    const link = document.createElement('a');
+    const link = window.document.createElement('a');
     link.href = document.path;
     link.download = document.name;
-    document.body.appendChild(link);
+    window.document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    window.document.body.removeChild(link);
   };
 
   const handleExternalOpen = (document: GovernanceDocument) => {
@@ -182,7 +182,9 @@ export function GovernanceDocuments() {
       {/* Document Preview Modal */}
       {previewDocument && (
         <DocumentPreview
-          document={previewDocument}
+          documentPath={previewDocument.path}
+          documentName={previewDocument.name}
+          documentType={previewDocument.type}
           onClose={() => setPreviewDocument(null)}
         />
       )}
