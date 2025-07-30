@@ -254,6 +254,24 @@ export interface IStorage {
     failureCount?: number;
   }): Promise<any>;
   getShoutoutHistory(): Promise<any[]>;
+
+  // User Activity methods
+  logUserActivity(activity: any): Promise<any>;
+  getUserActivityStats(userId: string, days?: number): Promise<{
+    totalActions: number;
+    sectionsUsed: string[];
+    topActions: { action: string; count: number }[];
+    dailyActivity: { date: string; count: number }[];
+  }>;
+  getAllUsersActivitySummary(days?: number): Promise<{
+    userId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    totalActions: number;
+    lastActive: Date | null;
+    topSection: string;
+  }[]>;
 }
 
 export class MemStorage implements IStorage {

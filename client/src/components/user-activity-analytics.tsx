@@ -30,10 +30,28 @@ export default function UserActivityAnalytics() {
   const [viewMode, setViewMode] = useState<"summary" | "details">("summary");
 
   // Get all users activity summary
-  const { data: activitySummary, isLoading: summaryLoading } = useQuery<UserActivitySummary[]>({
+  const { data: activitySummary, isLoading: summaryLoading, error: summaryError } = useQuery<UserActivitySummary[]>({
     queryKey: ["/api/user-activity/summary", selectedPeriod],
-    queryFn: () => fetch(`/api/user-activity/summary?days=${selectedPeriod}`).then(res => res.json()),
-    enabled: viewMode === "summary"
+    queryFn: async () => {
+      const res = await fetch(`/api/user-activity/summary?days=${selectedPeriod}`, {
+        credentials: 'include' // Include cookies for authentication
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error('Authentication required - please login');
+        }
+        if (res.status === 403) {
+          throw new Error('Admin access required to view activity summary');
+        }
+        throw new Error(`Failed to fetch activity summary: ${res.status}`);
+      }
+      const data = await res.json();
+      console.log('Activity summary data:', data);
+      // Ensure we return an array
+      return Array.isArray(data) ? data : [];
+    },
+    enabled: viewMode === "summary",
+    retry: false // Don't retry auth errors
   });
 
   // Get individual user stats
@@ -119,6 +137,11 @@ export default function UserActivityAnalytics() {
               {summaryLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                </div>
+              ) : summaryError ? (
+                <div className="text-center py-8">
+                  <div className="text-red-600 mb-4">Error loading activity data:</div>
+                  <div className="text-sm text-gray-600">{summaryError.message}</div>
                 </div>
               ) : (
                 <div className="space-y-4">
