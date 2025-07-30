@@ -171,6 +171,7 @@ export default function SandwichCollectionLog() {
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
             c.hostName?.toLowerCase().includes(searchTerm)
           );
+          console.log(`Host name filter '${searchTerm}' applied: ${filteredCollections.length} results`);
         }
         
         if (debouncedSearchFilters.collectionDateFrom) {
@@ -178,6 +179,7 @@ export default function SandwichCollectionLog() {
           filteredCollections = filteredCollections.filter((c: SandwichCollection) => 
             new Date(c.collectionDate) >= fromDate
           );
+          console.log(`Date from filter '${debouncedSearchFilters.collectionDateFrom}' applied: ${filteredCollections.length} results`);
         }
         
         if (debouncedSearchFilters.collectionDateTo) {
