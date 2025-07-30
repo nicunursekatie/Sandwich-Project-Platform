@@ -1,0 +1,270 @@
+client:536 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/?token=_4BTORqGdTMR' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=_4BTORqGdTMR' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+message-notifications.tsx:98 Connecting to WebSocket at: wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/notifications
+dashboard.tsx:62 Current URL location: /
+dashboard.tsx:84 Dashboard activeSection changed to: dashboard
+message-notifications.tsx:110 WebSocket connected successfully
+useMessaging.ts:239 WebSocket connection to 'wss://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev/notifications' failed: 
+(anonymous) @ useMessaging.ts:239
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+useMessaging.ts:274 Messaging WebSocket error: Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+overrideMethod @ hook.js:608
+ws.onerror @ useMessaging.ts:274
+useMessaging.ts:278 Messaging WebSocket disconnected
+simple-nav.tsx:191 Navigation click: user-management
+dashboard.tsx:419 Dashboard setActiveSection called with: user-management
+dashboard.tsx:62 Current URL location: /dashboard
+dashboard.tsx:84 Dashboard activeSection changed to: user-management
+user-activity-analytics.tsx:49 Activity summary data: [{…}]
+user-activity-analytics.tsx:156 Uncaught TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at user-activity-analytics.tsx:156:73
+    at Array.map (<anonymous>)
+    at UserActivityAnalytics (user-activity-analytics.tsx:149:39)
+    at renderWithHooks (chunk-276SZO74.js?v=88ca342b:11548:26)
+    at updateFunctionComponent (chunk-276SZO74.js?v=88ca342b:14582:28)
+    at beginWork (chunk-276SZO74.js?v=88ca342b:15924:22)
+    at HTMLUnknownElement.callCallback2 (chunk-276SZO74.js?v=88ca342b:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-276SZO74.js?v=88ca342b:3699:24)
+    at invokeGuardedCallback (chunk-276SZO74.js?v=88ca342b:3733:39)
+    at beginWork$1 (chunk-276SZO74.js?v=88ca342b:19765:15)
+(anonymous) @ user-activity-analytics.tsx:156
+UserActivityAnalytics @ user-activity-analytics.tsx:149
+renderWithHooks @ chunk-276SZO74.js?v=88ca342b:11548
+updateFunctionComponent @ chunk-276SZO74.js?v=88ca342b:14582
+beginWork @ chunk-276SZO74.js?v=88ca342b:15924
+callCallback2 @ chunk-276SZO74.js?v=88ca342b:3674
+invokeGuardedCallbackDev @ chunk-276SZO74.js?v=88ca342b:3699
+invokeGuardedCallback @ chunk-276SZO74.js?v=88ca342b:3733
+beginWork$1 @ chunk-276SZO74.js?v=88ca342b:19765
+performUnitOfWork @ chunk-276SZO74.js?v=88ca342b:19198
+workLoopSync @ chunk-276SZO74.js?v=88ca342b:19137
+renderRootSync @ chunk-276SZO74.js?v=88ca342b:19116
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18874
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=88ca342b:565
+flush @ @tanstack_react-query.js?v=88ca342b:589
+batch @ @tanstack_react-query.js?v=88ca342b:607
+dispatch_fn @ @tanstack_react-query.js?v=88ca342b:1040
+setData @ @tanstack_react-query.js?v=88ca342b:718
+onSuccess @ @tanstack_react-query.js?v=88ca342b:940
+resolve @ @tanstack_react-query.js?v=88ca342b:475
+Promise.then
+run @ @tanstack_react-query.js?v=88ca342b:517
+start @ @tanstack_react-query.js?v=88ca342b:555
+fetch @ @tanstack_react-query.js?v=88ca342b:969
+executeFetch_fn @ @tanstack_react-query.js?v=88ca342b:2279
+onSubscribe @ @tanstack_react-query.js?v=88ca342b:1983
+subscribe @ @tanstack_react-query.js?v=88ca342b:24
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3146
+subscribeToStore @ chunk-276SZO74.js?v=88ca342b:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+user-activity-analytics.tsx:156 Uncaught TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at user-activity-analytics.tsx:156:73
+    at Array.map (<anonymous>)
+    at UserActivityAnalytics (user-activity-analytics.tsx:149:39)
+    at renderWithHooks (chunk-276SZO74.js?v=88ca342b:11548:26)
+    at updateFunctionComponent (chunk-276SZO74.js?v=88ca342b:14582:28)
+    at beginWork (chunk-276SZO74.js?v=88ca342b:15924:22)
+    at HTMLUnknownElement.callCallback2 (chunk-276SZO74.js?v=88ca342b:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-276SZO74.js?v=88ca342b:3699:24)
+    at invokeGuardedCallback (chunk-276SZO74.js?v=88ca342b:3733:39)
+    at beginWork$1 (chunk-276SZO74.js?v=88ca342b:19765:15)
+(anonymous) @ user-activity-analytics.tsx:156
+UserActivityAnalytics @ user-activity-analytics.tsx:149
+renderWithHooks @ chunk-276SZO74.js?v=88ca342b:11548
+updateFunctionComponent @ chunk-276SZO74.js?v=88ca342b:14582
+beginWork @ chunk-276SZO74.js?v=88ca342b:15924
+callCallback2 @ chunk-276SZO74.js?v=88ca342b:3674
+invokeGuardedCallbackDev @ chunk-276SZO74.js?v=88ca342b:3699
+invokeGuardedCallback @ chunk-276SZO74.js?v=88ca342b:3733
+beginWork$1 @ chunk-276SZO74.js?v=88ca342b:19765
+performUnitOfWork @ chunk-276SZO74.js?v=88ca342b:19198
+workLoopSync @ chunk-276SZO74.js?v=88ca342b:19137
+renderRootSync @ chunk-276SZO74.js?v=88ca342b:19116
+recoverFromConcurrentError @ chunk-276SZO74.js?v=88ca342b:18736
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18879
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=88ca342b:565
+flush @ @tanstack_react-query.js?v=88ca342b:589
+batch @ @tanstack_react-query.js?v=88ca342b:607
+dispatch_fn @ @tanstack_react-query.js?v=88ca342b:1040
+setData @ @tanstack_react-query.js?v=88ca342b:718
+onSuccess @ @tanstack_react-query.js?v=88ca342b:940
+resolve @ @tanstack_react-query.js?v=88ca342b:475
+Promise.then
+run @ @tanstack_react-query.js?v=88ca342b:517
+start @ @tanstack_react-query.js?v=88ca342b:555
+fetch @ @tanstack_react-query.js?v=88ca342b:969
+executeFetch_fn @ @tanstack_react-query.js?v=88ca342b:2279
+onSubscribe @ @tanstack_react-query.js?v=88ca342b:1983
+subscribe @ @tanstack_react-query.js?v=88ca342b:24
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3146
+subscribeToStore @ chunk-276SZO74.js?v=88ca342b:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+hook.js:608 The above error occurred in the <UserActivityAnalytics> component:
+
+    at UserActivityAnalytics (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/user-activity-analytics.tsx:28:47)
+    at div
+    at UserManagement (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/user-management.tsx:40:33)
+    at div
+    at div
+    at div
+    at div
+    at div
+    at HelpProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/help-system/HelpProvider.tsx:29:32)
+    at Dashboard (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/pages/dashboard.tsx?t=1753901358742:61:37)
+    at Route (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=88ca342b:206:16)
+    at Switch (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=88ca342b:262:17)
+    at Router (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/App.tsx?t=1753901358742&v=oGrawusz6u49TbJkV3foF:31:49)
+    at Provider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-3RXG37ZK.js?v=88ca342b:38:15)
+    at TooltipProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=88ca342b:65:5)
+    at QueryClientProvider (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=88ca342b:2933:3)
+    at ErrorBoundary (https://bb1d30f8-d852-4bae-abcd-b7c4521e3d85-00-x9tsn55inx51.spock.replit.dev:5000/src/components/error-boundary.tsx:10:5)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+overrideMethod @ hook.js:608
+logCapturedError @ chunk-276SZO74.js?v=88ca342b:14032
+callback @ chunk-276SZO74.js?v=88ca342b:14078
+callCallback @ chunk-276SZO74.js?v=88ca342b:11248
+commitUpdateQueue @ chunk-276SZO74.js?v=88ca342b:11265
+commitLayoutEffectOnFiber @ chunk-276SZO74.js?v=88ca342b:17075
+commitLayoutMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:17980
+commitLayoutEffects_begin @ chunk-276SZO74.js?v=88ca342b:17969
+commitLayoutEffects @ chunk-276SZO74.js?v=88ca342b:17920
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19353
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=88ca342b:565
+flush @ @tanstack_react-query.js?v=88ca342b:589
+batch @ @tanstack_react-query.js?v=88ca342b:607
+dispatch_fn @ @tanstack_react-query.js?v=88ca342b:1040
+setData @ @tanstack_react-query.js?v=88ca342b:718
+onSuccess @ @tanstack_react-query.js?v=88ca342b:940
+resolve @ @tanstack_react-query.js?v=88ca342b:475
+Promise.then
+run @ @tanstack_react-query.js?v=88ca342b:517
+start @ @tanstack_react-query.js?v=88ca342b:555
+fetch @ @tanstack_react-query.js?v=88ca342b:969
+executeFetch_fn @ @tanstack_react-query.js?v=88ca342b:2279
+onSubscribe @ @tanstack_react-query.js?v=88ca342b:1983
+subscribe @ @tanstack_react-query.js?v=88ca342b:24
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3146
+subscribeToStore @ chunk-276SZO74.js?v=88ca342b:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+error-boundary.tsx:28 Error caught by boundary: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at user-activity-analytics.tsx:156:73
+    at Array.map (<anonymous>)
+    at UserActivityAnalytics (user-activity-analytics.tsx:149:39)
+    at renderWithHooks (chunk-276SZO74.js?v=88ca342b:11548:26)
+    at updateFunctionComponent (chunk-276SZO74.js?v=88ca342b:14582:28)
+    at beginWork (chunk-276SZO74.js?v=88ca342b:15924:22)
+    at beginWork$1 (chunk-276SZO74.js?v=88ca342b:19753:22)
+    at performUnitOfWork (chunk-276SZO74.js?v=88ca342b:19198:20)
+    at workLoopSync (chunk-276SZO74.js?v=88ca342b:19137:13)
+    at renderRootSync (chunk-276SZO74.js?v=88ca342b:19116:15) {componentStack: '\n    at UserActivityAnalytics (https://bb1d30f8-d8…rc/components/error-boundary.tsx:10:5)\n    at App'} Error Component Stack
+    at ErrorBoundary (error-boundary.tsx:19:5)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+componentDidCatch @ error-boundary.tsx:28
+callback @ chunk-276SZO74.js?v=88ca342b:14084
+callCallback @ chunk-276SZO74.js?v=88ca342b:11248
+commitUpdateQueue @ chunk-276SZO74.js?v=88ca342b:11265
+commitLayoutEffectOnFiber @ chunk-276SZO74.js?v=88ca342b:17075
+commitLayoutMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:17980
+commitLayoutEffects_begin @ chunk-276SZO74.js?v=88ca342b:17969
+commitLayoutEffects @ chunk-276SZO74.js?v=88ca342b:17920
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19353
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=88ca342b:565
+flush @ @tanstack_react-query.js?v=88ca342b:589
+batch @ @tanstack_react-query.js?v=88ca342b:607
+dispatch_fn @ @tanstack_react-query.js?v=88ca342b:1040
+setData @ @tanstack_react-query.js?v=88ca342b:718
+onSuccess @ @tanstack_react-query.js?v=88ca342b:940
+resolve @ @tanstack_react-query.js?v=88ca342b:475
+Promise.then
+run @ @tanstack_react-query.js?v=88ca342b:517
+start @ @tanstack_react-query.js?v=88ca342b:555
+fetch @ @tanstack_react-query.js?v=88ca342b:969
+executeFetch_fn @ @tanstack_react-query.js?v=88ca342b:2279
+onSubscribe @ @tanstack_react-query.js?v=88ca342b:1983
+subscribe @ @tanstack_react-query.js?v=88ca342b:24
+(anonymous) @ @tanstack_react-query.js?v=88ca342b:3146
+subscribeToStore @ chunk-276SZO74.js?v=88ca342b:11984
+commitHookEffectListMount @ chunk-276SZO74.js?v=88ca342b:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=88ca342b:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=88ca342b:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=88ca342b:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=88ca342b:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=88ca342b:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=88ca342b:19447
+commitRootImpl @ chunk-276SZO74.js?v=88ca342b:19416
+commitRoot @ chunk-276SZO74.js?v=88ca342b:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=88ca342b:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=88ca342b:9119
+(anonymous) @ chunk-276SZO74.js?v=88ca342b:18627
+message-notifications.tsx:136 WebSocket connection closed: 1000 Component unmounting

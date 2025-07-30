@@ -153,13 +153,13 @@ export default function UserActivityAnalytics() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 rounded-full bg-[#236383] text-white flex items-center justify-center text-sm font-medium">
-                                {(user.firstName?.[0] || user.email[0]).toUpperCase()}
+                                {(user.firstName?.[0] || user.email?.[0] || 'U').toUpperCase()}
                               </div>
                               <div>
                                 <div className="font-medium">
-                                  {user.firstName} {user.lastName}
+                                  {user.firstName || 'Unknown'} {user.lastName || ''}
                                 </div>
-                                <div className="text-sm text-gray-600">{user.email}</div>
+                                <div className="text-sm text-gray-600">{user.email || 'No email'}</div>
                               </div>
                             </div>
                             <div className="text-right">
@@ -172,8 +172,8 @@ export default function UserActivityAnalytics() {
                           
                           <div className="flex items-center justify-between text-sm">
                             <div className="flex items-center gap-4">
-                              <Badge className={getSectionBadgeColor(user.topSection)}>
-                                {user.topSection}
+                              <Badge className={getSectionBadgeColor(user.topSection || 'none')}>
+                                {user.topSection || 'No activity'}
                               </Badge>
                               <span className={activity.color}>
                                 {activity.level} Activity
