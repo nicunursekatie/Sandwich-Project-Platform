@@ -280,7 +280,7 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
@@ -291,9 +291,9 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="flex-1 overflow-hidden flex flex-col space-y-6">
           {/* Role Selection */}
-          <div className="space-y-3">
+          <div className="space-y-3 flex-shrink-0">
             <div className="flex items-center justify-between">
               <Label htmlFor="role">User Role</Label>
               <div className="flex gap-2">
@@ -340,7 +340,7 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
           </div>
 
           {/* Permission Categories */}
-          <ScrollArea className="h-[400px] pr-4">
+          <ScrollArea className="flex-1 pr-4">
             <div className="space-y-6">
               {PERMISSION_GROUPS.map((category) => (
                 <Card key={category.id} className={`${getCardColorForType(category.type)}`}>
@@ -409,7 +409,7 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
           </ScrollArea>
 
           {/* Quick Actions & Permission Count */}
-          <div className="flex items-center justify-between pt-2 border-t">
+          <div className="flex items-center justify-between pt-2 border-t flex-shrink-0">
             <div className="flex items-center gap-2">
               <Badge variant="secondary">
                 {selectedPermissions.length} permissions selected
@@ -444,7 +444,7 @@ export function SimplePermissionsDialog({ user, open, onOpenChange, onSave }: Si
           </div>
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="flex-shrink-0 mt-4">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
