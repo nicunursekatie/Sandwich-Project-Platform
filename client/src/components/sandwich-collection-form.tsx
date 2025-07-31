@@ -386,7 +386,7 @@ export default function SandwichCollectionForm({
     padding: "24px",
     borderTop: "1px solid #e2e8f0",
     display: "flex",
-    justifyContent: "flex-end",
+    justifyContent: "center",
     background: "linear-gradient(135deg, #e1f3f7 0%, #cfe9f0 100%)",
   };
 
