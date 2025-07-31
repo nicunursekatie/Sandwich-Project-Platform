@@ -366,7 +366,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 value={collectionDate}
                 onChange={(e) => setCollectionDate(e.target.value)}
                 required
-                className="h-10 text-sm px-3 py-2 border border-gray-200 rounded focus:ring-2 focus:ring-[#236383] focus:border-transparent"
+                className="h-10 text-sm px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#236383] focus:border-transparent"
               />
             </div>
 
@@ -384,7 +384,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                       validateField('hostName', e.target.value);
                     }}
                     placeholder="Location name"
-                    className={`h-10 text-sm px-3 py-2 border rounded focus:ring-2 focus:ring-[#236383] focus:border-transparent ${
+                    className={`h-10 text-sm px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-[#236383] focus:border-transparent ${
                       validationErrors.hostName 
                         ? 'border-[#A31C41] border-2' 
                         : 'border-gray-200'
@@ -468,7 +468,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               validateField('individualSandwiches', e.target.value);
             }}
             placeholder="0"
-            className={`h-10 w-32 text-center text-sm px-3 py-2 border rounded focus:ring-2 focus:ring-[#236383] focus:border-transparent ${
+            className={`h-10 w-32 text-center text-sm px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-[#236383] focus:border-transparent ${
               validationErrors.individualSandwiches 
                 ? 'border-[#A31C41] border-2' 
                 : 'border-gray-200'
@@ -498,7 +498,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                   onChange={(e) =>
                     updateGroupCollection(group.id, "groupName", e.target.value)
                   }
-                  className="h-10 text-sm px-3 py-2 border border-gray-200 rounded w-full focus:ring-2 focus:ring-[#236383] focus:border-transparent"
+                  className="h-10 text-sm px-4 py-2.5 border border-gray-200 rounded-xl w-full focus:ring-2 focus:ring-[#236383] focus:border-transparent"
                 />
                 <div className="flex gap-2 items-center">
                   <div className="flex-1">
@@ -518,7 +518,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                           parseInt(e.target.value) || 0,
                         )
                       }
-                      className="h-10 text-sm px-3 py-2 border border-gray-200 rounded w-full focus:ring-2 focus:ring-[#236383] focus:border-transparent"
+                      className="h-10 text-sm px-4 py-2.5 border border-gray-200 rounded-xl w-full focus:ring-2 focus:ring-[#236383] focus:border-transparent"
                     />
                   </div>
                   {groupCollections.length > 1 && (
