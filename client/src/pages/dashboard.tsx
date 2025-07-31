@@ -410,7 +410,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         {/* Sidebar */}
         <div className={`${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 fixed md:relative z-50 w-64 sm:w-72 bg-gradient-to-b from-white to-orange-50/30 border-r-2 border-amber-200 shadow-lg flex flex-col transition-transform duration-300 ease-in-out h-screen max-h-screen`}>
+        } md:translate-x-0 fixed md:relative z-50 w-64 sm:w-72 bg-gradient-to-b from-white to-orange-50/30 border-r-2 border-amber-200 shadow-lg flex flex-col transition-transform duration-300 ease-in-out h-full`}>
           {/* Simple Navigation with enhanced mobile scrolling */}
           <div className="flex-1 overflow-y-auto pb-6 touch-pan-y overscroll-contain">
             <SimpleNav 
