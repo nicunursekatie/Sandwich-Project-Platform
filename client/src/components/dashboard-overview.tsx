@@ -9,7 +9,7 @@ import { HelpBubble } from "@/components/help-system";
 import { DocumentPreviewModal } from "@/components/document-preview-modal";
 import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import { AnimatedCounter } from "@/components/modern-dashboard/animated-counter";
-import { MiniChart } from "@/components/modern-dashboard/mini-chart";
+
 import { DarkModeToggle } from "@/components/modern-dashboard/dark-mode-toggle";
 import { SandwichStackIcon, GrowthTrendIcon, CommunityIcon, TargetIcon, SparkleIcon, NetworkIcon } from "@/components/modern-dashboard/custom-svg-icons";
 import tspLogo from "@assets/sandwich_project_transparent_1753668698851.png";
@@ -106,10 +106,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
     totalEntries: statsData?.totalEntries?.toLocaleString() || "Loading..."
   };
 
-  // Sample data for mini charts
-  const chartData = [12, 19, 15, 25, 22, 18, 30, 28, 35, 32, 40, 38];
-  const weeklyData = [5000, 6200, 7800, 9200, 8800, 10500, 12000, 15000, 18000, 22000, 25000, 28000];
-  const growthData = [100, 120, 180, 250, 350, 480, 650, 850, 1200, 1500, 1800, 2100];
+  // Remove fake mini chart data - only use real data
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
@@ -223,52 +220,57 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                 </div>
               </div>
             </div>
-            <div className="mt-6">
-              <MiniChart data={weeklyData} color="#8b5cf6" type="area" />
+            <div className="mt-4 text-center">
+              <div className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+                Real data from verified collection records
+              </div>
             </div>
           </div>
 
           {/* Individual Cards */}
           <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-orange-500/10 to-red-500/10">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4 mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center">
                 <TargetIcon className="w-6 h-6 text-white" />
               </div>
-              <MiniChart data={chartData} color="#f97316" type="line" />
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Individual Collections</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Personal contributions</p>
+              </div>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter mb-2">Individual Collections</h3>
             <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
               <AnimatedCounter value={statsData?.individualSandwiches || 0} />
             </div>
-            <p className="text-slate-600 dark:text-slate-300 text-sm">Personal contributions</p>
           </div>
 
           <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-blue-500/10 to-cyan-500/10">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4 mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center">
                 <CommunityIcon className="w-6 h-6 text-white" />
               </div>
-              <MiniChart data={growthData} color="#3b82f6" type="bar" />
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Group Collections</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Organization donations</p>
+              </div>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter mb-2">Group Collections</h3>
             <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
               <AnimatedCounter value={statsData ? ((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)) : 0} />
             </div>
-            <p className="text-slate-600 dark:text-slate-300 text-sm">Organization donations</p>
           </div>
 
-          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center">
+          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-teal-500/10 to-cyan-500/10">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center">
                 <NetworkIcon className="w-6 h-6 text-white" />
               </div>
-              <MiniChart data={[1, 3, 8, 15, 25, 40, 60, 85, 120, 160, 210, 280]} color="#a855f7" type="area" />
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Total Entries</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Data submissions</p>
+              </div>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter mb-2">Total Entries</h3>
             <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
               <AnimatedCounter value={statsData?.totalEntries || 0} />
             </div>
-            <p className="text-slate-600 dark:text-slate-300 text-sm">Data submissions</p>
           </div>
         </div>
 
