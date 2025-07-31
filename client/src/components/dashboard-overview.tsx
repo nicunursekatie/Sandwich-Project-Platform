@@ -173,81 +173,81 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         <div className="p-6">
           {/* Primary Metric - Featured Size */}
           <div className="mb-6">
-            <div className="bg-gradient-to-br from-[#236383] to-[#007E8C] rounded-2xl p-6 text-white shadow-[0_4px_16px_rgba(35,99,131,0.25)] hover:shadow-[0_6px_20px_rgba(35,99,131,0.35)] transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                  <Target className="h-6 w-6 text-white" />
+            <div className="bg-gradient-to-br from-[#236383] to-[#007E8C] rounded-2xl p-4 md:p-6 text-white shadow-[0_4px_16px_rgba(35,99,131,0.25)] hover:shadow-[0_6px_20px_rgba(35,99,131,0.35)] transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Target className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-white/90">Total Lifetime Impact</h3>
-                  <p className="text-sm text-white/70">Sandwiches distributed since 2020</p>
+                <div className="min-w-0">
+                  <h3 className="text-base sm:text-lg font-semibold text-white/90 leading-tight">Total Lifetime Impact</h3>
+                  <p className="text-xs sm:text-sm text-white/70 leading-tight">Sandwiches distributed since 2020</p>
                 </div>
               </div>
-              <div className="text-4xl md:text-5xl font-black text-white mb-2">{organizationalStats.totalLifetimeSandwiches}</div>
-              <div className="text-white/80 text-sm font-medium">Feeding families across Georgia communities</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-2 leading-tight break-all">{organizationalStats.totalLifetimeSandwiches}</div>
+              <div className="text-white/80 text-xs sm:text-sm font-medium leading-tight">Feeding families across Georgia communities</div>
             </div>
           </div>
 
           {/* Secondary Metrics Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <div className="bg-gradient-to-br from-[#FBAD3F]/10 to-[#FBAD3F]/5 rounded-xl border border-[#FBAD3F]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(251,173,63,0.15)] hover:border-[#FBAD3F]/30 transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded-lg flex items-center justify-center">
+            <div className="bg-gradient-to-br from-[#FBAD3F]/10 to-[#FBAD3F]/5 rounded-xl border border-[#FBAD3F]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(251,173,63,0.15)] hover:border-[#FBAD3F]/30 transition-all duration-300 transform hover:-translate-y-1 min-h-[120px]">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded-lg flex items-center justify-center flex-shrink-0">
                   <Zap className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-sm font-semibold text-[#FBAD3F]">Peak Performance</span>
+                <span className="text-sm font-semibold text-[#FBAD3F] leading-tight">Peak Performance</span>
               </div>
-              <div className="text-2xl font-bold text-slate-900 mb-1">{organizationalStats.peakWeekRecord}</div>
-              <div className="text-xs text-slate-600 font-medium">{organizationalStats.peakWeekDate}</div>
+              <div className="text-xl lg:text-2xl font-bold text-slate-900 mb-1 leading-tight">{organizationalStats.peakWeekRecord}</div>
+              <div className="text-xs text-slate-600 font-medium leading-tight">{organizationalStats.peakWeekDate}</div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#007E8C]/10 to-[#47B3CB]/5 rounded-xl border border-[#007E8C]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,126,140,0.15)] hover:border-[#007E8C]/30 transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#007E8C] to-[#47B3CB] rounded-lg flex items-center justify-center">
+            <div className="bg-gradient-to-br from-[#007E8C]/10 to-[#47B3CB]/5 rounded-xl border border-[#007E8C]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,126,140,0.15)] hover:border-[#007E8C]/30 transition-all duration-300 transform hover:-translate-y-1 min-h-[120px]">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#007E8C] to-[#47B3CB] rounded-lg flex items-center justify-center flex-shrink-0">
                   <Activity className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-sm font-semibold text-[#007E8C]">Annual Capacity</span>
+                <span className="text-sm font-semibold text-[#007E8C] leading-tight">Annual Capacity</span>
               </div>
-              <div className="text-2xl font-bold text-slate-900 mb-1">{organizationalStats.currentAnnualCapacity}</div>
-              <div className="text-xs text-slate-600 font-medium">Sustainable Output</div>
+              <div className="text-xl lg:text-2xl font-bold text-slate-900 mb-1 leading-tight">{organizationalStats.currentAnnualCapacity}</div>
+              <div className="text-xs text-slate-600 font-medium leading-tight">Sustainable Output</div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#A31C41]/10 to-[#A31C41]/5 rounded-xl border border-[#A31C41]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(163,28,65,0.15)] hover:border-[#A31C41]/30 transition-all duration-300 transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#A31C41] to-[#8b1635] rounded-lg flex items-center justify-center">
+            <div className="bg-gradient-to-br from-[#A31C41]/10 to-[#A31C41]/5 rounded-xl border border-[#A31C41]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(163,28,65,0.15)] hover:border-[#A31C41]/30 transition-all duration-300 transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1 min-h-[120px]">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#A31C41] to-[#8b1635] rounded-lg flex items-center justify-center flex-shrink-0">
                   <TrendingUp className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-sm font-semibold text-[#A31C41]">Growth Rate</span>
+                <span className="text-sm font-semibold text-[#A31C41] leading-tight">Growth Rate</span>
               </div>
-              <div className="text-2xl font-bold text-slate-900 mb-1">{organizationalStats.growthMultiplier}</div>
-              <div className="text-xs text-slate-600 font-medium">Since Foundation</div>
+              <div className="text-xl lg:text-2xl font-bold text-slate-900 mb-1 leading-tight">{organizationalStats.growthMultiplier}</div>
+              <div className="text-xs text-slate-600 font-medium leading-tight">Since Foundation</div>
             </div>
           </div>
 
-          {/* Data Breakdown - Smaller Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300">
-              <div className="flex items-center gap-2 mb-2">
-                <Users className="h-4 w-4 text-[#236383]" />
-                <span className="text-sm font-medium text-slate-700">Individual</span>
+          {/* Data Breakdown - Better Responsive Layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300 min-h-[100px]">
+              <div className="flex items-center gap-2 mb-3">
+                <Users className="h-4 w-4 text-[#236383] flex-shrink-0" />
+                <span className="text-sm font-medium text-slate-700 leading-tight">Individual</span>
               </div>
-              <div className="text-xl font-bold text-slate-900">{organizationalStats.individualSandwiches}</div>
+              <div className="text-lg lg:text-xl font-bold text-slate-900 leading-tight break-all">{organizationalStats.individualSandwiches}</div>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300">
-              <div className="flex items-center gap-2 mb-2">
-                <Building2 className="h-4 w-4 text-[#FBAD3F]" />
-                <span className="text-sm font-medium text-slate-700">Groups</span>
+            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300 min-h-[100px]">
+              <div className="flex items-center gap-2 mb-3">
+                <Building2 className="h-4 w-4 text-[#FBAD3F] flex-shrink-0" />
+                <span className="text-sm font-medium text-slate-700 leading-tight">Groups</span>
               </div>
-              <div className="text-xl font-bold text-slate-900">{organizationalStats.groupSandwiches}</div>
+              <div className="text-lg lg:text-xl font-bold text-slate-900 leading-tight break-all">{organizationalStats.groupSandwiches}</div>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300">
-              <div className="flex items-center gap-2 mb-2">
-                <Layers className="h-4 w-4 text-[#007E8C]" />
-                <span className="text-sm font-medium text-slate-700">Total Entries</span>
+            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300 sm:col-span-2 lg:col-span-1 min-h-[100px]">
+              <div className="flex items-center gap-2 mb-3">
+                <Layers className="h-4 w-4 text-[#007E8C] flex-shrink-0" />
+                <span className="text-sm font-medium text-slate-700 leading-tight">Total Entries</span>
               </div>
-              <div className="text-xl font-bold text-slate-900">{organizationalStats.totalEntries}</div>
+              <div className="text-lg lg:text-xl font-bold text-slate-900 leading-tight break-all">{organizationalStats.totalEntries}</div>
             </div>
           </div>
         </div>
@@ -261,16 +261,16 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           </div>
           <h2 className="text-xl font-bold text-[#236383] font-roboto">Important Documents</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {importantDocuments.map((doc, index) => (
-            <div key={index} className="bg-gradient-to-br from-white to-amber-50/60 border border-amber-200/40 rounded-lg p-4 hover:shadow-lg transition-all duration-200 hover:border-amber-300/60">
+            <div key={index} className="bg-gradient-to-br from-white to-amber-50/60 border border-amber-200/40 rounded-lg p-4 hover:shadow-lg transition-all duration-200 hover:border-amber-300/60 min-h-[160px]">
               <div className="flex items-start gap-3 mb-3">
-                <div className="w-6 h-6 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded flex items-center justify-center flex-shrink-0">
                   <FileText className="h-3 w-3 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-semibold text-gray-900 font-roboto mb-2">{doc.title}</h3>
-                  <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full shadow-sm ${
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 font-roboto mb-2 leading-tight break-words">{doc.title}</h3>
+                  <span className={`inline-block px-2 sm:px-3 py-1 text-xs font-medium rounded-full shadow-sm ${
                     doc.category === 'Legal' ? 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800' :
                     doc.category === 'Strategy' ? 'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800' :
                     'bg-gradient-to-r from-green-100 to-green-200 text-green-800'
@@ -279,16 +279,16 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                   </span>
                 </div>
               </div>
-              <p className="text-sm text-gray-600 font-roboto mb-4 leading-tight">{doc.description}</p>
-              <div className="flex gap-2">
+              <p className="text-xs sm:text-sm text-gray-600 font-roboto mb-4 leading-tight break-words">{doc.description}</p>
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => openPreviewModal(doc.path, doc.title, doc.path.split('.').pop() || 'pdf')}
-                  className="flex items-center gap-1 text-[#236383] border-[#FBAD3F]/40 hover:bg-[#FBAD3F]/10 hover:border-[#FBAD3F]/60 text-xs h-8 transition-all duration-200"
+                  className="flex items-center justify-center gap-1 text-[#236383] border-[#FBAD3F]/40 hover:bg-[#FBAD3F]/10 hover:border-[#FBAD3F]/60 text-xs h-8 transition-all duration-200 w-full sm:w-auto"
                 >
-                  <Eye className="w-3 h-3" />
-                  Preview
+                  <Eye className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate">Preview</span>
                 </Button>
                 <Button
                   variant="outline"
@@ -299,10 +299,10 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                     link.download = doc.title;
                     link.click();
                   }}
-                  className="flex items-center gap-1 text-xs h-8 border-amber-300/50 hover:bg-amber-50 hover:border-amber-400/60 transition-all duration-200"
+                  className="flex items-center justify-center gap-1 text-xs h-8 border-amber-300/50 hover:bg-amber-50 hover:border-amber-400/60 transition-all duration-200 w-full sm:w-auto"
                 >
-                  <Download className="w-3 h-3" />
-                  Download
+                  <Download className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate">Download</span>
                 </Button>
               </div>
             </div>
