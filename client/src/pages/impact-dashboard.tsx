@@ -246,7 +246,7 @@ export default function ImpactDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+          <Card className="bg-gradient-to-r from-teal-500 to-teal-600 text-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium flex items-center">
                 <Calendar className="w-5 h-5 mr-2" />
@@ -255,7 +255,7 @@ export default function ImpactDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">{impactMetrics.year2024Total?.toLocaleString()}</div>
-              <p className="text-purple-100 text-sm">2024 collections total</p>
+              <p className="text-teal-100 text-sm">2024 collections total</p>
             </CardContent>
           </Card>
 
@@ -449,11 +449,11 @@ export default function ImpactDashboard() {
                       </div>
                     </div>
 
-                    <div className="flex items-start space-x-3 p-3 bg-purple-50 rounded-lg">
-                      <Calendar className="w-5 h-5 text-purple-600 mt-1" />
+                    <div className="flex items-start space-x-3 p-3 bg-teal-50 rounded-lg">
+                      <Calendar className="w-5 h-5 text-teal-600 mt-1" />
                       <div>
-                        <p className="font-medium text-purple-900">Collection Records</p>
-                        <p className="text-sm text-purple-700">
+                        <p className="font-medium text-teal-900">Collection Records</p>
+                        <p className="text-sm text-teal-700">
                           {impactMetrics.totalCollections?.toLocaleString()} collection events documented
                         </p>
                       </div>

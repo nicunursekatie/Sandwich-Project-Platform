@@ -323,7 +323,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
             {importantDocuments.map((doc, index) => (
               <div key={index} className="glass-card hover-lift p-4 group cursor-pointer">
                 <div className="flex items-center justify-between mb-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-teal-600 rounded-xl flex items-center justify-center">
                     <FileText className="w-5 h-5 text-white" />
                   </div>
                   <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">
@@ -339,7 +339,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                 <div className="flex gap-2">
                   <Button
                     size="sm"
-                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white flex-1"
+                    className="bg-gradient-to-r from-blue-500 to-teal-600 hover:from-blue-600 hover:to-teal-700 text-white flex-1"
                     onClick={() => openPreviewModal(doc.path, doc.title, 'pdf')}
                   >
                     <Eye className="w-4 h-4 mr-1" />
