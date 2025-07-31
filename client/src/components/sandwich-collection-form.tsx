@@ -52,7 +52,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
       margin: '0 auto'
     }}>
-      <form className="w-full space-y-6 text-[#646464] font-roboto">
+      <form className="w-full text-[#646464] font-roboto">
       {/* Header */}
       <div className="text-center">
         <h1 className="flex items-center justify-center" style={{ 
@@ -81,7 +81,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       </div>
 
       {/* Collection Details */}
-      <div className="space-y-4">
+      <div style={{ marginBottom: '32px' }}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="date" style={{ 
@@ -97,6 +97,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className="rounded-xl border-gray-300 text-sm focus:ring-2 focus:ring-[#007E8C]"
+              style={{ padding: '12px 16px' }}
             />
           </div>
           <div>
@@ -108,7 +109,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               display: 'block'
             }}>Location</Label>
             <Select value={location} onValueChange={setLocation}>
-              <SelectTrigger className="rounded-xl border-gray-300 text-sm focus:ring-2 focus:ring-[#007E8C]">
+              <SelectTrigger className="rounded-xl border-gray-300 text-sm focus:ring-2 focus:ring-[#007E8C]" style={{ padding: '12px 16px' }}>
                 <SelectValue placeholder="Select location" />
               </SelectTrigger>
               <SelectContent>
@@ -122,7 +123,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       </div>
 
       {/* Individual Sandwiches */}
-      <div className="space-y-2">
+      <div style={{ marginBottom: '32px' }}>
         <div className="flex items-center gap-2">
           <Label htmlFor="individualCount" style={{ 
             fontSize: '14px', 
@@ -154,11 +155,12 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           value={individualCount}
           onChange={(e) => setIndividualCount(e.target.value)}
           className="rounded-xl border-gray-300 text-sm w-32 focus:ring-2 focus:ring-[#007E8C]"
+          style={{ padding: '12px 16px' }}
         />
       </div>
 
       {/* Group Sandwiches */}
-      <div className="space-y-3">
+      <div style={{ marginBottom: '32px' }}>
         <div>
           <h3 className="flex items-center gap-1" style={{ 
             fontSize: '14px', 
@@ -192,6 +194,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 setGroups(newGroups);
               }}
               className="rounded-xl col-span-3 border-gray-300 text-sm focus:ring-2 focus:ring-[#007E8C]"
+              style={{ padding: '12px 16px' }}
             />
             <Input
               type="number"
@@ -204,6 +207,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 setGroups(newGroups);
               }}
               className="rounded-xl col-span-1 border-gray-300 text-sm focus:ring-2 focus:ring-[#007E8C]"
+              style={{ padding: '12px 16px' }}
             />
             <Button
               type="button"
@@ -219,7 +223,8 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
         <Button
           type="button"
           onClick={addGroup}
-          className="w-full bg-[#FBAD3F] text-[#236383] hover:bg-[#f4a530] rounded-xl font-semibold h-10 shadow-md"
+          className="w-full bg-[#FBAD3F] text-[#236383] hover:bg-[#f4a530] rounded-xl font-semibold shadow-md"
+          style={{ padding: '16px 24px' }}
         >
           <Plus className="w-4 h-4 mr-2" /> Add Group
         </Button>
@@ -228,7 +233,8 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       {/* Submit */}
       <Button
         type="submit"
-        className="w-full bg-[#236383] text-white hover:bg-[#1b4d66] font-semibold rounded-xl h-11 shadow-md"
+        className="w-full bg-[#236383] text-white hover:bg-[#1b4d66] font-semibold rounded-xl shadow-md"
+        style={{ padding: '16px 24px' }}
       >
         Submit Collection
       </Button>
