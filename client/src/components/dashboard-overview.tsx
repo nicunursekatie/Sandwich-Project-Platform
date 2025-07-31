@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
-import { HelpBubble } from "@/components/help-system/HelpBubble";
+import { HelpBubble } from "@/components/help-system";
 import { DocumentPreviewModal } from "@/components/document-preview-modal";
 import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import { AnimatedCounter } from "@/components/modern-dashboard/animated-counter";
@@ -361,7 +361,17 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
         {/* Help System */}
         <div className="mx-4 mt-8">
-          <HelpBubble />
+          <HelpBubble
+            title="Dashboard Overview"
+            content="This dashboard shows your impact at a glance! These numbers represent real meals provided to community members in your area. Use the forms above to submit new collection data or browse documents for guidance."
+            character="sandy"
+            position="top"
+            trigger="hover"
+          >
+            <div className="text-center text-sm text-slate-500 dark:text-slate-400 cursor-help">
+              Need help? Hover here for guidance
+            </div>
+          </HelpBubble>
         </div>
       </div>
 
@@ -370,7 +380,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         isOpen={previewModal.isOpen}
         onClose={closePreviewModal}
         documentPath={previewModal.documentPath}
-        documentTitle={previewModal.documentTitle}
+        documentName={previewModal.documentName}
         documentType={previewModal.documentType}
       />
     </div>
