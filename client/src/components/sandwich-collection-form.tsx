@@ -54,8 +54,13 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     }}>
       <form className="w-full space-y-6 text-[#646464] font-roboto">
       {/* Header */}
-      <div className="space-y-1 text-center">
-        <h1 className="text-2xl font-bold text-[#236383] flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="flex items-center justify-center" style={{ 
+          fontSize: '28px', 
+          fontWeight: '700', 
+          color: '#1e293b',
+          marginBottom: '8px'
+        }}>
           <div className="w-10 h-10 rounded-xl border border-gray-200 shadow-sm bg-white flex items-center justify-center mr-2">
             <img
               src={sandwichLogo}
@@ -65,7 +70,12 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
           Submit Collection
         </h1>
-        <p className="text-sm text-gray-500">
+        <p style={{ 
+          fontSize: '16px', 
+          fontWeight: '400', 
+          color: '#64748b',
+          marginBottom: '32px'
+        }}>
           We count each sandwich—because every meal matters.
         </p>
       </div>
@@ -73,8 +83,14 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       {/* Collection Details */}
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <Label htmlFor="date">Date</Label>
+          <div>
+            <Label htmlFor="date" style={{ 
+              fontSize: '14px', 
+              fontWeight: '600', 
+              color: '#334155',
+              marginBottom: '8px',
+              display: 'block'
+            }}>Date</Label>
             <Input
               type="date"
               id="date"
@@ -83,8 +99,14 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               className="rounded-xl border-gray-300 text-sm focus:ring-2 focus:ring-[#007E8C]"
             />
           </div>
-          <div className="space-y-1">
-            <Label htmlFor="location">Location</Label>
+          <div>
+            <Label htmlFor="location" style={{ 
+              fontSize: '14px', 
+              fontWeight: '600', 
+              color: '#334155',
+              marginBottom: '8px',
+              display: 'block'
+            }}>Location</Label>
             <Select value={location} onValueChange={setLocation}>
               <SelectTrigger className="rounded-xl border-gray-300 text-sm focus:ring-2 focus:ring-[#007E8C]">
                 <SelectValue placeholder="Select location" />
@@ -102,7 +124,11 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       {/* Individual Sandwiches */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <Label htmlFor="individualCount" className="text-sm font-medium">
+          <Label htmlFor="individualCount" style={{ 
+            fontSize: '14px', 
+            fontWeight: '600', 
+            color: '#334155'
+          }}>
             Individual Sandwiches
           </Label>
           <TooltipProvider>
@@ -111,7 +137,12 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 <Info className="w-4 h-4 text-[#FBAD3F]" />
               </TooltipTrigger>
               <TooltipContent>
-                <p className="text-sm">Do not include group totals here.</p>
+                <p style={{ 
+                  fontSize: '14px', 
+                  fontWeight: '400', 
+                  color: '#94a3b8',
+                  fontStyle: 'italic'
+                }}>Do not include group totals here.</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -129,10 +160,20 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       {/* Group Sandwiches */}
       <div className="space-y-3">
         <div>
-          <h3 className="text-[#236383] font-semibold flex items-center gap-1">
+          <h3 className="flex items-center gap-1" style={{ 
+            fontSize: '14px', 
+            fontWeight: '600', 
+            color: '#334155',
+            marginBottom: '8px'
+          }}>
             <Plus className="w-4 h-4" /> Group Sandwiches
           </h3>
-          <p className="text-xs text-gray-500 italic">
+          <p style={{ 
+            fontSize: '14px', 
+            fontWeight: '400', 
+            color: '#94a3b8',
+            fontStyle: 'italic'
+          }}>
             Optional — enter group totals separately below.
           </p>
         </div>
