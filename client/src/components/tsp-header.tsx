@@ -8,10 +8,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import tspLogo from "@/attached_assets/LOGOS/TSP_transparent.png";
+import tspLogo from "@assets/LOGOS/TSP_transparent.png";
 import { useAuth } from "@/hooks/useAuth";
 import { useMessaging } from "@/hooks/useMessaging";
 import MessageNotifications from "@/components/message-notifications";
+import { apiRequest } from "@/lib/queryClient";
 
 interface TSPHeaderProps {
   isMobileMenuOpen: boolean;
@@ -24,8 +25,19 @@ export default function TSPHeader({
   setIsMobileMenuOpen,
   onSectionChange 
 }: TSPHeaderProps) {
-  const { user, logOut } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { totalUnread } = useMessaging();
+
+  const handleLogOut = async () => {
+    try {
+      await apiRequest('POST', '/api/auth/logout');
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Force redirect even if logout request fails
+      window.location.href = '/login';
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 shadow-sm">
@@ -66,7 +78,7 @@ export default function TSPHeader({
         <div className="flex items-center gap-2">
           {/* Notifications */}
           <div className="relative">
-            <MessageNotifications />
+            <MessageNotifications user={user} />
             {totalUnread > 0 && (
               <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-tsp-burgundy animate-pulse" />
             )}
@@ -82,10 +94,10 @@ export default function TSPHeader({
               >
                 <div className="flex items-center gap-2">
                   <div className="h-8 w-8 rounded-full bg-gradient-tsp flex items-center justify-center text-white font-medium">
-                    {user?.name?.charAt(0).toUpperCase() || 'U'}
+                    {(user as any)?.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <span className="hidden md:inline-block text-sm font-medium">
-                    {user?.name || 'User'}
+                    {(user as any)?.name || 'User'}
                   </span>
                 </div>
               </Button>
@@ -100,7 +112,7 @@ export default function TSPHeader({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem 
-                onClick={logOut}
+                onClick={handleLogOut}
                 className="cursor-pointer text-destructive hover:text-destructive"
               >
                 <LogOut className="mr-2 h-4 w-4" />
@@ -114,7 +126,7 @@ export default function TSPHeader({
       {/* Mobile Breadcrumb or Status Bar */}
       <div className="xl:hidden border-t border-border/50 bg-tsp-navy-light px-4 py-2">
         <p className="text-xs text-tsp-navy font-medium">
-          Welcome back, {user?.name?.split(' ')[0] || 'Volunteer'}!
+          Welcome back, {(user as any)?.name?.split(' ')[0] || 'Volunteer'}!
         </p>
       </div>
     </header>

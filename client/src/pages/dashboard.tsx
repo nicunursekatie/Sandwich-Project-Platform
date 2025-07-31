@@ -1,11 +1,11 @@
 import { useLocation } from "wouter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ProjectList from "@/components/project-list";
+import ProjectList from "@/components/project-list-tsp";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
 import EnhancedChat from "@/components/enhanced-chat";
 import CommitteeChat from "@/components/committee-chat";
 import GoogleDriveLinks from "@/components/google-drive-links";
-import DashboardOverview from "@/components/dashboard-overview";
+import DashboardOverview from "@/components/dashboard-overview-tsp";
 import SandwichCollectionLog from "@/components/sandwich-collection-log";
 import RecipientsManagement from "@/components/recipients-management";
 import DriversManagement from "@/components/drivers-management";

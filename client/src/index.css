@@ -14,22 +14,45 @@
     overflow: hidden;
   }
   
-  /* TSP Brand Button Styles */
-  .btn-tsp-primary {
-    background-color: var(--tsp-navy);
-    color: white;
-    border: 2px solid var(--tsp-navy);
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    transition: all var(--transition-default);
-    box-shadow: var(--shadow-sm);
+  /* TSP Brand Component Styles */
+  .tsp-primary {
+    background-color: var(--tsp-navy) !important;
+    color: white !important;
   }
   
-  .btn-tsp-primary:hover {
-    background-color: var(--tsp-navy-hover);
-    border-color: var(--tsp-navy-hover);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
+  .tsp-secondary {
+    background-color: var(--tsp-gold) !important;
+    color: white !important;
+  }
+  
+  .tsp-accent {
+    background-color: var(--tsp-burgundy) !important;
+    color: white !important;
+  }
+  
+  /* Apply TSP theme to Tailwind components */
+  .bg-primary {
+    background-color: var(--tsp-navy) !important;
+  }
+  
+  .text-primary {
+    color: var(--tsp-navy) !important;
+  }
+  
+  .border-primary {
+    border-color: var(--tsp-navy) !important;
+  }
+  
+  .bg-secondary {
+    background-color: var(--tsp-gold) !important;
+  }
+  
+  .text-secondary {
+    color: var(--tsp-gold) !important;
+  }
+  
+  .border-secondary {
+    border-color: var(--tsp-gold) !important;
   }
   
   .btn-tsp-secondary {
@@ -68,17 +91,46 @@
   
   /* Tab styling fixes for TSP brand */
   .tsp-tab-active {
-    background-color: #236383 !important;
+    background-color: var(--tsp-navy) !important;
     color: white !important;
   }
   
   .tsp-tab-inactive {
-    color: #646464 !important;
+    color: var(--tsp-charcoal) !important;
   }
   
   .tsp-tab-inactive:hover {
-    color: #236383 !important;
-    background-color: rgba(35, 99, 131, 0.1) !important;
+    color: var(--tsp-navy) !important;
+    background-color: var(--tsp-navy-light) !important;
+  }
+  
+  /* Form Focus States */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--tsp-navy) !important;
+    outline: 2px solid transparent !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 3px rgba(35, 99, 131, 0.1) !important;
+  }
+  
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--tsp-charcoal);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--tsp-navy);
   }
 
   /* Stat Card Subtle Patterns */
