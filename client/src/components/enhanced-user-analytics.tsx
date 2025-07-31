@@ -296,82 +296,111 @@ export default function EnhancedUserAnalytics() {
           <TabsTrigger value="behavior">Behavior Analysis</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>User Activity Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[600px]">
-                <div className="space-y-4">
-                  {detailedActivities?.map((user) => (
-                    <div key={user.userId} className="border rounded-lg p-4 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-[#236383] text-white rounded-full flex items-center justify-center text-sm font-medium">
-                            {user.firstName?.[0] || user.email[0].toUpperCase()}
-                          </div>
-                          <div>
-                            <p className="font-medium">
-                              {user.firstName && user.lastName 
-                                ? `${user.firstName} ${user.lastName}` 
-                                : user.email}
-                            </p>
-                            <p className="text-sm text-muted-foreground">{user.email}</p>
-                          </div>
-                        </div>
-                        <Badge variant="secondary">
-                          {user.totalActions} actions
-                        </Badge>
-                      </div>
+        <TabsContent value="overview" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold">User Activity Summary</h3>
+              <p className="text-sm text-muted-foreground">
+                Overview of all users and their platform engagement
+              </p>
+            </div>
+            <Badge variant="outline">
+              {detailedActivities?.length || 0} total users
+            </Badge>
+          </div>
 
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                        <div>
-                          <p className="text-muted-foreground">Top Section</p>
-                          <Badge className={getSectionColor(user.topSection)}>
+          <ScrollArea className="h-[700px]">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {detailedActivities?.map((user) => (
+                <Card key={user.userId} className="hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-[#236383] to-[#1a4b5c] text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                        {user.firstName?.[0] || user.email[0].toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-sm truncate">
+                          {user.firstName && user.lastName 
+                            ? `${user.firstName} ${user.lastName}` 
+                            : user.email}
+                        </h4>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {user.email}
+                        </p>
+                      </div>
+                      <Badge variant={user.totalActions > 0 ? "default" : "secondary"} className="text-xs">
+                        {user.totalActions}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="space-y-4">
+                    {/* Key Metrics */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="text-center p-3 bg-muted/50 rounded-lg">
+                        <p className="text-xs text-muted-foreground">Sessions</p>
+                        <p className="text-lg font-bold">{user.sessionsCount}</p>
+                      </div>
+                      <div className="text-center p-3 bg-muted/50 rounded-lg">
+                        <p className="text-xs text-muted-foreground">Time Spent</p>
+                        <p className="text-lg font-bold">{Math.round(user.timeSpent)}m</p>
+                      </div>
+                    </div>
+
+                    {/* Top Activity */}
+                    {user.totalActions > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-medium text-muted-foreground">TOP SECTION</span>
+                          <Badge className={getSectionColor(user.topSection)} variant="outline">
                             {user.topSection}
                           </Badge>
                         </div>
-                        <div>
-                          <p className="text-muted-foreground">Top Feature</p>
-                          <p className="font-medium">{user.topFeature}</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">Time Spent</p>
-                          <p className="font-medium">{Math.round(user.timeSpent)} min</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">Last Active</p>
-                          <p className="font-medium">
-                            {user.lastActive 
-                              ? formatDistanceToNow(new Date(user.lastActive), { addSuffix: true })
-                              : 'Never'
-                            }
-                          </p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-medium text-muted-foreground">TOP FEATURE</span>
+                          <span className="text-xs font-medium truncate max-w-[120px]">
+                            {user.topFeature}
+                          </span>
                         </div>
                       </div>
+                    )}
 
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-2">Features Used</p>
+                    {/* Last Active */}
+                    <div className="pt-2 border-t">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Last Active</span>
+                        <span className="text-xs font-medium">
+                          {user.lastActive 
+                            ? formatDistanceToNow(new Date(user.lastActive), { addSuffix: true })
+                            : 'Never'
+                          }
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Features Preview */}
+                    {user.featuresUsed.length > 0 && (
+                      <div className="space-y-2">
+                        <span className="text-xs font-medium text-muted-foreground">FEATURES USED</span>
                         <div className="flex flex-wrap gap-1">
-                          {user.featuresUsed.slice(0, 5).map((feature, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
+                          {user.featuresUsed.slice(0, 3).map((feature, idx) => (
+                            <Badge key={idx} variant="outline" className="text-xs px-2 py-0">
                               {feature}
                             </Badge>
                           ))}
-                          {user.featuresUsed.length > 5 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{user.featuresUsed.length - 5} more
+                          {user.featuresUsed.length > 3 && (
+                            <Badge variant="outline" className="text-xs px-2 py-0 bg-muted">
+                              +{user.featuresUsed.length - 3}
                             </Badge>
                           )}
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </CardContent>
-          </Card>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </ScrollArea>
         </TabsContent>
 
         <TabsContent value="activity" className="space-y-4">
