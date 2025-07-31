@@ -219,7 +219,8 @@ export default function ShoutoutSystem() {
     if (!users) return 0;
     switch (recipientGroup) {
       case 'all': return users.length;
-      case 'admins': return users.filter((u: any) => u.role === 'admin' || u.role === 'super_admin').length;
+      case 'admins': return users.filter((u: any) => u.role === 'admin').length;
+      case 'super_admins': return users.filter((u: any) => u.role === 'super_admin').length;
       case 'hosts': return users.filter((u: any) => u.role === 'host').length;
       case 'volunteers': return users.filter((u: any) => u.role === 'volunteer').length;
       case 'committee': return users.filter((u: any) => u.role === 'committee_member').length;
@@ -317,10 +318,11 @@ export default function ShoutoutSystem() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Users ({getRecipientCount()})</SelectItem>
-                  <SelectItem value="admins">Administrators</SelectItem>
-                  <SelectItem value="hosts">Host Coordinators</SelectItem>
-                  <SelectItem value="volunteers">Volunteers</SelectItem>
-                  <SelectItem value="committee">Committee Members</SelectItem>
+                  <SelectItem value="super_admins">Super Administrators ({users?.filter((u: any) => u.role === 'super_admin').length || 0})</SelectItem>
+                  <SelectItem value="admins">Administrators ({users?.filter((u: any) => u.role === 'admin').length || 0})</SelectItem>
+                  <SelectItem value="hosts">Host Coordinators ({users?.filter((u: any) => u.role === 'host').length || 0})</SelectItem>
+                  <SelectItem value="volunteers">Volunteers ({users?.filter((u: any) => u.role === 'volunteer').length || 0})</SelectItem>
+                  <SelectItem value="committee">Committee Members ({users?.filter((u: any) => u.role === 'committee_member').length || 0})</SelectItem>
                 </SelectContent>
               </Select>
             </div>

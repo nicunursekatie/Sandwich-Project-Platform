@@ -69,7 +69,7 @@ router.post('/test', isAuthenticated, requirePermission('MANAGE_USERS'), async (
 const sendShoutoutSchema = z.object({
   subject: z.string().min(1, "Subject is required"),
   message: z.string().min(1, "Message is required"),
-  recipientGroup: z.enum(['all', 'admins', 'hosts', 'volunteers', 'committee']),
+  recipientGroup: z.enum(['all', 'super_admins', 'admins', 'hosts', 'volunteers', 'committee']),
   templateName: z.string().optional()
 });
 
@@ -87,10 +87,11 @@ router.post('/send', isAuthenticated, requirePermission('MANAGE_USERS'), async (
       case 'all':
         recipients = allUsers;
         break;
+      case 'super_admins':
+        recipients = allUsers.filter(user => user.role === 'super_admin');
+        break;
       case 'admins':
-        recipients = allUsers.filter(user => 
-          user.role === 'admin' || user.role === 'super_admin'
-        );
+        recipients = allUsers.filter(user => user.role === 'admin');
         break;
       case 'hosts':
         recipients = allUsers.filter(user => user.role === 'host');
