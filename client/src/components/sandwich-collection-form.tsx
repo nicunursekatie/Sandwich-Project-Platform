@@ -1,10 +1,16 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Plus, Trash2, Sandwich } from "lucide-react";
+import { Plus, Trash2, Sandwich, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Select,
   SelectContent,
@@ -434,19 +440,26 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
         </div>
 
-        {/* Ultra Compact Warning */}
-        <div className="bg-gradient-to-r from-amber-100/80 to-yellow-100/60 border-l-4 border-[#FBAD3F] p-3 text-sm text-amber-800 rounded-r-lg">
-          ⚠️ Don't include group totals in individual count
-        </div>
-
         {/* Ultra Compact Collections */}
         <div className="space-y-2">
           {/* Individual Collections - Single Line */}
           <div className="bg-gradient-to-r from-slate-50 to-blue-50/40 rounded-lg p-3 border border-slate-200">
             <div className="flex items-center gap-2">
-              <Label htmlFor="individualSandwiches" className="text-xs font-medium text-slate-700 w-20 flex-shrink-0">
-                Individual:
-              </Label>
+              <div className="flex items-center gap-1 w-20 flex-shrink-0">
+                <Label htmlFor="individualSandwiches" className="text-xs font-medium text-slate-700">
+                  Individual:
+                </Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="w-3 h-3 text-amber-600 hover:text-amber-700 cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-xs">
+                      <p className="text-xs">Don't include group totals here - enter those separately below</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <Input
                 id="individualSandwiches"
                 type="number"
