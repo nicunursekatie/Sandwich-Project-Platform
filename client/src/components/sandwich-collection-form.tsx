@@ -340,23 +340,23 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   };
 
   return (
-    <div className="w-full bg-gradient-to-br from-white to-amber-50/40 rounded-lg border border-amber-200/50 shadow-sm">
-      {/* Ultra Compact Header */}
-      <div className="px-4 py-3 border-b border-amber-200/30 bg-gradient-to-r from-[#FBAD3F]/8 to-amber-50/50">
-        <h2 className="text-base font-semibold text-[#236383] flex items-center font-roboto">
-          <div className="w-6 h-6 bg-white rounded mr-2 flex items-center justify-center border border-slate-200 shadow-sm">
-            <img src={sandwichLogo} alt="Logo" className="w-4 h-4 object-contain" />
+    <div className="w-full bg-gradient-to-br from-white via-[#236383]/5 to-[#FBAD3F]/10 rounded-lg border border-[#236383]/20 shadow-lg">
+      {/* Single Header with Logo */}
+      <div className="px-6 py-4 border-b border-[#236383]/20 bg-gradient-to-r from-[#FBAD3F]/10 via-white to-[#236383]/10">
+        <h2 className="text-lg font-bold text-[#236383] flex items-center font-roboto">
+          <div className="w-8 h-8 bg-white rounded-lg mr-3 flex items-center justify-center border border-[#236383]/30 shadow-md">
+            <img src={sandwichLogo} alt="Logo" className="w-5 h-5 object-contain" />
           </div>
           Submit Collection
         </h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-2 space-y-3">
+      <form onSubmit={handleSubmit} className="p-6 space-y-4">
         {/* Collection Info Section */}
-        <div className="bg-gradient-to-r from-amber-50/50 to-orange-50/30 rounded-lg p-4 space-y-3 border border-amber-200/30">
-          <div className="flex items-center gap-2 mb-3 pb-2 border-b border-amber-200/50">
-            <Calendar className="w-4 h-4 text-amber-600" />
-            <h3 className="text-sm font-semibold text-amber-800">Collection Info</h3>
+        <div className="bg-gradient-to-r from-[#236383]/10 to-[#236383]/5 rounded-lg p-5 space-y-4 border border-[#236383]/20 shadow-sm">
+          <div className="flex items-center gap-3 mb-4 pb-3 border-b border-[#236383]/20">
+            <Calendar className="w-5 h-5 text-[#236383]" />
+            <h3 className="text-base font-bold text-[#236383] font-roboto">Collection Info</h3>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
@@ -444,22 +444,22 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
         </div>
 
-        {/* Ultra Compact Collections */}
-        <div className="space-y-2">
-          {/* Individual Collections - Single Line */}
-          <div className="bg-gradient-to-r from-slate-50 to-blue-50/40 rounded-lg p-3 border border-slate-200">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1 w-20 flex-shrink-0">
-                <Label htmlFor="individualSandwiches" className="text-xs font-medium text-slate-700">
+        {/* Collections Data */}
+        <div className="space-y-4">
+          {/* Individual Collections */}
+          <div className="bg-gradient-to-r from-[#FBAD3F]/10 to-[#FBAD3F]/5 rounded-lg p-4 border border-[#FBAD3F]/20 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 w-28 flex-shrink-0">
+                <Label htmlFor="individualSandwiches" className="text-sm font-bold text-[#922B21] font-roboto">
                   Individual:
                 </Label>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Info className="w-3 h-3 text-amber-600 hover:text-amber-700 cursor-help" />
+                      <Info className="w-4 h-4 text-[#FBAD3F] hover:text-[#e89b2e] cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent side="right" className="max-w-xs">
-                      <p className="text-xs">Don't include group totals here - enter those separately below</p>
+                      <p className="text-sm">Don't include group totals here - enter those separately below</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -487,14 +487,14 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
 
           {/* Instruction Text */}
-          <div className="text-xs text-gray-600 italic px-1">
+          <div className="text-sm text-[#922B21] italic px-2 py-2 bg-[#922B21]/5 rounded-md border border-[#922B21]/10">
             Enter group totals separately below. Each group needs a name and count. Use "Add Group" button to add more groups.
           </div>
 
-          {/* Group Collections - Ultra Compact */}
-          <div className="bg-gradient-to-r from-orange-50/60 to-amber-50/40 rounded-lg p-3 border border-orange-200/50">
-            <div className="mb-2">
-              <Label className="text-xs font-medium text-slate-700">Groups:</Label>
+          {/* Group Collections */}
+          <div className="bg-gradient-to-r from-[#922B21]/10 to-[#922B21]/5 rounded-lg p-4 border border-[#922B21]/20 shadow-sm">
+            <div className="mb-3">
+              <Label className="text-sm font-bold text-[#922B21] font-roboto">Groups:</Label>
             </div>
 
             <div className="space-y-2">
@@ -549,23 +549,23 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 type="button"
                 variant="outline"
                 onClick={addGroupRow}
-                className="w-full h-8 text-xs font-medium border-orange-300 text-orange-700 hover:bg-orange-50 hover:border-orange-400"
+                className="w-full h-10 text-sm font-bold border-2 border-[#FBAD3F] text-[#922B21] hover:bg-[#FBAD3F]/10 hover:border-[#FBAD3F] transition-all duration-200 font-roboto"
               >
-                <Plus className="w-3 h-3 mr-1" />
+                <Plus className="w-4 h-4 mr-2" />
                 Add Group
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Ultra Compact Submit */}
+        {/* Submit Button */}
         <Button
           type="submit"
           disabled={submitCollectionMutation.isPending || !isFormValid()}
-          className={`w-full h-10 px-6 text-sm font-semibold rounded-lg shadow-sm transition-all duration-200 ${
+          className={`w-full h-12 px-8 text-base font-bold rounded-lg shadow-lg transition-all duration-200 font-roboto ${
             isFormValid() && !submitCollectionMutation.isPending
-              ? 'bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#d88a1e] text-white shadow-[#FBAD3F]/25'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-[#FBAD3F] via-[#e89b2e] to-[#922B21] hover:from-[#e89b2e] hover:via-[#d88a1e] hover:to-[#7a2419] text-white shadow-lg shadow-[#FBAD3F]/30 border-2 border-[#922B21]/20'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed border-2 border-gray-300'
           }`}
         >
           {submitCollectionMutation.isPending ? "Submitting..." : "Submit Collection"}
