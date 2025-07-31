@@ -22,7 +22,9 @@ interface Host {
   notes: string;
 }
 
-export default function SandwichCollectionForm({ onSuccess }: SandwichCollectionFormProps) {
+export default function SandwichCollectionForm({
+  onSuccess,
+}: SandwichCollectionFormProps) {
   const [date, setDate] = useState("2025-07-31");
   const [location, setLocation] = useState("");
   const [customLocation, setCustomLocation] = useState("");
@@ -37,7 +39,8 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   // Fetch active hosts
   const { data: hosts = [] } = useQuery<Host[]>({
     queryKey: ["/api/hosts"],
-    select: (data: any) => data.filter((host: Host) => host.status === "active"),
+    select: (data: any) =>
+      data.filter((host: Host) => host.status === "active"),
   });
 
   // Create new host mutation
@@ -199,7 +202,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   };
 
   const h1Style = {
-    fontSize: "18px",
+    fontSize: "20px",
     fontWeight: "600",
     margin: 0,
     marginBottom: "4px",
@@ -260,19 +263,19 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     alignItems: "center" as const,
     gap: "8px",
     position: "relative" as const,
-    paddingLeft: "12px",
+    paddingLeft: "13px",
     fontFamily: "Roboto, sans-serif",
   };
 
   const formRowStyle = {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "10px",
+    gridTemplateColumns: "200px 1fr",
+    gap: "16px",
   };
 
   const formGroupStyle = {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as const,
     gap: "5px",
   };
 
@@ -309,7 +312,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
 
   const selectStyle = {
     ...inputStyle,
-    appearance: "none",
+    appearance: "none" as const,
     backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23989393' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "right 10px center",
@@ -516,12 +519,16 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     gap: "4px",
   };
   // Event handlers
-  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputFocus = (
+    e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     e.currentTarget.style.outline = "none";
     e.currentTarget.style.borderColor = "#236383";
   };
 
-  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     e.currentTarget.style.borderColor = "#E9E6E6";
   };
 
@@ -676,7 +683,14 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
             // Expanded state
             <div>
               <div style={groupsHeaderStyle}>
-                <h3 style={{ ...sectionTitleStyle, marginBottom: 0, paddingBottom: 0, borderBottom: 'none' }}>
+                <h3
+                  style={{
+                    ...sectionTitleStyle,
+                    marginBottom: 0,
+                    paddingBottom: 0,
+                    borderBottom: "none",
+                  }}
+                >
                   <span style={accentBarStyle}></span>
                   Group Collections
                 </h3>
