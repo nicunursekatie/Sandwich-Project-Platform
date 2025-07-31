@@ -44,7 +44,15 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   };
 
   return (
-    <form className="w-full max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-xl space-y-8 text-[#646464] font-roboto">
+    <div className="mx-auto" style={{ 
+      maxWidth: '480px', 
+      padding: '24px', 
+      background: '#FFFFFF', 
+      borderRadius: '16px', 
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+      margin: '0 auto'
+    }}>
+      <form className="w-full space-y-6 text-[#646464] font-roboto">
       {/* Header */}
       <div className="space-y-1 text-center">
         <h1 className="text-2xl font-bold text-[#236383] flex items-center justify-center">
@@ -183,6 +191,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       >
         Submit Collection
       </Button>
-    </form>
+      </form>
+    </div>
   );
 }
