@@ -104,37 +104,37 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
   return (
     <div className="space-y-8">
-      {/* Simple Header with Large Logo */}
-      <div className="text-center py-8">
-        <img src={tspLogo} alt="The Sandwich Project" className="w-[500px] mb-6 mx-auto" />
-        <p className="text-lg text-gray-600 font-roboto">Community Impact Through Coordinated Action</p>
+      {/* Responsive Header with Logo */}
+      <div className="text-center py-4 md:py-8">
+        <img src={tspLogo} alt="The Sandwich Project" className="w-[300px] md:w-[500px] mb-4 md:mb-6 mx-auto" />
+        <p className="text-sm md:text-lg text-gray-600 font-roboto px-4">Community Impact Through Coordinated Action</p>
       </div>
 
       {/* Collection Call-to-Action */}
       {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
-          <div className="px-8 py-6 bg-gradient-to-r from-[#FBAD3F]/5 via-white to-[#236383]/5">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg border border-slate-200">
-                  <img src={sandwichLogo} alt="Sandwich" className="h-8 w-8 object-contain" />
+          <div className="px-4 md:px-8 py-4 md:py-6 bg-gradient-to-r from-[#FBAD3F]/5 via-white to-[#236383]/5">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div className="flex items-center space-x-3 md:space-x-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl flex items-center justify-center shadow-lg border border-slate-200">
+                  <img src={sandwichLogo} alt="Sandwich" className="h-6 w-6 md:h-8 md:w-8 object-contain" />
                 </div>
                 <div>
-                  <h2 className="text-xl md:text-2xl font-black text-slate-900 font-roboto tracking-tight">Record Collection Data</h2>
-                  <p className="text-sm font-medium text-slate-500 font-roboto mt-1">Submit your sandwich contributions to help our community</p>
+                  <h2 className="text-lg md:text-xl lg:text-2xl font-black text-slate-900 font-roboto tracking-tight">Record Collection Data</h2>
+                  <p className="text-xs md:text-sm font-medium text-slate-500 font-roboto mt-1">Submit your sandwich contributions to help our community</p>
                 </div>
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <Button 
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
-                  className="bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#d88a1e] text-white font-semibold px-8 py-3 text-sm shadow-lg shadow-[#FBAD3F]/25 transition-all duration-200"
+                  className="bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#d88a1e] text-white font-semibold px-4 md:px-8 py-2 md:py-3 text-xs md:text-sm shadow-lg shadow-[#FBAD3F]/25 transition-all duration-200 w-full sm:w-auto"
                 >
                   {showCollectionForm ? 'Hide Form' : 'Enter New Collection Data'}
                 </Button>
                 <Button 
                   variant="outline" 
                   onClick={() => onSectionChange?.("collections")}
-                  className="text-sm font-semibold border-2 border-[#236383]/30 text-[#236383] hover:bg-[#236383]/10 hover:border-[#236383]/50 transition-all duration-200 px-6"
+                  className="text-xs md:text-sm font-semibold border-2 border-[#236383]/30 text-[#236383] hover:bg-[#236383]/10 hover:border-[#236383]/50 transition-all duration-200 px-4 md:px-6 py-2 md:py-3 w-full sm:w-auto"
                 >
                   View All Collections
                 </Button>
@@ -167,63 +167,63 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
             <h2 className="text-lg font-semibold text-slate-900 font-roboto">Organizational Impact</h2>
           </div>
         </div>
-        <div className="p-6">
+        <div className="p-4 md:p-6">
           {/* Top Row - Main Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-gradient-to-r from-blue-50 via-violet-50/70 to-indigo-50 rounded-lg border border-blue-200/50 p-4 shadow-sm">
-              <div className="mb-3">
-                <span className="text-base sm:text-lg font-semibold text-blue-700">Total Lifetime</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-6">
+            <div className="bg-gradient-to-r from-blue-50 via-violet-50/70 to-indigo-50 rounded-lg border border-blue-200/50 p-3 md:p-4 shadow-sm">
+              <div className="mb-2 md:mb-3">
+                <span className="text-sm md:text-base lg:text-lg font-semibold text-blue-700">Total Lifetime</span>
               </div>
-              <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.totalLifetimeSandwiches}</div>
-              <div className="text-sm text-blue-600">Since 2020</div>
+              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.totalLifetimeSandwiches}</div>
+              <div className="text-xs md:text-sm text-blue-600">Since 2020</div>
             </div>
 
-            <div className="bg-gradient-to-r from-amber-50 via-orange-50/70 to-red-50 rounded-lg border border-orange-200/50 p-4 shadow-sm">
-              <div className="mb-3">
-                <span className="text-base sm:text-lg font-semibold text-orange-700">Peak Week</span>
+            <div className="bg-gradient-to-r from-amber-50 via-orange-50/70 to-red-50 rounded-lg border border-orange-200/50 p-3 md:p-4 shadow-sm">
+              <div className="mb-2 md:mb-3">
+                <span className="text-sm md:text-base lg:text-lg font-semibold text-orange-700">Peak Week</span>
               </div>
-              <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.peakWeekRecord}</div>
-              <div className="text-sm text-orange-600 break-words">{organizationalStats.peakWeekDate}</div>
+              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.peakWeekRecord}</div>
+              <div className="text-xs md:text-sm text-orange-600 break-words">{organizationalStats.peakWeekDate}</div>
             </div>
 
-            <div className="bg-gradient-to-r from-teal-50 via-emerald-50/70 to-green-50 rounded-lg border border-emerald-200/50 p-4 shadow-sm">
-              <div className="mb-3">
-                <span className="text-base sm:text-lg font-semibold text-emerald-700">Annual Capacity</span>
+            <div className="bg-gradient-to-r from-teal-50 via-emerald-50/70 to-green-50 rounded-lg border border-emerald-200/50 p-3 md:p-4 shadow-sm">
+              <div className="mb-2 md:mb-3">
+                <span className="text-sm md:text-base lg:text-lg font-semibold text-emerald-700">Annual Capacity</span>
               </div>
-              <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.currentAnnualCapacity}</div>
-              <div className="text-sm text-emerald-600">Sustainable Level</div>
+              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.currentAnnualCapacity}</div>
+              <div className="text-xs md:text-sm text-emerald-600">Sustainable Level</div>
             </div>
 
-            <div className="bg-gradient-to-r from-rose-50 via-pink-50/70 to-fuchsia-50 rounded-lg border border-red-200/50 p-4 shadow-sm">
-              <div className="mb-3">
-                <span className="text-base sm:text-lg font-semibold text-red-700">Growth</span>
+            <div className="bg-gradient-to-r from-rose-50 via-pink-50/70 to-fuchsia-50 rounded-lg border border-red-200/50 p-3 md:p-4 shadow-sm">
+              <div className="mb-2 md:mb-3">
+                <span className="text-sm md:text-base lg:text-lg font-semibold text-red-700">Growth</span>
               </div>
-              <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.growthMultiplier}</div>
-              <div className="text-sm text-red-600">Since Launch</div>
+              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.growthMultiplier}</div>
+              <div className="text-xs md:text-sm text-red-600">Since Launch</div>
             </div>
           </div>
 
           {/* Bottom Row - Breakdown Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-r from-blue-50 via-indigo-50/70 to-purple-50 rounded-lg border border-blue-200/50 p-4 shadow-sm">
-              <div className="mb-3">
-                <span className="text-base sm:text-lg font-semibold text-blue-700">Individual Sandwiches</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            <div className="bg-gradient-to-r from-blue-50 via-indigo-50/70 to-purple-50 rounded-lg border border-blue-200/50 p-3 md:p-4 shadow-sm">
+              <div className="mb-2 md:mb-3">
+                <span className="text-sm md:text-base lg:text-lg font-semibold text-blue-700">Individual Sandwiches</span>
               </div>
-              <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.individualSandwiches}</div>
+              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.individualSandwiches}</div>
             </div>
 
-            <div className="bg-gradient-to-r from-orange-50 via-red-50/70 to-rose-50 rounded-lg border border-orange-200/50 p-4 shadow-sm">
-              <div className="mb-3">
-                <span className="text-base sm:text-lg font-semibold text-orange-700">Group Sandwiches</span>
+            <div className="bg-gradient-to-r from-orange-50 via-red-50/70 to-rose-50 rounded-lg border border-orange-200/50 p-3 md:p-4 shadow-sm">
+              <div className="mb-2 md:mb-3">
+                <span className="text-sm md:text-base lg:text-lg font-semibold text-orange-700">Group Sandwiches</span>
               </div>
-              <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.groupSandwiches}</div>
+              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.groupSandwiches}</div>
             </div>
 
-            <div className="bg-gradient-to-r from-slate-50 via-gray-50/70 to-zinc-50 rounded-lg border border-slate-200/50 p-4 shadow-sm">
-              <div className="mb-3">
-                <span className="text-base sm:text-lg font-semibold text-slate-700">Total Entries</span>
+            <div className="bg-gradient-to-r from-slate-50 via-gray-50/70 to-zinc-50 rounded-lg border border-slate-200/50 p-3 md:p-4 shadow-sm sm:col-span-2 md:col-span-1">
+              <div className="mb-2 md:mb-3">
+                <span className="text-sm md:text-base lg:text-lg font-semibold text-slate-700">Total Entries</span>
               </div>
-              <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.totalEntries}</div>
+              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.totalEntries}</div>
             </div>
           </div>
         </div>
