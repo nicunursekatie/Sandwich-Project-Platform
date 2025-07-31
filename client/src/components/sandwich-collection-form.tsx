@@ -768,11 +768,24 @@ export default function SandwichCollectionForm({
                         type="number"
                         placeholder="0"
                         min="0"
-                        value={group.count}
+                        value={group.count === 0 ? "" : group.count}
                         onChange={(e) => {
                           const newGroups = [...groups];
-                          newGroups[i].count = parseInt(e.target.value) || 0;
+                          const value = e.target.value;
+                          // Allow empty string or valid numbers
+                          if (value === "" || value === "0") {
+                            newGroups[i].count = 0;
+                          } else {
+                            newGroups[i].count = parseInt(value) || 0;
+                          }
                           setGroups(newGroups);
+                        }}
+                        onFocus={(e) => {
+                          // Clear the field if it shows 0 when focused
+                          if (e.target.value === "0") {
+                            e.target.value = "";
+                          }
+                          handleInputFocus(e);
                         }}
                         style={{
                           ...groupInputStyle,
@@ -780,7 +793,6 @@ export default function SandwichCollectionForm({
                           fontWeight: "600",
                           color: "#236383",
                         }}
-                        onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
                       />
                       <button

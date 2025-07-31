@@ -1839,8 +1839,22 @@ export default function SandwichCollectionLog() {
                       type="number"
                       min="0"
                       placeholder="Count"
-                      value={group.sandwichCount?.toString() || ""}
-                      onChange={(e) => updateEditGroupCollection(group.id, "sandwichCount", parseInt(e.target.value) || 0)}
+                      value={group.sandwichCount === 0 ? "" : group.sandwichCount?.toString() || ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        // Allow empty string or valid numbers
+                        if (value === "" || value === "0") {
+                          updateEditGroupCollection(group.id, "sandwichCount", 0);
+                        } else {
+                          updateEditGroupCollection(group.id, "sandwichCount", parseInt(value) || 0);
+                        }
+                      }}
+                      onFocus={(e) => {
+                        // Clear the field if it shows 0 when focused
+                        if (e.target.value === "0") {
+                          e.target.value = "";
+                        }
+                      }}
                       className="w-24"
                     />
                     {editGroupCollections.length > 1 && (
