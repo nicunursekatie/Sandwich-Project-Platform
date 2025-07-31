@@ -180,7 +180,8 @@ export function CollectionTable({ collections, onEdit, onDelete, isUpdating, isD
               <th className="text-left p-3 font-medium">Individual</th>
               <th className="text-left p-3 font-medium">Groups</th>
               <th className="text-left p-3 font-medium">Total</th>
-              <th className="text-left p-3 font-medium">Submitted</th>
+              <th className="text-left p-3 font-medium">Submitted By</th>
+              <th className="text-left p-3 font-medium">Date Submitted</th>
               <th className="text-right p-3 font-medium">Actions</th>
             </tr>
           </thead>
@@ -231,6 +232,13 @@ export function CollectionTable({ collections, onEdit, onDelete, isUpdating, isD
                     <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                       {total}
                     </Badge>
+                  </td>
+                  
+                  <td className="p-3 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-2">
+                      <User className="h-3 w-3 text-gray-400" />
+                      <span>{(collection as any).createdByName || 'Unknown User'}</span>
+                    </div>
                   </td>
                   
                   <td className="p-3 text-sm text-gray-600 dark:text-gray-400">

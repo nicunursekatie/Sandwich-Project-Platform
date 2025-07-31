@@ -1124,8 +1124,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     async (req, res) => {
       try {
         const collectionData = insertSandwichCollectionSchema.parse(req.body);
-        const collection =
-          await storage.createSandwichCollection(collectionData);
+        
+        // Add user attribution to the collection
+        const user = req.user || req.session?.user;
+        const enrichedCollectionData = {
+          ...collectionData,
+          createdBy: user?.id || 'unknown',
+          createdByName: user?.firstName && user?.lastName 
+            ? `${user.firstName} ${user.lastName}` 
+            : user?.email || 'Unknown User'
+        };
+        
+        const collection = await storage.createSandwichCollection(enrichedCollectionData);
 
         // Invalidate cache when new collection is created
         QueryOptimizer.invalidateCache("sandwich-collections");
