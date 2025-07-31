@@ -354,9 +354,12 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       <form onSubmit={handleSubmit} className="p-6 space-y-5 bg-white rounded-b-lg">
         {/* Collection Info Section */}
         <div className="bg-gradient-to-r from-[#236383]/8 to-[#236383]/4 rounded-lg p-5 space-y-4 border border-[#236383]/20 shadow-sm">
-          <div className="flex items-center gap-3 mb-4 pb-3 border-b border-[#236383]/20">
-            <Calendar className="w-5 h-5 text-[#236383]" />
-            <h3 className="text-base font-bold text-[#236383] font-roboto">Collection Info</h3>
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#236383]/20">
+            <div className="flex items-center gap-3">
+              <Calendar className="w-5 h-5 text-[#236383]" />
+              <h3 className="text-base font-bold text-[#236383] font-roboto">Collection Info</h3>
+            </div>
+            <span className="bg-[#47B3CB] text-white text-xs font-bold px-2 py-1 rounded-full">Required</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
@@ -476,13 +479,16 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 placeholder="0"
                 className={`h-8 text-xs px-2 py-1 border rounded flex-1 ${
                   validationErrors.individualSandwiches 
-                    ? 'border-red-500' 
+                    ? 'border-[#A31C41] border-2' 
                     : 'border-slate-300'
                 }`}
               />
             </div>
             {validationErrors.individualSandwiches && (
-              <p className="text-xs text-red-600 mt-1">{validationErrors.individualSandwiches}</p>
+              <div className="mt-2 flex items-center gap-2">
+                <span className="bg-[#A31C41] text-white text-xs font-bold px-2 py-1 rounded-full">Error</span>
+                <p className="text-xs text-[#A31C41] font-medium">{validationErrors.individualSandwiches}</p>
+              </div>
             )}
           </div>
 
@@ -493,8 +499,9 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
 
           {/* Group Collections */}
           <div className="bg-gradient-to-r from-[#922B21]/8 to-[#922B21]/4 rounded-lg p-4 border border-[#922B21]/30 shadow-sm">
-            <div className="mb-3">
+            <div className="flex items-center justify-between mb-3">
               <Label className="text-sm font-bold text-[#922B21] font-roboto">Groups:</Label>
+              <span className="bg-[#47B3CB] text-white text-xs font-bold px-2 py-1 rounded-full">Optional</span>
             </div>
 
             <div className="space-y-2">
@@ -532,10 +539,9 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                     {groupCollections.length > 1 && (
                       <Button
                         type="button"
-                        variant="outline"
                         size="sm"
                         onClick={() => removeGroupRow(group.id)}
-                        className="h-7 w-7 p-0 text-red-600 mt-4"
+                        className="h-7 w-7 p-0 bg-[#A31C41] hover:bg-[#8b1836] text-white font-bold border border-[#A31C41] mt-4"
                       >
                         ✕
                       </Button>
@@ -547,9 +553,8 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               {/* Full-width Add Group button */}
               <Button
                 type="button"
-                variant="outline"
                 onClick={addGroupRow}
-                className="w-full h-9 text-sm font-semibold border-2 border-[#FBAD3F] text-[#922B21] hover:bg-[#FBAD3F]/10 hover:border-[#FBAD3F] transition-all duration-200 font-roboto"
+                className="w-full h-9 text-sm font-semibold bg-[#007E8C] hover:bg-[#006670] text-white font-bold border border-[#007E8C] transition-all duration-200 font-roboto"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Group
