@@ -167,29 +167,28 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     submitMutation.mutate(collectionData);
   };
 
-  // Container styles
+  // Modern dashboard-integrated container styles
   const containerStyle = {
-    maxWidth: "420px",
-    margin: "0 auto",
     background: "white",
-    borderRadius: "10px",
+    borderRadius: "8px",
+    border: "1px solid #e2e8f0",
     overflow: "hidden",
-    boxShadow: "0 3px 10px rgba(0, 0, 0, 0.08)",
   };
+
   const accentBarStyle = {
     width: "3px",
     height: "16px",
     background: "#FBAD3F",
     borderRadius: "2px",
-    position: "absolute",
+    position: "absolute" as const,
     left: 0,
   };
 
-  // Compact header with total
+  // Modern header style matching dashboard cards
   const headerStyle = {
-    background: "linear-gradient(135deg, #236383 0%, #007E8C 100%)",
-    color: "white",
-    padding: "16px 20px",
+    background: "#f8fafc",
+    borderBottom: "1px solid #e2e8f0",
+    padding: "16px 24px",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -203,58 +202,66 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     fontSize: "18px",
     fontWeight: "600",
     margin: 0,
-    marginBottom: "1px",
+    marginBottom: "4px",
+    color: "#1e293b",
+    fontFamily: "Roboto, sans-serif",
   };
 
   const headerPStyle = {
-    fontSize: "12px",
-    fontWeight: "300",
-    opacity: 0.9,
+    fontSize: "14px",
+    fontWeight: "400",
+    opacity: 0.7,
     margin: 0,
+    color: "#64748b",
+    fontFamily: "Roboto, sans-serif",
   };
 
   const totalBadgeStyle = {
-    background: "rgba(255, 255, 255, 0.2)",
-    borderRadius: "6px",
-    padding: "6px 12px",
-    textAlign: "center",
-    minWidth: "70px",
+    background: "linear-gradient(135deg, #236383 0%, #007E8C 100%)",
+    borderRadius: "8px",
+    padding: "8px 16px",
+    textAlign: "center" as const,
+    minWidth: "80px",
+    color: "white",
   };
 
   const totalLabelStyle = {
-    fontSize: "10px",
-    opacity: 0.8,
-    marginBottom: "1px",
+    fontSize: "11px",
+    opacity: 0.9,
+    marginBottom: "2px",
+    fontWeight: "500",
   };
 
   const totalNumberStyle = {
-    fontSize: "20px",
+    fontSize: "18px",
     fontWeight: "700",
   };
 
-  // Compact form container
+  // Modern form container with dashboard spacing
   const formContainerStyle = {
-    padding: "18px",
+    padding: "24px",
+    background: "white",
   };
 
   const formSectionStyle = {
-    marginBottom: "16px",
+    background: "#f8fafc",
+    borderRadius: "8px",
+    padding: "20px",
+    marginBottom: "20px",
+    border: "1px solid #e2e8f0",
   };
 
   const sectionTitleStyle = {
-    fontSize: "12px",
+    fontSize: "16px",
     fontWeight: "600",
-    color: "#236383",
-    textTransform: "uppercase" as const,
-    letterSpacing: "0.5px",
-    marginBottom: "10px",
-    paddingBottom: "10px",
-    borderBottom: "2px solid #E9E6E6",
+    color: "#1e293b",
+    marginBottom: "16px",
     display: "flex" as const,
     alignItems: "center" as const,
     gap: "8px",
     position: "relative" as const,
     paddingLeft: "12px",
+    fontFamily: "Roboto, sans-serif",
   };
 
   const formRowStyle = {
@@ -270,31 +277,34 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   };
 
   const labelStyle = {
-    fontSize: "11px",
+    fontSize: "14px",
     fontWeight: "500",
-    color: "#989393",
+    color: "#374151",
+    marginBottom: "6px",
+    fontFamily: "Roboto, sans-serif",
   };
 
-  // Compact input styling
+  // Modern input styling matching dashboard
   const inputStyle = {
-    height: "32px",
-    padding: "0 10px",
-    border: "1px solid #E9E6E6",
-    borderRadius: "5px",
-    fontSize: "13px",
+    height: "40px",
+    padding: "0 12px",
+    border: "1px solid #d1d5db",
+    borderRadius: "6px",
+    fontSize: "14px",
     fontFamily: "Roboto, sans-serif",
     transition: "all 0.2s ease",
     background: "white",
-    color: "#646464",
+    color: "#1f2937",
+    width: "100%",
   };
 
   const individualInputStyle = {
     ...inputStyle,
-    width: "85px",
+    width: "100px",
     fontWeight: "600",
     color: "#236383",
     fontSize: "16px",
-    textAlign: "center",
+    textAlign: "center" as const,
   };
 
   const selectStyle = {
@@ -307,12 +317,13 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     cursor: "pointer",
   };
 
-  // Super compact groups section
+  // Modern groups section
   const groupsContainerStyle = {
-    background: "#FAFAFA",
-    borderRadius: "6px",
-    padding: "12px",
-    border: "1px solid #E9E6E6",
+    background: "#ffffff",
+    borderRadius: "8px",
+    padding: "16px",
+    border: "1px solid #e2e8f0",
+    marginTop: "12px",
   };
 
   const groupsHeaderStyle = {
@@ -365,31 +376,34 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     fontFamily: "Roboto, sans-serif",
   };
 
-  // Compact submit section
+  // Modern submit section
   const submitSectionStyle = {
-    padding: "16px 18px",
-    borderTop: "1px solid #E9E6E6",
+    padding: "24px",
+    borderTop: "1px solid #e2e8f0",
     display: "flex",
     justifyContent: "flex-end",
+    background: "#f8fafc",
   };
 
   const submitBtnStyle = {
-    background: "#FBAD3F",
+    background: "linear-gradient(135deg, #FBAD3F 0%, #e89b2e 100%)",
     color: "white",
     border: "none",
-    padding: "8px 20px",
-    borderRadius: "5px",
-    fontSize: "13px",
+    padding: "12px 32px",
+    borderRadius: "8px",
+    fontSize: "14px",
     fontWeight: "600",
     cursor: "pointer",
     transition: "all 0.2s ease",
     fontFamily: "Roboto, sans-serif",
+    boxShadow: "0 2px 4px rgba(251, 173, 63, 0.25)",
   };
 
   const helperTextStyle = {
-    fontSize: "10px",
-    color: "#989393",
-    marginTop: "3px",
+    fontSize: "12px",
+    color: "#6b7280",
+    marginTop: "4px",
+    fontFamily: "Roboto, sans-serif",
   };
 
   const emptyStateStyle = {
