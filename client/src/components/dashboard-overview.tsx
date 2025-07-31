@@ -145,7 +145,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
         {/* Modern Collection Call-to-Action */}
         {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
-          <div className="glass-card hover-lift overlap-shadow mx-4 p-6 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10">
+          <div className="glass-card hover-lift overlap-shadow mx-4 p-6 bg-gradient-to-r from-blue-500/10 via-teal-500/10 to-orange-500/10">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div className="flex items-center space-x-4">
                 <div className="relative">
@@ -166,7 +166,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button 
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-inter font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 backdrop-blur-sm"
+                  className="bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-inter font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 backdrop-blur-sm"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
                 >
                   {showCollectionForm ? "Hide Form" : "Enter New Collection Data"}
