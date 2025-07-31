@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileText, TrendingUp, Calendar, Award, Download, ExternalLink, Sandwich, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import SandwichCollectionForm from "@/components/sandwich-collection-form";
+
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
@@ -105,30 +105,36 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         <p className="text-lg text-gray-600 font-roboto">Community Impact Through Coordinated Action</p>
       </div>
 
-      {/* Sandwich Collection Form - Primary Focus */}
+      {/* Collection Call-to-Action */}
       {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
-          <div className="px-8 py-6 border-b border-slate-200 flex justify-between items-center bg-gradient-to-r from-[#FBAD3F]/5 via-white to-[#236383]/5">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg border border-slate-200">
-                <img src={sandwichLogo} alt="Sandwich" className="h-8 w-8 object-contain" />
+          <div className="px-8 py-6 bg-gradient-to-r from-[#FBAD3F]/5 via-white to-[#236383]/5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg border border-slate-200">
+                  <img src={sandwichLogo} alt="Sandwich" className="h-8 w-8 object-contain" />
+                </div>
+                <div>
+                  <h2 className="text-xl md:text-2xl font-black text-slate-900 font-roboto tracking-tight">Record Collection Data</h2>
+                  <p className="text-sm font-medium text-slate-500 font-roboto mt-1">Submit your sandwich contributions to help our community</p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-xl md:text-2xl font-black text-slate-900 font-roboto tracking-tight">Submit Collection Data</h2>
-                <p className="text-sm font-medium text-slate-500 font-roboto mt-1">Record your sandwich contributions to the community</p>
+              <div className="flex gap-3">
+                <Button 
+                  onClick={() => onSectionChange?.("collections")}
+                  className="bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#d88a1e] text-white font-semibold px-8 py-3 text-sm shadow-lg shadow-[#FBAD3F]/25 transition-all duration-200"
+                >
+                  Enter New Collection Data
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => onSectionChange?.("collections")}
+                  className="text-sm font-semibold border-2 border-[#236383]/30 text-[#236383] hover:bg-[#236383]/10 hover:border-[#236383]/50 transition-all duration-200 px-6"
+                >
+                  View All Collections
+                </Button>
               </div>
             </div>
-            <Button 
-              variant="outline" 
-              size="lg"
-              onClick={() => onSectionChange?.("collections")}
-              className="text-sm font-semibold border-2 border-[#FBAD3F]/30 text-[#FBAD3F] hover:bg-[#FBAD3F]/10 hover:border-[#FBAD3F]/50 transition-all duration-200 px-6"
-            >
-              View All Collections
-            </Button>
-          </div>
-          <div className="p-8 bg-gradient-to-br from-slate-50/30 to-white">
-            <SandwichCollectionForm onSuccess={() => onSectionChange?.("collections")} />
           </div>
         </div>
       )}

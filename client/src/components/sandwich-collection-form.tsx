@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Plus, Trash2, Sandwich, Info } from "lucide-react";
+import { Plus, Trash2, Sandwich, Info, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -352,8 +352,12 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       </div>
 
       <form onSubmit={handleSubmit} className="p-2 space-y-3">
-        {/* Ultra Compact Basic Info */}
+        {/* Collection Info Section */}
         <div className="bg-gradient-to-r from-amber-50/50 to-orange-50/30 rounded-lg p-4 space-y-3 border border-amber-200/30">
+          <div className="flex items-center gap-2 mb-3 pb-2 border-b border-amber-200/50">
+            <Calendar className="w-4 h-4 text-amber-600" />
+            <h3 className="text-sm font-semibold text-amber-800">Collection Info</h3>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
               <Label htmlFor="collectionDate" className="text-xs font-medium text-slate-700 block mb-1">
