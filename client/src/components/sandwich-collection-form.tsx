@@ -351,9 +351,9 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
         </h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-6 space-y-4 bg-white rounded-b-lg">
+      <form onSubmit={handleSubmit} className="p-6 space-y-6 bg-white rounded-b-lg">
         {/* Collection Info Section */}
-        <div className="bg-gray-50 rounded p-4">
+        <div className="bg-gray-50 p-4 rounded border border-gray-200">
           <h3 className="text-lg font-medium text-[#236383] mb-4">Collection Details</h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -441,57 +441,55 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
         </div>
 
-        {/* Collections Data */}
-        <div className="space-y-4">
-          {/* Individual Collections */}
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Label htmlFor="individualSandwiches" className="text-sm font-medium text-[#646464]">
-                Individual Sandwiches:
-              </Label>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className="w-4 h-4 text-[#646464] hover:text-[#236383] cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent side="right" className="max-w-xs">
-                    <p className="text-sm">Don't include group totals here - enter those separately below</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+        {/* Individual Collections Section */}
+        <div className="bg-gray-50 p-4 rounded border border-gray-200">
+          <div className="flex items-center gap-2 mb-4">
+            <Label htmlFor="individualSandwiches" className="text-sm font-medium text-[#646464]">
+              Individual Sandwiches:
+            </Label>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info className="w-4 h-4 text-[#646464] hover:text-[#236383] cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent side="right" className="max-w-xs">
+                  <p className="text-sm">Only include sandwiches made individually, not counted in groups</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <Input
+            id="individualSandwiches"
+            type="number"
+            min="0"
+            value={individualSandwiches}
+            onChange={(e) => {
+              setIndividualSandwiches(e.target.value);
+              validateField('individualSandwiches', e.target.value);
+            }}
+            placeholder="0"
+            className={`h-10 w-32 text-center text-sm px-3 py-2 border rounded focus:ring-2 focus:ring-[#236383] focus:border-transparent ${
+              validationErrors.individualSandwiches 
+                ? 'border-[#A31C41] border-2' 
+                : 'border-gray-200'
+            }`}
+          />
+          {validationErrors.individualSandwiches && (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="bg-[#A31C41] text-white text-xs font-bold px-2 py-1 rounded-full">Error</span>
+              <p className="text-xs text-[#A31C41] font-medium">{validationErrors.individualSandwiches}</p>
             </div>
-            <Input
-              id="individualSandwiches"
-              type="number"
-              min="0"
-              value={individualSandwiches}
-              onChange={(e) => {
-                setIndividualSandwiches(e.target.value);
-                validateField('individualSandwiches', e.target.value);
-              }}
-              placeholder="0"
-              className={`h-10 w-32 text-center text-sm px-3 py-2 border rounded focus:ring-2 focus:ring-[#236383] focus:border-transparent ${
-                validationErrors.individualSandwiches 
-                  ? 'border-[#A31C41] border-2' 
-                  : 'border-gray-200'
-              }`}
-            />
-            {validationErrors.individualSandwiches && (
-              <div className="mt-2 flex items-center gap-2">
-                <span className="bg-[#A31C41] text-white text-xs font-bold px-2 py-1 rounded-full">Error</span>
-                <p className="text-xs text-[#A31C41] font-medium">{validationErrors.individualSandwiches}</p>
-              </div>
-            )}
+          )}
+        </div>
+
+        {/* Group Collections Section */}
+        <div className="bg-gray-50 p-4 rounded border border-gray-200">
+          <div className="mb-4">
+            <Label className="text-sm font-medium text-[#646464] block mb-1">Group Sandwiches:</Label>
+            <p className="text-xs text-gray-500 italic">Optional – use for bulk group entries like clubs or schools</p>
           </div>
 
-          {/* Group Collections */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <Label className="text-sm font-medium text-[#646464]">Group Sandwiches:</Label>
-              <span className="bg-[#47B3CB] text-white text-xs font-medium px-2 py-1 rounded-full">Optional</span>
-            </div>
-
-            <div className="space-y-3">
+          <div className="space-y-3">
               {groupCollections.map((group) => (
                 <div key={group.id} className="border border-gray-200 rounded p-3 space-y-2">
                   <Input
