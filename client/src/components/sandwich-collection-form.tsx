@@ -272,7 +272,20 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Info className="w-4 h-4 text-[#FBAD3F]" />
+                <div
+                  style={{
+                    width: '18px',
+                    height: '18px',
+                    background: '#f1f5f9',
+                    borderRadius: '50%',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginLeft: '4px'
+                  }}
+                >
+                  <Info style={{ fontSize: '12px', color: '#64748b', width: '12px', height: '12px' }} />
+                </div>
               </TooltipTrigger>
               <TooltipContent>
                 <p style={{ 
