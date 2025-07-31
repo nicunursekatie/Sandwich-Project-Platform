@@ -57,7 +57,7 @@ export const HelpBubble: React.FC<HelpBubbleProps> = ({
   children
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const characterData = characters[character];
+  const characterData = characters[character] || characters['sandy'];
 
   const positionClasses = {
     top: 'bottom-full left-1/2 transform -translate-x-1/2 mb-2',
