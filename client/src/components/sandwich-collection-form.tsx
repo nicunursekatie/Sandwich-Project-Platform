@@ -340,69 +340,74 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   };
 
   return (
-    <div className="w-full bg-white rounded-lg border border-gray-200 shadow-lg font-roboto">
-      {/* Single Header with Logo */}
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h2 className="text-lg font-medium text-[#236383] flex items-center">
-          <div className="w-8 h-8 bg-white rounded-lg mr-3 flex items-center justify-center border border-gray-200 shadow-sm">
-            <img src={sandwichLogo} alt="Logo" className="w-5 h-5 object-contain" />
-          </div>
-          Submit Collection
-        </h2>
-      </div>
-
-      <form onSubmit={handleSubmit} className="p-6 space-y-6 bg-white rounded-b-lg">
-        {/* Collection Info Section */}
-        <div className="bg-gray-50 p-4 rounded border border-gray-200">
-          <h3 className="text-lg font-medium text-[#236383] mb-4">Collection Details</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="collectionDate" className="text-sm font-medium text-[#646464] block mb-1">
-                Date
-              </Label>
-              <Input
-                id="collectionDate"
-                type="date"
-                value={collectionDate}
-                onChange={(e) => setCollectionDate(e.target.value)}
-                required
-                className="h-10 text-sm px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#236383] focus:border-transparent"
-              />
+    <div className="w-full bg-[#f9fafb] min-h-screen p-6 font-roboto">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h1 className="text-2xl font-bold text-[#236383] mb-2 flex items-center justify-center">
+            <div className="w-10 h-10 bg-white rounded-xl mr-3 flex items-center justify-center border border-gray-200 shadow-sm">
+              <img src={sandwichLogo} alt="Logo" className="w-6 h-6 object-contain" />
             </div>
+            Submit Collection
+          </h1>
+          <p className="text-sm text-gray-600">We count each sandwich—because every meal matters.</p>
+        </div>
 
-            <div>
-              <Label htmlFor="hostName" className="text-sm font-medium text-[#646464] block mb-1">
-                Location
-              </Label>
-              {isCustomHost ? (
-                <div className="flex gap-1">
-                  <Input
-                    id="hostName"
-                    value={hostName}
-                    onChange={(e) => {
-                      setHostName(e.target.value);
-                      validateField('hostName', e.target.value);
-                    }}
-                    placeholder="Location name"
-                    className={`h-10 text-sm px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-[#236383] focus:border-transparent ${
-                      validationErrors.hostName 
-                        ? 'border-[#A31C41] border-2' 
-                        : 'border-gray-200'
-                    }`}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setIsCustomHost(false);
-                      setHostName("");
-                    }}
-                    className="h-8 px-2 text-xs"
-                  >
-                    ✕
-                  </Button>
-                </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Collection Info Section */}
+          <div className="rounded-xl bg-white shadow-md border border-gray-200 p-6">
+            <h3 className="text-lg font-medium text-[#236383] mb-4 flex items-center">
+              <Calendar className="w-5 h-5 mr-2" />
+              Collection Details
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <Label htmlFor="collectionDate" className="text-sm font-medium text-[#646464]">
+                  Date
+                </Label>
+                <Input
+                  id="collectionDate"
+                  type="date"
+                  value={collectionDate}
+                  onChange={(e) => setCollectionDate(e.target.value)}
+                  required
+                  className="h-10 text-sm px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#236383] focus:border-transparent"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <Label htmlFor="hostName" className="text-sm font-medium text-[#646464]">
+                  Location
+                </Label>
+                {isCustomHost ? (
+                  <div className="flex gap-1">
+                    <Input
+                      id="hostName"
+                      value={hostName}
+                      onChange={(e) => {
+                        setHostName(e.target.value);
+                        validateField('hostName', e.target.value);
+                      }}
+                      placeholder="Location name"
+                      className={`h-10 text-sm px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-[#236383] focus:border-transparent ${
+                        validationErrors.hostName 
+                          ? 'border-[#A31C41] border-2' 
+                          : 'border-gray-200'
+                      }`}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setIsCustomHost(false);
+                        setHostName("");
+                      }}
+                      className="h-8 px-2 text-xs"
+                    >
+                      ✕
+                    </Button>
+                  </div>
               ) : (
                 <Select
                   value={hostName}
@@ -441,125 +446,136 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
         </div>
 
-        {/* Individual Collections Section */}
-        <div className="bg-gray-50 p-4 rounded border border-gray-200">
-          <div className="flex items-center gap-2 mb-4">
-            <Label htmlFor="individualSandwiches" className="text-sm font-medium text-[#646464]">
-              Individual Sandwiches:
-            </Label>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Info className="w-4 h-4 text-[#646464] hover:text-[#236383] cursor-help" />
-                </TooltipTrigger>
-                <TooltipContent side="right" className="max-w-xs">
-                  <p className="text-sm">Only include sandwiches made individually, not counted in groups</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-          <Input
-            id="individualSandwiches"
-            type="number"
-            min="0"
-            value={individualSandwiches}
-            onChange={(e) => {
-              setIndividualSandwiches(e.target.value);
-              validateField('individualSandwiches', e.target.value);
-            }}
-            placeholder="0"
-            className={`h-10 w-32 text-center text-sm px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-[#236383] focus:border-transparent ${
-              validationErrors.individualSandwiches 
-                ? 'border-[#A31C41] border-2' 
-                : 'border-gray-200'
-            }`}
-          />
-          {validationErrors.individualSandwiches && (
-            <div className="mt-2 flex items-center gap-2">
-              <span className="bg-[#A31C41] text-white text-xs font-bold px-2 py-1 rounded-full">Error</span>
-              <p className="text-xs text-[#A31C41] font-medium">{validationErrors.individualSandwiches}</p>
+          {/* Individual Collections Section */}
+          <div className="rounded-xl bg-white shadow-md border border-gray-200 p-6">
+            <h3 className="text-lg font-medium text-[#236383] mb-4 flex items-center">
+              <Sandwich className="w-5 h-5 mr-2" />
+              Individual Sandwiches
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">We count each sandwich—because every meal matters.</p>
+            
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="individualSandwiches" className="text-sm font-medium text-[#646464]">
+                  Individual Count
+                </Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="w-4 h-4 text-[#646464] hover:text-[#236383] cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-xs">
+                      <p className="text-sm">Only include sandwiches made individually, not counted in groups</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <Input
+                id="individualSandwiches"
+                type="number"
+                min="0"
+                value={individualSandwiches}
+                onChange={(e) => {
+                  setIndividualSandwiches(e.target.value);
+                  validateField('individualSandwiches', e.target.value);
+                }}
+                placeholder="0"
+                className={`h-10 w-32 text-center text-sm px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-[#236383] focus:border-transparent ${
+                  validationErrors.individualSandwiches 
+                    ? 'border-[#A31C41] border-2' 
+                    : 'border-gray-200'
+                }`}
+              />
+              {validationErrors.individualSandwiches && (
+                <p className="text-sm text-[#A31C41] mt-1">{validationErrors.individualSandwiches}</p>
+              )}
             </div>
-          )}
-        </div>
-
-        {/* Group Collections Section */}
-        <div className="bg-gray-50 p-4 rounded border border-gray-200">
-          <div className="mb-4">
-            <Label className="text-sm font-medium text-[#646464] block mb-1">Group Sandwiches:</Label>
-            <p className="text-xs text-gray-500 italic">Optional – use for bulk group entries like clubs or schools</p>
           </div>
 
-          <div className="space-y-3">
-            {groupCollections.map((group) => (
-              <div key={group.id} className="border border-gray-200 rounded p-3 space-y-2">
-                <Input
-                  placeholder="Group name (e.g., Church Group, School Club)"
-                  value={group.groupName}
-                  onChange={(e) =>
-                    updateGroupCollection(group.id, "groupName", e.target.value)
-                  }
-                  className="h-10 text-sm px-4 py-2.5 border border-gray-200 rounded-xl w-full focus:ring-2 focus:ring-[#236383] focus:border-transparent"
-                />
-                <div className="flex gap-2 items-center">
-                  <div className="flex-1">
-                    <Label htmlFor={`group-count-${group.id}`} className="text-sm font-medium text-[#646464] mb-1 block">
-                      Sandwich count:
-                    </Label>
+          {/* Group Collections Section */}
+          <div className="rounded-xl bg-white shadow-md border border-gray-200 p-6">
+            <h3 className="text-lg font-medium text-[#236383] mb-4 flex items-center">
+              <Plus className="w-5 h-5 mr-2" />
+              Group Sandwiches
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">Add group entries for teams, schools, or community clubs.</p>
+
+            <div className="space-y-4">
+              {groupCollections.map((group) => (
+                <div key={group.id} className="border border-gray-200 rounded-xl p-4 space-y-4">
+                  <div className="space-y-1">
+                    <Label className="text-sm font-medium text-[#646464]">Group Name</Label>
                     <Input
-                      id={`group-count-${group.id}`}
-                      type="number"
-                      min="0"
-                      placeholder="0"
-                      value={group.sandwichCount || ""}
+                      placeholder="Group name (e.g., Church Group, School Club)"
+                      value={group.groupName}
                       onChange={(e) =>
-                        updateGroupCollection(
-                          group.id,
-                          "sandwichCount",
-                          parseInt(e.target.value) || 0,
-                        )
+                        updateGroupCollection(group.id, "groupName", e.target.value)
                       }
                       className="h-10 text-sm px-4 py-2.5 border border-gray-200 rounded-xl w-full focus:ring-2 focus:ring-[#236383] focus:border-transparent"
                     />
                   </div>
-                  {groupCollections.length > 1 && (
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={() => removeGroupRow(group.id)}
-                      className="h-10 px-3 text-sm bg-[#A31C41] hover:bg-[#8b1836] text-white font-medium border border-[#A31C41]"
-                    >
-                      Remove Group
-                    </Button>
-                  )}
+                  
+                  <div className="flex gap-4 items-end">
+                    <div className="flex-1 space-y-1">
+                      <Label htmlFor={`group-count-${group.id}`} className="text-sm font-medium text-[#646464]">
+                        Sandwich Count
+                      </Label>
+                      <Input
+                        id={`group-count-${group.id}`}
+                        type="number"
+                        min="0"
+                        placeholder="0"
+                        value={group.sandwichCount || ""}
+                        onChange={(e) =>
+                          updateGroupCollection(
+                            group.id,
+                            "sandwichCount",
+                            parseInt(e.target.value) || 0,
+                          )
+                        }
+                        className="h-10 text-sm px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#236383] focus:border-transparent"
+                      />
+                    </div>
+                    {groupCollections.length > 1 && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={() => removeGroupRow(group.id)}
+                        className="h-10 px-3 text-sm bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl transition-all duration-150"
+                      >
+                        Remove
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
 
-            {/* Full-width Add Group button */}
-            <Button
-              type="button"
-              onClick={addGroupRow}
-              className="w-full h-10 text-sm font-medium !bg-[#236383] hover:!bg-[#1e5670] !text-white !border-[#236383] transition-all duration-200"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Group
-            </Button>
+              {/* Add Group button */}
+              <Button
+                type="button"
+                onClick={addGroupRow}
+                className="border border-[#236383] text-[#236383] hover:bg-[#236383] hover:text-white font-medium rounded-xl px-5 py-2 transition-all duration-150 w-full"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Group
+              </Button>
+            </div>
           </div>
-        </div>
 
-        {/* Submit Button */}
-        <Button
-          type="submit"
-          disabled={submitCollectionMutation.isPending || !isFormValid()}
-          className={`w-full h-11 px-6 text-sm font-medium rounded-lg shadow-md transition-all duration-200 ${
-            isFormValid() && !submitCollectionMutation.isPending
-              ? '!bg-[#236383] hover:!bg-[#1e5670] !text-white shadow-lg !border-[#236383]'
-              : '!bg-gray-300 !text-gray-500 cursor-not-allowed !border-gray-300'
-          }`}
-        >
-          {submitCollectionMutation.isPending ? "Submitting..." : "Submit Collection"}
-        </Button>
-      </form>
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            disabled={submitCollectionMutation.isPending || !isFormValid()}
+            className={`w-full h-11 px-6 text-sm font-medium rounded-xl shadow-md transition-all duration-200 ${
+              isFormValid() && !submitCollectionMutation.isPending
+                ? '!bg-[#236383] hover:!bg-[#1e5670] !text-white shadow-lg !border-[#236383]'
+                : '!bg-gray-300 !text-gray-500 cursor-not-allowed !border-gray-300'
+            }`}
+          >
+            {submitCollectionMutation.isPending ? "Submitting..." : "Submit Collection"}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }
