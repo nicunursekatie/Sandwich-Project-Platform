@@ -157,7 +157,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                 <Button 
                   variant="outline" 
                   className="border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-2 px-4 rounded-lg transition-colors"
-                  onClick={() => onSectionChange?.('collections-log')}
+                  onClick={() => onSectionChange?.('collections')}
                 >
                   View Collection History
                 </Button>
@@ -290,7 +290,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
         {/* Quick Actions Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mx-4 mt-8">
-          <button className="bg-white rounded-xl p-4 text-left group cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.05)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] transition-all" onClick={() => onSectionChange?.('collections-log')}>
+          <button className="bg-white rounded-xl p-4 text-left group cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.05)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] transition-all" onClick={() => onSectionChange?.('collections')}>
             <div className="w-10 h-10 bg-[#47B3CB] rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
               <BarChart3 className="w-5 h-5 text-white" />
             </div>
