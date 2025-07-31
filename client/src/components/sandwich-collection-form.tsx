@@ -112,19 +112,19 @@ export default function SandwichCollectionForm({ onSuccess }) {
 
   // Container styles
   const containerStyle = {
-    maxWidth: '480px',
+    maxWidth: '420px',
     margin: '0 auto',
     background: 'white',
-    borderRadius: '12px',
+    borderRadius: '10px',
     overflow: 'hidden',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)'
+    boxShadow: '0 3px 10px rgba(0, 0, 0, 0.08)'
   };
 
   // Compact header with total
   const headerStyle = {
     background: 'linear-gradient(135deg, #236383 0%, #007E8C 100%)',
     color: 'white',
-    padding: '20px 24px',
+    padding: '16px 20px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
@@ -135,14 +135,14 @@ export default function SandwichCollectionForm({ onSuccess }) {
   };
 
   const h1Style = {
-    fontSize: '20px',
+    fontSize: '18px',
     fontWeight: '600',
     margin: 0,
-    marginBottom: '2px'
+    marginBottom: '1px'
   };
 
   const headerPStyle = {
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '300',
     opacity: 0.9,
     margin: 0
@@ -150,66 +150,66 @@ export default function SandwichCollectionForm({ onSuccess }) {
 
   const totalBadgeStyle = {
     background: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: '8px',
-    padding: '8px 16px',
+    borderRadius: '6px',
+    padding: '6px 12px',
     textAlign: 'center',
-    minWidth: '80px'
+    minWidth: '70px'
   };
 
   const totalLabelStyle = {
-    fontSize: '11px',
+    fontSize: '10px',
     opacity: 0.8,
-    marginBottom: '2px'
+    marginBottom: '1px'
   };
 
   const totalNumberStyle = {
-    fontSize: '24px',
+    fontSize: '20px',
     fontWeight: '700'
   };
 
   // Compact form container
   const formContainerStyle = {
-    padding: '24px'
+    padding: '18px'
   };
 
   const formSectionStyle = {
-    marginBottom: '20px'
+    marginBottom: '16px'
   };
 
   const sectionTitleStyle = {
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '600',
     color: '#236383',
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
-    marginBottom: '12px'
+    marginBottom: '10px'
   };
 
   const formRowStyle = {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
-    gap: '12px'
+    gap: '10px'
   };
 
   const formGroupStyle = {
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px'
+    gap: '5px'
   };
 
   const labelStyle = {
-    fontSize: '12px',
+    fontSize: '11px',
     fontWeight: '500',
     color: '#989393'
   };
 
   // Compact input styling
   const inputStyle = {
-    height: '36px',
-    padding: '0 12px',
+    height: '32px',
+    padding: '0 10px',
     border: '1px solid #E9E6E6',
-    borderRadius: '6px',
-    fontSize: '14px',
+    borderRadius: '5px',
+    fontSize: '13px',
     fontFamily: 'Roboto, sans-serif',
     transition: 'all 0.2s ease',
     background: 'white',
@@ -218,10 +218,10 @@ export default function SandwichCollectionForm({ onSuccess }) {
 
   const individualInputStyle = {
     ...inputStyle,
-    width: '100px',
+    width: '85px',
     fontWeight: '600',
     color: '#236383',
-    fontSize: '18px',
+    fontSize: '16px',
     textAlign: 'center'
   };
 
@@ -230,16 +230,16 @@ export default function SandwichCollectionForm({ onSuccess }) {
     appearance: 'none',
     backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23989393' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'right 12px center',
-    paddingRight: '32px',
+    backgroundPosition: 'right 10px center',
+    paddingRight: '28px',
     cursor: 'pointer'
   };
 
   // Super compact groups section
   const groupsContainerStyle = {
     background: '#FAFAFA',
-    borderRadius: '8px',
-    padding: '16px',
+    borderRadius: '6px',
+    padding: '12px',
     border: '1px solid #E9E6E6'
   };
 
@@ -247,46 +247,46 @@ export default function SandwichCollectionForm({ onSuccess }) {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '12px'
+    marginBottom: '8px'
   };
 
   const groupItemStyle = {
     display: 'grid',
-    gridTemplateColumns: '1fr 70px 32px',
-    gap: '8px',
-    marginBottom: '8px',
+    gridTemplateColumns: '1fr 60px 28px',
+    gap: '6px',
+    marginBottom: '6px',
     alignItems: 'center'
   };
 
   const groupInputStyle = {
     ...inputStyle,
-    height: '32px',
-    padding: '0 10px',
-    fontSize: '13px'
+    height: '28px',
+    padding: '0 8px',
+    fontSize: '12px'
   };
 
   const removeBtnStyle = {
-    width: '32px',
-    height: '32px',
+    width: '28px',
+    height: '28px',
     background: '#FFE5E5',
     border: 'none',
-    borderRadius: '6px',
+    borderRadius: '4px',
     color: '#E74C3C',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '18px',
+    fontSize: '16px',
     transition: 'all 0.2s ease'
   };
 
   const addGroupBtnStyle = {
-    padding: '8px 12px',
+    padding: '6px 10px',
     background: 'transparent',
     border: '1px dashed #236383',
-    borderRadius: '6px',
+    borderRadius: '4px',
     color: '#236383',
-    fontSize: '12px',
+    fontSize: '11px',
     fontWeight: '500',
     cursor: 'pointer',
     transition: 'all 0.2s ease',
@@ -295,7 +295,7 @@ export default function SandwichCollectionForm({ onSuccess }) {
 
   // Compact submit section
   const submitSectionStyle = {
-    padding: '20px 24px',
+    padding: '16px 18px',
     borderTop: '1px solid #E9E6E6',
     display: 'flex',
     justifyContent: 'flex-end'
@@ -305,9 +305,9 @@ export default function SandwichCollectionForm({ onSuccess }) {
     background: '#FBAD3F',
     color: 'white',
     border: 'none',
-    padding: '10px 24px',
-    borderRadius: '6px',
-    fontSize: '14px',
+    padding: '8px 20px',
+    borderRadius: '5px',
+    fontSize: '13px',
     fontWeight: '600',
     cursor: 'pointer',
     transition: 'all 0.2s ease',
@@ -315,23 +315,23 @@ export default function SandwichCollectionForm({ onSuccess }) {
   };
 
   const helperTextStyle = {
-    fontSize: '11px',
+    fontSize: '10px',
     color: '#989393',
-    marginTop: '4px'
+    marginTop: '3px'
   };
 
   const emptyStateStyle = {
-    fontSize: '12px',
+    fontSize: '11px',
     color: '#989393',
     textAlign: 'center',
-    padding: '16px 0',
+    padding: '12px 0',
     fontStyle: 'italic'
   };
 
   // Custom location input style
   const customLocationInputStyle = {
     ...inputStyle,
-    marginTop: '8px'
+    marginTop: '6px'
   };
 
   // Event handlers
