@@ -6,13 +6,27 @@
 
 /* Fix for horizontal scroll black background */
 html, body {
-  background: linear-gradient(135deg, #ffffff 0%, rgba(251, 146, 60, 0.1) 100%);
+  background: linear-gradient(135deg, #ffffff 0%, rgba(251, 146, 60, 0.1) 100%) !important;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
 body {
   overscroll-behavior-x: none;
+}
+
+/* Ensure all viewport containers have proper backgrounds */
+#root {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(251, 146, 60, 0.1) 100%) !important;
+  min-height: 100vh;
+}
+
+/* Fix for mobile viewport issues */
+@media (max-width: 768px) {
+  html, body, #root {
+    background: linear-gradient(135deg, #ffffff 0%, rgba(251, 146, 60, 0.1) 100%) !important;
+    overflow-x: hidden !important;
+  }
 }
 
 /* Modern 2025 Design System - Glassmorphism & Animations */

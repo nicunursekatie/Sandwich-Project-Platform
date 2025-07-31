@@ -155,8 +155,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                   {showCollectionForm ? "Hide Form" : "Enter New Collection Data"}
                 </Button>
                 <Button 
-                  variant="outline" 
-                  className="border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                  className="bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm"
                   onClick={() => onSectionChange?.('collections')}
                 >
                   View Collection History
