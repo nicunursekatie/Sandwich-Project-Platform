@@ -430,13 +430,42 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       </div>
 
       {/* Submit */}
-      <Button
+      <button
         type="submit"
-        className="w-full bg-[#236383] text-white hover:bg-[#1b4d66] font-semibold rounded-xl shadow-md"
-        style={{ padding: '16px 24px' }}
+        style={{
+          width: '100%',
+          height: '56px',
+          borderRadius: '12px',
+          fontSize: '16px',
+          fontWeight: '600',
+          letterSpacing: '0.5px',
+          textTransform: 'none',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+          transition: 'all 0.2s ease',
+          background: '#236383',
+          color: 'white',
+          border: 'none',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.boxShadow = '0 8px 12px -2px rgba(0, 0, 0, 0.15)';
+          e.currentTarget.style.background = '#1b4d66';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+          e.currentTarget.style.background = '#236383';
+        }}
+        onMouseDown={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+        }}
+        onMouseUp={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px)';
+        }}
       >
         Submit Collection
-      </Button>
+      </button>
       </form>
     </div>
     </>
