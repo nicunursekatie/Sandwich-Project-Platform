@@ -399,14 +399,34 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
         ))}
 
-        <Button
+        <button
           type="button"
           onClick={addGroup}
-          className="w-full bg-[#FBAD3F] text-[#236383] hover:bg-[#f4a530] rounded-xl font-semibold shadow-md"
-          style={{ padding: '16px 24px' }}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#236383',
+            fontWeight: '600',
+            fontSize: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '12px',
+            borderRadius: '8px',
+            width: '100%',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(35, 99, 131, 0.05)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'none';
+          }}
         >
-          <Plus className="w-4 h-4 mr-2" /> Add Group
-        </Button>
+          <Plus style={{ width: '16px', height: '16px' }} /> Add Group
+        </button>
       </div>
 
       {/* Submit */}
