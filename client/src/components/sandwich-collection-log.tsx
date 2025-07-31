@@ -1405,21 +1405,7 @@ export default function SandwichCollectionLog() {
         </div>
       )}
       
-      {/* Embedded Submit Collection Form */}
-      {showSubmitForm && (
-        <div className="mx-6 mb-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
-          <div className="flex items-center mb-4">
-            <Sandwich className="w-5 h-5 mr-2 text-teal-600" />
-            <h3 className="text-lg font-semibold text-slate-900">Submit New Collection</h3>
-          </div>
-          <SandwichCollectionForm 
-            onSuccess={() => {
-              setShowSubmitForm(false);
-              queryClient.invalidateQueries({ queryKey: ['/api/sandwich-collections'] });
-            }}
-          />
-        </div>
-      )}
+
       
       {/* Top Pagination Controls */}
       {totalItems > 0 && <PaginationControls position="top" />}
