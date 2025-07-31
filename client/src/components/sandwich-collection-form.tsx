@@ -300,7 +300,13 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       </div>
 
       {/* Group Sandwiches */}
-      <div style={{ marginBottom: '32px' }}>
+      <div style={{ 
+        marginBottom: '32px',
+        background: '#f8fafc',
+        border: '1px dashed #e2e8f0',
+        borderRadius: '12px',
+        padding: '20px'
+      }}>
         <div>
           <h3 className="flex items-center gap-1" style={{ 
             fontSize: '14px', 
@@ -308,7 +314,13 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
             color: '#334155',
             marginBottom: '8px'
           }}>
-            <Plus className="w-4 h-4" /> Group Sandwiches
+            <Plus style={{ 
+              color: '#236383', 
+              fontSize: '20px', 
+              fontWeight: '600',
+              width: '20px',
+              height: '20px'
+            }} /> Group Sandwiches
           </h3>
           <p style={{ 
             fontSize: '14px', 
