@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FileText, TrendingUp, Calendar, Award, Download, ExternalLink, Sandwich, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
 import { DocumentPreviewModal } from "@/components/document-preview-modal";
+import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import tspLogo from "@assets/sandwich_project_transparent_1753668698851.png";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 
@@ -16,6 +17,10 @@ interface DashboardOverviewProps {
 
 export default function DashboardOverview({ onSectionChange }: { onSectionChange?: (section: string) => void }) {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+  
+  // Form state
+  const [showCollectionForm, setShowCollectionForm] = useState(false);
   
   // Modal state for document preview
   const [previewModal, setPreviewModal] = useState({
@@ -121,17 +126,10 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               </div>
               <div className="flex gap-3">
                 <Button 
-                  onClick={() => {
-                    onSectionChange?.("collections");
-                    // Add URL parameter to auto-open form
-                    setTimeout(() => {
-                      const event = new CustomEvent('openCollectionForm');
-                      window.dispatchEvent(event);
-                    }, 100);
-                  }}
+                  onClick={() => setShowCollectionForm(!showCollectionForm)}
                   className="bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#d88a1e] text-white font-semibold px-8 py-3 text-sm shadow-lg shadow-[#FBAD3F]/25 transition-all duration-200"
                 >
-                  Enter New Collection Data
+                  {showCollectionForm ? 'Hide Form' : 'Enter New Collection Data'}
                 </Button>
                 <Button 
                   variant="outline" 
@@ -143,6 +141,23 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               </div>
             </div>
           </div>
+
+          {/* Embedded Collection Form */}
+          {showCollectionForm && (
+            <div className="px-8 py-6 bg-slate-50 border-t border-slate-200">
+              <div className="flex items-center mb-4">
+                <Sandwich className="w-5 h-5 mr-2 text-teal-600" />
+                <h3 className="text-lg font-semibold text-slate-900">Submit New Collection</h3>
+              </div>
+              <SandwichCollectionForm 
+                onSuccess={() => {
+                  setShowCollectionForm(false);
+                  queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+                  queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections/stats"] });
+                }} 
+              />
+            </div>
+          )}
         </div>
       )}
 
