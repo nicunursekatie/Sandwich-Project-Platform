@@ -46,6 +46,30 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     height: '48px'
   };
 
+  // Date input styling - removes default calendar icon
+  const dateInputStyle = {
+    ...inputStyle,
+    paddingRight: '44px', // Make room for custom icon
+    WebkitAppearance: 'none' as const,
+    MozAppearance: 'textfield' as const,
+  };
+
+  // Additional CSS to remove browser calendar icon
+  const dateInputCSS = `
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      display: none;
+      -webkit-appearance: none;
+    }
+    input[type="date"]::-webkit-inner-spin-button {
+      display: none;
+      -webkit-appearance: none;
+    }
+    input[type="date"]::-webkit-clear-button {
+      display: none;
+      -webkit-appearance: none;
+    }
+  `;
+
   const handleInputMouseEnter = (e: React.MouseEvent<HTMLInputElement>) => {
     e.currentTarget.style.borderColor = '#cbd5e1';
     e.currentTarget.style.background = '#ffffff';
@@ -80,14 +104,16 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   };
 
   return (
-    <div className="mx-auto" style={{ 
-      maxWidth: '480px', 
-      padding: '24px', 
-      background: '#FFFFFF', 
-      borderRadius: '16px', 
-      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-      margin: '0 auto'
-    }}>
+    <>
+      <style>{dateInputCSS}</style>
+      <div className="mx-auto" style={{ 
+        maxWidth: '480px', 
+        padding: '24px', 
+        background: '#FFFFFF', 
+        borderRadius: '16px', 
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        margin: '0 auto'
+      }}>
       <form className="w-full text-[#646464] font-roboto">
       {/* Header */}
       <div className="text-center">
@@ -127,17 +153,30 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               marginBottom: '8px',
               display: 'block'
             }}>Date</Label>
-            <Input
-              type="date"
-              id="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              style={inputStyle}
-              onMouseEnter={handleInputMouseEnter}
-              onMouseLeave={handleInputMouseLeave}
-              onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
-            />
+            <div style={{ position: 'relative' }}>
+              <Input
+                type="date"
+                id="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                style={dateInputStyle}
+                onMouseEnter={handleInputMouseEnter}
+                onMouseLeave={handleInputMouseLeave}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
+              />
+              <Calendar 
+                className="w-4 h-4"
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: '#64748b',
+                  pointerEvents: 'none'
+                }}
+              />
+            </div>
           </div>
           <div>
             <Label htmlFor="location" style={{ 
@@ -290,5 +329,6 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       </Button>
       </form>
     </div>
+    </>
   );
 }
