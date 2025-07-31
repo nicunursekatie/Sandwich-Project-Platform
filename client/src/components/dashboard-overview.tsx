@@ -109,68 +109,54 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
   // Remove fake mini chart data - only use real data
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
-      {/* Gradient Mesh Background */}
-      <div className="fixed inset-0 gradient-mesh pointer-events-none" />
-      
+    <div className="min-h-screen bg-[#F8F8F8] relative">
       {/* Dark Mode Toggle */}
       <div className="absolute top-4 right-4 z-50">
         <DarkModeToggle />
       </div>
 
-      <div className="relative z-10 space-y-8 pb-8">
-        {/* Modern Header with Glassmorphism */}
-        <div className="glass-card overlap-shadow mx-4 mt-8 p-8 text-center">
+      <div className="space-y-8 pb-8">
+        {/* Header */}
+        <div className="bg-white rounded-xl mx-4 mt-8 p-8 text-center shadow-sm">
           <div className="relative">
             <img 
               src={tspLogo} 
               alt="The Sandwich Project" 
-              className="w-[250px] md:w-[400px] mb-6 mx-auto animate-float" 
+              className="w-[250px] md:w-[400px] mb-6 mx-auto" 
             />
-            <div className="absolute -top-2 -right-2 animate-pulse">
-              <SparkleIcon className="w-8 h-8 text-yellow-400" />
-            </div>
           </div>
-          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-inter font-medium">
+          <p className="text-lg md:text-xl text-gray-600 font-medium">
             Community Impact Through Coordinated Action
           </p>
-          <div className="mt-4 flex justify-center items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-            <NetworkIcon className="w-4 h-4" />
-            <span>Powered by modern technology • 2025</span>
-          </div>
         </div>
 
-        {/* Modern Collection Call-to-Action */}
+        {/* Collection Call-to-Action */}
         {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
-          <div className="glass-card hover-lift overlap-shadow mx-4 p-6 bg-gradient-to-r from-blue-500/10 via-teal-500/10 to-orange-500/10">
+          <div className="bg-white rounded-xl mx-4 p-6 shadow-sm">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <div className="w-14 h-14 bg-gradient-to-br from-orange-400 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl">
-                    <SandwichStackIcon className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse" />
+                <div className="w-12 h-12 bg-[#236383] rounded-lg flex items-center justify-center">
+                  <Sandwich className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white font-inter tracking-tight">
+                  <h2 className="text-xl font-semibold text-gray-900">
                     Record Collection Data
                   </h2>
-                  <p className="text-slate-600 dark:text-slate-300 font-medium mt-1 flex items-center gap-2">
-                    <TargetIcon className="w-4 h-4" />
+                  <p className="text-gray-600 mt-1">
                     Submit your sandwich contributions to help our community
                   </p>
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button 
-                  className="bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-inter font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 backdrop-blur-sm"
+                  className="bg-[#236383] hover:bg-[#1d5470] text-white font-medium py-2 px-4 rounded-lg transition-colors"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
                 >
                   {showCollectionForm ? "Hide Form" : "Enter New Collection Data"}
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="border-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-inter font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg backdrop-blur-sm"
+                  className="border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-2 px-4 rounded-lg transition-colors"
                   onClick={() => onSectionChange?.('collections-log')}
                 >
                   View Collection History
@@ -180,7 +166,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
             {/* Embedded Collection Form */}
             {showCollectionForm && (
-              <div className="mt-6 p-6 glass-card">
+              <div className="mt-6 p-6 bg-gray-50 rounded-lg">
                 <SandwichCollectionForm 
                   onSuccess={() => {
                     setShowCollectionForm(false);
