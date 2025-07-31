@@ -1,0 +1,281 @@
+/* The Sandwich Project Brand Theme */
+/* Based on TSP Style Guide */
+
+:root {
+  /* Primary Brand Colors */
+  --tsp-navy: #236383; /* Primary Teal/Navy */
+  --tsp-gold: #FBAD3F; /* Primary Gold/Orange */
+  --tsp-charcoal: #646464; /* Primary Gray */
+  
+  /* Secondary Colors */
+  --tsp-burgundy: #A31C41; /* Secondary Red/Burgundy */
+  --tsp-teal-dark: #007E8C; /* Secondary Dark Teal */
+  --tsp-teal-light: #47B3CB; /* Secondary Light Teal */
+  --tsp-gray-light: #D1D3D4; /* Secondary Light Gray */
+  
+  /* Color Variations */
+  --tsp-navy-hover: #1a4a61;
+  --tsp-navy-light: #e6f0f4;
+  --tsp-gold-hover: #e59d36;
+  --tsp-gold-light: #fef4e6;
+  --tsp-burgundy-hover: #821532;
+  --tsp-burgundy-light: #f5e6ea;
+  
+  /* Semantic Colors */
+  --color-primary: var(--tsp-navy);
+  --color-secondary: var(--tsp-gold);
+  --color-accent: var(--tsp-burgundy);
+  --color-neutral: var(--tsp-charcoal);
+  
+  /* Background Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f1f3f5;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8f9fa;
+  
+  /* Text Colors */
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-muted: #6c757d;
+  --text-light: #adb5bd;
+  --text-on-primary: #ffffff;
+  --text-on-secondary: #ffffff;
+  --text-on-accent: #ffffff;
+  
+  /* Border Colors */
+  --border-light: #e9ecef;
+  --border-default: #dee2e6;
+  --border-dark: #adb5bd;
+  
+  /* Status Colors */
+  --status-success: #28a745;
+  --status-warning: var(--tsp-gold);
+  --status-error: #dc3545;
+  --status-info: var(--tsp-teal-light);
+  
+  /* Shadow Definitions */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-default: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Spacing Scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-default: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+  
+  /* Transition Timing */
+  --transition-fast: 150ms ease-in-out;
+  --transition-default: 200ms ease-in-out;
+  --transition-slow: 300ms ease-in-out;
+  
+  /* Z-Index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}
+
+/* Dark Mode Variables */
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #3d3d3d;
+  --bg-card: #2d2d2d;
+  --bg-card-hover: #3d3d3d;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #e9ecef;
+  --text-muted: #adb5bd;
+  --text-light: #6c757d;
+  
+  --border-light: #3d3d3d;
+  --border-default: #4d4d4d;
+  --border-dark: #5d5d5d;
+  
+  /* Adjust brand colors for dark mode */
+  --tsp-navy: #3a84a7;
+  --tsp-gold: #fdb94e;
+  --tsp-teal-light: #5bc3d4;
+}
+
+/* Utility Classes */
+.bg-gradient-tsp {
+  background: linear-gradient(135deg, var(--tsp-navy) 0%, var(--tsp-teal-dark) 100%);
+}
+
+.bg-gradient-warm {
+  background: linear-gradient(135deg, var(--tsp-gold) 0%, var(--tsp-burgundy) 100%);
+}
+
+.text-gradient-tsp {
+  background: linear-gradient(135deg, var(--tsp-navy) 0%, var(--tsp-teal-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Pattern Overlays */
+.pattern-dots {
+  background-image: radial-gradient(circle, var(--tsp-gold) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.1;
+}
+
+.pattern-grid {
+  background-image: 
+    linear-gradient(var(--tsp-navy) 1px, transparent 1px),
+    linear-gradient(90deg, var(--tsp-navy) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.05;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Animation Classes */
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.5s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s ease-in-out infinite;
+}
+
+/* Loading Shimmer Effect */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 0%,
+    var(--bg-tertiary) 50%,
+    var(--bg-secondary) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Professional Hover Effects */
+.hover-lift {
+  transition: transform var(--transition-default), box-shadow var(--transition-default);
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.hover-glow {
+  transition: box-shadow var(--transition-default);
+}
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(35, 99, 131, 0.3);
+}
+
+.hover-border-glow {
+  position: relative;
+  overflow: hidden;
+}
+.hover-border-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(45deg, var(--tsp-navy), var(--tsp-gold), var(--tsp-teal-light));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--transition-default);
+  border-radius: inherit;
+}
+.hover-border-glow:hover::before {
+  opacity: 1;
+}
