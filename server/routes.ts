@@ -1120,7 +1120,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post(
     "/api/sandwich-collections",
-    requirePermission("edit_data"),
+    requirePermission("create_collections"),
     async (req, res) => {
       try {
         const collectionData = insertSandwichCollectionSchema.parse(req.body);
@@ -1150,7 +1150,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put(
     "/api/sandwich-collections/:id",
-    requirePermission("edit_data"),
+    requirePermission("edit_all_collections"),
     async (req, res) => {
       try {
         const id = parseInt(req.params.id);
@@ -1173,7 +1173,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Fix data corruption in sandwich collections - MUST be before /:id route
   app.patch("/api/sandwich-collections/fix-data-corruption", 
-    requirePermission("edit_data"),
+    requirePermission("edit_all_collections"),
     async (req, res) => {
     try {
       const collections = await storage.getAllSandwichCollections();
@@ -1482,7 +1482,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete(
     "/api/sandwich-collections/:id",
-    requirePermission("edit_data"),
+    requirePermission("delete_all_collections"),
     async (req, res) => {
       try {
         const id = parseInt(req.params.id);
