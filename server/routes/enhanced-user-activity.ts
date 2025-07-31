@@ -21,12 +21,25 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
       const totalUsersResult = await db.select({ count: count() }).from(users);
       const totalUsers = totalUsersResult[0]?.count || 0;
 
-      // Get active users in timeframe
-      const activeUsersResult = await db
-        .select({ count: count() })
+      // Get active users in last 24 hours (distinct users)
+      const last24Hours = new Date();
+      last24Hours.setHours(last24Hours.getHours() - 24);
+      
+      const activeUsersLast24hResult = await db
+        .select({ count: sql`COUNT(DISTINCT ${userActivityLogs.userId})`.as('count') })
         .from(userActivityLogs)
-        .where(sql`${userActivityLogs.createdAt} >= ${startDate}`);
-      const activeUsers = activeUsersResult[0]?.count || 0;
+        .where(sql`${userActivityLogs.createdAt} >= ${last24Hours}`);
+      const activeUsersLast24h = Number(activeUsersLast24hResult[0]?.count || 0);
+
+      // Get active users in last 12 hours for more recent activity
+      const last12Hours = new Date();
+      last12Hours.setHours(last12Hours.getHours() - 12);
+      
+      const activeUsersLast12hResult = await db
+        .select({ count: sql`COUNT(DISTINCT ${userActivityLogs.userId})`.as('count') })
+        .from(userActivityLogs)
+        .where(sql`${userActivityLogs.createdAt} >= ${last12Hours}`);
+      const activeUsersLast12h = Number(activeUsersLast12hResult[0]?.count || 0);
 
       // Get total actions in timeframe
       const totalActionsResult = await db
@@ -35,8 +48,8 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
         .where(sql`${userActivityLogs.createdAt} >= ${startDate}`);
       const totalActions = totalActionsResult[0]?.count || 0;
 
-      // Calculate average actions per user
-      const averageActionsPerUser = activeUsers > 0 ? totalActions / activeUsers : 0;
+      // Calculate average actions per user (based on 24h activity)
+      const averageActionsPerUser = activeUsersLast24h > 0 ? totalActions / activeUsersLast24h : 0;
 
       // Get top sections by actions (use section field for better names)
       const topSectionsResult = await db
@@ -87,7 +100,9 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
 
       const response = {
         totalUsers,
-        activeUsers,
+        activeUsers: activeUsersLast24h, // Primary metric: 24-hour active users
+        activeUsersLast24h,
+        activeUsersLast12h,
         totalActions,
         averageActionsPerUser,
         topSections: topSectionsResult.map(item => ({ 

@@ -232,9 +232,14 @@ export default function EnhancedUserAnalytics() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{systemStats.totalUsers}</div>
-              <p className="text-xs text-muted-foreground">
-                {systemStats.activeUsers} active in timeframe
-              </p>
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground">
+                  {systemStats.activeUsersLast24h || systemStats.activeUsers} active (24h)
+                </p>
+                <p className="text-xs text-green-600">
+                  {systemStats.activeUsersLast12h || 0} active (12h)
+                </p>
+              </div>
             </CardContent>
           </Card>
 
