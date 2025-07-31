@@ -25,7 +25,7 @@ interface Host {
 export default function SandwichCollectionForm({
   onSuccess,
 }: SandwichCollectionFormProps) {
-  const [date, setDate] = useState("2025-07-31");
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [location, setLocation] = useState("");
   const [customLocation, setCustomLocation] = useState("");
   const [showCustomLocation, setShowCustomLocation] = useState(false);
@@ -187,9 +187,9 @@ export default function SandwichCollectionForm({
     left: 0,
   };
 
-  // Modern header style matching dashboard cards
+  // Modern header style matching dashboard cards with TSP teal gradient
   const headerStyle = {
-    background: "#f8fafc",
+    background: "linear-gradient(135deg, #236383 0%, #007E8C 100%)",
     borderBottom: "1px solid #e2e8f0",
     padding: "16px 24px",
     display: "flex",
@@ -206,30 +206,32 @@ export default function SandwichCollectionForm({
     fontWeight: "600",
     margin: 0,
     marginBottom: "4px",
-    color: "#1e293b",
+    color: "white",
     fontFamily: "Roboto, sans-serif",
   };
 
   const headerPStyle = {
     fontSize: "14px",
     fontWeight: "400",
-    opacity: 0.7,
+    opacity: 0.9,
     margin: 0,
-    color: "#64748b",
+    color: "white",
     fontFamily: "Roboto, sans-serif",
   };
 
   const totalBadgeStyle = {
-    background: "linear-gradient(135deg, #236383 0%, #007E8C 100%)",
+    background: "linear-gradient(135deg, #FBAD3F 0%, #F7931E 100%)",
     borderRadius: "8px",
     padding: "8px 16px",
     textAlign: "center" as const,
     minWidth: "80px",
     color: "white",
+    border: "2px solid rgba(255,255,255,0.2)",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
   };
 
   const totalLabelStyle = {
-    fontSize: "11px",
+    fontSize: "13px",
     opacity: 0.9,
     marginBottom: "2px",
     fontWeight: "500",
@@ -293,7 +295,7 @@ export default function SandwichCollectionForm({
     padding: "0 12px",
     border: "1px solid #d1d5db",
     borderRadius: "6px",
-    fontSize: "14px",
+    fontSize: "16px",
     fontFamily: "Roboto, sans-serif",
     transition: "all 0.2s ease",
     background: "white",
@@ -306,7 +308,7 @@ export default function SandwichCollectionForm({
     width: "100px",
     fontWeight: "600",
     color: "#236383",
-    fontSize: "16px",
+    fontSize: "20px",
     textAlign: "center" as const,
   };
 
@@ -348,7 +350,7 @@ export default function SandwichCollectionForm({
     ...inputStyle,
     height: "28px",
     padding: "0 8px",
-    fontSize: "12px",
+    fontSize: "14px",
   };
 
   const removeBtnStyle = {
@@ -372,20 +374,20 @@ export default function SandwichCollectionForm({
     border: "1px dashed #236383",
     borderRadius: "4px",
     color: "#236383",
-    fontSize: "11px",
+    fontSize: "14px",
     fontWeight: "500",
     cursor: "pointer",
     transition: "all 0.2s ease",
     fontFamily: "Roboto, sans-serif",
   };
 
-  // Modern submit section
+  // Modern submit section with TSP teal background
   const submitSectionStyle = {
     padding: "24px",
     borderTop: "1px solid #e2e8f0",
     display: "flex",
     justifyContent: "flex-end",
-    background: "#f8fafc",
+    background: "linear-gradient(135deg, #e1f3f7 0%, #cfe9f0 100%)",
   };
 
   const submitBtnStyle = {
@@ -394,7 +396,7 @@ export default function SandwichCollectionForm({
     border: "none",
     padding: "12px 32px",
     borderRadius: "8px",
-    fontSize: "14px",
+    fontSize: "18px",
     fontWeight: "600",
     cursor: "pointer",
     transition: "all 0.2s ease",
@@ -403,14 +405,14 @@ export default function SandwichCollectionForm({
   };
 
   const helperTextStyle = {
-    fontSize: "12px",
+    fontSize: "14px",
     color: "#6b7280",
     marginTop: "4px",
     fontFamily: "Roboto, sans-serif",
   };
 
   const emptyStateStyle = {
-    fontSize: "11px",
+    fontSize: "14px",
     color: "#989393",
     textAlign: "center",
     padding: "12px 0",
@@ -492,7 +494,7 @@ export default function SandwichCollectionForm({
   };
 
   const instructionTextStyle = {
-    fontSize: "11px",
+    fontSize: "16px",
     color: "#64748b",
     marginBottom: "8px",
     lineHeight: "1.4",
@@ -509,7 +511,7 @@ export default function SandwichCollectionForm({
     border: "1px solid #cbd5e1",
     borderRadius: "4px",
     color: "#475569",
-    fontSize: "10px",
+    fontSize: "13px",
     fontWeight: "500",
     cursor: "pointer",
     transition: "all 0.2s ease",
@@ -620,7 +622,7 @@ export default function SandwichCollectionForm({
             <span style={accentBarStyle}></span>
             Individual Sandwiches
           </h3>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <input
               type="number"
               id="individual-count"
@@ -643,7 +645,7 @@ export default function SandwichCollectionForm({
                 e.currentTarget.style.background = "#f1f5f9";
               }}
             >
-              <Calculator style={{ width: "12px", height: "12px" }} />
+              <Calculator style={{ width: "14px", height: "14px" }} />
               Calculator
             </button>
           </div>
@@ -817,7 +819,7 @@ export default function SandwichCollectionForm({
             <h4
               style={{
                 margin: "0 0 12px 0",
-                fontSize: "14px",
+                fontSize: "16px",
                 fontWeight: "600",
                 color: "#236383",
               }}
@@ -826,7 +828,7 @@ export default function SandwichCollectionForm({
             </h4>
             <p
               style={{
-                fontSize: "11px",
+                fontSize: "13px",
                 color: "#64748b",
                 margin: "0 0 12px 0",
               }}
@@ -966,7 +968,7 @@ export default function SandwichCollectionForm({
                   color: "white",
                   border: "none",
                   borderRadius: "4px",
-                  fontSize: "12px",
+                  fontSize: "16px",
                   fontWeight: "600",
                   cursor: "pointer",
                 }}
@@ -982,7 +984,7 @@ export default function SandwichCollectionForm({
                   color: "#6c757d",
                   border: "1px solid #dee2e6",
                   borderRadius: "4px",
-                  fontSize: "12px",
+                  fontSize: "14px",
                   cursor: "pointer",
                 }}
                 onClick={() => setShowCalculator(false)}
