@@ -144,11 +144,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
 
           {/* Embedded Collection Form */}
           {showCollectionForm && (
-            <div className="px-8 py-6 bg-slate-50 border-t border-slate-200">
-              <div className="flex items-center mb-4">
-                <Sandwich className="w-5 h-5 mr-2 text-teal-600" />
-                <h3 className="text-lg font-semibold text-slate-900">Submit New Collection</h3>
-              </div>
+            <div className="px-8 py-6 bg-gradient-to-br from-[#FBAD3F]/5 via-white to-[#236383]/5 border-t border-[#FBAD3F]/20">
               <SandwichCollectionForm 
                 onSuccess={() => {
                   setShowCollectionForm(false);
