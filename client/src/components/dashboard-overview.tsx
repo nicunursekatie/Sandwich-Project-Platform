@@ -275,48 +275,64 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         </div>
 
         {/* Operational Capacity Overview */}
-        <div className="glass-card hover-lift overlap-shadow mx-4 p-6 bg-gradient-to-br from-slate-500/5 via-gray-500/5 to-stone-500/5">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-slate-600 to-gray-700 rounded-2xl flex items-center justify-center">
-              <Building2 className="w-6 h-6 text-white" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mx-4">
+          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-emerald-500/10 to-green-500/10">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-2xl flex items-center justify-center">
+                <Award className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Peak Week Record</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">November 15, 2023</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white font-inter">Operational Capacity</h2>
-              <p className="text-slate-600 dark:text-slate-300">Current system capabilities and performance metrics</p>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
+              {organizationalStats.peakWeekRecord}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-white/50 dark:bg-slate-800/50 rounded-xl">
-              <div className="text-2xl font-bold text-slate-900 dark:text-white font-inter">
-                {organizationalStats.peakWeekRecord}
+          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-violet-500/10 to-purple-500/10">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-500 rounded-2xl flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm text-slate-600 dark:text-slate-300 font-medium">Peak Week Record</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{organizationalStats.peakWeekDate}</div>
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Annual Capacity</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Current year target</p>
+              </div>
             </div>
-            
-            <div className="text-center p-4 bg-white/50 dark:bg-slate-800/50 rounded-xl">
-              <div className="text-2xl font-bold text-slate-900 dark:text-white font-inter">
-                {organizationalStats.currentAnnualCapacity}
-              </div>
-              <div className="text-sm text-slate-600 dark:text-slate-300 font-medium">Annual Capacity</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Current year target</div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
+              {organizationalStats.currentAnnualCapacity}
             </div>
-            
-            <div className="text-center p-4 bg-white/50 dark:bg-slate-800/50 rounded-xl">
-              <div className="text-2xl font-bold text-slate-900 dark:text-white font-inter">
-                {organizationalStats.weeklyBaseline}
+          </div>
+
+          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-amber-500/10 to-yellow-500/10">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-2xl flex items-center justify-center">
+                <Activity className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm text-slate-600 dark:text-slate-300 font-medium">Weekly Baseline</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Regular operations</div>
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Weekly Baseline</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Regular operations</p>
+              </div>
             </div>
-            
-            <div className="text-center p-4 bg-white/50 dark:bg-slate-800/50 rounded-xl">
-              <div className="text-2xl font-bold text-slate-900 dark:text-white font-inter">
-                {organizationalStats.surgingCapacity}
+            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
+              {organizationalStats.weeklyBaseline}
+            </div>
+          </div>
+
+          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-rose-500/10 to-pink-500/10">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-2xl flex items-center justify-center">
+                <Zap className="w-6 h-6 text-white" />
               </div>
-              <div className="text-sm text-slate-600 dark:text-slate-300 font-medium">Surge Capacity</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Peak mobilization</div>
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Surge Capacity</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Peak mobilization</p>
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
+              {organizationalStats.surgingCapacity}
             </div>
           </div>
         </div>
