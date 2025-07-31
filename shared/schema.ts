@@ -24,7 +24,7 @@ export const users = pgTable("users", {
   lastName: varchar("last_name"),
   displayName: varchar("display_name"), // User-chosen display name for chat/activities
   profileImageUrl: varchar("profile_image_url"),
-  role: varchar("role").notNull().default("volunteer"), // 'admin', 'coordinator', 'volunteer', 'viewer'
+  role: varchar("role").notNull().default("volunteer"), // 'admin', 'admin_coordinator', 'volunteer', 'viewer'
   permissions: jsonb("permissions").default('[]'), // Array of specific permissions
   metadata: jsonb("metadata").default('{}'), // Additional user data (phone, address, availability, etc.)
   isActive: boolean("is_active").notNull().default(true),

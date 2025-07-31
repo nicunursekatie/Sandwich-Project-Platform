@@ -24,7 +24,7 @@ interface HostWithContacts extends Host {
 export default function HostsManagementConsolidated() {
   const { toast } = useToast();
   const { user } = useAuth();
-  const canEdit = hasPermission(user, PERMISSIONS.EDIT_COLLECTIONS);
+  const canEdit = hasPermission(user, PERMISSIONS.EDIT_ALL_COLLECTIONS);
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingHost, setEditingHost] = useState<Host | null>(null);
@@ -421,7 +421,7 @@ export default function HostsManagementConsolidated() {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="edit-address">Address</Label>
+                          <Label htmlFor="edit-address">Host Location</Label>
                           <Input
                             id="edit-address"
                             value={editingHost.address || ""}
@@ -515,12 +515,12 @@ export default function HostsManagementConsolidated() {
                 />
               </div>
               <div>
-                <Label htmlFor="address">Address</Label>
+                <Label htmlFor="address">Host Location</Label>
                 <Input
                   id="address"
                   value={newHost.address || ""}
                   onChange={(e) => setNewHost({ ...newHost, address: e.target.value })}
-                  placeholder="Enter address"
+                  placeholder="Enter host location"
                 />
               </div>
               <div>
@@ -857,7 +857,7 @@ export default function HostsManagementConsolidated() {
                   </div>
                   {selectedHost.address && (
                     <div className="col-span-2">
-                      <Label className="text-sm font-medium text-slate-700">Address</Label>
+                      <Label className="text-sm font-medium text-slate-700">Host Location</Label>
                       <p className="text-slate-900">{selectedHost.address}</p>
                     </div>
                   )}

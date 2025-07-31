@@ -320,7 +320,7 @@ export default function ShoutoutSystem() {
                   <SelectItem value="all">All Users ({getRecipientCount()})</SelectItem>
                   <SelectItem value="super_admins">Super Administrators ({users?.filter((u: any) => u.role === 'super_admin').length || 0})</SelectItem>
                   <SelectItem value="admins">Administrators ({users?.filter((u: any) => u.role === 'admin').length || 0})</SelectItem>
-                  <SelectItem value="hosts">Host Coordinators ({users?.filter((u: any) => u.role === 'host').length || 0})</SelectItem>
+                  <SelectItem value="hosts">Hosts ({users?.filter((u: any) => u.role === 'host').length || 0})</SelectItem>
                   <SelectItem value="volunteers">Volunteers ({users?.filter((u: any) => u.role === 'volunteer').length || 0})</SelectItem>
                   <SelectItem value="committee">Committee Members ({users?.filter((u: any) => u.role === 'committee_member').length || 0})</SelectItem>
                 </SelectContent>
