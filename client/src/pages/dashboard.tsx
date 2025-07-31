@@ -50,6 +50,7 @@ import { HelpBubble } from "@/components/help-system/HelpBubble";
 import { ToolkitTabs } from "@/components/toolkit-tabs";
 import TSPHeader from "@/components/tsp-header";
 import TSPSidebar from "@/components/tsp-sidebar";
+import { MessageCircle } from "lucide-react";
 
 export default function Dashboard({ initialSection = "dashboard" }: { initialSection?: string }) {
   const [location] = useLocation();
@@ -270,7 +271,6 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
           </main>
         </div>
       </div>
-    </div>
     </HelpProvider>
   );
 }
