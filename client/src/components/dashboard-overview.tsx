@@ -323,39 +323,39 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
             </div>
           </div>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gradient-to-br from-[#47B3CB]/10 to-[#47B3CB]/5 rounded-xl border border-[#47B3CB]/20 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(71,179,203,0.15)] hover:border-[#47B3CB]/30 transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#47B3CB] to-[#007E8C] rounded-lg flex items-center justify-center">
-                  <Activity className="h-5 w-5 text-white" />
+        <div className="p-4 md:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="bg-gradient-to-br from-[#47B3CB]/10 to-[#47B3CB]/5 rounded-xl border border-[#47B3CB]/20 p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(71,179,203,0.15)] hover:border-[#47B3CB]/30 transition-all duration-300 transform hover:-translate-y-1 min-h-[140px]">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#47B3CB] to-[#007E8C] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                 </div>
-                <span className="text-lg font-semibold text-[#47B3CB]">Weekly Baseline</span>
+                <span className="text-sm sm:text-base lg:text-lg font-semibold text-[#47B3CB] leading-tight break-words">Weekly Baseline</span>
               </div>
-              <div className="text-3xl font-bold text-slate-900 mb-2">{organizationalStats.weeklyBaseline}</div>
-              <div className="text-sm text-slate-600 font-medium">Standard Operations</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mb-2 leading-tight break-all">{organizationalStats.weeklyBaseline}</div>
+              <div className="text-xs sm:text-sm text-slate-600 font-medium leading-tight">Standard Operations</div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#FBAD3F]/10 to-[#FBAD3F]/5 rounded-xl border border-[#FBAD3F]/20 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(251,173,63,0.15)] hover:border-[#FBAD3F]/30 transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded-lg flex items-center justify-center">
-                  <Zap className="h-5 w-5 text-white" />
+            <div className="bg-gradient-to-br from-[#FBAD3F]/10 to-[#FBAD3F]/5 rounded-xl border border-[#FBAD3F]/20 p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(251,173,63,0.15)] hover:border-[#FBAD3F]/30 transition-all duration-300 transform hover:-translate-y-1 min-h-[140px]">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                 </div>
-                <span className="text-lg font-semibold text-[#FBAD3F]">Surge Capacity</span>
+                <span className="text-sm sm:text-base lg:text-lg font-semibold text-[#FBAD3F] leading-tight break-words">Surge Capacity</span>
               </div>
-              <div className="text-3xl font-bold text-slate-900 mb-2">{organizationalStats.surgingCapacity}</div>
-              <div className="text-sm text-slate-600 font-medium">Crisis Response</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mb-2 leading-tight break-all">{organizationalStats.surgingCapacity}</div>
+              <div className="text-xs sm:text-sm text-slate-600 font-medium leading-tight">Crisis Response</div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#D1D3D4]/20 to-[#D1D3D4]/10 rounded-xl border border-[#D1D3D4]/30 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(209,211,212,0.15)] hover:border-[#D1D3D4]/40 transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#D1D3D4] to-[#9ca3af] rounded-lg flex items-center justify-center">
-                  <Award className="h-5 w-5 text-white" />
+            <div className="bg-gradient-to-br from-[#D1D3D4]/20 to-[#D1D3D4]/10 rounded-xl border border-[#D1D3D4]/30 p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(209,211,212,0.15)] hover:border-[#D1D3D4]/40 transition-all duration-300 transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1 min-h-[140px]">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#D1D3D4] to-[#9ca3af] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Award className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                 </div>
-                <span className="text-lg font-semibold text-[#6b7280]">Experience</span>
+                <span className="text-sm sm:text-base lg:text-lg font-semibold text-[#6b7280] leading-tight break-words">Experience</span>
               </div>
-              <div className="text-3xl font-bold text-slate-900 mb-2">{organizationalStats.operationalYears} Years</div>
-              <div className="text-sm text-slate-600 font-medium">Since April 2020</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mb-2 leading-tight break-all">{organizationalStats.operationalYears} Years</div>
+              <div className="text-xs sm:text-sm text-slate-600 font-medium leading-tight">Since April 2020</div>
             </div>
           </div>
         </div>
