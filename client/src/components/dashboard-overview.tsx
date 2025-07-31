@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { FileText, TrendingUp, Calendar, Award, Download, ExternalLink, Sandwich, Eye } from "lucide-react";
+import { FileText, TrendingUp, Calendar, Award, Download, ExternalLink, Sandwich, Eye, BarChart3, Target, Activity, Users, Zap, Clock, Building2, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -157,73 +157,97 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         </div>
       )}
 
-      {/* Organizational Impact - Card Based Layout */}
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-        <div className="px-6 py-4 border-b border-slate-200">
+      {/* Organizational Impact - Enhanced with TSP Brand Colors and Better Visual Hierarchy */}
+      <div className="bg-white rounded-lg border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300">
+        <div className="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-[#236383]/5 to-[#007E8C]/5">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FBAD3F] rounded-lg flex items-center justify-center">
-              <TrendingUp className="h-4 w-4 text-white" />
+            <div className="w-10 h-10 bg-gradient-to-br from-[#236383] to-[#007E8C] rounded-xl flex items-center justify-center shadow-lg">
+              <BarChart3 className="h-5 w-5 text-white" />
             </div>
-            <h2 className="text-lg font-semibold text-slate-900 font-roboto">Organizational Impact</h2>
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 font-roboto">Organizational Impact</h2>
+              <p className="text-sm text-slate-600 font-roboto">Community reach and sandwich distribution metrics</p>
+            </div>
           </div>
         </div>
-        <div className="p-4 md:p-6">
-          {/* Top Row - Main Metrics */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-6">
-            <div className="bg-gradient-to-r from-blue-50 via-violet-50/70 to-indigo-50 rounded-lg border border-blue-200/50 p-3 md:p-4 shadow-sm">
-              <div className="mb-2 md:mb-3">
-                <span className="text-sm md:text-base lg:text-lg font-semibold text-blue-700">Total Lifetime</span>
+        <div className="p-6">
+          {/* Primary Metric - Featured Size */}
+          <div className="mb-6">
+            <div className="bg-gradient-to-br from-[#236383] to-[#007E8C] rounded-2xl p-6 text-white shadow-[0_4px_16px_rgba(35,99,131,0.25)] hover:shadow-[0_6px_20px_rgba(35,99,131,0.35)] transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <Target className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white/90">Total Lifetime Impact</h3>
+                  <p className="text-sm text-white/70">Sandwiches distributed since 2020</p>
+                </div>
               </div>
-              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.totalLifetimeSandwiches}</div>
-              <div className="text-xs md:text-sm text-blue-600">Since 2020</div>
-            </div>
-
-            <div className="bg-gradient-to-r from-amber-50 via-orange-50/70 to-red-50 rounded-lg border border-orange-200/50 p-3 md:p-4 shadow-sm">
-              <div className="mb-2 md:mb-3">
-                <span className="text-sm md:text-base lg:text-lg font-semibold text-orange-700">Peak Week</span>
-              </div>
-              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.peakWeekRecord}</div>
-              <div className="text-xs md:text-sm text-orange-600 break-words">{organizationalStats.peakWeekDate}</div>
-            </div>
-
-            <div className="bg-gradient-to-r from-teal-50 via-emerald-50/70 to-green-50 rounded-lg border border-emerald-200/50 p-3 md:p-4 shadow-sm">
-              <div className="mb-2 md:mb-3">
-                <span className="text-sm md:text-base lg:text-lg font-semibold text-emerald-700">Annual Capacity</span>
-              </div>
-              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.currentAnnualCapacity}</div>
-              <div className="text-xs md:text-sm text-emerald-600">Sustainable Level</div>
-            </div>
-
-            <div className="bg-gradient-to-r from-rose-50 via-pink-50/70 to-fuchsia-50 rounded-lg border border-red-200/50 p-3 md:p-4 shadow-sm">
-              <div className="mb-2 md:mb-3">
-                <span className="text-sm md:text-base lg:text-lg font-semibold text-red-700">Growth</span>
-              </div>
-              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.growthMultiplier}</div>
-              <div className="text-xs md:text-sm text-red-600">Since Launch</div>
+              <div className="text-4xl md:text-5xl font-black text-white mb-2">{organizationalStats.totalLifetimeSandwiches}</div>
+              <div className="text-white/80 text-sm font-medium">Feeding families across Georgia communities</div>
             </div>
           </div>
 
-          {/* Bottom Row - Breakdown Metrics */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-            <div className="bg-gradient-to-r from-blue-50 via-indigo-50/70 to-purple-50 rounded-lg border border-blue-200/50 p-3 md:p-4 shadow-sm">
-              <div className="mb-2 md:mb-3">
-                <span className="text-sm md:text-base lg:text-lg font-semibold text-blue-700">Individual Sandwiches</span>
+          {/* Secondary Metrics Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <div className="bg-gradient-to-br from-[#FBAD3F]/10 to-[#FBAD3F]/5 rounded-xl border border-[#FBAD3F]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(251,173,63,0.15)] hover:border-[#FBAD3F]/30 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded-lg flex items-center justify-center">
+                  <Zap className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-sm font-semibold text-[#FBAD3F]">Peak Performance</span>
               </div>
-              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.individualSandwiches}</div>
+              <div className="text-2xl font-bold text-slate-900 mb-1">{organizationalStats.peakWeekRecord}</div>
+              <div className="text-xs text-slate-600 font-medium">{organizationalStats.peakWeekDate}</div>
             </div>
 
-            <div className="bg-gradient-to-r from-orange-50 via-red-50/70 to-rose-50 rounded-lg border border-orange-200/50 p-3 md:p-4 shadow-sm">
-              <div className="mb-2 md:mb-3">
-                <span className="text-sm md:text-base lg:text-lg font-semibold text-orange-700">Group Sandwiches</span>
+            <div className="bg-gradient-to-br from-[#007E8C]/10 to-[#47B3CB]/5 rounded-xl border border-[#007E8C]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,126,140,0.15)] hover:border-[#007E8C]/30 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#007E8C] to-[#47B3CB] rounded-lg flex items-center justify-center">
+                  <Activity className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-sm font-semibold text-[#007E8C]">Annual Capacity</span>
               </div>
-              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.groupSandwiches}</div>
+              <div className="text-2xl font-bold text-slate-900 mb-1">{organizationalStats.currentAnnualCapacity}</div>
+              <div className="text-xs text-slate-600 font-medium">Sustainable Output</div>
             </div>
 
-            <div className="bg-gradient-to-r from-slate-50 via-gray-50/70 to-zinc-50 rounded-lg border border-slate-200/50 p-3 md:p-4 shadow-sm sm:col-span-2 md:col-span-1">
-              <div className="mb-2 md:mb-3">
-                <span className="text-sm md:text-base lg:text-lg font-semibold text-slate-700">Total Entries</span>
+            <div className="bg-gradient-to-br from-[#A31C41]/10 to-[#A31C41]/5 rounded-xl border border-[#A31C41]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(163,28,65,0.15)] hover:border-[#A31C41]/30 transition-all duration-300 transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#A31C41] to-[#8b1635] rounded-lg flex items-center justify-center">
+                  <TrendingUp className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-sm font-semibold text-[#A31C41]">Growth Rate</span>
               </div>
-              <div className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.totalEntries}</div>
+              <div className="text-2xl font-bold text-slate-900 mb-1">{organizationalStats.growthMultiplier}</div>
+              <div className="text-xs text-slate-600 font-medium">Since Foundation</div>
+            </div>
+          </div>
+
+          {/* Data Breakdown - Smaller Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300">
+              <div className="flex items-center gap-2 mb-2">
+                <Users className="h-4 w-4 text-[#236383]" />
+                <span className="text-sm font-medium text-slate-700">Individual</span>
+              </div>
+              <div className="text-xl font-bold text-slate-900">{organizationalStats.individualSandwiches}</div>
+            </div>
+
+            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300">
+              <div className="flex items-center gap-2 mb-2">
+                <Building2 className="h-4 w-4 text-[#FBAD3F]" />
+                <span className="text-sm font-medium text-slate-700">Groups</span>
+              </div>
+              <div className="text-xl font-bold text-slate-900">{organizationalStats.groupSandwiches}</div>
+            </div>
+
+            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300">
+              <div className="flex items-center gap-2 mb-2">
+                <Layers className="h-4 w-4 text-[#007E8C]" />
+                <span className="text-sm font-medium text-slate-700">Total Entries</span>
+              </div>
+              <div className="text-xl font-bold text-slate-900">{organizationalStats.totalEntries}</div>
             </div>
           </div>
         </div>
@@ -286,41 +310,52 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         </div>
       </div>
 
-      {/* Operational Capacity - Matching Organizational Impact Style */}
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-        <div className="px-6 py-4 border-b border-slate-200">
+      {/* Operational Capacity - Enhanced with TSP Brand Colors */}
+      <div className="bg-white rounded-lg border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300">
+        <div className="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-[#47B3CB]/5 to-[#D1D3D4]/5">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#236383] rounded-lg flex items-center justify-center">
-              <Award className="h-4 w-4 text-white" />
+            <div className="w-10 h-10 bg-gradient-to-br from-[#47B3CB] to-[#007E8C] rounded-xl flex items-center justify-center shadow-lg">
+              <Clock className="h-5 w-5 text-white" />
             </div>
-            <h2 className="text-lg font-semibold text-slate-900 font-roboto">Operational Capacity</h2>
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 font-roboto">Operational Capacity</h2>
+              <p className="text-sm text-slate-600 font-roboto">Current performance levels and response capabilities</p>
+            </div>
           </div>
-          <p className="text-sm text-slate-500 mt-1">Current operational performance and capacity metrics</p>
         </div>
         <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-r from-emerald-50 via-green-100/70 to-lime-50 rounded-lg border border-emerald-200/50 p-4 shadow-sm">
-              <div className="mb-3">
-                <span className="text-base sm:text-lg font-semibold text-emerald-700">Weekly Baseline</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-gradient-to-br from-[#47B3CB]/10 to-[#47B3CB]/5 rounded-xl border border-[#47B3CB]/20 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(71,179,203,0.15)] hover:border-[#47B3CB]/30 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#47B3CB] to-[#007E8C] rounded-lg flex items-center justify-center">
+                  <Activity className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-lg font-semibold text-[#47B3CB]">Weekly Baseline</span>
               </div>
-              <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.weeklyBaseline}</div>
-              <div className="text-sm text-emerald-600">Standard Operations</div>
+              <div className="text-3xl font-bold text-slate-900 mb-2">{organizationalStats.weeklyBaseline}</div>
+              <div className="text-sm text-slate-600 font-medium">Standard Operations</div>
             </div>
 
-            <div className="bg-gradient-to-r from-orange-50 via-amber-100/70 to-yellow-100 rounded-lg border border-orange-200/50 p-4 shadow-sm">
-              <div className="mb-3">
-                <span className="text-base sm:text-lg font-semibold text-orange-700">Surge Capacity</span>
+            <div className="bg-gradient-to-br from-[#FBAD3F]/10 to-[#FBAD3F]/5 rounded-xl border border-[#FBAD3F]/20 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(251,173,63,0.15)] hover:border-[#FBAD3F]/30 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded-lg flex items-center justify-center">
+                  <Zap className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-lg font-semibold text-[#FBAD3F]">Surge Capacity</span>
               </div>
-              <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.surgingCapacity}</div>
-              <div className="text-sm text-orange-600">Crisis Response</div>
+              <div className="text-3xl font-bold text-slate-900 mb-2">{organizationalStats.surgingCapacity}</div>
+              <div className="text-sm text-slate-600 font-medium">Crisis Response</div>
             </div>
 
-            <div className="bg-gradient-to-r from-blue-50 via-sky-100/70 to-cyan-100 rounded-lg border border-blue-200/50 p-4 shadow-sm">
-              <div className="mb-3">
-                <span className="text-base sm:text-lg font-semibold text-blue-700">Experience</span>
+            <div className="bg-gradient-to-br from-[#D1D3D4]/20 to-[#D1D3D4]/10 rounded-xl border border-[#D1D3D4]/30 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(209,211,212,0.15)] hover:border-[#D1D3D4]/40 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#D1D3D4] to-[#9ca3af] rounded-lg flex items-center justify-center">
+                  <Award className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-lg font-semibold text-[#6b7280]">Experience</span>
               </div>
-              <div className="text-xl md:text-2xl font-bold text-slate-900 mb-1 break-words">{organizationalStats.operationalYears} Years</div>
-              <div className="text-sm text-blue-600">Since April 2020</div>
+              <div className="text-3xl font-bold text-slate-900 mb-2">{organizationalStats.operationalYears} Years</div>
+              <div className="text-sm text-slate-600 font-medium">Since April 2020</div>
             </div>
           </div>
         </div>
