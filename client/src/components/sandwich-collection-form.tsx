@@ -269,7 +269,7 @@ export default function SandwichCollectionForm({
 
   const formRowStyle = {
     display: "grid",
-    gridTemplateColumns: "200px 1fr",
+    gridTemplateColumns: "160px 1fr",
     gap: "16px",
   };
 
