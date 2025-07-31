@@ -193,146 +193,111 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           </div>
         )}
 
-        {/* Modern Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-4">
-          {/* Total Lifetime Impact - Hero Card */}
-          <div className="lg:col-span-3 glass-card hover-lift overlap-shadow p-8 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl">
-                    <SandwichStackIcon className="w-10 h-10 text-white" />
-                  </div>
-                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white animate-pulse" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white font-inter">Total Lifetime Impact</h3>
-                  <p className="text-slate-600 dark:text-slate-300 font-medium">Sandwiches distributed since 2020</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-4xl font-black text-slate-900 dark:text-white font-inter">
-                  <AnimatedCounter value={statsData?.completeTotalSandwiches || 0} />
-                </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <GrowthTrendIcon className="w-4 h-4 text-green-500" />
-                  <span className="text-sm text-green-600 font-semibold">Growing daily</span>
-                </div>
+        {/* Hero Impact Section */}
+        <div className="mx-4 mb-12">
+          <div className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-2xl p-12 text-center">
+            <div className="mb-4">
+              <h1 className="text-7xl md:text-8xl font-black text-slate-900 dark:text-white tracking-tight">
+                <AnimatedCounter value={statsData?.completeTotalSandwiches || 0} />
+              </h1>
+              <div className="flex items-center justify-center gap-3 mt-4">
+                <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                <p className="text-xl text-slate-600 dark:text-slate-400 font-medium">
+                  Total sandwiches distributed since 2020
+                </p>
+                <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
               </div>
             </div>
-            <div className="mt-4 text-center">
-              <div className="text-sm text-slate-500 dark:text-slate-400 font-medium">
-                Real data from verified collection records
-              </div>
-            </div>
-          </div>
-
-          {/* Individual Cards */}
-          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-orange-500/10 to-red-500/10">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center">
-                <TargetIcon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Individual Collections</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Personal contributions</p>
-              </div>
-            </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
-              <AnimatedCounter value={statsData?.individualSandwiches || 0} />
-            </div>
-          </div>
-
-          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-blue-500/10 to-cyan-500/10">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center">
-                <CommunityIcon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Group Collections</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Organization donations</p>
-              </div>
-            </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
-              <AnimatedCounter value={statsData ? ((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)) : 0} />
-            </div>
-          </div>
-
-          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-teal-500/10 to-cyan-500/10">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center">
-                <NetworkIcon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Total Entries</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Data submissions</p>
-              </div>
-            </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
-              <AnimatedCounter value={statsData?.totalEntries || 0} />
+            <div className="text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200/50 dark:border-slate-700/50 pt-6 mt-6">
+              Real data from verified collection records
             </div>
           </div>
         </div>
 
-        {/* Operational Capacity Overview */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mx-4">
-          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-emerald-500/10 to-green-500/10">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-2xl flex items-center justify-center">
-                <Award className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Peak Week Record</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">November 15, 2023</p>
+        {/* Key Metrics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mx-4 mb-8">
+          <div className="bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-xl p-6 hover:border-slate-300/60 dark:hover:border-slate-600/60 transition-all">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                Individual Collections
+              </h3>
+              <div className="w-8 h-8 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-lg flex items-center justify-center">
+                <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
               </div>
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
-              {organizationalStats.peakWeekRecord}
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+              <AnimatedCounter value={statsData?.individualSandwiches || 0} />
             </div>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Personal contributions</p>
           </div>
 
-          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-violet-500/10 to-purple-500/10">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-500 rounded-2xl flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Annual Capacity</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Current year target</p>
+          <div className="bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-xl p-6 hover:border-slate-300/60 dark:hover:border-slate-600/60 transition-all">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                Group Collections
+              </h3>
+              <div className="w-8 h-8 bg-gradient-to-br from-teal-500/20 to-teal-600/20 rounded-lg flex items-center justify-center">
+                <div className="w-3 h-3 bg-teal-500 rounded-full"></div>
               </div>
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
-              {organizationalStats.currentAnnualCapacity}
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+              <AnimatedCounter value={statsData ? ((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)) : 0} />
             </div>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Organization donations</p>
           </div>
 
-          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-amber-500/10 to-yellow-500/10">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-2xl flex items-center justify-center">
-                <Activity className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Weekly Baseline</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Regular operations</p>
+          <div className="bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-xl p-6 hover:border-slate-300/60 dark:hover:border-slate-600/60 transition-all">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                Collection Records
+              </h3>
+              <div className="w-8 h-8 bg-gradient-to-br from-slate-500/20 to-slate-600/20 rounded-lg flex items-center justify-center">
+                <div className="w-3 h-3 bg-slate-500 rounded-full"></div>
               </div>
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
-              {organizationalStats.weeklyBaseline}
+            <div className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+              <AnimatedCounter value={statsData?.totalEntries || 0} />
             </div>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Data submissions</p>
           </div>
+        </div>
 
-          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-rose-500/10 to-pink-500/10">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-2xl flex items-center justify-center">
-                <Zap className="w-6 h-6 text-white" />
+        {/* Operational Metrics */}
+        <div className="mx-4 mb-8">
+          <div className="bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-xl p-6">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-6">Operational Capacity</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
+                  {organizationalStats.peakWeekRecord}
+                </div>
+                <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">Peak Week</div>
+                <div className="text-xs text-slate-500 dark:text-slate-500 mt-1">Nov 15, 2023</div>
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Surge Capacity</h3>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Peak mobilization</p>
+              
+              <div className="text-center">
+                <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
+                  {organizationalStats.currentAnnualCapacity}
+                </div>
+                <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">Annual Target</div>
+                <div className="text-xs text-slate-500 dark:text-slate-500 mt-1">Current year</div>
               </div>
-            </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
-              {organizationalStats.surgingCapacity}
+              
+              <div className="text-center">
+                <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
+                  {organizationalStats.weeklyBaseline}
+                </div>
+                <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">Weekly Baseline</div>
+                <div className="text-xs text-slate-500 dark:text-slate-500 mt-1">Regular ops</div>
+              </div>
+              
+              <div className="text-center">
+                <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
+                  {organizationalStats.surgingCapacity}
+                </div>
+                <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">Surge Capacity</div>
+                <div className="text-xs text-slate-500 dark:text-slate-500 mt-1">Peak mobilization</div>
+              </div>
             </div>
           </div>
         </div>
