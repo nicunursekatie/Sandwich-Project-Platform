@@ -2,7 +2,9 @@
 // Incorporates deep blue (#236383), gold (#FBAD3F), and teal (#007E8C)
 
 import { useState } from "react";
-import { Calendar, Info, Plus, Trash2 } from "lucide-react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { Calendar, Info, Plus, Trash2, Sandwich } from "lucide-react";
+import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,8 +21,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import type { Host } from "@shared/schema";
 
-export default function ModernCollectionForm() {
+interface SandwichCollectionFormProps {
+  onSuccess?: () => void;
+}
+
+export default function SandwichCollectionForm({ onSuccess }: SandwichCollectionFormProps) {
   const [date, setDate] = useState("2025-07-31");
   const [location, setLocation] = useState("");
   const [individualCount, setIndividualCount] = useState("");
@@ -41,7 +50,7 @@ export default function ModernCollectionForm() {
         <h1 className="text-2xl font-bold text-[#236383] flex items-center justify-center">
           <div className="w-10 h-10 rounded-xl border border-gray-200 shadow-sm bg-white flex items-center justify-center mr-2">
             <img
-              src="/assets/LOGOS/sandwich logo.png"
+              src={sandwichLogo}
               alt="Sandwich Logo"
               className="w-6 h-6 object-contain"
             />
