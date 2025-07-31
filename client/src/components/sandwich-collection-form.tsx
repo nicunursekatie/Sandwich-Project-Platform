@@ -8,27 +8,41 @@ interface Group {
   count: number;
 }
 
-export default function SandwichCollectionForm({ onSuccess }) {
+interface SandwichCollectionFormProps {
+  onSuccess?: () => void;
+}
+
+interface Host {
+  id: number;
+  name: string;
+  status: string;
+  email: string;
+  phone: string;
+  address: string;
+  notes: string;
+}
+
+export default function SandwichCollectionForm({ onSuccess }: SandwichCollectionFormProps) {
   const [date, setDate] = useState("2025-07-31");
   const [location, setLocation] = useState("");
   const [customLocation, setCustomLocation] = useState("");
   const [showCustomLocation, setShowCustomLocation] = useState(false);
   const [individualCount, setIndividualCount] = useState("");
-  const [groups, setGroups] = useState([]);
+  const [groups, setGroups] = useState<Group[]>([]);
   const [showCalculator, setShowCalculator] = useState(false);
   const [calcDisplay, setCalcDisplay] = useState("");
 
   const queryClient = useQueryClient();
 
   // Fetch active hosts
-  const { data: hosts = [] } = useQuery({
+  const { data: hosts = [] } = useQuery<Host[]>({
     queryKey: ["/api/hosts"],
-    select: (data) => data.filter((host) => host.status === "active"),
+    select: (data: any) => data.filter((host: Host) => host.status === "active"),
   });
 
   // Create new host mutation
   const createHostMutation = useMutation({
-    mutationFn: async (hostName) => {
+    mutationFn: async (hostName: string) => {
       const response = await fetch("/api/hosts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,7 +65,7 @@ export default function SandwichCollectionForm({ onSuccess }) {
 
   // Submit collection mutation
   const submitMutation = useMutation({
-    mutationFn: async (collectionData) => {
+    mutationFn: async (collectionData: any) => {
       const response = await fetch("/api/sandwich-collections", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -69,7 +83,7 @@ export default function SandwichCollectionForm({ onSuccess }) {
   });
 
   // Handle location change
-  const handleLocationChange = (value) => {
+  const handleLocationChange = (value: string) => {
     setLocation(value);
     setShowCustomLocation(value === "other");
     if (value !== "other") {
@@ -93,12 +107,12 @@ export default function SandwichCollectionForm({ onSuccess }) {
   };
 
   // Remove group
-  const removeGroup = (id) => {
+  const removeGroup = (id: string) => {
     setGroups(groups.filter((g) => g.id !== id));
   };
 
   // Calculator functions
-  const handleCalcInput = (value) => {
+  const handleCalcInput = (value: string) => {
     if (value === "=") {
       try {
         const result = eval(calcDisplay);
@@ -116,7 +130,7 @@ export default function SandwichCollectionForm({ onSuccess }) {
   };
 
   const useCalcResult = () => {
-    if (calcDisplay && !isNaN(calcDisplay)) {
+    if (calcDisplay && !isNaN(Number(calcDisplay))) {
       setIndividualCount(calcDisplay);
       setShowCalculator(false);
       setCalcDisplay("");
@@ -488,12 +502,12 @@ export default function SandwichCollectionForm({ onSuccess }) {
     gap: "4px",
   };
   // Event handlers
-  const handleInputFocus = (e) => {
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
     e.currentTarget.style.outline = "none";
     e.currentTarget.style.borderColor = "#236383";
   };
 
-  const handleInputBlur = (e) => {
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
     e.currentTarget.style.borderColor = "#E9E6E6";
   };
 
@@ -648,7 +662,7 @@ export default function SandwichCollectionForm({ onSuccess }) {
             // Expanded state
             <div>
               <div style={groupsHeaderStyle}>
-                <h3 style={sectionTitleStyle}>  marginBottom: 0, paddingBottom: 0, borderBottom: 'none' }}
+                <h3 style={{ ...sectionTitleStyle, marginBottom: 0, paddingBottom: 0, borderBottom: 'none' }}>
                   <span style={accentBarStyle}></span>
                   Group Collections
                 </h3>
