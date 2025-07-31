@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Calculator } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Group {
   id: string;
@@ -35,6 +36,7 @@ export default function SandwichCollectionForm({
   const [calcDisplay, setCalcDisplay] = useState("");
 
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   // Fetch active hosts
   const { data: hosts = [] } = useQuery<Host[]>({
@@ -77,11 +79,42 @@ export default function SandwichCollectionForm({
       if (!response.ok) throw new Error("Failed to submit collection");
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const totalSandwiches = (parseInt(individualCount) || 0) + 
+        groups.reduce((sum, group) => sum + (parseInt(group.count) || 0), 0);
+      
+      // Show clear success message with details
+      toast({
+        title: "Collection Submitted Successfully! 🥪",
+        description: `Recorded ${totalSandwiches} sandwiches from ${location || customLocation} on ${new Date(date).toLocaleDateString()}. Thank you for your contribution!`,
+        duration: 5000,
+      });
+
+      // Clear form
+      setDate(new Date().toISOString().split("T")[0]);
+      setLocation("");
+      setCustomLocation("");
+      setShowCustomLocation(false);
+      setIndividualCount("");
+      setGroups([]);
+
       queryClient.invalidateQueries({
         queryKey: ["/api/sandwich-collections"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["/api/sandwich-collections/stats"],
+      });
+      
       if (onSuccess) onSuccess();
+    },
+    onError: (error) => {
+      // Show clear error message
+      toast({
+        title: "Submission Failed",
+        description: "There was a problem submitting your collection. Please try again or contact support if the issue persists.",
+        variant: "destructive",
+        duration: 7000,
+      });
     },
   });
 

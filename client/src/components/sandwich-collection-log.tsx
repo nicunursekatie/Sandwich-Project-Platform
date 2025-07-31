@@ -490,12 +490,14 @@ export default function SandwichCollectionLog() {
     mutationFn: async (data: { id: number; updates: any }) => {
       return await apiRequest('PATCH', `/api/sandwich-collections/${data.id}`, data.updates);
     },
-    onSuccess: () => {
+    onSuccess: (response, variables) => {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections/stats"] });
       setEditingCollection(null);
       toast({
-        title: "Collection updated",
-        description: "Sandwich collection has been updated successfully.",
+        title: "Collection Updated Successfully! ✏️",
+        description: "Your changes have been saved and the collection data has been updated.",
+        duration: 4000,
       });
     },
     onError: () => {
@@ -516,8 +518,9 @@ export default function SandwichCollectionLog() {
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections/stats"] });
       toast({
-        title: "Collection deleted",
-        description: "Sandwich collection has been deleted successfully.",
+        title: "Collection Deleted Successfully 🗑️",
+        description: "The sandwich collection record has been permanently removed from the system.",
+        duration: 4000,
       });
     },
     onError: (error: any) => {
@@ -549,8 +552,12 @@ export default function SandwichCollectionLog() {
     mutationFn: async (data: any) => {
       return await apiRequest('POST', '/api/sandwich-collections', data);
     },
-    onSuccess: () => {
+    onSuccess: (response, variables) => {
+      const totalSandwiches = (variables.individualSandwiches || 0) + 
+        (variables.groupSandwiches || 0);
+      
       queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections/stats"] });
       setShowAddForm(false);
       setNewCollectionData({
         collectionDate: "",
@@ -561,15 +568,17 @@ export default function SandwichCollectionLog() {
       setNewGroupCollections([{ id: Math.random().toString(36), groupName: "", sandwichCount: 0 }]);
       setNewCollectionGroupOnlyMode(false);
       toast({
-        title: "Collection added",
-        description: "The sandbox collection has been added successfully.",
+        title: "Collection Successfully Added! 🥪",
+        description: `Recorded ${totalSandwiches} sandwiches from ${variables.hostName} on ${new Date(variables.collectionDate).toLocaleDateString()}. Thank you for your contribution!`,
+        duration: 5000,
       });
     },
     onError: () => {
       toast({
-        title: "Add failed",
-        description: "Failed to add the collection. Please try again.",
+        title: "Submission Failed",
+        description: "Failed to add the collection. Please check your permissions and try again.",
         variant: "destructive",
+        duration: 7000,
       });
     }
   });
