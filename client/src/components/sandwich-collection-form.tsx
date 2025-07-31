@@ -490,61 +490,60 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           </div>
 
           <div className="space-y-3">
-              {groupCollections.map((group) => (
-                <div key={group.id} className="border border-gray-200 rounded p-3 space-y-2">
-                  <Input
-                    placeholder="Group name (e.g., Church Group, School Club)"
-                    value={group.groupName}
-                    onChange={(e) =>
-                      updateGroupCollection(group.id, "groupName", e.target.value)
-                    }
-                    className="h-10 text-sm px-3 py-2 border border-gray-200 rounded w-full focus:ring-2 focus:ring-[#236383] focus:border-transparent"
-                  />
-                  <div className="flex gap-2 items-center">
-                    <div className="flex-1">
-                      <Label htmlFor={`group-count-${group.id}`} className="text-sm font-medium text-[#646464] mb-1 block">
-                        Sandwich count:
-                      </Label>
-                      <Input
-                        id={`group-count-${group.id}`}
-                        type="number"
-                        min="0"
-                        placeholder="0"
-                        value={group.sandwichCount || ""}
-                        onChange={(e) =>
-                          updateGroupCollection(
-                            group.id,
-                            "sandwichCount",
-                            parseInt(e.target.value) || 0,
-                          )
-                        }
-                        className="h-10 text-sm px-3 py-2 border border-gray-200 rounded w-full focus:ring-2 focus:ring-[#236383] focus:border-transparent"
-                      />
-                    </div>
-                    {groupCollections.length > 1 && (
-                      <Button
-                        type="button"
-                        size="sm"
-                        onClick={() => removeGroupRow(group.id)}
-                        className="h-10 px-3 text-sm bg-[#A31C41] hover:bg-[#8b1836] text-white font-medium border border-[#A31C41]"
-                      >
-                        Remove Group
-                      </Button>
-                    )}
+            {groupCollections.map((group) => (
+              <div key={group.id} className="border border-gray-200 rounded p-3 space-y-2">
+                <Input
+                  placeholder="Group name (e.g., Church Group, School Club)"
+                  value={group.groupName}
+                  onChange={(e) =>
+                    updateGroupCollection(group.id, "groupName", e.target.value)
+                  }
+                  className="h-10 text-sm px-3 py-2 border border-gray-200 rounded w-full focus:ring-2 focus:ring-[#236383] focus:border-transparent"
+                />
+                <div className="flex gap-2 items-center">
+                  <div className="flex-1">
+                    <Label htmlFor={`group-count-${group.id}`} className="text-sm font-medium text-[#646464] mb-1 block">
+                      Sandwich count:
+                    </Label>
+                    <Input
+                      id={`group-count-${group.id}`}
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      value={group.sandwichCount || ""}
+                      onChange={(e) =>
+                        updateGroupCollection(
+                          group.id,
+                          "sandwichCount",
+                          parseInt(e.target.value) || 0,
+                        )
+                      }
+                      className="h-10 text-sm px-3 py-2 border border-gray-200 rounded w-full focus:ring-2 focus:ring-[#236383] focus:border-transparent"
+                    />
                   </div>
+                  {groupCollections.length > 1 && (
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => removeGroupRow(group.id)}
+                      className="h-10 px-3 text-sm bg-[#A31C41] hover:bg-[#8b1836] text-white font-medium border border-[#A31C41]"
+                    >
+                      Remove Group
+                    </Button>
+                  )}
                 </div>
-              ))}
+              </div>
+            ))}
 
-              {/* Full-width Add Group button */}
-              <Button
-                type="button"
-                onClick={addGroupRow}
-                className="w-full h-10 text-sm font-medium !bg-[#236383] hover:!bg-[#1e5670] !text-white !border-[#236383] transition-all duration-200"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Group
-              </Button>
-            </div>
+            {/* Full-width Add Group button */}
+            <Button
+              type="button"
+              onClick={addGroupRow}
+              className="w-full h-10 text-sm font-medium !bg-[#236383] hover:!bg-[#1e5670] !text-white !border-[#236383] transition-all duration-200"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Group
+            </Button>
           </div>
         </div>
 
