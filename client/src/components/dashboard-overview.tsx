@@ -121,7 +121,14 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               </div>
               <div className="flex gap-3">
                 <Button 
-                  onClick={() => onSectionChange?.("collections")}
+                  onClick={() => {
+                    onSectionChange?.("collections");
+                    // Add URL parameter to auto-open form
+                    setTimeout(() => {
+                      const event = new CustomEvent('openCollectionForm');
+                      window.dispatchEvent(event);
+                    }, 100);
+                  }}
                   className="bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#d88a1e] text-white font-semibold px-8 py-3 text-sm shadow-lg shadow-[#FBAD3F]/25 transition-all duration-200"
                 >
                   Enter New Collection Data

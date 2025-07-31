@@ -128,6 +128,16 @@ export default function SandwichCollectionLog() {
     return individual + groupTotal;
   };
 
+  // Listen for form open events from dashboard
+  useEffect(() => {
+    const handleOpenForm = () => {
+      setShowSubmitForm(true);
+    };
+    
+    window.addEventListener('openCollectionForm', handleOpenForm);
+    return () => window.removeEventListener('openCollectionForm', handleOpenForm);
+  }, []);
+
   // Debounce search filters to prevent excessive queries
   useEffect(() => {
     const timeoutId = setTimeout(() => {
