@@ -335,7 +335,12 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
         {groups.map((group, i) => (
           <div
             key={group.id}
-            className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-center"
+            style={{
+              display: 'flex',
+              gap: '12px',
+              alignItems: 'center',
+              marginBottom: '12px'
+            }}
           >
             <Input
               placeholder="Group name"
@@ -345,8 +350,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 newGroups[i].name = e.target.value;
                 setGroups(newGroups);
               }}
-              className="col-span-3"
-              style={inputStyle}
+              style={{ ...inputStyle, flex: '1' }}
               onMouseEnter={handleInputMouseEnter}
               onMouseLeave={handleInputMouseLeave}
               onFocus={handleInputFocus}
@@ -362,21 +366,36 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 newGroups[i].count = parseInt(e.target.value) || 0;
                 setGroups(newGroups);
               }}
-              className="col-span-1"
-              style={inputStyle}
+              style={{ ...inputStyle, width: '100px' }}
               onMouseEnter={handleInputMouseEnter}
               onMouseLeave={handleInputMouseLeave}
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
             />
-            <Button
+            <button
               type="button"
               onClick={() => removeGroup(group.id)}
-              variant="outline"
-              className="col-span-1 text-[#A31C41] border-[#A31C41] hover:bg-[#fce8ec] hover:text-[#8b1e35] h-9"
+              style={{
+                width: '44px',
+                height: '44px',
+                background: '#fee2e2',
+                border: 'none',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#fecaca';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#fee2e2';
+              }}
             >
-              <Trash2 className="w-4 h-4" />
-            </Button>
+              <Trash2 style={{ width: '16px', height: '16px', color: '#ef4444' }} />
+            </button>
           </div>
         ))}
 
