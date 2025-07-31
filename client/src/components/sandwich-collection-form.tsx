@@ -35,6 +35,42 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
   const [individualCount, setIndividualCount] = useState("");
   const [groups, setGroups] = useState([{ id: "1", name: "", count: 0 }]);
 
+  // Input styling with interaction states
+  const inputStyle = {
+    padding: '12px 16px',
+    border: '1px solid #e2e8f0',
+    borderRadius: '8px',
+    background: '#f8fafc',
+    transition: 'all 0.2s ease',
+    fontSize: '16px',
+    height: '48px'
+  };
+
+  const handleInputMouseEnter = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = '#cbd5e1';
+    e.currentTarget.style.background = '#ffffff';
+  };
+
+  const handleInputMouseLeave = (e: React.MouseEvent<HTMLInputElement>) => {
+    if (e.currentTarget !== document.activeElement) {
+      e.currentTarget.style.borderColor = '#e2e8f0';
+      e.currentTarget.style.background = '#f8fafc';
+    }
+  };
+
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.outline = 'none';
+    e.currentTarget.style.borderColor = '#236383';
+    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(35, 99, 131, 0.1)';
+    e.currentTarget.style.background = '#ffffff';
+  };
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.borderColor = '#e2e8f0';
+    e.currentTarget.style.boxShadow = 'none';
+    e.currentTarget.style.background = '#f8fafc';
+  };
+
   const addGroup = () => {
     setGroups([...groups, { id: Date.now().toString(), name: "", count: 0 }]);
   };
@@ -96,8 +132,11 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               id="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="rounded-xl border-gray-300 text-sm focus:ring-2 focus:ring-[#007E8C]"
-              style={{ padding: '12px 16px' }}
+              style={inputStyle}
+              onMouseEnter={handleInputMouseEnter}
+              onMouseLeave={handleInputMouseLeave}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
             />
           </div>
           <div>
@@ -109,7 +148,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               display: 'block'
             }}>Location</Label>
             <Select value={location} onValueChange={setLocation}>
-              <SelectTrigger className="rounded-xl border-gray-300 text-sm focus:ring-2 focus:ring-[#007E8C]" style={{ padding: '12px 16px' }}>
+              <SelectTrigger style={inputStyle}>
                 <SelectValue placeholder="Select location" />
               </SelectTrigger>
               <SelectContent>
@@ -154,8 +193,11 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           min="0"
           value={individualCount}
           onChange={(e) => setIndividualCount(e.target.value)}
-          className="rounded-xl border-gray-300 text-sm w-32 focus:ring-2 focus:ring-[#007E8C]"
-          style={{ padding: '12px 16px' }}
+          style={{ ...inputStyle, width: '128px' }}
+          onMouseEnter={handleInputMouseEnter}
+          onMouseLeave={handleInputMouseLeave}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
         />
       </div>
 
@@ -193,8 +235,12 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 newGroups[i].name = e.target.value;
                 setGroups(newGroups);
               }}
-              className="rounded-xl col-span-3 border-gray-300 text-sm focus:ring-2 focus:ring-[#007E8C]"
-              style={{ padding: '12px 16px' }}
+              className="col-span-3"
+              style={inputStyle}
+              onMouseEnter={handleInputMouseEnter}
+              onMouseLeave={handleInputMouseLeave}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
             />
             <Input
               type="number"
@@ -206,8 +252,12 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
                 newGroups[i].count = parseInt(e.target.value) || 0;
                 setGroups(newGroups);
               }}
-              className="rounded-xl col-span-1 border-gray-300 text-sm focus:ring-2 focus:ring-[#007E8C]"
-              style={{ padding: '12px 16px' }}
+              className="col-span-1"
+              style={inputStyle}
+              onMouseEnter={handleInputMouseEnter}
+              onMouseLeave={handleInputMouseLeave}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
             />
             <Button
               type="button"
