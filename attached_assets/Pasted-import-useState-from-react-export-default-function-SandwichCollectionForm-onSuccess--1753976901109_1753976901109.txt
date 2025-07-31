@@ -1,113 +1,16 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function SandwichCollectionForm({ onSuccess }) {
   const [date, setDate] = useState("2025-07-31");
   const [location, setLocation] = useState("");
-  const [customLocation, setCustomLocation] = useState("");
-  const [showCustomLocation, setShowCustomLocation] = useState(false);
   const [individualCount, setIndividualCount] = useState("");
   const [groups, setGroups] = useState([]);
-  
-  const queryClient = useQueryClient();
-
-  // Fetch active hosts
-  const { data: hosts = [] } = useQuery({
-    queryKey: ['/api/hosts'],
-    select: (data) => data.filter((host) => host.status === 'active')
-  });
-
-  // Create new host mutation
-  const createHostMutation = useMutation({
-    mutationFn: async (hostName) => {
-      const response = await fetch('/api/hosts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: hostName,
-          status: 'active',
-          email: '',
-          phone: '',
-          address: '',
-          notes: `Created from collection form on ${new Date().toLocaleDateString()}`
-        })
-      });
-      if (!response.ok) throw new Error('Failed to create host');
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/hosts'] });
-    }
-  });
-
-  // Submit collection mutation
-  const submitMutation = useMutation({
-    mutationFn: async (collectionData) => {
-      const response = await fetch('/api/sandwich-collections', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(collectionData)
-      });
-      if (!response.ok) throw new Error('Failed to submit collection');
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/sandwich-collections'] });
-      if (onSuccess) onSuccess();
-    }
-  });
-
-  // Handle location change
-  const handleLocationChange = (value) => {
-    setLocation(value);
-    setShowCustomLocation(value === "other");
-    if (value !== "other") {
-      setCustomLocation("");
-    }
-  };
 
   // Calculate total
   const calculateTotal = () => {
     const individual = parseInt(individualCount) || 0;
     const groupTotal = groups.reduce((sum, group) => sum + (parseInt(group.count) || 0), 0);
     return individual + groupTotal;
-  };
-
-  // Add group
-  const addGroup = () => {
-    setGroups([...groups, { id: Date.now().toString(), name: "", count: 0 }]);
-  };
-
-  // Remove group
-  const removeGroup = (id) => {
-    setGroups(groups.filter((g) => g.id !== id));
-  };
-
-  // Handle form submission
-  const handleSubmit = async () => {
-    let finalLocation = location;
-    
-    // If "other" is selected, create new host and use custom location
-    if (location === "other" && customLocation.trim()) {
-      try {
-        await createHostMutation.mutateAsync(customLocation.trim());
-        finalLocation = customLocation.trim();
-      } catch (error) {
-        console.error('Failed to create new host:', error);
-        return;
-      }
-    }
-
-    const collectionData = {
-      collectionDate: date,
-      hostName: finalLocation,
-      individualSandwiches: parseInt(individualCount) || 0,
-      groupSandwiches: groups.reduce((sum, group) => sum + (parseInt(group.count) || 0), 0),
-      groupCollections: groups.filter(g => g.name.trim() && g.count > 0),
-      notes: `Submitted via collection form on ${new Date().toLocaleString()}`
-    };
-
-    submitMutation.mutate(collectionData);
   };
 
   // Container styles
@@ -328,12 +231,6 @@ export default function SandwichCollectionForm({ onSuccess }) {
     fontStyle: 'italic'
   };
 
-  // Custom location input style
-  const customLocationInputStyle = {
-    ...inputStyle,
-    marginTop: '8px'
-  };
-
   // Event handlers
   const handleInputFocus = (e) => {
     e.currentTarget.style.outline = 'none';
@@ -342,6 +239,28 @@ export default function SandwichCollectionForm({ onSuccess }) {
 
   const handleInputBlur = (e) => {
     e.currentTarget.style.borderColor = '#E9E6E6';
+  };
+
+  const addGroup = () => {
+    setGroups([...groups, { id: Date.now().toString(), name: "", count: 0 }]);
+  };
+
+  const removeGroup = (id) => {
+    setGroups(groups.filter((g) => g.id !== id));
+  };
+
+  const handleSubmit = () => {
+    console.log({
+      date,
+      location,
+      individualCount: parseInt(individualCount) || 0,
+      groups: groups.filter(g => g.name && g.count > 0),
+      total: calculateTotal()
+    });
+    
+    if (onSuccess) {
+      onSuccess();
+    }
   };
 
   return (
@@ -382,37 +301,21 @@ export default function SandwichCollectionForm({ onSuccess }) {
               <select
                 id="location"
                 value={location}
-                onChange={(e) => handleLocationChange(e.target.value)}
+                onChange={(e) => setLocation(e.target.value)}
                 style={selectStyle}
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 required
               >
                 <option value="">Select location</option>
-                {hosts.map(host => (
-                  <option key={host.id} value={host.name}>{host.name}</option>
-                ))}
+                <option value="church">Church</option>
+                <option value="school">School</option>
+                <option value="community">Community Center</option>
+                <option value="shelter">Shelter</option>
                 <option value="other">Other</option>
               </select>
             </div>
           </div>
-          {/* Custom Location Input */}
-          {showCustomLocation && (
-            <div style={formGroupStyle}>
-              <label htmlFor="custom-location" style={labelStyle}>New Location Name</label>
-              <input
-                type="text"
-                id="custom-location"
-                value={customLocation}
-                onChange={(e) => setCustomLocation(e.target.value)}
-                placeholder="Enter new location name"
-                style={customLocationInputStyle}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                required={showCustomLocation}
-              />
-            </div>
-          )}
         </div>
 
         {/* Individual Sandwiches */}
@@ -517,27 +420,18 @@ export default function SandwichCollectionForm({ onSuccess }) {
       {/* Submit Button */}
       <div style={submitSectionStyle}>
         <button
-          style={{
-            ...submitBtnStyle,
-            opacity: (submitMutation.isPending || createHostMutation.isPending) ? 0.6 : 1,
-            cursor: (submitMutation.isPending || createHostMutation.isPending) ? 'not-allowed' : 'pointer'
-          }}
+          style={submitBtnStyle}
           onClick={handleSubmit}
-          disabled={submitMutation.isPending || createHostMutation.isPending}
           onMouseEnter={(e) => {
-            if (!submitMutation.isPending && !createHostMutation.isPending) {
-              e.currentTarget.style.background = '#F39C12';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-            }
+            e.currentTarget.style.background = '#F39C12';
+            e.currentTarget.style.transform = 'translateY(-1px)';
           }}
           onMouseLeave={(e) => {
-            if (!submitMutation.isPending && !createHostMutation.isPending) {
-              e.currentTarget.style.background = '#FBAD3F';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }
+            e.currentTarget.style.background = '#FBAD3F';
+            e.currentTarget.style.transform = 'translateY(0)';
           }}
         >
-          {(submitMutation.isPending || createHostMutation.isPending) ? 'Submitting...' : 'Submit Collection'}
+          Submit Collection
         </button>
       </div>
     </div>
