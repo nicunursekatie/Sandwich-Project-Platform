@@ -274,6 +274,53 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           </div>
         </div>
 
+        {/* Operational Capacity Overview */}
+        <div className="glass-card hover-lift overlap-shadow mx-4 p-6 bg-gradient-to-br from-slate-500/5 via-gray-500/5 to-stone-500/5">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-12 bg-gradient-to-br from-slate-600 to-gray-700 rounded-2xl flex items-center justify-center">
+              <Building2 className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white font-inter">Operational Capacity</h2>
+              <p className="text-slate-600 dark:text-slate-300">Current system capabilities and performance metrics</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center p-4 bg-white/50 dark:bg-slate-800/50 rounded-xl">
+              <div className="text-2xl font-bold text-slate-900 dark:text-white font-inter">
+                {organizationalStats.peakWeekRecord}
+              </div>
+              <div className="text-sm text-slate-600 dark:text-slate-300 font-medium">Peak Week Record</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{organizationalStats.peakWeekDate}</div>
+            </div>
+            
+            <div className="text-center p-4 bg-white/50 dark:bg-slate-800/50 rounded-xl">
+              <div className="text-2xl font-bold text-slate-900 dark:text-white font-inter">
+                {organizationalStats.currentAnnualCapacity}
+              </div>
+              <div className="text-sm text-slate-600 dark:text-slate-300 font-medium">Annual Capacity</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Current year target</div>
+            </div>
+            
+            <div className="text-center p-4 bg-white/50 dark:bg-slate-800/50 rounded-xl">
+              <div className="text-2xl font-bold text-slate-900 dark:text-white font-inter">
+                {organizationalStats.weeklyBaseline}
+              </div>
+              <div className="text-sm text-slate-600 dark:text-slate-300 font-medium">Weekly Baseline</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Regular operations</div>
+            </div>
+            
+            <div className="text-center p-4 bg-white/50 dark:bg-slate-800/50 rounded-xl">
+              <div className="text-2xl font-bold text-slate-900 dark:text-white font-inter">
+                {organizationalStats.surgingCapacity}
+              </div>
+              <div className="text-sm text-slate-600 dark:text-slate-300 font-medium">Surge Capacity</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Peak mobilization</div>
+            </div>
+          </div>
+        </div>
+
         {/* Quick Actions Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mx-4 mt-8">
           <button className="glass-card hover-lift p-4 text-left group cursor-pointer" onClick={() => onSectionChange?.('collections-log')}>
@@ -309,51 +356,51 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           </button>
         </div>
 
-        {/* Important Documents - Modernized */}
+        {/* Important Documents - Compact */}
         <div className="glass-card hover-lift overlap-shadow mx-4 mt-8 p-6">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center">
-              <FileText className="w-6 h-6 text-white" />
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
+              <FileText className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white font-inter">Important Documents</h2>
-              <p className="text-slate-600 dark:text-slate-300">Key organizational resources</p>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white font-inter">Important Documents</h2>
+              <p className="text-sm text-slate-600 dark:text-slate-300">Key organizational resources</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {importantDocuments.map((doc, index) => (
-              <div key={index} className="glass-card hover-lift p-4 group cursor-pointer">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-teal-600 rounded-xl flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-white" />
+              <div key={index} className="bg-white/40 dark:bg-slate-800/40 rounded-lg p-3 group hover:bg-white/60 dark:hover:bg-slate-800/60 transition-colors cursor-pointer">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-teal-600 rounded-lg flex items-center justify-center">
+                    <FileText className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">
+                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded">
                     {doc.category}
                   </span>
                 </div>
-                <h3 className="font-semibold text-slate-900 dark:text-white font-inter mb-2 group-hover:text-blue-600 transition-colors">
+                <h3 className="font-semibold text-sm text-slate-900 dark:text-white font-inter mb-1 group-hover:text-blue-600 transition-colors line-clamp-2">
                   {doc.title}
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-300 mb-3 line-clamp-2">
+                <p className="text-xs text-slate-600 dark:text-slate-300 mb-2 line-clamp-1">
                   {doc.description}
                 </p>
-                <div className="flex gap-2">
+                <div className="flex gap-1">
                   <Button
                     size="sm"
-                    className="bg-gradient-to-r from-blue-500 to-teal-600 hover:from-blue-600 hover:to-teal-700 text-white flex-1"
+                    className="bg-gradient-to-r from-blue-500 to-teal-600 hover:from-blue-600 hover:to-teal-700 text-white text-xs px-2 py-1 h-7 flex-1"
                     onClick={() => openPreviewModal(doc.path, doc.title, 'pdf')}
                   >
-                    <Eye className="w-4 h-4 mr-1" />
-                    Preview
+                    <Eye className="w-3 h-3 mr-1" />
+                    View
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-slate-300 dark:border-slate-600"
+                    className="border-slate-300 dark:border-slate-600 text-xs px-2 py-1 h-7"
                     onClick={() => window.open(doc.path, '_blank')}
                   >
-                    <ExternalLink className="w-4 h-4" />
+                    <ExternalLink className="w-3 h-3" />
                   </Button>
                 </div>
               </div>
