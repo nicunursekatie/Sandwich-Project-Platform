@@ -1,8 +1,276 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&family=Lobster&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&family=Lobster&family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Modern 2025 Design System - Glassmorphism & Animations */
+@layer utilities {
+  .gradient-mesh {
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(219, 39, 119, 0.1) 100%);
+    animation: mesh-flow 20s ease-in-out infinite;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+  }
+
+  .dark .glass-card {
+    background: rgba(17, 24, 39, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .dark .hover-lift:hover {
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .overlap-shadow {
+    box-shadow: 
+      0 4px 16px rgba(0, 0, 0, 0.1),
+      0 8px 32px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-count-up {
+    animation: count-up 0.6s ease-out;
+  }
+
+  .mini-chart {
+    width: 80px;
+    height: 32px;
+  }
+}
+
+/* Keyframe Animations */
+@keyframes mesh-flow {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(-5px, -10px) rotate(1deg); }
+  66% { transform: translate(5px, 5px) rotate(-1deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes count-up {
+  from { 
+    opacity: 0; 
+    transform: translateY(10px) scale(0.9); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
+/* Typography Enhancements */
+.font-inter {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+/* Dark mode improvements */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* Modern 2025 Dashboard Styles */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.75rem;
+    
+    /* Custom gradient mesh colors */
+    --gradient-from: 210 100% 98%;
+    --gradient-via: 220 50% 96%;
+    --gradient-to: 230 25% 94%;
+    
+    /* TSP Brand Variables */
+    --tsp-primary: #236383;
+    --tsp-secondary: #FBAD3F;
+    --tsp-accent: #A31C41;
+    --tsp-muted: #007E8C;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    
+    /* Dark mode gradient mesh */
+    --gradient-from: 222 84% 6%;
+    --gradient-via: 217 33% 18%;
+    --gradient-to: 222 47% 12%;
+  }
+}
+
+/* Modern gradient mesh backgrounds */
+.gradient-mesh {
+  background: radial-gradient(at 40% 20%, rgb(120, 119, 198) 0px, transparent 50%),
+              radial-gradient(at 80% 0%, rgb(255, 119, 198) 0px, transparent 50%),
+              radial-gradient(at 0% 50%, rgb(255, 0, 128) 0px, transparent 50%),
+              radial-gradient(at 80% 50%, rgb(120, 119, 255) 0px, transparent 50%),
+              radial-gradient(at 0% 100%, rgb(120, 255, 198) 0px, transparent 50%),
+              radial-gradient(at 80% 100%, rgb(255, 255, 0) 0px, transparent 50%),
+              radial-gradient(at 0% 0%, rgb(255, 200, 0) 0px, transparent 50%);
+  filter: blur(100px) saturate(150%);
+  opacity: 0.15;
+}
+
+.dark .gradient-mesh {
+  background: radial-gradient(at 40% 20%, rgb(60, 59, 99) 0px, transparent 50%),
+              radial-gradient(at 80% 0%, rgb(127, 59, 99) 0px, transparent 50%),
+              radial-gradient(at 0% 50%, rgb(127, 0, 64) 0px, transparent 50%),
+              radial-gradient(at 80% 50%, rgb(60, 59, 127) 0px, transparent 50%),
+              radial-gradient(at 0% 100%, rgb(60, 127, 99) 0px, transparent 50%),
+              radial-gradient(at 80% 100%, rgb(127, 127, 0) 0px, transparent 50%),
+              radial-gradient(at 0% 0%, rgb(127, 100, 0) 0px, transparent 50%);
+  filter: blur(100px) saturate(150%);
+  opacity: 0.2;
+}
+
+/* Glassmorphism cards */
+.glass-card {
+  backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  border-radius: 16px;
+}
+
+.dark .glass-card {
+  background-color: rgba(23, 23, 40, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+/* Animated number counters */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-count-up {
+  animation: countUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Modern hover transforms */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Overlapping element shadows */
+.overlap-shadow {
+  box-shadow: 
+    0 10px 38px -10px rgba(22, 23, 24, 0.35),
+    0 10px 20px -15px rgba(22, 23, 24, 0.2);
+}
+
+/* Custom SVG animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Mini chart containers */
+.mini-chart {
+  height: 40px;
+  width: 100%;
+  opacity: 0.7;
+}
+
+/* Modern progress bars */
+.progress-glow {
+  background: linear-gradient(90deg, var(--tsp-primary), var(--tsp-secondary));
+  box-shadow: 0 0 20px rgba(35, 99, 131, 0.3);
+}
+
+/* Backdrop blur navigation */
+.nav-blur {
+  backdrop-filter: blur(12px) saturate(200%);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .nav-blur {
+  background-color: rgba(23, 23, 40, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
 /* Custom utilities for message list */
 @layer utilities {

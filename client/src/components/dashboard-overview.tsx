@@ -8,6 +8,10 @@ import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
 import { DocumentPreviewModal } from "@/components/document-preview-modal";
 import SandwichCollectionForm from "@/components/sandwich-collection-form";
+import { AnimatedCounter } from "@/components/modern-dashboard/animated-counter";
+import { MiniChart } from "@/components/modern-dashboard/mini-chart";
+import { DarkModeToggle } from "@/components/modern-dashboard/dark-mode-toggle";
+import { SandwichStackIcon, GrowthTrendIcon, CommunityIcon, TargetIcon, SparkleIcon, NetworkIcon } from "@/components/modern-dashboard/custom-svg-icons";
 import tspLogo from "@assets/sandwich_project_transparent_1753668698851.png";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 
@@ -102,271 +106,271 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
     totalEntries: statsData?.totalEntries?.toLocaleString() || "Loading..."
   };
 
+  // Sample data for mini charts
+  const chartData = [12, 19, 15, 25, 22, 18, 30, 28, 35, 32, 40, 38];
+  const weeklyData = [5000, 6200, 7800, 9200, 8800, 10500, 12000, 15000, 18000, 22000, 25000, 28000];
+  const growthData = [100, 120, 180, 250, 350, 480, 650, 850, 1200, 1500, 1800, 2100];
+
   return (
-    <div className="space-y-8">
-      {/* Responsive Header with Logo */}
-      <div className="text-center py-4 md:py-8">
-        <img src={tspLogo} alt="The Sandwich Project" className="w-[300px] md:w-[500px] mb-4 md:mb-6 mx-auto" />
-        <p className="text-sm md:text-lg text-gray-600 font-roboto px-4">Community Impact Through Coordinated Action</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
+      {/* Gradient Mesh Background */}
+      <div className="fixed inset-0 gradient-mesh pointer-events-none" />
+      
+      {/* Dark Mode Toggle */}
+      <div className="absolute top-4 right-4 z-50">
+        <DarkModeToggle />
       </div>
 
-      {/* Collection Call-to-Action */}
-      {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
-          <div className="px-4 md:px-8 py-4 md:py-6 bg-gradient-to-r from-[#FBAD3F]/5 via-white to-[#236383]/5">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-              <div className="flex items-center space-x-3 md:space-x-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl flex items-center justify-center shadow-lg border border-slate-200">
-                  <img src={sandwichLogo} alt="Sandwich" className="h-6 w-6 md:h-8 md:w-8 object-contain" />
+      <div className="relative z-10 space-y-8 pb-8">
+        {/* Modern Header with Glassmorphism */}
+        <div className="glass-card overlap-shadow mx-4 mt-8 p-8 text-center">
+          <div className="relative">
+            <img 
+              src={tspLogo} 
+              alt="The Sandwich Project" 
+              className="w-[250px] md:w-[400px] mb-6 mx-auto animate-float" 
+            />
+            <div className="absolute -top-2 -right-2 animate-pulse">
+              <SparkleIcon className="w-8 h-8 text-yellow-400" />
+            </div>
+          </div>
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-inter font-medium">
+            Community Impact Through Coordinated Action
+          </p>
+          <div className="mt-4 flex justify-center items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+            <NetworkIcon className="w-4 h-4" />
+            <span>Powered by modern technology • 2025</span>
+          </div>
+        </div>
+
+        {/* Modern Collection Call-to-Action */}
+        {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
+          <div className="glass-card hover-lift overlap-shadow mx-4 p-6 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="flex items-center space-x-4">
+                <div className="relative">
+                  <div className="w-14 h-14 bg-gradient-to-br from-orange-400 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl">
+                    <SandwichStackIcon className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse" />
                 </div>
                 <div>
-                  <h2 className="text-lg md:text-xl lg:text-2xl font-black text-slate-900 font-roboto tracking-tight">Record Collection Data</h2>
-                  <p className="text-xs md:text-sm font-medium text-slate-500 font-roboto mt-1">Submit your sandwich contributions to help our community</p>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white font-inter tracking-tight">
+                    Record Collection Data
+                  </h2>
+                  <p className="text-slate-600 dark:text-slate-300 font-medium mt-1 flex items-center gap-2">
+                    <TargetIcon className="w-4 h-4" />
+                    Submit your sandwich contributions to help our community
+                  </p>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Button 
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-inter font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 backdrop-blur-sm"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
-                  className="bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#d88a1e] text-white font-semibold px-4 md:px-8 py-2 md:py-3 text-xs md:text-sm shadow-lg shadow-[#FBAD3F]/25 transition-all duration-200 w-full sm:w-auto"
                 >
-                  {showCollectionForm ? 'Hide Form' : 'Enter New Collection Data'}
+                  {showCollectionForm ? "Hide Form" : "Enter New Collection Data"}
                 </Button>
                 <Button 
                   variant="outline" 
-                  onClick={() => onSectionChange?.("collections")}
-                  className="text-xs md:text-sm font-semibold border-2 border-[#236383]/30 text-[#236383] hover:bg-[#236383]/10 hover:border-[#236383]/50 transition-all duration-200 px-4 md:px-6 py-2 md:py-3 w-full sm:w-auto"
+                  className="border-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-inter font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg backdrop-blur-sm"
+                  onClick={() => onSectionChange?.('collections-log')}
                 >
-                  View All Collections
+                  View Collection History
                 </Button>
               </div>
             </div>
+
+            {/* Embedded Collection Form */}
+            {showCollectionForm && (
+              <div className="mt-6 p-6 glass-card">
+                <SandwichCollectionForm 
+                  onSuccess={() => {
+                    setShowCollectionForm(false);
+                    queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
+                    queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections/stats"] });
+                  }} 
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Modern Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-4">
+          {/* Total Lifetime Impact - Hero Card */}
+          <div className="lg:col-span-3 glass-card hover-lift overlap-shadow p-8 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl">
+                    <SandwichStackIcon className="w-10 h-10 text-white" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white font-inter">Total Lifetime Impact</h3>
+                  <p className="text-slate-600 dark:text-slate-300 font-medium">Sandwiches distributed since 2020</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-4xl font-black text-slate-900 dark:text-white font-inter">
+                  <AnimatedCounter value={statsData?.completeTotalSandwiches || 0} />
+                </div>
+                <div className="flex items-center gap-2 mt-1">
+                  <GrowthTrendIcon className="w-4 h-4 text-green-500" />
+                  <span className="text-sm text-green-600 font-semibold">Growing daily</span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6">
+              <MiniChart data={weeklyData} color="#8b5cf6" type="area" />
+            </div>
           </div>
 
-          {/* Embedded Collection Form */}
-          {showCollectionForm && (
-            <div className="px-8 py-6 bg-gradient-to-br from-[#FBAD3F]/5 via-white to-[#236383]/5 border-t border-[#FBAD3F]/20">
-              <SandwichCollectionForm 
-                onSuccess={() => {
-                  setShowCollectionForm(false);
-                  queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
-                  queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections/stats"] });
-                }} 
-              />
+          {/* Individual Cards */}
+          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-orange-500/10 to-red-500/10">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center">
+                <TargetIcon className="w-6 h-6 text-white" />
+              </div>
+              <MiniChart data={chartData} color="#f97316" type="line" />
             </div>
-          )}
-        </div>
-      )}
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter mb-2">Individual Collections</h3>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
+              <AnimatedCounter value={statsData?.individualSandwiches || 0} />
+            </div>
+            <p className="text-slate-600 dark:text-slate-300 text-sm">Personal contributions</p>
+          </div>
 
-      {/* Organizational Impact - Enhanced with TSP Brand Colors and Better Visual Hierarchy */}
-      <div className="bg-white rounded-lg border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300">
-        <div className="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-[#236383]/5 to-[#007E8C]/5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#236383] to-[#007E8C] rounded-xl flex items-center justify-center shadow-lg">
-              <BarChart3 className="h-5 w-5 text-white" />
+          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-blue-500/10 to-cyan-500/10">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center">
+                <CommunityIcon className="w-6 h-6 text-white" />
+              </div>
+              <MiniChart data={growthData} color="#3b82f6" type="bar" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter mb-2">Group Collections</h3>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
+              <AnimatedCounter value={statsData ? ((statsData.completeTotalSandwiches || 0) - (statsData.individualSandwiches || 0)) : 0} />
+            </div>
+            <p className="text-slate-600 dark:text-slate-300 text-sm">Organization donations</p>
+          </div>
+
+          <div className="glass-card hover-lift overlap-shadow p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center">
+                <NetworkIcon className="w-6 h-6 text-white" />
+              </div>
+              <MiniChart data={[1, 3, 8, 15, 25, 40, 60, 85, 120, 160, 210, 280]} color="#a855f7" type="area" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-inter mb-2">Total Entries</h3>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white font-inter">
+              <AnimatedCounter value={statsData?.totalEntries || 0} />
+            </div>
+            <p className="text-slate-600 dark:text-slate-300 text-sm">Data submissions</p>
+          </div>
+        </div>
+
+        {/* Quick Actions Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mx-4 mt-8">
+          <button className="glass-card hover-lift p-4 text-left group cursor-pointer" onClick={() => onSectionChange?.('collections-log')}>
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <BarChart3 className="w-5 h-5 text-white" />
+            </div>
+            <h4 className="font-semibold text-slate-900 dark:text-white font-inter">Collections</h4>
+            <p className="text-sm text-slate-600 dark:text-slate-300">View all data</p>
+          </button>
+
+          <button className="glass-card hover-lift p-4 text-left group cursor-pointer" onClick={() => onSectionChange?.('analytics')}>
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <TrendingUp className="w-5 h-5 text-white" />
+            </div>
+            <h4 className="font-semibold text-slate-900 dark:text-white font-inter">Analytics</h4>
+            <p className="text-sm text-slate-600 dark:text-slate-300">Deep insights</p>
+          </button>
+
+          <button className="glass-card hover-lift p-4 text-left group cursor-pointer" onClick={() => onSectionChange?.('phone-directory')}>
+            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <Users className="w-5 h-5 text-white" />
+            </div>
+            <h4 className="font-semibold text-slate-900 dark:text-white font-inter">Directory</h4>
+            <p className="text-sm text-slate-600 dark:text-slate-300">Contact info</p>
+          </button>
+
+          <button className="glass-card hover-lift p-4 text-left group cursor-pointer" onClick={() => onSectionChange?.('messages')}>
+            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <Calendar className="w-5 h-5 text-white" />
+            </div>
+            <h4 className="font-semibold text-slate-900 dark:text-white font-inter">Messages</h4>
+            <p className="text-sm text-slate-600 dark:text-slate-300">Communication</p>
+          </button>
+        </div>
+
+        {/* Important Documents - Modernized */}
+        <div className="glass-card hover-lift overlap-shadow mx-4 mt-8 p-6">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center">
+              <FileText className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900 font-roboto">Organizational Impact</h2>
-              <p className="text-sm text-slate-600 font-roboto">Community reach and sandwich distribution metrics</p>
-            </div>
-          </div>
-        </div>
-        <div className="p-6">
-          {/* Primary Metric - Featured Size */}
-          <div className="mb-6">
-            <div className="bg-gradient-to-br from-[#236383] to-[#007E8C] rounded-2xl p-4 md:p-6 text-white shadow-[0_4px_16px_rgba(35,99,131,0.25)] hover:shadow-[0_6px_20px_rgba(35,99,131,0.35)] transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Target className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-base sm:text-lg font-semibold text-white/90 leading-tight">Total Lifetime Impact</h3>
-                  <p className="text-xs sm:text-sm text-white/70 leading-tight">Sandwiches distributed since 2020</p>
-                </div>
-              </div>
-              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-2 leading-tight break-all">{organizationalStats.totalLifetimeSandwiches}</div>
-              <div className="text-white/80 text-xs sm:text-sm font-medium leading-tight">Feeding families across Georgia communities</div>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white font-inter">Important Documents</h2>
+              <p className="text-slate-600 dark:text-slate-300">Key organizational resources</p>
             </div>
           </div>
 
-          {/* Secondary Metrics Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <div className="bg-gradient-to-br from-[#FBAD3F]/10 to-[#FBAD3F]/5 rounded-xl border border-[#FBAD3F]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(251,173,63,0.15)] hover:border-[#FBAD3F]/30 transition-all duration-300 transform hover:-translate-y-1 min-h-[120px]">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Zap className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-sm font-semibold text-[#FBAD3F] leading-tight">Peak Performance</span>
-              </div>
-              <div className="text-xl lg:text-2xl font-bold text-slate-900 mb-1 leading-tight">{organizationalStats.peakWeekRecord}</div>
-              <div className="text-xs text-slate-600 font-medium leading-tight">{organizationalStats.peakWeekDate}</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-[#007E8C]/10 to-[#47B3CB]/5 rounded-xl border border-[#007E8C]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,126,140,0.15)] hover:border-[#007E8C]/30 transition-all duration-300 transform hover:-translate-y-1 min-h-[120px]">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#007E8C] to-[#47B3CB] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Activity className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-sm font-semibold text-[#007E8C] leading-tight">Annual Capacity</span>
-              </div>
-              <div className="text-xl lg:text-2xl font-bold text-slate-900 mb-1 leading-tight">{organizationalStats.currentAnnualCapacity}</div>
-              <div className="text-xs text-slate-600 font-medium leading-tight">Sustainable Output</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-[#A31C41]/10 to-[#A31C41]/5 rounded-xl border border-[#A31C41]/20 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(163,28,65,0.15)] hover:border-[#A31C41]/30 transition-all duration-300 transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1 min-h-[120px]">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#A31C41] to-[#8b1635] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-sm font-semibold text-[#A31C41] leading-tight">Growth Rate</span>
-              </div>
-              <div className="text-xl lg:text-2xl font-bold text-slate-900 mb-1 leading-tight">{organizationalStats.growthMultiplier}</div>
-              <div className="text-xs text-slate-600 font-medium leading-tight">Since Foundation</div>
-            </div>
-          </div>
-
-          {/* Data Breakdown - Better Responsive Layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300 min-h-[100px]">
-              <div className="flex items-center gap-2 mb-3">
-                <Users className="h-4 w-4 text-[#236383] flex-shrink-0" />
-                <span className="text-sm font-medium text-slate-700 leading-tight">Individual</span>
-              </div>
-              <div className="text-lg lg:text-xl font-bold text-slate-900 leading-tight break-all">{organizationalStats.individualSandwiches}</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300 min-h-[100px]">
-              <div className="flex items-center gap-2 mb-3">
-                <Building2 className="h-4 w-4 text-[#FBAD3F] flex-shrink-0" />
-                <span className="text-sm font-medium text-slate-700 leading-tight">Groups</span>
-              </div>
-              <div className="text-lg lg:text-xl font-bold text-slate-900 leading-tight break-all">{organizationalStats.groupSandwiches}</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-lg border border-slate-200 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300 sm:col-span-2 lg:col-span-1 min-h-[100px]">
-              <div className="flex items-center gap-2 mb-3">
-                <Layers className="h-4 w-4 text-[#007E8C] flex-shrink-0" />
-                <span className="text-sm font-medium text-slate-700 leading-tight">Total Entries</span>
-              </div>
-              <div className="text-lg lg:text-xl font-bold text-slate-900 leading-tight break-all">{organizationalStats.totalEntries}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Important Documents */}
-      <div className="bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50 rounded-lg border border-amber-200/50 p-6 shadow-sm">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded-lg flex items-center justify-center shrink-0">
-            <FileText className="h-4 w-4 text-white" />
-          </div>
-          <h2 className="text-xl font-bold text-[#236383] font-roboto">Important Documents</h2>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {importantDocuments.map((doc, index) => (
-            <div key={index} className="bg-gradient-to-br from-white to-amber-50/60 border border-amber-200/40 rounded-lg p-4 hover:shadow-lg transition-all duration-200 hover:border-amber-300/60 min-h-[160px]">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-6 h-6 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded flex items-center justify-center flex-shrink-0">
-                  <FileText className="h-3 w-3 text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 font-roboto mb-2 leading-tight break-words">{doc.title}</h3>
-                  <span className={`inline-block px-2 sm:px-3 py-1 text-xs font-medium rounded-full shadow-sm ${
-                    doc.category === 'Legal' ? 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800' :
-                    doc.category === 'Strategy' ? 'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800' :
-                    'bg-gradient-to-r from-green-100 to-green-200 text-green-800'
-                  }`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {importantDocuments.map((doc, index) => (
+              <div key={index} className="glass-card hover-lift p-4 group cursor-pointer">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">
                     {doc.category}
                   </span>
                 </div>
+                <h3 className="font-semibold text-slate-900 dark:text-white font-inter mb-2 group-hover:text-blue-600 transition-colors">
+                  {doc.title}
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 mb-3 line-clamp-2">
+                  {doc.description}
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white flex-1"
+                    onClick={() => openPreviewModal(doc.path, doc.title, 'pdf')}
+                  >
+                    <Eye className="w-4 h-4 mr-1" />
+                    Preview
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-slate-300 dark:border-slate-600"
+                    onClick={() => window.open(doc.path, '_blank')}
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 font-roboto mb-4 leading-tight break-words">{doc.description}</p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => openPreviewModal(doc.path, doc.title, doc.path.split('.').pop() || 'pdf')}
-                  className="flex items-center justify-center gap-1 text-[#236383] border-[#FBAD3F]/40 hover:bg-[#FBAD3F]/10 hover:border-[#FBAD3F]/60 text-xs h-8 transition-all duration-200 w-full sm:w-auto"
-                >
-                  <Eye className="w-3 h-3 flex-shrink-0" />
-                  <span className="truncate">Preview</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const link = document.createElement('a');
-                    link.href = doc.path;
-                    link.download = doc.title;
-                    link.click();
-                  }}
-                  className="flex items-center justify-center gap-1 text-xs h-8 border-amber-300/50 hover:bg-amber-50 hover:border-amber-400/60 transition-all duration-200 w-full sm:w-auto"
-                >
-                  <Download className="w-3 h-3 flex-shrink-0" />
-                  <span className="truncate">Download</span>
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Operational Capacity - Enhanced with TSP Brand Colors */}
-      <div className="bg-white rounded-lg border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-all duration-300">
-        <div className="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-[#47B3CB]/5 to-[#D1D3D4]/5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#47B3CB] to-[#007E8C] rounded-xl flex items-center justify-center shadow-lg">
-              <Clock className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-slate-900 font-roboto">Operational Capacity</h2>
-              <p className="text-sm text-slate-600 font-roboto">Current performance levels and response capabilities</p>
-            </div>
+            ))}
           </div>
         </div>
-        <div className="p-4 md:p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            <div className="bg-gradient-to-br from-[#47B3CB]/10 to-[#47B3CB]/5 rounded-xl border border-[#47B3CB]/20 p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(71,179,203,0.15)] hover:border-[#47B3CB]/30 transition-all duration-300 transform hover:-translate-y-1 min-h-[140px]">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#47B3CB] to-[#007E8C] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                </div>
-                <span className="text-sm sm:text-base lg:text-lg font-semibold text-[#47B3CB] leading-tight break-words">Weekly Baseline</span>
-              </div>
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mb-2 leading-tight break-all">{organizationalStats.weeklyBaseline}</div>
-              <div className="text-xs sm:text-sm text-slate-600 font-medium leading-tight">Standard Operations</div>
-            </div>
 
-            <div className="bg-gradient-to-br from-[#FBAD3F]/10 to-[#FBAD3F]/5 rounded-xl border border-[#FBAD3F]/20 p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(251,173,63,0.15)] hover:border-[#FBAD3F]/30 transition-all duration-300 transform hover:-translate-y-1 min-h-[140px]">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#FBAD3F] to-[#e89b2e] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                </div>
-                <span className="text-sm sm:text-base lg:text-lg font-semibold text-[#FBAD3F] leading-tight break-words">Surge Capacity</span>
-              </div>
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mb-2 leading-tight break-all">{organizationalStats.surgingCapacity}</div>
-              <div className="text-xs sm:text-sm text-slate-600 font-medium leading-tight">Crisis Response</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-[#D1D3D4]/20 to-[#D1D3D4]/10 rounded-xl border border-[#D1D3D4]/30 p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(209,211,212,0.15)] hover:border-[#D1D3D4]/40 transition-all duration-300 transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1 min-h-[140px]">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#D1D3D4] to-[#9ca3af] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Award className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                </div>
-                <span className="text-sm sm:text-base lg:text-lg font-semibold text-[#6b7280] leading-tight break-words">Experience</span>
-              </div>
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mb-2 leading-tight break-all">{organizationalStats.operationalYears} Years</div>
-              <div className="text-xs sm:text-sm text-slate-600 font-medium leading-tight">Since April 2020</div>
-            </div>
-          </div>
+        {/* Help System */}
+        <div className="mx-4 mt-8">
+          <HelpBubble />
         </div>
       </div>
 
       {/* Document Preview Modal */}
-      <DocumentPreviewModal
+      <DocumentPreviewModal 
         isOpen={previewModal.isOpen}
         onClose={closePreviewModal}
         documentPath={previewModal.documentPath}
-        documentName={previewModal.documentName}
+        documentTitle={previewModal.documentTitle}
         documentType={previewModal.documentType}
       />
     </div>
