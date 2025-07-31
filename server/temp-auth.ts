@@ -802,24 +802,25 @@ export function setupTempAuth(app: Express) {
 // Middleware to check if user is authenticated
 export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
   console.log('=== AUTHENTICATION MIDDLEWARE ===');
+  console.log('URL:', req.method, req.url);
   console.log('req.session exists:', !!req.session);
   console.log('req.session.user exists:', !!req.session?.user);
   console.log('Session ID:', req.sessionID);
-  console.log('Session data:', req.session);
-  console.log('User data in session:', req.session?.user);
+  console.log('User email in session:', req.session?.user?.email);
 
   if (!req.session || !req.session.user) {
-    console.log('Authentication failed - no session or user');
+    console.log('❌ Authentication failed - no session or user');
     return res.status(401).json({ message: "Unauthorized" });
   }
 
   // Always fetch fresh user data from database to ensure permissions are current
   try {
     const freshUser = await storage.getUserByEmail(req.session.user.email);
-    if (freshUser) {
+    if (freshUser && freshUser.isActive) {
       // Update session with fresh user data if permissions are missing or changed
       if (!req.session.user.permissions || req.session.user.permissions.length === 0 || 
           JSON.stringify(req.session.user.permissions) !== JSON.stringify(freshUser.permissions)) {
+        console.log(`🔄 Updating session for ${freshUser.email} with fresh permissions`);
         req.session.user = {
           id: freshUser.id,
           email: freshUser.email,
@@ -836,20 +837,34 @@ export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
           if (err) console.error('Session save error:', err);
         });
       }
-      // Set req.user to the fresh database user data
-      req.user = freshUser;
-      console.log('Authentication successful, user attached to req.user with permissions:', freshUser.permissions?.length || 0);
+      
+      // CRITICAL: Always set req.user to the fresh database user data
+      req.user = {
+        id: freshUser.id,
+        email: freshUser.email,
+        firstName: freshUser.firstName,
+        lastName: freshUser.lastName,
+        profileImageUrl: freshUser.profileImageUrl,
+        role: freshUser.role,
+        permissions: freshUser.permissions,
+        isActive: freshUser.isActive
+      };
+      
+      console.log(`✅ Authentication successful for ${freshUser.email} (${freshUser.role})`);
+      console.log(`✅ req.user set with ${freshUser.permissions?.length || 0} permissions`);
     } else {
-      // User not found in database, clear invalid session
+      console.log(`❌ User not found or inactive: ${req.session.user.email}`);
+      // User not found in database or inactive, clear invalid session
       req.session.destroy((err) => {
         if (err) console.error('Session destroy error:', err);
       });
       return res.status(401).json({ message: "Unauthorized" });
     }
   } catch (error) {
-    console.error("Error fetching fresh user data in isAuthenticated:", error);
-    // Fallback to session user if database fetch fails
+    console.error("❌ Error fetching fresh user data in isAuthenticated:", error);
+    // Fallback to session user if database fetch fails but still set req.user
     req.user = req.session.user;
+    console.log(`⚠️ Fallback: Using session user for ${req.session.user.email}`);
   }
   
   next();
@@ -858,62 +873,46 @@ export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
 // Permission checking middleware
 export const requirePermission = (permission: string): RequestHandler => {
   return async (req: any, res, next) => {
-    const sessionUser = req.session.user;
-    if (!sessionUser) {
+    // First ensure the user is authenticated
+    if (!req.user && req.session?.user) {
+      // If req.user is missing but session exists, try to set it from session
+      try {
+        const freshUser = await storage.getUserByEmail(req.session.user.email);
+        if (freshUser && freshUser.isActive) {
+          req.user = freshUser;
+          console.log(`🔧 requirePermission: Set req.user from fresh DB data for ${freshUser.email}`);
+        }
+      } catch (error) {
+        console.error("Error setting req.user in requirePermission:", error);
+      }
+    }
+    
+    const user = req.user || req.session?.user;
+    if (!user) {
+      console.log(`❌ requirePermission: No user context for ${permission}`);
       return res.status(401).json({ message: "Unauthorized" });
     }
 
     // Super admins have all permissions
-    if (sessionUser.role === "super_admin" || sessionUser.role === "admin") {
-      // Standardize authentication - Always use (req as any).user and attach dbUser to request
-      try {
-        const dbUser = await storage.getUserByEmail(sessionUser.email);
-        if (dbUser) {
-          (req as any).user = dbUser;
-        }
-      } catch (error) {
-        console.error("Error fetching dbUser in requirePermission:", error);
-      }
+    if (user.role === "super_admin" || user.role === "admin") {
+      console.log(`✅ requirePermission: Admin access granted for ${permission} to ${user.email}`);
       return next();
     }
 
-    // Always fetch fresh user data from database to ensure permissions are current
-    let user = sessionUser;
-    try {
-      const freshUser = await storage.getUserByEmail(sessionUser.email);
-      if (freshUser) {
-        user = freshUser;
-        // Update session with fresh user data if permissions changed
-        if (!user.permissions || user.permissions.length === 0 || 
-            JSON.stringify(req.session.user?.permissions) !== JSON.stringify(freshUser.permissions)) {
-          req.session.user = {
-            id: freshUser.id,
-            email: freshUser.email,
-            firstName: freshUser.firstName,
-            lastName: freshUser.lastName,
-            profileImageUrl: freshUser.profileImageUrl,
-            role: freshUser.role,
-            permissions: freshUser.permissions,
-            isActive: freshUser.isActive
-          };
-        }
-        // Standardize authentication - Always use (req as any).user and attach dbUser to request
-        (req as any).user = freshUser;
-      }
-    } catch (error) {
-      console.error("Error fetching fresh user data:", error);
-    }
-
-    // Check if user has the specific permission
+    // Check specific permission
     if (user.permissions && user.permissions.includes(permission)) {
+      console.log(`✅ requirePermission: Permission ${permission} granted to ${user.email}`);
       return next();
     }
 
-    if (user.role === "driver" && ["view_users", "read_collections", "general_chat", "driver_chat", "view_phone_directory", "toolkit_access"].includes(permission)) {
-      return next();
-    }
-
-    res.status(403).json({ message: "Forbidden" });
+    console.log(`❌ requirePermission: Permission ${permission} denied for ${user.email} (role: ${user.role})`);
+    console.log(`   User permissions:`, user.permissions);
+    return res.status(403).json({ 
+      message: "Insufficient permissions",
+      required: permission,
+      userRole: user.role,
+      userPermissions: user.permissions || []
+    });
   };
 };
 

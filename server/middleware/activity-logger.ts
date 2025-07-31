@@ -67,13 +67,11 @@ export function createActivityLogger(options: ActivityLoggerOptions) {
           const user = (req as any).user;
           const sessionUser = (req as any).session?.user;
           
-          // Debug logging for missing user context
-          if (!user?.id) {
+          // Only log missing user context for API calls (not static assets)
+          if (!user?.id && req.path.startsWith('/api/')) {
             console.log(`🚨 Activity Logger: No user context for ${req.method} ${req.path}`);
             console.log(`   - req.user exists: ${!!user}`);
-            console.log(`   - req.user.id: ${user?.id}`);
-            console.log(`   - req.session.user exists: ${!!sessionUser}`);
-            console.log(`   - req.session.user.id: ${sessionUser?.id}`);
+            console.log(`   - Session user exists: ${!!sessionUser}`);
             console.log(`   - Status code: ${res.statusCode}`);
           }
           
