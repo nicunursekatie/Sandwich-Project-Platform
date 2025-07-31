@@ -541,7 +541,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               <Button
                 type="button"
                 onClick={addGroupRow}
-                className="w-full h-10 text-sm font-medium bg-[#007E8C] hover:bg-[#006670] text-white border border-[#007E8C] transition-all duration-200"
+                className="w-full h-10 text-sm font-medium !bg-[#236383] hover:!bg-[#1e5670] !text-white !border-[#236383] transition-all duration-200"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Group
@@ -556,8 +556,8 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
           disabled={submitCollectionMutation.isPending || !isFormValid()}
           className={`w-full h-11 px-6 text-sm font-medium rounded-lg shadow-md transition-all duration-200 ${
             isFormValid() && !submitCollectionMutation.isPending
-              ? 'bg-[#236383] hover:bg-[#1e5670] text-white shadow-lg border border-[#236383]'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed border border-gray-300'
+              ? '!bg-[#236383] hover:!bg-[#1e5670] !text-white shadow-lg !border-[#236383]'
+              : '!bg-gray-300 !text-gray-500 cursor-not-allowed !border-gray-300'
           }`}
         >
           {submitCollectionMutation.isPending ? "Submitting..." : "Submit Collection"}
