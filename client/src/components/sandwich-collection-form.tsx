@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Calendar, Info, Plus, Trash2, Sandwich } from "lucide-react";
+import { Calendar, Info, Plus, Trash2, Sandwich, ChevronDown } from "lucide-react";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,8 +54,8 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
     MozAppearance: 'textfield' as const,
   };
 
-  // Additional CSS to remove browser calendar icon
-  const dateInputCSS = `
+  // Additional CSS to remove browser calendar icon and customize select
+  const customInputCSS = `
     input[type="date"]::-webkit-calendar-picker-indicator {
       display: none;
       -webkit-appearance: none;
@@ -68,7 +68,30 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
       display: none;
       -webkit-appearance: none;
     }
+    
+    /* Custom select styling */
+    .custom-select-trigger {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      background-image: none !important;
+      padding-right: 48px !important;
+    }
+    
+    .custom-select-trigger::-ms-expand {
+      display: none;
+    }
   `;
+
+  // Custom select trigger styling
+  const selectTriggerStyle = {
+    ...inputStyle,
+    paddingRight: '48px', // Make room for custom icon
+    appearance: 'none' as const,
+    WebkitAppearance: 'none' as const,
+    MozAppearance: 'none' as const,
+    backgroundImage: 'none',
+  };
 
   const handleInputMouseEnter = (e: React.MouseEvent<HTMLInputElement>) => {
     e.currentTarget.style.borderColor = '#cbd5e1';
@@ -105,7 +128,7 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
 
   return (
     <>
-      <style>{dateInputCSS}</style>
+      <style>{customInputCSS}</style>
       <div className="mx-auto" style={{ 
         maxWidth: '480px', 
         padding: '24px', 
@@ -186,16 +209,52 @@ export default function SandwichCollectionForm({ onSuccess }: SandwichCollection
               marginBottom: '8px',
               display: 'block'
             }}>Location</Label>
-            <Select value={location} onValueChange={setLocation}>
-              <SelectTrigger style={inputStyle}>
-                <SelectValue placeholder="Select location" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Church">Church</SelectItem>
-                <SelectItem value="School">School</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
-              </SelectContent>
-            </Select>
+            <div style={{ position: 'relative' }}>
+              <Select value={location} onValueChange={setLocation}>
+                <SelectTrigger 
+                  className="custom-select-trigger"
+                  style={selectTriggerStyle}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = '#cbd5e1';
+                    e.currentTarget.style.background = '#ffffff';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = '#e2e8f0';
+                    e.currentTarget.style.background = '#f8fafc';
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.outline = 'none';
+                    e.currentTarget.style.borderColor = '#236383';
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(35, 99, 131, 0.1)';
+                    e.currentTarget.style.background = '#ffffff';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = '#e2e8f0';
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.background = '#f8fafc';
+                  }}
+                >
+                  <SelectValue placeholder="Select location" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Church">Church</SelectItem>
+                  <SelectItem value="School">School</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+              <ChevronDown 
+                style={{
+                  position: 'absolute',
+                  right: '16px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: '20px',
+                  height: '20px',
+                  color: '#64748b',
+                  pointerEvents: 'none'
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
