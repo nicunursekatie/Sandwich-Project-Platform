@@ -282,7 +282,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
 
   return (
     <HelpProvider>
-      <div className="bg-gradient-to-br from-orange-50 to-yellow-50 min-h-screen flex flex-col">
+      <div className="bg-gradient-to-br from-orange-50 to-yellow-50 min-h-screen flex flex-col overflow-x-hidden">
       {/* Announcement Banner */}
       <AnnouncementBanner />
       
@@ -429,10 +429,12 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto w-full md:w-auto relative z-10">
-          <div className="p-3 sm:p-4 md:p-6 pb-20 min-h-full bg-gradient-to-br from-white/80 to-orange-50/20 rounded-tl-lg">
-            <div className="max-w-full overflow-x-hidden">
-              {renderContent()}
+        <div className="flex-1 overflow-hidden w-full md:w-auto relative z-10 bg-gradient-to-br from-white to-orange-50/20">
+          <div className="h-full overflow-y-auto overflow-x-hidden">
+            <div className="p-3 sm:p-4 md:p-6 pb-20 min-h-full">
+              <div className="max-w-full overflow-x-hidden">
+                {renderContent()}
+              </div>
             </div>
           </div>
         </div>

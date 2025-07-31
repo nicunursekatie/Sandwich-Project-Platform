@@ -4,6 +4,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Fix for horizontal scroll black background */
+html, body {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(251, 146, 60, 0.1) 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body {
+  overscroll-behavior-x: none;
+}
+
 /* Modern 2025 Design System - Glassmorphism & Animations */
 @layer utilities {
   .gradient-mesh {
