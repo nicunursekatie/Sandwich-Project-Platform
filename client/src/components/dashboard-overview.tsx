@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { FileText, TrendingUp, Calendar, Award, Download, ExternalLink, Sandwich, Eye, Heart, Users, Target, Sparkles } from "lucide-react";
+import { FileText, TrendingUp, Calendar, Award, Download, ExternalLink, Sandwich, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TSPCard, TSPCardHeader, TSPCardTitle, TSPCardContent, TSPStatCard } from "@/components/ui/tsp-card";
-import { TSPButton } from "@/components/ui/tsp-button";
-import { Heading, Text } from "@/components/ui/tsp-typography";
-import { TSPBadge } from "@/components/ui/tsp-badge";
+
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
 import { DocumentPreviewModal } from "@/components/document-preview-modal";
 import SandwichCollectionForm from "@/components/sandwich-collection-form";
-import tspLogo from "@assets/LOGOS/TSP_transparent.png";
+import tspLogo from "@assets/sandwich_project_transparent_1753668698851.png";
+import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 
 interface DashboardOverviewProps {
   onSectionChange: (section: string) => void;
@@ -119,7 +117,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg border border-slate-200">
-                  <img src={tspLogo} alt="Sandwich" className="h-8 w-8 object-contain" />
+                  <img src={sandwichLogo} alt="Sandwich" className="h-8 w-8 object-contain" />
                 </div>
                 <div>
                   <h2 className="text-xl md:text-2xl font-black text-slate-900 font-roboto tracking-tight">Record Collection Data</h2>

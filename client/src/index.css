@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&family=Lobster&display=swap');
-@import './styles/tsp-theme.css';
 
 @tailwind base;
 @tailwind components;
@@ -14,164 +13,76 @@
     overflow: hidden;
   }
   
-  /* TSP Brand Component Styles */
-  .tsp-primary {
-    background-color: var(--tsp-navy) !important;
-    color: white !important;
+  /* TSP Brand Button Styles */
+  .btn-tsp-primary {
+    background-color: #236383;
+    color: white;
+    border: 2px solid #236383;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s ease;
   }
   
-  .tsp-secondary {
-    background-color: var(--tsp-gold) !important;
-    color: white !important;
-  }
-  
-  .tsp-accent {
-    background-color: var(--tsp-burgundy) !important;
-    color: white !important;
-  }
-  
-  /* Apply TSP theme to Tailwind components */
-  .bg-primary {
-    background-color: var(--tsp-navy) !important;
-  }
-  
-  .text-primary {
-    color: var(--tsp-navy) !important;
-  }
-  
-  .border-primary {
-    border-color: var(--tsp-navy) !important;
-  }
-  
-  .bg-secondary {
-    background-color: var(--tsp-gold) !important;
-  }
-  
-  .text-secondary {
-    color: var(--tsp-gold) !important;
-  }
-  
-  .border-secondary {
-    border-color: var(--tsp-gold) !important;
+  .btn-tsp-primary:hover {
+    background-color: #1e5470;
+    border-color: #1e5470;
   }
   
   .btn-tsp-secondary {
-    background-color: var(--tsp-gold);
+    background-color: #FBAD3F;
     color: white;
-    border: 2px solid var(--tsp-gold);
+    border: 2px solid #FBAD3F;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
-    transition: all var(--transition-default);
-    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
   }
   
   .btn-tsp-secondary:hover {
-    background-color: var(--tsp-gold-hover);
-    border-color: var(--tsp-gold-hover);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
-  }
-  
-  .btn-tsp-accent {
-    background-color: var(--tsp-burgundy);
-    color: white;
-    border: 2px solid var(--tsp-burgundy);
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    transition: all var(--transition-default);
-    box-shadow: var(--shadow-sm);
-  }
-  
-  .btn-tsp-accent:hover {
-    background-color: var(--tsp-burgundy-hover);
-    border-color: var(--tsp-burgundy-hover);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
+    background-color: #f09f2b;
+    border-color: #f09f2b;
   }
   
   /* Tab styling fixes for TSP brand */
   .tsp-tab-active {
-    background-color: var(--tsp-navy) !important;
+    background-color: #236383 !important;
     color: white !important;
   }
   
   .tsp-tab-inactive {
-    color: var(--tsp-charcoal) !important;
+    color: #646464 !important;
   }
   
   .tsp-tab-inactive:hover {
-    color: var(--tsp-navy) !important;
-    background-color: var(--tsp-navy-light) !important;
-  }
-  
-  /* Form Focus States */
-  input:focus,
-  textarea:focus,
-  select:focus {
-    border-color: var(--tsp-navy) !important;
-    outline: 2px solid transparent !important;
-    outline-offset: 2px !important;
-    box-shadow: 0 0 0 3px rgba(35, 99, 131, 0.1) !important;
-  }
-  
-  /* Scrollbar Styling */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: var(--tsp-charcoal);
-    border-radius: 4px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--tsp-navy);
+    color: #236383 !important;
+    background-color: rgba(35, 99, 131, 0.1) !important;
   }
 
   /* Stat Card Subtle Patterns */
   .stat-card-burgundy {
-    background-color: var(--tsp-burgundy) !important;
+    background-color: #922B21 !important;
     background-image: 
-      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.15) 2px, transparent 2px),
-      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.08) 1px, transparent 1px) !important;
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
+      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
     background-size: 20px 20px, 12px 12px !important;
-    box-shadow: var(--shadow-md) !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.15) !important;
   }
   
   .stat-card-gold {
-    background-color: var(--tsp-gold) !important;
+    background-color: #FBAD3F !important;
     background-image: 
-      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.2) 2px, transparent 2px),
-      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 1px, transparent 1px) !important;
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
+      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
     background-size: 20px 20px, 12px 12px !important;
-    box-shadow: var(--shadow-md) !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.15) !important;
   }
   
   .stat-card-navy {
-    background-color: var(--tsp-navy) !important;
+    background-color: #236383 !important;
     background-image: 
-      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.15) 2px, transparent 2px),
-      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.08) 1px, transparent 1px) !important;
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
+      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
     background-size: 20px 20px, 12px 12px !important;
-    box-shadow: var(--shadow-md) !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-  }
-  
-  .stat-card-teal {
-    background-color: var(--tsp-teal-light) !important;
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.25) 2px, transparent 2px),
-      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.15) 1px, transparent 1px) !important;
-    background-size: 20px 20px, 12px 12px !important;
-    box-shadow: var(--shadow-md) !important;
-    border: 1px solid rgba(255,255,255,0.2) !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.15) !important;
   }
 }
 
@@ -252,34 +163,32 @@
 
 :root {
   --background: 0 0% 100%; /* #FFFFFF */
-  --foreground: 0 0% 13%; /* #212529 - Better contrast */
-  --muted: 0 0% 96%; /* #F8F9FA - Light Gray */
-  --muted-foreground: 0 0% 45%; /* #6C757D */
+  --foreground: 24 5% 38%; /* #605251 - Dark Gray */
+  --muted: 0 0% 82%; /* #D1D3D4 - Light Gray */
+  --muted-foreground: 24 5% 38%; /* #605251 */
   --popover: 0 0% 100%; /* #FFFFFF */
-  --popover-foreground: 0 0% 13%; /* #212529 */
+  --popover-foreground: 24 5% 38%; /* #605251 */
   --card: 0 0% 100%; /* #FFFFFF */
-  --card-foreground: 0 0% 13%; /* #212529 */
-  --border: 0 0% 91%; /* #E9ECEF - Light border */
-  --input: 0 0% 98%; /* #FAFBFC - Light input background */
+  --card-foreground: 24 5% 38%; /* #605251 */
+  --border: 0 0% 90%; /* Light border */
+  --input: 0 0% 96%; /* Light input background */
   
-  /* TSP Brand Primary Colors */
-  --primary: 201 57% 32%; /* #236383 - TSP Navy */
+  /* Brand Primary Colors */
+  --primary: 197 100% 37%; /* #007EBC - Teal */
   --primary-foreground: 0 0% 100%; /* #FFFFFF */
-  --secondary: 33 96% 62%; /* #FBAD3F - TSP Gold */
-  --secondary-foreground: 0 0% 100%; /* #FFFFFF */
-  --accent: 344 69% 38%; /* #A31C41 - TSP Burgundy */
+  --secondary: 27 92% 62%; /* #FBAD3F - Orange */
+  --secondary-foreground: 24 5% 38%; /* #605251 */
+  --accent: 342 63% 38%; /* #A31C41 - Burgundy */
   --accent-foreground: 0 0% 100%; /* #FFFFFF */
   
   --destructive: 0 84% 60%; /* #EF4444 */
   --destructive-foreground: 0 0% 100%; /* #FFFFFF */
-  --ring: 201 57% 32%; /* #236383 - TSP Navy */
+  --ring: 197 100% 37%; /* #007EBC */
   --radius: 0.5rem;
   
-  /* TSP Supporting Colors */
-  --brand-teal-dark: 184 100% 28%; /* #007E8C */
-  --brand-teal-light: 193 51% 55%; /* #47B3CB */
-  --brand-gray: 0 0% 39%; /* #646464 */
-  --brand-gray-light: 210 3% 83%; /* #D1D3D4 */
+  /* Brand Supporting Colors */
+  --brand-teal-light: 197 45% 56%; /* #47B3CB */
+  --brand-burgundy-alt: 342 100% 28%; /* Alternative burgundy */
 }
 
 .dark {
