@@ -838,12 +838,21 @@ export default function GmailStyleInbox() {
                 <SelectTrigger className="rounded-lg border border-gray-300 bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-200 h-11 transition-colors">
                   <SelectValue placeholder="Choose team member..." />
                 </SelectTrigger>
-                <SelectContent className="rounded-lg border border-gray-200 bg-white">
+                <SelectContent className="rounded-lg border border-gray-200 bg-white shadow-lg">
                   {users.filter(u => u.id !== (user as any)?.id).map((user) => (
-                    <SelectItem key={user.id} value={user.id} className="rounded hover:bg-amber-50">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-                        {user.firstName} {user.lastName} ({user.email})
+                    <SelectItem 
+                      key={user.id} 
+                      value={user.id} 
+                      className="rounded hover:bg-amber-50 text-gray-900 font-medium py-3 px-3 cursor-pointer focus:bg-amber-50 focus:text-gray-900 data-[highlighted]:bg-amber-50 data-[highlighted]:text-gray-900"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-2 h-2 bg-teal-500 rounded-full flex-shrink-0"></div>
+                        <span className="text-gray-900 font-semibold">
+                          {user.firstName} {user.lastName}
+                        </span>
+                        <span className="text-gray-600 text-sm">
+                          ({user.email})
+                        </span>
                       </div>
                     </SelectItem>
                   ))}

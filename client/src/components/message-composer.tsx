@@ -133,12 +133,12 @@ export function MessageComposer({
             {isLoadingUsers ? (
               <div className="text-sm text-gray-500 mt-1">Loading users...</div>
             ) : (
-              <div className="mt-2 space-y-2 max-h-40 overflow-y-auto border rounded p-2">
+              <div className="mt-2 space-y-2 max-h-40 overflow-y-auto border rounded-lg p-3 bg-white dark:bg-gray-900">
                 {users.length === 0 ? (
                   <div className="text-sm text-gray-500">No users available</div>
                 ) : (
                   users.map((user: any) => (
-                    <div key={user.id} className="flex items-center space-x-2">
+                    <div key={user.id} className="flex items-center space-x-3 p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors">
                       <Checkbox
                         id={user.id}
                         checked={selectedRecipients.includes(user.id)}
@@ -150,12 +150,14 @@ export function MessageComposer({
                           }
                         }}
                       />
-                      <label htmlFor={user.id} className="text-sm cursor-pointer">
-                        {user.firstName && user.lastName 
-                          ? `${user.firstName} ${user.lastName}` 
-                          : user.email}
+                      <label htmlFor={user.id} className="text-sm cursor-pointer text-gray-900 dark:text-gray-100 font-medium flex-1">
+                        <span className="text-gray-900 dark:text-gray-100">
+                          {user.firstName && user.lastName 
+                            ? `${user.firstName} ${user.lastName}` 
+                            : user.email}
+                        </span>
                         {user.email && user.firstName && (
-                          <span className="text-gray-500 ml-1">({user.email})</span>
+                          <span className="text-gray-600 dark:text-gray-400 ml-1 font-normal">({user.email})</span>
                         )}
                       </label>
                     </div>
