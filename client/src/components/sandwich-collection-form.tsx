@@ -81,7 +81,7 @@ export default function SandwichCollectionForm({
     },
     onSuccess: (data) => {
       const totalSandwiches = (parseInt(individualCount) || 0) + 
-        groups.reduce((sum, group) => sum + (parseInt(group.count) || 0), 0);
+        groups.reduce((sum, group) => sum + (group.count || 0), 0);
       
       // Show clear success message with details
       toast({
@@ -193,7 +193,7 @@ export default function SandwichCollectionForm({
       hostName: finalLocation,
       individualSandwiches: parseInt(individualCount) || 0,
       groupSandwiches: groups.reduce(
-        (sum, group) => sum + (parseInt(group.count) || 0),
+        (sum, group) => sum + (group.count || 0),
         0,
       ),
       groupCollections: groups.filter((g) => g.name.trim() && g.count > 0),
@@ -220,14 +220,14 @@ export default function SandwichCollectionForm({
     left: 0,
   };
 
-  // Mobile-optimized header
+  // Mobile-optimized header - minimal padding
   const headerStyle = {
     background: "linear-gradient(135deg, #236383 0%, #007E8C 100%)",
     borderBottom: "1px solid #e2e8f0",
-    padding: "20px 16px", // More generous mobile padding
+    padding: "16px 8px", // Minimal padding to maximize form space
     display: "flex",
     flexDirection: "column" as const,
-    gap: "12px",
+    gap: "8px",
     alignItems: "center",
     textAlign: "center" as const,
   };
@@ -277,17 +277,17 @@ export default function SandwichCollectionForm({
     fontWeight: "700",
   };
 
-  // Mobile-optimized form container
+  // Mobile-optimized form container - minimal padding to maximize space
   const formContainerStyle = {
-    padding: "16px", // Reduced for mobile
+    padding: "8px", // Minimal padding for mobile
     background: "white",
   };
 
   const formSectionStyle = {
     background: "#f8fafc",
     borderRadius: "12px",
-    padding: "20px", // Keep generous padding for touch targets
-    marginBottom: "24px", // More space between sections
+    padding: "16px", // Reduced padding to save space
+    marginBottom: "16px", // Tighter spacing
     border: "1px solid #e2e8f0",
   };
 
@@ -428,9 +428,9 @@ export default function SandwichCollectionForm({
     minHeight: "48px", // Minimum touch target
   };
 
-  // Modern submit section with TSP teal background
+  // Mobile-optimized submit section
   const submitSectionStyle = {
-    padding: "24px",
+    padding: "16px 8px", // Reduced padding
     borderTop: "1px solid #e2e8f0",
     display: "flex",
     justifyContent: "center",
@@ -464,7 +464,7 @@ export default function SandwichCollectionForm({
   const emptyStateStyle = {
     fontSize: "14px",
     color: "#989393",
-    textAlign: "center",
+    textAlign: "center" as const,
     padding: "12px 0",
     fontStyle: "italic",
   };
@@ -477,7 +477,7 @@ export default function SandwichCollectionForm({
 
   // Calculator overlay styles
   const calculatorOverlayStyle = {
-    position: "fixed",
+    position: "fixed" as const,
     top: 0,
     left: 0,
     right: 0,
@@ -505,7 +505,7 @@ export default function SandwichCollectionForm({
     border: "1px solid #E9E6E6",
     borderRadius: "4px",
     fontSize: "16px",
-    textAlign: "right",
+    textAlign: "right" as const,
     marginBottom: "12px",
     background: "#f8f9fa",
   };
@@ -540,7 +540,7 @@ export default function SandwichCollectionForm({
     border: "1px solid #e2e8f0",
     borderRadius: "6px",
     padding: "12px",
-    textAlign: "center",
+    textAlign: "center" as const,
   };
 
   const instructionTextStyle = {
@@ -811,7 +811,7 @@ export default function SandwichCollectionForm({
                             }}
                             style={{
                               ...groupInputStyle,
-                              textAlign: "center",
+                              textAlign: "center" as const,
                               fontWeight: "600",
                               color: "#236383",
                               fontSize: "20px",

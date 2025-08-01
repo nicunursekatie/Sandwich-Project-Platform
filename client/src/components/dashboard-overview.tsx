@@ -163,9 +163,9 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               </div>
             </div>
 
-            {/* Embedded Collection Form */}
+            {/* Embedded Collection Form - Mobile optimized */}
             {showCollectionForm && (
-              <div className="mt-6 p-6 bg-gray-50 rounded-lg">
+              <div className="mt-4 mx-2">
                 <SandwichCollectionForm 
                   onSuccess={() => {
                     setShowCollectionForm(false);
