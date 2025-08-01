@@ -382,7 +382,7 @@ export default function SandwichCollectionLog() {
               size="sm"
               onClick={() => setCurrentPage(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-3 py-2"
+              className="px-3 py-2 bg-white border-gray-300 hover:bg-gray-50 text-gray-700 disabled:opacity-50"
             >
               Previous
             </Button>
@@ -404,7 +404,7 @@ export default function SandwichCollectionLog() {
                   variant={pageNum === currentPage ? "default" : "outline"}
                   size="sm"
                   onClick={() => setCurrentPage(pageNum)}
-                  className="w-10 h-10"
+                  className={`w-10 h-10 ${pageNum === currentPage ? 'bg-blue-600 text-white' : 'bg-white border-gray-300 hover:bg-gray-50 text-gray-700'}`}
                 >
                   {pageNum}
                 </Button>
@@ -417,7 +417,7 @@ export default function SandwichCollectionLog() {
               size="sm"
               onClick={() => setCurrentPage(currentPage + 1)}
               disabled={currentPage === effectiveTotalPages}
-              className="px-3 py-2"
+              className="px-3 py-2 bg-white border-gray-300 hover:bg-gray-50 text-gray-700 disabled:opacity-50"
             >
               Next
             </Button>
@@ -429,7 +429,7 @@ export default function SandwichCollectionLog() {
                 size="sm"
                 onClick={() => setCurrentPage(effectiveTotalPages)}
                 disabled={currentPage === effectiveTotalPages}
-                className="px-3 py-2"
+                className="px-3 py-2 bg-white border-gray-300 hover:bg-gray-50 text-gray-700 disabled:opacity-50"
               >
                 Last
               </Button>
@@ -1234,7 +1234,7 @@ export default function SandwichCollectionLog() {
                   variant="outline"
                   size="sm"
                   onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center space-x-1 flex-1 sm:flex-none justify-center py-2.5"
+                  className="flex items-center space-x-1 flex-1 sm:flex-none justify-center py-2.5 bg-white border-gray-300 hover:bg-gray-50 text-gray-700"
                 >
                   <Filter className="w-4 h-4" />
                   <span>Filter</span>
@@ -1245,8 +1245,7 @@ export default function SandwichCollectionLog() {
                   onClick={() => setShowDataManagement(true)}
                   variant="outline"
                   size="sm"
-                  className="flex items-center space-x-2 flex-1 sm:flex-none justify-center py-2.5 btn-outline-tsp"
-                  style={{borderColor: 'var(--tsp-teal)', color: 'var(--tsp-teal)'}}
+                  className="flex items-center space-x-2 flex-1 sm:flex-none justify-center py-2.5 bg-white border-teal-400 text-teal-600 hover:bg-teal-50"
                 >
                   <Database className="w-4 h-4" />
                   <span className="hidden sm:inline">Data</span>
@@ -1260,7 +1259,7 @@ export default function SandwichCollectionLog() {
                   variant="outline"
                   size="sm"
                   onClick={handleBatchEdit}
-                  className="flex items-center flex-1 justify-center py-2.5"
+                  className="flex items-center flex-1 justify-center py-2.5 bg-white border-gray-300 hover:bg-gray-50 text-gray-700"
                 >
                   <Edit className="w-4 h-4 mr-2" />
                   <span>Edit ({selectedCollections.size})</span>
@@ -1270,7 +1269,7 @@ export default function SandwichCollectionLog() {
                     variant="outline"
                     size="sm"
                     onClick={handleBatchDelete}
-                    className="flex items-center flex-1 justify-center py-2.5 text-red-600 hover:text-red-700"
+                    className="flex items-center flex-1 justify-center py-2.5 text-red-600 hover:text-red-700 hover:bg-red-50 bg-white border-gray-300"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
                     <span>Delete ({selectedCollections.size})</span>
@@ -1405,7 +1404,7 @@ export default function SandwichCollectionLog() {
               variant="outline"
               size="sm"
               onClick={handleClearFilters}
-              className="flex items-center space-x-1 w-full sm:w-auto"
+              className="flex items-center space-x-1 w-full sm:w-auto bg-white border-gray-300 hover:bg-gray-50 text-gray-700"
             >
               <X className="w-4 h-4" />
               <span>Clear Filters</span>
@@ -1525,7 +1524,7 @@ export default function SandwichCollectionLog() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleEdit(collection)}
-                          className="h-7 w-7 p-0 sm:h-8 sm:w-8"
+                          className="h-7 w-7 p-0 sm:h-8 sm:w-8 bg-white border-gray-300 hover:bg-gray-50 text-gray-700"
                         >
                           <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
@@ -1535,7 +1534,7 @@ export default function SandwichCollectionLog() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleDelete(collection.id)}
-                          className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 sm:h-8 sm:w-8"
+                          className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 sm:h-8 sm:w-8 bg-white border-gray-300"
                         >
                           <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
