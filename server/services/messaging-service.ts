@@ -162,13 +162,36 @@ export class MessagingService {
   }
 
   /**
-   * Mark a message as read
+   * Mark a message as read - ONLY if the current user is the recipient
    */
   async markMessageRead(
-    recipientId: string,
+    userId: string,
     messageId: number,
   ): Promise<boolean> {
     try {
+      // First, check if the message exists and get sender info
+      const messageInfo = await db
+        .select({
+          senderId: messages.senderId,
+        })
+        .from(messages)
+        .where(eq(messages.id, messageId))
+        .limit(1);
+
+      if (messageInfo.length === 0) {
+        console.log(`Message ${messageId} not found`);
+        return false;
+      }
+
+      const { senderId } = messageInfo[0];
+
+      // If current user is the sender, don't update read status (sender messages are always "read")
+      if (senderId === userId) {
+        console.log(`User ${userId} is sender of message ${messageId} - no read update needed`);
+        return true; // Return true since sender doesn't need to mark their own message as read
+      }
+
+      // Only update if user is actually a recipient
       const result = await db
         .update(messageRecipients)
         .set({
@@ -177,11 +200,12 @@ export class MessagingService {
         })
         .where(
           and(
-            eq(messageRecipients.recipientId, recipientId),
+            eq(messageRecipients.recipientId, userId),
             eq(messageRecipients.messageId, messageId),
           ),
         );
 
+      console.log(`Marked message ${messageId} as read for recipient ${userId}`);
       return true;
     } catch (error) {
       console.error("Failed to mark message as read:", error);
@@ -190,15 +214,15 @@ export class MessagingService {
   }
 
   /**
-   * Mark all messages as read for a recipient
+   * Mark all messages as read for a recipient - ONLY messages where user is the recipient
    */
   async markAllMessagesRead(
-    recipientId: string,
+    userId: string,
     contextType?: string,
   ): Promise<number> {
     try {
       if (contextType) {
-        // Mark read only for specific context type
+        // Mark read only for specific context type, excluding messages where user is the sender
         const messageIds = await db
           .select({ id: messages.id })
           .from(messages)
@@ -208,9 +232,11 @@ export class MessagingService {
           )
           .where(
             and(
-              eq(messageRecipients.recipientId, recipientId),
+              eq(messageRecipients.recipientId, userId),
               eq(messageRecipients.read, false),
               eq(messages.contextType, contextType),
+              // Don't mark messages where user is the sender
+              not(eq(messages.senderId, userId)),
             ),
           );
 
@@ -220,7 +246,7 @@ export class MessagingService {
             .set({ read: true, readAt: new Date() })
             .where(
               and(
-                eq(messageRecipients.recipientId, recipientId),
+                eq(messageRecipients.recipientId, userId),
                 inArray(
                   messageRecipients.messageId,
                   messageIds.map((m) => m.id),
@@ -229,23 +255,92 @@ export class MessagingService {
             );
         }
 
+        console.log(`Marked ${messageIds.length} messages as read for recipient ${userId} in context ${contextType}`);
         return messageIds.length;
       } else {
-        // Mark all messages as read
-        const result = await db
-          .update(messageRecipients)
-          .set({ read: true, readAt: new Date() })
+        // Mark all messages as read, excluding messages where user is the sender
+        const messageIds = await db
+          .select({ id: messages.id })
+          .from(messages)
+          .innerJoin(
+            messageRecipients,
+            eq(messages.id, messageRecipients.messageId),
+          )
           .where(
             and(
-              eq(messageRecipients.recipientId, recipientId),
+              eq(messageRecipients.recipientId, userId),
               eq(messageRecipients.read, false),
+              // Don't mark messages where user is the sender
+              not(eq(messages.senderId, userId)),
             ),
           );
 
-        return 0; // Return count if needed
+        if (messageIds.length > 0) {
+          await db
+            .update(messageRecipients)
+            .set({ read: true, readAt: new Date() })
+            .where(
+              and(
+                eq(messageRecipients.recipientId, userId),
+                inArray(
+                  messageRecipients.messageId,
+                  messageIds.map((m) => m.id),
+                ),
+              ),
+            );
+        }
+
+        console.log(`Marked ${messageIds.length} total messages as read for recipient ${userId}`);
+        return messageIds.length;
       }
     } catch (error) {
       console.error("Failed to mark all messages as read:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get unread message counts by context type - ONLY for recipients, never for senders
+   */
+  async getUnreadCountsByContext(userId: string): Promise<Record<string, number>> {
+    try {
+      const contextCounts = await db
+        .select({
+          contextType: messages.contextType,
+          count: sql<number>`COUNT(*)`,
+        })
+        .from(messageRecipients)
+        .innerJoin(messages, eq(messages.id, messageRecipients.messageId))
+        .where(
+          and(
+            eq(messageRecipients.recipientId, userId),
+            eq(messageRecipients.read, false),
+            isNull(messages.deletedAt),
+            eq(messageRecipients.contextAccessRevoked, false),
+            // Don't count messages where user is the sender
+            not(eq(messages.senderId, userId)),
+          ),
+        )
+        .groupBy(messages.contextType);
+
+      const result: Record<string, number> = {
+        suggestion: 0,
+        project: 0,
+        task: 0,
+        direct: 0,
+      };
+
+      // Map the database results to our result object
+      contextCounts.forEach((row) => {
+        if (row.contextType && result.hasOwnProperty(row.contextType)) {
+          result[row.contextType] = row.count;
+        }
+      });
+
+      console.log(`Unread counts by context for user ${userId}:`, result);
+      return result;
+    } catch (error) {
+      console.error("Failed to get unread counts by context:", error);
       throw error;
     }
   }

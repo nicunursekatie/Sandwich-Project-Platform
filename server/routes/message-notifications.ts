@@ -1,6 +1,6 @@
 import { Request, Response, Express } from "express";
-import { eq, sql, and, gt } from "drizzle-orm";
-import { messages, conversations, conversationParticipants, chatMessages, chatMessageReads } from "../../shared/schema";
+import { eq, sql, and, gt, or, isNull } from "drizzle-orm";
+import { messages, messageRecipients, conversations, conversationParticipants, chatMessages, chatMessageReads } from "../../shared/schema";
 import { db } from "../db";
 import { isAuthenticated } from "../temp-auth";
 
@@ -109,14 +109,35 @@ const getUnreadCounts = async (req: Request, res: Response) => {
 
         // Calculate total will be done after formal messaging counts
 
-        // Get unread conversation messages (only unread ones)
-        // For now, we'll use a simpler approach - count messages that haven't been read
-        // This is a placeholder until we implement proper message read tracking
-        
-        // Skip direct message counts for now to prevent inflated numbers
-        // TODO: Implement proper read status tracking for conversation messages
-        unreadCounts.direct = 0;
-        unreadCounts.groups = 0;
+        // Get unread email-style message counts (direct/group messages)
+        // Only count messages where user is recipient, never where user is sender
+        try {
+          const directMessageCount = await db
+            .select({ count: sql<number>`COUNT(*)` })
+            .from(messageRecipients)
+            .innerJoin(messages, eq(messages.id, messageRecipients.messageId))
+            .where(
+              and(
+                eq(messageRecipients.recipientId, userId),
+                eq(messageRecipients.read, false),
+                eq(messageRecipients.contextAccessRevoked, false),
+                isNull(messages.deletedAt),
+                // Only count direct messages, exclude messages where user is sender
+                or(
+                  eq(messages.contextType, 'direct'),
+                  isNull(messages.contextType)
+                ),
+                sql`${messages.senderId} != ${userId}`
+              )
+            );
+
+          unreadCounts.direct = directMessageCount[0]?.count || 0;
+          unreadCounts.groups = 0; // Groups functionality not implemented yet
+        } catch (directMsgError) {
+          console.error('Error getting direct message counts:', directMsgError);
+          unreadCounts.direct = 0;
+          unreadCounts.groups = 0;
+        }
 
         // Calculate total
         unreadCounts.total = unreadCounts.general + unreadCounts.committee + 

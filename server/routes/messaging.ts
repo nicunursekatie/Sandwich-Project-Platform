@@ -191,7 +191,13 @@ router.get("/unread", async (req, res) => {
       return res.status(401).json({ error: "User not authenticated" });
     }
 
-    const { contextType, limit = "50", offset = "0" } = req.query;
+    const { contextType, limit = "50", offset = "0", groupByContext } = req.query;
+
+    // If groupByContext is requested, return counts by context type
+    if (groupByContext === 'true') {
+      const contextCounts = await messagingService.getUnreadCountsByContext(user.id);
+      return res.json(contextCounts);
+    }
 
     const messages = await messagingService.getUnreadMessages(user.id, {
       contextType: contextType as string | undefined,
