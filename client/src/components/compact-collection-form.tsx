@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calculator, Plus } from "lucide-react";
+import tspLogo from "@assets/LOGOS/TSP_transparent.png";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 
@@ -77,11 +78,22 @@ export default function CompactCollectionForm({ onSuccess }: CompactCollectionFo
 
   return (
     <div className="max-w-sm mx-auto bg-white">
-      {/* Ultra-compact header */}
-      <div className="bg-gradient-to-r from-[#236383] to-[#007E8C] text-white text-center py-2 px-4">
-        <h1 className="text-base font-semibold mb-1">Submit Collection</h1>
-        <p className="text-xs opacity-90">Record today's distribution</p>
-        <div className="bg-gradient-to-r from-[#FBAD3F] to-[#F7931E] rounded px-3 py-1 mt-1 inline-block">
+      {/* Ultra-compact header with square logo */}
+      <div className="bg-gradient-to-r from-[#236383] to-[#007E8C] text-white py-3 px-4">
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <div className="w-8 h-8 bg-white rounded-md p-1 flex items-center justify-center">
+            <img 
+              src={tspLogo} 
+              alt="TSP Logo" 
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="text-center">
+            <h1 className="text-base font-semibold">Submit Collection</h1>
+            <p className="text-xs opacity-90">Record today's distribution</p>
+          </div>
+        </div>
+        <div className="bg-gradient-to-r from-[#FBAD3F] to-[#F7931E] rounded px-3 py-1 inline-block">
           <div className="text-xs opacity-90">Total</div>
           <div className="text-sm font-bold">{totalSandwiches}</div>
         </div>
