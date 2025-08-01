@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { HelpBubble } from "@/components/help-system";
 import { DocumentPreviewModal } from "@/components/document-preview-modal";
-import SandwichCollectionForm from "@/components/sandwich-collection-form";
+import CompactCollectionForm from "@/components/compact-collection-form";
 import { AnimatedCounter } from "@/components/modern-dashboard/animated-counter";
 
 import { DarkModeToggle } from "@/components/modern-dashboard/dark-mode-toggle";
@@ -166,7 +166,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
             {/* Embedded Collection Form - Full width on mobile */}
             {showCollectionForm && (
               <div className="mt-4">
-                <SandwichCollectionForm 
+                <CompactCollectionForm 
                   onSuccess={() => {
                     setShowCollectionForm(false);
                     queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });
