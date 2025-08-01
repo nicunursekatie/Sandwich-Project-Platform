@@ -13,7 +13,7 @@ import { AnimatedCounter } from "@/components/modern-dashboard/animated-counter"
 import { DarkModeToggle } from "@/components/modern-dashboard/dark-mode-toggle";
 import { SandwichStackIcon, GrowthTrendIcon, CommunityIcon, TargetIcon, SparkleIcon, NetworkIcon } from "@/components/modern-dashboard/custom-svg-icons";
 import tspLogo from "@assets/sandwich_project_transparent_1753668698851.png";
-import tspSquareLogo from "@assets/LOGOS/TSP_transparent.png";
+import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 
 interface DashboardOverviewProps {
   onSectionChange: (section: string) => void;
@@ -137,8 +137,8 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-gray-200 p-1">
                   <img 
-                    src={tspSquareLogo} 
-                    alt="TSP Logo" 
+                    src={sandwichLogo} 
+                    alt="Sandwich Logo" 
                     className="w-full h-full object-contain"
                   />
                 </div>

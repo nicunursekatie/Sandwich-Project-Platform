@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calculator, Plus } from "lucide-react";
-import tspLogo from "@assets/LOGOS/TSP_transparent.png";
+import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 
@@ -83,8 +83,8 @@ export default function CompactCollectionForm({ onSuccess }: CompactCollectionFo
         <div className="flex items-center justify-center gap-3 mb-2">
           <div className="w-8 h-8 bg-white rounded-md p-1 flex items-center justify-center">
             <img 
-              src={tspLogo} 
-              alt="TSP Logo" 
+              src={sandwichLogo} 
+              alt="Sandwich Logo" 
               className="w-full h-full object-contain"
             />
           </div>
