@@ -522,7 +522,7 @@ export default function GmailStyleInbox() {
                       h-5 px-2 text-xs
                       ${activeFolder === folder.id 
                         ? 'bg-white/20 text-white' 
-                        : 'bg-slate-300 text-slate-700'
+                        : 'bg-gray-200 text-gray-800'
                       }
                     `}
                   >
@@ -554,7 +554,7 @@ export default function GmailStyleInbox() {
                 placeholder="Search messages..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 bg-white border-gray-300 text-gray-900 placeholder-gray-500"
               />
             </div>
             
@@ -628,7 +628,7 @@ export default function GmailStyleInbox() {
                         e.stopPropagation();
                         handleToggleSelect(message.id);
                       }}
-                      className="mt-1"
+                      className="mt-1 h-4 w-4 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500"
                     />
                     <button
                       onClick={(e) => {
@@ -642,7 +642,7 @@ export default function GmailStyleInbox() {
                       />
                     </button>
                     <Avatar className="h-7 w-7 lg:h-8 lg:w-8 flex-shrink-0">
-                      <AvatarFallback className="text-xs">
+                      <AvatarFallback className="text-xs bg-gray-200 text-gray-800">
                         {activeFolder === 'sent' 
                           ? (message.recipientName || 'U')?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'U'
                           : (message.senderName || 'U')?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'U'
@@ -743,7 +743,7 @@ export default function GmailStyleInbox() {
                 
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10">
-                    <AvatarFallback>
+                    <AvatarFallback className="bg-gray-200 text-gray-800">
                       {selectedMessage.senderName?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
