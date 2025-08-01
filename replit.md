@@ -3,6 +3,11 @@
 ## Overview
 This is a full-stack sandwich collection management application designed for The Sandwich Project, a nonprofit organization. It facilitates tracking sandwich donations and distributions, offering comprehensive data management, analytics, and operational tools for volunteers, hosts, recipients, and collection activities. The vision is to streamline operations, enhance data visibility, and support the organization's growth and impact in addressing food insecurity.
 
+## Recent Critical Fixes (August 2025)
+- **Email Read Status Bug**: Fixed critical issue where senders viewing sent messages incorrectly marked emails as read for recipients. Now only recipients can change read status.
+- **UI Component Transparency**: Resolved widespread black element issues in Select, Input, Button, Checkbox, and Textarea components by removing problematic CSS variable dependencies.
+- **Message Composer**: Fixed user dropdown population in message composer after UI component fixes.
+
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 UI Design: Button labels and interface text must be extremely clear about their function - avoid ambiguous labels like "Submit" in favor of specific action descriptions like "Enter New Data".
