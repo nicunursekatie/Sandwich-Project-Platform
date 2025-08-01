@@ -220,14 +220,16 @@ export default function SandwichCollectionForm({
     left: 0,
   };
 
-  // Modern header style matching dashboard cards with TSP teal gradient
+  // Mobile-optimized header
   const headerStyle = {
     background: "linear-gradient(135deg, #236383 0%, #007E8C 100%)",
     borderBottom: "1px solid #e2e8f0",
-    padding: "16px 24px",
+    padding: "20px 16px", // More generous mobile padding
     display: "flex",
-    justifyContent: "space-between",
+    flexDirection: "column" as const,
+    gap: "12px",
     alignItems: "center",
+    textAlign: "center" as const,
   };
 
   const headerLeftStyle = {
@@ -275,17 +277,17 @@ export default function SandwichCollectionForm({
     fontWeight: "700",
   };
 
-  // Modern form container with dashboard spacing
+  // Mobile-optimized form container
   const formContainerStyle = {
-    padding: "24px",
+    padding: "16px", // Reduced for mobile
     background: "white",
   };
 
   const formSectionStyle = {
     background: "#f8fafc",
-    borderRadius: "8px",
-    padding: "20px",
-    marginBottom: "20px",
+    borderRadius: "12px",
+    padding: "20px", // Keep generous padding for touch targets
+    marginBottom: "24px", // More space between sections
     border: "1px solid #e2e8f0",
   };
 
@@ -303,9 +305,14 @@ export default function SandwichCollectionForm({
   };
 
   const formRowStyle = {
-    display: "grid",
-    gridTemplateColumns: "160px 1fr",
+    display: "flex",
+    flexDirection: "column" as const,
     gap: "16px",
+    "@media (min-width: 768px)": {
+      display: "grid",
+      gridTemplateColumns: "160px 1fr",
+      flexDirection: "row",
+    }
   };
 
   const formGroupStyle = {
@@ -322,36 +329,38 @@ export default function SandwichCollectionForm({
     fontFamily: "Roboto, sans-serif",
   };
 
-  // Modern input styling matching dashboard
+  // Mobile-optimized input styling
   const inputStyle = {
-    height: "40px",
-    padding: "0 12px",
-    border: "1px solid #d1d5db",
-    borderRadius: "6px",
-    fontSize: "16px",
+    height: "48px", // Larger for mobile touch
+    padding: "0 16px",
+    border: "2px solid #d1d5db",
+    borderRadius: "8px",
+    fontSize: "18px", // Prevents zoom on iOS
     fontFamily: "Roboto, sans-serif",
     transition: "all 0.2s ease",
     background: "white",
     color: "#1f2937",
     width: "100%",
+    boxSizing: "border-box" as const,
   };
 
   const individualInputStyle = {
     ...inputStyle,
-    width: "100px",
+    width: "120px", // Wider for mobile
     fontWeight: "600",
     color: "#236383",
-    fontSize: "20px",
+    fontSize: "22px", // Larger for mobile
     textAlign: "center" as const,
+    minWidth: "120px",
   };
 
   const selectStyle = {
     ...inputStyle,
     appearance: "none" as const,
-    backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23989393' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23989393' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
     backgroundRepeat: "no-repeat",
-    backgroundPosition: "right 10px center",
-    paddingRight: "28px",
+    backgroundPosition: "right 16px center", // More padding for mobile
+    paddingRight: "48px", // More space for the arrow
     cursor: "pointer",
   };
 
@@ -372,46 +381,51 @@ export default function SandwichCollectionForm({
   };
 
   const groupItemStyle = {
-    display: "grid",
-    gridTemplateColumns: "1fr 60px 28px",
-    gap: "6px",
-    marginBottom: "6px",
-    alignItems: "center",
+    display: "flex",
+    flexDirection: "column" as const,
+    gap: "8px",
+    marginBottom: "16px",
+    padding: "12px",
+    background: "#f8fafc",
+    borderRadius: "8px",
+    border: "1px solid #e2e8f0",
   };
 
   const groupInputStyle = {
     ...inputStyle,
-    height: "28px",
-    padding: "0 8px",
-    fontSize: "14px",
+    height: "48px", // Same as main inputs for consistency
+    padding: "0 16px",
+    fontSize: "16px", // Readable on mobile
   };
 
   const removeBtnStyle = {
-    width: "28px",
-    height: "28px",
+    width: "40px", // Larger touch target
+    height: "40px",
     background: "#FFE5E5",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "8px",
     color: "#E74C3C",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "16px",
+    fontSize: "20px", // Larger for mobile
     transition: "all 0.2s ease",
+    alignSelf: "flex-end",
   };
 
   const addGroupBtnStyle = {
-    padding: "6px 10px",
+    padding: "12px 20px", // Larger touch target
     background: "transparent",
-    border: "1px dashed #236383",
-    borderRadius: "4px",
+    border: "2px dashed #236383",
+    borderRadius: "8px",
     color: "#236383",
-    fontSize: "14px",
+    fontSize: "16px", // Larger text
     fontWeight: "500",
     cursor: "pointer",
     transition: "all 0.2s ease",
     fontFamily: "Roboto, sans-serif",
+    minHeight: "48px", // Minimum touch target
   };
 
   // Modern submit section with TSP teal background
@@ -427,14 +441,17 @@ export default function SandwichCollectionForm({
     background: "linear-gradient(135deg, #FBAD3F 0%, #e89b2e 100%)",
     color: "white",
     border: "none",
-    padding: "12px 32px",
-    borderRadius: "8px",
-    fontSize: "18px",
+    padding: "16px 40px", // Larger for mobile
+    borderRadius: "12px",
+    fontSize: "20px", // Bigger text
     fontWeight: "600",
     cursor: "pointer",
     transition: "all 0.2s ease",
     fontFamily: "Roboto, sans-serif",
-    boxShadow: "0 2px 4px rgba(251, 173, 63, 0.25)",
+    boxShadow: "0 4px 8px rgba(251, 173, 63, 0.25)",
+    minHeight: "56px", // Minimum touch target
+    width: "100%", // Full width on mobile
+    maxWidth: "320px",
   };
 
   const helperTextStyle = {
@@ -655,7 +672,8 @@ export default function SandwichCollectionForm({
             <span style={accentBarStyle}></span>
             Individual Sandwiches
           </h3>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", justifyContent: "center" }}>
             <input
               type="number"
               id="individual-count"
@@ -685,6 +703,7 @@ export default function SandwichCollectionForm({
           <p style={helperTextStyle}>
             Count only individual sandwiches here (don't include group totals)
           </p>
+          </div>
         </div>
 
         {/* Group Collections - Collapsed or Expanded */}
@@ -751,9 +770,10 @@ export default function SandwichCollectionForm({
                 <div>
                   {groups.map((group, i) => (
                     <div key={group.id} style={groupItemStyle}>
+                      <label style={{ ...labelStyle, marginBottom: "4px" }}>Group Name</label>
                       <input
                         type="text"
-                        placeholder="Group name"
+                        placeholder="Enter group or organization name"
                         value={group.name}
                         onChange={(e) => {
                           const newGroups = [...groups];
@@ -764,52 +784,59 @@ export default function SandwichCollectionForm({
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
                       />
-                      <input
-                        type="number"
-                        placeholder="0"
-                        min="0"
-                        value={group.count === 0 ? "" : group.count}
-                        onChange={(e) => {
-                          const newGroups = [...groups];
-                          const value = e.target.value;
-                          // Allow empty string or valid numbers
-                          if (value === "" || value === "0") {
-                            newGroups[i].count = 0;
-                          } else {
-                            newGroups[i].count = parseInt(value) || 0;
-                          }
-                          setGroups(newGroups);
-                        }}
-                        onFocus={(e) => {
-                          // Clear the field if it shows 0 when focused
-                          if (e.target.value === "0") {
-                            e.target.value = "";
-                          }
-                          handleInputFocus(e);
-                        }}
-                        style={{
-                          ...groupInputStyle,
-                          textAlign: "center",
-                          fontWeight: "600",
-                          color: "#236383",
-                        }}
-                        onBlur={handleInputBlur}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeGroup(group.id)}
-                        style={removeBtnStyle}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "#E74C3C";
-                          e.currentTarget.style.color = "white";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "#FFE5E5";
-                          e.currentTarget.style.color = "#E74C3C";
-                        }}
-                      >
-                        ×
-                      </button>
+                      
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "8px" }}>
+                        <div style={{ flex: 1 }}>
+                          <label style={{ ...labelStyle, marginBottom: "4px" }}>Sandwich Count</label>
+                          <input
+                            type="number"
+                            placeholder="0"
+                            min="0"
+                            value={group.count === 0 ? "" : group.count}
+                            onChange={(e) => {
+                              const newGroups = [...groups];
+                              const value = e.target.value;
+                              if (value === "" || value === "0") {
+                                newGroups[i].count = 0;
+                              } else {
+                                newGroups[i].count = parseInt(value) || 0;
+                              }
+                              setGroups(newGroups);
+                            }}
+                            onFocus={(e) => {
+                              if (e.target.value === "0") {
+                                e.target.value = "";
+                              }
+                              handleInputFocus(e);
+                            }}
+                            style={{
+                              ...groupInputStyle,
+                              textAlign: "center",
+                              fontWeight: "600",
+                              color: "#236383",
+                              fontSize: "20px",
+                            }}
+                            onBlur={handleInputBlur}
+                          />
+                        </div>
+                        
+                        <button
+                          type="button"
+                          onClick={() => removeGroup(group.id)}
+                          style={{ ...removeBtnStyle, marginTop: "24px" }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "#E74C3C";
+                            e.currentTarget.style.color = "white";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "#FFE5E5";
+                            e.currentTarget.style.color = "#E74C3C";
+                          }}
+                          title="Remove this group"
+                        >
+                          ×
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
