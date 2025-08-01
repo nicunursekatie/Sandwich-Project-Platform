@@ -220,14 +220,14 @@ export default function SandwichCollectionForm({
     left: 0,
   };
 
-  // Mobile-optimized header - zero horizontal padding
+  // Ultra-compact header for single-screen view
   const headerStyle = {
     background: "linear-gradient(135deg, #236383 0%, #007E8C 100%)",
     borderBottom: "1px solid #e2e8f0",
-    padding: "16px 0", // Zero horizontal padding for maximum width
+    padding: "8px 0", // Minimal vertical padding
     display: "flex",
     flexDirection: "column" as const,
-    gap: "8px",
+    gap: "4px", // Reduced gap
     alignItems: "center",
     textAlign: "center" as const,
   };
@@ -237,16 +237,16 @@ export default function SandwichCollectionForm({
   };
 
   const h1Style = {
-    fontSize: "20px",
+    fontSize: "18px", // Smaller for compactness
     fontWeight: "600",
     margin: 0,
-    marginBottom: "4px",
+    marginBottom: "2px", // Reduced margin
     color: "white",
     fontFamily: "Roboto, sans-serif",
   };
 
   const headerPStyle = {
-    fontSize: "14px",
+    fontSize: "12px", // Smaller subtitle for compact view
     fontWeight: "400",
     opacity: 0.9,
     margin: 0,
@@ -256,24 +256,24 @@ export default function SandwichCollectionForm({
 
   const totalBadgeStyle = {
     background: "linear-gradient(135deg, #FBAD3F 0%, #F7931E 100%)",
-    borderRadius: "8px",
-    padding: "8px 16px",
+    borderRadius: "6px", // Smaller radius
+    padding: "6px 12px", // More compact padding
     textAlign: "center" as const,
-    minWidth: "80px",
+    minWidth: "70px", // Smaller width
     color: "white",
-    border: "2px solid rgba(255,255,255,0.2)",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+    border: "1px solid rgba(255,255,255,0.2)", // Thinner border
+    boxShadow: "0 1px 4px rgba(0,0,0,0.1)", // Smaller shadow
   };
 
   const totalLabelStyle = {
-    fontSize: "13px",
+    fontSize: "11px", // Smaller label
     opacity: 0.9,
-    marginBottom: "2px",
+    marginBottom: "1px", // Reduced margin
     fontWeight: "500",
   };
 
   const totalNumberStyle = {
-    fontSize: "18px",
+    fontSize: "16px", // Smaller number
     fontWeight: "700",
   };
 
@@ -285,9 +285,9 @@ export default function SandwichCollectionForm({
 
   const formSectionStyle = {
     background: "#f8fafc",
-    borderRadius: "12px",
-    padding: "12px", // Minimal padding for maximum space
-    marginBottom: "12px", // Tight spacing
+    borderRadius: "8px", // Smaller radius for compactness
+    padding: "8px", // Ultra-minimal padding
+    marginBottom: "8px", // Tighter spacing
     marginLeft: "8px", // Small side margins to prevent edge touching
     marginRight: "8px",
     border: "1px solid #e2e8f0",
@@ -430,9 +430,9 @@ export default function SandwichCollectionForm({
     minHeight: "48px", // Minimum touch target
   };
 
-  // Mobile-optimized submit section - zero horizontal padding
+  // Ultra-compact submit section
   const submitSectionStyle = {
-    padding: "16px 0", // Zero horizontal padding for full width
+    padding: "12px 0", // Reduced vertical padding
     borderTop: "1px solid #e2e8f0",
     display: "flex",
     justifyContent: "center",
@@ -443,17 +443,17 @@ export default function SandwichCollectionForm({
     background: "linear-gradient(135deg, #FBAD3F 0%, #e89b2e 100%)",
     color: "white",
     border: "none",
-    padding: "16px 40px", // Larger for mobile
-    borderRadius: "12px",
-    fontSize: "20px", // Bigger text
+    padding: "12px 32px", // Reduced padding for compactness
+    borderRadius: "8px", // Smaller radius
+    fontSize: "18px", // Smaller text
     fontWeight: "600",
     cursor: "pointer",
     transition: "all 0.2s ease",
     fontFamily: "Roboto, sans-serif",
-    boxShadow: "0 4px 8px rgba(251, 173, 63, 0.25)",
-    minHeight: "56px", // Minimum touch target
+    boxShadow: "0 2px 4px rgba(251, 173, 63, 0.25)",
+    minHeight: "44px", // Reduced minimum height
     width: "100%", // Full width on mobile
-    maxWidth: "320px",
+    maxWidth: "280px", // Smaller max width
   };
 
   const helperTextStyle = {
