@@ -225,6 +225,7 @@ export class EmailService {
 
   /**
    * Update email status (star, archive, trash, etc.)
+   * CRITICAL: Only recipients can mark emails as read to prevent sender read actions affecting recipient status
    */
   async updateEmailStatus(
     emailId: number,
@@ -257,7 +258,27 @@ export class EmailService {
         return false;
       }
 
-      // Update the email
+      // CRITICAL FIX: Only allow recipients to mark emails as read
+      // If sender is trying to mark as read, ignore that update to prevent affecting recipient's unread status
+      if (updates.isRead !== undefined && email.senderId === userId) {
+        console.log(`Sender ${userId} attempted to mark email ${emailId} as read - ignoring to protect recipient read status`);
+        // Remove isRead from updates for senders
+        const { isRead, ...otherUpdates } = updates;
+        
+        // Update only other fields (star, archive, etc.) for senders
+        if (Object.keys(otherUpdates).length > 0) {
+          await db
+            .update(emailMessages)
+            .set({
+              ...otherUpdates,
+              updatedAt: new Date(),
+            })
+            .where(eq(emailMessages.id, emailId));
+        }
+        return true;
+      }
+
+      // Recipients can mark emails as read normally
       await db
         .update(emailMessages)
         .set({
