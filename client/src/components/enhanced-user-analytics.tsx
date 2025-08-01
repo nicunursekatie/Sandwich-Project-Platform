@@ -64,9 +64,11 @@ interface ActivityLog {
 interface SystemStats {
   totalUsers: number;
   activeUsers: number;
+  activeUsersLast24h?: number;
+  activeUsersLast12h?: number;
   totalActions: number;
   averageActionsPerUser: number;
-  topSections: { section: string; actions: number }[];
+  topSections: { section: string; actions: number; usage?: number }[];
   topFeatures: { feature: string; usage: number }[];
   dailyActiveUsers: { date: string; users: number }[];
 }

@@ -1,8 +1,12 @@
 import { Switch, Route } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 import { queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
+import { initGA } from "../lib/analytics";
+import { useAnalytics } from "../hooks/use-analytics";
+import { useEnhancedTracking } from "../hooks/use-enhanced-tracking";
 
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +20,12 @@ import NotFound from "@/pages/not-found";
 
 function Router() {
   const { isAuthenticated, isLoading, error } = useAuth();
+  
+  // Track page views when routes change
+  useAnalytics();
+  
+  // Enhanced tracking for detailed user behavior analytics
+  useEnhancedTracking();
 
   if (isLoading) {
     return <LoadingState text="Authenticating..." size="lg" className="min-h-screen" />;
@@ -107,6 +117,16 @@ function Router() {
 }
 
 function App() {
+  // Initialize Google Analytics when app loads
+  useEffect(() => {
+    // Verify required environment variable is present
+    if (!import.meta.env.VITE_GA_MEASUREMENT_ID) {
+      console.warn('Missing required Google Analytics key: VITE_GA_MEASUREMENT_ID');
+    } else {
+      initGA();
+    }
+  }, []);
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
