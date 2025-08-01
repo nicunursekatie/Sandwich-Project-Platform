@@ -838,19 +838,24 @@ export default function GmailStyleInbox() {
                 <SelectTrigger className="rounded-lg border border-gray-300 bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-200 h-11 transition-colors">
                   <SelectValue placeholder="Choose team member..." />
                 </SelectTrigger>
-                <SelectContent className="rounded-lg border border-gray-200 bg-white shadow-lg">
+                <SelectContent className="rounded-lg border border-gray-200 bg-white shadow-lg z-50">
                   {users.filter(u => u.id !== (user as any)?.id).map((user) => (
                     <SelectItem 
                       key={user.id} 
                       value={user.id} 
-                      className="rounded hover:bg-amber-50 text-gray-900 font-medium py-3 px-3 cursor-pointer focus:bg-amber-50 focus:text-gray-900 data-[highlighted]:bg-amber-50 data-[highlighted]:text-gray-900"
+                      className="py-2 px-3 hover:bg-amber-50 focus:bg-amber-50 data-[highlighted]:bg-amber-50"
+                      style={{ 
+                        color: '#1f2937', 
+                        fontWeight: '500',
+                        fontSize: '14px'
+                      }}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-teal-500 rounded-full flex-shrink-0"></div>
-                        <span className="text-gray-900 font-semibold">
+                      <div className="flex items-center gap-2" style={{ color: '#1f2937' }}>
+                        <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                        <span style={{ color: '#1f2937', fontWeight: '600' }}>
                           {user.firstName} {user.lastName}
                         </span>
-                        <span className="text-gray-600 text-sm">
+                        <span style={{ color: '#6b7280', fontSize: '12px' }}>
                           ({user.email})
                         </span>
                       </div>
