@@ -875,7 +875,8 @@ export default function GmailStyleInbox() {
                 value={composeSubject}
                 onChange={(e) => setComposeSubject(e.target.value)}
                 placeholder="Budget Review, Website Updates, Event Planning..."
-                className="rounded-lg border border-gray-300 bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-200 h-11 font-['Roboto'] placeholder:text-gray-500 transition-colors"
+                className="rounded-lg border border-gray-300 bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-200 h-11 font-['Roboto'] placeholder:text-gray-500 transition-colors text-gray-900"
+                style={{ color: '#1f2937' }}
               />
               <p className="text-xs text-gray-500 font-['Roboto'] italic">
                 Leave blank for general conversation
@@ -892,7 +893,8 @@ export default function GmailStyleInbox() {
                 onChange={(e) => setComposeContent(e.target.value)}
                 placeholder="Type your message here..."
                 rows={6}
-                className="rounded-lg border border-gray-300 bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-200 font-['Roboto'] placeholder:text-gray-500 resize-none transition-colors"
+                className="rounded-lg border border-gray-300 bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-200 font-['Roboto'] placeholder:text-gray-500 resize-none transition-colors text-gray-900"
+                style={{ color: '#1f2937' }}
               />
             </div>
             
