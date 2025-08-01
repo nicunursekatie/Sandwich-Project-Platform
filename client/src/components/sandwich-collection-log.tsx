@@ -1281,9 +1281,9 @@ export default function SandwichCollectionLog() {
         </div>
       </div>
 
-      {/* Embedded Submit Collection Form - Mobile optimized */}
+      {/* Embedded Submit Collection Form - Full width */}
       {showSubmitForm && (
-        <div className="mx-2 mb-4">
+        <div className="mb-4">
           <SandwichCollectionForm 
             onSuccess={() => {
               setShowSubmitForm(false);

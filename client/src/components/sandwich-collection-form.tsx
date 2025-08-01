@@ -220,11 +220,11 @@ export default function SandwichCollectionForm({
     left: 0,
   };
 
-  // Mobile-optimized header - minimal padding
+  // Mobile-optimized header - zero horizontal padding
   const headerStyle = {
     background: "linear-gradient(135deg, #236383 0%, #007E8C 100%)",
     borderBottom: "1px solid #e2e8f0",
-    padding: "16px 8px", // Minimal padding to maximize form space
+    padding: "16px 0", // Zero horizontal padding for maximum width
     display: "flex",
     flexDirection: "column" as const,
     gap: "8px",
@@ -277,17 +277,19 @@ export default function SandwichCollectionForm({
     fontWeight: "700",
   };
 
-  // Mobile-optimized form container - minimal padding to maximize space
+  // Mobile-optimized form container - zero padding for maximum space
   const formContainerStyle = {
-    padding: "8px", // Minimal padding for mobile
+    padding: "0", // Zero padding for mobile
     background: "white",
   };
 
   const formSectionStyle = {
     background: "#f8fafc",
     borderRadius: "12px",
-    padding: "16px", // Reduced padding to save space
-    marginBottom: "16px", // Tighter spacing
+    padding: "12px", // Minimal padding for maximum space
+    marginBottom: "12px", // Tight spacing
+    marginLeft: "8px", // Small side margins to prevent edge touching
+    marginRight: "8px",
     border: "1px solid #e2e8f0",
   };
 
@@ -428,9 +430,9 @@ export default function SandwichCollectionForm({
     minHeight: "48px", // Minimum touch target
   };
 
-  // Mobile-optimized submit section
+  // Mobile-optimized submit section - zero horizontal padding
   const submitSectionStyle = {
-    padding: "16px 8px", // Reduced padding
+    padding: "16px 0", // Zero horizontal padding for full width
     borderTop: "1px solid #e2e8f0",
     display: "flex",
     justifyContent: "center",
