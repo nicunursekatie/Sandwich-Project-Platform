@@ -107,7 +107,7 @@ export default function CompactCollectionForm({
       {/* Ultra-compact header */}
       <div className="bg-gradient-to-r from-[#236383] to-[#007E8C] text-white text-center py-3 px-4">
         <h1 className="text-lg sm:text-base font-semibold mb-1">Submit Collection</h1>
-        <p className="text-sm sm:text-xs opacity-90 mb-2">
+        <p className="text-base sm:text-sm opacity-90 mb-2">
           Record a sandwich collection log
         </p>
         <div className="bg-gradient-to-r from-[#FBAD3F] to-[#F7931E] rounded px-3 py-1 inline-block">
