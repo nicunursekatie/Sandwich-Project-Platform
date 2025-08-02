@@ -187,7 +187,7 @@ export default function SimpleNav({ onSectionChange, activeSection, isCollapsed 
             className={`
               w-full ${isCollapsed ? 'justify-center px-2' : 'justify-start px-2 sm:px-3'} text-left h-10 sm:h-11 touch-manipulation relative
               ${isCurrentlyActive 
-                ? "bg-[#236383] text-white shadow-sm border-l-4 border-l-orange-500" 
+                ? "bg-[#236383] hover:bg-[#1d5470] text-white shadow-sm border-l-4 border-l-orange-500" 
                 : "hover:bg-slate-100 text-slate-700"
               }
             `}
