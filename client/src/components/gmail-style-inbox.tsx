@@ -774,7 +774,7 @@ export default function GmailStyleInbox() {
         </div>
 
         {/* Message Detail */}
-        <div className={`${selectedMessage ? 'flex-1' : 'hidden xl:flex xl:flex-1'} flex flex-col bg-white`}>
+        <div className={`${selectedMessage ? 'flex-1' : 'hidden 2xl:flex 2xl:flex-1'} flex flex-col bg-white`}>
           {selectedMessage ? (
             <>
               {/* Message Header */}
