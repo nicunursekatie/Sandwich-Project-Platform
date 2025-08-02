@@ -138,9 +138,11 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                 <h2 className="text-xl font-semibold text-[#236383] mb-2">
                   Record Collection Data
                 </h2>
-                <p className="text-gray-700">
-                  Submit your sandwich contributions to help our community
-                </p>
+                {showCollectionForm && (
+                  <p className="text-gray-700">
+                    Submit your sandwich contributions to help our community
+                  </p>
+                )}
               </div>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button 
