@@ -153,13 +153,13 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button 
-                  className="bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-3 px-6 rounded-lg transition-colors !text-xl sm:!text-sm"
+                  className="bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-4 px-8 rounded-lg transition-colors !text-lg sm:!text-sm min-h-[56px] sm:min-h-[40px]"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
                 >
                   {showCollectionForm ? "Hide Form" : "Enter New Collection Data"}
                 </Button>
                 <Button 
-                  className="bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-3 px-6 rounded-lg transition-colors shadow-sm !text-xl sm:!text-sm"
+                  className="bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-4 px-8 rounded-lg transition-colors shadow-sm !text-lg sm:!text-sm min-h-[56px] sm:min-h-[40px]"
                   onClick={() => onSectionChange?.('collections')}
                 >
                   View Collection History

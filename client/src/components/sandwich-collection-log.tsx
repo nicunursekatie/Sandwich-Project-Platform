@@ -1215,7 +1215,7 @@ export default function SandwichCollectionLog() {
                   onClick={() => setShowSubmitForm(!showSubmitForm)}
                   variant="default"
                   size="sm"
-                  className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-[#236383] hover:bg-[#1d5470] py-3 !text-xl sm:!text-sm"
+                  className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-[#236383] hover:bg-[#1d5470] py-4 px-6 !text-lg sm:!text-sm min-h-[56px] sm:min-h-[40px]"
                 >
                   <Sandwich className="w-5 h-5 sm:w-4 sm:h-4" />
                   <span className="font-medium">{showSubmitForm ? 'Hide Form' : 'Enter New Collection Data'}</span>
