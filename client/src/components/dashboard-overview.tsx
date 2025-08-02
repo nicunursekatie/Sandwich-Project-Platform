@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { FileText, TrendingUp, Calendar, Award, Download, ExternalLink, Sandwich, Eye, BarChart3, Target, Activity, Users, Zap, Clock, Building2, Layers } from "lucide-react";
+import { FileText, TrendingUp, Calendar, Award, Download, ExternalLink, Sandwich, Eye, BarChart3, Target, Activity, Users, Zap, Clock, Building2, Layers, Plus, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -133,33 +133,39 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         {/* Collection Call-to-Action */}
         {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
           <div className="bg-white rounded-xl mx-4 p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-[#FBAD3F] rounded-lg flex items-center justify-center">
-                  <Sandwich className="w-6 h-6 text-white" />
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-[#FBAD3F] rounded-lg flex items-center justify-center">
+                    <Sandwich className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-[#236383]">
+                      Record Collection Data
+                    </h2>
+                    <p className="text-gray-700 mt-1">
+                      Submit your sandwich contributions to help our community
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-[#236383]">
-                    Record Collection Data
-                  </h2>
-                  <p className="text-gray-700 mt-1">
-                    Submit your sandwich contributions to help our community
-                  </p>
+                
+                {/* Buttons stack vertically on small screens, side by side on larger screens */}
+                <div className="flex flex-col sm:flex-row gap-3 sm:flex-shrink-0">
+                  <Button 
+                    className="bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-2.5 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 min-h-[44px]"
+                    onClick={() => setShowCollectionForm(!showCollectionForm)}
+                  >
+                    <Plus className="w-4 h-4" />
+                    {showCollectionForm ? "Hide Form" : "Enter New Collection Data"}
+                  </Button>
+                  <Button 
+                    className="bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-2.5 px-6 rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 min-h-[44px]"
+                    onClick={() => onSectionChange?.('collections')}
+                  >
+                    <History className="w-4 h-4" />
+                    View Collection History
+                  </Button>
                 </div>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button 
-                  className="bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-2 px-4 rounded-lg transition-colors"
-                  onClick={() => setShowCollectionForm(!showCollectionForm)}
-                >
-                  {showCollectionForm ? "Hide Form" : "Enter New Collection Data"}
-                </Button>
-                <Button 
-                  className="bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm"
-                  onClick={() => onSectionChange?.('collections')}
-                >
-                  View Collection History
-                </Button>
               </div>
             </div>
 
