@@ -145,21 +145,53 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                 )}
               </div>
               
-              {/* COMPLETELY NEW LAYOUT - VERTICAL STACKING */}
-              <div className="space-y-2 max-w-[280px] mx-auto">
+              {/* CACHE-BUSTING VERTICAL BUTTON LAYOUT - v3.0 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '240px', margin: '0 auto', padding: '0 16px' }}>
                 <button 
-                  className="w-full bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-3 px-4 rounded-lg transition-colors text-sm h-12 border-none outline-none"
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#FBAD3F',
+                    color: 'white',
+                    fontWeight: '500',
+                    padding: '12px 16px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontSize: '14px',
+                    height: '48px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s'
+                  }}
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
-                  style={{ minWidth: '0', width: '100%' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#e09a36'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#FBAD3F'}
                 >
-                  {showCollectionForm ? "Hide Form" : "Add Data"}
+                  {showCollectionForm ? "Hide" : "Add Data"}
                 </button>
                 <button 
-                  className="w-full bg-white border-2 border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-3 px-4 rounded-lg transition-colors text-sm h-12"
+                  style={{
+                    width: '100%',
+                    backgroundColor: 'white',
+                    color: '#47B3CB',
+                    fontWeight: '500',
+                    padding: '12px 16px',
+                    borderRadius: '8px',
+                    border: '2px solid #47B3CB',
+                    fontSize: '14px',
+                    height: '48px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
                   onClick={() => onSectionChange?.('collections')}
-                  style={{ minWidth: '0', width: '100%' }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = '#47B3CB';
+                    e.target.style.color = 'white';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'white';
+                    e.target.style.color = '#47B3CB';
+                  }}
                 >
-                  View History
+                  History
                 </button>
               </div>
             </div>
