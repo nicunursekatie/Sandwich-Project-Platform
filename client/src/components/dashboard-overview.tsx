@@ -130,34 +130,37 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           </p>
         </div>
 
-        {/* Collection Call-to-Action */}
+        {/* REFRESHED Collection Buttons - VERTICAL LAYOUT TO PREVENT CUTOFF */}
         {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
-          <div className="bg-white rounded-xl mx-4 p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
+          <div className="bg-white rounded-xl mx-2 p-4 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
             <div className="text-center">
-              <div className="mb-6">
-                <h2 className="text-xl font-semibold text-[#236383] mb-2">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-[#236383] mb-2">
                   Record Collection Data
                 </h2>
                 {showCollectionForm && (
-                  <p className="text-gray-700">
+                  <p className="text-gray-600 text-sm">
                     Submit your sandwich contributions to help our community
                   </p>
                 )}
               </div>
-              {/* FIXED: Force refresh - buttons now stack vertically to prevent cutoff */}
-              <div className="flex flex-col gap-3 max-w-xs mx-auto px-2">
-                <Button 
-                  className="w-full bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-3 px-4 rounded-lg transition-colors text-sm min-h-[50px]"
+              
+              {/* COMPLETELY NEW LAYOUT - VERTICAL STACKING */}
+              <div className="space-y-2 max-w-[280px] mx-auto">
+                <button 
+                  className="w-full bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-3 px-4 rounded-lg transition-colors text-sm h-12 border-none outline-none"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
+                  style={{ minWidth: '0', width: '100%' }}
                 >
                   {showCollectionForm ? "Hide Form" : "Add Data"}
-                </Button>
-                <Button 
-                  className="w-full bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-sm text-sm min-h-[50px]"
+                </button>
+                <button 
+                  className="w-full bg-white border-2 border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-3 px-4 rounded-lg transition-colors text-sm h-12"
                   onClick={() => onSectionChange?.('collections')}
+                  style={{ minWidth: '0', width: '100%' }}
                 >
                   View History
-                </Button>
+                </button>
               </div>
             </div>
 
