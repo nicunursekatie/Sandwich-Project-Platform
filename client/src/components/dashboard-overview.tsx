@@ -133,8 +133,8 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         {/* Collection Call-to-Action */}
         {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
           <div className="bg-white rounded-xl mx-4 p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div className="flex items-center space-x-4">
+            <div className="text-center">
+              <div className="flex justify-center items-center space-x-4 mb-6">
                 <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-gray-200 p-1">
                   <img 
                     src={sandwichLogo} 
@@ -151,7 +151,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button 
                   className="bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-4 px-8 rounded-lg transition-colors !text-lg sm:!text-sm min-h-[56px] sm:min-h-[40px]"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
