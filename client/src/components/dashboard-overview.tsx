@@ -144,15 +144,15 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                   </p>
                 )}
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-2xl mx-auto px-4">
+              <div className="space-y-3 max-w-md mx-auto">
                 <Button 
-                  className="w-full bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-4 px-3 rounded-lg transition-colors text-xs sm:text-sm min-h-[56px] flex items-center justify-center text-center leading-tight"
+                  className="w-full bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-4 px-6 rounded-lg transition-colors text-sm min-h-[56px]"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
                 >
                   {showCollectionForm ? "Hide Form" : "Enter New Data"}
                 </Button>
                 <Button 
-                  className="w-full bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-4 px-3 rounded-lg transition-colors shadow-sm text-xs sm:text-sm min-h-[56px] flex items-center justify-center text-center leading-tight"
+                  className="w-full bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-4 px-6 rounded-lg transition-colors shadow-sm text-sm min-h-[56px]"
                   onClick={() => onSectionChange?.('collections')}
                 >
                   View History
