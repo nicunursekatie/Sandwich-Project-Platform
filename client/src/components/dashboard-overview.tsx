@@ -144,15 +144,16 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                   </p>
                 )}
               </div>
-              <div className="space-y-3 max-w-md mx-auto">
+              {/* FIXED: Force refresh - buttons now stack vertically to prevent cutoff */}
+              <div className="flex flex-col gap-3 max-w-xs mx-auto px-2">
                 <Button 
-                  className="w-full bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-4 px-6 rounded-lg transition-colors text-sm min-h-[56px]"
+                  className="w-full bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-3 px-4 rounded-lg transition-colors text-sm min-h-[50px]"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
                 >
-                  {showCollectionForm ? "Hide Form" : "Enter New Data"}
+                  {showCollectionForm ? "Hide Form" : "Add Data"}
                 </Button>
                 <Button 
-                  className="w-full bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-4 px-6 rounded-lg transition-colors shadow-sm text-sm min-h-[56px]"
+                  className="w-full bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-sm text-sm min-h-[50px]"
                   onClick={() => onSectionChange?.('collections')}
                 >
                   View History
