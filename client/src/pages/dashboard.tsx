@@ -340,8 +340,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
             }}
             className={`p-2 rounded-lg transition-colors relative z-50 pointer-events-auto touch-manipulation ${
               activeSection === "messages"
-                ? "bg-gradient-to-r from-amber-100 to-orange-100 text-teal-700 border border-amber-300 shadow-sm"
-                : "text-teal-600 hover:bg-amber-50 hover:text-teal-800"
+                ? "bg-[#236383] text-white border border-[#236383] shadow-sm"
+                : "text-teal-600 hover:bg-teal-50 hover:text-teal-800"
             }`}
             title="Messages"
             aria-label="Messages"
@@ -363,8 +363,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
             }}
             className={`p-2 rounded-lg transition-colors relative z-50 pointer-events-auto touch-manipulation ${
               activeSection === "profile"
-                ? "bg-gradient-to-r from-amber-100 to-orange-100 text-teal-700 border border-amber-300 shadow-sm"
-                : "text-teal-600 hover:bg-amber-50 hover:text-teal-800"
+                ? "bg-[#236383] text-white border border-[#236383] shadow-sm"
+                : "text-teal-600 hover:bg-teal-50 hover:text-teal-800"
             }`}
             title="Account Settings"
             aria-label="Account Settings"
