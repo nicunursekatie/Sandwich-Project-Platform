@@ -115,14 +115,30 @@ export default function GmailStyleInbox() {
   const [showCompose, setShowCompose] = useState(false);
   const [showReply, setShowReply] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMessageListCollapsed, setIsMessageListCollapsed] = useState(false);
+  const [screenSize, setScreenSize] = useState('desktop');
 
-  // Responsive behavior - auto-collapse sidebar on small screens
+  // Responsive behavior with proper priority order
   useEffect(() => {
     const checkScreenSize = () => {
-      const isSmallScreen = window.innerWidth < 1024; // Less than lg breakpoint
-      setIsMobile(isSmallScreen);
-      setIsSidebarCollapsed(isSmallScreen);
+      const width = window.innerWidth;
+      
+      if (width < 768) {
+        // Mobile: Show only message body, collapse both sidebar and message list
+        setScreenSize('mobile');
+        setIsSidebarCollapsed(true);
+        setIsMessageListCollapsed(true);
+      } else if (width < 1024) {
+        // Tablet: Show message list + body, collapse sidebar first
+        setScreenSize('tablet');
+        setIsSidebarCollapsed(true);
+        setIsMessageListCollapsed(false);
+      } else {
+        // Desktop: Show all three panels
+        setScreenSize('desktop');
+        setIsSidebarCollapsed(false);
+        setIsMessageListCollapsed(false);
+      }
     };
 
     checkScreenSize();
@@ -501,24 +517,31 @@ export default function GmailStyleInbox() {
 
   return (
     <div className="flex h-[calc(100vh-120px)] bg-white overflow-hidden relative">
-      {/* Mobile Overlay */}
-      {!isSidebarCollapsed && isMobile && (
+      {/* Mobile Overlay for Sidebar */}
+      {!isSidebarCollapsed && screenSize === 'mobile' && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={() => setIsSidebarCollapsed(true)}
         />
       )}
       
-      {/* Sidebar */}
+      {/* Mobile Overlay for Message List */}
+      {!isMessageListCollapsed && screenSize === 'mobile' && selectedMessage && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setIsMessageListCollapsed(true)}
+        />
+      )}
+      
+      {/* Sidebar - Folders (Inbox, Drafts, etc.) */}
       <div className={`
-        ${isSidebarCollapsed ? 'hidden' : 'block'} 
-        ${selectedMessage ? 'hidden md:block' : 'block'} 
-        w-64 lg:w-64 md:w-56 sm:w-52 xs:w-48 border-r bg-white flex flex-col flex-shrink-0
+        ${isSidebarCollapsed ? 'hidden' : 'flex'} 
+        w-64 border-r bg-white flex-col flex-shrink-0
         transition-all duration-300 ease-in-out
-        ${!isSidebarCollapsed && isMobile ? 'fixed left-0 top-0 h-full z-50' : 'relative'}
+        ${screenSize === 'mobile' && !isSidebarCollapsed ? 'fixed left-0 top-0 h-full z-50' : 'relative'}
       `}>
         <div className="p-4">
-          <div className="flex items-center justify-between mb-4 lg:hidden">
+          <div className={`flex items-center justify-between mb-4 ${screenSize === 'desktop' ? 'hidden' : 'flex'}`}>
             <span className="text-sm font-medium text-gray-700">Navigation</span>
             <Button
               variant="ghost"
@@ -578,20 +601,37 @@ export default function GmailStyleInbox() {
 
       {/* Message List */}
       <div className="flex-1 flex bg-white min-w-0">
-        <div className={`${selectedMessage ? 'hidden md:flex md:w-1/2 lg:w-2/5' : 'flex-1'} ${isMobile && !isSidebarCollapsed ? 'hidden' : 'flex'} border-r flex-col bg-white min-w-0`}>
+        <div className={`
+          ${isMessageListCollapsed ? 'hidden' : 'flex'} 
+          ${selectedMessage ? 'w-1/2 lg:w-2/5' : 'flex-1'} 
+          ${screenSize === 'mobile' && selectedMessage ? 'fixed left-0 top-0 h-full z-45 w-full' : ''}
+          border-r flex-col bg-white min-w-0
+          transition-all duration-300 ease-in-out
+        `}>
           {/* Toolbar */}
           <div className="border-b p-4 space-y-3 bg-white">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                {/* Sidebar toggle button - only visible when sidebar is collapsed */}
+                {/* Sidebar toggle button - visible when sidebar is collapsed */}
                 {isSidebarCollapsed && (
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsSidebarCollapsed(false)}
-                    className="lg:hidden"
+                    title="Show folders"
                   >
                     <Menu className="h-4 w-4" />
+                  </Button>
+                )}
+                {/* Close message list button - only on mobile when message is selected */}
+                {screenSize === 'mobile' && selectedMessage && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsMessageListCollapsed(true)}
+                    title="Hide message list"
+                  >
+                    <X className="h-4 w-4" />
                   </Button>
                 )}
                 <h2 className="text-lg font-semibold capitalize">{activeFolder}</h2>
@@ -749,6 +789,17 @@ export default function GmailStyleInbox() {
               <div className="border-b p-4">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
+                    {/* Show message list toggle button when collapsed */}
+                    {isMessageListCollapsed && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsMessageListCollapsed(false)}
+                        title="Show message list"
+                      >
+                        <Menu className="h-4 w-4" />
+                      </Button>
+                    )}
                     <Button 
                       variant="ghost" 
                       size="sm" 
@@ -867,9 +918,35 @@ export default function GmailStyleInbox() {
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center text-gray-500">
-              <div className="text-center">
+              <div className="text-center space-y-4">
                 <InboxIcon className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                <p>Select a message to read</p>
+                <p className="text-lg">Select a message to read</p>
+                
+                {/* Show toggle buttons for collapsed panels */}
+                <div className="flex justify-center gap-3 mt-6">
+                  {isSidebarCollapsed && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsSidebarCollapsed(false)}
+                      className="flex items-center gap-2"
+                    >
+                      <Menu className="h-4 w-4" />
+                      Show Folders
+                    </Button>
+                  )}
+                  {isMessageListCollapsed && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsMessageListCollapsed(false)}
+                      className="flex items-center gap-2"
+                    >
+                      <Menu className="h-4 w-4" />
+                      Show Messages
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           )}
