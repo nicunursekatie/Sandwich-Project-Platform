@@ -516,7 +516,7 @@ export default function GmailStyleInbox() {
   ];
 
   return (
-    <div className="flex h-[calc(100vh-120px)] bg-white overflow-hidden relative">
+    <div className="flex h-[calc(100vh-120px)] bg-white relative">
       {/* Mobile Overlay for Sidebar - only when sidebar is open as overlay */}
       {!isSidebarCollapsed && screenSize === 'mobile' && (
         <div 
@@ -530,7 +530,7 @@ export default function GmailStyleInbox() {
         ${isSidebarCollapsed ? 'hidden' : 'flex'} 
         w-64 border-r bg-white flex-col flex-shrink-0
         transition-all duration-300 ease-in-out
-        ${screenSize === 'mobile' && !isSidebarCollapsed ? 'fixed left-0 top-0 h-full z-50' : 'relative'}
+        ${screenSize === 'mobile' && !isSidebarCollapsed ? 'fixed left-0 top-0 h-full w-64 z-50' : 'relative'}
       `}>
         <div className="p-4">
           <div className={`flex items-center justify-between mb-4 ${screenSize === 'desktop' ? 'hidden' : 'flex'}`}>
@@ -596,7 +596,6 @@ export default function GmailStyleInbox() {
         <div className={`
           ${isMessageListCollapsed ? 'hidden' : 'flex'} 
           ${selectedMessage ? 'w-1/2 lg:w-2/5' : 'flex-1'} 
-          ${screenSize === 'mobile' && selectedMessage ? 'fixed left-0 top-0 h-full z-40 w-full bg-white' : ''}
           border-r flex-col bg-white min-w-0
           transition-all duration-300 ease-in-out
         `}>
