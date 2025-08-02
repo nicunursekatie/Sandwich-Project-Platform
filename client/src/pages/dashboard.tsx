@@ -451,7 +451,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         {/* Main Content */}
         <div className="flex-1 overflow-hidden w-full md:w-auto relative z-10 bg-gradient-to-br from-white to-orange-50/20">
           <div className="h-full overflow-y-auto overflow-x-hidden">
-            <div className="p-0 sm:p-4 md:p-6 pb-20 min-h-full">
+            <div className={`${activeSection === 'gmail-inbox' ? 'p-2' : 'p-0 sm:p-4 md:p-6'} pb-20 min-h-full`}>
               <div className="max-w-full overflow-x-hidden">
                 {renderContent()}
               </div>
