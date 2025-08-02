@@ -144,20 +144,20 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                   </p>
                 )}
               </div>
-              <div className="flex flex-col lg:flex-row gap-3 justify-center items-center max-w-4xl mx-auto">
+              <div className="flex flex-col xl:flex-row gap-3 justify-center items-stretch max-w-5xl mx-auto px-2">
                 <Button 
-                  className="w-full lg:w-auto bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-3 px-4 lg:py-4 lg:px-8 rounded-lg transition-colors text-sm lg:text-base min-h-[48px] lg:min-h-[56px] whitespace-nowrap"
+                  className="flex-1 xl:flex-none xl:min-w-[240px] bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-3 px-4 rounded-lg transition-colors text-sm min-h-[48px] text-center"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
                 >
-                  <span className="hidden sm:inline">{showCollectionForm ? "Hide Form" : "Enter New Collection Data"}</span>
-                  <span className="sm:hidden">{showCollectionForm ? "Hide" : "New Collection"}</span>
+                  <span className="hidden md:inline">{showCollectionForm ? "Hide Form" : "Enter New Collection Data"}</span>
+                  <span className="md:hidden">{showCollectionForm ? "Hide" : "Add Collection"}</span>
                 </Button>
                 <Button 
-                  className="w-full lg:w-auto bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-3 px-4 lg:py-4 lg:px-8 rounded-lg transition-colors shadow-sm text-sm lg:text-base min-h-[48px] lg:min-h-[56px] whitespace-nowrap"
+                  className="flex-1 xl:flex-none xl:min-w-[240px] bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-sm text-sm min-h-[48px] text-center"
                   onClick={() => onSectionChange?.('collections')}
                 >
-                  <span className="hidden sm:inline">View Collection History</span>
-                  <span className="sm:hidden">View History</span>
+                  <span className="hidden md:inline">View Collection History</span>
+                  <span className="md:hidden">View History</span>
                 </Button>
               </div>
             </div>
