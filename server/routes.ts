@@ -276,26 +276,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const origin = req.headers.origin;
     
     // Enhanced CORS handling for frontend/backend communication
-    console.log(`CORS: Request from origin: ${origin || 'undefined'}`);
+    // Reduced logging for cleaner console output
     
     // In development, allow from any Replit dev domain or localhost
     if (process.env.NODE_ENV === 'development') {
       if (origin && (origin.includes('.replit.dev') || origin.includes('localhost') || origin.includes('127.0.0.1'))) {
         res.header('Access-Control-Allow-Origin', origin);
-        console.log(`CORS: Allowing origin: ${origin}`);
       } else {
         // For development, allow all origins as fallback
         res.header('Access-Control-Allow-Origin', '*');
-        console.log('CORS: Allowing all origins (development fallback)');
       }
     } else {
       // In production, be more restrictive
       if (origin && origin.includes('.replit.dev')) {
         res.header('Access-Control-Allow-Origin', origin);
-        console.log(`CORS: Allowing origin: ${origin}`);
       } else {
         res.header('Access-Control-Allow-Origin', '*');
-        console.log('CORS: Allowing all origins (production fallback)');
       }
     }
     

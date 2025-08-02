@@ -801,12 +801,7 @@ export function setupTempAuth(app: Express) {
 
 // Middleware to check if user is authenticated
 export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
-  console.log('=== AUTHENTICATION MIDDLEWARE ===');
-  console.log('URL:', req.method, req.url);
-  console.log('req.session exists:', !!req.session);
-  console.log('req.session.user exists:', !!req.session?.user);
-  console.log('Session ID:', req.sessionID);
-  console.log('User email in session:', req.session?.user?.email);
+  // Reduced logging for cleaner console output
 
   if (!req.session || !req.session.user) {
     console.log('❌ Authentication failed - no session or user');
@@ -850,8 +845,7 @@ export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
         isActive: freshUser.isActive
       };
       
-      console.log(`✅ Authentication successful for ${freshUser.email} (${freshUser.role})`);
-      console.log(`✅ req.user set with ${freshUser.permissions?.length || 0} permissions`);
+      // Authentication successful - user data set in req.user
     } else {
       console.log(`❌ User not found or inactive: ${req.session.user.email}`);
       // User not found in database or inactive, clear invalid session
