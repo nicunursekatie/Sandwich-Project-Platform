@@ -8,10 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Calculator, Plus } from "lucide-react";
+import { Calculator, Plus, HelpCircle } from "lucide-react";
 import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface CompactCollectionFormProps {
   onSuccess?: () => void;
@@ -98,7 +99,8 @@ export default function CompactCollectionForm({
   };
 
   return (
-    <div className="max-w-sm mx-auto bg-white">
+    <TooltipProvider>
+      <div className="max-w-sm mx-auto bg-white">
       {/* Ultra-compact header */}
       <div className="bg-gradient-to-r from-[#236383] to-[#007E8C] text-white text-center py-3 px-4">
         <h1 className="text-base font-semibold mb-1">Submit Collection</h1>
@@ -116,9 +118,19 @@ export default function CompactCollectionForm({
         {/* Date and Location in same row */}
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label className="text-xs font-medium text-[#236383] block mb-1">
-              Date
-            </label>
+            <div className="flex items-center gap-1 mb-1">
+              <label className="text-xs font-medium text-[#236383]">
+                Date
+              </label>
+              <Tooltip>
+                <TooltipTrigger>
+                  <HelpCircle className="h-3 w-3 text-gray-400" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Choose the day you collected or received the sandwiches</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
             <Input
               type="date"
               value={date}
@@ -127,12 +139,22 @@ export default function CompactCollectionForm({
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-[#236383] block mb-1">
-              Location
-            </label>
+            <div className="flex items-center gap-1 mb-1">
+              <label className="text-xs font-medium text-[#236383]">
+                Location
+              </label>
+              <Tooltip>
+                <TooltipTrigger>
+                  <HelpCircle className="h-3 w-3 text-gray-400" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Select where the sandwiches were collected or distributed</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
             <Select value={location} onValueChange={setLocation}>
               <SelectTrigger className="h-8 text-sm">
-                <SelectValue placeholder="Select" />
+                <SelectValue placeholder="Choose location..." />
               </SelectTrigger>
               <SelectContent>
                 {hosts.map((host: any) => (
@@ -147,20 +169,37 @@ export default function CompactCollectionForm({
 
         {/* Individual sandwiches - compact row */}
         <div className="bg-gray-50 rounded p-2">
-          <label className="text-xs font-medium text-[#236383] block mb-1">
-            Individual Sandwiches
-          </label>
+          <div className="flex items-center gap-1 mb-1">
+            <label className="text-xs font-medium text-[#236383]">
+              Individual Sandwiches
+            </label>
+            <Tooltip>
+              <TooltipTrigger>
+                <HelpCircle className="h-3 w-3 text-gray-400" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Count single sandwiches only. Don't include group or bulk quantities here.</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
           <div className="flex gap-2 items-center">
             <Input
               type="number"
               value={individualCount}
               onChange={(e) => setIndividualCount(Number(e.target.value) || 0)}
               className="h-8 text-sm flex-1"
-              placeholder="0"
+              placeholder="Enter number (e.g. 15)"
             />
-            <Button size="sm" variant="outline" className="h-8 px-2">
-              <Calculator className="h-3 w-3" />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button size="sm" variant="outline" className="h-8 px-2">
+                  <Calculator className="h-3 w-3" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Need help counting? Use this calculator</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
           <p className="text-xs text-gray-600 mt-1">
             Don't include group totals
@@ -170,29 +209,46 @@ export default function CompactCollectionForm({
         {/* Group collections - redesigned with better flow */}
         <div className="bg-gray-50 rounded p-3">
           <div className="flex items-center justify-between mb-3">
-            <label className="text-sm font-medium text-[#236383]">
-              Group Collections
-            </label>
-            <Button
-              onClick={addGroup}
-              size="sm"
-              className="h-5 w-5 p-0 bg-[#47B3CB] hover:bg-[#236383] rounded-md shadow-sm"
-            >
-              <Plus className="h-2 w-2" />
-            </Button>
+            <div className="flex items-center gap-1">
+              <label className="text-sm font-medium text-[#236383]">
+                Group Collections
+              </label>
+              <Tooltip>
+                <TooltipTrigger>
+                  <HelpCircle className="h-3 w-3 text-gray-400" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Add groups that brought sandwiches (like "Church Group: 50" or "School Class: 25")</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  onClick={addGroup}
+                  size="sm"
+                  className="h-5 w-5 p-0 bg-[#47B3CB] hover:bg-[#236383] rounded-md shadow-sm"
+                >
+                  <Plus className="h-2 w-2" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Click to add the group you entered above</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
 
           {/* Add group form - stacked layout */}
           <div className="space-y-2 mb-3">
             <Input
-              placeholder="Group name"
+              placeholder="e.g. 'Smith Family' or 'ABC Church'"
               value={newGroupName}
               onChange={(e) => setNewGroupName(e.target.value)}
               className="h-9 text-sm"
             />
             <Input
               type="number"
-              placeholder="Count"
+              placeholder="Enter count (e.g. 25)"
               value={newGroupCount || ""}
               onChange={(e) => setNewGroupCount(Number(e.target.value) || 0)}
               className="h-9 text-sm"
@@ -224,14 +280,25 @@ export default function CompactCollectionForm({
         </div>
 
         {/* Submit button - compact */}
-        <Button
-          onClick={handleSubmit}
-          disabled={submitMutation.isPending}
-          className="w-full h-10 bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#FBAD3F] text-white font-semibold"
-        >
-          {submitMutation.isPending ? "Submitting..." : "Submit Collection"}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={handleSubmit}
+            disabled={submitMutation.isPending}
+            className="flex-1 h-10 bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#FBAD3F] text-white font-semibold"
+          >
+            {submitMutation.isPending ? "Saving..." : "Save My Collection"}
+          </Button>
+          <Tooltip>
+            <TooltipTrigger>
+              <HelpCircle className="h-4 w-4 text-gray-400" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Click to save your sandwich count. You can always add more entries later.</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </div>
     </div>
+    </TooltipProvider>
   );
 }
