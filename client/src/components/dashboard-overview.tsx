@@ -130,69 +130,33 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
           </p>
         </div>
 
-        {/* REFRESHED Collection Buttons - VERTICAL LAYOUT TO PREVENT CUTOFF */}
+        {/* Collection Call-to-Action */}
         {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
-          <div className="bg-white rounded-xl mx-2 p-4 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
+          <div className="bg-white rounded-xl mx-4 p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
             <div className="text-center">
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold text-[#236383] mb-2">
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold text-[#236383] mb-2">
                   Record Collection Data
                 </h2>
                 {showCollectionForm && (
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-gray-700">
                     Submit your sandwich contributions to help our community
                   </p>
                 )}
               </div>
-              
-              {/* CACHE-BUSTING VERTICAL BUTTON LAYOUT - v3.0 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '240px', margin: '0 auto', padding: '0 16px' }}>
-                <button 
-                  style={{
-                    width: '100%',
-                    backgroundColor: '#FBAD3F',
-                    color: 'white',
-                    fontWeight: '500',
-                    padding: '12px 16px',
-                    borderRadius: '8px',
-                    border: 'none',
-                    fontSize: '14px',
-                    height: '48px',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s'
-                  }}
+              <div className="space-y-3 max-w-md mx-auto">
+                <Button 
+                  className="w-full bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-4 px-6 rounded-lg transition-colors text-sm min-h-[56px]"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#e09a36'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = '#FBAD3F'}
                 >
-                  {showCollectionForm ? "Hide" : "Add Data"}
-                </button>
-                <button 
-                  style={{
-                    width: '100%',
-                    backgroundColor: 'white',
-                    color: '#47B3CB',
-                    fontWeight: '500',
-                    padding: '12px 16px',
-                    borderRadius: '8px',
-                    border: '2px solid #47B3CB',
-                    fontSize: '14px',
-                    height: '48px',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s'
-                  }}
+                  {showCollectionForm ? "Hide Form" : "Enter New Data"}
+                </Button>
+                <Button 
+                  className="w-full bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-4 px-6 rounded-lg transition-colors shadow-sm text-sm min-h-[56px]"
                   onClick={() => onSectionChange?.('collections')}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = '#47B3CB';
-                    e.target.style.color = 'white';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'white';
-                    e.target.style.color = '#47B3CB';
-                  }}
                 >
-                  History
-                </button>
+                  View History
+                </Button>
               </div>
             </div>
 
