@@ -27,11 +27,13 @@ import { useMessaging } from "@/hooks/useMessaging";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
+import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 
 interface NavigationItem {
   id: string;
   label: string;
-  icon: any;
+  icon?: any;
+  customIcon?: string;
   href: string;
   permission?: string;
   group?: string;
@@ -64,7 +66,7 @@ export default function SimpleNav({ onSectionChange, activeSection, isCollapsed 
     // MAIN section
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "dashboard" },
     ...(hasPermission(user, PERMISSIONS.VIEW_PROJECTS) ? [{ id: "projects", label: "Projects", icon: ClipboardList, href: "projects" }] : []),
-    { id: "collections", label: "Collections Log", icon: Sandwich, href: "collections" },
+    { id: "collections", label: "Collections Log", customIcon: sandwichLogo, href: "collections" },
     
     // COMMUNICATION section
     { id: "gmail-inbox", label: "Inbox", icon: Inbox, href: "gmail-inbox", group: "communication" },
@@ -197,7 +199,15 @@ export default function SimpleNav({ onSectionChange, activeSection, isCollapsed 
             }}
             title={isCollapsed ? item.label : undefined}
           >
-            <item.icon className={`h-4 w-4 flex-shrink-0 ${isCollapsed ? '' : 'mr-2 sm:mr-3'}`} />
+            {item.customIcon ? (
+              <img 
+                src={item.customIcon} 
+                alt={item.label}
+                className={`h-4 w-4 flex-shrink-0 ${isCollapsed ? '' : 'mr-2 sm:mr-3'}`}
+              />
+            ) : (
+              <item.icon className={`h-4 w-4 flex-shrink-0 ${isCollapsed ? '' : 'mr-2 sm:mr-3'}`} />
+            )}
             {!isCollapsed && (
               <span className="truncate flex-1 text-xs sm:text-sm">{item.label}</span>
             )}
