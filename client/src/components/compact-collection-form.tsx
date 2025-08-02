@@ -178,7 +178,7 @@ export default function CompactCollectionForm({
                 <HelpCircle className="h-3 w-3 text-gray-400" />
               </TooltipTrigger>
               <TooltipContent>
-                <p>Count single sandwiches only. Don't include group or bulk quantities here.</p>
+                <p>Please subtract sandwiches made by a group from your total count and report those along with the name of each group in the section below.</p>
               </TooltipContent>
             </Tooltip>
           </div>
@@ -191,7 +191,7 @@ export default function CompactCollectionForm({
               placeholder="Enter number (e.g. 15)"
             />
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button size="sm" variant="outline" className="h-8 px-2">
                   <Calculator className="h-3 w-3" />
                 </Button>
@@ -223,7 +223,7 @@ export default function CompactCollectionForm({
               </Tooltip>
             </div>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   onClick={addGroup}
                   size="sm"
