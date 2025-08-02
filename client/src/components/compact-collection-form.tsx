@@ -72,11 +72,19 @@ export default function CompactCollectionForm({
     individualCount +
     groupCollections.reduce((sum, group) => sum + group.count, 0);
 
+  // Debug logging to track calculation
+  console.log('Calculation Debug:', {
+    individualCount,
+    groupCollections,
+    groupTotal: groupCollections.reduce((sum, group) => sum + group.count, 0),
+    totalSandwiches
+  });
+
   const addGroup = () => {
     if (newGroupName && newGroupCount > 0) {
       setGroupCollections([
         ...groupCollections,
-        { name: newGroupName, count: newGroupCount },
+        { name: newGroupName, count: Number(newGroupCount) }, // Ensure it's a number
       ]);
       setNewGroupName("");
       setNewGroupCount(0);
@@ -194,7 +202,10 @@ export default function CompactCollectionForm({
             <Input
               type="number"
               value={individualCount}
-              onChange={(e) => setIndividualCount(Number(e.target.value) || 0)}
+              onChange={(e) => {
+                const value = parseInt(e.target.value) || 0;
+                setIndividualCount(value);
+              }}
               className="h-12 md:h-10 text-lg md:text-base flex-1"
               placeholder="0"
             />
@@ -258,7 +269,10 @@ export default function CompactCollectionForm({
               type="number"
               placeholder="Enter count (e.g. 25)"
               value={newGroupCount || ""}
-              onChange={(e) => setNewGroupCount(Number(e.target.value) || 0)}
+              onChange={(e) => {
+                const value = parseInt(e.target.value) || 0;
+                setNewGroupCount(value);
+              }}
               className="h-12 md:h-10 text-lg md:text-base"
             />
           </div>
