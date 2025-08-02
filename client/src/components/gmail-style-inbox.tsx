@@ -596,6 +596,7 @@ export default function GmailStyleInbox() {
         <div className={`
           ${isMessageListCollapsed ? 'hidden' : 'flex'} 
           ${selectedMessage ? 'w-1/2 lg:w-2/5' : 'flex-1'} 
+          ${!selectedMessage ? 'flex-1' : ''}
           border-r flex-col bg-white min-w-0
           transition-all duration-300 ease-in-out
         `}>
