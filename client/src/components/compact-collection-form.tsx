@@ -141,9 +141,9 @@ export default function CompactCollectionForm({ onSuccess }: CompactCollectionFo
             <Button 
               onClick={addGroup}
               size="sm" 
-              className="h-6 w-6 p-0 bg-blue-500 hover:bg-blue-600 rounded-md shadow-sm"
+              className="h-5 w-5 p-0 bg-[#47B3CB] hover:bg-[#236383] rounded-md shadow-sm"
             >
-              <Plus className="h-3 w-3" />
+              <Plus className="h-2.5 w-2.5" />
             </Button>
           </div>
           
