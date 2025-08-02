@@ -143,7 +143,7 @@ export default function CompactCollectionForm({ onSuccess }: CompactCollectionFo
               size="sm" 
               className="h-5 w-5 p-0 bg-[#47B3CB] hover:bg-[#236383] rounded-md shadow-sm"
             >
-              <Plus className="h-2.5 w-2.5" />
+              <Plus className="h-2 w-2" />
             </Button>
           </div>
           
