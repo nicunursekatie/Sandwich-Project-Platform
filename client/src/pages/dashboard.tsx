@@ -91,6 +91,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
   };
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { user, isLoading } = useAuth();
 
   // Make setActiveSection available globally for project detail navigation
@@ -410,7 +411,24 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
         {/* Sidebar */}
         <div className={`${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 fixed md:relative z-50 w-64 sm:w-72 bg-gradient-to-b from-white to-orange-50/30 border-r-2 border-amber-200 shadow-lg flex flex-col transition-transform duration-300 ease-in-out h-full`}>
+        } md:translate-x-0 fixed md:relative z-50 ${
+          isSidebarCollapsed ? 'w-16' : 'w-64 sm:w-72'
+        } bg-gradient-to-b from-white to-orange-50/30 border-r-2 border-amber-200 shadow-lg flex flex-col transition-all duration-300 ease-in-out h-full`}>
+          {/* Collapse Toggle Button */}
+          <div className="hidden md:flex justify-end p-2 border-b border-amber-200">
+            <button
+              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+              className="p-1.5 rounded-lg hover:bg-amber-100 transition-colors"
+              aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {isSidebarCollapsed ? (
+                <ChevronRight className="w-4 h-4 text-amber-700" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-amber-700 rotate-90" />
+              )}
+            </button>
+          </div>
+
           {/* Simple Navigation with enhanced mobile scrolling */}
           <div className="flex-1 overflow-y-auto pb-6 touch-pan-y overscroll-contain">
             <SimpleNav 
@@ -423,7 +441,8 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
                 // Also update URL for back button support
                 const newUrl = section === 'dashboard' ? '/dashboard' : `/dashboard?section=${section}`;
                 window.history.pushState({}, '', newUrl);
-              }} 
+              }}
+              isCollapsed={isSidebarCollapsed}
             />
           </div>
         </div>

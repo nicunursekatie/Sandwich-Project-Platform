@@ -7,6 +7,7 @@ This is a full-stack sandwich collection management application designed for The
 - **Email Read Status Bug**: Fixed critical issue where senders viewing sent messages incorrectly marked emails as read for recipients. Now only recipients can change read status.
 - **UI Component Transparency**: Resolved widespread black element issues in Select, Input, Button, Checkbox, and Textarea components by removing problematic CSS variable dependencies.
 - **Message Composer**: Fixed user dropdown population in message composer after UI component fixes.
+- **Collapsible Navigation**: Implemented collapsible sidebar that shrinks to icon-only view while remaining visually present and easily expandable. Includes smooth transitions and tooltip support for collapsed state.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
