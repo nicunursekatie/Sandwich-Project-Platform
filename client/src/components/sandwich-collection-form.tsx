@@ -220,14 +220,14 @@ export default function SandwichCollectionForm({
     left: 0,
   };
 
-  // Ultra-compact header for single-screen view
+  // Mobile-optimized header - minimal padding
   const headerStyle = {
     background: "linear-gradient(135deg, #236383 0%, #007E8C 100%)",
     borderBottom: "1px solid #e2e8f0",
-    padding: "8px 0", // Minimal vertical padding
+    padding: "16px 8px", // Minimal padding to maximize form space
     display: "flex",
     flexDirection: "column" as const,
-    gap: "4px", // Reduced gap
+    gap: "8px",
     alignItems: "center",
     textAlign: "center" as const,
   };
@@ -237,16 +237,16 @@ export default function SandwichCollectionForm({
   };
 
   const h1Style = {
-    fontSize: "18px", // Smaller for compactness
+    fontSize: "20px",
     fontWeight: "600",
     margin: 0,
-    marginBottom: "2px", // Reduced margin
+    marginBottom: "4px",
     color: "white",
     fontFamily: "Roboto, sans-serif",
   };
 
   const headerPStyle = {
-    fontSize: "12px", // Smaller subtitle for compact view
+    fontSize: "14px",
     fontWeight: "400",
     opacity: 0.9,
     margin: 0,
@@ -256,40 +256,38 @@ export default function SandwichCollectionForm({
 
   const totalBadgeStyle = {
     background: "linear-gradient(135deg, #FBAD3F 0%, #F7931E 100%)",
-    borderRadius: "6px", // Smaller radius
-    padding: "6px 12px", // More compact padding
+    borderRadius: "8px",
+    padding: "8px 16px",
     textAlign: "center" as const,
-    minWidth: "70px", // Smaller width
+    minWidth: "80px",
     color: "white",
-    border: "1px solid rgba(255,255,255,0.2)", // Thinner border
-    boxShadow: "0 1px 4px rgba(0,0,0,0.1)", // Smaller shadow
+    border: "2px solid rgba(255,255,255,0.2)",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
   };
 
   const totalLabelStyle = {
-    fontSize: "11px", // Smaller label
+    fontSize: "13px",
     opacity: 0.9,
-    marginBottom: "1px", // Reduced margin
+    marginBottom: "2px",
     fontWeight: "500",
   };
 
   const totalNumberStyle = {
-    fontSize: "16px", // Smaller number
+    fontSize: "18px",
     fontWeight: "700",
   };
 
-  // Mobile-optimized form container - zero padding for maximum space
+  // Mobile-optimized form container - minimal padding to maximize space
   const formContainerStyle = {
-    padding: "0", // Zero padding for mobile
+    padding: "8px", // Minimal padding for mobile
     background: "white",
   };
 
   const formSectionStyle = {
     background: "#f8fafc",
-    borderRadius: "8px", // Smaller radius for compactness
-    padding: "8px", // Ultra-minimal padding
-    marginBottom: "8px", // Tighter spacing
-    marginLeft: "8px", // Small side margins to prevent edge touching
-    marginRight: "8px",
+    borderRadius: "12px",
+    padding: "16px", // Reduced padding to save space
+    marginBottom: "16px", // Tighter spacing
     border: "1px solid #e2e8f0",
   };
 
@@ -430,9 +428,9 @@ export default function SandwichCollectionForm({
     minHeight: "48px", // Minimum touch target
   };
 
-  // Ultra-compact submit section
+  // Mobile-optimized submit section
   const submitSectionStyle = {
-    padding: "12px 0", // Reduced vertical padding
+    padding: "16px 8px", // Reduced padding
     borderTop: "1px solid #e2e8f0",
     display: "flex",
     justifyContent: "center",
@@ -443,17 +441,17 @@ export default function SandwichCollectionForm({
     background: "linear-gradient(135deg, #FBAD3F 0%, #e89b2e 100%)",
     color: "white",
     border: "none",
-    padding: "12px 32px", // Reduced padding for compactness
-    borderRadius: "8px", // Smaller radius
-    fontSize: "18px", // Smaller text
+    padding: "16px 40px", // Larger for mobile
+    borderRadius: "12px",
+    fontSize: "20px", // Bigger text
     fontWeight: "600",
     cursor: "pointer",
     transition: "all 0.2s ease",
     fontFamily: "Roboto, sans-serif",
-    boxShadow: "0 2px 4px rgba(251, 173, 63, 0.25)",
-    minHeight: "44px", // Reduced minimum height
+    boxShadow: "0 4px 8px rgba(251, 173, 63, 0.25)",
+    minHeight: "56px", // Minimum touch target
     width: "100%", // Full width on mobile
-    maxWidth: "280px", // Smaller max width
+    maxWidth: "320px",
   };
 
   const helperTextStyle = {

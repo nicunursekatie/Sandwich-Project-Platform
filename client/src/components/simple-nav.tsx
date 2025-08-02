@@ -27,19 +27,17 @@ import { useMessaging } from "@/hooks/useMessaging";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { HelpBubble } from "@/components/help-system/HelpBubble";
-import sandwichLogo from "@assets/LOGOS/sandwich logo.png";
 
 interface NavigationItem {
   id: string;
   label: string;
-  icon?: any;
-  customIcon?: string;
+  icon: any;
   href: string;
   permission?: string;
   group?: string;
 }
 
-export default function SimpleNav({ onSectionChange, activeSection, isCollapsed = false }: { onSectionChange: (section: string) => void; activeSection?: string; isCollapsed?: boolean }) {
+export default function SimpleNav({ onSectionChange, activeSection }: { onSectionChange: (section: string) => void; activeSection?: string }) {
   const { user } = useAuth();
   const [location] = useLocation();
   const { unreadCounts, totalUnread } = useMessaging();
@@ -66,7 +64,7 @@ export default function SimpleNav({ onSectionChange, activeSection, isCollapsed 
     // MAIN section
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, href: "dashboard" },
     ...(hasPermission(user, PERMISSIONS.VIEW_PROJECTS) ? [{ id: "projects", label: "Projects", icon: ClipboardList, href: "projects" }] : []),
-    { id: "collections", label: "Collections Log", customIcon: sandwichLogo, href: "collections" },
+    { id: "collections", label: "Collections Log", icon: Sandwich, href: "collections" },
     
     // COMMUNICATION section
     { id: "gmail-inbox", label: "Inbox", icon: Inbox, href: "gmail-inbox", group: "communication" },
@@ -132,28 +130,24 @@ export default function SimpleNav({ onSectionChange, activeSection, isCollapsed 
   };
 
   return (
-    <nav className={`space-y-1 ${isCollapsed ? 'p-2' : 'p-3 sm:p-4'} pb-6 sm:pb-8`}>
-      {/* Navigation Help Header - Hidden when collapsed */}
-      {!isCollapsed && (
-        <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Navigation</div>
-          <HelpBubble
-            content={{
-              id: 'navigation-help',
-              title: 'Finding Your Way Around',
-              message: "Think of this sidebar as your map to everything TSP! Each section is designed to help you contribute in your own unique way. Take your time exploring - there's no rush.",
-              tone: 'informative',
-              character: 'guide',
-              position: 'right'
-            }}
-            trigger="click"
-          />
-        </div>
-      )}
+    <nav className="space-y-1 p-3 sm:p-4 pb-6 sm:pb-8">
+      {/* Navigation Help Header */}
+      <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Navigation</div>
+        <HelpBubble
+          content={{
+            id: 'navigation-help',
+            title: 'Finding Your Way Around',
+            message: "Think of this sidebar as your map to everything TSP! Each section is designed to help you contribute in your own unique way. Take your time exploring - there's no rush.",
+            tone: 'informative',
+            character: 'guide',
+            position: 'right'
+          }}
+          trigger="click"
+        />
+      </div>
       {groupedItems.map((item, index) => {
         if (item.type === 'separator') {
-          // Hide separators when collapsed
-          if (isCollapsed) return null;
           return (
             <div key={`sep-${index}`} className="pt-3 sm:pt-4 pb-2">
               <div className="flex items-center text-xs font-medium text-slate-500 uppercase tracking-wider">
@@ -185,7 +179,7 @@ export default function SimpleNav({ onSectionChange, activeSection, isCollapsed 
             key={item.id}
             variant={isCurrentlyActive ? "default" : "ghost"}
             className={`
-              w-full ${isCollapsed ? 'justify-center px-2' : 'justify-start px-2 sm:px-3'} text-left h-10 sm:h-11 touch-manipulation relative
+              w-full justify-start text-left h-10 sm:h-11 px-2 sm:px-3 touch-manipulation
               ${isCurrentlyActive 
                 ? "bg-primary text-primary-foreground shadow-sm border-l-4 border-l-yellow-500" 
                 : "hover:bg-slate-100 text-slate-700"
@@ -197,24 +191,13 @@ export default function SimpleNav({ onSectionChange, activeSection, isCollapsed 
               console.log('Navigation click:', item.href);
               onSectionChange(item.href);
             }}
-            title={isCollapsed ? item.label : undefined}
           >
-            {item.customIcon ? (
-              <img 
-                src={item.customIcon} 
-                alt={item.label}
-                className={`h-4 w-4 flex-shrink-0 ${isCollapsed ? '' : 'mr-2 sm:mr-3'}`}
-              />
-            ) : (
-              <item.icon className={`h-4 w-4 flex-shrink-0 ${isCollapsed ? '' : 'mr-2 sm:mr-3'}`} />
-            )}
-            {!isCollapsed && (
-              <span className="truncate flex-1 text-xs sm:text-sm">{item.label}</span>
-            )}
+            <item.icon className="h-4 w-4 mr-2 sm:mr-3 flex-shrink-0" />
+            <span className="truncate flex-1 text-xs sm:text-sm">{item.label}</span>
             {unreadCount > 0 && (
               <Badge 
                 variant={isCurrentlyActive ? "secondary" : "destructive"} 
-                className={`${isCollapsed ? 'absolute -top-1 -right-1 h-4 w-4 p-0 text-xs' : 'ml-auto h-4 sm:h-5 px-1 sm:px-1.5 min-w-[16px] sm:min-w-[20px] text-xs'} flex items-center justify-center`}
+                className="ml-auto h-4 sm:h-5 px-1 sm:px-1.5 min-w-[16px] sm:min-w-[20px] flex items-center justify-center text-xs"
               >
                 {unreadCount > 99 ? '99+' : unreadCount}
               </Badge>

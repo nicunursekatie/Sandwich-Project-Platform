@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { hasPermission, PERMISSIONS } from "@shared/auth-utils";
 import { HelpBubble } from "@/components/help-system";
 import { DocumentPreviewModal } from "@/components/document-preview-modal";
-import CompactCollectionForm from "@/components/compact-collection-form";
+import SandwichCollectionForm from "@/components/sandwich-collection-form";
 import { AnimatedCounter } from "@/components/modern-dashboard/animated-counter";
 
 import { DarkModeToggle } from "@/components/modern-dashboard/dark-mode-toggle";
@@ -133,26 +133,29 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         {/* Collection Call-to-Action */}
         {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
           <div className="bg-white rounded-xl mx-4 p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
-            <div className="text-center">
-              <div className="mb-6">
-                <h2 className="text-xl font-semibold text-[#236383] mb-2">
-                  Record Collection Data
-                </h2>
-                {showCollectionForm && (
-                  <p className="text-gray-700">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-[#FBAD3F] rounded-lg flex items-center justify-center">
+                  <Sandwich className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-[#236383]">
+                    Record Collection Data
+                  </h2>
+                  <p className="text-gray-700 mt-1">
                     Submit your sandwich contributions to help our community
                   </p>
-                )}
+                </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Button 
-                  className="bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-4 px-8 rounded-lg transition-colors !text-lg sm:!text-sm min-h-[56px] sm:min-h-[40px]"
+                  className="bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-2 px-4 rounded-lg transition-colors"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
                 >
                   {showCollectionForm ? "Hide Form" : "Enter New Collection Data"}
                 </Button>
                 <Button 
-                  className="bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-4 px-8 rounded-lg transition-colors shadow-sm !text-lg sm:!text-sm min-h-[56px] sm:min-h-[40px]"
+                  className="bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm"
                   onClick={() => onSectionChange?.('collections')}
                 >
                   View Collection History
@@ -160,10 +163,10 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
               </div>
             </div>
 
-            {/* Embedded Collection Form - Full width on mobile */}
+            {/* Embedded Collection Form - Mobile optimized */}
             {showCollectionForm && (
-              <div className="mt-4">
-                <CompactCollectionForm 
+              <div className="mt-4 mx-2">
+                <SandwichCollectionForm 
                   onSuccess={() => {
                     setShowCollectionForm(false);
                     queryClient.invalidateQueries({ queryKey: ["/api/sandwich-collections"] });

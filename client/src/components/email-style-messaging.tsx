@@ -261,9 +261,9 @@ export default function EmailStyleMessaging() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-120px)] bg-white rounded-lg border overflow-hidden">
+    <div className="flex h-[calc(100vh-200px)] bg-white rounded-lg border">
       {/* Sidebar */}
-      <div className={`${selectedMessage ? 'hidden md:block' : 'block'} w-56 lg:w-64 border-r bg-gray-50 flex-shrink-0`}>
+      <div className="w-64 border-r bg-gray-50">
         <div className="p-4 border-b">
           <Button 
             className="w-full" 
@@ -424,7 +424,7 @@ export default function EmailStyleMessaging() {
           /* Message List & Detail View */
           <div className="flex-1 flex min-h-0">
             {/* Message List */}
-            <div className={`${selectedMessage ? 'hidden md:flex md:w-1/2 lg:w-2/5' : 'w-full'} min-w-0 border-r flex flex-col bg-white`}>
+            <div className="w-2/5 min-w-0 border-r flex flex-col bg-white">
               <div className="p-4 border-b bg-gray-50 space-y-3">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -554,22 +554,12 @@ export default function EmailStyleMessaging() {
             </div>
             
             {/* Message Detail */}
-            <div className={`${selectedMessage ? 'flex-1' : 'hidden md:flex md:flex-1'} flex flex-col overflow-hidden`}>
+            <div className="flex-1 flex flex-col">
               {selectedMessage ? (
                 <>
                   <div className="p-4 border-b">
                     <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="md:hidden"
-                          onClick={() => setSelectedMessage(null)}
-                        >
-                          ← Back
-                        </Button>
-                        <h2 className="text-lg font-semibold">{selectedMessage.subject}</h2>
-                      </div>
+                      <h2 className="text-lg font-semibold">{selectedMessage.subject}</h2>
                       <div className="flex items-center gap-2">
                         <Button variant="ghost" size="sm">
                           {selectedMessage.starred ? 

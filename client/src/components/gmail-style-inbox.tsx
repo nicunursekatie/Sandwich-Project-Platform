@@ -484,9 +484,9 @@ export default function GmailStyleInbox() {
   ];
 
   return (
-    <div className="flex h-[calc(100vh-120px)] bg-white overflow-hidden">
+    <div className="flex h-[calc(100vh-64px)] bg-white overflow-hidden">
       {/* Sidebar */}
-      <div className={`${selectedMessage ? 'hidden md:block' : 'block'} w-64 lg:w-64 md:w-56 sm:w-52 xs:w-48 border-r bg-white flex flex-col flex-shrink-0`}>
+      <div className="w-64 lg:w-64 md:w-56 sm:w-52 xs:w-48 border-r bg-white flex flex-col flex-shrink-0">
         <div className="p-4">
           <Button 
             onClick={() => setShowCompose(true)} 
@@ -537,7 +537,7 @@ export default function GmailStyleInbox() {
 
       {/* Message List */}
       <div className="flex-1 flex bg-white min-w-0">
-        <div className={`${selectedMessage ? 'hidden md:flex md:w-1/2 lg:w-2/5' : 'flex-1'} border-r flex flex-col bg-white min-w-0`}>
+        <div className="flex-1 lg:flex-none lg:w-1/2 md:w-3/5 border-r flex flex-col bg-white min-w-0">
           {/* Toolbar */}
           <div className="border-b p-4 space-y-3 bg-white">
             <div className="flex items-center justify-between">
@@ -688,27 +688,17 @@ export default function GmailStyleInbox() {
         </div>
 
         {/* Message Detail */}
-        <div className={`${selectedMessage ? 'flex-1' : 'hidden md:flex md:flex-1'} flex flex-col bg-white`}>
+        <div className="hidden lg:flex lg:flex-1 flex-col bg-white">
           {selectedMessage ? (
             <>
               {/* Message Header */}
               <div className="border-b p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="md:hidden"
-                      onClick={() => setSelectedMessage(null)}
-                    >
-                      ← Back
-                    </Button>
-                    <h3 className="text-lg font-semibold">
-                      {selectedMessage.content.length > 40 
-                        ? `${selectedMessage.content.substring(0, 40)}...`
-                        : selectedMessage.content}
-                    </h3>
-                  </div>
+                  <h3 className="text-lg font-semibold">
+                    {selectedMessage.content.length > 40 
+                      ? `${selectedMessage.content.substring(0, 40)}...`
+                      : selectedMessage.content}
+                  </h3>
                   <div className="flex items-center gap-2">
                     <Button variant="ghost" size="sm" onClick={() => setShowReply(true)}>
                       <Reply className="h-4 w-4" />
