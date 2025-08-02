@@ -134,22 +134,13 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         {(hasPermission(user, PERMISSIONS.CREATE_COLLECTIONS) || hasPermission(user, PERMISSIONS.MANAGE_COLLECTIONS)) && (
           <div className="bg-white rounded-xl mx-4 p-6 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
             <div className="text-center">
-              <div className="flex justify-center items-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-gray-200 p-1">
-                  <img 
-                    src={sandwichLogo} 
-                    alt="Sandwich Logo" 
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-[#236383]">
-                    Record Collection Data
-                  </h2>
-                  <p className="text-gray-700 mt-1">
-                    Submit your sandwich contributions to help our community
-                  </p>
-                </div>
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold text-[#236383] mb-2">
+                  Record Collection Data
+                </h2>
+                <p className="text-gray-700">
+                  Submit your sandwich contributions to help our community
+                </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button 
