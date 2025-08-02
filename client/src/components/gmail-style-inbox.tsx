@@ -517,19 +517,11 @@ export default function GmailStyleInbox() {
 
   return (
     <div className="flex h-[calc(100vh-120px)] bg-white overflow-hidden relative">
-      {/* Mobile Overlay for Sidebar */}
+      {/* Mobile Overlay for Sidebar - only when sidebar is open as overlay */}
       {!isSidebarCollapsed && screenSize === 'mobile' && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={() => setIsSidebarCollapsed(true)}
-        />
-      )}
-      
-      {/* Mobile Overlay for Message List */}
-      {!isMessageListCollapsed && screenSize === 'mobile' && selectedMessage && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={() => setIsMessageListCollapsed(true)}
         />
       )}
       
@@ -604,7 +596,7 @@ export default function GmailStyleInbox() {
         <div className={`
           ${isMessageListCollapsed ? 'hidden' : 'flex'} 
           ${selectedMessage ? 'w-1/2 lg:w-2/5' : 'flex-1'} 
-          ${screenSize === 'mobile' && selectedMessage ? 'fixed left-0 top-0 h-full z-45 w-full' : ''}
+          ${screenSize === 'mobile' && selectedMessage ? 'fixed left-0 top-0 h-full z-40 w-full bg-white' : ''}
           border-r flex-col bg-white min-w-0
           transition-all duration-300 ease-in-out
         `}>
@@ -782,7 +774,7 @@ export default function GmailStyleInbox() {
         </div>
 
         {/* Message Detail */}
-        <div className={`${selectedMessage ? 'flex-1' : 'hidden md:flex md:flex-1'} flex flex-col bg-white`}>
+        <div className={`${selectedMessage ? 'flex-1' : 'hidden lg:flex lg:flex-1'} flex flex-col bg-white`}>
           {selectedMessage ? (
             <>
               {/* Message Header */}
