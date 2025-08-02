@@ -118,23 +118,28 @@ export default function GmailStyleInbox() {
   const [isMessageListCollapsed, setIsMessageListCollapsed] = useState(false);
   const [screenSize, setScreenSize] = useState('desktop');
 
-  // Responsive behavior with proper priority order
+  // Responsive behavior with comprehensive breakpoint strategy
   useEffect(() => {
     const checkScreenSize = () => {
       const width = window.innerWidth;
       
       if (width < 768) {
-        // Mobile: Show only message body, collapse both sidebar and message list
+        // Mobile (< 768px): Show only message body, collapse both sidebar and message list
         setScreenSize('mobile');
         setIsSidebarCollapsed(true);
         setIsMessageListCollapsed(true);
-      } else if (width < 1024) {
-        // Tablet: Show message list + body, collapse sidebar first
-        setScreenSize('tablet');
+      } else if (width < 900) {
+        // Small tablet (768-899px): Show message list + body, collapse sidebar
+        setScreenSize('small-tablet');
         setIsSidebarCollapsed(true);
         setIsMessageListCollapsed(false);
+      } else if (width < 1200) {
+        // Large tablet/small laptop (900-1199px): Show compact sidebar + message list + body
+        setScreenSize('large-tablet');
+        setIsSidebarCollapsed(false);
+        setIsMessageListCollapsed(false);
       } else {
-        // Desktop: Show all three panels
+        // Desktop (≥ 1200px): Show full sidebar + message list + body
         setScreenSize('desktop');
         setIsSidebarCollapsed(false);
         setIsMessageListCollapsed(false);
@@ -517,8 +522,8 @@ export default function GmailStyleInbox() {
 
   return (
     <div className="flex h-[calc(100vh-120px)] bg-white relative">
-      {/* Mobile Overlay for Sidebar - only when sidebar is open as overlay */}
-      {!isSidebarCollapsed && screenSize === 'mobile' && (
+      {/* Mobile/Tablet Overlay for Sidebar - when sidebar is open as overlay */}
+      {!isSidebarCollapsed && (screenSize === 'mobile' || screenSize === 'small-tablet') && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={() => setIsSidebarCollapsed(true)}
@@ -528,9 +533,10 @@ export default function GmailStyleInbox() {
       {/* Sidebar - Folders (Inbox, Drafts, etc.) */}
       <div className={`
         ${isSidebarCollapsed ? 'hidden' : 'flex'} 
-        w-64 border-r bg-white flex-col flex-shrink-0
+        ${screenSize === 'large-tablet' ? 'w-48' : 'w-64'} 
+        border-r bg-white flex-col flex-shrink-0
         transition-all duration-300 ease-in-out
-        ${screenSize === 'mobile' && !isSidebarCollapsed ? 'fixed left-0 top-0 h-full w-64 z-50' : 'relative'}
+        ${(screenSize === 'mobile' || screenSize === 'small-tablet') && !isSidebarCollapsed ? 'fixed left-0 top-0 h-full w-64 z-50' : 'relative'}
       `}>
         <div className="p-4">
           <div className={`flex items-center justify-between mb-4 ${screenSize === 'desktop' ? 'hidden' : 'flex'}`}>
@@ -595,7 +601,9 @@ export default function GmailStyleInbox() {
       <div className="flex-1 flex bg-white min-w-0">
         <div className={`
           ${isMessageListCollapsed ? 'hidden' : 'flex'} 
-          ${selectedMessage ? 'w-1/2 lg:w-2/5' : 'flex-1'} 
+          ${selectedMessage && screenSize === 'desktop' ? 'w-2/5' : ''}
+          ${selectedMessage && screenSize === 'large-tablet' ? 'w-1/2' : ''}
+          ${selectedMessage && (screenSize === 'small-tablet' || screenSize === 'mobile') ? 'flex-1' : ''}
           ${!selectedMessage ? 'flex-1' : ''}
           border-r flex-col bg-white min-w-0
           transition-all duration-300 ease-in-out
@@ -774,7 +782,13 @@ export default function GmailStyleInbox() {
         </div>
 
         {/* Message Detail */}
-        <div className={`${selectedMessage ? 'flex-1' : 'hidden 2xl:flex 2xl:flex-1'} flex flex-col bg-white`}>
+        <div className={`
+          ${selectedMessage ? 'flex-1' : ''} 
+          ${!selectedMessage && screenSize === 'desktop' ? 'flex flex-1' : ''}
+          ${!selectedMessage && screenSize !== 'desktop' ? 'hidden' : ''}
+          ${selectedMessage ? 'flex' : ''}
+          flex-col bg-white
+        `}>
           {selectedMessage ? (
             <>
               {/* Message Header */}
