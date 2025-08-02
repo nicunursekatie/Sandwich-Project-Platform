@@ -126,7 +126,7 @@ export default function CompactCollectionForm({
                   <HelpCircle className="h-4 w-4 sm:h-3 sm:w-3 text-gray-400" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Choose the day you collected or received the sandwiches</p>
+                  <p>Enter the Wednesday on which you collected the sandwiches</p>
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -147,7 +147,7 @@ export default function CompactCollectionForm({
                   <HelpCircle className="h-4 w-4 sm:h-3 sm:w-3 text-gray-400" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Select where the sandwiches were collected or distributed</p>
+                  <p>Select the location where you collected the sandwiches</p>
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -217,7 +217,7 @@ export default function CompactCollectionForm({
                   <HelpCircle className="h-4 w-4 sm:h-3 sm:w-3 text-gray-400" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Add groups that brought sandwiches (like "Church Group: 50" or "School Class: 25")</p>
+                  <p>If any groups brought sandwiches to your location this week, do not include their # in your individual sandwiches count. Instead log them here, enter the name of each group and the # of sandwiches they brought.</p>
                 </TooltipContent>
               </Tooltip>
             </div>
