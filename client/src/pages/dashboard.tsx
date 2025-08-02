@@ -1,6 +1,7 @@
 import { Sandwich, LogOut, LayoutDashboard, ListTodo, MessageCircle, ClipboardList, FolderOpen, BarChart3, TrendingUp, Users, Car, Building2, FileText, Phone, ChevronDown, ChevronRight, Menu, X, UserCog, Lightbulb, AlertCircle } from "lucide-react";
 import { useLocation } from "wouter";
 import sandwichLogo from "@assets/LOGOS/TSP_transparent.png";
+import squareSandwichLogo from "@assets/LOGOS/sandwich logo.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProjectList from "@/components/project-list";
 import WeeklySandwichForm from "@/components/weekly-sandwich-form";
@@ -422,7 +423,7 @@ export default function Dashboard({ initialSection = "dashboard" }: { initialSec
               aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               {isSidebarCollapsed ? (
-                <ChevronRight className="w-4 h-4 text-amber-700" />
+                <img src={squareSandwichLogo} alt="Expand" className="w-5 h-5" />
               ) : (
                 <ChevronDown className="w-4 h-4 text-amber-700 rotate-90" />
               )}
