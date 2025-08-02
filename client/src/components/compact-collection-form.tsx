@@ -21,7 +21,10 @@ interface CompactCollectionFormProps {
 export default function CompactCollectionForm({
   onSuccess,
 }: CompactCollectionFormProps) {
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  // Get today's date in user's local timezone
+  const today = new Date();
+  const localDate = new Date(today.getTime() - (today.getTimezoneOffset() * 60000));
+  const [date, setDate] = useState(localDate.toISOString().split("T")[0]);
   const [location, setLocation] = useState("");
   const [individualCount, setIndividualCount] = useState(0);
   const [groupCollections, setGroupCollections] = useState<
