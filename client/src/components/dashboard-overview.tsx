@@ -144,18 +144,20 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                   </p>
                 )}
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex flex-col lg:flex-row gap-3 justify-center items-center max-w-4xl mx-auto">
                 <Button 
-                  className="bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-4 px-8 rounded-lg transition-colors !text-lg sm:!text-sm min-h-[56px] sm:min-h-[40px]"
+                  className="w-full lg:w-auto bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-3 px-4 lg:py-4 lg:px-8 rounded-lg transition-colors text-sm lg:text-base min-h-[48px] lg:min-h-[56px] whitespace-nowrap"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
                 >
-                  {showCollectionForm ? "Hide Form" : "Enter New Collection Data"}
+                  <span className="hidden sm:inline">{showCollectionForm ? "Hide Form" : "Enter New Collection Data"}</span>
+                  <span className="sm:hidden">{showCollectionForm ? "Hide" : "New Collection"}</span>
                 </Button>
                 <Button 
-                  className="bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-4 px-8 rounded-lg transition-colors shadow-sm !text-lg sm:!text-sm min-h-[56px] sm:min-h-[40px]"
+                  className="w-full lg:w-auto bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-3 px-4 lg:py-4 lg:px-8 rounded-lg transition-colors shadow-sm text-sm lg:text-base min-h-[48px] lg:min-h-[56px] whitespace-nowrap"
                   onClick={() => onSectionChange?.('collections')}
                 >
-                  View Collection History
+                  <span className="hidden sm:inline">View Collection History</span>
+                  <span className="sm:hidden">View History</span>
                 </Button>
               </div>
             </div>
@@ -285,7 +287,7 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
         </div>
 
         {/* Quick Actions Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mx-4 mt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mx-4 mt-8">
           <button className="bg-white rounded-xl p-4 text-left group cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.05)] hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] transition-all" onClick={() => onSectionChange?.('collections')}>
             <div className="w-10 h-10 bg-[#47B3CB] rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
               <BarChart3 className="w-5 h-5 text-white" />
