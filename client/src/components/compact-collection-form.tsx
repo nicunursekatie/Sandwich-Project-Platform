@@ -240,17 +240,17 @@ export default function CompactCollectionForm({
           {/* Add group form - stacked layout */}
           <div className="space-y-2 mb-3">
             <Input
-              placeholder="e.g. 'Smith Family' or 'ABC Church'"
+              placeholder="e.g. 'Smith Family'"
               value={newGroupName}
               onChange={(e) => setNewGroupName(e.target.value)}
-              className="h-11 sm:h-9 text-base sm:text-sm"
+              className="h-10 sm:h-8 text-base sm:text-sm"
             />
             <Input
               type="number"
               placeholder="Enter count (e.g. 25)"
               value={newGroupCount || ""}
               onChange={(e) => setNewGroupCount(Number(e.target.value) || 0)}
-              className="h-11 sm:h-9 text-base sm:text-sm"
+              className="h-10 sm:h-8 text-base sm:text-sm"
             />
           </div>
 
@@ -298,10 +298,10 @@ export default function CompactCollectionForm({
         </div>
 
         {/* Total counter moved to bottom */}
-        <div className="text-center mt-3">
-          <div className="bg-gradient-to-r from-[#FBAD3F] to-[#F7931E] rounded-lg px-4 py-3 inline-block shadow-sm">
-            <div className="text-sm sm:text-xs text-white opacity-90">Total Sandwiches</div>
-            <div className="text-xl sm:text-lg font-bold text-white">{totalSandwiches}</div>
+        <div className="mt-4 p-3 bg-gray-50 rounded-lg border">
+          <div className="flex items-center justify-between">
+            <span className="text-base sm:text-sm font-medium text-[#236383]">Total Sandwiches:</span>
+            <span className="text-2xl sm:text-xl font-bold text-[#FBAD3F]">{totalSandwiches}</span>
           </div>
         </div>
       </div>
