@@ -1215,9 +1215,9 @@ export default function SandwichCollectionLog() {
                   onClick={() => setShowSubmitForm(!showSubmitForm)}
                   variant="default"
                   size="sm"
-                  className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-[#236383] hover:bg-[#1d5470] py-2.5"
+                  className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-[#236383] hover:bg-[#1d5470] py-4 px-6 !text-lg sm:!text-sm min-h-[56px] sm:min-h-[40px]"
                 >
-                  <Sandwich className="w-4 h-4" />
+                  <Sandwich className="w-5 h-5 sm:w-4 sm:h-4" />
                   <span className="font-medium">{showSubmitForm ? 'Hide Form' : 'Enter New Collection Data'}</span>
                 </Button>
               </HelpBubble>
@@ -1281,9 +1281,9 @@ export default function SandwichCollectionLog() {
         </div>
       </div>
 
-      {/* Embedded Submit Collection Form - Mobile optimized */}
+      {/* Embedded Submit Collection Form - Full width */}
       {showSubmitForm && (
-        <div className="mx-2 mb-4">
+        <div className="mb-4">
           <SandwichCollectionForm 
             onSuccess={() => {
               setShowSubmitForm(false);
