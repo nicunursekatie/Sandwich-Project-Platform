@@ -106,13 +106,13 @@ export default function CompactCollectionForm({
       <div className="max-w-sm mx-auto bg-white">
       {/* Ultra-compact header */}
       <div className="bg-gradient-to-r from-[#236383] to-[#007E8C] text-white text-center py-3 px-4">
-        <h1 className="text-base font-semibold mb-1">Submit Collection</h1>
-        <p className="text-xs opacity-90 mb-2">
+        <h1 className="text-lg sm:text-base font-semibold mb-1">Submit Collection</h1>
+        <p className="text-sm sm:text-xs opacity-90 mb-2">
           Record a sandwich collection log
         </p>
         <div className="bg-gradient-to-r from-[#FBAD3F] to-[#F7931E] rounded px-3 py-1 inline-block">
-          <div className="text-xs opacity-90">Total</div>
-          <div className="text-sm font-bold">{totalSandwiches}</div>
+          <div className="text-sm sm:text-xs opacity-90">Total</div>
+          <div className="text-base sm:text-sm font-bold">{totalSandwiches}</div>
         </div>
       </div>
 
@@ -122,12 +122,12 @@ export default function CompactCollectionForm({
         <div className="grid grid-cols-2 gap-2">
           <div>
             <div className="flex items-center gap-1 mb-1">
-              <label className="text-xs font-medium text-[#236383]">
+              <label className="text-sm sm:text-xs font-medium text-[#236383]">
                 Date
               </label>
               <Tooltip>
                 <TooltipTrigger>
-                  <HelpCircle className="h-3 w-3 text-gray-400" />
+                  <HelpCircle className="h-4 w-4 sm:h-3 sm:w-3 text-gray-400" />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Choose the day you collected or received the sandwiches</p>
@@ -138,17 +138,17 @@ export default function CompactCollectionForm({
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="h-8 text-sm"
+              className="h-10 sm:h-8 text-base sm:text-sm"
             />
           </div>
           <div>
             <div className="flex items-center gap-1 mb-1">
-              <label className="text-xs font-medium text-[#236383]">
+              <label className="text-sm sm:text-xs font-medium text-[#236383]">
                 Location
               </label>
               <Tooltip>
                 <TooltipTrigger>
-                  <HelpCircle className="h-3 w-3 text-gray-400" />
+                  <HelpCircle className="h-4 w-4 sm:h-3 sm:w-3 text-gray-400" />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Select where the sandwiches were collected or distributed</p>
@@ -156,7 +156,7 @@ export default function CompactCollectionForm({
               </Tooltip>
             </div>
             <Select value={location} onValueChange={setLocation}>
-              <SelectTrigger className="h-8 text-sm">
+              <SelectTrigger className="h-10 sm:h-8 text-base sm:text-sm">
                 <SelectValue placeholder="Choose location..." />
               </SelectTrigger>
               <SelectContent>
@@ -173,12 +173,12 @@ export default function CompactCollectionForm({
         {/* Individual sandwiches - compact row */}
         <div className="bg-gray-50 rounded p-2">
           <div className="flex items-center gap-1 mb-1">
-            <label className="text-xs font-medium text-[#236383]">
+            <label className="text-sm sm:text-xs font-medium text-[#236383]">
               Individual Sandwiches
             </label>
             <Tooltip>
               <TooltipTrigger>
-                <HelpCircle className="h-3 w-3 text-gray-400" />
+                <HelpCircle className="h-4 w-4 sm:h-3 sm:w-3 text-gray-400" />
               </TooltipTrigger>
               <TooltipContent>
                 <p>Please subtract sandwiches made by a group from your total count and report those along with the name of each group in the section below.</p>
@@ -190,7 +190,7 @@ export default function CompactCollectionForm({
               type="number"
               value={individualCount}
               onChange={(e) => setIndividualCount(Number(e.target.value) || 0)}
-              className="h-8 text-sm flex-1"
+              className="h-10 sm:h-8 text-base sm:text-sm flex-1"
               placeholder="Enter number (e.g. 15)"
             />
             <Tooltip>
@@ -204,7 +204,7 @@ export default function CompactCollectionForm({
               </TooltipContent>
             </Tooltip>
           </div>
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="text-sm sm:text-xs text-gray-600 mt-1">
             Don't include group totals
           </p>
         </div>
@@ -213,12 +213,12 @@ export default function CompactCollectionForm({
         <div className="bg-gray-50 rounded p-3">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-1">
-              <label className="text-sm font-medium text-[#236383]">
+              <label className="text-base sm:text-sm font-medium text-[#236383]">
                 Group Collections
               </label>
               <Tooltip>
                 <TooltipTrigger>
-                  <HelpCircle className="h-3 w-3 text-gray-400" />
+                  <HelpCircle className="h-4 w-4 sm:h-3 sm:w-3 text-gray-400" />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Add groups that brought sandwiches (like "Church Group: 50" or "School Class: 25")</p>
@@ -247,20 +247,20 @@ export default function CompactCollectionForm({
               placeholder="e.g. 'Smith Family' or 'ABC Church'"
               value={newGroupName}
               onChange={(e) => setNewGroupName(e.target.value)}
-              className="h-9 text-sm"
+              className="h-11 sm:h-9 text-base sm:text-sm"
             />
             <Input
               type="number"
               placeholder="Enter count (e.g. 25)"
               value={newGroupCount || ""}
               onChange={(e) => setNewGroupCount(Number(e.target.value) || 0)}
-              className="h-9 text-sm"
+              className="h-11 sm:h-9 text-base sm:text-sm"
             />
           </div>
 
           {/* Group list - card style with proper hierarchy */}
           {groupCollections.length === 0 ? (
-            <p className="text-sm text-gray-500 italic text-center py-2">
+            <p className="text-base sm:text-sm text-gray-500 italic text-center py-2">
               No groups added
             </p>
           ) : (
@@ -270,10 +270,10 @@ export default function CompactCollectionForm({
                   key={index}
                   className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm"
                 >
-                  <div className="text-sm font-medium text-[#236383] mb-1">
+                  <div className="text-base sm:text-sm font-medium text-[#236383] mb-1">
                     {group.name}
                   </div>
-                  <div className="text-xl font-bold text-gray-800">
+                  <div className="text-2xl sm:text-xl font-bold text-gray-800">
                     {group.count}
                   </div>
                 </div>
@@ -287,7 +287,7 @@ export default function CompactCollectionForm({
           <Button
             onClick={handleSubmit}
             disabled={submitMutation.isPending}
-            className="flex-1 h-10 bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#FBAD3F] text-white font-semibold"
+            className="flex-1 h-12 sm:h-10 bg-gradient-to-r from-[#FBAD3F] to-[#e89b2e] hover:from-[#e89b2e] hover:to-[#FBAD3F] text-white font-semibold text-lg sm:text-base"
           >
             {submitMutation.isPending ? "Saving..." : "Save My Collection"}
           </Button>
