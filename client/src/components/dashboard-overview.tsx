@@ -144,20 +144,18 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
                   </p>
                 )}
               </div>
-              <div className="flex flex-col xl:flex-row gap-3 justify-center items-stretch max-w-5xl mx-auto px-2">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-2xl mx-auto px-4">
                 <Button 
-                  className="flex-1 xl:flex-none xl:min-w-[240px] bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-3 px-4 rounded-lg transition-colors text-sm min-h-[48px] text-center"
+                  className="w-full bg-[#FBAD3F] hover:bg-[#e09a36] text-white font-medium py-4 px-3 rounded-lg transition-colors text-xs sm:text-sm min-h-[56px] flex items-center justify-center text-center leading-tight"
                   onClick={() => setShowCollectionForm(!showCollectionForm)}
                 >
-                  <span className="hidden md:inline">{showCollectionForm ? "Hide Form" : "Enter New Collection Data"}</span>
-                  <span className="md:hidden">{showCollectionForm ? "Hide" : "Add Collection"}</span>
+                  {showCollectionForm ? "Hide Form" : "Enter New Data"}
                 </Button>
                 <Button 
-                  className="flex-1 xl:flex-none xl:min-w-[240px] bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-sm text-sm min-h-[48px] text-center"
+                  className="w-full bg-white border border-[#47B3CB] text-[#47B3CB] hover:bg-[#47B3CB] hover:text-white font-medium py-4 px-3 rounded-lg transition-colors shadow-sm text-xs sm:text-sm min-h-[56px] flex items-center justify-center text-center leading-tight"
                   onClick={() => onSectionChange?.('collections')}
                 >
-                  <span className="hidden md:inline">View Collection History</span>
-                  <span className="md:hidden">View History</span>
+                  View History
                 </Button>
               </div>
             </div>
