@@ -24,11 +24,12 @@ import {
   ReplyAll,
   Forward,
   MoreVertical,
+  Menu,
+  X,
   CheckCircle2,
   Circle,
   Search,
   Plus,
-  X,
   Users,
   ChevronLeft,
   ChevronRight,
@@ -113,6 +114,21 @@ export default function GmailStyleInbox() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showCompose, setShowCompose] = useState(false);
   const [showReply, setShowReply] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Responsive behavior - auto-collapse sidebar on small screens
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const isSmallScreen = window.innerWidth < 1024; // Less than lg breakpoint
+      setIsMobile(isSmallScreen);
+      setIsSidebarCollapsed(isSmallScreen);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
   
   // Compose State
   const [composeRecipient, setComposeRecipient] = useState("");
@@ -484,10 +500,35 @@ export default function GmailStyleInbox() {
   ];
 
   return (
-    <div className="flex h-[calc(100vh-120px)] bg-white overflow-hidden">
+    <div className="flex h-[calc(100vh-120px)] bg-white overflow-hidden relative">
+      {/* Mobile Overlay */}
+      {!isSidebarCollapsed && isMobile && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsSidebarCollapsed(true)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className={`${selectedMessage ? 'hidden md:block' : 'block'} w-64 lg:w-64 md:w-56 sm:w-52 xs:w-48 border-r bg-white flex flex-col flex-shrink-0`}>
+      <div className={`
+        ${isSidebarCollapsed ? 'hidden' : 'block'} 
+        ${selectedMessage ? 'hidden md:block' : 'block'} 
+        w-64 lg:w-64 md:w-56 sm:w-52 xs:w-48 border-r bg-white flex flex-col flex-shrink-0
+        transition-all duration-300 ease-in-out
+        ${!isSidebarCollapsed && isMobile ? 'fixed left-0 top-0 h-full z-50' : 'relative'}
+      `}>
         <div className="p-4">
+          <div className="flex items-center justify-between mb-4 lg:hidden">
+            <span className="text-sm font-medium text-gray-700">Navigation</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsSidebarCollapsed(true)}
+              className="h-6 w-6 p-1"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
           <Button 
             onClick={() => setShowCompose(true)} 
             className="w-full gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-['Roboto'] font-medium shadow-lg hover:shadow-xl transition-all duration-200"
@@ -537,11 +578,24 @@ export default function GmailStyleInbox() {
 
       {/* Message List */}
       <div className="flex-1 flex bg-white min-w-0">
-        <div className={`${selectedMessage ? 'hidden md:flex md:w-1/2 lg:w-2/5' : 'flex-1'} border-r flex flex-col bg-white min-w-0`}>
+        <div className={`${selectedMessage ? 'hidden md:flex md:w-1/2 lg:w-2/5' : 'flex-1'} ${isMobile && !isSidebarCollapsed ? 'hidden' : 'flex'} border-r flex-col bg-white min-w-0`}>
           {/* Toolbar */}
           <div className="border-b p-4 space-y-3 bg-white">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold capitalize">{activeFolder}</h2>
+              <div className="flex items-center gap-2">
+                {/* Sidebar toggle button - only visible when sidebar is collapsed */}
+                {isSidebarCollapsed && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsSidebarCollapsed(false)}
+                    className="lg:hidden"
+                  >
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                )}
+                <h2 className="text-lg font-semibold capitalize">{activeFolder}</h2>
+              </div>
               <Button variant="ghost" size="sm" onClick={() => refetchMessages()}>
                 <RefreshCw className="h-4 w-4" />
               </Button>
