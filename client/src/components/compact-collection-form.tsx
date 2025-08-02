@@ -136,25 +136,25 @@ export default function CompactCollectionForm({ onSuccess }: CompactCollectionFo
 
         {/* Group collections - redesigned with better flow */}
         <div className="bg-gray-50 rounded p-3">
-          <label className="text-sm font-medium text-[#236383] block mb-3">Group Collections</label>
+          <div className="flex items-center justify-between mb-3">
+            <label className="text-sm font-medium text-[#236383]">Group Collections</label>
+            <Button 
+              onClick={addGroup}
+              size="sm" 
+              className="h-6 w-6 p-0 bg-blue-500 hover:bg-blue-600 rounded-md shadow-sm"
+            >
+              <Plus className="h-3 w-3" />
+            </Button>
+          </div>
           
-          {/* Add group form - stacked layout with intentional plus positioning */}
+          {/* Add group form - stacked layout */}
           <div className="space-y-2 mb-3">
-            <div className="relative">
-              <Input
-                placeholder="Group name"
-                value={newGroupName}
-                onChange={(e) => setNewGroupName(e.target.value)}
-                className="h-9 text-sm pr-12"
-              />
-              <Button 
-                onClick={addGroup}
-                size="sm" 
-                className="absolute right-1 top-1 h-7 w-7 p-0 bg-blue-500 hover:bg-blue-600 rounded-md shadow-sm"
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
-            </div>
+            <Input
+              placeholder="Group name"
+              value={newGroupName}
+              onChange={(e) => setNewGroupName(e.target.value)}
+              className="h-9 text-sm"
+            />
             <Input
               type="number"
               placeholder="Count"
