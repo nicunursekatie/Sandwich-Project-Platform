@@ -1218,7 +1218,7 @@ export default function SandwichCollectionLog() {
                   className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-[#236383] hover:bg-[#1d5470] py-2.5"
                 >
                   <Sandwich className="w-4 h-4" />
-                  <span className="font-medium">{showSubmitForm ? 'Hide Form' : 'Enter New Collection Data'}</span>
+                  <span className="font-medium text-base sm:text-sm">{showSubmitForm ? 'Hide Form' : 'Enter New Collection Data'}</span>
                 </Button>
               </HelpBubble>
             )}
