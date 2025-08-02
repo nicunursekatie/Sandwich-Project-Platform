@@ -1222,39 +1222,37 @@ export default function SandwichCollectionLog() {
                 </Button>
               </HelpBubble>
             )}
-            <div className="flex gap-2 w-full sm:w-auto">
-              <HelpBubble
-                title="Filter Collections"
-                content="Use these filters to search and sort your collection data by date, host, or other criteria. Perfect for finding specific entries!"
-                character="guide"
-                position="bottom"
-                trigger="hover"
+            <HelpBubble
+              title="Filter Collections"
+              content="Use these filters to search and sort your collection data by date, host, or other criteria. Perfect for finding specific entries!"
+              character="guide"
+              position="bottom"
+              trigger="hover"
+            >
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center space-x-1 w-full sm:w-auto justify-center py-2.5 bg-white border-gray-300 hover:bg-gray-50 text-gray-700"
               >
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center space-x-1 flex-1 sm:flex-none justify-center py-2.5 bg-white border-gray-300 hover:bg-gray-50 text-gray-700"
-                >
-                  <Filter className="w-4 h-4" />
-                  <span>Filter</span>
-                </Button>
-              </HelpBubble>
-              {canEditData && (
-                <Button
-                  onClick={() => setShowDataManagement(true)}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center space-x-2 flex-1 sm:flex-none justify-center py-2.5 bg-white border-teal-400 text-teal-600 hover:bg-teal-50"
-                >
-                  <Database className="w-4 h-4" />
-                  <span className="hidden sm:inline">Data</span>
-                  <span className="sm:hidden">Data</span>
-                </Button>
-              )}
-            </div>
+                <Filter className="w-4 h-4" />
+                <span>Filter</span>
+              </Button>
+            </HelpBubble>
+            {canEditData && (
+              <Button
+                onClick={() => setShowDataManagement(true)}
+                variant="outline"
+                size="sm"
+                className="flex items-center space-x-2 w-full sm:w-auto justify-center py-2.5 bg-white border-teal-400 text-teal-600 hover:bg-teal-50"
+              >
+                <Database className="w-4 h-4" />
+                <span className="hidden sm:inline">Data Management</span>
+                <span className="sm:hidden">Data</span>
+              </Button>
+            )}
             {selectedCollections.size > 0 && canEditData && (
-              <div className="flex gap-2 w-full mt-2">
+              <div className="flex flex-col xs:flex-row gap-2 w-full mt-2">
                 <Button
                   variant="outline"
                   size="sm"
