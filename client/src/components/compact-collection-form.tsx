@@ -134,40 +134,48 @@ export default function CompactCollectionForm({ onSuccess }: CompactCollectionFo
           <p className="text-xs text-gray-600 mt-1">Don't include group totals</p>
         </div>
 
-        {/* Group collections - compact */}
-        <div className="bg-gray-50 rounded p-2">
-          <label className="text-xs font-medium text-[#236383] block mb-1">Group Collections</label>
+        {/* Group collections - redesigned with better flow */}
+        <div className="bg-gray-50 rounded p-3">
+          <label className="text-sm font-medium text-[#236383] block mb-3">Group Collections</label>
           
-          {/* Add group form - ultra compact */}
-          <div className="flex gap-1 mb-2">
-            <Input
-              placeholder="Group name"
-              value={newGroupName}
-              onChange={(e) => setNewGroupName(e.target.value)}
-              className="h-7 text-xs flex-1"
-            />
+          {/* Add group form - stacked layout with intentional plus positioning */}
+          <div className="space-y-2 mb-3">
+            <div className="relative">
+              <Input
+                placeholder="Group name"
+                value={newGroupName}
+                onChange={(e) => setNewGroupName(e.target.value)}
+                className="h-9 text-sm pr-12"
+              />
+              <Button 
+                onClick={addGroup}
+                size="sm" 
+                className="absolute right-1 top-1 h-7 w-7 p-0 bg-blue-500 hover:bg-blue-600 rounded-md shadow-sm"
+              >
+                <Plus className="h-3 w-3" />
+              </Button>
+            </div>
             <Input
               type="number"
               placeholder="Count"
               value={newGroupCount || ""}
               onChange={(e) => setNewGroupCount(Number(e.target.value) || 0)}
-              className="h-7 text-xs w-16"
+              className="h-9 text-sm"
             />
-            <Button size="sm" onClick={addGroup} className="h-7 px-2">
-              <Plus className="h-3 w-3" />
-            </Button>
           </div>
-
-          {/* Group list - very compact */}
-          {groupCollections.map((group, idx) => (
-            <div key={idx} className="flex justify-between items-center text-xs py-1 border-b last:border-b-0">
-              <span className="font-medium">{group.name}</span>
-              <span className="text-[#FBAD3F] font-bold">{group.count}</span>
-            </div>
-          ))}
           
-          {groupCollections.length === 0 && (
-            <p className="text-xs text-gray-500 text-center py-2 italic">No groups added</p>
+          {/* Group list - card style with proper hierarchy */}
+          {groupCollections.length === 0 ? (
+            <p className="text-sm text-gray-500 italic text-center py-2">No groups added</p>
+          ) : (
+            <div className="space-y-2">
+              {groupCollections.map((group, index) => (
+                <div key={index} className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
+                  <div className="text-sm font-medium text-[#236383] mb-1">{group.name}</div>
+                  <div className="text-xl font-bold text-gray-800">{group.count}</div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
 
