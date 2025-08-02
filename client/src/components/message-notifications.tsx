@@ -144,6 +144,8 @@ function MessageNotifications({ user }: MessageNotificationsProps) {
         
         socket.onerror = (error) => {
           console.error('WebSocket error:', error);
+          // Prevent unhandled promise rejections
+          socket = null;
         };
         
       } catch (error) {

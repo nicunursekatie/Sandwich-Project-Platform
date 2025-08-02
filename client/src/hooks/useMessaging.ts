@@ -236,7 +236,14 @@ export function useMessaging() {
       wsUrl = `ws://localhost:5000/notifications`;
     }
     
-    const ws = new WebSocket(wsUrl);
+    let ws: WebSocket;
+    
+    try {
+      ws = new WebSocket(wsUrl);
+    } catch (error) {
+      console.error('Failed to create WebSocket connection:', error);
+      return () => {}; // Return cleanup function even on error
+    }
 
     ws.onopen = () => {
       console.log('Messaging WebSocket connected');
@@ -272,11 +279,17 @@ export function useMessaging() {
 
     ws.onerror = (error) => {
       console.error('Messaging WebSocket error:', error);
+      setWsConnection(null);
     };
 
-    ws.onclose = () => {
+    ws.onclose = (event) => {
       console.log('Messaging WebSocket disconnected');
       setWsConnection(null);
+      
+      // Prevent logging error for normal closure
+      if (event.code !== 1000 && event.code !== 1001) {
+        console.warn('WebSocket closed unexpectedly:', event.code, event.reason);
+      }
     };
 
     return () => {

@@ -9,6 +9,7 @@ interface ChatMessage {
   content: string;
   timestamp: Date;
   channel: string;
+  edited?: boolean;
 }
 
 interface ConnectedUser {
