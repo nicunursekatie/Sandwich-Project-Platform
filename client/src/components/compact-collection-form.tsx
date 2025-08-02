@@ -292,7 +292,7 @@ export default function CompactCollectionForm({
               <HelpCircle className="h-4 w-4 text-gray-400" />
             </TooltipTrigger>
             <TooltipContent>
-              <p>Click to save your sandwich count. You can always add more entries later.</p>
+              <p>Click to save your sandwich count. You can always edit or delete it after saving or add another entry for more sandwiches/more groups.</p>
             </TooltipContent>
           </Tooltip>
         </div>
