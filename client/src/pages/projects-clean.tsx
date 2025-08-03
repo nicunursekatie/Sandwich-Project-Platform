@@ -303,6 +303,18 @@ export default function ProjectsClean() {
             <span>{project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No date'}</span>
           </div>
         </div>
+
+        {/* Kudos Button for Completed Projects */}
+        {project.status === 'completed' && project.assigneeName && project.assigneeId && user?.id !== project.assigneeId && (
+          <div className="mt-3 pt-3 border-t border-gray-100" onClick={(e) => e.stopPropagation()}>
+            <SendKudosButton
+              projectId={project.id}
+              projectTitle={project.title}
+              assigneeId={project.assigneeId}
+              assigneeName={project.assigneeName}
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );
