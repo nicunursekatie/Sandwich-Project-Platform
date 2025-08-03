@@ -231,7 +231,7 @@ export function ProjectAssigneeSelector({
                     ) : user.isSystemUser ? (
                       <span className="text-xs text-orange-500 font-normal">Email lookup needed</span>
                     ) : (
-                      <span className="text-xs text-blue-500 font-normal">Custom assignment</span>
+                      <span className="text-xs text-gray-500 font-normal">External volunteer</span>
                     )}
                   </div>
                   <Button
