@@ -52,7 +52,7 @@ export function ProjectAssigneeSelector({
   useEffect(() => {
     if (value && users.length > 0) {
       console.log('ProjectAssigneeSelector - Initializing with value:', value);
-      console.log('ProjectAssigneeSelector - Available users:', users.map(u => ({ id: u.id, name: `${u.firstName || ''} ${u.lastName || ''}`.trim(), email: u.email })));
+      console.log('ProjectAssigneeSelector - Available users:', users.map(u => ({ id: u.id, name: `${u.firstName || ''} ${u.lastName || ''}`.trim(), email: u.email, firstName: u.firstName, lastName: u.lastName })));
       
       const names = value.split(',').map(name => name.trim()).filter(name => name.length > 0);
       const allUsers: SelectedUser[] = [];
@@ -60,7 +60,15 @@ export function ProjectAssigneeSelector({
       names.forEach(name => {
         const matchedUser = users.find(user => {
           const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim();
-          return fullName === name || user.email === name;
+          const firstNameOnly = user.firstName?.trim() || '';
+          const lastNameOnly = user.lastName?.trim() || '';
+          // Try multiple matching strategies
+          return fullName === name || 
+                 user.email === name || 
+                 firstNameOnly === name ||
+                 lastNameOnly === name ||
+                 (firstNameOnly && name.includes(firstNameOnly)) ||
+                 (lastNameOnly && name.includes(lastNameOnly));
         });
         
         if (matchedUser) {
@@ -68,9 +76,23 @@ export function ProjectAssigneeSelector({
           console.log('ProjectAssigneeSelector - Found matching user:', { name: fullName, email: matchedUser.email });
           allUsers.push({ id: matchedUser.id, name: fullName, email: matchedUser.email, isSystemUser: true });
         } else {
-          // Add as custom name
-          console.log('ProjectAssigneeSelector - Adding custom name:', name);
-          allUsers.push({ id: `custom_${Date.now()}_${Math.random()}`, name, isSystemUser: false });
+          // Try one more aggressive search for partial matches
+          const partialMatch = users.find(user => {
+            const userFullName = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+            const nameWords = name.toLowerCase().split(' ');
+            const userWords = userFullName.toLowerCase().split(' ');
+            return nameWords.some(word => userWords.some(userWord => userWord.includes(word) && word.length > 2));
+          });
+          
+          if (partialMatch) {
+            const fullName = `${partialMatch.firstName || ''} ${partialMatch.lastName || ''}`.trim() || partialMatch.email;
+            console.log('ProjectAssigneeSelector - Found partial match:', { name: fullName, email: partialMatch.email });
+            allUsers.push({ id: partialMatch.id, name: fullName, email: partialMatch.email, isSystemUser: true });
+          } else {
+            // Add as custom name
+            console.log('ProjectAssigneeSelector - Adding custom name:', name);
+            allUsers.push({ id: `custom_${Date.now()}_${Math.random()}`, name, isSystemUser: false });
+          }
         }
       });
       
@@ -204,11 +226,12 @@ export function ProjectAssigneeSelector({
                 >
                   <div className="flex flex-col items-start">
                     <span className="font-medium text-gray-900">{user.name}</span>
-                    {user.email && (
+                    {user.email ? (
                       <span className="text-xs text-gray-600 font-normal">{user.email}</span>
-                    )}
-                    {!user.email && user.isSystemUser && (
-                      <span className="text-xs text-orange-500 font-normal">Email not available</span>
+                    ) : user.isSystemUser ? (
+                      <span className="text-xs text-orange-500 font-normal">Email lookup needed</span>
+                    ) : (
+                      <span className="text-xs text-blue-500 font-normal">Custom assignment</span>
                     )}
                   </div>
                   <Button
