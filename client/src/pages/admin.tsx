@@ -19,42 +19,6 @@ interface AdminDocument {
 
 const adminDocuments: AdminDocument[] = [
   {
-    id: 'tax-exempt-letter',
-    name: 'IRS Tax Exempt Letter',
-    description: 'Our 501(c)(3) letter',
-    category: 'Legal & Tax',
-    path: '/attached_assets/IRS Tax Exempt Letter (Contains EIN).pdf',
-    type: 'pdf',
-    importance: 'critical'
-  },
-  {
-    id: 'articles-incorporation',
-    name: 'Articles of Incorporation',
-    description: 'Articles of Incorporation',
-    category: 'Legal & Tax',
-    path: '/attached_assets/Articles of Incorporation.pdf',
-    type: 'pdf',
-    importance: 'critical'
-  },
-  {
-    id: 'georgia-code',
-    name: '2020 Georgia Code Title 51',
-    description: 'Georgia state legal code reference for nonprofit operations',
-    category: 'Legal & Tax',
-    path: '/attached_assets/2020 Georgia Code Title 51.pdf',
-    type: 'pdf',
-    importance: 'high'
-  },
-  {
-    id: 'bylaws-2024',
-    name: 'TSP Bylaws 2024',
-    description: 'Current organizational bylaws and governance structure',
-    category: 'Governance',
-    path: '/attached_assets/The Sandwich Project Bylaws 2024(1)_1750871081277.pdf',
-    type: 'pdf',
-    importance: 'critical'
-  },
-  {
     id: 'volunteer-driver-agreement',
     name: 'TSP Volunteer Driver Agreement',
     description: 'Required agreement form for volunteer drivers',
@@ -71,10 +35,28 @@ const adminDocuments: AdminDocument[] = [
     path: '/attached_assets/TSP COMMUNITY SERVICE HOURS (1) (1) (1).pdf',
     type: 'pdf',
     importance: 'high'
+  },
+  {
+    id: 'meeting-minutes-02122024',
+    name: 'Meeting Minutes - February 12, 2024',
+    description: 'Administrative meeting minutes and decisions',
+    category: 'Administration',
+    path: '/attached_assets/02122024 meeting minutes.pdf',
+    type: 'pdf',
+    importance: 'normal'
+  },
+  {
+    id: 'meeting-minutes-04082024',
+    name: 'Meeting Minutes - April 8, 2024',
+    description: 'Administrative meeting minutes and decisions',
+    category: 'Administration',
+    path: '/attached_assets/04082024 meeting minutes.pdf',
+    type: 'pdf',
+    importance: 'normal'
   }
 ];
 
-const categories = ['All', 'Legal & Tax', 'Governance', 'Forms'];
+const categories = ['All', 'Forms', 'Administration'];
 
 export default function AdminPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');

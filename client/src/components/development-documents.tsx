@@ -15,27 +15,19 @@ interface DevelopmentDocument {
 
 const developmentDocuments: DevelopmentDocument[] = [
   {
-    name: "Articles of Incorporation",
-    path: "/attached_assets/Articles of Incorporation_1750817584990.pdf",
-    type: "pdf",
-    category: "Legal",
-    description: "Official Articles of Incorporation for The Sandwich Project"
+    name: "Data Verification Report",
+    path: "/data_verification_report.md",
+    type: "txt",
+    category: "Development",
+    description: "Technical report on data integrity and system verification processes"
   },
   {
-    name: "IRS Tax Exempt Letter",
-    path: "/attached_assets/IRS Tax Exempt Letter (Contains EIN)_1750817584990.pdf",
-    type: "pdf",
-    category: "Legal",
-    description: "IRS Tax Exempt determination letter containing EIN"
-  },
-  {
-    name: "The Sandwich Project Bylaws 2024",
-    path: "/attached_assets/The Sandwich Project Bylaws 2024(1)_1750871081277.pdf",
-    type: "pdf",
-    category: "Legal",
-    description: "Official bylaws document outlining organizational structure, governance, and operational procedures"
-  },
-
+    name: "Source Data Comparison",
+    path: "/source_data_comparison.csv",
+    type: "other",
+    category: "Development", 
+    description: "Comparative analysis of data sources and validation results"
+  }
 ];
 
 const getFileIcon = (type: string) => {
