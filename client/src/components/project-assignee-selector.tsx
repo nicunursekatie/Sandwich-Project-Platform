@@ -27,6 +27,7 @@ interface User {
 interface SelectedUser {
   id: string;
   name: string;
+  email?: string;
   isSystemUser: boolean;
 }
 
@@ -61,7 +62,7 @@ export function ProjectAssigneeSelector({
         
         if (matchedUser) {
           const fullName = `${matchedUser.firstName || ''} ${matchedUser.lastName || ''}`.trim() || matchedUser.email;
-          allUsers.push({ id: matchedUser.id, name: fullName, isSystemUser: true });
+          allUsers.push({ id: matchedUser.id, name: fullName, email: matchedUser.email, isSystemUser: true });
         } else {
           // Add as custom name
           allUsers.push({ id: `custom_${Date.now()}_${Math.random()}`, name, isSystemUser: false });
@@ -85,7 +86,7 @@ export function ProjectAssigneeSelector({
     // Check if already selected
     if (selectedUsers.some(u => u.id === user.id)) return;
 
-    const updatedUsers = [...selectedUsers, { id: user.id, name: fullName, isSystemUser: true }];
+    const updatedUsers = [...selectedUsers, { id: user.id, name: fullName, email: user.email, isSystemUser: true }];
     setSelectedUsers(updatedUsers);
     
     // Update parent
@@ -145,13 +146,11 @@ export function ProjectAssigneeSelector({
                 .filter(user => !selectedUsers.some(selected => selected.id === user.id && selected.isSystemUser))
                 .map((user) => (
                   <SelectItem key={user.id} value={user.id}>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col">
                       <span className="font-medium">
                         {`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email}
                       </span>
-                      <Badge variant="secondary" className="text-xs">
-                        {user.role || 'User'}
-                      </Badge>
+                      <span className="text-xs text-gray-500">{user.email}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -197,10 +196,12 @@ export function ProjectAssigneeSelector({
                   variant={user.isSystemUser ? "default" : "outline"} 
                   className="flex items-center gap-1 px-3 py-1"
                 >
-                  <span>{user.name}</span>
-                  {user.isSystemUser && (
-                    <span className="text-xs opacity-75">(User)</span>
-                  )}
+                  <div className="flex flex-col">
+                    <span>{user.name}</span>
+                    {user.email && (
+                      <span className="text-xs opacity-75">{user.email}</span>
+                    )}
+                  </div>
                   <Button
                     type="button"
                     variant="ghost"
