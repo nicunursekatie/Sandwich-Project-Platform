@@ -17,84 +17,114 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
       const { userActivityLogs, users } = await import("@shared/schema");
       const { db } = await import("../db");
 
-      // Get total users and active users
-      const totalUsersResult = await db.select({ count: count() }).from(users);
+      // Development accounts to exclude from analytics
+      const devAccounts = [
+        'katielong2316@gmail.com',
+        'admin@sandwich.project', 
+        'kenig.ka@gmail.com'
+      ];
+
+      // Get total users (excluding dev accounts)
+      const totalUsersResult = await db
+        .select({ count: count() })
+        .from(users)
+        .where(sql`${users.email} NOT IN (${devAccounts.map(email => `'${email}'`).join(', ')})`);
       const totalUsers = totalUsersResult[0]?.count || 0;
 
-      // Get active users in last 24 hours (distinct users)
+      // Get active users in last 24 hours (distinct users, excluding dev accounts)
       const last24Hours = new Date();
       last24Hours.setHours(last24Hours.getHours() - 24);
       
       const activeUsersLast24hResult = await db
         .select({ count: sql`COUNT(DISTINCT ${userActivityLogs.userId})`.as('count') })
         .from(userActivityLogs)
-        .where(sql`${userActivityLogs.createdAt} >= ${last24Hours}`);
+        .leftJoin(users, eq(userActivityLogs.userId, users.id))
+        .where(and(
+          sql`${userActivityLogs.createdAt} >= ${last24Hours}`,
+          sql`${users.email} NOT IN (${devAccounts.map(email => `'${email}'`).join(', ')})`
+        ));
       const activeUsersLast24h = Number(activeUsersLast24hResult[0]?.count || 0);
 
-      // Get active users in last 12 hours for more recent activity
+      // Get active users in last 12 hours for more recent activity (excluding dev accounts)
       const last12Hours = new Date();
       last12Hours.setHours(last12Hours.getHours() - 12);
       
       const activeUsersLast12hResult = await db
         .select({ count: sql`COUNT(DISTINCT ${userActivityLogs.userId})`.as('count') })
         .from(userActivityLogs)
-        .where(sql`${userActivityLogs.createdAt} >= ${last12Hours}`);
+        .leftJoin(users, eq(userActivityLogs.userId, users.id))
+        .where(and(
+          sql`${userActivityLogs.createdAt} >= ${last12Hours}`,
+          sql`${users.email} NOT IN (${devAccounts.map(email => `'${email}'`).join(', ')})`
+        ));
       const activeUsersLast12h = Number(activeUsersLast12hResult[0]?.count || 0);
 
-      // Get total actions in timeframe
+      // Get total actions in timeframe (excluding dev accounts)
       const totalActionsResult = await db
         .select({ count: count() })
         .from(userActivityLogs)
-        .where(sql`${userActivityLogs.createdAt} >= ${startDate}`);
+        .leftJoin(users, eq(userActivityLogs.userId, users.id))
+        .where(and(
+          sql`${userActivityLogs.createdAt} >= ${startDate}`,
+          sql`${users.email} NOT IN (${devAccounts.map(email => `'${email}'`).join(', ')})`
+        ));
       const totalActions = totalActionsResult[0]?.count || 0;
 
       // Calculate average actions per user (based on 24h activity)
       const averageActionsPerUser = activeUsersLast24h > 0 ? totalActions / activeUsersLast24h : 0;
 
-      // Get top sections by actions (use section field for better names)
+      // Get top sections by actions (use section field for better names, excluding dev accounts)
       const topSectionsResult = await db
         .select({
           section: userActivityLogs.section,
           actions: count()
         })
         .from(userActivityLogs)
+        .leftJoin(users, eq(userActivityLogs.userId, users.id))
         .where(
           and(
             sql`${userActivityLogs.createdAt} >= ${startDate}`,
             sql`${userActivityLogs.section} IS NOT NULL`,
-            sql`${userActivityLogs.section} != 'General'`
+            sql`${userActivityLogs.section} != 'General'`,
+            sql`${users.email} NOT IN (${devAccounts.map(email => `'${email}'`).join(', ')})`
           )
         )
         .groupBy(userActivityLogs.section)
         .orderBy(desc(count()))
         .limit(8);
 
-      // Get top features by usage (exclude Unknown values)
+      // Get top features by usage (exclude Unknown values and dev accounts)
       const topFeaturesResult = await db
         .select({
           feature: userActivityLogs.feature,
           usage: count()
         })
         .from(userActivityLogs)
+        .leftJoin(users, eq(userActivityLogs.userId, users.id))
         .where(
           and(
             sql`${userActivityLogs.createdAt} >= ${startDate}`,
             sql`${userActivityLogs.feature} IS NOT NULL`,
-            sql`${userActivityLogs.feature} != 'Unknown'`
+            sql`${userActivityLogs.feature} != 'Unknown'`,
+            sql`${users.email} NOT IN (${devAccounts.map(email => `'${email}'`).join(', ')})`
           )
         )
         .groupBy(userActivityLogs.feature)
         .orderBy(desc(count()))
         .limit(8);
 
-      // Get daily active users for trend analysis
+      // Get daily active users for trend analysis (excluding dev accounts)
       const dailyActiveUsersResult = await db
         .select({
           date: sql`DATE(${userActivityLogs.createdAt})`.as('date'),
           users: sql`COUNT(DISTINCT ${userActivityLogs.userId})`.as('users')
         })
         .from(userActivityLogs)
-        .where(sql`${userActivityLogs.createdAt} >= ${startDate}`)
+        .leftJoin(users, eq(userActivityLogs.userId, users.id))
+        .where(and(
+          sql`${userActivityLogs.createdAt} >= ${startDate}`,
+          sql`${users.email} NOT IN (${devAccounts.map(email => `'${email}'`).join(', ')})`
+        ))
         .groupBy(sql`DATE(${userActivityLogs.createdAt})`)
         .orderBy(asc(sql`DATE(${userActivityLogs.createdAt})`));
 
@@ -136,7 +166,14 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
       const { userActivityLogs, users } = await import("@shared/schema");
       const { db } = await import("../db");
 
-      // Get all users with their activity metrics (simplified query)
+      // Development accounts to exclude from analytics
+      const devAccounts = [
+        'katielong2316@gmail.com',
+        'admin@sandwich.project', 
+        'kenig.ka@gmail.com'
+      ];
+
+      // Get all users with their activity metrics (simplified query) - excluding dev accounts
       const userActivities = await db
         .select({
           userId: users.id,
@@ -155,25 +192,28 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
           eq(userActivityLogs.userId, users.id),
           sql`${userActivityLogs.createdAt} >= ${startDate}`
         ))
+        .where(sql`${users.email} NOT IN (${devAccounts.map(email => `'${email}'`).join(', ')})`)
         .groupBy(users.id, users.email, users.firstName, users.lastName)
         .orderBy(desc(sql`COUNT(${userActivityLogs.id})`));
 
-      // Get features used by each user
+      // Get features used by each user (excluding dev accounts)
       const userFeatures = await db
         .select({
           userId: userActivityLogs.userId,
           features: sql`array_agg(DISTINCT ${userActivityLogs.feature})`.as('features')
         })
         .from(userActivityLogs)
+        .leftJoin(users, eq(userActivityLogs.userId, users.id))
         .where(
           and(
             sql`${userActivityLogs.createdAt} >= ${startDate}`,
-            sql`${userActivityLogs.feature} IS NOT NULL`
+            sql`${userActivityLogs.feature} IS NOT NULL`,
+            sql`${users.email} NOT IN (${devAccounts.map(email => `'${email}'`).join(', ')})`
           )
         )
         .groupBy(userActivityLogs.userId);
 
-      // Get section breakdown for each user
+      // Get section breakdown for each user (excluding dev accounts)
       const sectionBreakdowns = await db
         .select({
           userId: userActivityLogs.userId,
@@ -182,7 +222,11 @@ export function createEnhancedUserActivityRoutes(storage: IStorage): Router {
           timeSpent: sql`COALESCE(SUM(${userActivityLogs.duration}), 0)`.as('timeSpent')
         })
         .from(userActivityLogs)
-        .where(sql`${userActivityLogs.createdAt} >= ${startDate}`)
+        .leftJoin(users, eq(userActivityLogs.userId, users.id))
+        .where(and(
+          sql`${userActivityLogs.createdAt} >= ${startDate}`,
+          sql`${users.email} NOT IN (${devAccounts.map(email => `'${email}'`).join(', ')})`
+        ))
         .groupBy(userActivityLogs.userId, userActivityLogs.page);
 
       // Combine data

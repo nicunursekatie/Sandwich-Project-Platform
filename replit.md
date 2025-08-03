@@ -8,6 +8,8 @@ This is a full-stack sandwich collection management application designed for The
 - **UI Component Transparency**: Resolved widespread black element issues in Select, Input, Button, Checkbox, and Textarea components by removing problematic CSS variable dependencies.
 - **Message Composer**: Fixed user dropdown population in message composer after UI component fixes.
 - **Collapsible Navigation**: Implemented collapsible sidebar that shrinks to icon-only view while remaining visually present and easily expandable. Includes smooth transitions and tooltip support for collapsed state.
+- **Kudos System**: Successfully implemented purple-themed kudos button in the correct project cards view (projects-clean.tsx) that appears only on completed projects where assignee is not the logged-in user.
+- **Analytics Filtering**: Added development account exclusion filter to all user analytics endpoints, excluding katielong2316@gmail.com, admin@sandwich.project, and kenig.ka@gmail.com from behavior analysis to prevent skewing of user engagement data.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
