@@ -51,6 +51,9 @@ export function ProjectAssigneeSelector({
   // Initialize from existing value - handle both single names and comma-separated
   useEffect(() => {
     if (value && users.length > 0) {
+      console.log('ProjectAssigneeSelector - Initializing with value:', value);
+      console.log('ProjectAssigneeSelector - Available users:', users.map(u => ({ id: u.id, name: `${u.firstName || ''} ${u.lastName || ''}`.trim(), email: u.email })));
+      
       const names = value.split(',').map(name => name.trim()).filter(name => name.length > 0);
       const allUsers: SelectedUser[] = [];
       
@@ -62,13 +65,16 @@ export function ProjectAssigneeSelector({
         
         if (matchedUser) {
           const fullName = `${matchedUser.firstName || ''} ${matchedUser.lastName || ''}`.trim() || matchedUser.email;
+          console.log('ProjectAssigneeSelector - Found matching user:', { name: fullName, email: matchedUser.email });
           allUsers.push({ id: matchedUser.id, name: fullName, email: matchedUser.email, isSystemUser: true });
         } else {
           // Add as custom name
+          console.log('ProjectAssigneeSelector - Adding custom name:', name);
           allUsers.push({ id: `custom_${Date.now()}_${Math.random()}`, name, isSystemUser: false });
         }
       });
       
+      console.log('ProjectAssigneeSelector - Final selected users:', allUsers);
       setSelectedUsers(allUsers);
     }
   }, [users, value]);
@@ -194,12 +200,15 @@ export function ProjectAssigneeSelector({
                 <Badge 
                   key={user.id} 
                   variant={user.isSystemUser ? "default" : "outline"} 
-                  className="flex items-center gap-1 px-3 py-2"
+                  className="flex items-center gap-1 px-3 py-2 bg-white border border-gray-200"
                 >
                   <div className="flex flex-col items-start">
-                    <span className="font-medium">{user.name}</span>
+                    <span className="font-medium text-gray-900">{user.name}</span>
                     {user.email && (
-                      <span className="text-xs opacity-75 font-normal">{user.email}</span>
+                      <span className="text-xs text-gray-600 font-normal">{user.email}</span>
+                    )}
+                    {!user.email && user.isSystemUser && (
+                      <span className="text-xs text-orange-500 font-normal">Email not available</span>
                     )}
                   </div>
                   <Button
