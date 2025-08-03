@@ -2,6 +2,8 @@ import { Clock, Users, AlertCircle, CheckCircle, Calendar, Edit, Trash2 } from "
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
+import SendKudosButton from "@/components/send-kudos-button";
 import type { Project } from "@shared/schema";
 
 interface ProjectCardProps {
@@ -11,6 +13,7 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
+  const { user } = useAuth();
   const getStatusIcon = () => {
     switch (project.status) {
       case "completed":
@@ -113,6 +116,22 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
             </div>
           )}
         </div>
+        
+        {/* Show kudos button for completed projects if assignee is not current user */}
+        {project.status === "completed" && project.assigneeName && user && (
+          <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+            <SendKudosButton
+              recipientId={project.assigneeId?.toString() || `user_${project.assigneeName.toLowerCase().replace(/\s+/g, '_')}`}
+              recipientName={project.assigneeName}
+              contextType="project"
+              contextId={project.id.toString()}
+              contextTitle={project.title}
+              size="sm"
+              variant="outline"
+              className="text-purple-600 hover:text-purple-700 border-purple-200 hover:bg-purple-50"
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );
