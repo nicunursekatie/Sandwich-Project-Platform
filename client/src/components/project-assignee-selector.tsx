@@ -194,12 +194,12 @@ export function ProjectAssigneeSelector({
                 <Badge 
                   key={user.id} 
                   variant={user.isSystemUser ? "default" : "outline"} 
-                  className="flex items-center gap-1 px-3 py-1"
+                  className="flex items-center gap-1 px-3 py-2"
                 >
-                  <div className="flex flex-col">
-                    <span>{user.name}</span>
+                  <div className="flex flex-col items-start">
+                    <span className="font-medium">{user.name}</span>
                     {user.email && (
-                      <span className="text-xs opacity-75">{user.email}</span>
+                      <span className="text-xs opacity-75 font-normal">{user.email}</span>
                     )}
                   </div>
                   <Button
