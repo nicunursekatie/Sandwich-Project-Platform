@@ -24,6 +24,22 @@ import SendKudosButton from '@/components/send-kudos-button';
 import { ProjectAssigneeSelector } from '@/components/project-assignee-selector';
 import sandwichLogo from '@assets/LOGOS/TSP_transparent.png';
 
+// Component to display assignee email
+function AssigneeEmail({ assigneeId }: { assigneeId: string }) {
+  const { data: users = [] } = useQuery({
+    queryKey: ['/api/users'],
+    retry: false,
+  });
+  
+  const user = users.find((u: any) => u.id === assigneeId);
+  
+  if (!user?.email) return null;
+  
+  return (
+    <span className="text-xs text-gray-400 truncate">{user.email}</span>
+  );
+}
+
 export default function ProjectsClean() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -294,12 +310,17 @@ export default function ProjectsClean() {
         )}
 
         <div className="flex items-center justify-between text-sm text-gray-500 font-roboto">
-          <div className="flex items-center gap-1">
-            <User className="w-4 h-4 text-[#FBAD3F]" />
-            <span>{project.assigneeName || 'Unassigned'}</span>
+          <div className="flex items-center gap-1 flex-1 min-w-0">
+            <User className="w-4 h-4 text-[#FBAD3F] flex-shrink-0" />
+            <div className="flex flex-col min-w-0">
+              <span className="truncate">{project.assigneeName || 'Unassigned'}</span>
+              {project.assigneeId && (
+                <AssigneeEmail assigneeId={project.assigneeId} />
+              )}
+            </div>
           </div>
           
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-shrink-0">
             <Calendar className="w-4 h-4 text-[#FBAD3F]" />
             <span>{project.dueDate ? new Date(project.dueDate).toLocaleDateString() : 'No date'}</span>
           </div>
