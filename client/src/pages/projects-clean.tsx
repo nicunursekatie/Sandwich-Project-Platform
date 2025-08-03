@@ -305,13 +305,17 @@ export default function ProjectsClean() {
         </div>
 
         {/* Kudos Button for Completed Projects */}
-        {project.status === 'completed' && project.assigneeName && project.assigneeId && user?.id !== project.assigneeId && (
+        {project.status === 'completed' && project.assigneeName && (
           <div className="mt-3 pt-3 border-t border-gray-100" onClick={(e) => e.stopPropagation()}>
             <SendKudosButton
-              projectId={project.id}
-              projectTitle={project.title}
-              assigneeId={project.assigneeId}
-              assigneeName={project.assigneeName}
+              recipientId={project.assigneeId || ''}
+              recipientName={project.assigneeName}
+              contextType="project"
+              contextId={project.id.toString()}
+              contextTitle={project.title}
+              className="w-full"
+              size="sm"
+              variant="outline"
             />
           </div>
         )}
