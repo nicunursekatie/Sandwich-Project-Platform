@@ -8,9 +8,14 @@ This is a full-stack sandwich collection management application designed for The
 - **UI Component Transparency**: Resolved widespread black element issues in Select, Input, Button, Checkbox, and Textarea components by removing problematic CSS variable dependencies.
 - **Message Composer**: Fixed user dropdown population in message composer after UI component fixes.
 - **Collapsible Navigation**: Implemented collapsible sidebar that shrinks to icon-only view while remaining visually present and easily expandable. Includes smooth transitions and tooltip support for collapsed state.
+
 - **Kudos System**: Successfully implemented purple-themed kudos button in the correct project cards view (projects-clean.tsx) that appears only on completed projects where assignee is not the logged-in user.
 - **Analytics Filtering**: Added development account exclusion filter to all user analytics endpoints, excluding katielong2316@gmail.com, admin@sandwich.project, and kenig.ka@gmail.com from behavior analysis to prevent skewing of user engagement data.
 - **Project Edit Dialog Consistency**: Updated the gear icon edit dialog in projects-clean.tsx to use the comprehensive form with all fields (category dropdown, assignee selector, budget, estimated hours, etc.) matching the detailed project edit form from project-detail-clean.tsx.
+
+- **Project Management UX**: Enhanced project edit dialogs with comprehensive forms, improved email display for assignees, repositioned completion checkbox to left of project title with clear visual states (empty checkbox for incomplete, filled checkmark for completed), and changed "Custom assignment" to "External volunteer" for better clarity.
+- **Google Analytics Integration**: Implemented comprehensive tracking with both HTML and dynamic script loading, configured with measurement ID G-9M4XDZGN68, excludes development accounts from analytics data.
+
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.

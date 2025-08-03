@@ -72,22 +72,22 @@ export default function DashboardOverview({ onSectionChange }: { onSectionChange
       path: "/attached_assets/Key Findings_ Peak Sandwich Collection Weeks_1753498455636.pdf"
     },
     {
-      title: "IRS Tax Exempt Letter",
-      description: "Official tax-exempt status documentation with EIN",
-      category: "Legal",
-      path: "/attached_assets/IRS Tax Exempt Letter (Contains EIN).pdf"
-    },
-    {
-      title: "Articles of Incorporation",
-      description: "Legal founding documents and organizational structure",
-      category: "Legal", 
-      path: "/attached_assets/Articles of Incorporation.pdf"
-    },
-    {
       title: "Food Safety Guidelines",
       description: "Essential safety protocols for volunteers",
       category: "Operations",
       path: "/attached_assets/20230525-TSP-Food Safety Volunteers_1749341933308.pdf"
+    },
+    {
+      title: "Volunteer Driver Agreement",
+      description: "Required agreement form for volunteer drivers",
+      category: "Forms",
+      path: "/attached_assets/TSP Volunteer Driver Agreement (1).pdf"
+    },
+    {
+      title: "Community Service Hours Form",
+      description: "Form for tracking and documenting community service hours",
+      category: "Forms",
+      path: "/attached_assets/TSP COMMUNITY SERVICE HOURS (1) (1) (1).pdf"
     }
   ];
 

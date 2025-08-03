@@ -16,7 +16,7 @@ import { useCelebration } from '@/components/celebration-toast';
 import { PERMISSIONS, hasPermission } from '@shared/auth-utils';
 import { 
   Plus, Circle, Play, CheckCircle2, Archive, Settings, 
-  Edit, Trash2, User, Calendar, ArrowRight, Filter
+  Edit, Trash2, User, Calendar, ArrowRight, Filter, Square
 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 import { Project, InsertProject } from '@shared/schema';
@@ -25,13 +25,13 @@ import { ProjectAssigneeSelector } from '@/components/project-assignee-selector'
 import sandwichLogo from '@assets/LOGOS/TSP_transparent.png';
 
 // Component to display assignee email
-function AssigneeEmail({ assigneeId }: { assigneeId: string }) {
-  const { data: users = [] } = useQuery({
+function AssigneeEmail({ assigneeId }: { assigneeId: string | number }) {
+  const { data: users = [] } = useQuery<any[]>({
     queryKey: ['/api/users'],
     retry: false,
   });
   
-  const user = users.find((u: any) => u.id === assigneeId);
+  const user = users.find((u: any) => u.id === assigneeId.toString());
   
   if (!user?.email) return null;
   
@@ -236,37 +236,44 @@ export default function ProjectsClean() {
     >
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <h3 className="font-semibold text-[#236383] font-roboto text-lg mb-1 break-words leading-tight">
-              {project.title}
-            </h3>
-            <div className="flex flex-wrap gap-2 mb-2">
-              <Badge className={`${getPriorityColor(project.priority)} text-white text-xs font-roboto`}>
-                {project.priority} priority
-              </Badge>
-              <Badge className="bg-[#FBAD3F] text-white border-[#FBAD3F] text-xs font-roboto">
-                {project.status === 'in_progress' ? 'active' : project.status?.replace('_', ' ') || 'available'}
-              </Badge>
+          <div className="flex-1 flex items-start gap-3">
+            {canEditProject(user, project) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (project.status !== 'completed') {
+                    handleMarkComplete(project.id, project.title);
+                  }
+                }}
+                className="h-5 w-5 p-0 hover:bg-[#FBAD3F]/10 flex-shrink-0 mt-1"
+                title={project.status === 'completed' ? 'Completed' : 'Mark as Complete'}
+              >
+                {project.status === 'completed' ? (
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                ) : (
+                  <Square className="h-5 w-5 text-gray-400 hover:text-[#FBAD3F]" />
+                )}
+              </Button>
+            )}
+            <div className="flex-1">
+              <h3 className="font-semibold text-[#236383] font-roboto text-lg mb-1 break-words leading-tight">
+                {project.title}
+              </h3>
+              <div className="flex flex-wrap gap-2 mb-2">
+                <Badge className={`${getPriorityColor(project.priority)} text-white text-xs font-roboto`}>
+                  {project.priority} priority
+                </Badge>
+                <Badge className="bg-[#FBAD3F] text-white border-[#FBAD3F] text-xs font-roboto">
+                  {project.status === 'in_progress' ? 'active' : project.status?.replace('_', ' ') || 'available'}
+                </Badge>
+              </div>
             </div>
           </div>
           
           {canEditProject(user, project) && (
             <div className="flex gap-1">
-              {project.status !== 'completed' && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleMarkComplete(project.id, project.title);
-                  }}
-                  className="h-8 w-8 p-0 hover:bg-[#FBAD3F]/10"
-                  title="Complete"
-                >
-                  <CheckCircle2 className="h-4 w-4 text-[#FBAD3F]" />
-                </Button>
-              )}
-              
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -330,7 +337,7 @@ export default function ProjectsClean() {
         {project.status === 'completed' && project.assigneeName && (
           <div className="mt-3 pt-3 border-t border-gray-100" onClick={(e) => e.stopPropagation()}>
             <SendKudosButton
-              recipientId={project.assigneeId || ''}
+              recipientId={project.assigneeId?.toString() || ''}
               recipientName={project.assigneeName}
               contextType="project"
               contextId={project.id.toString()}
