@@ -10,6 +10,7 @@ This is a full-stack sandwich collection management application designed for The
 - **Collapsible Navigation**: Implemented collapsible sidebar that shrinks to icon-only view while remaining visually present and easily expandable. Includes smooth transitions and tooltip support for collapsed state.
 - **Kudos System**: Successfully implemented purple-themed kudos button in the correct project cards view (projects-clean.tsx) that appears only on completed projects where assignee is not the logged-in user.
 - **Analytics Filtering**: Added development account exclusion filter to all user analytics endpoints, excluding katielong2316@gmail.com, admin@sandwich.project, and kenig.ka@gmail.com from behavior analysis to prevent skewing of user engagement data.
+- **Project Edit Dialog Consistency**: Updated the gear icon edit dialog in projects-clean.tsx to use the comprehensive form with all fields (category dropdown, assignee selector, budget, estimated hours, etc.) matching the detailed project edit form from project-detail-clean.tsx.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
