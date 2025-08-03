@@ -21,6 +21,7 @@ import {
 import { apiRequest } from '@/lib/queryClient';
 import { Project, InsertProject } from '@shared/schema';
 import SendKudosButton from '@/components/send-kudos-button';
+import { ProjectAssigneeSelector } from '@/components/project-assignee-selector';
 import sandwichLogo from '@assets/LOGOS/TSP_transparent.png';
 
 export default function ProjectsClean() {
@@ -542,41 +543,60 @@ export default function ProjectsClean() {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Project Dialog */}
+      {/* Edit Project Dialog - Comprehensive Form */}
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="text-[#236383] font-roboto">Edit Project</DialogTitle>
+            <p className="text-sm text-gray-600 font-roboto">Update project details and assignments</p>
           </DialogHeader>
           
           {editingProject && (
             <form onSubmit={handleUpdateProject} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-title" className="font-roboto">Project Title</Label>
-                <Input
-                  id="edit-title"
-                  value={editingProject.title}
-                  onChange={(e) => setEditingProject({...editingProject, title: e.target.value})}
-                  className="font-roboto"
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="edit-description" className="font-roboto">Description</Label>
-                <Textarea
-                  id="edit-description"
-                  value={editingProject.description || ''}
-                  onChange={(e) => setEditingProject({...editingProject, description: e.target.value})}
-                  className="font-roboto"
-                  rows={3}
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-priority" className="font-roboto">Priority</Label>
-                  <Select value={editingProject.priority} onValueChange={(value) => setEditingProject({...editingProject, priority: value})}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
+                  <Label htmlFor="edit-project-title" className="font-roboto">Title</Label>
+                  <Input
+                    id="edit-project-title"
+                    value={editingProject.title}
+                    onChange={(e) => setEditingProject({...editingProject, title: e.target.value})}
+                    className="font-roboto"
+                    required
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <Label htmlFor="edit-project-description" className="font-roboto">Description</Label>
+                  <Textarea
+                    id="edit-project-description"
+                    value={editingProject.description || ''}
+                    onChange={(e) => setEditingProject({...editingProject, description: e.target.value})}
+                    className="font-roboto"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-project-status" className="font-roboto">Status</Label>
+                  <Select 
+                    value={editingProject.status} 
+                    onValueChange={(value) => setEditingProject({...editingProject, status: value})}
+                  >
+                    <SelectTrigger className="font-roboto">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="available">Available</SelectItem>
+                      <SelectItem value="in_progress">In Progress</SelectItem>
+                      <SelectItem value="waiting">Waiting</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="edit-project-priority" className="font-roboto">Priority</Label>
+                  <Select 
+                    value={editingProject.priority} 
+                    onValueChange={(value) => setEditingProject({...editingProject, priority: value})}
+                  >
                     <SelectTrigger className="font-roboto">
                       <SelectValue />
                     </SelectTrigger>
@@ -588,44 +608,69 @@ export default function ProjectsClean() {
                     </SelectContent>
                   </Select>
                 </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="edit-status" className="font-roboto">Status</Label>
-                  <Select value={editingProject.status} onValueChange={(value) => setEditingProject({...editingProject, status: value})}>
+                <div>
+                  <Label htmlFor="edit-project-category" className="font-roboto">Category</Label>
+                  <Select 
+                    value={editingProject.category || 'technology'} 
+                    onValueChange={(value) => setEditingProject({...editingProject, category: value})}
+                  >
                     <SelectTrigger className="font-roboto">
-                      <SelectValue />
+                      <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="available">Available</SelectItem>
-                      <SelectItem value="in_progress">In Progress</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                      <SelectItem value="waiting">Waiting</SelectItem>
+                      <SelectItem value="technology">💻 Tech</SelectItem>
+                      <SelectItem value="events">📅 Events</SelectItem>
+                      <SelectItem value="grants">💰 Grants</SelectItem>
+                      <SelectItem value="outreach">🤝 Outreach</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
+                <div>
+                  <ProjectAssigneeSelector
+                    value={editingProject.assigneeName || ''}
+                    onChange={(value, userIds) => setEditingProject({
+                      ...editingProject, 
+                      assigneeName: value,
+                      assigneeIds: userIds?.length ? userIds : undefined
+                    })}
+                    label="Assigned To"
+                    placeholder="Select or enter person responsible"
+                    className="font-roboto"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-project-due-date" className="font-roboto">Due Date</Label>
+                  <Input
+                    id="edit-project-due-date"
+                    type="date"
+                    value={editingProject.dueDate ? editingProject.dueDate.split('T')[0] : ''}
+                    onChange={(e) => setEditingProject({...editingProject, dueDate: e.target.value})}
+                    className="font-roboto"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-project-budget" className="font-roboto">Budget</Label>
+                  <Input
+                    id="edit-project-budget"
+                    type="text"
+                    value={editingProject.budget || ''}
+                    onChange={(e) => setEditingProject({...editingProject, budget: e.target.value})}
+                    className="font-roboto"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-project-estimated-hours" className="font-roboto">Estimated Hours</Label>
+                  <Input
+                    id="edit-project-estimated-hours"
+                    type="number"
+                    value={editingProject.estimatedHours || ''}
+                    onChange={(e) => setEditingProject({...editingProject, estimatedHours: Number(e.target.value)})}
+                    className="font-roboto"
+                    placeholder="0"
+                  />
+                </div>
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="edit-assigneeName" className="font-roboto">Assigned To</Label>
-                <Input
-                  id="edit-assigneeName"
-                  value={editingProject.assigneeName || ''}
-                  onChange={(e) => setEditingProject({...editingProject, assigneeName: e.target.value})}
-                  className="font-roboto"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="edit-dueDate" className="font-roboto">Due Date</Label>
-                <Input
-                  id="edit-dueDate"
-                  type="date"
-                  value={editingProject.dueDate || ''}
-                  onChange={(e) => setEditingProject({...editingProject, dueDate: e.target.value})}
-                  className="font-roboto"
-                />
-              </div>
-              
               <div className="flex justify-end gap-2 pt-4">
                 <Button 
                   type="button" 
